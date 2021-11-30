@@ -9,77 +9,74 @@ import SwiftUI
 import CoreData
 
 struct ContentView: View {
-    @Environment(\.managedObjectContext) private var viewContext
-
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
-        animation: .default)
-    private var items: FetchedResults<Item>
-
+    @EnvironmentObject var switchVM:SwitchVM
+    @State var switchList:[SwitchOptionVM] = []
+    @State var showSettingMenu = false
+    @State var id = UUID()
     var body: some View {
-        NavigationView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp!, formatter: itemFormatter)")
-                    } label: {
-                        Text(item.timestamp!, formatter: itemFormatter)
+        VStack {
+            ScrollView(.vertical) {
+                VStack {
+                    ForEach(switchList.indices, id:\.self) { index in
+                        HStack {
+                            Image(nsImage: switchList[index].switchType.switchTitle().1)
+                            Text(switchList[index].switchType.switchTitle().0)
+                            Spacer()
+                            Toggle("",isOn: $switchList[index].isOn)
+                                .toggleStyle(.switch)
+                        }
                     }
-                }
-                .onDelete(perform: deleteItems)
+                    
+                }.padding(15)
             }
-            .toolbar {
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+            HStack {
+                Spacer()
+                Text("Only Switch")
+                    .padding(10)
+                    .offset(x:10)
+                Spacer()
+                Button(action: {
+                    showSettingMenu.toggle()
+                }, label: {
+                    Image(systemName: "gearshape.circle")
+                }).buttonStyle(.plain)
+                    .popover(isPresented: $showSettingMenu) {
+                        List {
+                            Button(action: {
+                                TopNotchSwitch.shared.clearCache()
+                            }, label: {
+                                Text("Clear cache")
+                            }).buttonStyle(.borderless)
+                            Divider()
+                            Button(action: {
+                                NSApp.terminate(self)
+                            }, label: {
+                                Text("Quit")
+                            }).buttonStyle(.borderless)
+                        }.frame(width: 150, height: 100)
+                            
                     }
-                }
+                    .padding(10)
             }
-            Text("Select an item")
+            
+        }.id(id)
+        .onReceive(NotificationCenter.default.publisher(for: showPopoverNotificationName, object: nil)) { _ in
+            refreshData()
         }
+        
     }
 
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
-
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
-        }
+    func refreshData() {
+        switchVM.refreshSwitchStatus()
+        switchList = switchVM.switchList
+        id = UUID()
     }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            offsets.map { items[$0] }.forEach(viewContext.delete)
-
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
-        }
-    }
+    
+    
 }
-
-private let itemFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .short
-    formatter.timeStyle = .medium
-    return formatter
-}()
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        ContentView().frame(width: 300).environmentObject(SwitchVM())
     }
 }
