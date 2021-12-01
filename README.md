@@ -23,7 +23,10 @@ OnlySwitch provides a series toggle switch to simply your routine work, such as 
 | Turn off display time | todo              |
 | No disturb mode       | todo              |
 
- 
+## About hiding new Macbook Notch 
+
+The Hide notch switch only shows on build-in display of M1 Pro/Max Macbook Pro. The switch just controls current desktop, not for all work desktops.
+
 ## Screenshots
 
 <p align="center">
