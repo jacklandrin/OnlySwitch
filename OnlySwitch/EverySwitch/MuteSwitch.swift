@@ -6,32 +6,41 @@
 //
 
 import Foundation
+import AppKit
+
 
 let volumeKey = "volumeKey"
 
 class MuteSwitch:SwitchProtocal {
     static let shared = MuteSwitch()
+    
     func operationSwitch(isOn: Bool) -> Bool {
         if isOn {
-            let cmd = setOutputVolumeCMD + "0"
-            return cmd.runAppleScript().0
+            NSSound.systemVolumeFadeToMute(seconds: 0, blocking: true)
+            let isMuted = NSSound.systemVolumeIsMuted
+            print("turn on, isMuted:\(isMuted)")
+            return isMuted
         } else {
-            let volumeValue = UserDefaults.standard.integer(forKey: volumeKey)
-            let cmd = setOutputVolumeCMD + String(volumeValue)
-            return cmd.runAppleScript().0
+            var volumeValue = Float(UserDefaults.standard.float(forKey: volumeKey))
+            if volumeValue == 0 {
+                volumeValue = 0.5
+            }
+            NSSound.systemVolume = volumeValue
+            let isMuted = NSSound.systemVolumeIsMuted
+            print("turn off, isMuted:\(isMuted)")
+            return !isMuted
         }
     }
     
     func currentStatus() -> Bool {
-        let result = getCurrentVolume.runAppleScript()
-        if result.0 {
-            let volume:String = result.1 as! String
-            let volumeValue = Int(volume) ?? 50
+        if NSSound.systemVolumeIsMuted {
+            return true
+        } else {
+            let volume = NSSound.systemVolume
             UserDefaults.standard.set(volume, forKey: volumeKey)
             UserDefaults.standard.synchronize()
-            return volumeValue == 0
-        } else {
             return false
         }
+        
     }
 }

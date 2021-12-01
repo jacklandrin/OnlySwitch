@@ -11,7 +11,7 @@ import CoreData
 struct ContentView: View {
     @EnvironmentObject var switchVM:SwitchVM
     @Environment(\.colorScheme) private var colorScheme
-    @State private var switchList:[SwitchOptionVM] = []
+    @State private var switchList:[SwitchBarVM] = []
     @State private var showSettingMenu = false
     @State private var id = UUID()
     var body: some View {
@@ -19,19 +19,7 @@ struct ContentView: View {
             ScrollView(.vertical) {
                 VStack {
                     ForEach(switchList.indices, id:\.self) { index in
-                    
-                        HStack {
-                            Image(nsImage:
-                                    barImage(option: switchList[index]))
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 25 , height: 25)
-                            Text(switchList[index].switchType.switchTitle().title)
-                            Spacer()
-                            Toggle("",isOn: $switchList[index].isOn)
-                                .toggleStyle(.switch)
-                        }.isHidden(switchList[index].isHidden, remove: true)
-                        
+                        SwitchBarView().environmentObject(switchList[index])
                     }
                     
                 }.padding(15)
@@ -78,15 +66,7 @@ struct ContentView: View {
         switchList = switchVM.switchList
         id = UUID()
     }
-    
-    func barImage(option:SwitchOptionVM) -> NSImage {
-        if option.isOn {
-            return option.switchType.switchTitle().onImage
-        } else {
-            return option.switchType.switchTitle().offImage
-        }
-    }
-    
+        
 }
 
 struct ContentView_Previews: PreviewProvider {

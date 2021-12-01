@@ -16,6 +16,11 @@
 		043E5D662757C84900ADC004 /* HiddenModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D652757C84900ADC004 /* HiddenModifier.swift */; };
 		043E5D6A2757D68800ADC004 /* MuteSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D692757D68800ADC004 /* MuteSwitch.swift */; };
 		043E5D6D2757DADB00ADC004 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 043E5D6C2757DADB00ADC004 /* AVFoundation.framework */; };
+		043E5D6F2758116800ADC004 /* NSSound_SystemVolumeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D6E2758116800ADC004 /* NSSound_SystemVolumeExtension.swift */; };
+		043E5D712758176B00ADC004 /* SwitchToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D702758176B00ADC004 /* SwitchToggle.swift */; };
+		043E5D7327581C2E00ADC004 /* SwitchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D7227581C2E00ADC004 /* SwitchBarView.swift */; };
+		043E5D752758208D00ADC004 /* SwitchBarVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D742758208D00ADC004 /* SwitchBarVM.swift */; };
+		043E5D7A2758212A00ADC004 /* SwitchType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D792758212A00ADC004 /* SwitchType.swift */; };
 		04447B5C2754F08000CD2900 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B5B2754F08000CD2900 /* AppDelegate.swift */; };
 		04447B5E2754F08000CD2900 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B5D2754F08000CD2900 /* ContentView.swift */; };
 		04447B602754F08100CD2900 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04447B5F2754F08100CD2900 /* Assets.xcassets */; };
@@ -42,6 +47,11 @@
 		043E5D652757C84900ADC004 /* HiddenModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HiddenModifier.swift; sourceTree = "<group>"; };
 		043E5D692757D68800ADC004 /* MuteSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuteSwitch.swift; sourceTree = "<group>"; };
 		043E5D6C2757DADB00ADC004 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		043E5D6E2758116800ADC004 /* NSSound_SystemVolumeExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSSound_SystemVolumeExtension.swift; sourceTree = "<group>"; };
+		043E5D702758176B00ADC004 /* SwitchToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchToggle.swift; sourceTree = "<group>"; };
+		043E5D7227581C2E00ADC004 /* SwitchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchBarView.swift; sourceTree = "<group>"; };
+		043E5D742758208D00ADC004 /* SwitchBarVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchBarVM.swift; sourceTree = "<group>"; };
+		043E5D792758212A00ADC004 /* SwitchType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchType.swift; sourceTree = "<group>"; };
 		04447B582754F08000CD2900 /* OnlySwitch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnlySwitch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04447B5B2754F08000CD2900 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		04447B5D2754F08000CD2900 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -87,6 +97,9 @@
 			isa = PBXGroup;
 			children = (
 				04447B5D2754F08000CD2900 /* ContentView.swift */,
+				043E5D702758176B00ADC004 /* SwitchToggle.swift */,
+				043E5D7227581C2E00ADC004 /* SwitchBarView.swift */,
+				04447B7527550F6900CD2900 /* VisualEffectView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -95,6 +108,7 @@
 			isa = PBXGroup;
 			children = (
 				04447B712754FE3800CD2900 /* SwitchVM.swift */,
+				043E5D742758208D00ADC004 /* SwitchBarVM.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -105,6 +119,32 @@
 				043E5D6C2757DADB00ADC004 /* AVFoundation.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		043E5D76275820B300ADC004 /* Modifier */ = {
+			isa = PBXGroup;
+			children = (
+				043E5D652757C84900ADC004 /* HiddenModifier.swift */,
+			);
+			path = Modifier;
+			sourceTree = "<group>";
+		};
+		043E5D77275820DD00ADC004 /* Define */ = {
+			isa = PBXGroup;
+			children = (
+				04447B732755015A00CD2900 /* ShellCommandDefine.swift */,
+				043E5D792758212A00ADC004 /* SwitchType.swift */,
+			);
+			path = Define;
+			sourceTree = "<group>";
+		};
+		043E5D782758210000ADC004 /* StatusBar */ = {
+			isa = PBXGroup;
+			children = (
+				04447B6F2754F21A00CD2900 /* StatusBarController.swift */,
+				04447B772755129D00CD2900 /* EventMonitor.swift */,
+			);
+			path = StatusBar;
 			sourceTree = "<group>";
 		};
 		04447B4F2754F08000CD2900 = {
@@ -127,17 +167,15 @@
 		04447B5A2754F08000CD2900 /* OnlySwitch */ = {
 			isa = PBXGroup;
 			children = (
+				04447B5B2754F08000CD2900 /* AppDelegate.swift */,
+				04243485275641890044D0AD /* EverySwitch */,
 				043E5D682757C86400ADC004 /* ViewModel */,
 				043E5D672757C85500ADC004 /* View */,
+				043E5D782758210000ADC004 /* StatusBar */,
+				043E5D77275820DD00ADC004 /* Define */,
+				043E5D76275820B300ADC004 /* Modifier */,
 				040CD2BD27579CEA002E0CC6 /* Info.plist */,
-				04243485275641890044D0AD /* EverySwitch */,
 				04A2FFF8275636DD00CE56A0 /* Extension */,
-				04447B5B2754F08000CD2900 /* AppDelegate.swift */,
-				043E5D652757C84900ADC004 /* HiddenModifier.swift */,
-				04447B732755015A00CD2900 /* ShellCommandDefine.swift */,
-				04447B6F2754F21A00CD2900 /* StatusBarController.swift */,
-				04447B772755129D00CD2900 /* EventMonitor.swift */,
-				04447B7527550F6900CD2900 /* VisualEffectView.swift */,
 				04447B5F2754F08100CD2900 /* Assets.xcassets */,
 				04447B642754F08100CD2900 /* Persistence.swift */,
 				04447B692754F08100CD2900 /* OnlySwitch.entitlements */,
@@ -158,6 +196,7 @@
 		04A2FFF8275636DD00CE56A0 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				043E5D6E2758116800ADC004 /* NSSound_SystemVolumeExtension.swift */,
 				04A2FFF62755A3E500CE56A0 /* NSImage++.swift */,
 				04A2FFF9275636FA00CE56A0 /* String++.swift */,
 				0424348E27565F9F0044D0AD /* NSAppleEventDescriptor.swift */,
@@ -243,18 +282,23 @@
 				04447B722754FE3800CD2900 /* SwitchVM.swift in Sources */,
 				04447B742755015A00CD2900 /* ShellCommandDefine.swift in Sources */,
 				04A2FFFA275636FA00CE56A0 /* String++.swift in Sources */,
+				043E5D752758208D00ADC004 /* SwitchBarVM.swift in Sources */,
+				043E5D7327581C2E00ADC004 /* SwitchBarView.swift in Sources */,
 				043E5D6A2757D68800ADC004 /* MuteSwitch.swift in Sources */,
 				04243489275642370044D0AD /* HiddenDesktopSwitch.swift in Sources */,
 				0424348D275643560044D0AD /* TopNotchSwitch.swift in Sources */,
 				04447B5C2754F08000CD2900 /* AppDelegate.swift in Sources */,
 				04447B7627550F6900CD2900 /* VisualEffectView.swift in Sources */,
 				04A2FFF72755A3E500CE56A0 /* NSImage++.swift in Sources */,
+				043E5D7A2758212A00ADC004 /* SwitchType.swift in Sources */,
+				043E5D6F2758116800ADC004 /* NSSound_SystemVolumeExtension.swift in Sources */,
 				0424348F27565F9F0044D0AD /* NSAppleEventDescriptor.swift in Sources */,
 				04447B782755129D00CD2900 /* EventMonitor.swift in Sources */,
 				04243487275641DB0044D0AD /* SwitchProtocal.swift in Sources */,
 				04447B702754F21A00CD2900 /* StatusBarController.swift in Sources */,
 				043E5D662757C84900ADC004 /* HiddenModifier.swift in Sources */,
 				04447B682754F08100CD2900 /* OnlySwitch.xcdatamodeld in Sources */,
+				043E5D712758176B00ADC004 /* SwitchToggle.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
