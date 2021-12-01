@@ -7,19 +7,25 @@
 
 import SwiftUI
 
-//let notchHeight:CGFloat = 76.0
+struct SwitchBar {
+    let title:String
+    let onImage:NSImage
+    let offImage:NSImage
+}
 
 enum SwitchType {
-    case hiddeDesktop, darkMode, topNotch
+    case hiddeDesktop, darkMode, topNotch, mute
     
-    func switchTitle() -> (String, NSImage) {
+    func switchTitle() -> SwitchBar {
         switch self {
         case .hiddeDesktop:
-            return ("Hide Desktop", NSImage(systemSymbolName: "desktopcomputer", accessibilityDescription: nil)!)
+            return SwitchBar(title:"Hide Desktop", onImage:NSImage(named: "desktopcomputer")!, offImage:NSImage(named: "desktop_with_icon")!)
         case .darkMode:
-            return ("Dark Mode", NSImage(systemSymbolName: "circle.circle.fill", accessibilityDescription: nil)!)
+            return SwitchBar(title:"Dark Mode", onImage:NSImage(named: "darkmode_on")!, offImage: NSImage(named: "darkmode_off")!)
         case .topNotch:
-            return ("Hide Notch", NSImage(systemSymbolName: "laptopcomputer", accessibilityDescription: nil)!)
+            return SwitchBar(title:"Hide Notch", onImage:NSImage(named:"laptopnotchhidden")!, offImage: NSImage(named: "laptopwithnotch")!)
+        case .mute:
+            return SwitchBar(title: "Mute", onImage: NSImage(systemSymbolName: "speaker.slash.circle"), offImage: NSImage(systemSymbolName: "speaker.wave.2.circle"))
         }
     }
     
@@ -31,6 +37,8 @@ enum SwitchType {
             return DarkModeSwitch.shared.operationSwitch(isOn: isOn)
         case .topNotch:
             return TopNotchSwitch.shared.operationSwitch(isOn: isOn)
+        case .mute:
+            return MuteSwitch.shared.operationSwitch(isOn: isOn)
         }
     }
     
@@ -43,6 +51,21 @@ enum SwitchType {
             return DarkModeSwitch.shared.currentStatus()
         case .topNotch:
             return TopNotchSwitch.shared.currentStatus()
+        case .mute:
+            return MuteSwitch.shared.currentStatus()
+        }
+    }
+    
+    func isVisible() -> Bool {
+        switch self {
+        case .hiddeDesktop:
+            return true
+        case .darkMode:
+            return true
+        case .topNotch:
+            return TopNotchSwitch.shared.isNotchScreen
+        case .mute:
+            return true
         }
     }
     
@@ -50,21 +73,23 @@ enum SwitchType {
 
 class SwitchOptionVM : ObservableObject, Identifiable {
     @Published var switchType:SwitchType
-    var _isOn:Bool
+    @Published var isHidden  = false
+    private var _isOn:Bool
     var isOn:Bool
     {
         set {
             let success = switchType.turnSwitch(isOn: newValue)
             if success {
-                _isOn = newValue
-                objectWillChange.send()
+                withAnimation(.spring()) {
+                    _isOn = newValue
+                    objectWillChange.send()
+                }
             }
         }
         
         get{
             return _isOn
         }
-
     }
     
     init(switchType:SwitchType) {
@@ -74,6 +99,7 @@ class SwitchOptionVM : ObservableObject, Identifiable {
     
     func refreshStatus() {
         _isOn = self.switchType.isOnInitailValue()
+        isHidden = !self.switchType.isVisible()
     }
     
 }
@@ -81,7 +107,8 @@ class SwitchOptionVM : ObservableObject, Identifiable {
 class SwitchVM : ObservableObject {
     @Published var switchList:[SwitchOptionVM] = [SwitchOptionVM(switchType: .hiddeDesktop),
                                                   SwitchOptionVM(switchType: .darkMode),
-                                                  SwitchOptionVM(switchType: .topNotch)]
+                                                  SwitchOptionVM(switchType: .topNotch),
+                                                  SwitchOptionVM(switchType: .mute)]
     @Published var startatLogin = false
     
     func refreshSwitchStatus() {

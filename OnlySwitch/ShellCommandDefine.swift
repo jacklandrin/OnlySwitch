@@ -31,3 +31,7 @@ let currentInferfaceStyle = "defaults read -g AppleInterfaceStyle"
 
 let getCurrentWallpaperUrl = "tell app \"finder\" to get posix path of (get desktop picture as alias)"
 let getDesktopProperties = "tell application \"System Events\" to get properties of every desktop"
+
+let getCurrentVolume = "set ovol to output volume of (get volume settings)"
+
+let setOutputVolumeCMD = "set volume output volume " //+value

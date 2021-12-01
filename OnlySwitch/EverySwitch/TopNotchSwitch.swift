@@ -16,17 +16,17 @@ class TopNotchSwitch:SwitchProtocal {
         let appBundleID = Bundle.main.infoDictionary?["CFBundleName"] as! String
         let paths = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).map(\.path)
         let directory = paths.first
-        let myAppPath = directory?.appending("/\(appBundleID)")
+        let myAppPath = directory?.appendingPathComponent(string: appBundleID)
         return myAppPath
     }
     
     func currentStatus() -> Bool {
         let workspace = NSWorkspace.shared
-        
+        let appBundleID = Bundle.main.infoDictionary?["CFBundleName"] as! String
         guard let screen = getScreenWithMouse() else {return false}
         guard let path = workspace.desktopImageURL(for: screen) else {return false}
         
-        if path.absoluteString.contains("/OnlySwitch/processed") {
+        if path.absoluteString.contains("/\(appBundleID)/processed") {
             currentImageName = path.lastPathComponent
             return true
         } else {
@@ -40,6 +40,15 @@ class TopNotchSwitch:SwitchProtocal {
             return hiddenNotch()
         } else {
             return recoverNotch()
+        }
+    }
+    
+    var isNotchScreen:Bool {
+        if #available(macOS 12, *) {
+            guard let screen = getScreenWithMouse() else {return false}
+            return screen.auxiliaryTopLeftArea != nil && screen.auxiliaryTopRightArea != nil
+        } else {
+            return false
         }
     }
     
@@ -66,9 +75,10 @@ class TopNotchSwitch:SwitchProtocal {
     
     private func hideSingleDesktopNotch(imagePath:URL) -> Bool {
         print("original path:\(imagePath)")
-        if let myAppPath = myAppPath ,imagePath.absoluteString.contains(myAppPath.appending("/original")) {
+        let appBundleID = Bundle.main.infoDictionary?["CFBundleName"] as! String
+        if let myAppPath = myAppPath ,imagePath.absoluteString.contains("/\(appBundleID)/original") {
             currentImageName = URL(fileURLWithPath: imagePath.absoluteString).lastPathComponent
-            let processdUrl = myAppPath.appending("/processed/\(currentImageName)")
+            let processdUrl = myAppPath.appendingPathComponent(string: "processed", currentImageName)
             if FileManager.default.fileExists(atPath: processdUrl) {
                 return setDesktopImageURL(url: URL(fileURLWithPath: processdUrl))
             }
@@ -83,6 +93,7 @@ class TopNotchSwitch:SwitchProtocal {
             screenSize = screen.visibleFrame.size
             print("screenSize:\(screenSize)")
         }
+        
         let nsscreenSize = NSSize(width: screenSize.width, height: screenSize.height)
         guard let resizeWallpaperImage = currentWallpaperImage.resizeMaintainingAspectRatio(withSize: nsscreenSize) else {return false}
 
@@ -91,7 +102,7 @@ class TopNotchSwitch:SwitchProtocal {
             return false
         }
         guard let finalWallpaper = cgwallpaper.crop(toSize: screenSize) else {return false}
-        let notchHeight = NSApplication.shared.mainMenu?.menuBarHeight
+        let notchHeight = NSApplication.shared.mainMenu?.menuBarHeight //auxiliaryTopLeftArea is not equivalent to menubar's height
 
         guard let notchHeight = notchHeight else {return false}
         
@@ -136,7 +147,7 @@ class TopNotchSwitch:SwitchProtocal {
     }
     
     private func saveImage(image:NSImage, isProcessed:Bool, imageName:String) -> URL? {
-        let imagePath = myAppPath?.appending("/\(isProcessed ? "processed" : "original")")
+        let imagePath = myAppPath?.appendingPathComponent(string: isProcessed ? "processed" : "original")
         guard let imagePath = imagePath else {return nil}
         if !FileManager.default.fileExists(atPath: imagePath) {
             do {
@@ -145,7 +156,7 @@ class TopNotchSwitch:SwitchProtocal {
                 return nil
             }
         }
-        let destinationPath = imagePath.appending("/\(imageName).jpg")
+        let destinationPath = imagePath.appendingPathComponent(string: "\(imageName).jpg")
         let destinationURL = URL(fileURLWithPath: destinationPath)
         if image.jpgWrite(to: destinationURL, options: .withoutOverwriting) {
             print("destinationURL:\(destinationURL)")
@@ -169,8 +180,8 @@ class TopNotchSwitch:SwitchProtocal {
             return
         }
 
-        let processedPath = myAppPath.appending("/processed")
-        let originalPath = myAppPath.appending("/original")
+        let processedPath = myAppPath.appendingPathComponent(string: "processed")
+        let originalPath = myAppPath.appendingPathComponent(string: "original")
         var currentNames = [String]()
         let workspace = NSWorkspace.shared
         for screen in NSScreen.screens {

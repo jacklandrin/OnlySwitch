@@ -23,6 +23,12 @@ extension NSImage {
 }
 
 extension NSImage {
+    public convenience init(systemSymbolName:String) {
+        self.init(systemSymbolName: systemSymbolName, accessibilityDescription:nil)!
+    }
+}
+
+extension NSImage {
 
     /// The height of the image.
     var height: CGFloat {

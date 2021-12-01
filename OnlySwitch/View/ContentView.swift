@@ -10,21 +10,28 @@ import CoreData
 
 struct ContentView: View {
     @EnvironmentObject var switchVM:SwitchVM
-    @State var switchList:[SwitchOptionVM] = []
-    @State var showSettingMenu = false
-    @State var id = UUID()
+    @Environment(\.colorScheme) private var colorScheme
+    @State private var switchList:[SwitchOptionVM] = []
+    @State private var showSettingMenu = false
+    @State private var id = UUID()
     var body: some View {
         VStack {
             ScrollView(.vertical) {
                 VStack {
                     ForEach(switchList.indices, id:\.self) { index in
+                    
                         HStack {
-                            Image(nsImage: switchList[index].switchType.switchTitle().1)
-                            Text(switchList[index].switchType.switchTitle().0)
+                            Image(nsImage:
+                                    barImage(option: switchList[index]))
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 25 , height: 25)
+                            Text(switchList[index].switchType.switchTitle().title)
                             Spacer()
                             Toggle("",isOn: $switchList[index].isOn)
                                 .toggleStyle(.switch)
-                        }
+                        }.isHidden(switchList[index].isHidden, remove: true)
+                        
                     }
                     
                 }.padding(15)
@@ -72,6 +79,13 @@ struct ContentView: View {
         id = UUID()
     }
     
+    func barImage(option:SwitchOptionVM) -> NSImage {
+        if option.isOn {
+            return option.switchType.switchTitle().onImage
+        } else {
+            return option.switchType.switchTitle().offImage
+        }
+    }
     
 }
 

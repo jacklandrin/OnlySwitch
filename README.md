@@ -13,14 +13,15 @@ OnlySwitch provides a series toggle switch to simply your routine work, such as 
 
 ## Switch list
 
-| Switch                | status                           |
-|:----------------------|----------------------------------|
-| Hide desktop          | finish                           |
-| Dark mode             | todo: switch wallpaper dark mode |
-| Hide notch            | exist some issues                |
-| Airpod                | todo                             |
-| Turn off display time | todo                             |
-| No disturb mode       | todo                             |
+| Switch                | status            |
+|:----------------------|-------------------|
+| Hide desktop          | finish            |
+| Dark mode             | finish            |
+| Hide notch            | exist some issues |
+| Mute                  | exist some issues |
+| Airpod                | todo              |
+| Turn off display time | todo              |
+| No disturb mode       | todo              |
 
  
 ## Screenshots
