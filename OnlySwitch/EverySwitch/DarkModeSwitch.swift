@@ -7,7 +7,7 @@
 
 import Foundation
 
-class DarkModeSwitch:SwitchProtocal {
+class DarkModeSwitch:SwitchProvider {
     static let shared = DarkModeSwitch()
     func currentStatus() -> Bool {
         let result = currentInferfaceStyle.runAppleScript(isShellCMD: true)
@@ -21,11 +21,15 @@ class DarkModeSwitch:SwitchProtocal {
         return false
     }
     
-    func operationSwitch(isOn: Bool) -> Bool {
+    func operationSwitch(isOn: Bool) async -> Bool {
         if isOn {
             return turnOnDarkModeCMD.runAppleScript().0
         } else {
             return turnOffDarkModeCMD.runAppleScript().0
         }
+    }
+    
+    func isVisable() -> Bool {
+        return true
     }
 }

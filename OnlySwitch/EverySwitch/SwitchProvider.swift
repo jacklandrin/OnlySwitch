@@ -7,7 +7,8 @@
 
 import Foundation
 
-protocol SwitchProtocal {
+protocol SwitchProvider {
     func currentStatus() -> Bool
-    func operationSwitch(isOn:Bool) -> Bool
+    func operationSwitch(isOn:Bool) async -> Bool
+    func isVisable() -> Bool
 }

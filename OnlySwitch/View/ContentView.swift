@@ -12,7 +12,6 @@ struct ContentView: View {
     @EnvironmentObject var switchVM:SwitchVM
     @Environment(\.colorScheme) private var colorScheme
     @State private var switchList:[SwitchBarVM] = []
-    @State private var showSettingMenu = false
     @State private var id = UUID()
     var body: some View {
         VStack {
@@ -21,7 +20,6 @@ struct ContentView: View {
                     ForEach(switchList.indices, id:\.self) { index in
                         SwitchBarView().environmentObject(switchList[index])
                     }
-                    
                 }.padding(15)
             }
             HStack {
@@ -31,11 +29,11 @@ struct ContentView: View {
                     .offset(x:10)
                 Spacer()
                 Button(action: {
-                    showSettingMenu.toggle()
+                    switchVM.showSettingMenu.toggle()
                 }, label: {
                     Image(systemName: "gearshape.circle")
                 }).buttonStyle(.plain)
-                    .popover(isPresented: $showSettingMenu) {
+                    .popover(isPresented: $switchVM.showSettingMenu) {
                         List {
                             Button(action: {
                                 TopNotchSwitch.shared.clearCache()
@@ -48,7 +46,8 @@ struct ContentView: View {
                             }, label: {
                                 Text("Quit")
                             }).buttonStyle(.borderless)
-                        }.frame(width: 150, height: 100)
+                        }
+                        .frame(width: 150, height: 100)
                             
                     }
                     .padding(10)

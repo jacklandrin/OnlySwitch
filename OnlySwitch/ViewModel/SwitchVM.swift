@@ -13,6 +13,12 @@ class SwitchVM : ObservableObject {
                                                   SwitchBarVM(switchType: .topNotch),
                                                   SwitchBarVM(switchType: .mute)]
     @Published var startatLogin = false
+    @Published var showSettingMenu = false
+    {
+        didSet {
+            OtherPopover.hasShown(showSettingMenu)
+        }
+    }
     
     func refreshSwitchStatus() {
         for option in switchList {

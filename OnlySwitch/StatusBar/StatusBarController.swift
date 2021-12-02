@@ -9,15 +9,24 @@ import AppKit
 
 let showPopoverNotificationName = NSNotification.Name("showPopover")
 
+struct OtherPopover {
+    static let name = NSNotification.Name("otherPopover")
+    static func hasShown(_ hasShown:Bool) {
+        NotificationCenter.default.post(name: name, object: hasShown)
+    }
+}
+
 class StatusBarController {
     private var statusBar: NSStatusBar
     private var statusItem: NSStatusItem
     private var popover: NSPopover
     private var eventMonitor : EventMonitor?
+    private var hasOtherPopover = false
+    private var otherPopoverBitwise:Int = 0
     init(_ popover:NSPopover) {
         self.popover = popover
-        statusBar = NSStatusBar.init()
-        statusItem = statusBar.statusItem(withLength: 28.0)
+        statusBar = NSStatusBar()
+        statusItem = statusBar.statusItem(withLength: 28)
         if let statusBarButton = statusItem.button {
             statusBarButton.image = #imageLiteral(resourceName: "statusbar")
             statusBarButton.image?.size = NSSize(width: 18, height: 18)
@@ -27,9 +36,33 @@ class StatusBarController {
             statusBarButton.target = self
         }
         eventMonitor = EventMonitor(mask: [.leftMouseDown, .rightMouseDown], handler: mouseEventHandler)
+        
+        NotificationCenter.default.addObserver(forName: OtherPopover.name, object: nil, queue: .main, using: { [weak self] notify in
+            guard let strongSelf = self else {return}
+            let hasShown = notify.object as! Bool
+            if hasShown {
+                strongSelf.otherPopoverBitwise = strongSelf.otherPopoverBitwise << 1 + 1
+            } else {
+                strongSelf.otherPopoverBitwise = strongSelf.otherPopoverBitwise >> 1
+            }
+            var existOtherPopover = false
+            if strongSelf.otherPopoverBitwise == 0 {
+                existOtherPopover = false
+            } else {
+                existOtherPopover = true
+            }
+            
+            if existOtherPopover != strongSelf.hasOtherPopover {
+                strongSelf.hasOtherPopover = existOtherPopover
+            }
+            
+        })
     }
     
     @objc func togglePopover(sender:AnyObject) {
+        if hasOtherPopover {
+            return
+        }
         if(popover.isShown) {
             hidePopover(sender)
         }
@@ -52,6 +85,9 @@ class StatusBarController {
     }
 
     func mouseEventHandler(_ event:NSEvent?) {
+        if hasOtherPopover {
+            return
+        }
         if popover.isShown {
             hidePopover(event!)
         }

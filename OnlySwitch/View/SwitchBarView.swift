@@ -19,6 +19,10 @@ struct SwitchBarView: View {
                 .frame(width: 25 , height: 25)
             Text(switchOption.switchType.switchTitle().title)
             Spacer()
+            ProgressView()
+                .progressViewStyle(.circular)
+                .scaleEffect(0.8)
+                .isHidden(!switchOption.processing,remove: true)
             SwitchToggle(isOn: $switchOption.isOn) { isOn in
                 switchOption.doSwitch(isOn: isOn)
             }.disabled(switchOption.processing)
@@ -39,6 +43,8 @@ struct SwitchBarView: View {
 
 struct SwitchBar_Previews: PreviewProvider {
     static var previews: some View {
-        SwitchBarView().environmentObject(SwitchBarVM(switchType: .topNotch))
+        SwitchBarView()
+            .environmentObject(SwitchBarVM(switchType: .topNotch))
+            .frame(width: 300)
     }
 }

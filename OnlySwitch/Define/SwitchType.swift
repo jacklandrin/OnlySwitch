@@ -28,44 +28,17 @@ enum SwitchType {
             return SwitchBarInfo(title: "Mute", onImage: NSImage(systemSymbolName: "speaker.slash.circle"), offImage: NSImage(systemSymbolName: "speaker.wave.2.circle"))
         }
     }
-    
-    func turnSwitch(isOn:Bool) async -> Bool {
+
+    func switchOperator() -> SwitchProvider {
         switch self {
         case .hiddeDesktop:
-            return HiddenDesktopSwitch.shared.operationSwitch(isOn: isOn)
+            return HiddenDesktopSwitch.shared
         case .darkMode:
-            return DarkModeSwitch.shared.operationSwitch(isOn: isOn)
+            return DarkModeSwitch.shared
         case .topNotch:
-            return TopNotchSwitch.shared.operationSwitch(isOn: isOn)
+            return TopNotchSwitch.shared
         case .mute:
-            return MuteSwitch.shared.operationSwitch(isOn: isOn)
-        }
-    }
-    
-    
-    func isOnInitailValue() -> Bool {
-        switch self {
-        case .hiddeDesktop:
-            return HiddenDesktopSwitch.shared.currentStatus()
-        case .darkMode:
-            return DarkModeSwitch.shared.currentStatus()
-        case .topNotch:
-            return TopNotchSwitch.shared.currentStatus()
-        case .mute:
-            return MuteSwitch.shared.currentStatus()
-        }
-    }
-    
-    func isVisible() -> Bool {
-        switch self {
-        case .hiddeDesktop:
-            return true
-        case .darkMode:
-            return true
-        case .topNotch:
-            return TopNotchSwitch.shared.isNotchScreen
-        case .mute:
-            return true
+            return MuteSwitch.shared
         }
     }
     

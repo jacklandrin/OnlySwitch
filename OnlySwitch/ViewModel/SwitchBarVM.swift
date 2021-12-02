@@ -12,19 +12,22 @@ class SwitchBarVM : ObservableObject, Identifiable {
     @Published var isOn:Bool = false
     @Published var processing = false
     
+    private let switchOperator:SwitchProvider
+    
     init(switchType:SwitchType) {
         self.switchType = switchType
+        self.switchOperator = switchType.switchOperator()
     }
     
     func refreshStatus() {
-        isOn = self.switchType.isOnInitailValue()
-        isHidden = !self.switchType.isVisible()
+        isOn = self.switchOperator.currentStatus()
+        isHidden = !self.switchOperator.isVisable()
     }
     
     func doSwitch(isOn:Bool) {
         processing = true
         Task {
-            let success = await switchType.turnSwitch(isOn: isOn)
+            let success = await switchOperator.operationSwitch(isOn: isOn)
             DispatchQueue.main.async { [self] in
                 if success {
                     self.isOn = isOn

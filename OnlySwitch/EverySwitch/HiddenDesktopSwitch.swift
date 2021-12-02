@@ -7,7 +7,7 @@
 
 import Foundation
 
-class HiddenDesktopSwitch:SwitchProtocal {
+class HiddenDesktopSwitch:SwitchProvider {
     static let shared = HiddenDesktopSwitch()
     func currentStatus() -> Bool {
         let result = currentDesktopStatusCMD.runAppleScript(isShellCMD: true)
@@ -21,11 +21,15 @@ class HiddenDesktopSwitch:SwitchProtocal {
         return false
     }
     
-    func operationSwitch(isOn: Bool) -> Bool {
+    func operationSwitch(isOn: Bool) async -> Bool {
         if isOn {
             return hiddleDesktopCMD.runAppleScript(isShellCMD: true).0
         } else {
             return showDesktopCMD.runAppleScript(isShellCMD: true).0
         }
+    }
+    
+    func isVisable() -> Bool {
+        return true
     }
 }

@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		040CD2BC2756D497002E0CC6 /* CGImage++.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040CD2BB2756D497002E0CC6 /* CGImage++.swift.swift */; };
-		04243487275641DB0044D0AD /* SwitchProtocal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04243486275641DB0044D0AD /* SwitchProtocal.swift */; };
+		04243487275641DB0044D0AD /* SwitchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04243486275641DB0044D0AD /* SwitchProvider.swift */; };
 		04243489275642370044D0AD /* HiddenDesktopSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04243488275642370044D0AD /* HiddenDesktopSwitch.swift */; };
 		0424348B275642D20044D0AD /* DarkModeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0424348A275642D20044D0AD /* DarkModeSwitch.swift */; };
 		0424348D275643560044D0AD /* TopNotchSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0424348C275643560044D0AD /* TopNotchSwitch.swift */; };
@@ -39,7 +39,7 @@
 /* Begin PBXFileReference section */
 		040CD2BB2756D497002E0CC6 /* CGImage++.swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGImage++.swift.swift"; sourceTree = "<group>"; };
 		040CD2BD27579CEA002E0CC6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		04243486275641DB0044D0AD /* SwitchProtocal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchProtocal.swift; sourceTree = "<group>"; };
+		04243486275641DB0044D0AD /* SwitchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchProvider.swift; sourceTree = "<group>"; };
 		04243488275642370044D0AD /* HiddenDesktopSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HiddenDesktopSwitch.swift; sourceTree = "<group>"; };
 		0424348A275642D20044D0AD /* DarkModeSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkModeSwitch.swift; sourceTree = "<group>"; };
 		0424348C275643560044D0AD /* TopNotchSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNotchSwitch.swift; sourceTree = "<group>"; };
@@ -84,7 +84,7 @@
 		04243485275641890044D0AD /* EverySwitch */ = {
 			isa = PBXGroup;
 			children = (
-				04243486275641DB0044D0AD /* SwitchProtocal.swift */,
+				04243486275641DB0044D0AD /* SwitchProvider.swift */,
 				04243488275642370044D0AD /* HiddenDesktopSwitch.swift */,
 				0424348A275642D20044D0AD /* DarkModeSwitch.swift */,
 				0424348C275643560044D0AD /* TopNotchSwitch.swift */,
@@ -167,6 +167,7 @@
 		04447B5A2754F08000CD2900 /* OnlySwitch */ = {
 			isa = PBXGroup;
 			children = (
+				040CD2BD27579CEA002E0CC6 /* Info.plist */,
 				04447B5B2754F08000CD2900 /* AppDelegate.swift */,
 				04243485275641890044D0AD /* EverySwitch */,
 				043E5D682757C86400ADC004 /* ViewModel */,
@@ -174,7 +175,6 @@
 				043E5D782758210000ADC004 /* StatusBar */,
 				043E5D77275820DD00ADC004 /* Define */,
 				043E5D76275820B300ADC004 /* Modifier */,
-				040CD2BD27579CEA002E0CC6 /* Info.plist */,
 				04A2FFF8275636DD00CE56A0 /* Extension */,
 				04447B5F2754F08100CD2900 /* Assets.xcassets */,
 				04447B642754F08100CD2900 /* Persistence.swift */,
@@ -294,7 +294,7 @@
 				043E5D6F2758116800ADC004 /* NSSound_SystemVolumeExtension.swift in Sources */,
 				0424348F27565F9F0044D0AD /* NSAppleEventDescriptor.swift in Sources */,
 				04447B782755129D00CD2900 /* EventMonitor.swift in Sources */,
-				04243487275641DB0044D0AD /* SwitchProtocal.swift in Sources */,
+				04243487275641DB0044D0AD /* SwitchProvider.swift in Sources */,
 				04447B702754F21A00CD2900 /* StatusBarController.swift in Sources */,
 				043E5D662757C84900ADC004 /* HiddenModifier.swift in Sources */,
 				04447B682754F08100CD2900 /* OnlySwitch.xcdatamodeld in Sources */,

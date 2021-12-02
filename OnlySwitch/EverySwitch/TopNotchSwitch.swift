@@ -7,10 +7,11 @@
 
 import Cocoa
 
-class TopNotchSwitch:SwitchProtocal {
+class TopNotchSwitch:SwitchProvider {
     static let shared = TopNotchSwitch()
     
     private var currentImageName = ""
+    private var notchHeight:CGFloat = 0
     
     private var myAppPath:String? {
         let appBundleID = Bundle.main.infoDictionary?["CFBundleName"] as! String
@@ -21,11 +22,12 @@ class TopNotchSwitch:SwitchProtocal {
     }
     
     func currentStatus() -> Bool {
+        
         let workspace = NSWorkspace.shared
         let appBundleID = Bundle.main.infoDictionary?["CFBundleName"] as! String
         guard let screen = getScreenWithMouse() else {return false}
         guard let path = workspace.desktopImageURL(for: screen) else {return false}
-        
+    
         if path.absoluteString.contains("/\(appBundleID)/processed") {
             currentImageName = path.lastPathComponent
             return true
@@ -35,7 +37,8 @@ class TopNotchSwitch:SwitchProtocal {
 
     }
     
-    func operationSwitch(isOn: Bool) -> Bool {
+    
+    func operationSwitch(isOn: Bool) async -> Bool {
         if isOn {
             return hiddenNotch()
         } else {
@@ -43,17 +46,25 @@ class TopNotchSwitch:SwitchProtocal {
         }
     }
     
-    var isNotchScreen:Bool {
+    func isVisable() -> Bool {
+        return self.isNotchScreen
+    }
+    
+    private var isNotchScreen:Bool {
         if #available(macOS 12, *) {
             guard let screen = getScreenWithMouse() else {return false}
-            return screen.auxiliaryTopLeftArea != nil && screen.auxiliaryTopRightArea != nil
+            guard let topLeftArea = screen.auxiliaryTopLeftArea, let _ = screen.auxiliaryTopRightArea else {return false}
+            
+            notchHeight = NSApplication.shared.mainMenu?.menuBarHeight ?? (topLeftArea.height + 5) //auxiliaryTopLeftArea is not equivalent to menubar's height
+            print("get notchHeight:\(notchHeight)")
+            return true
         } else {
             return false
         }
     }
     
     private func recoverNotch() -> Bool {
-        let originalPath = myAppPath?.appending("/original/\(currentImageName)")
+        let originalPath = myAppPath?.appendingPathComponent(string: "original", currentImageName)
         guard let originalPath = originalPath else {return false}
         let success = setDesktopImageURL(url: URL(fileURLWithPath: originalPath))
         if success {
@@ -102,9 +113,9 @@ class TopNotchSwitch:SwitchProtocal {
             return false
         }
         guard let finalWallpaper = cgwallpaper.crop(toSize: screenSize) else {return false}
-        let notchHeight = NSApplication.shared.mainMenu?.menuBarHeight //auxiliaryTopLeftArea is not equivalent to menubar's height
-
-        guard let notchHeight = notchHeight else {return false}
+//        let notchHeight = NSApplication.shared.mainMenu?.menuBarHeight
+//
+//        guard let notchHeight = notchHeight else {return false}
         
         print("notchHeight\(notchHeight)")
         var finalCGImage:CGImage? = nil
