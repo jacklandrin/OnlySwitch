@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		040CD2BC2756D497002E0CC6 /* CGImage++.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040CD2BB2756D497002E0CC6 /* CGImage++.swift.swift */; };
+		040CD2BC2756D497002E0CC6 /* CGImage++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040CD2BB2756D497002E0CC6 /* CGImage++.swift */; };
 		04243487275641DB0044D0AD /* SwitchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04243486275641DB0044D0AD /* SwitchProvider.swift */; };
 		04243489275642370044D0AD /* HiddenDesktopSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04243488275642370044D0AD /* HiddenDesktopSwitch.swift */; };
 		0424348B275642D20044D0AD /* DarkModeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0424348A275642D20044D0AD /* DarkModeSwitch.swift */; };
@@ -21,6 +21,7 @@
 		043E5D7327581C2E00ADC004 /* SwitchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D7227581C2E00ADC004 /* SwitchBarView.swift */; };
 		043E5D752758208D00ADC004 /* SwitchBarVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D742758208D00ADC004 /* SwitchBarVM.swift */; };
 		043E5D7A2758212A00ADC004 /* SwitchType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D792758212A00ADC004 /* SwitchType.swift */; };
+		0443A6B627599AAC00A3BCFD /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0443A6B527599AAC00A3BCFD /* README.md */; };
 		04447B5C2754F08000CD2900 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B5B2754F08000CD2900 /* AppDelegate.swift */; };
 		04447B5E2754F08000CD2900 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B5D2754F08000CD2900 /* ContentView.swift */; };
 		04447B602754F08100CD2900 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04447B5F2754F08100CD2900 /* Assets.xcassets */; };
@@ -37,7 +38,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		040CD2BB2756D497002E0CC6 /* CGImage++.swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGImage++.swift.swift"; sourceTree = "<group>"; };
+		040CD2BB2756D497002E0CC6 /* CGImage++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGImage++.swift"; sourceTree = "<group>"; };
 		040CD2BD27579CEA002E0CC6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		04243486275641DB0044D0AD /* SwitchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchProvider.swift; sourceTree = "<group>"; };
 		04243488275642370044D0AD /* HiddenDesktopSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HiddenDesktopSwitch.swift; sourceTree = "<group>"; };
@@ -52,6 +53,7 @@
 		043E5D7227581C2E00ADC004 /* SwitchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchBarView.swift; sourceTree = "<group>"; };
 		043E5D742758208D00ADC004 /* SwitchBarVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchBarVM.swift; sourceTree = "<group>"; };
 		043E5D792758212A00ADC004 /* SwitchType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchType.swift; sourceTree = "<group>"; };
+		0443A6B527599AAC00A3BCFD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		04447B582754F08000CD2900 /* OnlySwitch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnlySwitch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04447B5B2754F08000CD2900 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		04447B5D2754F08000CD2900 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 		04447B4F2754F08000CD2900 = {
 			isa = PBXGroup;
 			children = (
+				0443A6B527599AAC00A3BCFD /* README.md */,
 				04447B5A2754F08000CD2900 /* OnlySwitch */,
 				04447B592754F08000CD2900 /* Products */,
 				043E5D6B2757DADB00ADC004 /* Frameworks */,
@@ -200,7 +203,7 @@
 				04A2FFF62755A3E500CE56A0 /* NSImage++.swift */,
 				04A2FFF9275636FA00CE56A0 /* String++.swift */,
 				0424348E27565F9F0044D0AD /* NSAppleEventDescriptor.swift */,
-				040CD2BB2756D497002E0CC6 /* CGImage++.swift.swift */,
+				040CD2BB2756D497002E0CC6 /* CGImage++.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -263,6 +266,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0443A6B627599AAC00A3BCFD /* README.md in Resources */,
 				04447B632754F08100CD2900 /* Preview Assets.xcassets in Resources */,
 				04447B602754F08100CD2900 /* Assets.xcassets in Resources */,
 			);
@@ -275,7 +279,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				040CD2BC2756D497002E0CC6 /* CGImage++.swift.swift in Sources */,
+				040CD2BC2756D497002E0CC6 /* CGImage++.swift in Sources */,
 				0424348B275642D20044D0AD /* DarkModeSwitch.swift in Sources */,
 				04447B652754F08100CD2900 /* Persistence.swift in Sources */,
 				04447B5E2754F08000CD2900 /* ContentView.swift in Sources */,

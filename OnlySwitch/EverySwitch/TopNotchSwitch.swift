@@ -6,6 +6,7 @@
 //
 
 import Cocoa
+import UniformTypeIdentifiers
 
 class TopNotchSwitch:SwitchProvider {
     static let shared = TopNotchSwitch()
@@ -78,27 +79,73 @@ class TopNotchSwitch:SwitchProvider {
         let workspace = NSWorkspace.shared
         guard let screen = getScreenWithMouse() else {return false}
         guard let path = workspace.desktopImageURL(for: screen) else {return false}
-        let success = hideSingleDesktopNotch(imagePath: path)
-        let _ = currentStatus()
-        return success
-    }
-    
-    
-    private func hideSingleDesktopNotch(imagePath:URL) -> Bool {
-        print("original path:\(imagePath)")
         let appBundleID = Bundle.main.infoDictionary?["CFBundleName"] as! String
-        if let myAppPath = myAppPath ,imagePath.absoluteString.contains("/\(appBundleID)/original") {
-            currentImageName = URL(fileURLWithPath: imagePath.absoluteString).lastPathComponent
+        if let myAppPath = myAppPath ,path.absoluteString.contains("/\(appBundleID)/original") {
+            currentImageName = URL(fileURLWithPath: path.absoluteString).lastPathComponent
             let processdUrl = myAppPath.appendingPathComponent(string: "processed", currentImageName)
             if FileManager.default.fileExists(atPath: processdUrl) {
                 return setDesktopImageURL(url: URL(fileURLWithPath: processdUrl))
             }
         }
-        
-        guard let currentWallpaperImage = NSImage(contentsOf: imagePath) else {
+        print("original path:\(path)")
+        guard let currentWallpaperImage = NSImage(contentsOf: path) else {
             return false
         }
+        if path.pathExtension == "heic" {
+            let success = hideHeicDesktopNotch(image: currentWallpaperImage)
+            let _ = currentStatus()
+            return success
+        } else {
+            let success = hideSingleDesktopNotch(image: currentWallpaperImage)
+            let _ = currentStatus()
+            return success
+        }
+    }
+    
+    
+    private func hideHeicDesktopNotch(image:NSImage) -> Bool {
+        let finalImage = NSImage()
+        let imageReps = image.representations
+        for index in 0..<imageReps.count {
+            if let imageRep = imageReps[index] as? NSBitmapImageRep {
+                let nsImage = NSImage()
+                nsImage.addRepresentation(imageRep)
+                if let processedImageRep = hideNotchForEachImageOfHeic(image:nsImage) {
+                    finalImage.addRepresentation(processedImageRep)
+                }
+            }
+        }
+        let imageName = UUID().uuidString
+        guard let url = saveHeicData(image: finalImage, isProcessed: true, imageName: imageName) else {return false}
+        let _ = saveHeicData(image: image, isProcessed: false, imageName: imageName)
+        let success = setDesktopImageURL(url: url)
+        return success
+    }
+    
+    private func hideNotchForEachImageOfHeic(image:NSImage) -> NSBitmapImageRep? {
+        guard let finalCGImage = addBlackRect(on: image) else {return nil}
+        return NSBitmapImageRep(cgImage: finalCGImage)
+    }
+    
+    
+    
+    private func hideSingleDesktopNotch(image:NSImage) -> Bool {
         
+        let finalCGImage = addBlackRect(on: image)
+        
+        guard let finalCGImage = finalCGImage else {
+            return false
+        }
+
+        let imageName = UUID().uuidString
+        guard let imageUrl = saveCGImage(finalCGImage, isProcessed: true, imageName: imageName) else {return false}
+        let _ = saveImage(image, isProcessed: false, imageName: imageName)
+        
+        return setDesktopImageURL(url:imageUrl)
+    }
+    
+    
+    private func addBlackRect(on image:NSImage) -> CGImage? {
         var screenSize:CGSize = .zero
         if let screen = getScreenWithMouse() {
             screenSize = screen.visibleFrame.size
@@ -106,16 +153,14 @@ class TopNotchSwitch:SwitchProvider {
         }
         
         let nsscreenSize = NSSize(width: screenSize.width, height: screenSize.height)
-        guard let resizeWallpaperImage = currentWallpaperImage.resizeMaintainingAspectRatio(withSize: nsscreenSize) else {return false}
-
+        guard let resizeWallpaperImage = image.resizeMaintainingAspectRatio(withSize: nsscreenSize) else {return nil}
+        
         var imageRect = CGRect(origin: .zero, size: CGSize(width: resizeWallpaperImage.width, height: resizeWallpaperImage.height))
         guard let cgwallpaper = resizeWallpaperImage.cgImage(forProposedRect: &imageRect, context: nil, hints: nil) else {
-            return false
+            return nil
         }
-        guard let finalWallpaper = cgwallpaper.crop(toSize: screenSize) else {return false}
-//        let notchHeight = NSApplication.shared.mainMenu?.menuBarHeight
-//
-//        guard let notchHeight = notchHeight else {return false}
+        
+        guard let finalWallpaper = cgwallpaper.crop(toSize: screenSize) else {return nil}
         
         print("notchHeight\(notchHeight)")
         var finalCGImage:CGImage? = nil
@@ -126,17 +171,7 @@ class TopNotchSwitch:SwitchProvider {
             context.fill(CGRect(origin: CGPoint(x: 0, y: screenSize.height - notchHeight), size: CGSize(width: screenSize.width, height: notchHeight)))
             finalCGImage = context.makeImage()
         }
-        
-        guard let finalCGImage = finalCGImage else {
-            return false
-        }
-
-        let newWallpapaer = NSImage(cgImage: finalCGImage, size: screenSize)
-        let imageName = UUID().uuidString
-        guard let imageUrl = saveImage(image: newWallpapaer, isProcessed: true, imageName: imageName) else {return false}
-        let _ = saveImage(image: currentWallpaperImage, isProcessed: false, imageName: imageName)
-        
-        return setDesktopImageURL(url:imageUrl)
+        return finalCGImage
     }
     
     private func setDesktopImageURL(url:URL) -> Bool {
@@ -157,7 +192,45 @@ class TopNotchSwitch:SwitchProvider {
       return screenWithMouse
     }
     
-    private func saveImage(image:NSImage, isProcessed:Bool, imageName:String) -> URL? {
+    private func saveImage(_ image:NSImage, isProcessed:Bool, imageName:String) -> URL? {
+        guard let destinationURL = saveDestination(isProcessed: isProcessed, imageName: imageName, type: "jpg") else {
+            return nil
+        }
+        if image.jpgWrite(to: destinationURL, options: .withoutOverwriting) {
+            print("destinationURL:\(destinationURL)")
+            return destinationURL
+        }
+        return nil
+    }
+    
+    private func saveCGImage(_ image: CGImage, isProcessed:Bool, imageName:String) -> URL? {
+        guard let destinationURL = saveDestination(isProcessed: isProcessed, imageName: imageName, type: "jpg") else {
+            return nil
+        }
+        let cfdestinationURL = destinationURL as CFURL
+        let destination = CGImageDestinationCreateWithURL(cfdestinationURL, kUTTypeJPEG, 1, nil)
+        guard let destination = destination else {return nil}
+        CGImageDestinationAddImage(destination, image, nil)
+        if !CGImageDestinationFinalize(destination) {
+            return nil
+        }
+        return destinationURL as URL
+    }
+    
+    
+    private func saveHeicData(image:NSImage, isProcessed:Bool, imageName:String) -> URL? {
+        
+        guard let destinationURL = saveDestination(isProcessed: isProcessed, imageName: imageName, type: "heic") else {
+            return nil
+        }
+        if image.heicWrite(to: destinationURL, options: .withoutOverwriting) {
+            print("destinationURL:\(destinationURL)")
+            return destinationURL
+        }
+        return nil
+    }
+    
+    private func saveDestination(isProcessed:Bool, imageName:String, type:String) -> URL? {
         let imagePath = myAppPath?.appendingPathComponent(string: isProcessed ? "processed" : "original")
         guard let imagePath = imagePath else {return nil}
         if !FileManager.default.fileExists(atPath: imagePath) {
@@ -167,13 +240,9 @@ class TopNotchSwitch:SwitchProvider {
                 return nil
             }
         }
-        let destinationPath = imagePath.appendingPathComponent(string: "\(imageName).jpg")
+        let destinationPath = imagePath.appendingPathComponent(string: "\(imageName).\(type)")
         let destinationURL = URL(fileURLWithPath: destinationPath)
-        if image.jpgWrite(to: destinationURL, options: .withoutOverwriting) {
-            print("destinationURL:\(destinationURL)")
-            return destinationURL
-        }
-        return nil
+        return destinationURL
     }
     
     private func createContext(size: CGSize) -> CGContext? {

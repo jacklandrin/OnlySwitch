@@ -6,7 +6,7 @@
 
 ***Your switch toolkit.***
 
-[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_0.2/OnlySwitch.zip)
+[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_0.3/OnlySwitch.zip)
 
 ## What's the OnlySwitch
 OnlySwitch provides a series toggle switch to simply your routine work, such as Hiden desktop icons, dark mode and hide ugly notch of new Mackbook Pro. The switches show on your statusbar, you can easily control them.
@@ -26,7 +26,7 @@ OnlySwitch provides a series toggle switch to simply your routine work, such as 
 ## About hiding new Macbook Notch 
 
 The Hide notch switch only shows on build-in display of M1 Pro/Max Macbook Pro. The switch just controls current desktop, not for all work desktops.
-
+Now, the Hide notch switch supports dynamic wallpaper, just the processing takes much longer time.
 ## Screenshots
 
 <p align="center">

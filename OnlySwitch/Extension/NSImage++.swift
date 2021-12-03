@@ -20,6 +20,8 @@ extension NSImage {
             return false
         }
     }
+    
+    
 }
 
 extension NSImage {
@@ -133,4 +135,20 @@ extension NSImage {
 /// - creatingPngRepresentationFailed: Is thrown when the creation of the png representation failed.
 enum NSImageExtensionError: Error {
     case unwrappingPNGRepresentationFailed
+}
+
+extension NSImage {
+    var heic: Data? {
+        return NSBitmapImageRep.representationOfImageReps(in: self.representations, using: .tiff, properties: [:])
+    }
+    
+    func heicWrite(to url: URL, options: Data.WritingOptions = .atomic) -> Bool {
+        do {
+            try heic?.write(to: url, options: options)
+            return true
+        } catch {
+            print(error)
+            return false
+        }
+    }
 }
