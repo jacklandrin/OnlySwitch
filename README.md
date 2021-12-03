@@ -19,7 +19,7 @@ OnlySwitch provides a series toggle switch to simply your routine work, such as 
 | Dark mode             | finish            |
 | Hide notch            | exist some issues |
 | Mute                  | exist some issues |
-| Airpod                | todo              |
+| Airpods               | todo              |
 | Turn off display time | todo              |
 | No disturb mode       | todo              |
 
