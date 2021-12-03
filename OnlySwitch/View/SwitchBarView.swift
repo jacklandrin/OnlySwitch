@@ -18,6 +18,8 @@ struct SwitchBarView: View {
                 .scaledToFit()
                 .frame(width: 25 , height: 25)
             Text(switchOption.switchType.switchTitle().title)
+                .frame(width:90, alignment: .leading)
+            Text(switchOption.info).foregroundColor(.gray)
             Spacer()
             ProgressView()
                 .progressViewStyle(.circular)

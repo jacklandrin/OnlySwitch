@@ -9,9 +9,10 @@ import SwiftUI
 
 class SwitchVM : ObservableObject {
     @Published var switchList:[SwitchBarVM] = [SwitchBarVM(switchType: .hiddeDesktop),
-                                                  SwitchBarVM(switchType: .darkMode),
-                                                  SwitchBarVM(switchType: .topNotch),
-                                                  SwitchBarVM(switchType: .mute)]
+                                               SwitchBarVM(switchType: .darkMode),
+                                               SwitchBarVM(switchType: .topNotch),
+                                               SwitchBarVM(switchType: .mute),
+                                               SwitchBarVM(switchType: .screenSaver)]
     @Published var startatLogin = false
     @Published var showSettingMenu = false
     {

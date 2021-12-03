@@ -9,6 +9,7 @@ import Foundation
 
 protocol SwitchProvider {
     func currentStatus() -> Bool
+    func currentInfo() -> String
     func operationSwitch(isOn:Bool) async -> Bool
     func isVisable() -> Bool
 }

@@ -8,12 +8,11 @@
 import Foundation
 import AppKit
 
-
 let NSVolumeKey = "NSVolumeKey"
 let ASVolumeKey = "ASVolumeKey"
-
 class MuteSwitch:SwitchProvider {
     static let shared = MuteSwitch()
+    
     private let muteSwitchOperator:MuteSwitchProtocal = ASMuteSwitchOperator()
     
     func operationSwitch(isOn: Bool) async -> Bool {
@@ -26,6 +25,10 @@ class MuteSwitch:SwitchProvider {
     
     func isVisable() -> Bool {
         return true
+    }
+    
+    func currentInfo() -> String {
+        return ""
     }
 }
 

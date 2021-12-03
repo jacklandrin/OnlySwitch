@@ -32,4 +32,8 @@ class DarkModeSwitch:SwitchProvider {
     func isVisable() -> Bool {
         return true
     }
+    
+    func currentInfo() -> String {
+        return ""
+    }
 }

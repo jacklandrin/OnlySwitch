@@ -35,3 +35,7 @@ let getDesktopProperties = "tell application \"System Events\" to get properties
 let getCurrentVolume = "set ovol to output volume of (get volume settings)"
 
 let setOutputVolumeCMD = "set volume output volume " //+value
+
+let screenSaverDisableCMD = "tell application \"System Events\" to tell screen saver preferences to set delay interval to 0"
+let setSceenSaverIntervalCMD = "tell application \"System Events\" to tell screen saver preferences to set delay interval to "
+let getScreenSaverIntervalCMD = "tell application \"System Events\" to tell screen saver preferences to get delay interval"

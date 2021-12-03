@@ -11,16 +11,13 @@ import UniformTypeIdentifiers
 class TopNotchSwitch:SwitchProvider {
     static let shared = TopNotchSwitch()
     
+    // Mark: - private properties
+    
     private var currentImageName = ""
     private var notchHeight:CGFloat = 0
     
-    private var myAppPath:String? {
-        let appBundleID = Bundle.main.infoDictionary?["CFBundleName"] as! String
-        let paths = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).map(\.path)
-        let directory = paths.first
-        let myAppPath = directory?.appendingPathComponent(string: appBundleID)
-        return myAppPath
-    }
+    
+    // Mark: - SwitchProvider functions
     
     func currentStatus() -> Bool {
         
@@ -51,6 +48,35 @@ class TopNotchSwitch:SwitchProvider {
         return self.isNotchScreen
     }
     
+    func currentInfo() -> String {
+        return ""
+    }
+    
+    func clearCache() {
+        guard let myAppPath = myAppPath else {
+            return
+        }
+
+        let processedPath = myAppPath.appendingPathComponent(string: "processed")
+        let originalPath = myAppPath.appendingPathComponent(string: "original")
+        var currentNames = [String]()
+        let workspace = NSWorkspace.shared
+        for screen in NSScreen.screens {
+            if let path = workspace.desktopImageURL(for: screen){
+                currentNames.append(path.lastPathComponent)
+            }
+        }
+        
+        let processedUrl = URL(fileURLWithPath: processedPath)
+        let originalUrl = URL(fileURLWithPath: originalPath)
+        
+        removeAllFile(url: processedUrl, ignore: currentNames)
+        removeAllFile(url: originalUrl, ignore: currentNames)
+        
+    }
+    
+    // Mark: - private functions
+    
     private var isNotchScreen:Bool {
         if #available(macOS 12, *) {
             guard let screen = getScreenWithMouse() else {return false}
@@ -62,6 +88,14 @@ class TopNotchSwitch:SwitchProvider {
         } else {
             return false
         }
+    }
+    
+    private var myAppPath:String? {
+        let appBundleID = Bundle.main.infoDictionary?["CFBundleName"] as! String
+        let paths = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).map(\.path)
+        let directory = paths.first
+        let myAppPath = directory?.appendingPathComponent(string: appBundleID)
+        return myAppPath
     }
     
     private func recoverNotch() -> Bool {
@@ -253,29 +287,6 @@ class TopNotchSwitch:SwitchProvider {
                          bytesPerRow: 0,
                          space: CGColorSpaceCreateDeviceRGB(),
                          bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue | CGBitmapInfo.byteOrder32Little.rawValue)
-    }
-    
-    func clearCache() {
-        guard let myAppPath = myAppPath else {
-            return
-        }
-
-        let processedPath = myAppPath.appendingPathComponent(string: "processed")
-        let originalPath = myAppPath.appendingPathComponent(string: "original")
-        var currentNames = [String]()
-        let workspace = NSWorkspace.shared
-        for screen in NSScreen.screens {
-            if let path = workspace.desktopImageURL(for: screen){
-                currentNames.append(path.lastPathComponent)
-            }
-        }
-        
-         let processedUrl = URL(fileURLWithPath: processedPath)
-         let originalUrl = URL(fileURLWithPath: originalPath)
-        
-        removeAllFile(url: processedUrl, ignore: currentNames)
-        removeAllFile(url: originalUrl, ignore: currentNames)
-        
     }
     
     private func removeAllFile(url:URL, ignore:[String]) {

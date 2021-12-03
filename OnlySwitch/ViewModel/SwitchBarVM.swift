@@ -11,6 +11,7 @@ class SwitchBarVM : ObservableObject, Identifiable {
     @Published var isHidden  = false
     @Published var isOn:Bool = false
     @Published var processing = false
+    @Published var info = ""
     
     private let switchOperator:SwitchProvider
     
@@ -22,6 +23,7 @@ class SwitchBarVM : ObservableObject, Identifiable {
     func refreshStatus() {
         isOn = self.switchOperator.currentStatus()
         isHidden = !self.switchOperator.isVisable()
+        info = self.switchOperator.currentInfo()
     }
     
     func doSwitch(isOn:Bool) {
