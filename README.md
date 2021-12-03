@@ -17,6 +17,7 @@ OnlySwitch provides a series toggle switch to simply your routine work, such as 
 |:----------------------|-------------------|
 | Hide desktop          | finish            |
 | Dark mode             | finish            |
+| Screen Saver          | finish            |
 | Hide notch            | exist some issues |
 | Mute                  | exist some issues |
 | Airpods               | todo              |
@@ -26,7 +27,7 @@ OnlySwitch provides a series toggle switch to simply your routine work, such as 
 ## About hiding new Macbook Notch 
 
 The Hide notch switch only shows on build-in display of M1 Pro/Max Macbook Pro. The switch just controls current desktop, not for all work desktops.
-Now, the Hide notch switch supports dynamic wallpaper, just the processing takes much longer time.
+Now, the Hide notch switch supports dynamic wallpaper(Lack of metadata, so it cannot change. I'll fix it.), just the processing takes much longer time.
 ## Screenshots
 
 <p align="center">
