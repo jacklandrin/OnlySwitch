@@ -13,6 +13,7 @@
 		0424348B275642D20044D0AD /* DarkModeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0424348A275642D20044D0AD /* DarkModeSwitch.swift */; };
 		0424348D275643560044D0AD /* TopNotchSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0424348C275643560044D0AD /* TopNotchSwitch.swift */; };
 		0424348F27565F9F0044D0AD /* NSAppleEventDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0424348E27565F9F0044D0AD /* NSAppleEventDescriptor.swift */; };
+		0427B25B275D786400AD783A /* SystemInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0427B25A275D786400AD783A /* SystemInfo.swift */; };
 		0430887E275D707C00877E51 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 0430887D275D707C00877E51 /* LaunchAtLogin */; };
 		043E5D662757C84900ADC004 /* HiddenModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D652757C84900ADC004 /* HiddenModifier.swift */; };
 		043E5D6A2757D68800ADC004 /* MuteSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D692757D68800ADC004 /* MuteSwitch.swift */; };
@@ -47,6 +48,7 @@
 		0424348A275642D20044D0AD /* DarkModeSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkModeSwitch.swift; sourceTree = "<group>"; };
 		0424348C275643560044D0AD /* TopNotchSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNotchSwitch.swift; sourceTree = "<group>"; };
 		0424348E27565F9F0044D0AD /* NSAppleEventDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSAppleEventDescriptor.swift; sourceTree = "<group>"; };
+		0427B25A275D786400AD783A /* SystemInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemInfo.swift; sourceTree = "<group>"; };
 		043E5D652757C84900ADC004 /* HiddenModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HiddenModifier.swift; sourceTree = "<group>"; };
 		043E5D692757D68800ADC004 /* MuteSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuteSwitch.swift; sourceTree = "<group>"; };
 		043E5D6C2757DADB00ADC004 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -193,6 +195,7 @@
 				04447B5F2754F08100CD2900 /* Assets.xcassets */,
 				04447B692754F08100CD2900 /* OnlySwitch.entitlements */,
 				04447B612754F08100CD2900 /* Preview Content */,
+				0427B25A275D786400AD783A /* SystemInfo.swift */,
 			);
 			path = OnlySwitch;
 			sourceTree = "<group>";
@@ -237,6 +240,7 @@
 				04447B552754F08000CD2900 /* Frameworks */,
 				04447B562754F08000CD2900 /* Resources */,
 				0430887F275D709C00877E51 /* Launch at Login Helper */,
+				0427B25C275D791100AD783A /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -300,6 +304,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		0427B25C275D791100AD783A /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 8;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${INFOPLIST_FILE}\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${INFOPLIST_FILE}\"\n";
+		};
 		0430887F275D709C00877E51 /* Launch at Login Helper */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -333,6 +354,7 @@
 				04A2FFFA275636FA00CE56A0 /* String++.swift in Sources */,
 				043E5D752758208D00ADC004 /* SwitchBarVM.swift in Sources */,
 				043E5D7327581C2E00ADC004 /* SwitchBarView.swift in Sources */,
+				0427B25B275D786400AD783A /* SystemInfo.swift in Sources */,
 				043E5D6A2757D68800ADC004 /* MuteSwitch.swift in Sources */,
 				04243489275642370044D0AD /* HiddenDesktopSwitch.swift in Sources */,
 				04A23B2B275D61BC00B454C8 /* NightShiftSwitch.swift in Sources */,
@@ -479,7 +501,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -500,7 +522,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.4;
+				MARKETING_VERSION = 0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = NO;
@@ -523,7 +545,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -544,7 +566,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.4;
+				MARKETING_VERSION = 0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = NO;

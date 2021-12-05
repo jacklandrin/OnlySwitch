@@ -64,6 +64,7 @@ struct ContentView: View {
                 .fontWeight(.bold)
                 .padding(10)
                 .offset(x:10)
+            Text("v\(SystemInfo.majorVersion as! String)")
             Spacer()
             Button(action: {
                 switchVM.showSettingMenu.toggle()
