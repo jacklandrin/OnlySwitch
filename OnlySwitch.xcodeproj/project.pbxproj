@@ -34,6 +34,8 @@
 		04447B742755015A00CD2900 /* ShellCommandDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B732755015A00CD2900 /* ShellCommandDefine.swift */; };
 		04447B7627550F6900CD2900 /* VisualEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B7527550F6900CD2900 /* VisualEffectView.swift */; };
 		04447B782755129D00CD2900 /* EventMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B772755129D00CD2900 /* EventMonitor.swift */; };
+		04A23B23275D5FC500B454C8 /* CoreBrightness.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04A23B22275D5FC500B454C8 /* CoreBrightness.framework */; };
+		04A23B2B275D61BC00B454C8 /* NightShiftSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A23B2A275D61BC00B454C8 /* NightShiftSwitch.swift */; };
 		04A2FFF72755A3E500CE56A0 /* NSImage++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A2FFF62755A3E500CE56A0 /* NSImage++.swift */; };
 		04A2FFFA275636FA00CE56A0 /* String++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A2FFF9275636FA00CE56A0 /* String++.swift */; };
 /* End PBXBuildFile section */
@@ -69,6 +71,10 @@
 		04447B732755015A00CD2900 /* ShellCommandDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShellCommandDefine.swift; sourceTree = "<group>"; };
 		04447B7527550F6900CD2900 /* VisualEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectView.swift; sourceTree = "<group>"; };
 		04447B772755129D00CD2900 /* EventMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventMonitor.swift; sourceTree = "<group>"; };
+		04A23B22275D5FC500B454C8 /* CoreBrightness.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBrightness.framework; path = ../../../../System/Library/PrivateFrameworks/CoreBrightness.framework; sourceTree = "<group>"; };
+		04A23B2A275D61BC00B454C8 /* NightShiftSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightShiftSwitch.swift; sourceTree = "<group>"; };
+		04A23B2C275D641900B454C8 /* OnlySwitch-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OnlySwitch-Bridging-Header.h"; sourceTree = "<group>"; };
+		04A23B2D275D69F700B454C8 /* CBBlueLightClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CBBlueLightClient.h; sourceTree = "<group>"; };
 		04A2FFF62755A3E500CE56A0 /* NSImage++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSImage++.swift"; sourceTree = "<group>"; };
 		04A2FFF9275636FA00CE56A0 /* String++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String++.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -78,6 +84,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04A23B23275D5FC500B454C8 /* CoreBrightness.framework in Frameworks */,
 				043E5D6D2757DADB00ADC004 /* AVFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -94,6 +101,7 @@
 				0424348C275643560044D0AD /* TopNotchSwitch.swift */,
 				043E5D692757D68800ADC004 /* MuteSwitch.swift */,
 				0443A6B72759A99700A3BCFD /* ScreenSaverSwitch.swift */,
+				04A23B2A275D61BC00B454C8 /* NightShiftSwitch.swift */,
 			);
 			path = EverySwitch;
 			sourceTree = "<group>";
@@ -121,6 +129,7 @@
 		043E5D6B2757DADB00ADC004 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				04A23B22275D5FC500B454C8 /* CoreBrightness.framework */,
 				043E5D6C2757DADB00ADC004 /* AVFoundation.framework */,
 			);
 			name = Frameworks;
@@ -173,6 +182,7 @@
 		04447B5A2754F08000CD2900 /* OnlySwitch */ = {
 			isa = PBXGroup;
 			children = (
+				04A23B27275D607200B454C8 /* Header */,
 				040CD2BD27579CEA002E0CC6 /* Info.plist */,
 				04447B5B2754F08000CD2900 /* AppDelegate.swift */,
 				04243485275641890044D0AD /* EverySwitch */,
@@ -197,6 +207,15 @@
 				04447B622754F08100CD2900 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		04A23B27275D607200B454C8 /* Header */ = {
+			isa = PBXGroup;
+			children = (
+				04A23B2C275D641900B454C8 /* OnlySwitch-Bridging-Header.h */,
+				04A23B2D275D69F700B454C8 /* CBBlueLightClient.h */,
+			);
+			path = Header;
 			sourceTree = "<group>";
 		};
 		04A2FFF8275636DD00CE56A0 /* Extension */ = {
@@ -293,6 +312,7 @@
 				043E5D7327581C2E00ADC004 /* SwitchBarView.swift in Sources */,
 				043E5D6A2757D68800ADC004 /* MuteSwitch.swift in Sources */,
 				04243489275642370044D0AD /* HiddenDesktopSwitch.swift in Sources */,
+				04A23B2B275D61BC00B454C8 /* NightShiftSwitch.swift in Sources */,
 				0424348D275643560044D0AD /* TopNotchSwitch.swift in Sources */,
 				04447B5C2754F08000CD2900 /* AppDelegate.swift in Sources */,
 				04447B7627550F6900CD2900 /* VisualEffectView.swift in Sources */,
@@ -442,8 +462,15 @@
 				DEVELOPMENT_TEAM = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/OnlySwitch",
+					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = OnlySwitch/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Only Switch";
 				INFOPLIST_KEY_NSAppleEventsUsageDescription = "Only Switch requests Apple Event usage to switch dark mode";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2021 Jacklandrin";
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
@@ -456,7 +483,12 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "OnlySwitch/Header/OnlySwitch-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks/CoreBrightness.framework/Versions/A",
+				);
 			};
 			name = Debug;
 		};
@@ -474,8 +506,15 @@
 				DEVELOPMENT_TEAM = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/OnlySwitch",
+					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = OnlySwitch/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Only Switch";
 				INFOPLIST_KEY_NSAppleEventsUsageDescription = "Only Switch requests Apple Event usage to switch dark mode";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2021 Jacklandrin";
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
@@ -488,7 +527,12 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "OnlySwitch/Header/OnlySwitch-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks/CoreBrightness.framework/Versions/A",
+				);
 			};
 			name = Release;
 		};

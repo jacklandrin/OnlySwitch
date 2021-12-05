@@ -34,5 +34,9 @@ Now, the Hide notch switch supports dynamic wallpaper(Lack of metadata, so it ca
 <img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2021/12/hidenotch.png" width="60%" align="center" />
 </p>
 
+## Reference
+
+NightShift switch refer to [Nocturnal](https://github.com/joshjon/nocturnal)
+
 ## License
 MIT

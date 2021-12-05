@@ -20,7 +20,7 @@ struct SwitchToggle: View {
         }, label: {
             ZStack {
                 RoundedRectangle(cornerRadius: 15)
-                    .foregroundColor(isOn ? .blue : .gray.opacity(0.1))
+                    .foregroundColor(isOn ? .blue : .gray.opacity(0.3))
                     .frame(height:30)
                     
                 Circle()
