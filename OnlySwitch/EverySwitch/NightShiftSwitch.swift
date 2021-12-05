@@ -24,7 +24,9 @@ class NightShiftSwitch:SwitchProvider {
     func operationSwitch(isOn: Bool) async -> Bool {
         if isOn {
             NightShiftTool.enable()
+            NightShiftTool.strength = 1
         } else {
+            NightShiftTool.strength = 0
             NightShiftTool.disable()
         }
         return true
