@@ -42,6 +42,8 @@ class ScreenSaverSwitch:SwitchProvider {
     func currentInfo() -> String {
         let intervalStr = getScreenSaverIntervalResult.1 as! String
         let interval:Int = Int(intervalStr) ?? 300
-        return "\(interval / 60) min"
+        let info = "\(interval / 60) min"
+        print(info)
+        return info
     }
 }

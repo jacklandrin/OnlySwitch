@@ -35,6 +35,10 @@ class SwitchBarVM : ObservableObject, Identifiable {
                     self.isOn = isOn
                 }
                 self.processing = false
+                if info != "" {
+                    let _ = self.switchOperator.currentStatus()
+                    info = self.switchOperator.currentInfo()
+                }
             }
         }
     }
