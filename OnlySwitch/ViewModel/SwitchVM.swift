@@ -14,7 +14,8 @@ class SwitchVM : ObservableObject {
                                                SwitchBarVM(switchType: .mute),
                                                SwitchBarVM(switchType: .screenSaver),
                                                SwitchBarVM(switchType: .nightShift)]
-    @Published var startatLogin = false
+
+    
     @Published var showSettingMenu = false
     {
         didSet {

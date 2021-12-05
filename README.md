@@ -36,7 +36,8 @@ Now, the Hide notch switch supports dynamic wallpaper(Lack of metadata, so it ca
 
 ## Reference
 
-NightShift switch refer to [Nocturnal](https://github.com/joshjon/nocturnal)
+* NightShift switch refer to [Nocturnal](https://github.com/joshjon/nocturnal)
+* [LaunchAtLogin](https://github.com/sindresorhus/LaunchAtLogin)
 
 ## License
 MIT

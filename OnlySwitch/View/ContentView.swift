@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import CoreData
+import LaunchAtLogin
 
 struct ContentView: View {
     @EnvironmentObject var switchVM:SwitchVM
@@ -61,6 +61,7 @@ struct ContentView: View {
         HStack {
             Spacer()
             Text("Only Switch")
+                .fontWeight(.bold)
                 .padding(10)
                 .offset(x:10)
             Spacer()
@@ -68,9 +69,13 @@ struct ContentView: View {
                 switchVM.showSettingMenu.toggle()
             }, label: {
                 Image(systemName: "gearshape.circle")
+                    .font(.system(size: 17))
             }).buttonStyle(.plain)
                 .popover(isPresented: $switchVM.showSettingMenu) {
                     List {
+                        LaunchAtLogin.Toggle {
+                            Text("Start at login")
+                        }
                         Button(action: {
                             TopNotchSwitch.shared.clearCache()
                         }, label: {
@@ -83,8 +88,8 @@ struct ContentView: View {
                             Text("Quit")
                         }).buttonStyle(.borderless)
                     }
-                    .frame(width: 150, height: 100)
-                        
+                    .frame(width: 150, height: 110)
+                    
                 }
                 .padding(10)
         }

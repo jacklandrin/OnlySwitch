@@ -13,6 +13,7 @@
 		0424348B275642D20044D0AD /* DarkModeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0424348A275642D20044D0AD /* DarkModeSwitch.swift */; };
 		0424348D275643560044D0AD /* TopNotchSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0424348C275643560044D0AD /* TopNotchSwitch.swift */; };
 		0424348F27565F9F0044D0AD /* NSAppleEventDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0424348E27565F9F0044D0AD /* NSAppleEventDescriptor.swift */; };
+		0430887E275D707C00877E51 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 0430887D275D707C00877E51 /* LaunchAtLogin */; };
 		043E5D662757C84900ADC004 /* HiddenModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D652757C84900ADC004 /* HiddenModifier.swift */; };
 		043E5D6A2757D68800ADC004 /* MuteSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D692757D68800ADC004 /* MuteSwitch.swift */; };
 		043E5D6D2757DADB00ADC004 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 043E5D6C2757DADB00ADC004 /* AVFoundation.framework */; };
@@ -27,8 +28,6 @@
 		04447B5E2754F08000CD2900 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B5D2754F08000CD2900 /* ContentView.swift */; };
 		04447B602754F08100CD2900 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04447B5F2754F08100CD2900 /* Assets.xcassets */; };
 		04447B632754F08100CD2900 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04447B622754F08100CD2900 /* Preview Assets.xcassets */; };
-		04447B652754F08100CD2900 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B642754F08100CD2900 /* Persistence.swift */; };
-		04447B682754F08100CD2900 /* OnlySwitch.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 04447B662754F08100CD2900 /* OnlySwitch.xcdatamodeld */; };
 		04447B702754F21A00CD2900 /* StatusBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B6F2754F21A00CD2900 /* StatusBarController.swift */; };
 		04447B722754FE3800CD2900 /* SwitchVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B712754FE3800CD2900 /* SwitchVM.swift */; };
 		04447B742755015A00CD2900 /* ShellCommandDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B732755015A00CD2900 /* ShellCommandDefine.swift */; };
@@ -63,8 +62,6 @@
 		04447B5D2754F08000CD2900 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		04447B5F2754F08100CD2900 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		04447B622754F08100CD2900 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		04447B642754F08100CD2900 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
-		04447B672754F08100CD2900 /* OnlySwitch.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = OnlySwitch.xcdatamodel; sourceTree = "<group>"; };
 		04447B692754F08100CD2900 /* OnlySwitch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OnlySwitch.entitlements; sourceTree = "<group>"; };
 		04447B6F2754F21A00CD2900 /* StatusBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
 		04447B712754FE3800CD2900 /* SwitchVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchVM.swift; sourceTree = "<group>"; };
@@ -84,6 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0430887E275D707C00877E51 /* LaunchAtLogin in Frameworks */,
 				04A23B23275D5FC500B454C8 /* CoreBrightness.framework in Frameworks */,
 				043E5D6D2757DADB00ADC004 /* AVFoundation.framework in Frameworks */,
 			);
@@ -193,9 +191,7 @@
 				043E5D76275820B300ADC004 /* Modifier */,
 				04A2FFF8275636DD00CE56A0 /* Extension */,
 				04447B5F2754F08100CD2900 /* Assets.xcassets */,
-				04447B642754F08100CD2900 /* Persistence.swift */,
 				04447B692754F08100CD2900 /* OnlySwitch.entitlements */,
-				04447B662754F08100CD2900 /* OnlySwitch.xcdatamodeld */,
 				04447B612754F08100CD2900 /* Preview Content */,
 			);
 			path = OnlySwitch;
@@ -240,12 +236,16 @@
 				04447B542754F08000CD2900 /* Sources */,
 				04447B552754F08000CD2900 /* Frameworks */,
 				04447B562754F08000CD2900 /* Resources */,
+				0430887F275D709C00877E51 /* Launch at Login Helper */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = OnlySwitch;
+			packageProductDependencies = (
+				0430887D275D707C00877E51 /* LaunchAtLogin */,
+			);
 			productName = OnlySwitch;
 			productReference = 04447B582754F08000CD2900 /* OnlySwitch.app */;
 			productType = "com.apple.product-type.application";
@@ -274,6 +274,9 @@
 				Base,
 			);
 			mainGroup = 04447B4F2754F08000CD2900;
+			packageReferences = (
+				0430887C275D707C00877E51 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */,
+			);
 			productRefGroup = 04447B592754F08000CD2900 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -296,6 +299,27 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		0430887F275D709C00877E51 /* Launch at Login Helper */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Launch at Login Helper";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${BUILT_PRODUCTS_DIR}/LaunchAtLogin_LaunchAtLogin.bundle/Contents/Resources/copy-helper-swiftpm.sh\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		04447B542754F08000CD2900 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -303,7 +327,6 @@
 			files = (
 				040CD2BC2756D497002E0CC6 /* CGImage++.swift in Sources */,
 				0424348B275642D20044D0AD /* DarkModeSwitch.swift in Sources */,
-				04447B652754F08100CD2900 /* Persistence.swift in Sources */,
 				04447B5E2754F08000CD2900 /* ContentView.swift in Sources */,
 				04447B722754FE3800CD2900 /* SwitchVM.swift in Sources */,
 				04447B742755015A00CD2900 /* ShellCommandDefine.swift in Sources */,
@@ -324,7 +347,6 @@
 				04243487275641DB0044D0AD /* SwitchProvider.swift in Sources */,
 				04447B702754F21A00CD2900 /* StatusBarController.swift in Sources */,
 				043E5D662757C84900ADC004 /* HiddenModifier.swift in Sources */,
-				04447B682754F08100CD2900 /* OnlySwitch.xcdatamodeld in Sources */,
 				043E5D712758176B00ADC004 /* SwitchToggle.swift in Sources */,
 				0443A6B82759A99700A3BCFD /* ScreenSaverSwitch.swift in Sources */,
 			);
@@ -559,18 +581,24 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCVersionGroup section */
-		04447B662754F08100CD2900 /* OnlySwitch.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				04447B672754F08100CD2900 /* OnlySwitch.xcdatamodel */,
-			);
-			currentVersion = 04447B672754F08100CD2900 /* OnlySwitch.xcdatamodel */;
-			path = OnlySwitch.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
+/* Begin XCRemoteSwiftPackageReference section */
+		0430887C275D707C00877E51 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/LaunchAtLogin";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
 		};
-/* End XCVersionGroup section */
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0430887D275D707C00877E51 /* LaunchAtLogin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0430887C275D707C00877E51 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */;
+			productName = LaunchAtLogin;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 04447B502754F08000CD2900 /* Project object */;
 }

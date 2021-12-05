@@ -22,6 +22,17 @@ class StatusBarController {
     private var popover: NSPopover
     private var eventMonitor : EventMonitor?
     private var hasOtherPopover = false
+    {
+        didSet {
+            if hasOtherPopover {
+                eventMonitor?.stop()
+            } else {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    self.eventMonitor?.start()
+                }
+            }
+        }
+    }
     private var otherPopoverBitwise:Int = 0
     init(_ popover:NSPopover) {
         self.popover = popover
@@ -55,7 +66,6 @@ class StatusBarController {
             if existOtherPopover != strongSelf.hasOtherPopover {
                 strongSelf.hasOtherPopover = existOtherPopover
             }
-            
         })
     }
     

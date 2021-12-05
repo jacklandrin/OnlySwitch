@@ -10,7 +10,7 @@ import Cocoa
 
 @main
 struct OnlySwitchApp: App {
-    let persistenceController = PersistenceController.shared
+    
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     var body: some Scene {
         WindowGroup {
@@ -23,7 +23,6 @@ struct OnlySwitchApp: App {
 class AppDelegate:NSObject, NSApplicationDelegate {
     var statusBar: StatusBarController?
     var popover = NSPopover()
-    let persistenceController = PersistenceController.shared
     let switchVM = SwitchVM()
     func applicationDidFinishLaunching(_ notification: Notification) {
         let contentView = ContentView()
