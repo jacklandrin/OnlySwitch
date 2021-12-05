@@ -18,6 +18,7 @@ OnlySwitch provides a series toggle switch to simply your routine work, such as 
 | Hide desktop          | finish            |
 | Dark mode             | finish            |
 | Screen Saver          | finish            |
+| Night Shift           | finish            |
 | Hide notch            | exist some issues |
 | Mute                  | exist some issues |
 | Airpods               | todo              |
