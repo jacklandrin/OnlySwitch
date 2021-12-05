@@ -22,36 +22,8 @@ struct ContentView: View {
                     }
                 }.padding(15)
             }
-            HStack {
-                Spacer()
-                Text("Only Switch")
-                    .padding(10)
-                    .offset(x:10)
-                Spacer()
-                Button(action: {
-                    switchVM.showSettingMenu.toggle()
-                }, label: {
-                    Image(systemName: "gearshape.circle")
-                }).buttonStyle(.plain)
-                    .popover(isPresented: $switchVM.showSettingMenu) {
-                        List {
-                            Button(action: {
-                                TopNotchSwitch.shared.clearCache()
-                            }, label: {
-                                Text("Clear cache")
-                            }).buttonStyle(.borderless)
-                            Divider()
-                            Button(action: {
-                                NSApp.terminate(self)
-                            }, label: {
-                                Text("Quit")
-                            }).buttonStyle(.borderless)
-                        }
-                        .frame(width: 150, height: 100)
-                            
-                    }
-                    .padding(10)
-            }
+            recommendApp
+            bottomBar
             
         }.id(id)
         .onReceive(NotificationCenter.default.publisher(for: showPopoverNotificationName, object: nil)) { _ in
@@ -59,7 +31,65 @@ struct ContentView: View {
         }
         
     }
-
+    
+    var recommendApp: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 10)
+                        .foregroundColor(colorScheme == .dark ? Color(nsColor: NSColor.darkGray) : .white)
+                        .frame(height: 45)
+            HStack() {
+                Spacer()
+                Text("More App, QRCobot")
+                    .font(.system(size: 14))
+                    .fontWeight(.bold)
+                    .padding(10)
+                Spacer()
+                Link(destination: URL(string: "https://apps.apple.com/us/app/id1590006394")!, label: {
+                    Image("QRCobot")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 45)
+                        .cornerRadius(10)
+                        .help(Text("Download QRCobot"))
+                })
+            }.frame(height: 45)
+                
+        }.padding(.horizontal, 15)
+    }
+    
+    var bottomBar : some View {
+        HStack {
+            Spacer()
+            Text("Only Switch")
+                .padding(10)
+                .offset(x:10)
+            Spacer()
+            Button(action: {
+                switchVM.showSettingMenu.toggle()
+            }, label: {
+                Image(systemName: "gearshape.circle")
+            }).buttonStyle(.plain)
+                .popover(isPresented: $switchVM.showSettingMenu) {
+                    List {
+                        Button(action: {
+                            TopNotchSwitch.shared.clearCache()
+                        }, label: {
+                            Text("Clear cache")
+                        }).buttonStyle(.borderless)
+                        Divider()
+                        Button(action: {
+                            NSApp.terminate(self)
+                        }, label: {
+                            Text("Quit")
+                        }).buttonStyle(.borderless)
+                    }
+                    .frame(width: 150, height: 100)
+                        
+                }
+                .padding(10)
+        }
+    }
+    
     func refreshData() {
         switchVM.refreshSwitchStatus()
         switchList = switchVM.switchList
