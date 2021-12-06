@@ -14,7 +14,7 @@ struct SwitchBarInfo {
 }
 
 enum SwitchType {
-    case hiddeDesktop, darkMode, topNotch, mute, screenSaver, nightShift
+    case hiddeDesktop, darkMode, topNotch, mute, screenSaver, nightShift, autohideDock
     
     func switchTitle() -> SwitchBarInfo {
         switch self {
@@ -30,6 +30,8 @@ enum SwitchType {
             return SwitchBarInfo(title: "Screen Saver", onImage: NSImage(systemSymbolName: "display"), offImage: NSImage(systemSymbolName: "display"))
         case .nightShift:
             return SwitchBarInfo(title: "Night Shift", onImage: NSImage(systemSymbolName: "moon.stars.fill"), offImage: NSImage(systemSymbolName: "moon.stars"))
+        case .autohideDock:
+            return SwitchBarInfo(title: "Autohide Dock", onImage: NSImage(systemSymbolName: "dock.arrow.down.rectangle"), offImage: NSImage(systemSymbolName: "dock.rectangle"))
         }
     }
 
@@ -47,6 +49,8 @@ enum SwitchType {
             return ScreenSaverSwitch.shared
         case .nightShift:
             return NightShiftSwitch.shared
+        case .autohideDock:
+            return AutohideDockSwitch.shared
         }
     }
     

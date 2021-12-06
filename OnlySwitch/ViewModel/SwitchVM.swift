@@ -13,7 +13,8 @@ class SwitchVM : ObservableObject {
                                                SwitchBarVM(switchType: .topNotch),
                                                SwitchBarVM(switchType: .mute),
                                                SwitchBarVM(switchType: .screenSaver),
-                                               SwitchBarVM(switchType: .nightShift)]
+                                               SwitchBarVM(switchType: .nightShift),
+                                               SwitchBarVM(switchType: .autohideDock)]
 
     
     @Published var showSettingMenu = false
