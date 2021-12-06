@@ -4,7 +4,7 @@
 
 # OnlySwitch
 
-***Your switch toolkit.***
+***Menubar is smaller, you only need an All-in-One switch.***
 
 [**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_0.6/OnlySwitch.zip)
 
