@@ -12,7 +12,7 @@
 OnlySwitch provides a series toggle switch to simply your routine work, such as Hiden desktop icons, dark mode and hide ugly notch of new Mackbook Pro. The switches show on your statusbar, you can easily control them.
 
 <p align="center">
-<img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2021/12/onlySwitch_06.png" width="60%" align="center" />
+<img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2021/12/onlySwitch_07.png" width="60%" align="center" />
 </p>
 
 ## Switch list
