@@ -24,13 +24,15 @@ class AppDelegate:NSObject, NSApplicationDelegate {
     var statusBar: StatusBarController?
     var popover = NSPopover()
     let switchVM = SwitchVM()
+    var blManager:BluetoothDevicesManager?
     func applicationDidFinishLaunching(_ notification: Notification) {
         let contentView = ContentView()
             .environmentObject(switchVM)
-        popover.contentSize = NSSize(width: 360, height: 400)
+        popover.contentSize = NSSize(width: 360, height: 480)
         popover.contentViewController = NSHostingController(rootView: contentView)
         
         statusBar = StatusBarController(popover)
+        blManager = BluetoothDevicesManager.shared
     }
     
     func applicationWillTerminate(_ notification: Notification) {

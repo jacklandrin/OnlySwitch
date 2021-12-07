@@ -43,3 +43,48 @@ let getScreenSaverIntervalCMD = "tell application \"System Events\" to tell scre
 let getAutohideDockCMD = "tell application \"System Events\" to get the autohide of the dock preferences"
 let setAutohideDockEnableCMD = "tell application \"System Events\" to set the autohide of the dock preferences to true"
 let setAutohideDockDisableCMD = "tell application \"System Events\" to set the autohide of the dock preferences to false"
+
+func scriptDiskFilePath(scriptName: String) -> String {
+    let appBundleID = Bundle.main.infoDictionary?["CFBundleName"] as! String
+    let appDirectory = "\(appBundleID)/script"
+    guard let scriptFileURL = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first else {
+        return ""
+    }
+    
+    let scriptDirectoryPath = "\(scriptFileURL)\(appDirectory)".replacingOccurrences(of: "file://", with: "")
+    let scriptDirectoryURL = URL(fileURLWithPath: scriptDirectoryPath, isDirectory: true)
+    let scriptFilePath = scriptDirectoryPath.appendingPathComponent(string: "\(scriptName).sh")
+    if !fileExistAtPath(scriptDirectoryPath) {
+        if !directoryExistsAtPath(scriptDirectoryPath) {
+            guard let _ = try? FileManager.default.createDirectory(at: scriptDirectoryURL, withIntermediateDirectories: true) else {
+                print("directory should be created and permissions allowed")
+                return ""
+            }
+        }
+        guard let localScriptPath =  Bundle.main.path(forResource: scriptName, ofType: "sh") else {return ""}
+        guard let _ = try? FileManager.default.createFile(atPath: scriptFilePath, contents: Data(contentsOf: URL(fileURLWithPath: localScriptPath)), attributes: nil) else {
+            print("File has not been created at \(scriptFilePath)")
+            return ""
+        }
+    }
+    return scriptFilePath
+}
+
+func directoryExistsAtPath(_ path: String) -> Bool {
+    var isDirectory = ObjCBool(true)
+    let exists = FileManager.default.fileExists(atPath: path, isDirectory: &isDirectory)
+    return exists && isDirectory.boolValue
+}
+
+func fileExistAtPath(_ path:String) -> Bool {
+    var isDirectory = ObjCBool(false)
+    let exists = FileManager.default.fileExists(atPath: path, isDirectory: &isDirectory)
+    return exists && isDirectory.boolValue
+}
+
+
+let getAirpodsBatteryShell = "battery-airpods-monterey"
+
+func notificationCMD(content:String, title:String) -> String {
+    "display notification \"\(content)\" with title \"\(title)\""
+}

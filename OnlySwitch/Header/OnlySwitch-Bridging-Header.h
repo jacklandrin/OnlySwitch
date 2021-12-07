@@ -7,3 +7,7 @@
 
 #import "CBBlueLightClient.h"
 
+//for turn on/off bluetooth
+void IOBluetoothPreferenceSetControllerPowerState(int state);
+int IOBluetoothPreferenceGetControllerPowerState();
+

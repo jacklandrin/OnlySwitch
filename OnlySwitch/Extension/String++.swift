@@ -36,4 +36,66 @@ extension String {
         return result
     }
     
+    func convertMacAdrress() -> String {
+        let upperCase = self.uppercased()
+        return upperCase.replacingOccurrences(of: "-", with: ":")
+    }
+    
+}
+
+
+extension String {
+    
+    func groups(for regexPattern: String) -> [[String]] {
+        do {
+            let text = self
+            let regex = try NSRegularExpression(pattern: regexPattern)
+            let matches = regex.matches(in: text,
+                                        range: NSRange(text.startIndex..., in: text))
+            return matches.map { match in
+                return (0..<match.numberOfRanges).map {
+                    let rangeBounds = match.range(at: $0)
+                    guard let range = Range(rangeBounds, in: text) else {
+                        return ""
+                    }
+                    return String(text[range])
+                }
+            }
+        } catch {
+            return []
+        }
+    }
+    
+    func matches(for regex: String) -> [String] {
+        
+        do {
+            let regex = try NSRegularExpression(pattern: regex)
+            let results = regex.matches(in: self,
+                                        range: NSRange(self.startIndex..., in: self))
+            return results.map {
+                if let range = Range($0.range, in: self) {
+                    return String(self[range])
+                }
+                return ""
+            }
+        } catch let error {
+            print("invalid regex: \(error.localizedDescription)")
+            return []
+        }
+    }
+}
+
+
+extension String {
+    func toInteger() -> Int {
+        (self as NSString).integerValue
+    }
+}
+
+extension String {
+  
+  func condenseWhitespace() -> String {
+    components(separatedBy: .whitespacesAndNewlines).filter { !$0.isEmpty }.joined(separator: " ")
+  }
+  
 }

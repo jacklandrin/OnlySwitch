@@ -9,7 +9,6 @@ import Foundation
 
 class AutohideDockSwitch:SwitchProvider {
     static let shared = AutohideDockSwitch()
-    
     func currentStatus() -> Bool {
         let result = getAutohideDockCMD.runAppleScript()
         if result.0 {

@@ -21,8 +21,8 @@ class SwitchBarVM : ObservableObject, Identifiable {
     }
     
     func refreshStatus() {
-        isOn = self.switchOperator.currentStatus()
         isHidden = !self.switchOperator.isVisable()
+        isOn = self.switchOperator.currentStatus()
         info = self.switchOperator.currentInfo()
     }
     
