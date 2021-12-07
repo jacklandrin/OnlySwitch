@@ -50,3 +50,8 @@ I use classOfDevice(2360344) to check if a bluetooth device is Airpods Pro, but 
 * AirPods Battery refer to [AirPods Battery Monitor For MAC OS](https://github.com/mohamed-arradi/AirpodsBattery-Monitor-For-Mac)
 ## License
 MIT
+## Donate
+If you like it, help supporting this app by giving me a cup of tea in order for me to keep coding.
+<p align="center">
+<img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2021/12/donation.jpeg" width="20%" align="left" title="Made by QRCobot"/>
+</p>
