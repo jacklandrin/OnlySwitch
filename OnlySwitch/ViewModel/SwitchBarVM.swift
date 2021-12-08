@@ -22,8 +22,38 @@ class SwitchBarVM : ObservableObject, Identifiable {
     
     func refreshStatus() {
         isHidden = !self.switchOperator.isVisable()
-        isOn = self.switchOperator.currentStatus()
-        info = self.switchOperator.currentInfo()
+        if self.switchType == .xcodeCache {
+            if self.info == "" || self.info != "Calculating..." {
+                self.info = "Calculating..."
+                refreshAsync()
+            }
+        } else {
+            isOn = self.switchOperator.currentStatus()
+            info = self.switchOperator.currentInfo()
+        }
+    }
+    
+    func refreshAsync() {
+        refreshSwitchStatus()
+        refreshInfo()
+    }
+    
+    func refreshSwitchStatus() {
+        Task {
+            let isOn = await (self.switchOperator.currentStatusAsync!)()
+            DispatchQueue.main.async { [self] in
+                self.isOn = isOn
+            }
+        }
+    }
+    
+    func refreshInfo() {
+        Task {
+            let info = await (self.switchOperator.currentInfoAsync!)()
+            DispatchQueue.main.async { [self] in
+                self.info = info
+            }
+        }
     }
     
     func doSwitch(isOn:Bool) {

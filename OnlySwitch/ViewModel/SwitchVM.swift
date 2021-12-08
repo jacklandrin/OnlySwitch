@@ -16,7 +16,9 @@ class SwitchVM : ObservableObject {
                                                SwitchBarVM(switchType: .screenSaver),
                                                SwitchBarVM(switchType: .nightShift),
                                                SwitchBarVM(switchType: .autohideDock),
-                                               SwitchBarVM(switchType: .airPods)]
+                                               SwitchBarVM(switchType: .autohideMenuBar),
+                                               SwitchBarVM(switchType: .airPods),
+                                               SwitchBarVM(switchType: .xcodeCache)]
 
     
     @Published var showSettingMenu = false

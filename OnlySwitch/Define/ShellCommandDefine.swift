@@ -44,6 +44,23 @@ let getAutohideDockCMD = "tell application \"System Events\" to get the autohide
 let setAutohideDockEnableCMD = "tell application \"System Events\" to set the autohide of the dock preferences to true"
 let setAutohideDockDisableCMD = "tell application \"System Events\" to set the autohide of the dock preferences to false"
 
+let getAutoHideMenuBarCMD = """
+                                tell application "System Events"
+                                    tell dock preferences to get autohide menu bar
+                                end tell
+                            """
+let setAutohideMenuBarEnableCMD = """
+                                    tell application "System Events"
+                                        tell dock preferences to set autohide menu bar to true
+                                    end tell
+                                  """
+
+let setAutohideMenuBarDisableCMD = """
+                                        tell application "System Events"
+                                            tell dock preferences to set autohide menu bar to false
+                                        end tell
+                                    """
+
 func scriptDiskFilePath(scriptName: String) -> String {
     let appBundleID = Bundle.main.infoDictionary?["CFBundleName"] as! String
     let appDirectory = "\(appBundleID)/script"

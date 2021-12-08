@@ -27,10 +27,13 @@ struct SwitchBarView: View {
             }
             
             Spacer()
+        
             ProgressView()
                 .progressViewStyle(.circular)
                 .scaleEffect(0.8)
                 .isHidden(!switchOption.processing,remove: true)
+            
+            
             SwitchToggle(isOn: $switchOption.isOn) { isOn in
                 switchOption.doSwitch(isOn: isOn)
             }.disabled(switchOption.processing)

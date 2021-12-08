@@ -26,11 +26,12 @@ OnlySwitch provides a series toggle switch to simply your routine work, such as 
 | Autohide Dock         | finish            |
 | Airpods               | finish            |
 | Bluetooth             | finish            |
+| Xcode cache           | finish            |
+| Autohide Menu Bar     | finish            |
 | Hide notch            | exist some issues |
 | Mute                  | exist some issues |
 | Turn off display time | todo              |
 | No disturb mode       | todo              |
-| Xcode cache           | todo              |
 | Empty trash           | todo              |
 | Show hidden files     | todo              |
 | Empty pasteboard      | todo              |

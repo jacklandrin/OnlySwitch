@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		040CD2BC2756D497002E0CC6 /* CGImage++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040CD2BB2756D497002E0CC6 /* CGImage++.swift */; };
 		040E97272760FF3E003D9D42 /* MetadataExtractorError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040E97262760FF3E003D9D42 /* MetadataExtractorError.swift */; };
+		040E972B27611C9C003D9D42 /* URL++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040E972A27611C9C003D9D42 /* URL++.swift */; };
+		040E972D27611DEA003D9D42 /* XcodeCacheSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040E972C27611DEA003D9D42 /* XcodeCacheSwitch.swift */; };
 		04243487275641DB0044D0AD /* SwitchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04243486275641DB0044D0AD /* SwitchProvider.swift */; };
 		04243489275642370044D0AD /* HiddenDesktopSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04243488275642370044D0AD /* HiddenDesktopSwitch.swift */; };
 		0424348B275642D20044D0AD /* DarkModeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0424348A275642D20044D0AD /* DarkModeSwitch.swift */; };
@@ -36,6 +38,8 @@
 		04447B7627550F6900CD2900 /* VisualEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B7527550F6900CD2900 /* VisualEffectView.swift */; };
 		04447B782755129D00CD2900 /* EventMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B772755129D00CD2900 /* EventMonitor.swift */; };
 		0457C25D2760046A00B25BFA /* BluetoothSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0457C25C2760046A00B25BFA /* BluetoothSwitch.swift */; };
+		049337212761286400AE779A /* CleanProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337202761286400AE779A /* CleanProgressView.swift */; };
+		0493372327615A4900AE779A /* AutohideMenuBarSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493372227615A4900AE779A /* AutohideMenuBarSwitch.swift */; };
 		04A23B23275D5FC500B454C8 /* CoreBrightness.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04A23B22275D5FC500B454C8 /* CoreBrightness.framework */; };
 		04A23B2B275D61BC00B454C8 /* NightShiftSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A23B2A275D61BC00B454C8 /* NightShiftSwitch.swift */; };
 		04A2FFF72755A3E500CE56A0 /* NSImage++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A2FFF62755A3E500CE56A0 /* NSImage++.swift */; };
@@ -51,6 +55,8 @@
 		040CD2BB2756D497002E0CC6 /* CGImage++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGImage++.swift"; sourceTree = "<group>"; };
 		040CD2BD27579CEA002E0CC6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		040E97262760FF3E003D9D42 /* MetadataExtractorError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetadataExtractorError.swift; sourceTree = "<group>"; };
+		040E972A27611C9C003D9D42 /* URL++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL++.swift"; sourceTree = "<group>"; };
+		040E972C27611DEA003D9D42 /* XcodeCacheSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodeCacheSwitch.swift; sourceTree = "<group>"; };
 		04243486275641DB0044D0AD /* SwitchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchProvider.swift; sourceTree = "<group>"; };
 		04243488275642370044D0AD /* HiddenDesktopSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HiddenDesktopSwitch.swift; sourceTree = "<group>"; };
 		0424348A275642D20044D0AD /* DarkModeSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkModeSwitch.swift; sourceTree = "<group>"; };
@@ -79,6 +85,8 @@
 		04447B7527550F6900CD2900 /* VisualEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectView.swift; sourceTree = "<group>"; };
 		04447B772755129D00CD2900 /* EventMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventMonitor.swift; sourceTree = "<group>"; };
 		0457C25C2760046A00B25BFA /* BluetoothSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothSwitch.swift; sourceTree = "<group>"; };
+		049337202761286400AE779A /* CleanProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanProgressView.swift; sourceTree = "<group>"; };
+		0493372227615A4900AE779A /* AutohideMenuBarSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutohideMenuBarSwitch.swift; sourceTree = "<group>"; };
 		04A23B22275D5FC500B454C8 /* CoreBrightness.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBrightness.framework; path = ../../../../System/Library/PrivateFrameworks/CoreBrightness.framework; sourceTree = "<group>"; };
 		04A23B2A275D61BC00B454C8 /* NightShiftSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightShiftSwitch.swift; sourceTree = "<group>"; };
 		04A23B2C275D641900B454C8 /* OnlySwitch-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OnlySwitch-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -119,6 +127,8 @@
 				04E03AF7275E6B4E00EA5FB9 /* AutohideDockSwitch.swift */,
 				04E03AFF275F93B900EA5FB9 /* AirPodsSwitch.swift */,
 				0457C25C2760046A00B25BFA /* BluetoothSwitch.swift */,
+				040E972C27611DEA003D9D42 /* XcodeCacheSwitch.swift */,
+				0493372227615A4900AE779A /* AutohideMenuBarSwitch.swift */,
 			);
 			path = EverySwitch;
 			sourceTree = "<group>";
@@ -131,6 +141,7 @@
 				043E5D7227581C2E00ADC004 /* SwitchBarView.swift */,
 				04447B7527550F6900CD2900 /* VisualEffectView.swift */,
 				04E03B05275FEBE200EA5FB9 /* AirPodsBatteryView.swift */,
+				049337202761286400AE779A /* CleanProgressView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -244,6 +255,7 @@
 				04A2FFF9275636FA00CE56A0 /* String++.swift */,
 				0424348E27565F9F0044D0AD /* NSAppleEventDescriptor.swift */,
 				040CD2BB2756D497002E0CC6 /* CGImage++.swift */,
+				040E972A27611C9C003D9D42 /* URL++.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -399,7 +411,9 @@
 				04243489275642370044D0AD /* HiddenDesktopSwitch.swift in Sources */,
 				04A23B2B275D61BC00B454C8 /* NightShiftSwitch.swift in Sources */,
 				0424348D275643560044D0AD /* TopNotchSwitch.swift in Sources */,
+				040E972B27611C9C003D9D42 /* URL++.swift in Sources */,
 				04447B5C2754F08000CD2900 /* AppDelegate.swift in Sources */,
+				049337212761286400AE779A /* CleanProgressView.swift in Sources */,
 				04447B7627550F6900CD2900 /* VisualEffectView.swift in Sources */,
 				04A2FFF72755A3E500CE56A0 /* NSImage++.swift in Sources */,
 				043E5D7A2758212A00ADC004 /* SwitchType.swift in Sources */,
@@ -407,10 +421,12 @@
 				043E5D6F2758116800ADC004 /* NSSound_SystemVolumeExtension.swift in Sources */,
 				0424348F27565F9F0044D0AD /* NSAppleEventDescriptor.swift in Sources */,
 				04447B782755129D00CD2900 /* EventMonitor.swift in Sources */,
+				0493372327615A4900AE779A /* AutohideMenuBarSwitch.swift in Sources */,
 				04243487275641DB0044D0AD /* SwitchProvider.swift in Sources */,
 				04E03AF8275E6B4E00EA5FB9 /* AutohideDockSwitch.swift in Sources */,
 				04E03B06275FEBE200EA5FB9 /* AirPodsBatteryView.swift in Sources */,
 				04447B702754F21A00CD2900 /* StatusBarController.swift in Sources */,
+				040E972D27611DEA003D9D42 /* XcodeCacheSwitch.swift in Sources */,
 				043E5D662757C84900ADC004 /* HiddenModifier.swift in Sources */,
 				043E5D712758176B00ADC004 /* SwitchToggle.swift in Sources */,
 				040E97272760FF3E003D9D42 /* MetadataExtractorError.swift in Sources */,
