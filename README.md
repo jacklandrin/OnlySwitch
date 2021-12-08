@@ -6,7 +6,7 @@
 
 ***Menubar is smaller, you only need an All-in-One switch.***
 
-[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_0.7/OnlySwitch.zip)
+[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_0.8/OnlySwitch.zip)
 
 ## What's the OnlySwitch
 OnlySwitch provides a series toggle switch to simply your routine work, such as Hiden desktop icons, dark mode and hide ugly notch of new Mackbook Pro. The switches show on your statusbar, you can easily control them.
@@ -30,11 +30,15 @@ OnlySwitch provides a series toggle switch to simply your routine work, such as 
 | Mute                  | exist some issues |
 | Turn off display time | todo              |
 | No disturb mode       | todo              |
+| Xcode cache           | todo              |
+| Empty trash           | todo              |
+| Show hidden files     | todo              |
+| Empty pasteboard      | todo              |
 
 ## About hiding new Macbook Notch 
 
 The Hide notch switch only shows on build-in display of M1 Pro/Max Macbook Pro. The switch just controls current desktop, not for all work desktops.
-Now, the Hide notch switch supports dynamic wallpaper(Lack of metadata, so it cannot change. I'll fix it.), just the processing takes much longer time.
+Now, the Hide notch switch supports dynamic wallpaper, just the processing takes much longer time.
 ## About AirPods Switch 
 I use classOfDevice(2360344) to check if a bluetooth device is Airpods Pro, but I'm not sure whether other AirPods modules are also 2360344, since I only have two AriPods Pros. If you are using AirPods 1~3, please tell me what the classOfDevice is. Or I can detect the count of battery value to check if AirPods(when count is 3, it's AirPods), like **AirPods Battery Monitor For MAC OS**.
 ## Screenshots
@@ -48,6 +52,8 @@ I use classOfDevice(2360344) to check if a bluetooth device is Airpods Pro, but 
 * NightShift switch refer to [Nocturnal](https://github.com/joshjon/nocturnal)
 * [LaunchAtLogin](https://github.com/sindresorhus/LaunchAtLogin)
 * AirPods Battery refer to [AirPods Battery Monitor For MAC OS](https://github.com/mohamed-arradi/AirpodsBattery-Monitor-For-Mac)
+* Dynamic Wallpaper processing refer to https://itnext.io/macos-mojave-dynamic-wallpaper-fd26b0698223 and [wallpapper](https://github.com/mczachurski/wallpapper)
+
 ## License
 MIT
 ## Donate

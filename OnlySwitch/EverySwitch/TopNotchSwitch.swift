@@ -7,6 +7,7 @@
 
 import Cocoa
 import UniformTypeIdentifiers
+import AVFoundation
 
 class TopNotchSwitch:SwitchProvider {
     static let shared = TopNotchSwitch()
@@ -126,7 +127,19 @@ class TopNotchSwitch:SwitchProvider {
             return false
         }
         if path.pathExtension == "heic" {
-            let success = hideHeicDesktopNotch(image: currentWallpaperImage)
+            var metaDataTag:HeicMetaDataTag?
+            do {
+                let imagaDate = try Data(contentsOf: path)
+                metaDataTag = try extractMetaData(imageData: imagaDate)
+            } catch {
+                return false
+            }
+//            return false
+            guard let metaDataTag = metaDataTag else {
+                return false
+            }
+
+            let success = hideHeicDesktopNotch(image: currentWallpaperImage, metaDataTag: metaDataTag)
             let _ = currentStatus()
             return success
         } else {
@@ -136,29 +149,95 @@ class TopNotchSwitch:SwitchProvider {
         }
     }
     
+    private func extractMetaData(imageData:Data) throws -> HeicMetaDataTag{
+        let imageSource = CGImageSourceCreateWithData(imageData as CFData, nil)
+        guard let imageSourceValue = imageSource else {
+            throw MetadataExtractorError.imageSourceNotCreated
+        }
+        
+        let imageMetadata = CGImageSourceCopyMetadataAtIndex(imageSourceValue, 0, nil)
+        guard let imageMetadataValue = imageMetadata else {
+            throw MetadataExtractorError.imageMetadataNotCreated
+        }
+        var tagType:String = ""
+        var plist:String = ""
+        CGImageMetadataEnumerateTagsUsingBlock(imageMetadataValue, nil, nil) { (value, metadataTag) -> Bool in
+
+            let valueString = value as String
+            print("---------------------------------------------------")
+            print("Metadata key: \(valueString)")
+            
+            let tag = CGImageMetadataTagCopyValue(metadataTag)
+            
+            guard let valueTag = tag as? String else {
+                print("\tError during convert tag into string")
+                return true
+            }
+            print(valueTag)
+            if valueString.starts(with: "apple_desktop:solar") {
+                tagType = "solar"
+                plist = valueTag
+            } else if valueString.starts(with: "apple_desktop:h24") {
+                tagType = "h24"
+                plist = valueTag
+            } else if valueString.starts(with: "apple_desktop:apr") {
+                tagType = "apr"
+                plist = valueTag
+            }
+            return true
+        }
+        return HeicMetaDataTag(type: tagType, plist: plist)
+    }
     
-    private func hideHeicDesktopNotch(image:NSImage) -> Bool {
-        let finalImage = NSImage()
+    private func hideHeicDesktopNotch(image:NSImage, metaDataTag:HeicMetaDataTag) -> Bool {
         let imageReps = image.representations
+        if imageReps.count == 1 && metaDataTag.type == "" {
+            return hideSingleDesktopNotch(image: image)
+        }
+        
+        var imageData: Data? = nil
+        let destinationData = NSMutableData()
+        let options = [kCGImageDestinationLossyCompressionQuality: 0.9]
+        
+        guard let imageDestination = CGImageDestinationCreateWithData(destinationData, AVFileType.heic as CFString, imageReps.count, nil) else {return false}
+        
         for index in 0..<imageReps.count {
             if let imageRep = imageReps[index] as? NSBitmapImageRep {
                 let nsImage = NSImage()
                 nsImage.addRepresentation(imageRep)
-                if let processedImageRep = hideNotchForEachImageOfHeic(image:nsImage) {
-                    finalImage.addRepresentation(processedImageRep)
+                if let processedImage = hideNotchForEachImageOfHeic(image:nsImage) {
+                    if index == 0 {
+                        let imageMetaData = CGImageMetadataCreateMutable()
+                        let imageMetaDataTag = CGImageMetadataTagCreate("http://ns.apple.com/namespace/1.0/" as CFString,
+                                                                        "apple_desktop" as CFString,
+                                                                        metaDataTag.type as CFString,
+                                                                        CGImageMetadataType.string,
+                                                                        metaDataTag.plist as CFTypeRef)
+                        let success = CGImageMetadataSetTagWithPath(imageMetaData, nil, "xmp:\(metaDataTag.type)" as CFString, imageMetaDataTag!)
+                        if !success {
+                            return false
+                        }
+                        
+                        CGImageDestinationAddImageAndMetadata(imageDestination, processedImage, imageMetaData, options as CFDictionary)
+                    } else {
+                        CGImageDestinationAddImage(imageDestination, processedImage, options as CFDictionary)
+                    }
                 }
             }
         }
+        
+        CGImageDestinationFinalize(imageDestination)
+        imageData = destinationData as Data
         let imageName = UUID().uuidString
-        guard let url = saveHeicData(image: finalImage, isProcessed: true, imageName: imageName) else {return false}
+        guard let url = saveHeicData(data:imageData, isProcessed: true, imageName: imageName) else {return false}
         let _ = saveHeicData(image: image, isProcessed: false, imageName: imageName)
         let success = setDesktopImageURL(url: url)
         return success
     }
     
-    private func hideNotchForEachImageOfHeic(image:NSImage) -> NSBitmapImageRep? {
+    private func hideNotchForEachImageOfHeic(image:NSImage) -> CGImage? {
         guard let finalCGImage = addBlackRect(on: image) else {return nil}
-        return NSBitmapImageRep(cgImage: finalCGImage)
+        return finalCGImage//NSBitmapImageRep(cgImage: finalCGImage)
     }
     
     
@@ -242,7 +321,7 @@ class TopNotchSwitch:SwitchProvider {
             return nil
         }
         let cfdestinationURL = destinationURL as CFURL
-        let destination = CGImageDestinationCreateWithURL(cfdestinationURL, kUTTypeJPEG, 1, nil)
+        let destination = CGImageDestinationCreateWithURL(cfdestinationURL,  UTType.jpeg.identifier as CFString as CFString, 1, nil)
         guard let destination = destination else {return nil}
         CGImageDestinationAddImage(destination, image, nil)
         if !CGImageDestinationFinalize(destination) {
@@ -253,7 +332,6 @@ class TopNotchSwitch:SwitchProvider {
     
     
     private func saveHeicData(image:NSImage, isProcessed:Bool, imageName:String) -> URL? {
-        
         guard let destinationURL = saveDestination(isProcessed: isProcessed, imageName: imageName, type: "heic") else {
             return nil
         }
@@ -262,6 +340,20 @@ class TopNotchSwitch:SwitchProvider {
             return destinationURL
         }
         return nil
+    }
+    
+    private func saveHeicData(data:Data?, isProcessed:Bool, imageName:String) -> URL? {
+        guard let destinationURL = saveDestination(isProcessed: isProcessed, imageName: imageName, type: "heic") else {
+            return nil
+        }
+        do {
+            try data?.write(to: destinationURL, options: .withoutOverwriting)
+            print("destinationURL:\(destinationURL)")
+            return destinationURL
+        } catch {
+            return nil
+        }
+        
     }
     
     private func saveDestination(isProcessed:Bool, imageName:String, type:String) -> URL? {
@@ -301,4 +393,9 @@ class TopNotchSwitch:SwitchProvider {
             
         }
     }
+}
+
+struct HeicMetaDataTag {
+    let type:String // solor, h24, apr
+    let plist:String //base64 Property List
 }

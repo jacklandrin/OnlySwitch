@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		040CD2BC2756D497002E0CC6 /* CGImage++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040CD2BB2756D497002E0CC6 /* CGImage++.swift */; };
+		040E97272760FF3E003D9D42 /* MetadataExtractorError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040E97262760FF3E003D9D42 /* MetadataExtractorError.swift */; };
 		04243487275641DB0044D0AD /* SwitchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04243486275641DB0044D0AD /* SwitchProvider.swift */; };
 		04243489275642370044D0AD /* HiddenDesktopSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04243488275642370044D0AD /* HiddenDesktopSwitch.swift */; };
 		0424348B275642D20044D0AD /* DarkModeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0424348A275642D20044D0AD /* DarkModeSwitch.swift */; };
@@ -49,6 +50,7 @@
 /* Begin PBXFileReference section */
 		040CD2BB2756D497002E0CC6 /* CGImage++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGImage++.swift"; sourceTree = "<group>"; };
 		040CD2BD27579CEA002E0CC6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		040E97262760FF3E003D9D42 /* MetadataExtractorError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetadataExtractorError.swift; sourceTree = "<group>"; };
 		04243486275641DB0044D0AD /* SwitchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchProvider.swift; sourceTree = "<group>"; };
 		04243488275642370044D0AD /* HiddenDesktopSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HiddenDesktopSwitch.swift; sourceTree = "<group>"; };
 		0424348A275642D20044D0AD /* DarkModeSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkModeSwitch.swift; sourceTree = "<group>"; };
@@ -249,6 +251,7 @@
 		04E03B01275FD91200EA5FB9 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				040E97262760FF3E003D9D42 /* MetadataExtractorError.swift */,
 				04E03AFD275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift */,
 				0427B25A275D786400AD783A /* SystemInfo.swift */,
 			);
@@ -410,6 +413,7 @@
 				04447B702754F21A00CD2900 /* StatusBarController.swift in Sources */,
 				043E5D662757C84900ADC004 /* HiddenModifier.swift in Sources */,
 				043E5D712758176B00ADC004 /* SwitchToggle.swift in Sources */,
+				040E97272760FF3E003D9D42 /* MetadataExtractorError.swift in Sources */,
 				0443A6B82759A99700A3BCFD /* ScreenSaverSwitch.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
