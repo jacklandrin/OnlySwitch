@@ -14,7 +14,7 @@ struct SwitchBarInfo {
 }
 
 enum SwitchType {
-    case hiddeDesktop, darkMode, topNotch, mute, screenSaver, nightShift, autohideDock, airPods, bluetooth, xcodeCache, autohideMenuBar
+    case hiddeDesktop, darkMode, topNotch, mute, screenSaver, nightShift, autohideDock, airPods, bluetooth, xcodeCache, autohideMenuBar, hiddenFiles
     
     func switchTitle() -> SwitchBarInfo {
         switch self {
@@ -40,6 +40,8 @@ enum SwitchType {
             return SwitchBarInfo(title: "Xcode Derived Data", onImage: NSImage(systemSymbolName: "hammer.circle.fill"), offImage: NSImage(systemSymbolName: "hammer.circle"))
         case .autohideMenuBar:
             return SwitchBarInfo(title: "Autohide Menu Bar", onImage: NSImage(systemSymbolName: "menubar.arrow.up.rectangle"), offImage: NSImage(systemSymbolName: "menubar.rectangle"))
+        case .hiddenFiles:
+            return SwitchBarInfo(title: "Show Hidden Files", onImage: NSImage(systemSymbolName: "eye"), offImage: NSImage(systemSymbolName: "eye.slash"))
         }
     }
 
@@ -67,6 +69,8 @@ enum SwitchType {
             return XcodeCacheSwitch.shared
         case .autohideMenuBar:
             return AutohideMenuBarSwitch.shared
+        case .hiddenFiles:
+            return HiddenFilesSwitch.shared
         }
     }
     

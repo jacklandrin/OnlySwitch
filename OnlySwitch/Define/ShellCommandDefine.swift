@@ -61,6 +61,11 @@ let setAutohideMenuBarDisableCMD = """
                                         end tell
                                     """
 
+let getHiddenFilesStateCMD = "defaults read com.apple.Finder AppleShowAllFiles"
+let setHiddenFilesShowCMD = "defaults write com.apple.Finder AppleShowAllFiles true; killall Finder"
+let setHiddenFilesHideCMD = "defaults write com.apple.Finder AppleShowAllFiles false; killall Finder"
+
+
 func scriptDiskFilePath(scriptName: String) -> String {
     let appBundleID = Bundle.main.infoDictionary?["CFBundleName"] as! String
     let appDirectory = "\(appBundleID)/script"

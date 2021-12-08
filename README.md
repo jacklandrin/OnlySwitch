@@ -6,7 +6,7 @@
 
 ***Menubar is smaller, you only need an All-in-One switch.***
 
-[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_0.8/OnlySwitch.zip)
+[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_0.9/OnlySwitch.zip)
 
 ## What's the OnlySwitch
 OnlySwitch provides a series toggle switch to simply your routine work, such as Hiden desktop icons, dark mode and hide ugly notch of new Mackbook Pro. The switches show on your statusbar, you can easily control them.
@@ -28,12 +28,12 @@ OnlySwitch provides a series toggle switch to simply your routine work, such as 
 | Bluetooth             | finish            |
 | Xcode cache           | finish            |
 | Autohide Menu Bar     | finish            |
+| Show hidden files     | finish            |
 | Hide notch            | exist some issues |
 | Mute                  | exist some issues |
 | Turn off display time | todo              |
 | No disturb mode       | todo              |
 | Empty trash           | todo              |
-| Show hidden files     | todo              |
 | Empty pasteboard      | todo              |
 
 ## About hiding new Macbook Notch 
