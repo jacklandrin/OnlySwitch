@@ -14,6 +14,7 @@ struct ContentView: View {
     @State private var switchList:[SwitchBarVM] = []
     @State private var id = UUID()
     var body: some View {
+       
         VStack {
             ScrollView(.vertical) {
                 VStack {
@@ -22,10 +23,17 @@ struct ContentView: View {
                     }
                 }.padding(15)
             }
-            recommendApp
+            recommendApp.opacity(0.8)
             bottomBar
-            
-        }.id(id)
+
+        }.background(
+            VStack {
+                Spacer()
+                BluredSoundWave()
+                    .rotation3DEffect(.degrees(180), axis: (x: 1, y: 0, z: 0))
+            }
+        )
+        .id(id)
         .onReceive(NotificationCenter.default.publisher(for: showPopoverNotificationName, object: nil)) { _ in
             refreshData()
         }
@@ -93,6 +101,7 @@ struct ContentView: View {
                     
                 }
                 .padding(10)
+            
         }
     }
     
@@ -106,6 +115,8 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView().frame(width: 300).environmentObject(SwitchVM())
+        ContentView()
+            .frame(width: popoverWidth, height: popoverHeight)
+            .environmentObject(SwitchVM())
     }
 }

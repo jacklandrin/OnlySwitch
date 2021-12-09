@@ -8,6 +8,7 @@
 import AppKit
 
 let showPopoverNotificationName = NSNotification.Name("showPopover")
+let hidePopoverNotificationName = NSNotification.Name("hidePopover")
 
 struct OtherPopover {
     static let name = NSNotification.Name("otherPopover")
@@ -91,6 +92,7 @@ class StatusBarController {
         
     func hidePopover(_ sender: AnyObject) {
         popover.performClose(sender)
+        NotificationCenter.default.post(name: hidePopoverNotificationName, object: nil)
         eventMonitor?.stop()
     }
 
