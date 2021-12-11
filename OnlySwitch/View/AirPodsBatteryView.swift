@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AirPodsBatteryView: View {
     var batteryValues:[Float]
-    @State var batteryText = ["L","R","C"]
+    @State var batteryText = ["C","L","R"]
     private let viewWidth = 24.0
     private let viewHeight = 10.0
     @Environment(\.colorScheme) private var colorScheme
@@ -25,7 +25,6 @@ struct AirPodsBatteryView: View {
                         Text(batteryText[index])
                             .font(.system(size:7))
                     }
-                    
                     
                     HStack {
                         Rectangle()

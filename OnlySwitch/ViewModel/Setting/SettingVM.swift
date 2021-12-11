@@ -12,18 +12,21 @@ let changeSettingNotification = NSNotification.Name("changeSettingNotification")
 enum SettingItem:String {
     case AirPods = "AirPods"
     case Radio = "Radio"
+    case About = "About"
     
     func page() -> AnyView {
         switch self {
         case .AirPods:
-            return AnyView(Text("AirPods"))
+            return AnyView(AirPodsSettingView())
         case .Radio:
-            return AnyView(RadioSetting())
+            return AnyView(RadioSettingView())
+        case .About:
+            return AnyView(AboutView())
         }
     }
 }
 
 class SettingVM:ObservableObject {
-    @Published var settingItems:[SettingItem] = [.AirPods,.Radio]
+    @Published var settingItems:[SettingItem] = [.Radio,.AirPods,.About]
     @Published var selection:SettingItem?
 }

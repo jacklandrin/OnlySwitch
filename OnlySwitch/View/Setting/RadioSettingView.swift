@@ -8,7 +8,7 @@
 import SwiftUI
 import AlertToast
 
-struct RadioSetting: View {
+struct RadioSettingView: View {
 
     @ObservedObject var radioSettingVM = RadioSettingVM()
     @State var updateTable:UUID = UUID()
@@ -92,6 +92,6 @@ struct RadioSetting: View {
 
 struct RadioSetting_Previews: PreviewProvider {
     static var previews: some View {
-        RadioSetting()
+        RadioSettingView()
     }
 }

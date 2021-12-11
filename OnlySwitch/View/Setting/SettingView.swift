@@ -22,7 +22,8 @@ struct SettingView: View {
                 }
             }.listStyle(SidebarListStyle())
             settingVM.settingItems.first?.page()
-        }.onAppear{
+        }.navigationTitle("Setting")
+        .onAppear{
             settingVM.selection = settingVM.settingItems.first
         }
         .onDisappear{

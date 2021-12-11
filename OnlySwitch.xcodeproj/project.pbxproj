@@ -41,6 +41,9 @@
 		04581DB02764CBCF008ADF30 /* SettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04581DAF2764CBCF008ADF30 /* SettingVM.swift */; };
 		04581DB6276506B9008ADF30 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = 04581DB5276506B9008ADF30 /* AlertToast */; };
 		04581DBB27651EF1008ADF30 /* RollingText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04581DBA27651EF1008ADF30 /* RollingText.swift */; };
+		04581DBD27653C35008ADF30 /* AirPodsSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04581DBC27653C35008ADF30 /* AirPodsSettingView.swift */; };
+		04581DBF27653C4A008ADF30 /* AirPodsSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04581DBE27653C4A008ADF30 /* AirPodsSettingVM.swift */; };
+		04581DC12765522A008ADF30 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04581DC02765522A008ADF30 /* AboutView.swift */; };
 		049337212761286400AE779A /* CleanProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337202761286400AE779A /* CleanProgressView.swift */; };
 		0493372327615A4900AE779A /* AutohideMenuBarSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493372227615A4900AE779A /* AutohideMenuBarSwitch.swift */; };
 		0493372527615EA400AE779A /* HiddenFilesSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493372427615EA400AE779A /* HiddenFilesSwitch.swift */; };
@@ -80,7 +83,7 @@
 		0493379027626FD200AE779A /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0493378F27626FD200AE779A /* NetworkExtension.framework */; };
 		049337922762BA3200AE779A /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337912762BA3200AE779A /* SettingView.swift */; };
 		049337942762BD1B00AE779A /* OpenWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337932762BD1B00AE779A /* OpenWindow.swift */; };
-		049337972762C07600AE779A /* RadioSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337962762C07600AE779A /* RadioSetting.swift */; };
+		049337972762C07600AE779A /* RadioSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337962762C07600AE779A /* RadioSettingView.swift */; };
 		049337992762C0B300AE779A /* RadioSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337982762C0B300AE779A /* RadioSettingVM.swift */; };
 		0493379C2763C09000AE779A /* OnlySwitch.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0493379A2763C09000AE779A /* OnlySwitch.xcdatamodeld */; };
 		0493379E2763C0E800AE779A /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493379D2763C0E800AE779A /* Persistence.swift */; };
@@ -131,6 +134,9 @@
 		0457C25C2760046A00B25BFA /* BluetoothSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothSwitch.swift; sourceTree = "<group>"; };
 		04581DAF2764CBCF008ADF30 /* SettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingVM.swift; sourceTree = "<group>"; };
 		04581DBA27651EF1008ADF30 /* RollingText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RollingText.swift; sourceTree = "<group>"; };
+		04581DBC27653C35008ADF30 /* AirPodsSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPodsSettingView.swift; sourceTree = "<group>"; };
+		04581DBE27653C4A008ADF30 /* AirPodsSettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPodsSettingVM.swift; sourceTree = "<group>"; };
+		04581DC02765522A008ADF30 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		049337202761286400AE779A /* CleanProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanProgressView.swift; sourceTree = "<group>"; };
 		0493372227615A4900AE779A /* AutohideMenuBarSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutohideMenuBarSwitch.swift; sourceTree = "<group>"; };
 		0493372427615EA400AE779A /* HiddenFilesSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HiddenFilesSwitch.swift; sourceTree = "<group>"; };
@@ -170,7 +176,7 @@
 		0493378F27626FD200AE779A /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
 		049337912762BA3200AE779A /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		049337932762BD1B00AE779A /* OpenWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWindow.swift; sourceTree = "<group>"; };
-		049337962762C07600AE779A /* RadioSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioSetting.swift; sourceTree = "<group>"; };
+		049337962762C07600AE779A /* RadioSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioSettingView.swift; sourceTree = "<group>"; };
 		049337982762C0B300AE779A /* RadioSettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioSettingVM.swift; sourceTree = "<group>"; };
 		0493379B2763C09000AE779A /* OnlySwitch.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = OnlySwitch.xcdatamodel; sourceTree = "<group>"; };
 		0493379D2763C0E800AE779A /* Persistence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -346,6 +352,8 @@
 			children = (
 				04581DAF2764CBCF008ADF30 /* SettingVM.swift */,
 				049337982762C0B300AE779A /* RadioSettingVM.swift */,
+				04581DBC27653C35008ADF30 /* AirPodsSettingView.swift */,
+				04581DC02765522A008ADF30 /* AboutView.swift */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -436,7 +444,8 @@
 			isa = PBXGroup;
 			children = (
 				049337912762BA3200AE779A /* SettingView.swift */,
-				049337962762C07600AE779A /* RadioSetting.swift */,
+				049337962762C07600AE779A /* RadioSettingView.swift */,
+				04581DBE27653C4A008ADF30 /* AirPodsSettingVM.swift */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -603,6 +612,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				040CD2BC2756D497002E0CC6 /* CGImage++.swift in Sources */,
+				04581DBF27653C4A008ADF30 /* AirPodsSettingVM.swift in Sources */,
 				0493375627625A1E00AE779A /* Downloading.swift in Sources */,
 				049337942762BD1B00AE779A /* OpenWindow.swift in Sources */,
 				0424348B275642D20044D0AD /* DarkModeSwitch.swift in Sources */,
@@ -612,7 +622,7 @@
 				04447B722754FE3800CD2900 /* SwitchVM.swift in Sources */,
 				0493375227625A1E00AE779A /* Reader.swift in Sources */,
 				04933788276264D400AE779A /* BluredSoundWave.swift in Sources */,
-				049337972762C07600AE779A /* RadioSetting.swift in Sources */,
+				049337972762C07600AE779A /* RadioSettingView.swift in Sources */,
 				04447B742755015A00CD2900 /* ShellCommandDefine.swift in Sources */,
 				0493374B27625A1E00AE779A /* StreamingState.swift in Sources */,
 				0493374D27625A1E00AE779A /* Parser+PropertyListener.swift in Sources */,
@@ -636,6 +646,7 @@
 				0493378E2762665A00AE779A /* RadioStationSwitch.swift in Sources */,
 				04243489275642370044D0AD /* HiddenDesktopSwitch.swift in Sources */,
 				0493374627625A1E00AE779A /* JLAVAudioPlayer.swift in Sources */,
+				04581DBD27653C35008ADF30 /* AirPodsSettingView.swift in Sources */,
 				049337922762BA3200AE779A /* SettingView.swift in Sources */,
 				0493376427625D6F00AE779A /* RadioPlayerItem.swift in Sources */,
 				04A23B2B275D61BC00B454C8 /* NightShiftSwitch.swift in Sources */,
@@ -664,6 +675,7 @@
 				04E03AF8275E6B4E00EA5FB9 /* AutohideDockSwitch.swift in Sources */,
 				04581DB02764CBCF008ADF30 /* SettingVM.swift in Sources */,
 				04E03B06275FEBE200EA5FB9 /* AirPodsBatteryView.swift in Sources */,
+				04581DC12765522A008ADF30 /* AboutView.swift in Sources */,
 				0493375127625A1E00AE779A /* Parser.swift in Sources */,
 				04447B702754F21A00CD2900 /* StatusBarController.swift in Sources */,
 				0493374A27625A1E00AE779A /* Streamer+DownloadableDelegate.swift in Sources */,

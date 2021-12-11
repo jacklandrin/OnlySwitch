@@ -109,7 +109,7 @@ struct ContentView: View {
                         Button(action: {
                             OpenWindows.Setting.open()
                         }, label: {
-                            Text("Setting")
+                            Text("Settings")
                         }).buttonStyle(.borderless)
                         Button(action: {
                             TopNotchSwitch.shared.clearCache()

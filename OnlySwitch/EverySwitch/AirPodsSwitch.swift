@@ -8,10 +8,31 @@
 import Foundation
 import IOBluetooth
 
+let AirPodsAddressKey = "AirPodsAddressKey"
+
 class AirPodsSwitch:SwitchProvider {
     static let shared = AirPodsSwitch()
     var blManager = BluetoothDevicesManager.shared
     var currentDevice:IOBluetoothDevice?
+    
+    init() {
+        setCurrentDevice()
+    }
+    
+    private func setCurrentDevice() {
+        let address = UserDefaults.standard.string(forKey: AirPodsAddressKey)
+        guard let address = address else {
+            currentDevice = blManager.allPairedAirpods.first
+            return
+        }
+        
+        let matchDevices = blManager.allPairedAirpods.filter{ $0.addressString == address }
+        guard matchDevices.count > 0, let device = matchDevices.first else {
+            currentDevice = blManager.allPairedAirpods.first
+            return
+        }
+        currentDevice = device
+    }
     
     func currentStatus() -> Bool {
         guard let currentDevice = currentDevice else {return false}
@@ -24,7 +45,7 @@ class AirPodsSwitch:SwitchProvider {
     }
     
     func isVisable() -> Bool {
-        currentDevice = blManager.allPairedAirpods.first
+        setCurrentDevice()
         guard blManager.centralManager.state == .poweredOn else {return false}
         guard let currentDevice = currentDevice, currentDevice.isPaired() else {return false}
         return true
