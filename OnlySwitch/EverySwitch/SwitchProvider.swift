@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 @objc protocol SwitchProvider {
     func currentStatus() -> Bool

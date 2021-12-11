@@ -14,7 +14,7 @@ protocol AudioPlayer {
     var currentAudioStation:RadioPlayerItem? {get set}
     var analyzer:RealtimeAnalyzer {get set}
     var bufferring : Bool {get set}
-    func play(stream item: RadioPlayerItem) -> Bool
+    func play(stream item: RadioPlayerItem)
     func stop()
 }
 
@@ -38,13 +38,13 @@ extension AudioPlayer {
         let commandCenter = MPRemoteCommandCenter.shared();
         commandCenter.playCommand.isEnabled = true
         commandCenter.playCommand.addTarget { event in
-            var station = self.currentAudioStation
+            let station = self.currentAudioStation
             station?.isPlaying = true
             return .success
         }
         commandCenter.pauseCommand.isEnabled = true
         commandCenter.pauseCommand.addTarget {event in
-            var station = self.currentAudioStation
+            let station = self.currentAudioStation
             station?.isPlaying = false
             return .success
         }

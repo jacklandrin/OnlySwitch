@@ -38,9 +38,9 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
         })
     }
     
-    func play(stream item: RadioPlayerItem) -> Bool {
+    func play(stream item: RadioPlayerItem) {
         guard let url = URL(string: item.streamUrl) else {
-            return false
+            return
         }
                
         if let currentAudioStation = currentAudioStation {
@@ -61,8 +61,6 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
         self.bufferring = true
        
         self.setupNowPlaying()
-
-        return true
     }
     
     func setAVPlayer(url:URL)  {
@@ -81,7 +79,7 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
             self.currentAudioStation?.streamInfo = currentStationTitle ?? ""
             return
         }
-        self.currentAudioStation?.streamInfo = title
+        self.currentAudioStation?.streamInfo = title.trimmingCharacters(in:.newlines)
     }
     
     func stop() {

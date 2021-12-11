@@ -23,10 +23,10 @@ class JLAVAudioPlayer: NSObject ,AVPlayerItemMetadataOutputPushDelegate, AudioPl
         self.setupRemoteCommandCenter()
     }
     
-    func play(stream item: RadioPlayerItem) -> Bool {
+    func play(stream item: RadioPlayerItem) {
         
         guard let url = URL(string: item.streamUrl) else {
-            return false
+            return
         }
         
         if let station = self.currentAudioStation  {
@@ -51,7 +51,6 @@ class JLAVAudioPlayer: NSObject ,AVPlayerItemMetadataOutputPushDelegate, AudioPl
         let metadataOutput = AVPlayerItemMetadataOutput(identifiers: nil)
         metadataOutput.setDelegate(self, queue: .main)
         self.playerItem?.add(metadataOutput)
-        return true
     }
     
     func metadataOutput(_ output: AVPlayerItemMetadataOutput, didOutputTimedMetadataGroups groups: [AVTimedMetadataGroup], from track: AVPlayerItemTrack?) {
@@ -60,7 +59,7 @@ class JLAVAudioPlayer: NSObject ,AVPlayerItemMetadataOutputPushDelegate, AudioPl
             self.currentAudioStation?.streamInfo = currentStationTitle
             return
         }
-        self.currentAudioStation?.streamInfo = title
+        self.currentAudioStation?.streamInfo = title.trimmingCharacters(in:.newlines)
         self.bufferring = false
     }
     

@@ -38,6 +38,9 @@
 		04447B7627550F6900CD2900 /* VisualEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B7527550F6900CD2900 /* VisualEffectView.swift */; };
 		04447B782755129D00CD2900 /* EventMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B772755129D00CD2900 /* EventMonitor.swift */; };
 		0457C25D2760046A00B25BFA /* BluetoothSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0457C25C2760046A00B25BFA /* BluetoothSwitch.swift */; };
+		04581DB02764CBCF008ADF30 /* SettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04581DAF2764CBCF008ADF30 /* SettingVM.swift */; };
+		04581DB6276506B9008ADF30 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = 04581DB5276506B9008ADF30 /* AlertToast */; };
+		04581DBB27651EF1008ADF30 /* RollingText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04581DBA27651EF1008ADF30 /* RollingText.swift */; };
 		049337212761286400AE779A /* CleanProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337202761286400AE779A /* CleanProgressView.swift */; };
 		0493372327615A4900AE779A /* AutohideMenuBarSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493372227615A4900AE779A /* AutohideMenuBarSwitch.swift */; };
 		0493372527615EA400AE779A /* HiddenFilesSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493372427615EA400AE779A /* HiddenFilesSwitch.swift */; };
@@ -75,6 +78,12 @@
 		0493378C2762654600AE779A /* LayoutDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493378B2762654600AE779A /* LayoutDefine.swift */; };
 		0493378E2762665A00AE779A /* RadioStationSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493378D2762665A00AE779A /* RadioStationSwitch.swift */; };
 		0493379027626FD200AE779A /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0493378F27626FD200AE779A /* NetworkExtension.framework */; };
+		049337922762BA3200AE779A /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337912762BA3200AE779A /* SettingView.swift */; };
+		049337942762BD1B00AE779A /* OpenWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337932762BD1B00AE779A /* OpenWindow.swift */; };
+		049337972762C07600AE779A /* RadioSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337962762C07600AE779A /* RadioSetting.swift */; };
+		049337992762C0B300AE779A /* RadioSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337982762C0B300AE779A /* RadioSettingVM.swift */; };
+		0493379C2763C09000AE779A /* OnlySwitch.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0493379A2763C09000AE779A /* OnlySwitch.xcdatamodeld */; };
+		0493379E2763C0E800AE779A /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493379D2763C0E800AE779A /* Persistence.swift */; };
 		04A23B23275D5FC500B454C8 /* CoreBrightness.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04A23B22275D5FC500B454C8 /* CoreBrightness.framework */; };
 		04A23B2B275D61BC00B454C8 /* NightShiftSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A23B2A275D61BC00B454C8 /* NightShiftSwitch.swift */; };
 		04A2FFF72755A3E500CE56A0 /* NSImage++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A2FFF62755A3E500CE56A0 /* NSImage++.swift */; };
@@ -120,6 +129,8 @@
 		04447B7527550F6900CD2900 /* VisualEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectView.swift; sourceTree = "<group>"; };
 		04447B772755129D00CD2900 /* EventMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventMonitor.swift; sourceTree = "<group>"; };
 		0457C25C2760046A00B25BFA /* BluetoothSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothSwitch.swift; sourceTree = "<group>"; };
+		04581DAF2764CBCF008ADF30 /* SettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingVM.swift; sourceTree = "<group>"; };
+		04581DBA27651EF1008ADF30 /* RollingText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RollingText.swift; sourceTree = "<group>"; };
 		049337202761286400AE779A /* CleanProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanProgressView.swift; sourceTree = "<group>"; };
 		0493372227615A4900AE779A /* AutohideMenuBarSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutohideMenuBarSwitch.swift; sourceTree = "<group>"; };
 		0493372427615EA400AE779A /* HiddenFilesSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HiddenFilesSwitch.swift; sourceTree = "<group>"; };
@@ -157,6 +168,12 @@
 		0493378B2762654600AE779A /* LayoutDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutDefine.swift; sourceTree = "<group>"; };
 		0493378D2762665A00AE779A /* RadioStationSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioStationSwitch.swift; sourceTree = "<group>"; };
 		0493378F27626FD200AE779A /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
+		049337912762BA3200AE779A /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
+		049337932762BD1B00AE779A /* OpenWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWindow.swift; sourceTree = "<group>"; };
+		049337962762C07600AE779A /* RadioSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioSetting.swift; sourceTree = "<group>"; };
+		049337982762C0B300AE779A /* RadioSettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioSettingVM.swift; sourceTree = "<group>"; };
+		0493379B2763C09000AE779A /* OnlySwitch.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = OnlySwitch.xcdatamodel; sourceTree = "<group>"; };
+		0493379D2763C0E800AE779A /* Persistence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		04A23B22275D5FC500B454C8 /* CoreBrightness.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBrightness.framework; path = ../../../../System/Library/PrivateFrameworks/CoreBrightness.framework; sourceTree = "<group>"; };
 		04A23B2A275D61BC00B454C8 /* NightShiftSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightShiftSwitch.swift; sourceTree = "<group>"; };
 		04A23B2C275D641900B454C8 /* OnlySwitch-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OnlySwitch-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -178,6 +195,7 @@
 				0430887E275D707C00877E51 /* LaunchAtLogin in Frameworks */,
 				0493379027626FD200AE779A /* NetworkExtension.framework in Frameworks */,
 				04A23B23275D5FC500B454C8 /* CoreBrightness.framework in Frameworks */,
+				04581DB6276506B9008ADF30 /* AlertToast in Frameworks */,
 				043E5D6D2757DADB00ADC004 /* AVFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -217,6 +235,8 @@
 				049337202761286400AE779A /* CleanProgressView.swift */,
 				04933765276262EB00AE779A /* SoundWaveView.swift */,
 				04933787276264D400AE779A /* BluredSoundWave.swift */,
+				049337952762C05200AE779A /* Setting */,
+				04581DBA27651EF1008ADF30 /* RollingText.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -227,6 +247,7 @@
 				04447B712754FE3800CD2900 /* SwitchVM.swift */,
 				043E5D742758208D00ADC004 /* SwitchBarVM.swift */,
 				049337892762651D00AE779A /* SoundWaveModel.swift */,
+				04581DB12764D23C008ADF30 /* Setting */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -255,6 +276,7 @@
 				043E5D792758212A00ADC004 /* SwitchType.swift */,
 				04447B732755015A00CD2900 /* ShellCommandDefine.swift */,
 				0493378B2762654600AE779A /* LayoutDefine.swift */,
+				049337932762BD1B00AE779A /* OpenWindow.swift */,
 			);
 			path = Define;
 			sourceTree = "<group>";
@@ -289,6 +311,8 @@
 		04447B5A2754F08000CD2900 /* OnlySwitch */ = {
 			isa = PBXGroup;
 			children = (
+				0493379A2763C09000AE779A /* OnlySwitch.xcdatamodeld */,
+				0493379D2763C0E800AE779A /* Persistence.swift */,
 				040CD2BD27579CEA002E0CC6 /* Info.plist */,
 				04447B5B2754F08000CD2900 /* AppDelegate.swift */,
 				0493372627625A1E00AE779A /* Player */,
@@ -315,6 +339,15 @@
 				04447B622754F08100CD2900 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		04581DB12764D23C008ADF30 /* Setting */ = {
+			isa = PBXGroup;
+			children = (
+				04581DAF2764CBCF008ADF30 /* SettingVM.swift */,
+				049337982762C0B300AE779A /* RadioSettingVM.swift */,
+			);
+			path = Setting;
 			sourceTree = "<group>";
 		};
 		0493372627625A1E00AE779A /* Player */ = {
@@ -399,6 +432,15 @@
 			path = AudioSpectrum;
 			sourceTree = "<group>";
 		};
+		049337952762C05200AE779A /* Setting */ = {
+			isa = PBXGroup;
+			children = (
+				049337912762BA3200AE779A /* SettingView.swift */,
+				049337962762C07600AE779A /* RadioSetting.swift */,
+			);
+			path = Setting;
+			sourceTree = "<group>";
+		};
 		04A23B27275D607200B454C8 /* Header */ = {
 			isa = PBXGroup;
 			children = (
@@ -460,6 +502,7 @@
 			name = OnlySwitch;
 			packageProductDependencies = (
 				0430887D275D707C00877E51 /* LaunchAtLogin */,
+				04581DB5276506B9008ADF30 /* AlertToast */,
 			);
 			productName = OnlySwitch;
 			productReference = 04447B582754F08000CD2900 /* OnlySwitch.app */;
@@ -491,6 +534,7 @@
 			mainGroup = 04447B4F2754F08000CD2900;
 			packageReferences = (
 				0430887C275D707C00877E51 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */,
+				04581DB4276506B9008ADF30 /* XCRemoteSwiftPackageReference "AlertToast" */,
 			);
 			productRefGroup = 04447B592754F08000CD2900 /* Products */;
 			projectDirPath = "";
@@ -560,6 +604,7 @@
 			files = (
 				040CD2BC2756D497002E0CC6 /* CGImage++.swift in Sources */,
 				0493375627625A1E00AE779A /* Downloading.swift in Sources */,
+				049337942762BD1B00AE779A /* OpenWindow.swift in Sources */,
 				0424348B275642D20044D0AD /* DarkModeSwitch.swift in Sources */,
 				0493374F27625A1E00AE779A /* Parser+Packets.swift in Sources */,
 				04447B5E2754F08000CD2900 /* ContentView.swift in Sources */,
@@ -567,6 +612,7 @@
 				04447B722754FE3800CD2900 /* SwitchVM.swift in Sources */,
 				0493375227625A1E00AE779A /* Reader.swift in Sources */,
 				04933788276264D400AE779A /* BluredSoundWave.swift in Sources */,
+				049337972762C07600AE779A /* RadioSetting.swift in Sources */,
 				04447B742755015A00CD2900 /* ShellCommandDefine.swift in Sources */,
 				0493374B27625A1E00AE779A /* StreamingState.swift in Sources */,
 				0493374D27625A1E00AE779A /* Parser+PropertyListener.swift in Sources */,
@@ -585,14 +631,17 @@
 				0493375927625A1E00AE779A /* DownloadingState.swift in Sources */,
 				043E5D6A2757D68800ADC004 /* MuteSwitch.swift in Sources */,
 				0493378C2762654600AE779A /* LayoutDefine.swift in Sources */,
+				049337992762C0B300AE779A /* RadioSettingVM.swift in Sources */,
 				0493375B27625A1E00AE779A /* JLASAudioPlayer+Streamer.swift in Sources */,
 				0493378E2762665A00AE779A /* RadioStationSwitch.swift in Sources */,
 				04243489275642370044D0AD /* HiddenDesktopSwitch.swift in Sources */,
 				0493374627625A1E00AE779A /* JLAVAudioPlayer.swift in Sources */,
+				049337922762BA3200AE779A /* SettingView.swift in Sources */,
 				0493376427625D6F00AE779A /* RadioPlayerItem.swift in Sources */,
 				04A23B2B275D61BC00B454C8 /* NightShiftSwitch.swift in Sources */,
 				0424348D275643560044D0AD /* TopNotchSwitch.swift in Sources */,
 				040E972B27611C9C003D9D42 /* URL++.swift in Sources */,
+				04581DBB27651EF1008ADF30 /* RollingText.swift in Sources */,
 				0493374427625A1E00AE779A /* AudioPlayer.swift in Sources */,
 				0493374E27625A1E00AE779A /* ParserError.swift in Sources */,
 				04447B5C2754F08000CD2900 /* AppDelegate.swift in Sources */,
@@ -613,6 +662,7 @@
 				0493374727625A1E00AE779A /* PlayerManager.swift in Sources */,
 				0493372527615EA400AE779A /* HiddenFilesSwitch.swift in Sources */,
 				04E03AF8275E6B4E00EA5FB9 /* AutohideDockSwitch.swift in Sources */,
+				04581DB02764CBCF008ADF30 /* SettingVM.swift in Sources */,
 				04E03B06275FEBE200EA5FB9 /* AirPodsBatteryView.swift in Sources */,
 				0493375127625A1E00AE779A /* Parser.swift in Sources */,
 				04447B702754F21A00CD2900 /* StatusBarController.swift in Sources */,
@@ -623,10 +673,12 @@
 				0493376227625BBD00AE779A /* NSBezierPath++.swift in Sources */,
 				040E972D27611DEA003D9D42 /* XcodeCacheSwitch.swift in Sources */,
 				043E5D662757C84900ADC004 /* HiddenModifier.swift in Sources */,
+				0493379E2763C0E800AE779A /* Persistence.swift in Sources */,
 				0493375A27625A1E00AE779A /* DownloadingDelegate.swift in Sources */,
 				043E5D712758176B00ADC004 /* SwitchToggle.swift in Sources */,
 				040E97272760FF3E003D9D42 /* MetadataExtractorError.swift in Sources */,
 				0443A6B82759A99700A3BCFD /* ScreenSaverSwitch.swift in Sources */,
+				0493379C2763C09000AE779A /* OnlySwitch.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -779,7 +831,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.6;
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = NO;
@@ -824,7 +876,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.6;
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = NO;
@@ -870,6 +922,14 @@
 				minimumVersion = 4.0.0;
 			};
 		};
+		04581DB4276506B9008ADF30 /* XCRemoteSwiftPackageReference "AlertToast" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/elai950/AlertToast.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -878,7 +938,25 @@
 			package = 0430887C275D707C00877E51 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */;
 			productName = LaunchAtLogin;
 		};
+		04581DB5276506B9008ADF30 /* AlertToast */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04581DB4276506B9008ADF30 /* XCRemoteSwiftPackageReference "AlertToast" */;
+			productName = AlertToast;
+		};
 /* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		0493379A2763C09000AE779A /* OnlySwitch.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				0493379B2763C09000AE779A /* OnlySwitch.xcdatamodel */,
+			);
+			currentVersion = 0493379B2763C09000AE779A /* OnlySwitch.xcdatamodel */;
+			path = OnlySwitch.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 04447B502754F08000CD2900 /* Project object */;
 }

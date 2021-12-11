@@ -13,8 +13,8 @@ struct ContentView: View {
     @Environment(\.colorScheme) private var colorScheme
     @State private var switchList:[SwitchBarVM] = []
     @State private var id = UUID()
+    @ObservedObject private var playerItem = RadioStationSwitch.shared.playerItem
     var body: some View {
-       
         VStack {
             ScrollView(.vertical) {
                 VStack {
@@ -31,10 +31,14 @@ struct ContentView: View {
                 Spacer()
                 BluredSoundWave()
                     .rotation3DEffect(.degrees(180), axis: (x: 1, y: 0, z: 0))
+                    .isHidden(!playerItem.isPlaying, remove: true)
             }
         )
         .id(id)
         .onReceive(NotificationCenter.default.publisher(for: showPopoverNotificationName, object: nil)) { _ in
+            refreshData()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: changeSettingNotification, object: nil)) { _ in
             refreshData()
         }
         
@@ -68,11 +72,28 @@ struct ContentView: View {
     var bottomBar : some View {
         HStack {
             Spacer()
-            Text("Only Switch")
-                .fontWeight(.bold)
-                .padding(10)
-                .offset(x:10)
-            Text("v\(SystemInfo.majorVersion as! String)")
+            if playerItem.streamInfo == "" {
+                HStack {
+                    Text("Only Switch")
+                        .fontWeight(.bold)
+                        .padding(10)
+                        .offset(x:10)
+                    Text("v\(SystemInfo.majorVersion as! String)")
+                }
+                .transition(.move(edge: .top))
+                
+            } else {
+                RollingText(text: playerItem.streamInfo,
+                            leftFade: 16,
+                            rightFade: 16,
+                            startDelay: 3)
+                    .frame(height:20)
+                    .padding(10)
+                    .transition(.move(edge: .bottom))
+                
+            }
+            
+            
             Spacer()
             Button(action: {
                 switchVM.showSettingMenu.toggle()
@@ -86,6 +107,11 @@ struct ContentView: View {
                             Text("Start at login")
                         }
                         Button(action: {
+                            OpenWindows.Setting.open()
+                        }, label: {
+                            Text("Setting")
+                        }).buttonStyle(.borderless)
+                        Button(action: {
                             TopNotchSwitch.shared.clearCache()
                         }, label: {
                             Text("Clear cache")
@@ -97,7 +123,7 @@ struct ContentView: View {
                             Text("Quit")
                         }).buttonStyle(.borderless)
                     }
-                    .frame(width: 150, height: 110)
+                    .frame(width: 150, height: 135)
                     
                 }
                 .padding(10)

@@ -10,12 +10,13 @@ import Cocoa
 
 @main
 struct OnlySwitchApp: App {
-    
+    let persistenceController = PersistenceController.shared
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     var body: some Scene {
         WindowGroup {
             EmptyView().frame(width: 0, height: 0)
         }
+        
     }
 }
 
@@ -33,6 +34,7 @@ class AppDelegate:NSObject, NSApplicationDelegate {
         
         statusBar = StatusBarController(popover)
         blManager = BluetoothDevicesManager.shared
+        RadioStationSwitch.shared.setDefaultRadioStations()
     }
     
     func applicationWillTerminate(_ notification: Notification) {
