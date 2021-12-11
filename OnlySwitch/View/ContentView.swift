@@ -87,10 +87,10 @@ struct ContentView: View {
                             leftFade: 16,
                             rightFade: 16,
                             startDelay: 3)
-                    .frame(height:20)
+                    .frame(width:250, height:20)
                     .padding(10)
                     .transition(.move(edge: .bottom))
-                
+                    
             }
             
             

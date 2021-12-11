@@ -6,13 +6,13 @@
 
 ***Menubar is smaller, you only need an All-in-One switch.***
 
-[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_0.9/OnlySwitch.zip)
+[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_1.0/OnlySwitch.zip)
 
 ## What's the OnlySwitch
 OnlySwitch provides a series toggle switch to simply your routine work, such as Hiden desktop icons, dark mode and hide ugly notch of new Mackbook Pro. The switches show on your statusbar, you can easily control them.
 
 <p align="center">
-<img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2021/12/onlySwitch_09.png" width="60%" align="center" />
+<img alt="Sits in the status bar" src="https://www.jacklandrin.com/wp-content/uploads/2021/12/onlySwitch_10.gif" width="60%" align="center" />
 </p>
 
 ## Switch list
@@ -29,6 +29,7 @@ OnlySwitch provides a series toggle switch to simply your routine work, such as 
 | Xcode cache           | finish            |
 | Autohide Menu Bar     | finish            |
 | Show hidden files     | finish            |
+| Radio Station         | finish            |
 | Hide notch            | exist some issues |
 | Mute                  | exist some issues |
 | Turn off display time | todo              |
@@ -54,7 +55,7 @@ I use classOfDevice(2360344) to check if a bluetooth device is Airpods Pro, but 
 * [LaunchAtLogin](https://github.com/sindresorhus/LaunchAtLogin)
 * AirPods Battery refer to [AirPods Battery Monitor For MAC OS](https://github.com/mohamed-arradi/AirpodsBattery-Monitor-For-Mac)
 * Dynamic Wallpaper processing refer to https://itnext.io/macos-mojave-dynamic-wallpaper-fd26b0698223 and [wallpapper](https://github.com/mczachurski/wallpapper)
-
+* [AlertToast](https://github.com/elai950/AlertToast)
 ## License
 MIT
 ## Donate
