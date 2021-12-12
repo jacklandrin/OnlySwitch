@@ -1,3 +1,4 @@
+![](https://img.shields.io/badge/UI-SwiftUI-blue)   ![](https://img.shields.io/badge/Platform-Monterey-purple)  ![](https://img.shields.io/badge/License-MIT-orange)
 <p align="left">
 <img alt="AppIcon" src="http://www.jacklandrin.com/wp-content/uploads/2021/12/only_switch_256.png" width="128px" align="center" />
 </p>
