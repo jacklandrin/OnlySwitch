@@ -51,6 +51,24 @@ I use classOfDevice(2360344) to check if a bluetooth device is Airpods Pro, but 
 <img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2021/12/hidenotch.png" width="60%" align="center" />
 </p>
 
+## About Apple's warning at first open
+Some users ask me why masOS shows a warning box below, when they first open Only Switch.
+<p align="center">
+<img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2021/12/os_warning.png" width="35%" align="center" />
+</p>
+
+Because the app isn't got from App Store, and I use some private API in project. You can at [here](https://support.apple.com/guide/mac-help/apple-cant-check-app-for-malicious-software-mchleab3a043/mac) to learn more about it.
+You can follow these steps to use Only Switch.
+1. Open System Preference
+2. Click Security & Privacy
+3. Select General
+4. Click **Open Anyway**
+5. Finally click Open on the dialog box. Now macOS won't block that you open the app.
+<p align="center">
+<img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2021/12/os_tip.png" width="60%" align="center" />
+</p>
+
+
 ## Reference
 
 * NightShift switch refer to [Nocturnal](https://github.com/joshjon/nocturnal)
