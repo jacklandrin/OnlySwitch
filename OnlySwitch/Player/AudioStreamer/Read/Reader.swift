@@ -73,6 +73,7 @@ public class Reader: Reading {
         try queue.sync {
             let context = unsafeBitCast(self, to: UnsafeMutableRawPointer.self)
             let status = AudioConverterFillComplexBuffer(converter!, ReaderConverterCallback, context, &packets, buffer.mutableAudioBufferList, nil)
+            cleanupConverterGarbage()
             guard status == noErr else {
                 switch status {
                 case ReaderMissingSourceFormatError:

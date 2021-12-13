@@ -22,8 +22,9 @@ class SoundWaveModel: ObservableObject {
     
     func setSpectrum(){
         NotificationCenter.default.addObserver(forName: spectraNofiticationName, object: nil, queue: .main, using: {[weak self] notification in
+            guard let strongSelf = self else {return}
             let spectra = notification.object as! [[Float]]
-            self?.spectra = spectra
+            strongSelf.spectra = spectra
         })
     }
     

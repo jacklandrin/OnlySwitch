@@ -214,7 +214,7 @@ class Streamer: Streaming {
         downloader.stop()
         playerNode.stop()
         engine.stop()
-        
+        reader?.parser.packets.removeAll()
         // Update the state
         state = .stopped
     }

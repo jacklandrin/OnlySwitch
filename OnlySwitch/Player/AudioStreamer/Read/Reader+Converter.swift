@@ -15,6 +15,8 @@ import os.log
 
 
 // MARK: -
+var packetDescs:[UnsafeMutablePointer<AudioStreamPacketDescription>?] = []
+var packetDatas:[UnsafeMutableRawPointer?] = []
 
 func ReaderConverterCallback(_ converter: AudioConverterRef,
                              _ packetCount: UnsafeMutablePointer<UInt32>,
@@ -55,10 +57,15 @@ func ReaderConverterCallback(_ converter: AudioConverterRef,
     let dataCount = data.count
     ioData.pointee.mNumberBuffers = 1
     ioData.pointee.mBuffers.mData = UnsafeMutableRawPointer.allocate(byteCount: dataCount, alignment: 0)
-    _ = data.withUnsafeMutableBytes { (bytes: UnsafeMutablePointer<UInt8>) in
-        memcpy((ioData.pointee.mBuffers.mData?.assumingMemoryBound(to: UInt8.self))!, bytes, dataCount)
+    data.withUnsafeMutableBytes { rawMutableBufferPointer in
+        let bufferPointer = rawMutableBufferPointer.bindMemory(to: UInt8.self)
+        if let address = bufferPointer.baseAddress {
+            memcpy((ioData.pointee.mBuffers.mData?.assumingMemoryBound(to: UInt8.self))!, address, dataCount)
+        }
+        
     }
     ioData.pointee.mBuffers.mDataByteSize = UInt32(dataCount)
+    packetDatas.append(ioData.pointee.mBuffers.mData)
     
     //
     // Handle packet descriptions for compressed formats (MP3, AAC, etc)
@@ -71,6 +78,7 @@ func ReaderConverterCallback(_ converter: AudioConverterRef,
         outPacketDescriptions?.pointee?.pointee.mDataByteSize = UInt32(dataCount)
         outPacketDescriptions?.pointee?.pointee.mStartOffset = 0
         outPacketDescriptions?.pointee?.pointee.mVariableFramesInPacket = 0
+        packetDescs.append(outPacketDescriptions?.pointee)
     }
     packetCount.pointee = 1
     reader.currentPacket = reader.currentPacket + 1
@@ -80,8 +88,18 @@ func ReaderConverterCallback(_ converter: AudioConverterRef,
             reader.parser.packets.removeSubrange(0...255)
             reader.currentPacket = 1
         }
+//        print("packets count:\(reader.parser.packets.count)")
     }
     
     
     return noErr;
+}
+
+func cleanupConverterGarbage() {
+    packetDescs.forEach { (desc) in desc?.deinitialize(count: 1); desc?.deallocate() }
+//    print("deallocated \(packetDescs.count) packet descriptions")
+    packetDescs.removeAll()
+    packetDatas.forEach { (data) in data?.deallocate() }
+//    print("deallocated \(packetDatas.count) packets of data")
+    packetDatas.removeAll()
 }
