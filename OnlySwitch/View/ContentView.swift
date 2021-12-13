@@ -16,13 +16,11 @@ struct ContentView: View {
     @ObservedObject private var playerItem = RadioStationSwitch.shared.playerItem
     var body: some View {
         VStack {
-//            ScrollView(.vertical) {
-                VStack {
-                    ForEach(switchList.indices, id:\.self) { index in
-                        SwitchBarView().environmentObject(switchList[index])
-                    }
-                }.padding(15)
-//            }
+            VStack {
+                ForEach(switchList.indices, id:\.self) { index in
+                    SwitchBarView().environmentObject(switchList[index])
+                }
+            }.padding(15)
             recommendApp.opacity(0.8)
             bottomBar
 

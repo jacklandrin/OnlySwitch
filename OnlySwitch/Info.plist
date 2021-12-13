@@ -4,8 +4,6 @@
 <dict>
 	<key>CFBundleShortVersionString</key>
 	<string>1.1</string>
-	<key>CFBundleVersion</key>
-	<string>15</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -15,6 +13,8 @@
 			</array>
 		</dict>
 	</array>
+	<key>CFBundleVersion</key>
+	<string>16</string>
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
