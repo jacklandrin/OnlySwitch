@@ -15,6 +15,7 @@ class SwitchVM : ObservableObject {
                                                SwitchBarVM(switchType: .mute),
                                                SwitchBarVM(switchType: .screenSaver),
                                                SwitchBarVM(switchType: .nightShift),
+                                               SwitchBarVM(switchType: .keepAwake),
                                                SwitchBarVM(switchType: .hiddenFiles),
                                                SwitchBarVM(switchType: .autohideDock),
                                                SwitchBarVM(switchType: .autohideMenuBar),

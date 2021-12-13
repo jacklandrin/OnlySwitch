@@ -44,6 +44,7 @@
 		04581DBD27653C35008ADF30 /* AirPodsSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04581DBC27653C35008ADF30 /* AirPodsSettingView.swift */; };
 		04581DBF27653C4A008ADF30 /* AirPodsSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04581DBE27653C4A008ADF30 /* AirPodsSettingVM.swift */; };
 		04581DC12765522A008ADF30 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04581DC02765522A008ADF30 /* AboutView.swift */; };
+		04581DC327677ADC008ADF30 /* KeepAwakeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04581DC227677ADC008ADF30 /* KeepAwakeSwitch.swift */; };
 		049337212761286400AE779A /* CleanProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337202761286400AE779A /* CleanProgressView.swift */; };
 		0493372327615A4900AE779A /* AutohideMenuBarSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493372227615A4900AE779A /* AutohideMenuBarSwitch.swift */; };
 		0493372527615EA400AE779A /* HiddenFilesSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493372427615EA400AE779A /* HiddenFilesSwitch.swift */; };
@@ -137,6 +138,7 @@
 		04581DBC27653C35008ADF30 /* AirPodsSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPodsSettingView.swift; sourceTree = "<group>"; };
 		04581DBE27653C4A008ADF30 /* AirPodsSettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPodsSettingVM.swift; sourceTree = "<group>"; };
 		04581DC02765522A008ADF30 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		04581DC227677ADC008ADF30 /* KeepAwakeSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeepAwakeSwitch.swift; sourceTree = "<group>"; };
 		049337202761286400AE779A /* CleanProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanProgressView.swift; sourceTree = "<group>"; };
 		0493372227615A4900AE779A /* AutohideMenuBarSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutohideMenuBarSwitch.swift; sourceTree = "<group>"; };
 		0493372427615EA400AE779A /* HiddenFilesSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HiddenFilesSwitch.swift; sourceTree = "<group>"; };
@@ -226,6 +228,7 @@
 				0493372227615A4900AE779A /* AutohideMenuBarSwitch.swift */,
 				0493372427615EA400AE779A /* HiddenFilesSwitch.swift */,
 				0493378D2762665A00AE779A /* RadioStationSwitch.swift */,
+				04581DC227677ADC008ADF30 /* KeepAwakeSwitch.swift */,
 			);
 			path = EverySwitch;
 			sourceTree = "<group>";
@@ -621,6 +624,7 @@
 				04E03AFE275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift in Sources */,
 				04447B722754FE3800CD2900 /* SwitchVM.swift in Sources */,
 				0493375227625A1E00AE779A /* Reader.swift in Sources */,
+				04581DC327677ADC008ADF30 /* KeepAwakeSwitch.swift in Sources */,
 				04933788276264D400AE779A /* BluredSoundWave.swift in Sources */,
 				049337972762C07600AE779A /* RadioSettingView.swift in Sources */,
 				04447B742755015A00CD2900 /* ShellCommandDefine.swift in Sources */,
@@ -843,7 +847,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = NO;
@@ -888,7 +892,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = NO;
