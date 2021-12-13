@@ -20,7 +20,7 @@ class JLAVAudioPlayer: NSObject ,AVPlayerItemMetadataOutputPushDelegate, AudioPl
         
     override init() {
         super.init()
-        self.setupRemoteCommandCenter()
+//        self.setupRemoteCommandCenter()
     }
     
     func play(stream item: RadioPlayerItem) {
@@ -45,7 +45,7 @@ class JLAVAudioPlayer: NSObject ,AVPlayerItemMetadataOutputPushDelegate, AudioPl
         self.playerItem = AVPlayerItem(asset: asset)
         self.audioPlayer = AVPlayer(playerItem: playerItem)
         self.audioPlayer?.play()
-        self.setupNowPlaying()
+//        self.setupNowPlaying()
         self.bufferring = true
         
         let metadataOutput = AVPlayerItemMetadataOutput(identifiers: nil)
@@ -72,5 +72,6 @@ extension AVPlayer {
     func stop() {
         self.seek(to: CMTime.zero)
         self.pause()
+        self.replaceCurrentItem(with: nil)
     }
 }

@@ -30,7 +30,9 @@ public struct RollingText : View {
                         .onAppear() {
                             print("\(geometry.size.width)  \(stringWidth)")
                             if geometry.size.width - leftFade - rightFade < stringWidth {
-                                self.animate = true
+                                withAnimation() {
+                                    self.animate = true
+                                }
                             }
                         }
                         .fixedSize(horizontal: true, vertical: false)
@@ -38,16 +40,21 @@ public struct RollingText : View {
                         .onChange(of: self.text) { _ in
                             print("\(geometry.size.width)  \(stringWidth)")
                             if geometry.size.width - leftFade - rightFade < stringWidth {
-                                self.animate = true
+                                withAnimation() {
+                                    self.animate = true
+                                }
                             }
                         }
-                    Text(self.text).lineLimit(1)
-                        .font(.init(font))
-                        .offset(x: self.animate ? 0 : stringWidth + stringHeight * 2)
-                        .animation(Animation.linear(duration: Double(stringWidth) / 30).delay(startDelay).repeatForever(autoreverses: false), value: self.animate
-                        )
-                        .fixedSize(horizontal: true, vertical: false)
-                        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
+                    
+                        Text(self.text).lineLimit(1)
+                            .font(.init(font))
+                            .offset(x: self.animate ? 0 : stringWidth + stringHeight * 2)
+                            .animation(Animation.linear(duration: Double(stringWidth) / 30).delay(startDelay).repeatForever(autoreverses: false), value: self.animate
+                            )
+                            .fixedSize(horizontal: true, vertical: false)
+                            .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
+                            .opacity(self.animate ? 1 : 0)
+                    
                 }.offset(x: leftFade)
                 .mask(
                     HStack(spacing:0) {

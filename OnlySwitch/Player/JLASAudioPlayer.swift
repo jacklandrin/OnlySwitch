@@ -9,6 +9,7 @@
 import AVFoundation
 import AVKit
 import MediaPlayer
+import SwiftUI
 
 let bufferSize = 512
 
@@ -28,7 +29,7 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
     
     override init() {
         super.init()
-        self.setupRemoteCommandCenter()
+//        self.setupRemoteCommandCenter()
         NotificationCenter.default.addObserver(forName: showPopoverNotificationName, object: nil, queue: .main, using: { _ in
             self.isAppActive = true
         })
@@ -60,7 +61,7 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
         }
         self.bufferring = true
        
-        self.setupNowPlaying()
+//        self.setupNowPlaying()
     }
     
     func setAVPlayer(url:URL)  {
@@ -79,7 +80,9 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
             self.currentAudioStation?.streamInfo = currentStationTitle ?? ""
             return
         }
-        self.currentAudioStation?.streamInfo = title.trimmingCharacters(in:.newlines)
+        withAnimation(.default) {
+            self.currentAudioStation?.streamInfo = title.trimmingCharacters(in:.newlines)
+        }
     }
     
     func stop() {

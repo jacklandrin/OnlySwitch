@@ -16,13 +16,13 @@ struct ContentView: View {
     @ObservedObject private var playerItem = RadioStationSwitch.shared.playerItem
     var body: some View {
         VStack {
-            ScrollView(.vertical) {
+//            ScrollView(.vertical) {
                 VStack {
                     ForEach(switchList.indices, id:\.self) { index in
                         SwitchBarView().environmentObject(switchList[index])
                     }
                 }.padding(15)
-            }
+//            }
             recommendApp.opacity(0.8)
             bottomBar
 
@@ -80,14 +80,14 @@ struct ContentView: View {
                         .offset(x:10)
                     Text("v\(SystemInfo.majorVersion as! String)")
                 }
-                .transition(.move(edge: .top))
+                .transition(.move(edge: .bottom))
                 
             } else {
                 RollingText(text: playerItem.streamInfo,
                             leftFade: 16,
                             rightFade: 16,
                             startDelay: 3)
-                    .frame(width:250, height:20)
+                    .frame(height:20)
                     .padding(10)
                     .transition(.move(edge: .bottom))
                     

@@ -16,9 +16,9 @@ struct SwitchBarView: View {
                     barImage(option: switchOption))
                 .resizable()
                 .scaledToFit()
-                .frame(width: 25 , height: 25)
+                .frame(width: 25, height: 25)
             Text(switchOption.switchType.switchTitle().title)
-                .frame(width:90, alignment: .leading)
+                .frame(alignment: .leading)
             if switchOption.switchType == .airPods {
                 AirPodsBatteryView(batteryValues: convertBattery(info: switchOption.info))
                     .offset(x:20)
