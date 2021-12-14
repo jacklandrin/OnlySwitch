@@ -1,0 +1,42 @@
+/* 
+  Localizable.strings
+  OnlySwitch
+
+  Created by Jacklandrin on 2021/12/14.
+  
+*/
+"Hide Desktop" = "Hide Desktop Icons";
+"Dark Mode" = "Dark Mode";
+"Hide Notch" = "Hide Notch";
+"Mute" = "Mute";
+"Screen Saver" = "Screen Saver";
+"Night Shift" = "Night Shift";
+"Autohide Dock" = "Autohide Dock";
+"AirPods" = "AirPods";
+"Bluetooth" = "Bluetooth";
+"Xcode Derived Data" = "Xcode Derived Data";
+"Autohide Menu Bar" = "Autohide Menu Bar";
+"Show Hidden Files" = "Show Hidden Files";
+"Radio Player" = "Radio Player";
+"Keep Awake" = "Keep Awake";
+"Settings" = "Settings";
+"Launch at login" = "Launch at login";
+"Clear cache" = "Clear cache";
+"Quit" = "Quit";
+"More App, QRCobot" = "More App, QRCobot";
+"Download QRCobot" = "Download QRCobot";
+"Radio" = "Radio";
+"About" = "About";
+"Name" = "Name";
+"Stream URL" = "Stream URL";
+"Select" = "Select";
+"Current: %@" = "Current: %@";
+"General" = "General";
+"Launch:" = "Launch:";
+"Language:" = "Language:";
+"Cache:" = "Cache:";
+"Contact:" = "Contact:";
+"Quit:" = "Quit:";
+"Cache for Hide Notch Switch" = "Cache for Hide Notch Switch";
+"Send Email to Jacklandrin" = "Send Email to Jacklandrin";
+"Quit Only Switch" = "Quit Only Switch";

@@ -1,0 +1,42 @@
+/* 
+  Localizable.strings
+  OnlySwitch
+
+  Created by Jacklandrin on 2021/12/14.
+  
+*/
+"Hide Desktop" = "Desktop ausblenden";
+"Dark Mode" = "Dunkelmodus";
+"Hide Notch" = "Einkerbung ausblenden";
+"Mute" = "Stumm";
+"Screen Saver" = "Bildschirmschoner";
+"Night Shift" = "Night Shift";
+"Autohide Dock" = "Dock automatisch ausblenden";
+"AirPods" = "AirPods";
+"Bluetooth" = "Bluetooth";
+"Xcode Derived Data" = "Xcode Derived Data";
+"Autohide Menu Bar" = "Menüleiste automatisch ausblenden";
+"Show Hidden Files" = "Versteckte Dateien Zeigen";
+"Radio Player" = "Radio-Player";
+"Keep Awake" = "Wach bleiben";
+"Settings" = "Einstellungen";
+"Launch at login" = "Bei Anmeldung starten";
+"Clear cache" = "Cache leeren";
+"Quit" = "Aufhören";
+"More App, QRCobot" = "Mehr App, QRCobot";
+"Download QRCobot" = "QRCobot herunterladen";
+"Radio" = "Radio";
+"About" = "Info";
+"Name" = "Name";
+"Stream URL" = "Stream-URL";
+"Select" = "Auswählen";
+"Current: %@" = "Derzeitig: %@";
+"General" = "Allgemein";
+"Launch:" = "Starten:";
+"Language:" = "Sprache:";
+"Cache:" = "Cache:";
+"Contact:" = "Kontaktieren:";
+"Quit:" = "Aufhören:";
+"Cache for Hide Notch Switch" = "Cache für Shalter von Einkerbung ausblenden";
+"Send Email to Jacklandrin" = "E-Mail an Jacklandrin senden";
+"Quit Only Switch" = "Only Switch Aufhören";

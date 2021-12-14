@@ -1,0 +1,42 @@
+/* 
+  Localizable.strings
+  OnlySwitch
+
+  Created by Jacklandrin on 2021/12/14.
+  
+*/
+"Hide Desktop" = "隐藏桌面图标";
+"Dark Mode" = "深色模式";
+"Hide Notch" = "藏刘海儿";
+"Mute" = "静音";
+"Screen Saver" = "屏幕保护";
+"Night Shift" = "夜览";
+"Autohide Dock" = "自动隐藏程序坞";
+"AirPods" = "AirPods";
+"Bluetooth" = "蓝牙";
+"Xcode Derived Data" = "Xcode Derived Data";
+"Autohide Menu Bar" = "自动隐藏菜单栏";
+"Show Hidden Files" = "显示隐藏文件";
+"Radio Player" = "电台";
+"Keep Awake" = "防止锁屏";
+"Settings" = "设置";
+"Launch at login" = "开机启动";
+"Clear cache" = "清除缓存";
+"Quit" = "退出";
+"More App, QRCobot" = "更多应用，QRCobot";
+"Download QRCobot" = "下载 QRCobot";
+"Radio" = "电台";
+"About" = "关于";
+"Name" = "名称";
+"Stream URL" = "流地址";
+"Select" = "选择";
+"Current: %@" = "当前: %@";
+"General" = "通用";
+"Launch:" = "启动:";
+"Language:" = "语言:";
+"Cache:" = "缓存:";
+"Contact:" = "联系:";
+"Quit:" = "退出:";
+"Cache for Hide Notch Switch" = "藏刘海儿开关缓存";
+"Send Email to Jacklandrin" = "给Jacklandrin发邮件";
+"Quit Only Switch" = "退出 Only Switch";

@@ -35,6 +35,7 @@ class AppDelegate:NSObject, NSApplicationDelegate {
         statusBar = StatusBarController(popover)
         blManager = BluetoothDevicesManager.shared
         RadioStationSwitch.shared.setDefaultRadioStations()
+        Bundle.setLanguage(lang: LanguageManager.sharedManager.currentLang)
     }
     
     func applicationWillTerminate(_ notification: Notification) {

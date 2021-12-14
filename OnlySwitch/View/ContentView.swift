@@ -49,7 +49,7 @@ struct ContentView: View {
                         .frame(height: 45)
             HStack() {
                 Spacer()
-                Text("More App, QRCobot")
+                Text("More App, QRCobot".localized())
                     .font(.system(size: 14))
                     .fontWeight(.bold)
                     .padding(10)
@@ -60,7 +60,7 @@ struct ContentView: View {
                         .scaledToFit()
                         .frame(width: 45)
                         .cornerRadius(10)
-                        .help(Text("Download QRCobot"))
+                        .help(Text("Download QRCobot".localized()))
                 })
             }.frame(height: 45)
                 
@@ -94,36 +94,11 @@ struct ContentView: View {
             
             Spacer()
             Button(action: {
-                switchVM.showSettingMenu.toggle()
+                OpenWindows.Setting.open()
             }, label: {
                 Image(systemName: "gearshape.circle")
                     .font(.system(size: 17))
             }).buttonStyle(.plain)
-                .popover(isPresented: $switchVM.showSettingMenu) {
-                    List {
-                        LaunchAtLogin.Toggle {
-                            Text("Start at login")
-                        }
-                        Button(action: {
-                            OpenWindows.Setting.open()
-                        }, label: {
-                            Text("Settings")
-                        }).buttonStyle(.borderless)
-                        Button(action: {
-                            TopNotchSwitch.shared.clearCache()
-                        }, label: {
-                            Text("Clear cache")
-                        }).buttonStyle(.borderless)
-                        Divider()
-                        Button(action: {
-                            NSApp.terminate(self)
-                        }, label: {
-                            Text("Quit")
-                        }).buttonStyle(.borderless)
-                    }
-                    .frame(width: 150, height: 135)
-                    
-                }
                 .padding(10)
             
         }

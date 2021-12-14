@@ -15,7 +15,7 @@ struct RadioSettingView: View {
     var body: some View {
         VStack {
             Table($radioSettingVM.radioList, selection: $radioSettingVM.selectRow) {
-                TableColumn("Name") { $row in
+                TableColumn("Name".localized()) { $row in
                     if row.isEditing {
                         TextEditor(text: $row.title)
                             .textFieldStyle(PlainTextFieldStyle())
@@ -29,7 +29,6 @@ struct RadioSettingView: View {
                         Text(row.title)
                             .onTapGesture {
                                 guard row.id == radioSettingVM.selectRow else {return}
-                                print("double click")
                                 radioSettingVM.endEditing()
                                 row.isEditing = true
                                 updateTable = UUID()
@@ -37,7 +36,7 @@ struct RadioSettingView: View {
                     }
                 }
                     .width(min: 50, ideal: 100, max: 200)
-                TableColumn("Stream URL") { $row in
+                TableColumn("Stream URL".localized()) { $row in
                     if row.isEditing {
                         TextEditor(text: $row.streamUrl)
                             .textFieldStyle(PlainTextFieldStyle())
@@ -50,7 +49,6 @@ struct RadioSettingView: View {
                         Text(row.streamUrl)
                             .onTapGesture {
                                 guard row.id == radioSettingVM.selectRow else {return}
-                                print("double click")
                                 radioSettingVM.endEditing()
                                 row.isEditing = true
                                 updateTable = UUID()
@@ -63,9 +61,9 @@ struct RadioSettingView: View {
                 Button(action: {
                     radioSettingVM.selectStation()
                 }, label: {
-                    Text("Select")
+                    Text("Select".localized())
                 })
-                Text("Current: \(radioSettingVM.currentTitle)")
+                Text("Current: %@".localizeWithFormat(arguments: radioSettingVM.currentTitle))
                 Spacer()
                 Button(action: {
                     print("plus item")

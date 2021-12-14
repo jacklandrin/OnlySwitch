@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SettingView: View {
     @ObservedObject var settingVM = SettingVM()
+    @ObservedObject var langManager = LanguageManager.sharedManager
     init() {
         settingVM.selection = settingVM.settingItems.first
     }
@@ -18,7 +19,7 @@ struct SettingView: View {
                 NavigationLink{
                     item.page()
                 }label:{
-                    Text(item.rawValue)
+                    Text(item.rawValue.localized())
                 }
             }.listStyle(SidebarListStyle())
             settingVM.settingItems.first?.page()

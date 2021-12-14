@@ -88,6 +88,11 @@
 		049337992762C0B300AE779A /* RadioSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337982762C0B300AE779A /* RadioSettingVM.swift */; };
 		0493379C2763C09000AE779A /* OnlySwitch.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0493379A2763C09000AE779A /* OnlySwitch.xcdatamodeld */; };
 		0493379E2763C0E800AE779A /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493379D2763C0E800AE779A /* Persistence.swift */; };
+		04938D002768CAEB00713F1D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 04938D022768CAEB00713F1D /* Localizable.strings */; };
+		04938D062768CB2000713F1D /* LocalizedString++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04938D052768CB2000713F1D /* LocalizedString++.swift */; };
+		04938D082768CBA100713F1D /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04938D072768CBA100713F1D /* LanguageManager.swift */; };
+		04938D0A2769143300713F1D /* GeneralView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04938D092769143300713F1D /* GeneralView.swift */; };
+		04938D0E2769247A00713F1D /* SendEmail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04938D0D2769247A00713F1D /* SendEmail.swift */; };
 		04A23B23275D5FC500B454C8 /* CoreBrightness.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04A23B22275D5FC500B454C8 /* CoreBrightness.framework */; };
 		04A23B2B275D61BC00B454C8 /* NightShiftSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A23B2A275D61BC00B454C8 /* NightShiftSwitch.swift */; };
 		04A2FFF72755A3E500CE56A0 /* NSImage++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A2FFF62755A3E500CE56A0 /* NSImage++.swift */; };
@@ -182,6 +187,13 @@
 		049337982762C0B300AE779A /* RadioSettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioSettingVM.swift; sourceTree = "<group>"; };
 		0493379B2763C09000AE779A /* OnlySwitch.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = OnlySwitch.xcdatamodel; sourceTree = "<group>"; };
 		0493379D2763C0E800AE779A /* Persistence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
+		04938D012768CAEB00713F1D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		04938D032768CAEE00713F1D /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		04938D042768CAEF00713F1D /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		04938D052768CB2000713F1D /* LocalizedString++.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "LocalizedString++.swift"; sourceTree = "<group>"; };
+		04938D072768CBA100713F1D /* LanguageManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LanguageManager.swift; sourceTree = "<group>"; };
+		04938D092769143300713F1D /* GeneralView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralView.swift; sourceTree = "<group>"; };
+		04938D0D2769247A00713F1D /* SendEmail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendEmail.swift; sourceTree = "<group>"; };
 		04A23B22275D5FC500B454C8 /* CoreBrightness.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBrightness.framework; path = ../../../../System/Library/PrivateFrameworks/CoreBrightness.framework; sourceTree = "<group>"; };
 		04A23B2A275D61BC00B454C8 /* NightShiftSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightShiftSwitch.swift; sourceTree = "<group>"; };
 		04A23B2C275D641900B454C8 /* OnlySwitch-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OnlySwitch-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -256,6 +268,7 @@
 				04447B712754FE3800CD2900 /* SwitchVM.swift */,
 				043E5D742758208D00ADC004 /* SwitchBarVM.swift */,
 				049337892762651D00AE779A /* SoundWaveModel.swift */,
+				04938D072768CBA100713F1D /* LanguageManager.swift */,
 				04581DB12764D23C008ADF30 /* Setting */,
 			);
 			path = ViewModel;
@@ -302,6 +315,7 @@
 		04447B4F2754F08000CD2900 = {
 			isa = PBXGroup;
 			children = (
+				04938D022768CAEB00713F1D /* Localizable.strings */,
 				0443A6B527599AAC00A3BCFD /* README.md */,
 				04447B5A2754F08000CD2900 /* OnlySwitch */,
 				04447B592754F08000CD2900 /* Products */,
@@ -355,8 +369,7 @@
 			children = (
 				04581DAF2764CBCF008ADF30 /* SettingVM.swift */,
 				049337982762C0B300AE779A /* RadioSettingVM.swift */,
-				04581DBC27653C35008ADF30 /* AirPodsSettingView.swift */,
-				04581DC02765522A008ADF30 /* AboutView.swift */,
+				04581DBE27653C4A008ADF30 /* AirPodsSettingVM.swift */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -448,7 +461,9 @@
 			children = (
 				049337912762BA3200AE779A /* SettingView.swift */,
 				049337962762C07600AE779A /* RadioSettingView.swift */,
-				04581DBE27653C4A008ADF30 /* AirPodsSettingVM.swift */,
+				04581DBC27653C35008ADF30 /* AirPodsSettingView.swift */,
+				04581DC02765522A008ADF30 /* AboutView.swift */,
+				04938D092769143300713F1D /* GeneralView.swift */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -465,6 +480,7 @@
 		04A2FFF8275636DD00CE56A0 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				04938D052768CB2000713F1D /* LocalizedString++.swift */,
 				043E5D6E2758116800ADC004 /* NSSound_SystemVolumeExtension.swift */,
 				04A2FFF62755A3E500CE56A0 /* NSImage++.swift */,
 				04A2FFF9275636FA00CE56A0 /* String++.swift */,
@@ -482,6 +498,7 @@
 				040E97262760FF3E003D9D42 /* MetadataExtractorError.swift */,
 				04E03AFD275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift */,
 				0427B25A275D786400AD783A /* SystemInfo.swift */,
+				04938D0D2769247A00713F1D /* SendEmail.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -541,6 +558,8 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				"zh-Hans",
+				de,
 				Base,
 			);
 			mainGroup = 04447B4F2754F08000CD2900;
@@ -562,6 +581,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04938D002768CAEB00713F1D /* Localizable.strings in Resources */,
 				0443A6B627599AAC00A3BCFD /* README.md in Resources */,
 				04447B632754F08100CD2900 /* Preview Assets.xcassets in Resources */,
 				04E03B04275FD98500EA5FB9 /* battery-airpods-monterey.sh in Resources */,
@@ -629,13 +649,16 @@
 				049337972762C07600AE779A /* RadioSettingView.swift in Sources */,
 				04447B742755015A00CD2900 /* ShellCommandDefine.swift in Sources */,
 				0493374B27625A1E00AE779A /* StreamingState.swift in Sources */,
+				04938D0E2769247A00713F1D /* SendEmail.swift in Sources */,
 				0493374D27625A1E00AE779A /* Parser+PropertyListener.swift in Sources */,
 				0493374827625A1E00AE779A /* StreamingDelegate.swift in Sources */,
 				0457C25D2760046A00B25BFA /* BluetoothSwitch.swift in Sources */,
 				04A2FFFA275636FA00CE56A0 /* String++.swift in Sources */,
 				043E5D752758208D00ADC004 /* SwitchBarVM.swift in Sources */,
 				0493374527625A1E00AE779A /* JLASAudioPlayer.swift in Sources */,
+				04938D0A2769143300713F1D /* GeneralView.swift in Sources */,
 				0493378A2762651D00AE779A /* SoundWaveModel.swift in Sources */,
+				04938D082768CBA100713F1D /* LanguageManager.swift in Sources */,
 				043E5D7327581C2E00ADC004 /* SwitchBarView.swift in Sources */,
 				0427B25B275D786400AD783A /* SystemInfo.swift in Sources */,
 				0493375527625A1E00AE779A /* Reader+Converter.swift in Sources */,
@@ -694,11 +717,25 @@
 				043E5D712758176B00ADC004 /* SwitchToggle.swift in Sources */,
 				040E97272760FF3E003D9D42 /* MetadataExtractorError.swift in Sources */,
 				0443A6B82759A99700A3BCFD /* ScreenSaverSwitch.swift in Sources */,
+				04938D062768CB2000713F1D /* LocalizedString++.swift in Sources */,
 				0493379C2763C09000AE779A /* OnlySwitch.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		04938D022768CAEB00713F1D /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				04938D012768CAEB00713F1D /* en */,
+				04938D032768CAEE00713F1D /* zh-Hans */,
+				04938D042768CAEF00713F1D /* de */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		04447B6A2754F08100CD2900 /* Debug */ = {

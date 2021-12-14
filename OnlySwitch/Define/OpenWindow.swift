@@ -25,7 +25,7 @@ enum OpenWindows:String, CaseIterable {
                 let xPos = getScreenWithMouse()!.frame.width / 2 - settingWindowWidth / 2
                 let yPos = getScreenWithMouse()!.frame.height / 2 - settingWindowHeight / 2
                 settingWindow.setFrameOrigin(NSPoint(x: xPos, y: yPos))
-                settingWindow.title = "Settings"
+                settingWindow.title = "Settings".localized()
                 let controller = NSWindowController(window: settingWindow)
                 Router.settingWindowController = controller
                 controller.showWindow(self)

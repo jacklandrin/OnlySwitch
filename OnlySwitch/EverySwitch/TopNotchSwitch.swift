@@ -76,6 +76,30 @@ class TopNotchSwitch:SwitchProvider {
         
     }
     
+    func cacheSize() -> String {
+        guard let myAppPath = myAppPath else {
+            return ""
+        }
+        let processedPath = myAppPath.appendingPathComponent(string: "processed")
+        let originalPath = myAppPath.appendingPathComponent(string: "original")
+        let processedUrl = URL(fileURLWithPath: processedPath)
+        let originalUrl = URL(fileURLWithPath: originalPath)
+        
+        var processedSize = 0
+        var originalSize = 0
+        var size = ""
+        do {
+            processedSize = try processedUrl.directoryTotalAllocatedSize(includingSubfolders: true) ?? 0
+            originalSize = try originalUrl.directoryTotalAllocatedSize(includingSubfolders: true) ?? 0
+            URL.byteCountFormatter.countStyle = .file
+            guard let byteCount = URL.byteCountFormatter.string(for: processedSize + originalSize) else { return ""}
+            size = byteCount
+        } catch {
+            size = ""
+        }
+        return size
+    }
+    
     // Mark: - private functions
     
     private var isNotchScreen:Bool {

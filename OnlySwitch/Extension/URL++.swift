@@ -38,5 +38,5 @@ extension URL {
         guard let byteCount = URL.byteCountFormatter.string(for: size) else { return nil}
         return byteCount
     }
-    private static let byteCountFormatter = ByteCountFormatter()
+    static let byteCountFormatter = ByteCountFormatter()
 }
