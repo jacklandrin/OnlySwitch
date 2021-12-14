@@ -37,7 +37,8 @@ struct AirPodsSettingView: View {
     }
     
     func backgroundColor(item:AirPodsItem) -> Color {
-        guard let device = AirPodsSwitch.shared.currentDevice else {return Color(nsColor: NSColor.lightGray)}
+        guard let airPodsSwitch = SwitchManager.shared.getSwitch(of: .airPods) as? AirPodsSwitch else {return Color(nsColor: NSColor.lightGray)}
+        guard let device = airPodsSwitch.currentDevice else {return Color(nsColor: NSColor.lightGray)}
         if device.addressString == item.address {
             return .blue
         } else {

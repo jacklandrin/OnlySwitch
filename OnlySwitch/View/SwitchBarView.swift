@@ -17,11 +17,11 @@ struct SwitchBarView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 25, height: 25)
-            Text(switchOption.switchType.switchTitle().title)
+            Text(switchOption.switchOperator!.barInfo.title)
                 .frame(alignment: .leading)
             if switchOption.switchType == .airPods {
                 AirPodsBatteryView(batteryValues: convertBattery(info: switchOption.info))
-                    .offset(x:20)
+                    .offset(x:60)
             } else {
                 Text(switchOption.info).foregroundColor(.gray)
             }
@@ -44,9 +44,9 @@ struct SwitchBarView: View {
     
     func barImage(option:SwitchBarVM) -> NSImage {
         if option.isOn {
-            return option.switchType.switchTitle().onImage
+            return option.switchOperator!.barInfo.onImage
         } else {
-            return option.switchType.switchTitle().offImage
+            return option.switchOperator!.barInfo.offImage
         }
     }
 

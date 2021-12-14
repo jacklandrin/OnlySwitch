@@ -13,23 +13,27 @@ class SwitchBarVM : ObservableObject, Identifiable {
     @Published var processing = false
     @Published var info = ""
     
-    private let switchOperator:SwitchProvider
+    weak var switchOperator:SwitchProvider?
     
     init(switchType:SwitchType) {
         self.switchType = switchType
-        self.switchOperator = switchType.switchOperator()
+//        self.switchOperator = aswitch
     }
     
     func refreshStatus() {
-        isHidden = !self.switchOperator.isVisable()
+        guard let switchOperator = switchOperator else {
+            return
+        }
+
+        isHidden = !switchOperator.isVisable()
         if self.switchType == .xcodeCache {
             if self.info == "" || self.info != "Calculating..." {
                 self.info = "Calculating..."
                 refreshAsync()
             }
         } else {
-            isOn = self.switchOperator.currentStatus()
-            info = self.switchOperator.currentInfo()
+            isOn = switchOperator.currentStatus()
+            info = switchOperator.currentInfo()
         }
     }
     
@@ -39,8 +43,12 @@ class SwitchBarVM : ObservableObject, Identifiable {
     }
     
     func refreshSwitchStatus() {
+        guard let switchOperator = switchOperator else {
+            return
+        }
+
         Task {
-            let isOn = await (self.switchOperator.currentStatusAsync!)()
+            let isOn = await switchOperator.currentStatusAsync()
             DispatchQueue.main.async { [self] in
                 self.isOn = isOn
             }
@@ -48,8 +56,11 @@ class SwitchBarVM : ObservableObject, Identifiable {
     }
     
     func refreshInfo() {
+        guard let switchOperator = switchOperator else {
+            return
+        }
         Task {
-            let info = await (self.switchOperator.currentInfoAsync!)()
+            let info = await switchOperator.currentInfoAsync()
             DispatchQueue.main.async { [self] in
                 self.info = info
             }
@@ -57,6 +68,9 @@ class SwitchBarVM : ObservableObject, Identifiable {
     }
     
     func doSwitch(isOn:Bool) {
+        guard let switchOperator = switchOperator else {
+            return
+        }
         processing = true
         Task {
             let success = await switchOperator.operationSwitch(isOn: isOn)
@@ -66,8 +80,8 @@ class SwitchBarVM : ObservableObject, Identifiable {
                 }
                 self.processing = false
                 if info != "" {
-                    let _ = self.switchOperator.currentStatus()
-                    info = self.switchOperator.currentInfo()
+                    let _ = switchOperator.currentStatus()
+                    info = switchOperator.currentInfo()
                 }
             }
         }

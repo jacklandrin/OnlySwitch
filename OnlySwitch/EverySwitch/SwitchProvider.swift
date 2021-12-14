@@ -8,12 +8,22 @@
 import Foundation
 import Combine
 
-@objc protocol SwitchProvider {
+protocol SwitchProvider:AnyObject {
     func currentStatus() -> Bool
     func currentInfo() -> String
-    @objc optional func currentStatusAsync() async -> Bool
-    @objc optional func currentInfoAsync() async -> String
     func operationSwitch(isOn:Bool) async -> Bool
     func isVisable() -> Bool
+    var type:SwitchType {get set}
+    var switchBarVM:SwitchBarVM {get set}
+    var barInfo:SwitchBarInfo {get set}
 }
 
+extension SwitchProvider {
+    func currentStatusAsync() async -> Bool {
+        return currentStatus()
+    }
+    
+    func currentInfoAsync() async -> String {
+        return currentInfo()
+    }
+}

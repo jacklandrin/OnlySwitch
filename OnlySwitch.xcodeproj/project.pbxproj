@@ -93,6 +93,8 @@
 		04938D082768CBA100713F1D /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04938D072768CBA100713F1D /* LanguageManager.swift */; };
 		04938D0A2769143300713F1D /* GeneralView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04938D092769143300713F1D /* GeneralView.swift */; };
 		04938D0E2769247A00713F1D /* SendEmail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04938D0D2769247A00713F1D /* SendEmail.swift */; };
+		04938D1027692B6900713F1D /* SwitchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04938D0F27692B6900713F1D /* SwitchManager.swift */; };
+		04938D12276948DE00713F1D /* WallpaperManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04938D11276948DE00713F1D /* WallpaperManager.swift */; };
 		04A23B23275D5FC500B454C8 /* CoreBrightness.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04A23B22275D5FC500B454C8 /* CoreBrightness.framework */; };
 		04A23B2B275D61BC00B454C8 /* NightShiftSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A23B2A275D61BC00B454C8 /* NightShiftSwitch.swift */; };
 		04A2FFF72755A3E500CE56A0 /* NSImage++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A2FFF62755A3E500CE56A0 /* NSImage++.swift */; };
@@ -194,6 +196,8 @@
 		04938D072768CBA100713F1D /* LanguageManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LanguageManager.swift; sourceTree = "<group>"; };
 		04938D092769143300713F1D /* GeneralView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralView.swift; sourceTree = "<group>"; };
 		04938D0D2769247A00713F1D /* SendEmail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendEmail.swift; sourceTree = "<group>"; };
+		04938D0F27692B6900713F1D /* SwitchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchManager.swift; sourceTree = "<group>"; };
+		04938D11276948DE00713F1D /* WallpaperManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WallpaperManager.swift; sourceTree = "<group>"; };
 		04A23B22275D5FC500B454C8 /* CoreBrightness.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBrightness.framework; path = ../../../../System/Library/PrivateFrameworks/CoreBrightness.framework; sourceTree = "<group>"; };
 		04A23B2A275D61BC00B454C8 /* NightShiftSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightShiftSwitch.swift; sourceTree = "<group>"; };
 		04A23B2C275D641900B454C8 /* OnlySwitch-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OnlySwitch-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -227,6 +231,7 @@
 			isa = PBXGroup;
 			children = (
 				04243486275641DB0044D0AD /* SwitchProvider.swift */,
+				04938D0F27692B6900713F1D /* SwitchManager.swift */,
 				04243488275642370044D0AD /* HiddenDesktopSwitch.swift */,
 				0424348A275642D20044D0AD /* DarkModeSwitch.swift */,
 				0424348C275643560044D0AD /* TopNotchSwitch.swift */,
@@ -499,6 +504,7 @@
 				04E03AFD275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift */,
 				0427B25A275D786400AD783A /* SystemInfo.swift */,
 				04938D0D2769247A00713F1D /* SendEmail.swift */,
+				04938D11276948DE00713F1D /* WallpaperManager.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -655,6 +661,7 @@
 				0457C25D2760046A00B25BFA /* BluetoothSwitch.swift in Sources */,
 				04A2FFFA275636FA00CE56A0 /* String++.swift in Sources */,
 				043E5D752758208D00ADC004 /* SwitchBarVM.swift in Sources */,
+				04938D1027692B6900713F1D /* SwitchManager.swift in Sources */,
 				0493374527625A1E00AE779A /* JLASAudioPlayer.swift in Sources */,
 				04938D0A2769143300713F1D /* GeneralView.swift in Sources */,
 				0493378A2762651D00AE779A /* SoundWaveModel.swift in Sources */,
@@ -703,6 +710,7 @@
 				04581DB02764CBCF008ADF30 /* SettingVM.swift in Sources */,
 				04E03B06275FEBE200EA5FB9 /* AirPodsBatteryView.swift in Sources */,
 				04581DC12765522A008ADF30 /* AboutView.swift in Sources */,
+				04938D12276948DE00713F1D /* WallpaperManager.swift in Sources */,
 				0493375127625A1E00AE779A /* Parser.swift in Sources */,
 				04447B702754F21A00CD2900 /* StatusBarController.swift in Sources */,
 				0493374A27625A1E00AE779A /* Streamer+DownloadableDelegate.swift in Sources */,
@@ -884,6 +892,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -929,6 +938,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";

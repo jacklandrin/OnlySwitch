@@ -16,7 +16,9 @@ class RadioSettingVM:ObservableObject {
             for radio in radioList where radio.id != selectRow {
                 radio.isEditing = false
             }
+            
             currentTitle = RadioStationSwitch.shared.playerItem.title
+            
         }
     }
     @Published var showErrorToast = false
@@ -106,6 +108,7 @@ class RadioSettingVM:ObservableObject {
         }
         let station = RadioStations.fetchRequest(by: currentRow).first
         guard let station = station else {return}
+        
         RadioStationSwitch.shared.playerItem.isPlaying = false
         RadioStationSwitch.shared.playerItem.title = station.title!
         RadioStationSwitch.shared.playerItem.streamUrl = station.url!
@@ -115,5 +118,7 @@ class RadioSettingVM:ObservableObject {
         UserDefaults.standard.synchronize()
         currentTitle = RadioStationSwitch.shared.playerItem.title
         NotificationCenter.default.post(name: changeSettingNotification, object: nil)
+        
+        
     }
 }

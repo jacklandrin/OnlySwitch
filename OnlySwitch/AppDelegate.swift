@@ -16,7 +16,6 @@ struct OnlySwitchApp: App {
         WindowGroup {
             EmptyView().frame(width: 0, height: 0)
         }
-        
     }
 }
 
@@ -33,6 +32,9 @@ class AppDelegate:NSObject, NSApplicationDelegate {
         popover.contentViewController = NSHostingController(rootView: contentView)
         
         statusBar = StatusBarController(popover)
+        
+        SwitchManager.shared.registerAllSwitches()
+        
         blManager = BluetoothDevicesManager.shared
         RadioStationSwitch.shared.setDefaultRadioStations()
         Bundle.setLanguage(lang: LanguageManager.sharedManager.currentLang)
@@ -41,6 +43,6 @@ class AppDelegate:NSObject, NSApplicationDelegate {
     func applicationWillTerminate(_ notification: Notification) {
         
     }
-    
+
     
 }

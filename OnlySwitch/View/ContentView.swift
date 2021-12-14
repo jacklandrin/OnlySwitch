@@ -105,6 +105,7 @@ struct ContentView: View {
     }
     
     func refreshData() {
+        switchVM.refreshList()
         switchVM.refreshSwitchStatus()
         switchList = switchVM.switchList
         id = UUID()

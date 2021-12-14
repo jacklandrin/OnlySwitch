@@ -34,7 +34,10 @@ struct CleanProgressView: View {
                         .progressViewStyle(GaugeProgressStyle())
                         .contentShape(Rectangle()))
             .onReceive(timer) { _ in
-                progress = XcodeCacheSwitch.shared.progressPercent
+                if let xcodeSwitch = SwitchManager.shared.getSwitch(of: .xcodeCache) as? XcodeCacheSwitch {
+                    progress = xcodeSwitch.progressPercent
+                }
+                
             }
     }
 }

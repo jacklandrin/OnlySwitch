@@ -11,8 +11,15 @@ import AppKit
 let NSVolumeKey = "NSVolumeKey"
 let ASVolumeKey = "ASVolumeKey"
 class MuteSwitch:SwitchProvider {
-    static let shared = MuteSwitch()
-    
+
+    var type: SwitchType = .mute
+    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .mute)
+    var barInfo: SwitchBarInfo = SwitchBarInfo(title: "Mute".localized(),
+                                               onImage: NSImage(systemSymbolName: "speaker.slash.circle"),
+                                               offImage: NSImage(systemSymbolName: "speaker.wave.2.circle"))
+    init() {
+        switchBarVM.switchOperator = self
+    }
     private let muteSwitchOperator:MuteSwitchProtocal = ASMuteSwitchOperator()
     
     func operationSwitch(isOn: Bool) async -> Bool {

@@ -5,10 +5,18 @@
 //  Created by Jacklandrin on 2021/12/7.
 //
 
-import Foundation
+import AppKit
 
 class BluetoothSwitch:SwitchProvider {
-    static let shared = BluetoothSwitch()
+
+    var type: SwitchType = .bluetooth
+    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .bluetooth)
+    var barInfo: SwitchBarInfo = SwitchBarInfo(title: "Bluetooth".localized(),
+                                               onImage: NSImage(named: "bluetooth_on")!,
+                                               offImage: NSImage(named: "bluetooth_off")!)
+    init() {
+        switchBarVM.switchOperator = self
+    }
     let blManager = BluetoothDevicesManager.shared
     func currentInfo() -> String {
         return ""

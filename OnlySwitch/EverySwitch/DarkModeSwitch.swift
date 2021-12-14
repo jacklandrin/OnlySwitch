@@ -5,10 +5,19 @@
 //  Created by Jacklandrin on 2021/11/30.
 //
 
-import Foundation
+import AppKit
 
 class DarkModeSwitch:SwitchProvider {
-    static let shared = DarkModeSwitch()
+
+    var type: SwitchType = .darkMode
+    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .darkMode)
+    var barInfo: SwitchBarInfo = SwitchBarInfo(title:"Dark Mode".localized(),
+                                               onImage:NSImage(named: "darkmode_on")!,
+                                               offImage: NSImage(named: "darkmode_off")!)
+    init() {
+        switchBarVM.switchOperator = self
+    }
+    
     func currentStatus() -> Bool {
         let result = currentInferfaceStyle.runAppleScript(isShellCMD: true)
         if result.0 {

@@ -5,19 +5,24 @@
 //  Created by Jacklandrin on 2021/12/7.
 //
 
-import Foundation
+import AppKit
 import IOBluetooth
 
 let AirPodsAddressKey = "AirPodsAddressKey"
 
 class AirPodsSwitch:SwitchProvider {
-    static let shared = AirPodsSwitch()
-    var blManager = BluetoothDevicesManager.shared
-    var currentDevice:IOBluetoothDevice?
-    
+
+    var type: SwitchType = .airPods
+    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .airPods)
+    var barInfo: SwitchBarInfo = SwitchBarInfo(title: "AirPods".localized(),
+                                               onImage: NSImage(systemSymbolName: "airpodspro"),
+                                               offImage: NSImage(systemSymbolName: "airpodspro"))
     init() {
+        switchBarVM.switchOperator = self
         setCurrentDevice()
     }
+    var blManager = BluetoothDevicesManager.shared
+    var currentDevice:IOBluetoothDevice?
     
     private func setCurrentDevice() {
         let address = UserDefaults.standard.string(forKey: AirPodsAddressKey)

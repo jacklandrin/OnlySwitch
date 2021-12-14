@@ -8,27 +8,31 @@
 import SwiftUI
 
 class SwitchVM : ObservableObject {
-    @Published var switchList:[SwitchBarVM] = [SwitchBarVM(switchType: .hiddeDesktop),
-                                               SwitchBarVM(switchType: .darkMode),
-                                               SwitchBarVM(switchType: .topNotch),
-                                               SwitchBarVM(switchType: .bluetooth),
-                                               SwitchBarVM(switchType: .mute),
-                                               SwitchBarVM(switchType: .screenSaver),
-                                               SwitchBarVM(switchType: .nightShift),
-                                               SwitchBarVM(switchType: .keepAwake),
-                                               SwitchBarVM(switchType: .hiddenFiles),
-                                               SwitchBarVM(switchType: .autohideDock),
-                                               SwitchBarVM(switchType: .autohideMenuBar),
-                                               SwitchBarVM(switchType: .airPods),
-                                               SwitchBarVM(switchType: .xcodeCache),
-                                               SwitchBarVM(switchType: .radioStation)]
-
+//    @Published var switchList:[SwitchBarVM] = [SwitchBarVM(switchType: .hiddeDesktop),
+//                                               SwitchBarVM(switchType: .darkMode),
+//                                               SwitchBarVM(switchType: .topNotch),
+//                                               SwitchBarVM(switchType: .bluetooth),
+//                                               SwitchBarVM(switchType: .mute),
+//                                               SwitchBarVM(switchType: .screenSaver),
+//                                               SwitchBarVM(switchType: .nightShift),
+//                                               SwitchBarVM(switchType: .keepAwake),
+//                                               SwitchBarVM(switchType: .hiddenFiles),
+//                                               SwitchBarVM(switchType: .autohideDock),
+//                                               SwitchBarVM(switchType: .autohideMenuBar),
+//                                               SwitchBarVM(switchType: .airPods),
+//                                               SwitchBarVM(switchType: .xcodeCache),
+//                                               SwitchBarVM(switchType: .radioStation)]
+    @Published var switchList = [SwitchBarVM]()
     
     @Published var showSettingMenu = false
     {
         didSet {
             OtherPopover.hasShown(showSettingMenu)
         }
+    }
+    
+    func refreshList() {
+        self.switchList = SwitchManager.shared.barVMList()
     }
     
     func refreshSwitchStatus() {

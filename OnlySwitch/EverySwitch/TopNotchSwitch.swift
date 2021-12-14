@@ -10,8 +10,15 @@ import UniformTypeIdentifiers
 import AVFoundation
 
 class TopNotchSwitch:SwitchProvider {
-    static let shared = TopNotchSwitch()
     
+    var type: SwitchType = .topNotch
+    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .topNotch)
+    var barInfo: SwitchBarInfo = SwitchBarInfo(title:"Hide Notch".localized(),
+                                               onImage:NSImage(named:"laptopnotchhidden")!,
+                                               offImage: NSImage(named: "laptopwithnotch")!)
+    init() {
+        switchBarVM.switchOperator = self
+    }
     // Mark: - private properties
     
     private var currentImageName = ""
@@ -53,52 +60,6 @@ class TopNotchSwitch:SwitchProvider {
         return ""
     }
     
-    func clearCache() {
-        guard let myAppPath = myAppPath else {
-            return
-        }
-
-        let processedPath = myAppPath.appendingPathComponent(string: "processed")
-        let originalPath = myAppPath.appendingPathComponent(string: "original")
-        var currentNames = [String]()
-        let workspace = NSWorkspace.shared
-        for screen in NSScreen.screens {
-            if let path = workspace.desktopImageURL(for: screen){
-                currentNames.append(path.lastPathComponent)
-            }
-        }
-        
-        let processedUrl = URL(fileURLWithPath: processedPath)
-        let originalUrl = URL(fileURLWithPath: originalPath)
-        
-        removeAllFile(url: processedUrl, ignore: currentNames)
-        removeAllFile(url: originalUrl, ignore: currentNames)
-        
-    }
-    
-    func cacheSize() -> String {
-        guard let myAppPath = myAppPath else {
-            return ""
-        }
-        let processedPath = myAppPath.appendingPathComponent(string: "processed")
-        let originalPath = myAppPath.appendingPathComponent(string: "original")
-        let processedUrl = URL(fileURLWithPath: processedPath)
-        let originalUrl = URL(fileURLWithPath: originalPath)
-        
-        var processedSize = 0
-        var originalSize = 0
-        var size = ""
-        do {
-            processedSize = try processedUrl.directoryTotalAllocatedSize(includingSubfolders: true) ?? 0
-            originalSize = try originalUrl.directoryTotalAllocatedSize(includingSubfolders: true) ?? 0
-            URL.byteCountFormatter.countStyle = .file
-            guard let byteCount = URL.byteCountFormatter.string(for: processedSize + originalSize) else { return ""}
-            size = byteCount
-        } catch {
-            size = ""
-        }
-        return size
-    }
     
     // Mark: - private functions
     
@@ -158,7 +119,7 @@ class TopNotchSwitch:SwitchProvider {
             } catch {
                 return false
             }
-//            return false
+
             guard let metaDataTag = metaDataTag else {
                 return false
             }
@@ -261,7 +222,7 @@ class TopNotchSwitch:SwitchProvider {
     
     private func hideNotchForEachImageOfHeic(image:NSImage) -> CGImage? {
         guard let finalCGImage = addBlackRect(on: image) else {return nil}
-        return finalCGImage//NSBitmapImageRep(cgImage: finalCGImage)
+        return finalCGImage
     }
     
     
@@ -403,19 +364,6 @@ class TopNotchSwitch:SwitchProvider {
                          bytesPerRow: 0,
                          space: CGColorSpaceCreateDeviceRGB(),
                          bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue | CGBitmapInfo.byteOrder32Little.rawValue)
-    }
-    
-    private func removeAllFile(url:URL, ignore:[String]) {
-        do {
-            let fileUrls = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
-            for fileUrl in fileUrls {
-                if !ignore.contains(fileUrl.lastPathComponent) {
-                    try FileManager.default.removeItem(at: fileUrl)
-                }
-            }
-        } catch {
-            
-        }
     }
 }
 

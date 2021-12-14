@@ -5,10 +5,18 @@
 //  Created by Jacklandrin on 2021/12/6.
 //
 
-import Foundation
+import AppKit
 
 class AutohideDockSwitch:SwitchProvider {
-    static let shared = AutohideDockSwitch()
+
+    var type: SwitchType = .autohideDock
+    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .autohideDock)
+    var barInfo: SwitchBarInfo = SwitchBarInfo(title: "Autohide Dock".localized(),
+                                               onImage: NSImage(systemSymbolName: "dock.arrow.down.rectangle"),
+                                               offImage: NSImage(systemSymbolName: "dock.rectangle"))
+    init() {
+        switchBarVM.switchOperator = self
+    }
     func currentStatus() -> Bool {
         let result = getAutohideDockCMD.runAppleScript()
         if result.0 {

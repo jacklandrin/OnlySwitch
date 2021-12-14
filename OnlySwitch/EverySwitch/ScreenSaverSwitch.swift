@@ -5,10 +5,18 @@
 //  Created by Jacklandrin on 2021/12/3.
 //
 
-import Foundation
+import AppKit
 
 class ScreenSaverSwitch:SwitchProvider {
-    static let shared = ScreenSaverSwitch()
+
+    var type: SwitchType = .screenSaver
+    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .screenSaver)
+    var barInfo: SwitchBarInfo = SwitchBarInfo(title: "Screen Saver".localized(),
+                                               onImage: NSImage(systemSymbolName: "display"),
+                                               offImage: NSImage(systemSymbolName: "display"))
+    init() {
+        switchBarVM.switchOperator = self
+    }
     var getScreenSaverIntervalResult:(Bool,Any) = (true,"")
     let ScreenSaverIntervalKey = "ScreenSaverIntervalKey"
     func operationSwitch(isOn: Bool) async -> Bool {

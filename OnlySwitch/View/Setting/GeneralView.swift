@@ -56,8 +56,8 @@ struct GeneralView: View {
                         HStack {
                             Text(cacheSize)
                             Button("Clear cache".localized()) {
-                                TopNotchSwitch.shared.clearCache()
-                                cacheSize = TopNotchSwitch.shared.cacheSize()
+                                WallpaperManager.shared.clearCache()
+                                cacheSize = WallpaperManager.shared.cacheSize()
                             }
                         }
                         Text("Cache for Hide Notch Switch".localized())
@@ -78,7 +78,7 @@ struct GeneralView: View {
             Spacer()
         }
         .onAppear{
-            cacheSize = TopNotchSwitch.shared.cacheSize()
+            cacheSize = WallpaperManager.shared.cacheSize()
         }
         
     }

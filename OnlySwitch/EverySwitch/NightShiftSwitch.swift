@@ -5,9 +5,19 @@
 //  Created by Jacklandrin on 2021/12/5.
 //
 
-import Foundation
+import AppKit
 
 class NightShiftSwitch:SwitchProvider {
+    
+    var type: SwitchType = .nightShift
+    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .nightShift)
+    var barInfo: SwitchBarInfo = SwitchBarInfo(title: "Night Shift".localized(),
+                                               onImage: NSImage(systemSymbolName: "moon.stars.fill"),
+                                               offImage: NSImage(systemSymbolName: "moon.stars"))
+    init() {
+        switchBarVM.switchOperator = self
+    }
+    
     func isVisable() -> Bool {
         return NightShiftTool.supportsNightShift
     }

@@ -5,7 +5,7 @@
 //  Created by Jacklandrin on 2021/12/9.
 //
 
-import Foundation
+import AppKit
 import CoreData
 
 let hasRunRadioKey = "hasRunRadioKey"
@@ -15,11 +15,17 @@ let defaultRadioStations = [["title":"Country Radio", "url":"https://live.leanst
                             ["title":"Box UK", "url":"http://51.75.170.46:6191/stream"]]
 class RadioStationSwitch:SwitchProvider {
     static let shared = RadioStationSwitch()
+    var type: SwitchType = .radioStation
+    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .radioStation)
+    var barInfo: SwitchBarInfo = SwitchBarInfo(title: "Radio Player".localized(),
+                                               onImage: NSImage(systemSymbolName: "radio"),
+                                               offImage: NSImage(systemSymbolName: "radio"))
     private var managedObjectContext:NSManagedObjectContext?
     
     var playerItem:RadioPlayerItem = RadioPlayerItem(isPlaying: false, title: "Country Radio", streamUrl: "http://uk2.internet-radio.com:8024/stream", streamInfo: "", id: UUID())
     
     init() {
+        switchBarVM.switchOperator = self
         self.managedObjectContext = PersistenceController.shared.container.viewContext
         
         let currentStationIDStr = UserDefaults.standard.string(forKey: radioStationKey)

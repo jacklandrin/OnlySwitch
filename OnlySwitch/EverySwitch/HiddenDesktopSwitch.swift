@@ -5,10 +5,19 @@
 //  Created by Jacklandrin on 2021/11/30.
 //
 
-import Foundation
+import AppKit
 
 class HiddenDesktopSwitch:SwitchProvider {
-    static let shared = HiddenDesktopSwitch()
+    
+    var type: SwitchType = .hiddeDesktop
+    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .hiddeDesktop)
+    var barInfo: SwitchBarInfo = SwitchBarInfo(title:"Hide Desktop".localized(),
+                                               onImage:NSImage(named: "desktopcomputer")!,
+                                               offImage:NSImage(named: "desktop_with_icon")!)
+    init() {
+        switchBarVM.switchOperator = self
+    }
+    
     func currentStatus() -> Bool {
         let result = currentDesktopStatusCMD.runAppleScript(isShellCMD: true)
         if result.0 {
@@ -35,5 +44,9 @@ class HiddenDesktopSwitch:SwitchProvider {
     
     func currentInfo() -> String {
         return ""
+    }
+    
+    deinit{
+        print("hidden desktop switch deinit")
     }
 }

@@ -6,8 +6,19 @@
 //
 
 import Foundation
+import AppKit
+
 class XcodeCacheSwitch:SwitchProvider {
-    static let shared = XcodeCacheSwitch()
+
+    var type: SwitchType = .xcodeCache
+    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .xcodeCache)
+    var barInfo: SwitchBarInfo = SwitchBarInfo(title: "Xcode Derived Data".localized(),
+                                               onImage: NSImage(systemSymbolName: "hammer.circle.fill"),
+                                               offImage: NSImage(systemSymbolName: "hammer.circle"))
+    init() {
+        switchBarVM.switchOperator = self
+    }
+    
     let derivedData = "Library/Developer/Xcode/DerivedData/"
     let xcodepath = "Library/Developer/Xcode/"
     
@@ -46,11 +57,7 @@ class XcodeCacheSwitch:SwitchProvider {
         }
         return size == 0
     }
-    
-    func currentStatusAsync() async -> Bool {
-        return currentStatus()
-    }
-    
+        
     func currentInfo() -> String {
         do {
             return try derivedDataURL.sizeOnDisk() ?? ""
@@ -58,11 +65,7 @@ class XcodeCacheSwitch:SwitchProvider {
             return ""
         }
     }
-    
-    func currentInfoAsync() async -> String {
-        return currentInfo()
-    }
-    
+
     
     func isVisable() -> Bool {
         let home = manager.homeDirectoryForCurrentUser

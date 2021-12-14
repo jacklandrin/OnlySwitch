@@ -5,10 +5,18 @@
 //  Created by Jacklandrin on 2021/12/8.
 //
 
-import Foundation
+import AppKit
 
 class AutohideMenuBarSwitch:SwitchProvider {
-    static let shared = AutohideMenuBarSwitch()
+
+    var type: SwitchType = .autohideMenuBar
+    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .autohideMenuBar)
+    var barInfo: SwitchBarInfo = SwitchBarInfo(title: "Autohide Menu Bar".localized(),
+                                               onImage: NSImage(systemSymbolName: "menubar.arrow.up.rectangle"),
+                                               offImage: NSImage(systemSymbolName: "menubar.rectangle"))
+    init() {
+        switchBarVM.switchOperator = self
+    }
     
     func currentStatus() -> Bool {
         let result = getAutoHideMenuBarCMD.runAppleScript()

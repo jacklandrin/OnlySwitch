@@ -35,8 +35,10 @@ class AirPodsSettingVM:ObservableObject {
     func select(item:AirPodsItem) {
         UserDefaults.standard.set(item.address, forKey: AirPodsAddressKey)
         UserDefaults.standard.synchronize()
-        AirPodsSwitch.shared.currentDevice = item.device
-        NotificationCenter.default.post(name: changeSettingNotification, object: nil)
+        if let airpodSwitch = SwitchManager.shared.getSwitch(of: .airPods) as? AirPodsSwitch {
+            airpodSwitch.currentDevice = item.device
+            NotificationCenter.default.post(name: changeSettingNotification, object: nil)
+        }
     }
     
 }
