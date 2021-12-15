@@ -7,7 +7,7 @@
 */
 "Hide Desktop" = "Desktop ausblenden";
 "Dark Mode" = "Dunkelmodus";
-"Hide Notch" = "Einkerbung ausblenden";
+"Hide Notch" = "Notch ausblenden";
 "Mute" = "Stumm";
 "Screen Saver" = "Bildschirmschoner";
 "Night Shift" = "Night Shift";
@@ -16,14 +16,14 @@
 "Bluetooth" = "Bluetooth";
 "Xcode Derived Data" = "Xcode Derived Data";
 "Autohide Menu Bar" = "Menüleiste automatisch ausblenden";
-"Show Hidden Files" = "Versteckte Dateien Zeigen";
+"Show Hidden Files" = "Versteckte Dateien zeigen";
 "Radio Player" = "Radio-Player";
 "Keep Awake" = "Wach bleiben";
 "Settings" = "Einstellungen";
 "Launch at login" = "Bei Anmeldung starten";
 "Clear cache" = "Cache leeren";
-"Quit" = "Aufhören";
-"More App, QRCobot" = "Mehr App, QRCobot";
+"Quit" = "Beenden";
+"More App, QRCobot" = "Mehr Apps, QRCobot";
 "Download QRCobot" = "QRCobot herunterladen";
 "Radio" = "Radio";
 "About" = "Info";
@@ -36,8 +36,8 @@
 "Language:" = "Sprache:";
 "Cache:" = "Cache:";
 "Contact:" = "Kontaktieren:";
-"Quit:" = "Aufhören:";
-"Cache for Hide Notch Switch" = "Cache für Shalter von Einkerbung ausblenden";
+"Quit:" = "Beenden:";
+"Cache for Hide Notch Switch" = "Cache für den Notch-Schalter";
 "Send Email to Jacklandrin" = "E-Mail an Jacklandrin senden";
-"Quit Only Switch" = "Only Switch Aufhören";
+"Quit Only Switch" = "Only Switch beenden";
 "Calculating..." = "Berechnen...";
