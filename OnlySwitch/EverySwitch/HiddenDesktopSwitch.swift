@@ -11,7 +11,7 @@ class HiddenDesktopSwitch:SwitchProvider {
     
     var type: SwitchType = .hiddeDesktop
     var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .hiddeDesktop)
-    var barInfo: SwitchBarInfo = SwitchBarInfo(title:"Hide Desktop".localized(),
+    var barInfo: SwitchBarInfo = SwitchBarInfo(title:"Hide Desktop",
                                                onImage:NSImage(named: "desktopcomputer")!,
                                                offImage:NSImage(named: "desktop_with_icon")!)
     init() {

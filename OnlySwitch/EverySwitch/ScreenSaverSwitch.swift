@@ -11,7 +11,7 @@ class ScreenSaverSwitch:SwitchProvider {
 
     var type: SwitchType = .screenSaver
     var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .screenSaver)
-    var barInfo: SwitchBarInfo = SwitchBarInfo(title: "Screen Saver".localized(),
+    var barInfo: SwitchBarInfo = SwitchBarInfo(title: "Screen Saver",
                                                onImage: NSImage(systemSymbolName: "display"),
                                                offImage: NSImage(systemSymbolName: "display"))
     init() {

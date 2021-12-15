@@ -17,7 +17,7 @@ class RadioStationSwitch:SwitchProvider {
     static let shared = RadioStationSwitch()
     var type: SwitchType = .radioStation
     var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .radioStation)
-    var barInfo: SwitchBarInfo = SwitchBarInfo(title: "Radio Player".localized(),
+    var barInfo: SwitchBarInfo = SwitchBarInfo(title: "Radio Player",
                                                onImage: NSImage(systemSymbolName: "radio"),
                                                offImage: NSImage(systemSymbolName: "radio"))
     private var managedObjectContext:NSManagedObjectContext?

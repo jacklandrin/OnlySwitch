@@ -11,7 +11,7 @@ class AutohideMenuBarSwitch:SwitchProvider {
 
     var type: SwitchType = .autohideMenuBar
     var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .autohideMenuBar)
-    var barInfo: SwitchBarInfo = SwitchBarInfo(title: "Autohide Menu Bar".localized(),
+    var barInfo: SwitchBarInfo = SwitchBarInfo(title: "Autohide Menu Bar",
                                                onImage: NSImage(systemSymbolName: "menubar.arrow.up.rectangle"),
                                                offImage: NSImage(systemSymbolName: "menubar.rectangle"))
     init() {

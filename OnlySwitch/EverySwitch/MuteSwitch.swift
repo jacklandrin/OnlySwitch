@@ -14,7 +14,7 @@ class MuteSwitch:SwitchProvider {
 
     var type: SwitchType = .mute
     var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .mute)
-    var barInfo: SwitchBarInfo = SwitchBarInfo(title: "Mute".localized(),
+    var barInfo: SwitchBarInfo = SwitchBarInfo(title: "Mute",
                                                onImage: NSImage(systemSymbolName: "speaker.slash.circle"),
                                                offImage: NSImage(systemSymbolName: "speaker.wave.2.circle"))
     init() {

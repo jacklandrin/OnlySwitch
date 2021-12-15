@@ -11,7 +11,7 @@ class HiddenFilesSwitch:SwitchProvider {
 //    static let shared = HiddenFilesSwitch()
     var type: SwitchType = .hiddenFiles
     var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .hiddenFiles)
-    var barInfo: SwitchBarInfo = SwitchBarInfo(title: "Show Hidden Files".localized(),
+    var barInfo: SwitchBarInfo = SwitchBarInfo(title: "Show Hidden Files",
                                                onImage: NSImage(systemSymbolName: "eye"),
                                                offImage: NSImage(systemSymbolName: "eye.slash"))
     init() {

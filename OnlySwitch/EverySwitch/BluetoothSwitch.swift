@@ -11,7 +11,7 @@ class BluetoothSwitch:SwitchProvider {
 
     var type: SwitchType = .bluetooth
     var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .bluetooth)
-    var barInfo: SwitchBarInfo = SwitchBarInfo(title: "Bluetooth".localized(),
+    var barInfo: SwitchBarInfo = SwitchBarInfo(title: "Bluetooth",
                                                onImage: NSImage(named: "bluetooth_on")!,
                                                offImage: NSImage(named: "bluetooth_off")!)
     init() {

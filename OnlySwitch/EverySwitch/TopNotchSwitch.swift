@@ -13,7 +13,7 @@ class TopNotchSwitch:SwitchProvider {
     
     var type: SwitchType = .topNotch
     var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .topNotch)
-    var barInfo: SwitchBarInfo = SwitchBarInfo(title:"Hide Notch".localized(),
+    var barInfo: SwitchBarInfo = SwitchBarInfo(title:"Hide Notch",
                                                onImage:NSImage(named:"laptopnotchhidden")!,
                                                offImage: NSImage(named: "laptopwithnotch")!)
     init() {

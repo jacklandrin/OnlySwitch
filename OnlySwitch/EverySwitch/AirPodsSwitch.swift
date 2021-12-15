@@ -14,7 +14,7 @@ class AirPodsSwitch:SwitchProvider {
 
     var type: SwitchType = .airPods
     var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .airPods)
-    var barInfo: SwitchBarInfo = SwitchBarInfo(title: "AirPods".localized(),
+    var barInfo: SwitchBarInfo = SwitchBarInfo(title: "AirPods",
                                                onImage: NSImage(systemSymbolName: "airpodspro"),
                                                offImage: NSImage(systemSymbolName: "airpodspro"))
     init() {

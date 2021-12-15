@@ -14,6 +14,7 @@ struct ContentView: View {
     @State private var switchList:[SwitchBarVM] = []
     @State private var id = UUID()
     @ObservedObject private var playerItem = RadioStationSwitch.shared.playerItem
+    @ObservedObject private var languageManager = LanguageManager.sharedManager
     var body: some View {
         VStack {
             VStack {

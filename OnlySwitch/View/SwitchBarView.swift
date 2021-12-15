@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SwitchBarView: View {
     @EnvironmentObject var switchOption:SwitchBarVM
-
+    @ObservedObject private var languageManager = LanguageManager.sharedManager
     var body: some View {
         HStack {
             Image(nsImage:
@@ -17,13 +17,13 @@ struct SwitchBarView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 25, height: 25)
-            Text(switchOption.switchOperator!.barInfo.title)
+            Text(switchOption.switchOperator!.barInfo.title.localized())
                 .frame(alignment: .leading)
             if switchOption.switchType == .airPods {
                 AirPodsBatteryView(batteryValues: convertBattery(info: switchOption.info))
                     .offset(x:60)
             } else {
-                Text(switchOption.info).foregroundColor(.gray)
+                Text(switchOption.info.localized()).foregroundColor(.gray)
             }
             
             Spacer()

@@ -15,7 +15,7 @@ class KeepAwakeSwitch:SwitchProvider {
 //    static let shared = KeepAwakeSwitch()
     var type: SwitchType = .keepAwake
     var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .keepAwake)
-    var barInfo: SwitchBarInfo = SwitchBarInfo(title: "Keep Awake".localized(),
+    var barInfo: SwitchBarInfo = SwitchBarInfo(title: "Keep Awake",
                                                onImage: NSImage(systemSymbolName: "lock.slash.fill"),
                                                offImage: NSImage(systemSymbolName: "lock.slash"))
     private let reasonForActivity = "Reason for activity" as CFString
