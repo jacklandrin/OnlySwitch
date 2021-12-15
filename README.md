@@ -11,7 +11,7 @@
 
 ## What's the OnlySwitch
 OnlySwitch provides a series toggle switch to simply your routine work, such as Hiden desktop icons, dark mode and hide ugly notch of new Mackbook Pro. The switches show on your statusbar, you can easily control them.
-
+From Version 1.2, OnlySwitch supports **simplified Chinese** and **German**.
 <p align="center">
 <img alt="Sits in the status bar" src="https://www.jacklandrin.com/wp-content/uploads/2021/12/onlySwitch_12.png" width="60%" align="center" />
 </p>
@@ -54,6 +54,7 @@ I use classOfDevice(2360344) to check if a bluetooth device is Airpods Pro, but 
 ## They talk about it
 * German Article - itopnews.de https://www.itopnews.de/2021/12/onlyswitch-mac-mit-switches-aus-der-systemleiste-steuern/
 * Ifun.de https://www.ifun.de/eheimtipp-onlyswitch-schaltzentrale-in-der-mac-menueleiste-179482/
+* appgefahren.de https://www.appgefahren.de/onlyswitch-kleines-tool-mit-wichtigen-aktionen-fuer-die-mac-menueleiste-312135.html
 
 ## About Apple's warning at first open
 Some users ask me why masOS shows a warning box below, when they first open Only Switch.
