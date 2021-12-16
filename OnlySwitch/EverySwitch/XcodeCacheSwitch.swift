@@ -12,10 +12,7 @@ class XcodeCacheSwitch:SwitchProvider {
 
     var type: SwitchType = .xcodeCache
     var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .xcodeCache)
-    var barInfo: SwitchBarInfo = SwitchBarInfo(title: "Xcode Derived Data",
-                                               onImage: NSImage(systemSymbolName: "hammer.circle.fill"),
-                                               offImage: NSImage(systemSymbolName: "hammer.circle"),
-                                               controlType: .Button)
+    
     init() {
         switchBarVM.switchOperator = self
     }

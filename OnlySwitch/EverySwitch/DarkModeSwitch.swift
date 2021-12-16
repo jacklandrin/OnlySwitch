@@ -11,9 +11,7 @@ class DarkModeSwitch:SwitchProvider {
 
     var type: SwitchType = .darkMode
     var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .darkMode)
-    var barInfo: SwitchBarInfo = SwitchBarInfo(title:"Dark Mode",
-                                               onImage:NSImage(named: "darkmode_on")!,
-                                               offImage: NSImage(named: "darkmode_off")!)
+    
     init() {
         switchBarVM.switchOperator = self
     }

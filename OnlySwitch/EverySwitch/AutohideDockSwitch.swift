@@ -11,9 +11,7 @@ class AutohideDockSwitch:SwitchProvider {
 
     var type: SwitchType = .autohideDock
     var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .autohideDock)
-    var barInfo: SwitchBarInfo = SwitchBarInfo(title: "Autohide Dock",
-                                               onImage: NSImage(systemSymbolName: "dock.arrow.down.rectangle"),
-                                               offImage: NSImage(systemSymbolName: "dock.rectangle"))
+    
     init() {
         switchBarVM.switchOperator = self
     }

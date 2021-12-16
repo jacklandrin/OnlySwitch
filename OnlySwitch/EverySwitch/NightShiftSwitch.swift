@@ -11,9 +11,7 @@ class NightShiftSwitch:SwitchProvider {
     
     var type: SwitchType = .nightShift
     var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .nightShift)
-    var barInfo: SwitchBarInfo = SwitchBarInfo(title: "Night Shift",
-                                               onImage: NSImage(systemSymbolName: "moon.stars.fill"),
-                                               offImage: NSImage(systemSymbolName: "moon.stars"))
+    
     init() {
         switchBarVM.switchOperator = self
     }

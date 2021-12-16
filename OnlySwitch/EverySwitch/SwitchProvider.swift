@@ -15,7 +15,6 @@ protocol SwitchProvider:AnyObject {
     func isVisable() -> Bool
     var type:SwitchType {get set}
     var switchBarVM:SwitchBarVM {get set}
-    var barInfo:SwitchBarInfo {get set}
 }
 
 extension SwitchProvider {

@@ -17,9 +17,7 @@ class RadioStationSwitch:SwitchProvider {
     static let shared = RadioStationSwitch()
     var type: SwitchType = .radioStation
     var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .radioStation)
-    var barInfo: SwitchBarInfo = SwitchBarInfo(title: "Radio Player",
-                                               onImage: NSImage(systemSymbolName: "radio"),
-                                               offImage: NSImage(systemSymbolName: "radio"))
+    
     private var managedObjectContext:NSManagedObjectContext?
     
     var playerItem:RadioPlayerItem = RadioPlayerItem(isPlaying: false, title: "Country Radio", streamUrl: "http://uk2.internet-radio.com:8024/stream", streamInfo: "", id: UUID())

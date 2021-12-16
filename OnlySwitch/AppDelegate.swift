@@ -33,7 +33,7 @@ class AppDelegate:NSObject, NSApplicationDelegate {
         
         statusBar = StatusBarController(popover)
         
-        SwitchManager.shared.registerAllSwitches()
+        SwitchManager.shared.registerSwitchesShouldShow()
         
         blManager = BluetoothDevicesManager.shared
         RadioStationSwitch.shared.setDefaultRadioStations()

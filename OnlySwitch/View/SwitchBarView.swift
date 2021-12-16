@@ -17,7 +17,7 @@ struct SwitchBarView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 25, height: 25)
-            Text(switchOption.switchOperator!.barInfo.title.localized())
+            Text(switchOption.switchType.barInfo().title.localized())
                 .frame(alignment: .leading)
             if switchOption.switchType == .airPods {
                 AirPodsBatteryView(batteryValues: convertBattery(info: switchOption.info))
@@ -33,7 +33,7 @@ struct SwitchBarView: View {
                 .scaleEffect(0.8)
                 .isHidden(!switchOption.processing,remove: true)
             
-            switch switchOption.switchOperator!.barInfo.controlType {
+            switch switchOption.switchType.barInfo().controlType {
             case .Switch:
                 SwitchToggle(isOn: $switchOption.isOn) { isOn in
                     switchOption.doSwitch(isOn: isOn)
@@ -63,9 +63,9 @@ struct SwitchBarView: View {
     
     func barImage(option:SwitchBarVM) -> NSImage {
         if option.isOn {
-            return option.switchOperator!.barInfo.onImage
+            return option.switchType.barInfo().onImage
         } else {
-            return option.switchOperator!.barInfo.offImage
+            return option.switchType.barInfo().offImage
         }
     }
 
@@ -74,7 +74,6 @@ struct SwitchBarView: View {
         let groups = info.groups(for: pattern).compactMap({$0.first}).map{Float($0)! < 0 ? 0.0 : (Float($0)! / 100.0)}
         return groups
     }
-    
     
 }
 

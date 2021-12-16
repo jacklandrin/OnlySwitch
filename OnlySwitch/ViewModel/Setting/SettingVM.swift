@@ -13,7 +13,9 @@ enum SettingItem:String {
     case AirPods = "AirPods"
     case Radio = "Radio"
     case General = "General"
+    case Customize = "Customize"
     case About = "About"
+    
     
     func page() -> AnyView {
         switch self {
@@ -23,6 +25,8 @@ enum SettingItem:String {
             return AnyView(RadioSettingView())
         case .General:
             return AnyView(GeneralView())
+        case .Customize:
+            return AnyView(CustomizeView())
         case .About:
             return AnyView(AboutView())
         }
@@ -30,6 +34,6 @@ enum SettingItem:String {
 }
 
 class SettingVM:ObservableObject {
-    @Published var settingItems:[SettingItem] = [.General,.Radio,.AirPods,.About]
+    @Published var settingItems:[SettingItem] = [.General, .Customize, .Radio,.AirPods,.About]
     @Published var selection:SettingItem?
 }

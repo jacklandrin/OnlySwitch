@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		040C6EAA276B7D4500291DEB /* CustomizeVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040C6EA9276B7D4500291DEB /* CustomizeVM.swift */; };
+		040C6EAC276B7D9F00291DEB /* CustomizeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040C6EAB276B7D9F00291DEB /* CustomizeView.swift */; };
 		040CD2BC2756D497002E0CC6 /* CGImage++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040CD2BB2756D497002E0CC6 /* CGImage++.swift */; };
 		040E97272760FF3E003D9D42 /* MetadataExtractorError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040E97262760FF3E003D9D42 /* MetadataExtractorError.swift */; };
 		040E972B27611C9C003D9D42 /* URL++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040E972A27611C9C003D9D42 /* URL++.swift */; };
@@ -107,6 +109,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		040C6EA9276B7D4500291DEB /* CustomizeVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomizeVM.swift; sourceTree = "<group>"; };
+		040C6EAB276B7D9F00291DEB /* CustomizeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomizeView.swift; sourceTree = "<group>"; };
 		040CD2BB2756D497002E0CC6 /* CGImage++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGImage++.swift"; sourceTree = "<group>"; };
 		040CD2BD27579CEA002E0CC6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		040E97262760FF3E003D9D42 /* MetadataExtractorError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetadataExtractorError.swift; sourceTree = "<group>"; };
@@ -375,6 +379,7 @@
 				04581DAF2764CBCF008ADF30 /* SettingVM.swift */,
 				049337982762C0B300AE779A /* RadioSettingVM.swift */,
 				04581DBE27653C4A008ADF30 /* AirPodsSettingVM.swift */,
+				040C6EA9276B7D4500291DEB /* CustomizeVM.swift */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -465,6 +470,7 @@
 			isa = PBXGroup;
 			children = (
 				049337912762BA3200AE779A /* SettingView.swift */,
+				040C6EAB276B7D9F00291DEB /* CustomizeView.swift */,
 				049337962762C07600AE779A /* RadioSettingView.swift */,
 				04581DBC27653C35008ADF30 /* AirPodsSettingView.swift */,
 				04581DC02765522A008ADF30 /* AboutView.swift */,
@@ -647,6 +653,7 @@
 				0424348B275642D20044D0AD /* DarkModeSwitch.swift in Sources */,
 				0493374F27625A1E00AE779A /* Parser+Packets.swift in Sources */,
 				04447B5E2754F08000CD2900 /* ContentView.swift in Sources */,
+				040C6EAC276B7D9F00291DEB /* CustomizeView.swift in Sources */,
 				04E03AFE275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift in Sources */,
 				04447B722754FE3800CD2900 /* SwitchVM.swift in Sources */,
 				0493375227625A1E00AE779A /* Reader.swift in Sources */,
@@ -690,6 +697,7 @@
 				0493374427625A1E00AE779A /* AudioPlayer.swift in Sources */,
 				0493374E27625A1E00AE779A /* ParserError.swift in Sources */,
 				04447B5C2754F08000CD2900 /* AppDelegate.swift in Sources */,
+				040C6EAA276B7D4500291DEB /* CustomizeVM.swift in Sources */,
 				049337212761286400AE779A /* CleanProgressView.swift in Sources */,
 				0493374927625A1E00AE779A /* Streaming.swift in Sources */,
 				0493375027625A1E00AE779A /* Parsing.swift in Sources */,

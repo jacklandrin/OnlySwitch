@@ -18,6 +18,7 @@ class RadioPlayerItem:ObservableObject, Identifiable {
                 PlayerManager.shared.player.play(stream: self)
             } else {
                 PlayerManager.shared.player.stop()
+                self.streamInfo = ""
             }
         }
     }
