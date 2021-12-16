@@ -11,6 +11,7 @@ struct SwitchBarInfo {
     let title:String
     let onImage:NSImage
     let offImage:NSImage
+    var controlType:ControlType = .Switch
 }
 
 enum SwitchType:Int {
@@ -28,4 +29,9 @@ enum SwitchType:Int {
     case xcodeCache
     case hiddenFiles
     case radioStation
+}
+
+enum ControlType{
+    case Switch
+    case Button
 }

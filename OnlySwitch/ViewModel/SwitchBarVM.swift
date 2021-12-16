@@ -17,7 +17,6 @@ class SwitchBarVM : ObservableObject, Identifiable {
     
     init(switchType:SwitchType) {
         self.switchType = switchType
-//        self.switchOperator = aswitch
     }
     
     func refreshStatus() {

@@ -33,12 +33,31 @@ struct SwitchBarView: View {
                 .scaleEffect(0.8)
                 .isHidden(!switchOption.processing,remove: true)
             
+            switch switchOption.switchOperator!.barInfo.controlType {
+            case .Switch:
+                SwitchToggle(isOn: $switchOption.isOn) { isOn in
+                    switchOption.doSwitch(isOn: isOn)
+                }.disabled(switchOption.processing)
+                .animation(.spring(), value: switchOption.isOn)
+                .scaleEffect(0.8)
+            case .Button:
+                Button(action: {
+                    switchOption.doSwitch(isOn: true)
+                }, label: {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 15)
+                            .foregroundColor(.blue)
+                            .frame(height:26)
+                        Text("Clear".localized())
+                            .foregroundColor(.white)
+                            .font(.system(size: 12))
+                    }.frame(width: 46, height: 30)
+                }).buttonStyle(.plain)
+                    .shadow(radius: 4)
+                    .padding(.trailing, 6)
+            }
             
-            SwitchToggle(isOn: $switchOption.isOn) { isOn in
-                switchOption.doSwitch(isOn: isOn)
-            }.disabled(switchOption.processing)
-            .animation(.spring(), value: switchOption.isOn)
-            .scaleEffect(0.8)
+           
         }.isHidden(switchOption.isHidden, remove: true)
     }
     
