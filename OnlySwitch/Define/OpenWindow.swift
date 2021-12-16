@@ -31,6 +31,7 @@ enum OpenWindows:String, CaseIterable {
                 controller.showWindow(self)
                 settingWindow.makeKeyAndOrderFront(self)
                 NSApp.activate(ignoringOtherApps: true)
+                
             }
         }
         NSApplication.shared.setActivationPolicy(.regular)

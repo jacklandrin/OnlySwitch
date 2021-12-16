@@ -50,7 +50,13 @@ class SwitchManager {
             let bitwise:UInt64 = 1 << index
             let shouldShow = (state & bitwise == 0) ? false : true
             if shouldShow {
-                self.register(aswitch: SwitchType(rawValue: bitwise)!.getNewSwitchInstance())
+                let type = SwitchType(rawValue: bitwise)!
+                if type == .radioStation {
+                    self.register(aswitch: RadioStationSwitch.shared)
+                } else {
+                    self.register(aswitch: type.getNewSwitchInstance())
+                }
+                
             }
         }
     }

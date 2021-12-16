@@ -34,7 +34,12 @@ class CustomizeItem:ObservableObject {
     {
         didSet {
             if toggle {
-                SwitchManager.shared.register(aswitch: type.getNewSwitchInstance())
+                if type == .radioStation {
+                    SwitchManager.shared.register(aswitch: RadioStationSwitch.shared)
+                } else {
+                    SwitchManager.shared.register(aswitch: type.getNewSwitchInstance())
+                }
+                
             } else {
                 if SwitchManager.shared.shownSwitchCount < 5 {
                     error()

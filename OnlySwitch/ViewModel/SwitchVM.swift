@@ -11,13 +11,6 @@ class SwitchVM : ObservableObject {
 
     @Published var switchList = [SwitchBarVM]()
     
-    @Published var showSettingMenu = false
-    {
-        didSet {
-            OtherPopover.hasShown(showSettingMenu)
-        }
-    }
-    
     func refreshList() {
         self.switchList = SwitchManager.shared.barVMList()
     }

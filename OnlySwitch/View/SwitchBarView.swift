@@ -51,7 +51,7 @@ struct SwitchBarView: View {
                             .frame(height:26)
                         Text("Clear".localized())
                             .foregroundColor(.white)
-                            .font(.system(size: 12))
+                            .font(.system(size: 11))
                     }.frame(width: 46, height: 30)
                 }).buttonStyle(.plain)
                     .shadow(radius: 2)

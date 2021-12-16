@@ -24,6 +24,7 @@ struct AirPodsBatteryView: View {
                             .frame(width: 10, height: 10)
                         Text(batteryText[index])
                             .font(.system(size:7))
+                            .foregroundColor(.white)
                     }
                     
                     HStack {
