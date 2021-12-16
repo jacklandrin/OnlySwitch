@@ -66,6 +66,8 @@ class SwitchManager {
             let state = UInt64(stateStr) ?? 16383 // binary 11111111111111
             return state
         } else {
+            UserDefaults.standard.set("16383", forKey: SwitchStateKey)
+            UserDefaults.standard.synchronize()
             return 16383
         }
     }
