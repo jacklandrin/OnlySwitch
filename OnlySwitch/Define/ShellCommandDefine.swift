@@ -65,6 +65,13 @@ let getHiddenFilesStateCMD = "defaults read com.apple.Finder AppleShowAllFiles"
 let setHiddenFilesShowCMD = "defaults write com.apple.Finder AppleShowAllFiles true; killall Finder"
 let setHiddenFilesHideCMD = "defaults write com.apple.Finder AppleShowAllFiles false; killall Finder"
 
+let emptyTrashCMD = """
+                    tell application "Finder"
+                        set warns before emptying of trash to false
+                        empty trash
+                    end tell
+                    """
+
 
 func scriptDiskFilePath(scriptName: String) -> String {
     let appBundleID = Bundle.main.infoDictionary?["CFBundleName"] as! String

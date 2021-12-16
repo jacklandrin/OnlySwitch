@@ -14,7 +14,7 @@ struct SwitchBarInfo {
     var controlType:ControlType = .Switch
 }
 
-enum SwitchType:UInt64 {
+enum SwitchType:UInt64, CaseIterable {
     case hiddeDesktop = 1
     case darkMode = 2
     case topNotch = 4
@@ -29,6 +29,8 @@ enum SwitchType:UInt64 {
     case xcodeCache = 2048
     case hiddenFiles = 4096
     case radioStation = 8192
+    case emptyTrash = 16384
+    case emptyPasteboard = 32768
     
     func barInfo() -> SwitchBarInfo {
         switch self {
@@ -89,6 +91,16 @@ enum SwitchType:UInt64 {
             return SwitchBarInfo(title: "Radio Player",
                                  onImage: NSImage(systemSymbolName: "radio"),
                                  offImage: NSImage(systemSymbolName: "radio"))
+        case .emptyTrash:
+            return SwitchBarInfo(title: "Empty Trash",
+                                 onImage: NSImage(systemSymbolName: "trash"),
+                                 offImage: NSImage(systemSymbolName: "trash"),
+                                 controlType: .Button)
+        case .emptyPasteboard:
+            return SwitchBarInfo(title: "Empty Pasteboard",
+                                 onImage: NSImage(systemSymbolName: "doc.on.clipboard"),
+                                 offImage: NSImage(systemSymbolName: "doc.on.clipboard"),
+                                 controlType: .Button)
         }
     }
     
@@ -122,11 +134,15 @@ enum SwitchType:UInt64 {
             return HiddenFilesSwitch()
         case .radioStation:
             return RadioStationSwitch()
+        case .emptyTrash:
+            return EmptyTrashSwitch()
+        case .emptyPasteboard:
+            return EmptyPasteboardSwitch()
         }
     }
 }
 
-let switchTypeCount = 14
+let switchTypeCount = SwitchType.allCases.count
 
 enum ControlType{
     case Switch

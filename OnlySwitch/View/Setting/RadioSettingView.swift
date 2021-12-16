@@ -82,7 +82,9 @@ struct RadioSettingView: View {
             }.padding(10)
         }.navigationTitle(Text("Radio Stations"))
             .toast(isPresenting: $radioSettingVM.showErrorToast) {
-                AlertToast(displayMode: .alert, type: .error(.red), title: radioSettingVM.errorInfo)
+                AlertToast(displayMode: .alert,
+                           type: .error(.red),
+                           title: radioSettingVM.errorInfo.localized())
             }
     }
 }

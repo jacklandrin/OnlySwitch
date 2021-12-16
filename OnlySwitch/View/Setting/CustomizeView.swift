@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AlertToast
 
 struct CustomizeView: View {
     @ObservedObject var customizeVM = CustomizeVM()
@@ -22,13 +23,17 @@ struct CustomizeView: View {
                             .resizable()
                             .scaledToFit()
                             .frame(width: 25, height: 25)
-                        Text(barInfo(index:index).title)
+                        Text(barInfo(index:index).title.localized())
                     }
                     
                 }
             }
             Divider()
                 .padding(.bottom,10)
+        }.toast(isPresenting: $customizeVM.showErrorToast) {
+            AlertToast(displayMode: .alert,
+                       type: .error(.red),
+                       title: customizeVM.errorInfo.localized())
         }
         
     }

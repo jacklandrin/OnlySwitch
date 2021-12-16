@@ -23,7 +23,8 @@ struct SwitchBarView: View {
                 AirPodsBatteryView(batteryValues: convertBattery(info: switchOption.info))
                     .offset(x:60)
             } else {
-                Text(switchOption.info.localized()).foregroundColor(.gray)
+                Text(switchOption.info.localized())
+                    .foregroundColor(.gray)
             }
             
             Spacer()
@@ -53,7 +54,7 @@ struct SwitchBarView: View {
                             .font(.system(size: 12))
                     }.frame(width: 46, height: 30)
                 }).buttonStyle(.plain)
-                    .shadow(radius: 4)
+                    .shadow(radius: 2)
                     .padding(.trailing, 6)
             }
             

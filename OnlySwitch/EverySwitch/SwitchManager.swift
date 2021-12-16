@@ -14,6 +14,10 @@ class SwitchManager {
     
     private var shownSwitchMap = [SwitchType: SwitchProvider?]()
     
+    var shownSwitchCount:Int {
+        shownSwitchMap.count
+    }
+    
     func register(aswitch:SwitchProvider) {
         shownSwitchMap[aswitch.type] = aswitch
         NotificationCenter.default.post(name: changeSettingNotification, object: nil)
