@@ -7,36 +7,37 @@
 
 ***Menubar is smaller, you only need an All-in-One switch.***
 
-[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_1.3/OnlySwitch.zip)
+[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_1.4/OnlySwitch.zip)
 
 ## What's the OnlySwitch
 OnlySwitch provides a series toggle switch to simply your routine work, such as Hiden desktop icons, dark mode and hide ugly notch of new Mackbook Pro. The switches show on your statusbar, you can easily control them.
 From Version 1.2, OnlySwitch supports **simplified Chinese** and **German**.
 <p align="center">
-<img alt="Sits in the status bar" src="https://www.jacklandrin.com/wp-content/uploads/2021/12/onlySwitch_13.png" width="60%" align="center" />
+<img alt="Sits in the status bar" src="https://www.jacklandrin.com/wp-content/uploads/2021/12/onlySwitch_14.png" width="60%" align="center" />
 </p>
 
 ## Switch list
 
-| Switch            | status            |
-|:------------------|-------------------|
-| Hide desktop      | finish            |
-| Dark mode         | finish            |
-| Screen Saver      | finish            |
-| Night Shift       | finish            |
-| Autohide Dock     | finish            |
-| Airpods           | finish            |
-| Bluetooth         | finish            |
-| Xcode cache       | finish            |
-| Autohide Menu Bar | finish            |
-| Show hidden files | finish            |
-| Radio Station     | finish            |
-| Keep awake        | finish            |
-| Empty trash       | finish            |
-| Empty pasteboard  | finish            |
-| Mute              | finish            |
-| Hide notch        | exist some issues |
-| No disturb mode   | todo              |
+| Switch                   | status            |
+|:-------------------------|-------------------|
+| Hide desktop             | finish            |
+| Dark mode                | finish            |
+| Screen Saver             | finish            |
+| Night Shift              | finish            |
+| Autohide Dock            | finish            |
+| Airpods                  | finish            |
+| Bluetooth                | finish            |
+| Xcode cache              | finish            |
+| Autohide Menu Bar        | finish            |
+| Show hidden files        | finish            |
+| Radio Station            | finish            |
+| Keep awake               | finish            |
+| Empty trash              | finish            |
+| Empty pasteboard         | finish            |
+| Mute                     | finish            |
+| Show user library folder | finish            |
+| Hide notch               | exist some issues |
+| No disturb mode          | todo              |
 
 From Version 1.3, switches can be added or removed on list.
 
