@@ -13,10 +13,12 @@ struct SwitchBarView: View {
     var body: some View {
         HStack {
             Image(nsImage:
-                    barImage(option: switchOption))
+                    barImage(option: switchOption).resizeMaintainingAspectRatio(withSize: NSSize(width: 50, height: 50))!)
+                .renderingMode(.template)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 25, height: 25)
+            
             Text(switchOption.switchType.barInfo().title.localized())
                 .frame(alignment: .leading)
             if switchOption.switchType == .airPods {
