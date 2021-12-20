@@ -58,6 +58,7 @@ I use classOfDevice(2360344) to check if a bluetooth device is Airpods Pro, but 
 * German Article - itopnews.de https://www.itopnews.de/2021/12/onlyswitch-mac-mit-switches-aus-der-systemleiste-steuern/
 * Ifun.de https://www.ifun.de/eheimtipp-onlyswitch-schaltzentrale-in-der-mac-menueleiste-179482/
 * appgefahren.de https://www.appgefahren.de/onlyswitch-kleines-tool-mit-wichtigen-aktionen-fuer-die-mac-menueleiste-312135.html
+* CASCHYS BLOG https://stadt-bremerhaven.de/only-switch-fuer-macos-schnellzugriff-auf-einige-systemoptionen/
 
 ## About Apple's warning at first open
 Some users ask me why masOS shows a warning box below, when they first open Only Switch.
