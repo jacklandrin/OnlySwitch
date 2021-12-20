@@ -31,6 +31,7 @@ enum SwitchType:UInt64, CaseIterable {
     case radioStation = 8192
     case emptyTrash = 16384
     case emptyPasteboard = 32768
+    case showUserLibrary = 65536
     
     func barInfo() -> SwitchBarInfo {
         switch self {
@@ -101,6 +102,10 @@ enum SwitchType:UInt64, CaseIterable {
                                  onImage: NSImage(systemSymbolName: "doc.on.clipboard"),
                                  offImage: NSImage(systemSymbolName: "doc.on.clipboard"),
                                  controlType: .Button)
+        case .showUserLibrary:
+            return SwitchBarInfo(title: "Show User Library",
+                                 onImage: NSImage(systemSymbolName: "building.columns.fill"),
+                                 offImage: NSImage(systemSymbolName: "building.columns"))
         }
     }
     
@@ -138,6 +143,8 @@ enum SwitchType:UInt64, CaseIterable {
             return EmptyTrashSwitch()
         case .emptyPasteboard:
             return EmptyPasteboardSwitch()
+        case .showUserLibrary:
+            return ShowUserLibrarySwitch()
         }
     }
 }

@@ -111,3 +111,21 @@ extension String {
         }
     }
 }
+
+///for file and folder
+extension URL {
+    var isHidden:Bool {
+        return (try? resourceValues(forKeys: [.isHiddenKey]))?.isHidden == true
+    }
+    
+    mutating func doHide(_ hide:Bool) -> Bool {
+        var resourceValues = URLResourceValues()
+        resourceValues.isHidden = hide
+        do {
+            try setResourceValues(resourceValues)
+        } catch {
+            return false
+        }
+        return true
+    }
+}
