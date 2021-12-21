@@ -92,6 +92,8 @@ You can follow these steps to use Only Switch.
 * [AlertToast](https://github.com/elai950/AlertToast)
 * [AudioStreamer](https://github.com/syedhali/AudioStreamer) modified for live streaming
 * [AudioSpectrum](https://github.com/potato04/AudioSpectrum) modified for Appkit
+* [Alamofire](https://github.com/Alamofire/Alamofire)
+
 ## License
 MIT
 ## Donate
