@@ -18,7 +18,7 @@ struct OtherPopover {
 }
 
 class StatusBarController {
-    private var statusBar: NSStatusBar
+//    private var statusBar: NSStatusBar
     private var statusItem: NSStatusItem
     private var popover: NSPopover
     private var eventMonitor : EventMonitor?
@@ -37,8 +37,8 @@ class StatusBarController {
     private var otherPopoverBitwise:Int = 0
     init(_ popover:NSPopover) {
         self.popover = popover
-        statusBar = NSStatusBar()
-        statusItem = statusBar.statusItem(withLength: 28)
+//        statusBar = NSStatusBar()
+        statusItem = NSStatusBar.system.statusItem(withLength:NSStatusItem.squareLength)//statusBar.statusItem(withLength: 28)
         if let statusBarButton = statusItem.button {
             statusBarButton.image = #imageLiteral(resourceName: "statusbar")
             statusBarButton.image?.size = NSSize(width: 18, height: 18)

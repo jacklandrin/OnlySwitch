@@ -101,6 +101,8 @@
 		04A23B2B275D61BC00B454C8 /* NightShiftSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A23B2A275D61BC00B454C8 /* NightShiftSwitch.swift */; };
 		04A2FFF72755A3E500CE56A0 /* NSImage++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A2FFF62755A3E500CE56A0 /* NSImage++.swift */; };
 		04A2FFFA275636FA00CE56A0 /* String++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A2FFF9275636FA00CE56A0 /* String++.swift */; };
+		04A6B54B27715F90003B2647 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 04A6B54A27715F90003B2647 /* Alamofire */; };
+		04A6B5502771F338003B2647 /* CheckUpdateTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A6B54F2771F338003B2647 /* CheckUpdateTool.swift */; };
 		04AA63CE276BC94000ED5DEA /* EmptyTrashSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AA63CD276BC94000ED5DEA /* EmptyTrashSwitch.swift */; };
 		04AA63D0276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AA63CF276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift */; };
 		04D68B0D2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D68B0C2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift */; };
@@ -211,6 +213,7 @@
 		04A23B2D275D69F700B454C8 /* CBBlueLightClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CBBlueLightClient.h; sourceTree = "<group>"; };
 		04A2FFF62755A3E500CE56A0 /* NSImage++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSImage++.swift"; sourceTree = "<group>"; };
 		04A2FFF9275636FA00CE56A0 /* String++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String++.swift"; sourceTree = "<group>"; };
+		04A6B54F2771F338003B2647 /* CheckUpdateTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckUpdateTool.swift; sourceTree = "<group>"; };
 		04AA63CD276BC94000ED5DEA /* EmptyTrashSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyTrashSwitch.swift; sourceTree = "<group>"; };
 		04AA63CF276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyPasteboardSwitch.swift; sourceTree = "<group>"; };
 		04D68B0C2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowUserLibrarySwitch.swift; sourceTree = "<group>"; };
@@ -229,6 +232,7 @@
 				0430887E275D707C00877E51 /* LaunchAtLogin in Frameworks */,
 				0493379027626FD200AE779A /* NetworkExtension.framework in Frameworks */,
 				04A23B23275D5FC500B454C8 /* CoreBrightness.framework in Frameworks */,
+				04A6B54B27715F90003B2647 /* Alamofire in Frameworks */,
 				04581DB6276506B9008ADF30 /* AlertToast in Frameworks */,
 				043E5D6D2757DADB00ADC004 /* AVFoundation.framework in Frameworks */,
 			);
@@ -520,6 +524,7 @@
 				0427B25A275D786400AD783A /* SystemInfo.swift */,
 				04938D0D2769247A00713F1D /* SendEmail.swift */,
 				04938D11276948DE00713F1D /* WallpaperManager.swift */,
+				04A6B54F2771F338003B2647 /* CheckUpdateTool.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -553,6 +558,7 @@
 			packageProductDependencies = (
 				0430887D275D707C00877E51 /* LaunchAtLogin */,
 				04581DB5276506B9008ADF30 /* AlertToast */,
+				04A6B54A27715F90003B2647 /* Alamofire */,
 			);
 			productName = OnlySwitch;
 			productReference = 04447B582754F08000CD2900 /* OnlySwitch.app */;
@@ -566,7 +572,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1310;
-				LastUpgradeCheck = 1310;
+				LastUpgradeCheck = 1320;
 				TargetAttributes = {
 					04447B572754F08000CD2900 = {
 						CreatedOnToolsVersion = 13.1;
@@ -587,6 +593,7 @@
 			packageReferences = (
 				0430887C275D707C00877E51 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */,
 				04581DB4276506B9008ADF30 /* XCRemoteSwiftPackageReference "AlertToast" */,
+				04A6B54927715F90003B2647 /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			productRefGroup = 04447B592754F08000CD2900 /* Products */;
 			projectDirPath = "";
@@ -703,6 +710,7 @@
 				04A23B2B275D61BC00B454C8 /* NightShiftSwitch.swift in Sources */,
 				0424348D275643560044D0AD /* TopNotchSwitch.swift in Sources */,
 				040E972B27611C9C003D9D42 /* URL++.swift in Sources */,
+				04A6B5502771F338003B2647 /* CheckUpdateTool.swift in Sources */,
 				04581DBB27651EF1008ADF30 /* RollingText.swift in Sources */,
 				0493374427625A1E00AE779A /* AudioPlayer.swift in Sources */,
 				0493374E27625A1E00AE779A /* ParserError.swift in Sources */,
@@ -770,6 +778,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -831,6 +840,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -1013,6 +1023,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		04A6B54927715F90003B2647 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = exactVersion;
+				version = 5.5.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1025,6 +1043,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 04581DB4276506B9008ADF30 /* XCRemoteSwiftPackageReference "AlertToast" */;
 			productName = AlertToast;
+		};
+		04A6B54A27715F90003B2647 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04A6B54927715F90003B2647 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
 		};
 /* End XCSwiftPackageProductDependency section */
 
