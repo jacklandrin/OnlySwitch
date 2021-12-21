@@ -111,6 +111,7 @@
 		04E03B00275F93B900EA5FB9 /* AirPodsSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AFF275F93B900EA5FB9 /* AirPodsSwitch.swift */; };
 		04E03B04275FD98500EA5FB9 /* battery-airpods-monterey.sh in Resources */ = {isa = PBXBuildFile; fileRef = 04E03B03275FD98500EA5FB9 /* battery-airpods-monterey.sh */; };
 		04E03B06275FEBE200EA5FB9 /* AirPodsBatteryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03B05275FEBE200EA5FB9 /* AirPodsBatteryView.swift */; };
+		04FE2C922772880300C79FF9 /* ShowExtensionNameSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FE2C912772880300C79FF9 /* ShowExtensionNameSwitch.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -222,6 +223,7 @@
 		04E03AFF275F93B900EA5FB9 /* AirPodsSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPodsSwitch.swift; sourceTree = "<group>"; };
 		04E03B03275FD98500EA5FB9 /* battery-airpods-monterey.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "battery-airpods-monterey.sh"; sourceTree = "<group>"; };
 		04E03B05275FEBE200EA5FB9 /* AirPodsBatteryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPodsBatteryView.swift; sourceTree = "<group>"; };
+		04FE2C912772880300C79FF9 /* ShowExtensionNameSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowExtensionNameSwitch.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -263,6 +265,7 @@
 				04AA63CD276BC94000ED5DEA /* EmptyTrashSwitch.swift */,
 				04AA63CF276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift */,
 				04D68B0C2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift */,
+				04FE2C912772880300C79FF9 /* ShowExtensionNameSwitch.swift */,
 			);
 			path = EverySwitch;
 			sourceTree = "<group>";
@@ -747,6 +750,7 @@
 				0493375727625A1E00AE779A /* Downloader.swift in Sources */,
 				0493376227625BBD00AE779A /* NSBezierPath++.swift in Sources */,
 				040E972D27611DEA003D9D42 /* XcodeCacheSwitch.swift in Sources */,
+				04FE2C922772880300C79FF9 /* ShowExtensionNameSwitch.swift in Sources */,
 				043E5D662757C84900ADC004 /* HiddenModifier.swift in Sources */,
 				0493379E2763C0E800AE779A /* Persistence.swift in Sources */,
 				0493375A27625A1E00AE779A /* DownloadingDelegate.swift in Sources */,

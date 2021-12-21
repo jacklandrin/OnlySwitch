@@ -71,7 +71,9 @@ let emptyTrashCMD = """
                         empty trash
                     end tell
                     """
-
+let getExtensionNameStateCMD = "defaults read NSGlobalDomain AppleShowAllExtensions"
+let showExtensionNameCMD = "defaults write NSGlobalDomain AppleShowAllExtensions -bool true; killall Finder"
+let hideExtensionNameCMD = "defaults write NSGlobalDomain AppleShowAllExtensions -bool false; killall Finder"
 
 func scriptDiskFilePath(scriptName: String) -> String {
     let appBundleID = Bundle.main.infoDictionary?["CFBundleName"] as! String
