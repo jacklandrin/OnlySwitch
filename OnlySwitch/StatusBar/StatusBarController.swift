@@ -18,7 +18,7 @@ struct OtherPopover {
 }
 
 class StatusBarController {
-//    private var statusBar: NSStatusBar
+
     private var statusItem: NSStatusItem
     private var popover: NSPopover
     private var eventMonitor : EventMonitor?
@@ -37,16 +37,18 @@ class StatusBarController {
     private var otherPopoverBitwise:Int = 0
     init(_ popover:NSPopover) {
         self.popover = popover
-//        statusBar = NSStatusBar()
-        statusItem = NSStatusBar.system.statusItem(withLength:NSStatusItem.squareLength)//statusBar.statusItem(withLength: 28)
+
+        statusItem = NSStatusBar.system.statusItem(withLength:NSStatusItem.squareLength)
         if let statusBarButton = statusItem.button {
             statusBarButton.image = #imageLiteral(resourceName: "statusbar")
             statusBarButton.image?.size = NSSize(width: 18, height: 18)
             statusBarButton.image?.isTemplate = true
-            
+
             statusBarButton.action = #selector(togglePopover(sender:))
             statusBarButton.target = self
         }
+        
+        
         eventMonitor = EventMonitor(mask: [.leftMouseDown, .rightMouseDown], handler: mouseEventHandler)
         
         NotificationCenter.default.addObserver(forName: OtherPopover.name, object: nil, queue: .main, using: { [weak self] notify in
