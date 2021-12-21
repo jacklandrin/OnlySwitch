@@ -7,13 +7,13 @@
 
 ***Menubar is smaller, you only need an All-in-One switch.***
 
-[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_1.4/OnlySwitch.dmg)
+[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_1.5/OnlySwitch.dmg)
 
 ## What's the OnlySwitch
 OnlySwitch provides a series toggle switch to simply your routine work, such as Hiden desktop icons, dark mode and hide ugly notch of new Mackbook Pro. The switches show on your statusbar, you can easily control them.
 From Version 1.2, OnlySwitch supports **simplified Chinese** and **German**.
 <p align="center">
-<img alt="Sits in the status bar" src="https://www.jacklandrin.com/wp-content/uploads/2021/12/onlySwitch_14.png" width="60%" align="center" />
+<img alt="Sits in the status bar" src="https://www.jacklandrin.com/wp-content/uploads/2021/12/onlySwitch_15.png" width="60%" align="center" />
 </p>
 
 ## Switch list
@@ -36,6 +36,7 @@ From Version 1.2, OnlySwitch supports **simplified Chinese** and **German**.
 | Empty pasteboard         | finish            |
 | Mute                     | finish            |
 | Show user library folder | finish            |
+| Show extension name      | finish            |
 | Hide notch               | exist some issues |
 | No disturb mode          | todo              |
 
@@ -48,6 +49,10 @@ Now, the Hide notch switch supports dynamic wallpaper, just the processing takes
 ## About AirPods Switch 
 
 I use classOfDevice(2360344) to check if a bluetooth device is Airpods Pro, but I'm not sure whether other AirPods modules are also 2360344, since I only have two AriPods Pros. If you are using AirPods 1~3, please tell me what the classOfDevice is. Or I can detect the count of battery value to check if AirPods(when count is 3, it's AirPods), like **AirPods Battery Monitor For MAC OS**.
+
+## Can't compile preview by Xcode 13.2.1 on some Macs
+I found I can't run the preview of SwiftUI by Xcode 13.2.1 on my M1 Pro Macbook. It'll show an error like this https://developer.apple.com/forums/thread/697037. Meanwhile, the OnlySwitch status bar icon will be missing, including old version app. However it's normal that I run it on my i7 Macbook. I'm not sure whether this is a bug of Xcode. The current workaround is installing back to Xcode 13.2.
+
 ## Screenshots
 
 <p align="center">
