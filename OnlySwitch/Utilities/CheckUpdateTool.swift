@@ -108,6 +108,37 @@ class CheckUpdateTool{
                 return false
             }
         }
+        if latestVersionSplited.count > currentVersionSplited.count { //for example: 1.4.1 vs 1.4
+            return false
+        }
         return true
+    }
+    
+    func downloadDMG(complete:@escaping (_ success:Bool, _ path:String?) -> Void ) {
+        let filePath = myAppPath?.appendingPathComponent(string: "OnlySwitch.dmg")
+        guard let filePath = filePath else {
+            complete(false, nil)
+            return
+        }
+        let destination: DownloadRequest.Destination = { _, _ in
+            return (URL(fileURLWithPath: filePath), [.removePreviousFile, .createIntermediateDirectories])
+        }
+
+        let request = AF.download(downloadURL, to: destination)
+        request.response { response in
+            if response.error == nil, let path = response.fileURL?.path {
+                complete(true, path)
+            } else {
+                complete(false, nil)
+            }
+        }
+    }
+    
+    private var myAppPath:String? {
+        let appBundleID = Bundle.main.infoDictionary?["CFBundleName"] as! String
+        let paths = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).map(\.path)
+        let directory = paths.first
+        let myAppPath = directory?.appendingPathComponent(string: appBundleID)
+        return myAppPath
     }
 }
