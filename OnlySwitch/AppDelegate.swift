@@ -37,11 +37,23 @@ class AppDelegate:NSObject, NSApplicationDelegate {
         blManager = BluetoothDevicesManager.shared
         RadioStationSwitch.shared.setDefaultRadioStations()
         Bundle.setLanguage(lang: LanguageManager.sharedManager.currentLang)
+        
+        checkUpdate()
     }
     
     func applicationWillTerminate(_ notification: Notification) {
         
     }
 
+    
+    func checkUpdate() {
+        CheckUpdateTool.shared.checkupdate(complete: { success in
+            if success {
+                let newestVersion = CheckUpdateTool.shared.latestVersion
+                UserDefaults.standard.set(newestVersion, forKey: newestVersionKey)
+                UserDefaults.standard.synchronize()
+            }
+        })
+    }
     
 }

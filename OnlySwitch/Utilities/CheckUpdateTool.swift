@@ -77,6 +77,8 @@ struct LatestRelease:Decodable {
     }
 }
 
+let newestVersionKey = "newestVersionKey"
+
 class CheckUpdateTool{
     static let shared = CheckUpdateTool()
     var latestVersion:String = ""

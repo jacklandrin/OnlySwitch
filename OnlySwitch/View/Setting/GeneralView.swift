@@ -11,8 +11,11 @@ import LaunchAtLogin
 struct GeneralView: View {
     @ObservedObject var langManager = LanguageManager.sharedManager
     @State var cacheSize:String = ""
-    @State var needUpdate = false
+    @State var needtoUpdateAlert = false
     @State var showProgress = false
+    @State var newestVersion = UserDefaults.standard.string(forKey: newestVersionKey) ?? ""
+    
+    
     var body: some View {
         VStack {
             HStack {
@@ -22,12 +25,14 @@ struct GeneralView: View {
                         
                     Text("Language:".localized())
                         .frame(height:30)
+                        .padding(.top,8)
                     
-                    Text("Updates".localized())
+                    Text("Updates:".localized())
                         .frame(height:30)
                     
                     Text("Cache:".localized())
                         .frame(height: 50, alignment: .top)
+                        .padding(.top,5)
                     
                     Text("Contact:".localized())
                         .frame(height:30)
@@ -54,23 +59,37 @@ struct GeneralView: View {
                             }
                         }
                         .frame(maxWidth:150)
-                        
-                    }
+                    }.frame(height:30)
+                    
                     HStack {
-                        Button("Check for updates") {
+                        Button("Check for updates".localized()) {
                             showProgress = true
                             CheckUpdateTool.shared.checkupdate(complete: { success in
                                 if success {
-                                    needUpdate = !CheckUpdateTool.shared.isTheNewestVersion()
+                                    newestVersion = CheckUpdateTool.shared.latestVersion
+                                    UserDefaults.standard.set(newestVersion, forKey: newestVersionKey)
+                                    UserDefaults.standard.synchronize()
+                                    needtoUpdateAlert = !CheckUpdateTool.shared.isTheNewestVersion()
                                     showProgress = false
                                 }
                             })
                         }
+                        
+                        if !newestVersion.isEmpty {
+                            if CheckUpdateTool.shared.isTheNewestVersion() {
+                                Text("You’re up to date!".localized())
+                                    .foregroundColor(.green)
+                            } else {
+                                Text("The latest version is v%@".localizeWithFormat(arguments: newestVersion))
+                                    .foregroundColor(.red)
+                            }
+                        }
+                        
                         ProgressView()
                             .progressViewStyle(.circular)
-                            .scaleEffect(0.8)
+                            .scaleEffect(0.6)
                             .isHidden(!showProgress,remove: true)
-                    }
+                    }.frame(height:30)
                     
                     VStack(alignment:.leading,spacing: 15) {
                         HStack {
@@ -94,16 +113,16 @@ struct GeneralView: View {
                     }
                     .frame(height:30)
                 }
-            }.padding(.top, 50)
+            }.padding(.top, 40)
             Spacer()
         }
         .onAppear{
             cacheSize = WallpaperManager.shared.cacheSize()
         }
-        .alert(isPresented: $needUpdate) {
-            Alert(title: Text("Update"),
-                  message: Text("You can update to new Version. The latest version is v\(CheckUpdateTool.shared.latestVersion)"),
-                  primaryButton: .default(Text("Download"), action: {
+        .alert(isPresented: $needtoUpdateAlert) {
+            Alert(title: Text("Update".localized()),
+                  message: Text("You can update to new version. The latest version is v%@".localizeWithFormat(arguments: CheckUpdateTool.shared.latestVersion)),
+                  primaryButton: .default(Text("Download".localized()), action: {
                 CheckUpdateTool.shared.downloadDMG{ success, path in
                     guard success, let path = path else {return}
                     openDMG(path: path)
@@ -112,7 +131,7 @@ struct GeneralView: View {
                     }
                 }
             }),
-                  secondaryButton:.cancel())
+                  secondaryButton:.default(Text("Cancel".localized())))
         }
     }
     
