@@ -87,6 +87,7 @@ class StatusBarController {
     func showPopover(_ sender: AnyObject) {
         if let statusBarButton = statusItem.button {
             popover.show(relativeTo: statusBarButton.bounds, of: statusBarButton, preferredEdge: NSRectEdge.maxY)
+            popover.contentViewController?.view.window?.makeKey()
             NotificationCenter.default.post(name: showPopoverNotificationName, object: nil)
             eventMonitor?.start()
         }
