@@ -38,6 +38,7 @@ From Version 1.2, OnlySwitch supports **simplified Chinese** and **German**.
 | Show user library folder | finish            |
 | Show extension name      | finish            |
 | Hide notch               | exist some issues |
+| Pomodoro timer           | todo              |
 | No disturb mode          | todo              |
 
 From Version 1.3, switches can be added or removed on list.
@@ -64,6 +65,8 @@ I found I can't run the preview of SwiftUI by Xcode 13.2.1 on my M1 Pro Macbook.
 * Ifun.de https://www.ifun.de/eheimtipp-onlyswitch-schaltzentrale-in-der-mac-menueleiste-179482/
 * appgefahren.de https://www.appgefahren.de/onlyswitch-kleines-tool-mit-wichtigen-aktionen-fuer-die-mac-menueleiste-312135.html
 * CASCHYS BLOG https://stadt-bremerhaven.de/only-switch-fuer-macos-schnellzugriff-auf-einige-systemoptionen/
+* softpedia https://mac.softpedia.com/get/System-Utilities/OnlySwitch.shtml
+* macupdate https://www.macupdate.com/app/mac/63719/onlyswitch
 
 ## About Apple's warning at first open
 Some users ask me why masOS shows a warning box below, when they first open Only Switch.
