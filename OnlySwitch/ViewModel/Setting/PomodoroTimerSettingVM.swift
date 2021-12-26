@@ -25,7 +25,9 @@ class PomodoroTimerSettingVM:ObservableObject {
         didSet {
             objectWillChange.send()
             NotificationCenter.default.post(name: ChangePTDurationNotification, object: nil)
-            NotificationCenter.default.post(name: changeSettingNotification, object: nil)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                NotificationCenter.default.post(name: changeSettingNotification, object: nil)
+            }
         }
     }
     
@@ -34,7 +36,9 @@ class PomodoroTimerSettingVM:ObservableObject {
         didSet {
             objectWillChange.send()
             NotificationCenter.default.post(name: ChangePTDurationNotification, object: nil)
-            NotificationCenter.default.post(name: changeSettingNotification, object: nil)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                NotificationCenter.default.post(name: changeSettingNotification, object: nil)
+            }
         }
     }
     
