@@ -47,6 +47,14 @@
 		04581DBF27653C4A008ADF30 /* AirPodsSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04581DBE27653C4A008ADF30 /* AirPodsSettingVM.swift */; };
 		04581DC12765522A008ADF30 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04581DC02765522A008ADF30 /* AboutView.swift */; };
 		04581DC327677ADC008ADF30 /* KeepAwakeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04581DC227677ADC008ADF30 /* KeepAwakeSwitch.swift */; };
+		047140B327788364005B160B /* mixkit-alert-bells-echo-765.wav in Resources */ = {isa = PBXBuildFile; fileRef = 047140B127788364005B160B /* mixkit-alert-bells-echo-765.wav */; };
+		047140B427788364005B160B /* mixkit-bell-notification-933.wav in Resources */ = {isa = PBXBuildFile; fileRef = 047140B227788364005B160B /* mixkit-bell-notification-933.wav */; };
+		047140B627788486005B160B /* EffectSoundHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140B527788486005B160B /* EffectSoundHelper.swift */; };
+		047140B8277884EE005B160B /* UserDefaultValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140B7277884EE005B160B /* UserDefaultValue.swift */; };
+		047140BA2778890A005B160B /* PomodoroTimerSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140B92778890A005B160B /* PomodoroTimerSwitch.swift */; };
+		047140BC2778935B005B160B /* TimerCountDownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140BB2778935B005B160B /* TimerCountDownView.swift */; };
+		047140BE2778A416005B160B /* PomodoroTimerSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140BD2778A416005B160B /* PomodoroTimerSettingView.swift */; };
+		047140C02778A478005B160B /* PomodoroTimerSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140BF2778A478005B160B /* PomodoroTimerSettingVM.swift */; };
 		049337212761286400AE779A /* CleanProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337202761286400AE779A /* CleanProgressView.swift */; };
 		0493372327615A4900AE779A /* AutohideMenuBarSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493372227615A4900AE779A /* AutohideMenuBarSwitch.swift */; };
 		0493372527615EA400AE779A /* HiddenFilesSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493372427615EA400AE779A /* HiddenFilesSwitch.swift */; };
@@ -156,6 +164,14 @@
 		04581DBE27653C4A008ADF30 /* AirPodsSettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPodsSettingVM.swift; sourceTree = "<group>"; };
 		04581DC02765522A008ADF30 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		04581DC227677ADC008ADF30 /* KeepAwakeSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeepAwakeSwitch.swift; sourceTree = "<group>"; };
+		047140B127788364005B160B /* mixkit-alert-bells-echo-765.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "mixkit-alert-bells-echo-765.wav"; sourceTree = "<group>"; };
+		047140B227788364005B160B /* mixkit-bell-notification-933.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "mixkit-bell-notification-933.wav"; sourceTree = "<group>"; };
+		047140B527788486005B160B /* EffectSoundHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectSoundHelper.swift; sourceTree = "<group>"; };
+		047140B7277884EE005B160B /* UserDefaultValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultValue.swift; sourceTree = "<group>"; };
+		047140B92778890A005B160B /* PomodoroTimerSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimerSwitch.swift; sourceTree = "<group>"; };
+		047140BB2778935B005B160B /* TimerCountDownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerCountDownView.swift; sourceTree = "<group>"; };
+		047140BD2778A416005B160B /* PomodoroTimerSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimerSettingView.swift; sourceTree = "<group>"; };
+		047140BF2778A478005B160B /* PomodoroTimerSettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimerSettingVM.swift; sourceTree = "<group>"; };
 		049337202761286400AE779A /* CleanProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanProgressView.swift; sourceTree = "<group>"; };
 		0493372227615A4900AE779A /* AutohideMenuBarSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutohideMenuBarSwitch.swift; sourceTree = "<group>"; };
 		0493372427615EA400AE779A /* HiddenFilesSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HiddenFilesSwitch.swift; sourceTree = "<group>"; };
@@ -266,6 +282,7 @@
 				04AA63CF276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift */,
 				04D68B0C2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift */,
 				04FE2C912772880300C79FF9 /* ShowExtensionNameSwitch.swift */,
+				047140B92778890A005B160B /* PomodoroTimerSwitch.swift */,
 			);
 			path = EverySwitch;
 			sourceTree = "<group>";
@@ -281,8 +298,9 @@
 				049337202761286400AE779A /* CleanProgressView.swift */,
 				04933765276262EB00AE779A /* SoundWaveView.swift */,
 				04933787276264D400AE779A /* BluredSoundWave.swift */,
-				049337952762C05200AE779A /* Setting */,
+				047140BB2778935B005B160B /* TimerCountDownView.swift */,
 				04581DBA27651EF1008ADF30 /* RollingText.swift */,
+				049337952762C05200AE779A /* Setting */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -324,6 +342,7 @@
 				04447B732755015A00CD2900 /* ShellCommandDefine.swift */,
 				0493378B2762654600AE779A /* LayoutDefine.swift */,
 				049337932762BD1B00AE779A /* OpenWindow.swift */,
+				047140B7277884EE005B160B /* UserDefaultValue.swift */,
 			);
 			path = Define;
 			sourceTree = "<group>";
@@ -396,6 +415,7 @@
 				049337982762C0B300AE779A /* RadioSettingVM.swift */,
 				04581DBE27653C4A008ADF30 /* AirPodsSettingVM.swift */,
 				040C6EA9276B7D4500291DEB /* CustomizeVM.swift */,
+				047140BF2778A478005B160B /* PomodoroTimerSettingVM.swift */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -491,6 +511,7 @@
 				04581DBC27653C35008ADF30 /* AirPodsSettingView.swift */,
 				04581DC02765522A008ADF30 /* AboutView.swift */,
 				04938D092769143300713F1D /* GeneralView.swift */,
+				047140BD2778A416005B160B /* PomodoroTimerSettingView.swift */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -528,6 +549,7 @@
 				04938D0D2769247A00713F1D /* SendEmail.swift */,
 				04938D11276948DE00713F1D /* WallpaperManager.swift */,
 				04A6B54F2771F338003B2647 /* CheckUpdateTool.swift */,
+				047140B527788486005B160B /* EffectSoundHelper.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -535,6 +557,8 @@
 		04E03B02275FD92D00EA5FB9 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				047140B127788364005B160B /* mixkit-alert-bells-echo-765.wav */,
+				047140B227788364005B160B /* mixkit-bell-notification-933.wav */,
 				04E03B03275FD98500EA5FB9 /* battery-airpods-monterey.sh */,
 			);
 			path = Resource;
@@ -616,6 +640,8 @@
 				0443A6B627599AAC00A3BCFD /* README.md in Resources */,
 				04447B632754F08100CD2900 /* Preview Assets.xcassets in Resources */,
 				04E03B04275FD98500EA5FB9 /* battery-airpods-monterey.sh in Resources */,
+				047140B327788364005B160B /* mixkit-alert-bells-echo-765.wav in Resources */,
+				047140B427788364005B160B /* mixkit-bell-notification-933.wav in Resources */,
 				04447B602754F08100CD2900 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -702,6 +728,7 @@
 				043E5D6A2757D68800ADC004 /* MuteSwitch.swift in Sources */,
 				0493378C2762654600AE779A /* LayoutDefine.swift in Sources */,
 				049337992762C0B300AE779A /* RadioSettingVM.swift in Sources */,
+				047140B627788486005B160B /* EffectSoundHelper.swift in Sources */,
 				0493375B27625A1E00AE779A /* JLASAudioPlayer+Streamer.swift in Sources */,
 				04AA63CE276BC94000ED5DEA /* EmptyTrashSwitch.swift in Sources */,
 				0493378E2762665A00AE779A /* RadioStationSwitch.swift in Sources */,
@@ -730,10 +757,13 @@
 				043E5D6F2758116800ADC004 /* NSSound_SystemVolumeExtension.swift in Sources */,
 				04D68B0D2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift in Sources */,
 				0493375F27625AAC00AE779A /* SpectrumView.swift in Sources */,
+				047140BE2778A416005B160B /* PomodoroTimerSettingView.swift in Sources */,
 				0424348F27565F9F0044D0AD /* NSAppleEventDescriptor.swift in Sources */,
 				04447B782755129D00CD2900 /* EventMonitor.swift in Sources */,
 				0493372327615A4900AE779A /* AutohideMenuBarSwitch.swift in Sources */,
+				047140BA2778890A005B160B /* PomodoroTimerSwitch.swift in Sources */,
 				04243487275641DB0044D0AD /* SwitchProvider.swift in Sources */,
+				047140C02778A478005B160B /* PomodoroTimerSettingVM.swift in Sources */,
 				0493374727625A1E00AE779A /* PlayerManager.swift in Sources */,
 				0493372527615EA400AE779A /* HiddenFilesSwitch.swift in Sources */,
 				04AA63D0276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift in Sources */,
@@ -746,12 +776,14 @@
 				04447B702754F21A00CD2900 /* StatusBarController.swift in Sources */,
 				0493374A27625A1E00AE779A /* Streamer+DownloadableDelegate.swift in Sources */,
 				0493376027625AAC00AE779A /* RealtimeAnalyzer.swift in Sources */,
+				047140B8277884EE005B160B /* UserDefaultValue.swift in Sources */,
 				04933766276262EB00AE779A /* SoundWaveView.swift in Sources */,
 				0493375727625A1E00AE779A /* Downloader.swift in Sources */,
 				0493376227625BBD00AE779A /* NSBezierPath++.swift in Sources */,
 				040E972D27611DEA003D9D42 /* XcodeCacheSwitch.swift in Sources */,
 				04FE2C922772880300C79FF9 /* ShowExtensionNameSwitch.swift in Sources */,
 				043E5D662757C84900ADC004 /* HiddenModifier.swift in Sources */,
+				047140BC2778935B005B160B /* TimerCountDownView.swift in Sources */,
 				0493379E2763C0E800AE779A /* Persistence.swift in Sources */,
 				0493375A27625A1E00AE779A /* DownloadingDelegate.swift in Sources */,
 				043E5D712758176B00ADC004 /* SwitchToggle.swift in Sources */,

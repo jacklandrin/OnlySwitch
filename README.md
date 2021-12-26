@@ -37,8 +37,8 @@ From Version 1.2, OnlySwitch supports **simplified Chinese** and **German**.
 | Mute                     | finish            |
 | Show user library folder | finish            |
 | Show extension name      | finish            |
+| Pomodoro timer           | finish            |
 | Hide notch               | exist some issues |
-| Pomodoro timer           | todo              |
 | No disturb mode          | todo              |
 
 From Version 1.3, switches can be added or removed on list.
@@ -96,6 +96,7 @@ You can follow these steps to use Only Switch.
 * [AudioStreamer](https://github.com/syedhali/AudioStreamer) modified for live streaming
 * [AudioSpectrum](https://github.com/potato04/AudioSpectrum) modified for Appkit
 * [Alamofire](https://github.com/Alamofire/Alamofire)
+* Sound Source: [mixkit](https://mixkit.co)
 
 ## License
 MIT

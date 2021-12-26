@@ -15,6 +15,5 @@ class SendEmail {
         service.subject = "About Only Switch"
 
         service.perform(withItems: [""])
-    
     }
 }

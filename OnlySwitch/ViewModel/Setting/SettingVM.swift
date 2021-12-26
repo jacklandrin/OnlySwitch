@@ -12,6 +12,7 @@ let changeSettingNotification = NSNotification.Name("changeSettingNotification")
 enum SettingItem:String {
     case AirPods = "AirPods"
     case Radio = "Radio"
+    case PomodoroTimer = "Pomodoro Timer"
     case General = "General"
     case Customize = "Customize"
     case About = "About"
@@ -23,6 +24,8 @@ enum SettingItem:String {
             return AnyView(AirPodsSettingView())
         case .Radio:
             return AnyView(RadioSettingView())
+        case .PomodoroTimer:
+            return AnyView(PomodoroTimerSettingView())
         case .General:
             return AnyView(GeneralView())
         case .Customize:
@@ -34,6 +37,6 @@ enum SettingItem:String {
 }
 
 class SettingVM:ObservableObject {
-    @Published var settingItems:[SettingItem] = [.General, .Customize, .Radio,.AirPods,.About]
+    @Published var settingItems:[SettingItem] = [.General, .Customize, .Radio, .AirPods, .PomodoroTimer,.About]
     @Published var selection:SettingItem?
 }

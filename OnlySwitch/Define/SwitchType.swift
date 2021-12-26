@@ -33,6 +33,7 @@ enum SwitchType:UInt64, CaseIterable {
     case emptyPasteboard = 32768
     case showUserLibrary = 65536
     case showExtensionName = 131072
+    case pomodoroTimer = 262144
     
     func barInfo() -> SwitchBarInfo {
         switch self {
@@ -108,7 +109,13 @@ enum SwitchType:UInt64, CaseIterable {
                                  onImage: NSImage(systemSymbolName: "building.columns.fill"),
                                  offImage: NSImage(systemSymbolName: "building.columns"))
         case .showExtensionName:
-            return SwitchBarInfo(title: "Show Extension Name", onImage: NSImage(named: "extension_on")!, offImage: NSImage(named: "extension_off")!)
+            return SwitchBarInfo(title: "Show Extension Name",
+                                 onImage: NSImage(named: "extension_on")!,
+                                 offImage: NSImage(named: "extension_off")!)
+        case .pomodoroTimer:
+            return SwitchBarInfo(title: "Pomodoro Timer",
+                                 onImage: NSImage(systemSymbolName: "timer"),
+                                 offImage: NSImage(systemSymbolName: "timer"))
         }
     }
     
@@ -141,7 +148,7 @@ enum SwitchType:UInt64, CaseIterable {
         case .hiddenFiles:
             return HiddenFilesSwitch()
         case .radioStation:
-            return RadioStationSwitch()
+            return RadioStationSwitch.shared
         case .emptyTrash:
             return EmptyTrashSwitch()
         case .emptyPasteboard:
@@ -150,6 +157,8 @@ enum SwitchType:UInt64, CaseIterable {
             return ShowUserLibrarySwitch()
         case .showExtensionName:
             return ShowExtensionNameSwitch()
+        case .pomodoroTimer:
+            return PomodoroTimerSwitch()
         }
     }
 }

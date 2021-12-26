@@ -75,6 +75,10 @@ let getExtensionNameStateCMD = "defaults read NSGlobalDomain AppleShowAllExtensi
 let showExtensionNameCMD = "defaults write NSGlobalDomain AppleShowAllExtensions -bool true; killall Finder"
 let hideExtensionNameCMD = "defaults write NSGlobalDomain AppleShowAllExtensions -bool false; killall Finder"
 
+func displayNotificationCMD(title:String, content:String, subtitle:String) -> String {
+    "display notification \"\(content)\" with title \"\(title)\" subtitle \"\(subtitle)\""
+}
+
 func scriptDiskFilePath(scriptName: String) -> String {
     let appBundleID = Bundle.main.infoDictionary?["CFBundleName"] as! String
     let appDirectory = "\(appBundleID)/script"
@@ -112,6 +116,8 @@ func fileExistAtPath(_ path:String) -> Bool {
     let exists = FileManager.default.fileExists(atPath: path, isDirectory: &isDirectory)
     return exists && isDirectory.boolValue
 }
+
+
 
 
 let getAirpodsBatteryShell = "battery-airpods-monterey"
