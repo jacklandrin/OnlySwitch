@@ -71,9 +71,21 @@ let emptyTrashCMD = """
                         empty trash
                     end tell
                     """
+
+
 let getExtensionNameStateCMD = "defaults read NSGlobalDomain AppleShowAllExtensions"
 let showExtensionNameCMD = "defaults write NSGlobalDomain AppleShowAllExtensions -bool true; killall Finder"
 let hideExtensionNameCMD = "defaults write NSGlobalDomain AppleShowAllExtensions -bool false; killall Finder"
+
+let getLaunchpadRowCMD = "defaults read com.apple.dock springboard-rows"
+let smallLaunchpadIconCMD = """
+                            defaults write com.apple.dock springboard-rows -int 6
+                            defaults write com.apple.dock ResetLaunchPad -bool TRUE; killall Dock
+                            """
+let bigLaunchpadIconCMD = """
+                            defaults write com.apple.dock springboard-rows -int 5
+                            defaults write com.apple.dock ResetLaunchPad -bool TRUE; killall Dock
+                            """
 
 func displayNotificationCMD(title:String, content:String, subtitle:String) -> String {
     "display notification \"\(content)\" with title \"\(title)\" subtitle \"\(subtitle)\""

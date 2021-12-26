@@ -55,6 +55,7 @@
 		047140BC2778935B005B160B /* TimerCountDownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140BB2778935B005B160B /* TimerCountDownView.swift */; };
 		047140BE2778A416005B160B /* PomodoroTimerSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140BD2778A416005B160B /* PomodoroTimerSettingView.swift */; };
 		047140C02778A478005B160B /* PomodoroTimerSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140BF2778A478005B160B /* PomodoroTimerSettingVM.swift */; };
+		047140C22778D2A1005B160B /* SmallLaunchpadIconSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140C12778D2A1005B160B /* SmallLaunchpadIconSwitch.swift */; };
 		049337212761286400AE779A /* CleanProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337202761286400AE779A /* CleanProgressView.swift */; };
 		0493372327615A4900AE779A /* AutohideMenuBarSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493372227615A4900AE779A /* AutohideMenuBarSwitch.swift */; };
 		0493372527615EA400AE779A /* HiddenFilesSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493372427615EA400AE779A /* HiddenFilesSwitch.swift */; };
@@ -172,6 +173,7 @@
 		047140BB2778935B005B160B /* TimerCountDownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerCountDownView.swift; sourceTree = "<group>"; };
 		047140BD2778A416005B160B /* PomodoroTimerSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimerSettingView.swift; sourceTree = "<group>"; };
 		047140BF2778A478005B160B /* PomodoroTimerSettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimerSettingVM.swift; sourceTree = "<group>"; };
+		047140C12778D2A1005B160B /* SmallLaunchpadIconSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallLaunchpadIconSwitch.swift; sourceTree = "<group>"; };
 		049337202761286400AE779A /* CleanProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanProgressView.swift; sourceTree = "<group>"; };
 		0493372227615A4900AE779A /* AutohideMenuBarSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutohideMenuBarSwitch.swift; sourceTree = "<group>"; };
 		0493372427615EA400AE779A /* HiddenFilesSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HiddenFilesSwitch.swift; sourceTree = "<group>"; };
@@ -283,6 +285,7 @@
 				04D68B0C2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift */,
 				04FE2C912772880300C79FF9 /* ShowExtensionNameSwitch.swift */,
 				047140B92778890A005B160B /* PomodoroTimerSwitch.swift */,
+				047140C12778D2A1005B160B /* SmallLaunchpadIconSwitch.swift */,
 			);
 			path = EverySwitch;
 			sourceTree = "<group>";
@@ -745,6 +748,7 @@
 				0493374427625A1E00AE779A /* AudioPlayer.swift in Sources */,
 				0493374E27625A1E00AE779A /* ParserError.swift in Sources */,
 				04447B5C2754F08000CD2900 /* AppDelegate.swift in Sources */,
+				047140C22778D2A1005B160B /* SmallLaunchpadIconSwitch.swift in Sources */,
 				040C6EAA276B7D4500291DEB /* CustomizeVM.swift in Sources */,
 				049337212761286400AE779A /* CleanProgressView.swift in Sources */,
 				0493374927625A1E00AE779A /* Streaming.swift in Sources */,

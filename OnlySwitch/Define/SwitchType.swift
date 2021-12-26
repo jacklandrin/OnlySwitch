@@ -34,6 +34,7 @@ enum SwitchType:UInt64, CaseIterable {
     case showUserLibrary = 65536
     case showExtensionName = 131072
     case pomodoroTimer = 262144
+    case smallLaunchpadIcon = 524288
     
     func barInfo() -> SwitchBarInfo {
         switch self {
@@ -116,6 +117,10 @@ enum SwitchType:UInt64, CaseIterable {
             return SwitchBarInfo(title: "Pomodoro Timer",
                                  onImage: NSImage(systemSymbolName: "timer"),
                                  offImage: NSImage(systemSymbolName: "timer"))
+        case .smallLaunchpadIcon:
+            return SwitchBarInfo(title: "Small Launchpad Icon",
+                                 onImage: NSImage(systemSymbolName: "square.grid.4x3.fill"),
+                                 offImage: NSImage(systemSymbolName: "square.grid.4x3.fill"))
         }
     }
     
@@ -159,6 +164,8 @@ enum SwitchType:UInt64, CaseIterable {
             return ShowExtensionNameSwitch()
         case .pomodoroTimer:
             return PomodoroTimerSwitch()
+        case .smallLaunchpadIcon:
+            return SmallLaunchpadIconSwitch()
         }
     }
 }
