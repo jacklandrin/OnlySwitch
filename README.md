@@ -50,7 +50,7 @@ Since Version 1.3, switches can be added or removed on list.
 * support other languges
 * fix bug: radio player crash
 
-If you have other good idea💡, send E-mail for me.
+If you have other good idea💡, send E-mail to me.
 
 ## About hiding new Macbook Notch 
 
