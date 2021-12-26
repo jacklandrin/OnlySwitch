@@ -17,9 +17,9 @@ class CustomizeVM:ObservableObject {
         for index in 0..<switchTypeCount {
             let bitwise:UInt64 = 1 << index
             let toggle = (state & bitwise == 0) ? false : true
-            allSwitches.append(CustomizeItem(type: SwitchType(rawValue: bitwise)!, toggle: toggle, error: { [weak self] in
+            allSwitches.append(CustomizeItem(type: SwitchType(rawValue: bitwise)!, toggle: toggle, error: { [weak self] info in
                 guard let strongSelf = self else {return}
-                strongSelf.errorInfo = "At lease remain 4 switches"
+                strongSelf.errorInfo = info
                 strongSelf.showErrorToast = true
             }))
         }
@@ -29,11 +29,16 @@ class CustomizeVM:ObservableObject {
 
 class CustomizeItem:ObservableObject {
     let type:SwitchType
-    let error:() -> Void
+    let error:(_ info:String) -> Void
     @Published var toggle:Bool
     {
         didSet {
             if toggle {
+                if SwitchManager.shared.shownSwitchCount > 13 {
+                    error("The maximum number of switch is 14")
+                    toggle = false
+                    return
+                }
                 if type == .radioStation {
                     SwitchManager.shared.register(aswitch: RadioStationSwitch.shared)
                 } else {
@@ -42,7 +47,7 @@ class CustomizeItem:ObservableObject {
                 
             } else {
                 if SwitchManager.shared.shownSwitchCount < 5 {
-                    error()
+                    error("At lease remain 4 switches")
                     toggle = true
                     return
                 }
@@ -60,7 +65,7 @@ class CustomizeItem:ObservableObject {
         }
     }
     
-    init(type:SwitchType, toggle:Bool, error:@escaping () -> Void) {
+    init(type:SwitchType, toggle:Bool, error:@escaping (_ info:String) -> Void) {
         self.type = type
         self.toggle = toggle
         self.error = error
