@@ -38,6 +38,7 @@ From Version 1.2, OnlySwitch supports **simplified Chinese** and **German**.
 | Show user library folder | finish            |
 | Show extension name      | finish            |
 | Pomodoro timer           | finish            |
+| small launchpad icon     | finish            |
 | Hide notch               | exist some issues |
 | No disturb mode          | todo              |
 
