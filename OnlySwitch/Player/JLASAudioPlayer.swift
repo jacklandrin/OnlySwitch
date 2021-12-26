@@ -55,13 +55,20 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
         
         
         setAVPlayer(url: url)
-        audioPlayer.url = url
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
-            self?.audioPlayer.play()
+        if notm3uStream(url: url.absoluteString){
+            audioPlayer.url = url
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
+                self?.audioPlayer.play()
+            }
         }
+        
         self.bufferring = true
        
 //        self.setupNowPlaying()
+    }
+    
+    func notm3uStream(url:String) -> Bool {
+        return !url.hasSuffix(".m3u") && !url.hasSuffix(".m3u8")
     }
     
     func setAVPlayer(url:URL)  {
@@ -71,7 +78,7 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
         metadataOutput.setDelegate(self, queue: .main)
         playerItem.add(metadataOutput)
         self.avplayer.play()
-        self.avplayer.isMuted = true
+        self.avplayer.isMuted = notm3uStream(url: url.absoluteString)
     }
     
     func metadataOutput(_ output: AVPlayerItemMetadataOutput, didOutputTimedMetadataGroups groups: [AVTimedMetadataGroup], from track: AVPlayerItemTrack?) {
@@ -86,7 +93,13 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
     }
     
     func stop() {
-        audioPlayer.stop()
+        guard let currentAudioStation = currentAudioStation else {
+            return
+        }
+
+        if notm3uStream(url: currentAudioStation.streamUrl) {
+            audioPlayer.stop()
+        }
         avplayer.stop()
     }
     

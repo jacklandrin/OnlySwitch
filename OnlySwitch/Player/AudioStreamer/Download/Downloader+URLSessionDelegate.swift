@@ -9,6 +9,8 @@
 import Foundation
 import os.log
 
+let supportFormat = ["audio/mpeg", "audio/aacp", "application/octet-stream"]
+
 extension Downloader: URLSessionDataDelegate {
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
 //        os_log("%@ - %d", log: Downloader.logger, type: .debug, #function, #line)
@@ -22,9 +24,10 @@ extension Downloader: URLSessionDataDelegate {
 //        os_log("%@ - %d", log: Downloader.logger, type: .debug, #function, #line, data.count)
         let response = dataTask.response
 //        print("\(String(describing: response?.mimeType))")
-        if response?.mimeType == "audio/x-scpls" {
+        guard let mimeType = response?.mimeType else {return}
+        if mimeType == "audio/x-scpls" {
             
-        } else if response?.mimeType == "audio/mpeg" || response?.mimeType == "audio/aacp"{
+        } else if supportFormat.contains(mimeType){
             totalBytesReceived += Int64(data.count)
             progress = Float(totalBytesReceived) / Float(totalBytesCount)
 //            print("totalBytesReceived:\(totalBytesReceived)")
