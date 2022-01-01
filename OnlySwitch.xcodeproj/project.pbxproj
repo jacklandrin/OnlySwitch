@@ -18,6 +18,7 @@
 		0424348B275642D20044D0AD /* DarkModeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0424348A275642D20044D0AD /* DarkModeSwitch.swift */; };
 		0424348D275643560044D0AD /* TopNotchSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0424348C275643560044D0AD /* TopNotchSwitch.swift */; };
 		0424348F27565F9F0044D0AD /* NSAppleEventDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0424348E27565F9F0044D0AD /* NSAppleEventDescriptor.swift */; };
+		0426613A2780B885005DF2B9 /* LowPowerModeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042661392780B885005DF2B9 /* LowPowerModeSwitch.swift */; };
 		0427B25B275D786400AD783A /* SystemInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0427B25A275D786400AD783A /* SystemInfo.swift */; };
 		0430887E275D707C00877E51 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 0430887D275D707C00877E51 /* LaunchAtLogin */; };
 		043E5D662757C84900ADC004 /* HiddenModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D652757C84900ADC004 /* HiddenModifier.swift */; };
@@ -136,6 +137,7 @@
 		0424348A275642D20044D0AD /* DarkModeSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkModeSwitch.swift; sourceTree = "<group>"; };
 		0424348C275643560044D0AD /* TopNotchSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNotchSwitch.swift; sourceTree = "<group>"; };
 		0424348E27565F9F0044D0AD /* NSAppleEventDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSAppleEventDescriptor.swift; sourceTree = "<group>"; };
+		042661392780B885005DF2B9 /* LowPowerModeSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LowPowerModeSwitch.swift; sourceTree = "<group>"; };
 		0427B25A275D786400AD783A /* SystemInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemInfo.swift; sourceTree = "<group>"; };
 		043E5D652757C84900ADC004 /* HiddenModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HiddenModifier.swift; sourceTree = "<group>"; };
 		043E5D692757D68800ADC004 /* MuteSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuteSwitch.swift; sourceTree = "<group>"; };
@@ -286,6 +288,7 @@
 				04FE2C912772880300C79FF9 /* ShowExtensionNameSwitch.swift */,
 				047140B92778890A005B160B /* PomodoroTimerSwitch.swift */,
 				047140C12778D2A1005B160B /* SmallLaunchpadIconSwitch.swift */,
+				042661392780B885005DF2B9 /* LowPowerModeSwitch.swift */,
 			);
 			path = EverySwitch;
 			sourceTree = "<group>";
@@ -737,6 +740,7 @@
 				0493378E2762665A00AE779A /* RadioStationSwitch.swift in Sources */,
 				04243489275642370044D0AD /* HiddenDesktopSwitch.swift in Sources */,
 				0493374627625A1E00AE779A /* JLAVAudioPlayer.swift in Sources */,
+				0426613A2780B885005DF2B9 /* LowPowerModeSwitch.swift in Sources */,
 				04581DBD27653C35008ADF30 /* AirPodsSettingView.swift in Sources */,
 				049337922762BA3200AE779A /* SettingView.swift in Sources */,
 				0493376427625D6F00AE779A /* RadioPlayerItem.swift in Sources */,
@@ -963,7 +967,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.6;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = NO;
@@ -1009,7 +1013,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.6;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = NO;

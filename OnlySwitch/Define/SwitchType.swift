@@ -35,6 +35,7 @@ enum SwitchType:UInt64, CaseIterable {
     case showExtensionName = 131072
     case pomodoroTimer = 262144
     case smallLaunchpadIcon = 524288
+    case lowpowerMode = 1048576
     
     func barInfo() -> SwitchBarInfo {
         switch self {
@@ -121,6 +122,10 @@ enum SwitchType:UInt64, CaseIterable {
             return SwitchBarInfo(title: "Small Launchpad Icon",
                                  onImage: NSImage(systemSymbolName: "square.grid.4x3.fill"),
                                  offImage: NSImage(systemSymbolName: "square.grid.4x3.fill"))
+        case .lowpowerMode:
+            return SwitchBarInfo(title: "Low Power Mode",
+                                 onImage: NSImage(systemSymbolName: "bolt.circle"),
+                                 offImage: NSImage(systemSymbolName: "bolt.circle.fill"))
         }
     }
     
@@ -166,6 +171,8 @@ enum SwitchType:UInt64, CaseIterable {
             return PomodoroTimerSwitch()
         case .smallLaunchpadIcon:
             return SmallLaunchpadIconSwitch()
+        case .lowpowerMode:
+            return LowPowerModeSwitch()
         }
     }
 }

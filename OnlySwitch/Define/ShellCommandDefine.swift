@@ -87,6 +87,10 @@ let bigLaunchpadIconCMD = """
                             defaults write com.apple.dock ResetLaunchPad -bool TRUE; killall Dock
                             """
 
+let getLowpowerModeCMD = "pmset -g | grep lowpowermode"
+let setLowpowerModeCMD = "sudo pmset -a lowpowermode 1"
+let unsetLowpowerModeCMD = "sudo pmset -a lowpowermode 0"
+
 func displayNotificationCMD(title:String, content:String, subtitle:String) -> String {
     "display notification \"\(content)\" with title \"\(title)\" subtitle \"\(subtitle)\""
 }

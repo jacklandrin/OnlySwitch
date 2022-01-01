@@ -8,10 +8,13 @@
 import Foundation
 
 extension String {
-    func runAppleScript(isShellCMD:Bool = false) -> (Bool, Any) {
+    func runAppleScript(isShellCMD:Bool = false, with administratorPrivilege:Bool = false) -> (Bool, Any) {
         var finalCommand = self
         if isShellCMD {
             finalCommand = "do shell script \"\(self)\""
+        }
+        if administratorPrivilege {
+            finalCommand += "with prompt \"OnlySwitch\" with administrator privileges"
         }
         print("command:\(finalCommand)")
         var error: NSDictionary?
@@ -27,6 +30,7 @@ extension String {
         }
         return (true, "")
     }
+    
     
     func appendingPathComponent(string:String...) -> String {
         var result = self
