@@ -7,6 +7,7 @@
 
 import Foundation
 import AppKit
+import LaunchAtLogin
 
 let SwitchStateKey = "SwitchStateKey"
 class SwitchManager {
@@ -43,6 +44,28 @@ class SwitchManager {
         }
         return switchBarVMs
     }
+    
+    func shortcutsBarVMList() -> [ShortcutsBarVM] {
+        let shortcuts = UserDefaults.standard.dictionary(forKey: shorcutsDicKey)
+        var list = [ShortcutsBarVM]()
+        guard let shortcuts = shortcuts, shortcuts.count > 0 else {
+            return list
+        }
+        
+        let sortedDic = shortcuts.sorted{
+            return $0.key > $1.key
+        }
+        
+        for (name, toggle) in sortedDic {
+            if toggle as! Bool {
+                list.append(ShortcutsBarVM(name: name))
+            }
+        }
+        
+        return list
+    }
+    
+
     
     func registerSwitchesShouldShow() {
         let state = getAllSwitchState()

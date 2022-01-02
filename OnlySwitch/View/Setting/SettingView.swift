@@ -10,6 +10,7 @@ import SwiftUI
 struct SettingView: View {
     @ObservedObject var settingVM = SettingVM()
     @ObservedObject var langManager = LanguageManager.sharedManager
+    @ObservedObject var shortcutsVM = ShortcutsSettingVM()
     init() {
         settingVM.selection = settingVM.settingItems.first
     }
@@ -17,7 +18,12 @@ struct SettingView: View {
         NavigationView {
             List(settingVM.settingItems, id:\.self, selection: $settingVM.selection) { item in
                 NavigationLink{
-                    item.page()
+                    if item == .Shortcuts {
+                        item.page().environmentObject(shortcutsVM)
+                    } else {
+                        item.page()
+                    }
+                    
                 }label:{
                     Text(item.rawValue.localized())
                 }.frame(width:170, alignment:.leading)
@@ -27,6 +33,7 @@ struct SettingView: View {
         }.navigationTitle("Setting")
         .onAppear{
             settingVM.selection = settingVM.settingItems.first
+            shortcutsVM.loadShortcutsList()
         }
         .onDisappear{
             print("disappear")

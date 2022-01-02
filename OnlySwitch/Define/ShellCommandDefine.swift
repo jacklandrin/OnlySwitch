@@ -7,7 +7,7 @@
 
 import Foundation
 
-let hiddleDesktopCMD = "defaults write com.apple.finder CreateDesktop 0; killall Finder"
+let hideDesktopCMD = "defaults write com.apple.finder CreateDesktop 0; killall Finder"
 let showDesktopCMD = "defaults write com.apple.finder CreateDesktop 1; killall Finder"
 let currentDesktopStatusCMD = "defaults read com.apple.finder CreateDesktop"
 
@@ -90,6 +90,13 @@ let bigLaunchpadIconCMD = """
 let getLowpowerModeCMD = "pmset -g | grep lowpowermode"
 let setLowpowerModeCMD = "sudo pmset -a lowpowermode 1"
 let unsetLowpowerModeCMD = "sudo pmset -a lowpowermode 0"
+
+
+let getShortcutsList = "shortcuts list"
+
+func runShortcut(name:String) -> String {
+    return "shortcuts run \'\(name)\'"
+}
 
 func displayNotificationCMD(title:String, content:String, subtitle:String) -> String {
     "display notification \"\(content)\" with title \"\(title)\" subtitle \"\(subtitle)\""

@@ -15,6 +15,7 @@ enum SettingItem:String {
     case PomodoroTimer = "Pomodoro Timer"
     case General = "General"
     case Customize = "Customize"
+    case Shortcuts = "Shortcuts"
     case About = "About"
     
     
@@ -26,6 +27,8 @@ enum SettingItem:String {
             return AnyView(RadioSettingView())
         case .PomodoroTimer:
             return AnyView(PomodoroTimerSettingView())
+        case .Shortcuts:
+            return AnyView(ShortcutsView())
         case .General:
             return AnyView(GeneralView())
         case .Customize:
@@ -37,6 +40,6 @@ enum SettingItem:String {
 }
 
 class SettingVM:ObservableObject {
-    @Published var settingItems:[SettingItem] = [.General, .Customize, .Radio, .AirPods, .PomodoroTimer,.About]
+    @Published var settingItems:[SettingItem] = [.General, .Customize, .Shortcuts, .Radio, .AirPods, .PomodoroTimer,.About]
     @Published var selection:SettingItem?
 }

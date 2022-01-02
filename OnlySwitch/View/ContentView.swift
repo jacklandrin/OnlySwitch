@@ -12,6 +12,7 @@ struct ContentView: View {
     @EnvironmentObject var switchVM:SwitchVM
     @Environment(\.colorScheme) private var colorScheme
     @State private var switchList:[SwitchBarVM] = []
+    @State private var shortcutList:[ShortcutsBarVM] = []
     @State private var id = UUID()
     @ObservedObject private var playerItem = RadioStationSwitch.shared.playerItem
     @ObservedObject private var languageManager = LanguageManager.sharedManager
@@ -20,6 +21,9 @@ struct ContentView: View {
             VStack {
                 ForEach(switchList.indices, id:\.self) { index in
                     SwitchBarView().environmentObject(switchList[index])
+                }
+                ForEach(shortcutList.indices, id:\.self) { index in
+                    ShortCutBarView().environmentObject(shortcutList[index])
                 }
             }.padding(15)
             recommendApp.opacity(0.8)
@@ -109,6 +113,7 @@ struct ContentView: View {
         switchVM.refreshList()
         switchVM.refreshSwitchStatus()
         switchList = switchVM.switchList
+        shortcutList = switchVM.shortcutsList
         id = UUID()
     }
         

@@ -30,7 +30,7 @@ class HiddenDesktopSwitch:SwitchProvider {
     
     func operationSwitch(isOn: Bool) async -> Bool {
         if isOn {
-            return hiddleDesktopCMD.runAppleScript(isShellCMD: true).0
+            return hideDesktopCMD.runAppleScript(isShellCMD: true).0
         } else {
             return showDesktopCMD.runAppleScript(isShellCMD: true).0
         }

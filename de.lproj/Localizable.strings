@@ -76,3 +76,8 @@
 "The maximum number of switch is 14" = "Die maximale Anzahl von Switches ist 14";
 "Small Launchpad Icon" = "Kleines Launchpad-Icon";
 "Low Power Mode" = "Stromsparmodus";
+"Shortcuts" = "Kurzbefehle";
+"Run" = "Laufen";
+"To add or remove any shortcuts on list" = "Um Kurzbefehle in der Liste hinzuzufügen oder zu entfernen";
+"There's not any Shortcuts." = "Es gibt keine Kurzbefehle.";
+"The maximum number of shortcuts is 6" = "Die maximale Anzahl von Kurzbefehle ist 6";

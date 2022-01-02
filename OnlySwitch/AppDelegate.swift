@@ -19,6 +19,7 @@ struct OnlySwitchApp: App {
     }
 }
 
+@MainActor
 class AppDelegate:NSObject, NSApplicationDelegate {
     var statusBar: StatusBarController?
     var popover = NSPopover()
@@ -44,7 +45,6 @@ class AppDelegate:NSObject, NSApplicationDelegate {
     func applicationWillTerminate(_ notification: Notification) {
         
     }
-
     
     func checkUpdate() {
         CheckUpdateTool.shared.checkupdate(complete: { success in

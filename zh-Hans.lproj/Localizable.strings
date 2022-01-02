@@ -76,3 +76,8 @@
 "The maximum number of switch is 14" = "最多14个开关";
 "Small Launchpad Icon" = "小启动台图标";
 "Low Power Mode" = "低电量模式";
+"Shortcuts" = "快捷指令";
+"Run" = "执行";
+"To add or remove any shortcuts on list" = "增加或删减列表里的快捷指令";
+"There's not any Shortcuts." = "没有快捷指令";
+"The maximum number of shortcuts is 6" = "最多6个快捷指令";

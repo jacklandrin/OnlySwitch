@@ -14,7 +14,7 @@ extension String {
             finalCommand = "do shell script \"\(self)\""
         }
         if administratorPrivilege {
-            finalCommand += "with prompt \"OnlySwitch\" with administrator privileges"
+            finalCommand += " with prompt \"OnlySwitch\" with administrator privileges"
         }
         print("command:\(finalCommand)")
         var error: NSDictionary?

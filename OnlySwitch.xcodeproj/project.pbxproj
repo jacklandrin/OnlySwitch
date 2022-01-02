@@ -121,8 +121,25 @@
 		04E03B00275F93B900EA5FB9 /* AirPodsSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AFF275F93B900EA5FB9 /* AirPodsSwitch.swift */; };
 		04E03B04275FD98500EA5FB9 /* battery-airpods-monterey.sh in Resources */ = {isa = PBXBuildFile; fileRef = 04E03B03275FD98500EA5FB9 /* battery-airpods-monterey.sh */; };
 		04E03B06275FEBE200EA5FB9 /* AirPodsBatteryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03B05275FEBE200EA5FB9 /* AirPodsBatteryView.swift */; };
+		04EB1CD02780F36F00C612AB /* ShortcutsSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CCF2780F36F00C612AB /* ShortcutsSettingVM.swift */; };
+		04EB1CD22780F4F700C612AB /* ShortcutsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CD12780F4F700C612AB /* ShortcutsView.swift */; };
+		04EB1CD42781280900C612AB /* ShortCutBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CD32781280900C612AB /* ShortCutBarView.swift */; };
+		04EB1CD62781299A00C612AB /* ShortcutsBarVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CD52781299A00C612AB /* ShortcutsBarVM.swift */; };
 		04FE2C922772880300C79FF9 /* ShowExtensionNameSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FE2C912772880300C79FF9 /* ShowExtensionNameSwitch.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		042661862780CBDE005DF2B9 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		040C6EA9276B7D4500291DEB /* CustomizeVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomizeVM.swift; sourceTree = "<group>"; };
@@ -138,6 +155,7 @@
 		0424348C275643560044D0AD /* TopNotchSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNotchSwitch.swift; sourceTree = "<group>"; };
 		0424348E27565F9F0044D0AD /* NSAppleEventDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSAppleEventDescriptor.swift; sourceTree = "<group>"; };
 		042661392780B885005DF2B9 /* LowPowerModeSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LowPowerModeSwitch.swift; sourceTree = "<group>"; };
+		042661402780C147005DF2B9 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
 		0427B25A275D786400AD783A /* SystemInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemInfo.swift; sourceTree = "<group>"; };
 		043E5D652757C84900ADC004 /* HiddenModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HiddenModifier.swift; sourceTree = "<group>"; };
 		043E5D692757D68800ADC004 /* MuteSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuteSwitch.swift; sourceTree = "<group>"; };
@@ -243,6 +261,10 @@
 		04E03AFF275F93B900EA5FB9 /* AirPodsSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPodsSwitch.swift; sourceTree = "<group>"; };
 		04E03B03275FD98500EA5FB9 /* battery-airpods-monterey.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "battery-airpods-monterey.sh"; sourceTree = "<group>"; };
 		04E03B05275FEBE200EA5FB9 /* AirPodsBatteryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPodsBatteryView.swift; sourceTree = "<group>"; };
+		04EB1CCF2780F36F00C612AB /* ShortcutsSettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsSettingVM.swift; sourceTree = "<group>"; };
+		04EB1CD12780F4F700C612AB /* ShortcutsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsView.swift; sourceTree = "<group>"; };
+		04EB1CD32781280900C612AB /* ShortCutBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortCutBarView.swift; sourceTree = "<group>"; };
+		04EB1CD52781299A00C612AB /* ShortcutsBarVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsBarVM.swift; sourceTree = "<group>"; };
 		04FE2C912772880300C79FF9 /* ShowExtensionNameSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowExtensionNameSwitch.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -299,6 +321,7 @@
 				04447B5D2754F08000CD2900 /* ContentView.swift */,
 				043E5D702758176B00ADC004 /* SwitchToggle.swift */,
 				043E5D7227581C2E00ADC004 /* SwitchBarView.swift */,
+				04EB1CD32781280900C612AB /* ShortCutBarView.swift */,
 				04447B7527550F6900CD2900 /* VisualEffectView.swift */,
 				04E03B05275FEBE200EA5FB9 /* AirPodsBatteryView.swift */,
 				049337202761286400AE779A /* CleanProgressView.swift */,
@@ -316,6 +339,7 @@
 			children = (
 				04447B712754FE3800CD2900 /* SwitchVM.swift */,
 				043E5D742758208D00ADC004 /* SwitchBarVM.swift */,
+				04EB1CD52781299A00C612AB /* ShortcutsBarVM.swift */,
 				049337892762651D00AE779A /* SoundWaveModel.swift */,
 				04938D072768CBA100713F1D /* LanguageManager.swift */,
 				04581DB12764D23C008ADF30 /* Setting */,
@@ -329,6 +353,7 @@
 				0493378F27626FD200AE779A /* NetworkExtension.framework */,
 				04A23B22275D5FC500B454C8 /* CoreBrightness.framework */,
 				043E5D6C2757DADB00ADC004 /* AVFoundation.framework */,
+				042661402780C147005DF2B9 /* Intents.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -421,6 +446,7 @@
 				049337982762C0B300AE779A /* RadioSettingVM.swift */,
 				04581DBE27653C4A008ADF30 /* AirPodsSettingVM.swift */,
 				040C6EA9276B7D4500291DEB /* CustomizeVM.swift */,
+				04EB1CCF2780F36F00C612AB /* ShortcutsSettingVM.swift */,
 				047140BF2778A478005B160B /* PomodoroTimerSettingVM.swift */,
 			);
 			path = Setting;
@@ -518,6 +544,7 @@
 				04581DC02765522A008ADF30 /* AboutView.swift */,
 				04938D092769143300713F1D /* GeneralView.swift */,
 				047140BD2778A416005B160B /* PomodoroTimerSettingView.swift */,
+				04EB1CD12780F4F700C612AB /* ShortcutsView.swift */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -582,6 +609,7 @@
 				04447B562754F08000CD2900 /* Resources */,
 				0430887F275D709C00877E51 /* Launch at Login Helper */,
 				0427B25C275D791100AD783A /* ShellScript */,
+				042661862780CBDE005DF2B9 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
@@ -604,7 +632,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1310;
+				LastSwiftUpdateCheck = 1320;
 				LastUpgradeCheck = 1320;
 				TargetAttributes = {
 					04447B572754F08000CD2900 = {
@@ -697,6 +725,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04EB1CD22780F4F700C612AB /* ShortcutsView.swift in Sources */,
 				040CD2BC2756D497002E0CC6 /* CGImage++.swift in Sources */,
 				04581DBF27653C4A008ADF30 /* AirPodsSettingVM.swift in Sources */,
 				0493375627625A1E00AE779A /* Downloading.swift in Sources */,
@@ -738,6 +767,7 @@
 				0493375B27625A1E00AE779A /* JLASAudioPlayer+Streamer.swift in Sources */,
 				04AA63CE276BC94000ED5DEA /* EmptyTrashSwitch.swift in Sources */,
 				0493378E2762665A00AE779A /* RadioStationSwitch.swift in Sources */,
+				04EB1CD42781280900C612AB /* ShortCutBarView.swift in Sources */,
 				04243489275642370044D0AD /* HiddenDesktopSwitch.swift in Sources */,
 				0493374627625A1E00AE779A /* JLAVAudioPlayer.swift in Sources */,
 				0426613A2780B885005DF2B9 /* LowPowerModeSwitch.swift in Sources */,
@@ -772,12 +802,14 @@
 				047140BA2778890A005B160B /* PomodoroTimerSwitch.swift in Sources */,
 				04243487275641DB0044D0AD /* SwitchProvider.swift in Sources */,
 				047140C02778A478005B160B /* PomodoroTimerSettingVM.swift in Sources */,
+				04EB1CD02780F36F00C612AB /* ShortcutsSettingVM.swift in Sources */,
 				0493374727625A1E00AE779A /* PlayerManager.swift in Sources */,
 				0493372527615EA400AE779A /* HiddenFilesSwitch.swift in Sources */,
 				04AA63D0276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift in Sources */,
 				04E03AF8275E6B4E00EA5FB9 /* AutohideDockSwitch.swift in Sources */,
 				04581DB02764CBCF008ADF30 /* SettingVM.swift in Sources */,
 				04E03B06275FEBE200EA5FB9 /* AirPodsBatteryView.swift in Sources */,
+				04EB1CD62781299A00C612AB /* ShortcutsBarVM.swift in Sources */,
 				04581DC12765522A008ADF30 /* AboutView.swift in Sources */,
 				04938D12276948DE00713F1D /* WallpaperManager.swift in Sources */,
 				0493375127625A1E00AE779A /* Parser.swift in Sources */,
@@ -938,13 +970,14 @@
 		04447B6D2754F08100CD2900 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = OnlySwitch/OnlySwitch.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 27;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -958,6 +991,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = OnlySwitch/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Only Switch";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSAppleEventsUsageDescription = "Only Switch requests Apple Event usage to switch dark mode";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Only Switch requests Bluetooth usage to switch Airpods connection";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2021 Jacklandrin";
@@ -967,7 +1001,8 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.6;
+				MARKETING_VERSION = 1.7;
+				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = NO;
@@ -984,13 +1019,14 @@
 		04447B6E2754F08100CD2900 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = OnlySwitch/OnlySwitch.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 27;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1004,6 +1040,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = OnlySwitch/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Only Switch";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSAppleEventsUsageDescription = "Only Switch requests Apple Event usage to switch dark mode";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Only Switch requests Bluetooth usage to switch Airpods connection";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2021 Jacklandrin";
@@ -1013,7 +1050,8 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.6;
+				MARKETING_VERSION = 1.7;
+				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = NO;
