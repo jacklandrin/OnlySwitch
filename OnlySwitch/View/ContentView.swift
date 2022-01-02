@@ -18,14 +18,19 @@ struct ContentView: View {
     @ObservedObject private var languageManager = LanguageManager.sharedManager
     var body: some View {
         VStack {
-            VStack {
-                ForEach(switchList.indices, id:\.self) { index in
-                    SwitchBarView().environmentObject(switchList[index])
-                }
-                ForEach(shortcutList.indices, id:\.self) { index in
-                    ShortCutBarView().environmentObject(shortcutList[index])
-                }
-            }.padding(15)
+            ScrollView {
+                VStack(spacing:0) {
+                    ForEach(switchList.indices, id:\.self) { index in
+                        SwitchBarView().environmentObject(switchList[index])
+                            .frame(height:38)
+                    }
+                    ForEach(shortcutList.indices, id:\.self) { index in
+                        ShortCutBarView().environmentObject(shortcutList[index])
+                            .frame(height:38)
+                    }
+                }.padding(.horizontal,15)
+            }.frame(height: scrollViewHeight)
+                .padding(.vertical,15)
             recommendApp.opacity(0.8)
             bottomBar
 
@@ -44,7 +49,7 @@ struct ContentView: View {
         .onReceive(NotificationCenter.default.publisher(for: changeSettingNotification, object: nil)) { _ in
             refreshData()
         }
-        
+        .frame(height:scrollViewHeight + 130)
     }
     
     var recommendApp: some View {
@@ -93,7 +98,6 @@ struct ContentView: View {
                     .frame(height:20)
                     .padding(10)
                     .transition(.move(edge: .bottom))
-                    
             }
             
             
@@ -116,8 +120,18 @@ struct ContentView: View {
         switchList = switchVM.switchList
         shortcutList = switchVM.shortcutsList
         id = UUID()
+        print("refresh")
     }
-        
+    
+    var scrollViewHeight : CGFloat {
+        let height = min(CGFloat((visableSwitchCount + shortcutList.count)) * 38.0 , switchVM.maxHeight - 150)
+        print("scroll view height:\(height)")
+        return height
+    }
+    
+    var visableSwitchCount:Int {
+        switchList.filter{!$0.isHidden}.count
+    }
 }
 
 struct ContentView_Previews: PreviewProvider {
