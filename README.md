@@ -7,13 +7,14 @@
 
 ***Menubar is smaller, you only need an All-in-One switch.***
 
-[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_1.6/OnlySwitch.dmg)
+[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_1.7/OnlySwitch.dmg)
 
 ## What's the OnlySwitch?
 OnlySwitch provides a series of toggle switches to simply your routine work, such as Hiden desktop icons, dark mode and hide ugly notch of new Mackbook Pro. The switches show on your statusbar, you can easily control them.
 Since Version 1.2, OnlySwitch supports **simplified Chinese** and **German**.
+Since Version 1.7, Shortcuts can be imported in OnlySwitch.
 <p align="center">
-<img alt="Sits in the status bar" src="https://www.jacklandrin.com/wp-content/uploads/2021/12/onlySwitch_16.png" width="60%" align="center" />
+<img alt="Sits in the status bar" src="https://www.jacklandrin.com/wp-content/uploads/2022/01/onlySwitch_17.png" width="60%" align="center" />
 </p>
 
 ## Switch list
@@ -66,6 +67,14 @@ Radio Player supports m3u stream since version 1.6, but without sound wave effec
 
 ## About Low Power Mode
 Low Power Mode uses Terminal commands that require root access, so the app will ask you to enter password on every toggle.
+
+## About Shortcuts
+Shortcuts is a powerful iOS app which can help people make fantasitic automation functions. It comes to macOS in Monterey as well. Many users eager OnlySwitch has more customizable features, and one good news is that the app supports Shortcuts display since Version 1.7. More menubar space therefore is saved. 
+In the next versions, OnlySwitch will also provide some Shortcuts actions to impove user experience.
+
+<p align="center">
+<img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2022/01/shortcutsDisplay.png" width="60%" align="center" />
+</p>
 
 ## Can't compile preview by Xcode 13.2.1 on some Macs
 I found I can't run the preview of SwiftUI by Xcode 13.2.1 on my M1 Pro Macbook. It'll show an error like this https://developer.apple.com/forums/thread/697037. Meanwhile, the OnlySwitch status bar icon will be missing, including old version app. However it's normal that I run it on my i7 Macbook. I'm not sure whether this is a bug of Xcode. The current workaround is installing back to Xcode 13.2.

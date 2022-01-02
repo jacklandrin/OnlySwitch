@@ -11,6 +11,8 @@
 			</array>
 		</dict>
 	</array>
+	<key>CFBundleVersion</key>
+	<string>29</string>
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
