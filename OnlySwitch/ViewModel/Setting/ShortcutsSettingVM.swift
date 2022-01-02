@@ -57,12 +57,11 @@ class ShortcutsSettingVM:ObservableObject {
                 self.shortcutsList = [ShorcutsItem]()
                 for name in allshortcuts {
                     if let toggle = shortcutsDic[String(name)] as? Bool {
-                        self.shortcutsList.append(ShorcutsItem(name: String(name), toggle: toggle, error: {[weak self] info in
-                            guard let strongSelf = self else {return}
-                            strongSelf.errorInfo = info
-                            strongSelf.showErrorToast = true
-                        }))
+                        self.addItem(name: String(name), toggle: toggle)
                         newShortcutsDic[String(name)] = toggle
+                    } else {
+                        self.addItem(name: String(name), toggle: false)
+                        newShortcutsDic[String(name)] = false
                     }
                 }
             } else {
@@ -79,5 +78,13 @@ class ShortcutsSettingVM:ObservableObject {
             UserDefaults.standard.set(newShortcutsDic, forKey: shorcutsDicKey)
             UserDefaults.standard.synchronize()
         }
+    }
+    
+    func addItem(name:String, toggle:Bool) {
+        self.shortcutsList.append(ShorcutsItem(name: String(name), toggle: toggle, error: {[weak self] info in
+            guard let strongSelf = self else {return}
+            strongSelf.errorInfo = info
+            strongSelf.showErrorToast = true
+        }))
     }
 }

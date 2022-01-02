@@ -19,7 +19,13 @@ struct SettingView: View {
             List(settingVM.settingItems, id:\.self, selection: $settingVM.selection) { item in
                 NavigationLink{
                     if item == .Shortcuts {
-                        item.page().environmentObject(shortcutsVM)
+                        item
+                            .page()
+                            .environmentObject(shortcutsVM)
+                            .onAppear{
+                                shortcutsVM.loadShortcutsList()
+                            }
+                            
                     } else {
                         item.page()
                     }
