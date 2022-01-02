@@ -23,7 +23,7 @@ class LowPowerModeSwitch:SwitchProvider {
     }
     
     func currentInfo() -> String {
-        return ""
+        return "require password"
     }
     
     func operationSwitch(isOn: Bool) async -> Bool {
