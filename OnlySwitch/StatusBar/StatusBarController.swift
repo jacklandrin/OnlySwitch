@@ -9,7 +9,7 @@ import AppKit
 
 let showPopoverNotificationName = NSNotification.Name("showPopover")
 let hidePopoverNotificationName = NSNotification.Name("hidePopover")
-
+let shouldHidePopoverNotificationName = NSNotification.Name("shouldHidePopover")
 struct OtherPopover {
     static let name = NSNotification.Name("otherPopover")
     static func hasShown(_ hasShown:Bool) {
@@ -50,6 +50,14 @@ class StatusBarController {
         
         
         eventMonitor = EventMonitor(mask: [.leftMouseDown, .rightMouseDown], handler: mouseEventHandler)
+        
+        NotificationCenter.default.addObserver(forName: shouldHidePopoverNotificationName, object: nil, queue: .main, using: {[weak self] notify in
+            guard let strongSelf = self else {return}
+            if let statusBarButton = strongSelf.statusItem.button {
+                strongSelf.hidePopover(statusBarButton)
+            }
+            
+        })
         
         NotificationCenter.default.addObserver(forName: OtherPopover.name, object: nil, queue: .main, using: { [weak self] notify in
             guard let strongSelf = self else {return}

@@ -100,6 +100,7 @@ struct ContentView: View {
             Spacer()
             Button(action: {
                 OpenWindows.Setting.open()
+                NotificationCenter.default.post(name: shouldHidePopoverNotificationName, object: nil)
             }, label: {
                 Image(systemName: "gearshape.circle")
                     .font(.system(size: 17))
