@@ -7,6 +7,12 @@
 
 ***Menubar is smaller, you only need an All-in-One switch.***
 
+## Install by Homebrew
+
+```
+brew install only-switch
+```
+## Manually Download
 [**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_1.7/OnlySwitch.dmg)
 
 ## What's the OnlySwitch?
@@ -18,6 +24,7 @@ Since Version 1.7, **Shortcuts** can be imported in OnlySwitch.
 <p align="center">
 <img alt="Sits in the status bar" src="https://www.jacklandrin.com/wp-content/uploads/2022/01/onlySwitch_17.png" width="60%" align="center" />
 </p>
+
 
 ## Switch list
 
