@@ -38,7 +38,8 @@ Since Version 1.2, OnlySwitch supports **simplified Chinese** and **German**.
 | Show user library folder | finish            |
 | Show extension name      | finish            |
 | Pomodoro timer           | finish            |
-| small launchpad icon     | finish            |
+| Small launchpad icon     | finish            |
+| Low power mode           | require password  |
 | Hide notch               | exist some issues |
 | No disturb mode          | todo              |
 
@@ -62,6 +63,9 @@ I use classOfDevice(2360344) to check if a bluetooth device is Airpods Pro, but 
 
 ## About Radio Player
 Radio Player supports m3u stream since version 1.6, but without sound wave effect. If your Radio Player crashes, please send the crash log and stream url to me.
+
+## About Low Power Mode
+Low Power Mode uses Terminal commands that require root access, so the app will ask you to enter password on every toggle.
 
 ## Can't compile preview by Xcode 13.2.1 on some Macs
 I found I can't run the preview of SwiftUI by Xcode 13.2.1 on my M1 Pro Macbook. It'll show an error like this https://developer.apple.com/forums/thread/697037. Meanwhile, the OnlySwitch status bar icon will be missing, including old version app. However it's normal that I run it on my i7 Macbook. I'm not sure whether this is a bug of Xcode. The current workaround is installing back to Xcode 13.2.
