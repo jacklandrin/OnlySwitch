@@ -23,7 +23,7 @@ struct AboutView: View {
                     .font(.system(size: 22))
             }
             HStack {
-                Text("Copyright @ 2021 ")
+                Text("Copyright @ 2021-2022 ")
                 Link(destination: URL(string: "https://www.jacklandrin.com")!, label: {
                     Text("Jacklandrin")
                 })
