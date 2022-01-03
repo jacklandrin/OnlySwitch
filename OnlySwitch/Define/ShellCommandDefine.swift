@@ -79,12 +79,10 @@ let hideExtensionNameCMD = "defaults write NSGlobalDomain AppleShowAllExtensions
 
 let getLaunchpadRowCMD = "defaults read com.apple.dock springboard-rows"
 let smallLaunchpadIconCMD = """
-                            defaults write com.apple.dock springboard-rows -int 6
-                            defaults write com.apple.dock ResetLaunchPad -bool TRUE; killall Dock
+                            defaults write com.apple.dock springboard-rows -int 6; killall Dock
                             """
 let bigLaunchpadIconCMD = """
-                            defaults write com.apple.dock springboard-rows -int 5
-                            defaults write com.apple.dock ResetLaunchPad -bool TRUE; killall Dock
+                            defaults write com.apple.dock springboard-rows -int 5; killall Dock
                             """
 
 let getLowpowerModeCMD = "pmset -g | grep lowpowermode"
