@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-class SwitchVM : ObservableObject {
+class SwitchVM : ObservableObject, CurrentScreen {
 
     @Published var switchList = [SwitchBarVM]()
     @Published var shortcutsList = [ShortcutsBarVM]()
@@ -38,10 +38,4 @@ class SwitchVM : ObservableObject {
         print(maxHeight)
     }
     
-    private func getScreenWithMouse() -> NSScreen? {
-        let mouseLocation = NSEvent.mouseLocation
-        let screens = NSScreen.screens
-        let screenWithMouse = (screens.first { NSMouseInRect(mouseLocation, $0.frame, false) })
-        return screenWithMouse
-    }
 }

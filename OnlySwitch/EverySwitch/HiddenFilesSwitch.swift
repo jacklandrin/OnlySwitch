@@ -8,7 +8,7 @@
 import AppKit
 
 class HiddenFilesSwitch:SwitchProvider {
-//    static let shared = HiddenFilesSwitch()
+
     var type: SwitchType = .hiddenFiles
     var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .hiddenFiles)
     

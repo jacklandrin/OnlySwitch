@@ -8,8 +8,12 @@
 import Foundation
 import Cocoa
 
-class SendEmail {
-    static func send() {
+protocol EmailProvider {
+    func sendEmail()
+}
+
+extension EmailProvider {
+    func sendEmail() {
         let service = NSSharingService(named: NSSharingService.Name.composeEmail)!
         service.recipients = ["jacklandrin@hotmail.com"]
         service.subject = "About Only Switch"

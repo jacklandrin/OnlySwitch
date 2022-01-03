@@ -8,7 +8,7 @@
 import SwiftUI
 import LaunchAtLogin
 
-struct GeneralView: View {
+struct GeneralView: View, EmailProvider {
     @ObservedObject var langManager = LanguageManager.sharedManager
     @State var cacheSize:String = ""
     @State var needtoUpdateAlert = false
@@ -104,7 +104,7 @@ struct GeneralView: View {
                     }.frame(height: 50)
                     
                     Button("Send Email to Jacklandrin".localized()) {
-                        SendEmail.send()
+                        sendEmail()
                     }
                     .frame(height:30)
                    

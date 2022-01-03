@@ -9,7 +9,7 @@ import Cocoa
 import UniformTypeIdentifiers
 import AVFoundation
 
-class TopNotchSwitch:SwitchProvider {
+class TopNotchSwitch:SwitchProvider, CurrentScreen {
     
     var type: SwitchType = .topNotch
     var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .topNotch)
@@ -281,12 +281,12 @@ class TopNotchSwitch:SwitchProvider {
         return true
     }
     
-    private func getScreenWithMouse() -> NSScreen? {
-        let mouseLocation = NSEvent.mouseLocation
-        let screens = NSScreen.screens
-        let screenWithMouse = (screens.first { NSMouseInRect(mouseLocation, $0.frame, false) })
-        return screenWithMouse
-    }
+//    private func getScreenWithMouse() -> NSScreen? {
+//        let mouseLocation = NSEvent.mouseLocation
+//        let screens = NSScreen.screens
+//        let screenWithMouse = (screens.first { NSMouseInRect(mouseLocation, $0.frame, false) })
+//        return screenWithMouse
+//    }
     
     private func saveImage(_ image:NSImage, isProcessed:Bool, imageName:String) -> URL? {
         guard let destinationURL = saveDestination(isProcessed: isProcessed, imageName: imageName, type: "jpg") else {

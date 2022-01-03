@@ -8,7 +8,7 @@
 import SwiftUI
 import AppKit
 
-enum OpenWindows:String, CaseIterable {
+enum OpenWindows:String, CaseIterable, CurrentScreen {
     case Setting = "setting"
     
     func open() {
@@ -35,14 +35,6 @@ enum OpenWindows:String, CaseIterable {
             }
         }
         NSApplication.shared.setActivationPolicy(.regular)
-    }
-    
-    
-    private func getScreenWithMouse() -> NSScreen? {
-        let mouseLocation = NSEvent.mouseLocation
-        let screens = NSScreen.screens
-        let screenWithMouse = (screens.first { NSMouseInRect(mouseLocation, $0.frame, false) })
-        return screenWithMouse
     }
 }
 
