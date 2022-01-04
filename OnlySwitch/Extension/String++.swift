@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import OSAKit
 
 extension String {
     func runAppleScript(isShellCMD:Bool = false, with administratorPrivilege:Bool = false) -> (Bool, Any) {
@@ -18,15 +19,16 @@ extension String {
         }
         print("command:\(finalCommand)")
         var error: NSDictionary?
-        if let scroptObject = NSAppleScript(source: finalCommand) {
-            let descriptor = scroptObject.executeAndReturnError(&error)
-            if let outputString = descriptor.stringValue {
-                print(outputString)
-                return (true, outputString)
-            } else if error != nil {
-                print("error:\(String(describing: error!))")
-                return (false, "failed")
-            }
+        let osaScript = OSAScript(source: finalCommand)
+        guard let descriptor = osaScript.executeAndReturnError(&error) else {
+            return (false, "failed")
+        }
+        if let outputString = descriptor.stringValue {
+            print(outputString)
+            return (true, outputString)
+        } else if error != nil {
+            print("error:\(String(describing: error!))")
+            return (false, String(describing: error!))
         }
         return (true, "")
     }
