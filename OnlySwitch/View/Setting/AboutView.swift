@@ -28,7 +28,9 @@ struct AboutView: View {
                     Text("Jacklandrin")
                 })
             }
-            
+            Link(destination: URL(string: "https://github.com/jacklandrin/OnlySwitch")!, label: {
+                Text("GitHub Repo")
+            })
         }
     }
 }
