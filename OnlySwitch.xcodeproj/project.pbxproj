@@ -29,6 +29,8 @@
 		043E5D7327581C2E00ADC004 /* SwitchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D7227581C2E00ADC004 /* SwitchBarView.swift */; };
 		043E5D752758208D00ADC004 /* SwitchBarVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D742758208D00ADC004 /* SwitchBarVM.swift */; };
 		043E5D7A2758212A00ADC004 /* SwitchType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D792758212A00ADC004 /* SwitchType.swift */; };
+		043F5AE92784B8CC001DFDF0 /* IsDarkMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043F5AE82784B8CC001DFDF0 /* IsDarkMode.swift */; };
+		043F5AEB2784BE34001DFDF0 /* SetDarkMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043F5AEA2784BE34001DFDF0 /* SetDarkMode.swift */; };
 		0443A6B627599AAC00A3BCFD /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0443A6B527599AAC00A3BCFD /* README.md */; };
 		0443A6B82759A99700A3BCFD /* ScreenSaverSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0443A6B72759A99700A3BCFD /* ScreenSaverSwitch.swift */; };
 		04447B5C2754F08000CD2900 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B5B2754F08000CD2900 /* AppDelegate.swift */; };
@@ -115,18 +117,43 @@
 		04A6B5502771F338003B2647 /* CheckUpdateTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A6B54F2771F338003B2647 /* CheckUpdateTool.swift */; };
 		04AA63CE276BC94000ED5DEA /* EmptyTrashSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AA63CD276BC94000ED5DEA /* EmptyTrashSwitch.swift */; };
 		04AA63D0276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AA63CF276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift */; };
+		04B856352784B1B60061B56C /* GetWallpaperURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B856342784B1B60061B56C /* GetWallpaperURL.swift */; };
 		04D68B0D2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D68B0C2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift */; };
 		04E03AF8275E6B4E00EA5FB9 /* AutohideDockSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AF7275E6B4E00EA5FB9 /* AutohideDockSwitch.swift */; };
 		04E03AFE275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AFD275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift */; };
 		04E03B00275F93B900EA5FB9 /* AirPodsSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AFF275F93B900EA5FB9 /* AirPodsSwitch.swift */; };
 		04E03B04275FD98500EA5FB9 /* battery-airpods-monterey.sh in Resources */ = {isa = PBXBuildFile; fileRef = 04E03B03275FD98500EA5FB9 /* battery-airpods-monterey.sh */; };
 		04E03B06275FEBE200EA5FB9 /* AirPodsBatteryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03B05275FEBE200EA5FB9 /* AirPodsBatteryView.swift */; };
+		04E2ACF9278267DE00BC5DF3 /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 042661402780C147005DF2B9 /* Intents.framework */; platformFilter = maccatalyst; };
+		04E2ACFC278267DE00BC5DF3 /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E2ACFB278267DE00BC5DF3 /* IntentHandler.swift */; };
+		04E2AD00278267DE00BC5DF3 /* IntentsExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 04E2ACF8278267DE00BC5DF3 /* IntentsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		04E2AD0A2782734500BC5DF3 /* ShellCommandDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B732755015A00CD2900 /* ShellCommandDefine.swift */; };
+		04E2AD0B2782734D00BC5DF3 /* String++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A2FFF9275636FA00CE56A0 /* String++.swift */; };
+		04E2AD0D2783624A00BC5DF3 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 04E2AD102783624A00BC5DF3 /* Intents.intentdefinition */; };
+		04E2AD0E2783624A00BC5DF3 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 04E2AD102783624A00BC5DF3 /* Intents.intentdefinition */; };
+		04E2AD142783A31300BC5DF3 /* GetWallpaperImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E2AD132783A31300BC5DF3 /* GetWallpaperImage.swift */; };
+		04E2AD152783A37300BC5DF3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04447B5F2754F08100CD2900 /* Assets.xcassets */; };
+		04E2AD172783A4E000BC5DF3 /* NSImage++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E2AD162783A4E000BC5DF3 /* NSImage++.swift */; };
+		04E2AD1A2783A50000BC5DF3 /* Data++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E2AD192783A50000BC5DF3 /* Data++.swift */; };
+		04E2AD1C2783A54000BC5DF3 /* URL++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E2AD1B2783A54000BC5DF3 /* URL++.swift */; };
+		04E2AD1E2783B63600BC5DF3 /* CurrentScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E2AD1D2783B63600BC5DF3 /* CurrentScreen.swift */; };
+		04E2AD1F2783B6C400BC5DF3 /* CurrentScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E2AD1D2783B63600BC5DF3 /* CurrentScreen.swift */; };
 		04EB1CD02780F36F00C612AB /* ShortcutsSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CCF2780F36F00C612AB /* ShortcutsSettingVM.swift */; };
 		04EB1CD22780F4F700C612AB /* ShortcutsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CD12780F4F700C612AB /* ShortcutsView.swift */; };
 		04EB1CD42781280900C612AB /* ShortCutBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CD32781280900C612AB /* ShortCutBarView.swift */; };
 		04EB1CD62781299A00C612AB /* ShortcutsBarVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CD52781299A00C612AB /* ShortcutsBarVM.swift */; };
 		04FE2C922772880300C79FF9 /* ShowExtensionNameSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FE2C912772880300C79FF9 /* ShowExtensionNameSwitch.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		04E2ACFE278267DE00BC5DF3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 04447B502754F08000CD2900 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 04E2ACF7278267DE00BC5DF3;
+			remoteInfo = IntentsExtension;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		042661862780CBDE005DF2B9 /* Embed App Extensions */ = {
@@ -135,6 +162,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				04E2AD00278267DE00BC5DF3 /* IntentsExtension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -165,6 +193,8 @@
 		043E5D7227581C2E00ADC004 /* SwitchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchBarView.swift; sourceTree = "<group>"; };
 		043E5D742758208D00ADC004 /* SwitchBarVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchBarVM.swift; sourceTree = "<group>"; };
 		043E5D792758212A00ADC004 /* SwitchType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchType.swift; sourceTree = "<group>"; };
+		043F5AE82784B8CC001DFDF0 /* IsDarkMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsDarkMode.swift; sourceTree = "<group>"; };
+		043F5AEA2784BE34001DFDF0 /* SetDarkMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetDarkMode.swift; sourceTree = "<group>"; };
 		0443A6B527599AAC00A3BCFD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0443A6B72759A99700A3BCFD /* ScreenSaverSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenSaverSwitch.swift; sourceTree = "<group>"; };
 		04447B582754F08000CD2900 /* OnlySwitch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnlySwitch.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -255,12 +285,23 @@
 		04A6B54F2771F338003B2647 /* CheckUpdateTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckUpdateTool.swift; sourceTree = "<group>"; };
 		04AA63CD276BC94000ED5DEA /* EmptyTrashSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyTrashSwitch.swift; sourceTree = "<group>"; };
 		04AA63CF276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyPasteboardSwitch.swift; sourceTree = "<group>"; };
+		04B856342784B1B60061B56C /* GetWallpaperURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetWallpaperURL.swift; sourceTree = "<group>"; };
 		04D68B0C2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowUserLibrarySwitch.swift; sourceTree = "<group>"; };
 		04E03AF7275E6B4E00EA5FB9 /* AutohideDockSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutohideDockSwitch.swift; sourceTree = "<group>"; };
 		04E03AFD275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothDevicesManager.swift; sourceTree = "<group>"; };
 		04E03AFF275F93B900EA5FB9 /* AirPodsSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPodsSwitch.swift; sourceTree = "<group>"; };
 		04E03B03275FD98500EA5FB9 /* battery-airpods-monterey.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "battery-airpods-monterey.sh"; sourceTree = "<group>"; };
 		04E03B05275FEBE200EA5FB9 /* AirPodsBatteryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPodsBatteryView.swift; sourceTree = "<group>"; };
+		04E2ACF8278267DE00BC5DF3 /* IntentsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = IntentsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		04E2ACFB278267DE00BC5DF3 /* IntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentHandler.swift; sourceTree = "<group>"; };
+		04E2ACFD278267DE00BC5DF3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		04E2AD0C27827EAD00BC5DF3 /* IntentsExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = IntentsExtension.entitlements; sourceTree = "<group>"; };
+		04E2AD0F2783624A00BC5DF3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; name = Base; path = Base.lproj/Intents.intentdefinition; sourceTree = "<group>"; };
+		04E2AD132783A31300BC5DF3 /* GetWallpaperImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetWallpaperImage.swift; sourceTree = "<group>"; };
+		04E2AD162783A4E000BC5DF3 /* NSImage++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSImage++.swift"; sourceTree = "<group>"; };
+		04E2AD192783A50000BC5DF3 /* Data++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data++.swift"; sourceTree = "<group>"; };
+		04E2AD1B2783A54000BC5DF3 /* URL++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL++.swift"; sourceTree = "<group>"; };
+		04E2AD1D2783B63600BC5DF3 /* CurrentScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentScreen.swift; sourceTree = "<group>"; };
 		04EB1CCF2780F36F00C612AB /* ShortcutsSettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsSettingVM.swift; sourceTree = "<group>"; };
 		04EB1CD12780F4F700C612AB /* ShortcutsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsView.swift; sourceTree = "<group>"; };
 		04EB1CD32781280900C612AB /* ShortCutBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortCutBarView.swift; sourceTree = "<group>"; };
@@ -279,6 +320,14 @@
 				04A6B54B27715F90003B2647 /* Alamofire in Frameworks */,
 				04581DB6276506B9008ADF30 /* AlertToast in Frameworks */,
 				043E5D6D2757DADB00ADC004 /* AVFoundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		04E2ACF5278267DE00BC5DF3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				04E2ACF9278267DE00BC5DF3 /* Intents.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -393,6 +442,7 @@
 				04938D022768CAEB00713F1D /* Localizable.strings */,
 				0443A6B527599AAC00A3BCFD /* README.md */,
 				04447B5A2754F08000CD2900 /* OnlySwitch */,
+				04E2ACFA278267DE00BC5DF3 /* IntentsExtension */,
 				04447B592754F08000CD2900 /* Products */,
 				043E5D6B2757DADB00ADC004 /* Frameworks */,
 			);
@@ -402,6 +452,7 @@
 			isa = PBXGroup;
 			children = (
 				04447B582754F08000CD2900 /* OnlySwitch.app */,
+				04E2ACF8278267DE00BC5DF3 /* IntentsExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -583,6 +634,7 @@
 				04938D11276948DE00713F1D /* WallpaperManager.swift */,
 				04A6B54F2771F338003B2647 /* CheckUpdateTool.swift */,
 				047140B527788486005B160B /* EffectSoundHelper.swift */,
+				04E2AD1D2783B63600BC5DF3 /* CurrentScreen.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -595,6 +647,40 @@
 				04E03B03275FD98500EA5FB9 /* battery-airpods-monterey.sh */,
 			);
 			path = Resource;
+			sourceTree = "<group>";
+		};
+		04E2ACFA278267DE00BC5DF3 /* IntentsExtension */ = {
+			isa = PBXGroup;
+			children = (
+				04E2AD182783A4E900BC5DF3 /* Extension */,
+				04E2AD0C27827EAD00BC5DF3 /* IntentsExtension.entitlements */,
+				04E2AD0627826AC900BC5DF3 /* Actions */,
+				04E2ACFB278267DE00BC5DF3 /* IntentHandler.swift */,
+				04E2ACFD278267DE00BC5DF3 /* Info.plist */,
+				04E2AD102783624A00BC5DF3 /* Intents.intentdefinition */,
+			);
+			path = IntentsExtension;
+			sourceTree = "<group>";
+		};
+		04E2AD0627826AC900BC5DF3 /* Actions */ = {
+			isa = PBXGroup;
+			children = (
+				04E2AD132783A31300BC5DF3 /* GetWallpaperImage.swift */,
+				04B856342784B1B60061B56C /* GetWallpaperURL.swift */,
+				043F5AE82784B8CC001DFDF0 /* IsDarkMode.swift */,
+				043F5AEA2784BE34001DFDF0 /* SetDarkMode.swift */,
+			);
+			path = Actions;
+			sourceTree = "<group>";
+		};
+		04E2AD182783A4E900BC5DF3 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				04E2AD162783A4E000BC5DF3 /* NSImage++.swift */,
+				04E2AD192783A50000BC5DF3 /* Data++.swift */,
+				04E2AD1B2783A54000BC5DF3 /* URL++.swift */,
+			);
+			path = Extension;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -614,6 +700,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				04E2ACFF278267DE00BC5DF3 /* PBXTargetDependency */,
 			);
 			name = OnlySwitch;
 			packageProductDependencies = (
@@ -624,6 +711,23 @@
 			productName = OnlySwitch;
 			productReference = 04447B582754F08000CD2900 /* OnlySwitch.app */;
 			productType = "com.apple.product-type.application";
+		};
+		04E2ACF7278267DE00BC5DF3 /* IntentsExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 04E2AD03278267DE00BC5DF3 /* Build configuration list for PBXNativeTarget "IntentsExtension" */;
+			buildPhases = (
+				04E2ACF4278267DE00BC5DF3 /* Sources */,
+				04E2ACF5278267DE00BC5DF3 /* Frameworks */,
+				04E2ACF6278267DE00BC5DF3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = IntentsExtension;
+			productName = IntentsExtension;
+			productReference = 04E2ACF8278267DE00BC5DF3 /* IntentsExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -637,6 +741,9 @@
 				TargetAttributes = {
 					04447B572754F08000CD2900 = {
 						CreatedOnToolsVersion = 13.1;
+					};
+					04E2ACF7278267DE00BC5DF3 = {
+						CreatedOnToolsVersion = 13.2;
 					};
 				};
 			};
@@ -661,6 +768,7 @@
 			projectRoot = "";
 			targets = (
 				04447B572754F08000CD2900 /* OnlySwitch */,
+				04E2ACF7278267DE00BC5DF3 /* IntentsExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -677,6 +785,14 @@
 				047140B327788364005B160B /* mixkit-alert-bells-echo-765.wav in Resources */,
 				047140B427788364005B160B /* mixkit-bell-notification-933.wav in Resources */,
 				04447B602754F08100CD2900 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		04E2ACF6278267DE00BC5DF3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				04E2AD152783A37300BC5DF3 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -790,6 +906,7 @@
 				04447B7627550F6900CD2900 /* VisualEffectView.swift in Sources */,
 				04A2FFF72755A3E500CE56A0 /* NSImage++.swift in Sources */,
 				0493375827625A1E00AE779A /* Downloader+URLSessionDelegate.swift in Sources */,
+				04E2AD1E2783B63600BC5DF3 /* CurrentScreen.swift in Sources */,
 				043E5D7A2758212A00ADC004 /* SwitchType.swift in Sources */,
 				04E03B00275F93B900EA5FB9 /* AirPodsSwitch.swift in Sources */,
 				043E5D6F2758116800ADC004 /* NSSound_SystemVolumeExtension.swift in Sources */,
@@ -805,6 +922,7 @@
 				04EB1CD02780F36F00C612AB /* ShortcutsSettingVM.swift in Sources */,
 				0493374727625A1E00AE779A /* PlayerManager.swift in Sources */,
 				0493372527615EA400AE779A /* HiddenFilesSwitch.swift in Sources */,
+				04E2AD0D2783624A00BC5DF3 /* Intents.intentdefinition in Sources */,
 				04AA63D0276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift in Sources */,
 				04E03AF8275E6B4E00EA5FB9 /* AutohideDockSwitch.swift in Sources */,
 				04581DB02764CBCF008ADF30 /* SettingVM.swift in Sources */,
@@ -834,7 +952,34 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		04E2ACF4278267DE00BC5DF3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				04E2AD0B2782734D00BC5DF3 /* String++.swift in Sources */,
+				04E2AD142783A31300BC5DF3 /* GetWallpaperImage.swift in Sources */,
+				04E2AD1F2783B6C400BC5DF3 /* CurrentScreen.swift in Sources */,
+				04E2AD0A2782734500BC5DF3 /* ShellCommandDefine.swift in Sources */,
+				04E2AD0E2783624A00BC5DF3 /* Intents.intentdefinition in Sources */,
+				04E2ACFC278267DE00BC5DF3 /* IntentHandler.swift in Sources */,
+				043F5AE92784B8CC001DFDF0 /* IsDarkMode.swift in Sources */,
+				04E2AD172783A4E000BC5DF3 /* NSImage++.swift in Sources */,
+				04E2AD1C2783A54000BC5DF3 /* URL++.swift in Sources */,
+				04E2AD1A2783A50000BC5DF3 /* Data++.swift in Sources */,
+				04B856352784B1B60061B56C /* GetWallpaperURL.swift in Sources */,
+				043F5AEB2784BE34001DFDF0 /* SetDarkMode.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		04E2ACFF278267DE00BC5DF3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 04E2ACF7278267DE00BC5DF3 /* IntentsExtension */;
+			targetProxy = 04E2ACFE278267DE00BC5DF3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		04938D022768CAEB00713F1D /* Localizable.strings */ = {
@@ -845,6 +990,14 @@
 				04938D042768CAEF00713F1D /* de */,
 			);
 			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		04E2AD102783624A00BC5DF3 /* Intents.intentdefinition */ = {
+			isa = PBXVariantGroup;
+			children = (
+				04E2AD0F2783624A00BC5DF3 /* Base */,
+			);
+			name = Intents.intentdefinition;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -977,7 +1130,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 27;
+				CURRENT_PROJECT_VERSION = 28;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1001,7 +1154,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.7;
+				MARKETING_VERSION = 1.8;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1026,7 +1179,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 27;
+				CURRENT_PROJECT_VERSION = 28;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1050,7 +1203,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.7;
+				MARKETING_VERSION = 1.8;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1062,6 +1215,64 @@
 					"$(inherited)",
 					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks/CoreBrightness.framework/Versions/A",
 				);
+			};
+			name = Release;
+		};
+		04E2AD01278267DE00BC5DF3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = IntentsExtension/IntentsExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 28;
+				DEVELOPMENT_TEAM = B22726TNGH;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = IntentsExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = IntentsExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.8;
+				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.IntentsExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "OnlySwitch/Header/OnlySwitch-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		04E2AD02278267DE00BC5DF3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = IntentsExtension/IntentsExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 28;
+				DEVELOPMENT_TEAM = B22726TNGH;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = IntentsExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = IntentsExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.8;
+				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.IntentsExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "OnlySwitch/Header/OnlySwitch-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -1082,6 +1293,15 @@
 			buildConfigurations = (
 				04447B6D2754F08100CD2900 /* Debug */,
 				04447B6E2754F08100CD2900 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		04E2AD03278267DE00BC5DF3 /* Build configuration list for PBXNativeTarget "IntentsExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				04E2AD01278267DE00BC5DF3 /* Debug */,
+				04E2AD02278267DE00BC5DF3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

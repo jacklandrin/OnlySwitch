@@ -10,6 +10,7 @@ import AppKit
 
 protocol CurrentScreen{
     func getScreenWithMouse() -> NSScreen?
+    func getWallpaperPath() -> URL?
 }
 
 extension CurrentScreen {
@@ -18,5 +19,12 @@ extension CurrentScreen {
         let screens = NSScreen.screens
         let screenWithMouse = (screens.first { NSMouseInRect(mouseLocation, $0.frame, false) })
         return screenWithMouse
+    }
+    
+    func getWallpaperPath() -> URL? {
+        let workspace = NSWorkspace.shared
+        guard let screen = getScreenWithMouse() else {return nil}
+        guard let path = workspace.desktopImageURL(for: screen) else {return nil}
+        return path
     }
 }

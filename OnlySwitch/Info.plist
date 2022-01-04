@@ -11,8 +11,6 @@
 			</array>
 		</dict>
 	</array>
-	<key>CFBundleVersion</key>
-	<string>29</string>
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -20,5 +18,12 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSUserActivityTypes</key>
+	<array>
+		<string>GetWallpaperImageIntent</string>
+		<string>GetWallpaperUrlIntent</string>
+		<string>IsDarkModeIntent</string>
+		<string>SetDarkModeIntent</string>
+	</array>
 </dict>
 </plist>
