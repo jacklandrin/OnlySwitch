@@ -110,7 +110,7 @@ struct ContentView: View {
                     .font(.system(size: 17))
             }).buttonStyle(.plain)
                 .padding(10)
-            
+                .help(Text("Settings".localized()))
         }
     }
     
