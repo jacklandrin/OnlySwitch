@@ -13,7 +13,7 @@
 brew install only-switch
 ```
 ## Manually Download
-[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_1.7/OnlySwitch.dmg)
+[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_1.8/OnlySwitch.dmg)
 
 ## What's the OnlySwitch?
 OnlySwitch provides a series of toggle switches to simply your routine work, such as Hiden desktop icons, dark mode and hide ugly notch of new Mackbook Pro. The switches show on your statusbar, you can easily control them.
@@ -55,6 +55,15 @@ Since Version 1.7, **Shortcuts** can be imported in OnlySwitch.
 
 Since Version 1.3, switches can be added or removed on list.
 
+## Shortcuts Actions
+
+| Actions             | status |
+|---------------------|--------|
+| Get wallpaper image | finish |
+| Get wallpaper url   | finish |
+| is dark mode        | finish |
+| set dark mode       | finish |
+
 ## Welcome to pull request for these
 
 * support Big Sur
@@ -83,6 +92,12 @@ In the next versions, OnlySwitch will also provide some Shortcuts actions to imp
 
 <p align="center">
 <img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2022/01/shortcutsDisplay.png" width="60%" align="center" />
+</p>
+
+OnlySwitch offers some Shortcus actions since Version 1.8. For example, you can config your own dark mode switch. (**Set Appearance** action by Shortcuts can also set dark mode, but the appearance status cannot be detected. So, OnlySwitch provides a set dark mode action)
+
+<p align="center">
+<img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2022/01/shortcutsdarkmode.png" width="60%" align="center" />
 </p>
 
 ## Can't compile preview by Xcode 13.2.1 on some Macs
