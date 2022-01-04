@@ -30,8 +30,8 @@ class PomodoroTimerSwitch: SwitchProvider {
     @UserDefaultValue(key: WorkDurationKey, defaultValue: 25 * 60)
     var workDuration:Int
     
-//    var restDuration:Int = 10
-//    var workDuration:Int = 20
+//    var restDuration:Int = 5
+//    var workDuration:Int = 10
     
     @UserDefaultValue(key: RestAlertKey, defaultValue: "mixkit-alert-bells-echo-765")
     var restAlert:String
@@ -41,6 +41,11 @@ class PomodoroTimerSwitch: SwitchProvider {
     
     @UserDefaultValue(key: AllowNotificationAlertKey, defaultValue: true)
     var allowNotificationAlert:Bool
+    
+    @UserDefaultValue(key: PTimerCycleCountKey, defaultValue: 1)
+    var cycleCount:Int
+    
+    var cycleIndex:Int = 0
     
     var isRestTimerValid:Bool {
         guard let restTimer = restTimer else {
@@ -85,6 +90,7 @@ class PomodoroTimerSwitch: SwitchProvider {
     
     func operationSwitch(isOn: Bool) async -> Bool {
         if isOn {
+            self.cycleIndex = 0
             self.startTimer()
             return true
         } else {
@@ -98,38 +104,47 @@ class PomodoroTimerSwitch: SwitchProvider {
     }
     
     func startTimer() {
+        
         nextDate = .now + TimeInterval(workDuration + 1)
         status = .work
         DispatchQueue.main.async {
-            self.restTimer = Timer(timeInterval: TimeInterval(self.workDuration + 1), repeats: false) { timer in
-                self.restTimer?.invalidate()
-                self.restTimer = nil
-                EffectSoundHelper.shared.playSound(name: self.restAlert, type: "wav")
-                if self.allowNotificationAlert {
+            self.restTimer = Timer(timeInterval: TimeInterval(self.workDuration + 1), repeats: false) {[weak self] timer in
+                guard let strongSelf = self else {return}
+                strongSelf.restTimer?.invalidate()
+                strongSelf.restTimer = nil
+                EffectSoundHelper.shared.playSound(name: strongSelf.restAlert, type: "wav")
+                if strongSelf.allowNotificationAlert {
                     let _ = displayNotificationCMD(title: "Take a break!".localized(),
                                                    content: "You've worked for %d min."
-                                                    .localizeWithFormat(arguments: self.workDuration / 60),
+                                                    .localizeWithFormat(arguments: strongSelf.workDuration / 60),
                                                    subtitle: "Time's up.".localized())
                         .runAppleScript()
                 }
-                self.nextDate = .now + TimeInterval(self.restDuration + 1)
-                self.status = .rest
+                strongSelf.nextDate = .now + TimeInterval(strongSelf.restDuration + 1)
+                strongSelf.status = .rest
             }
             
-            self.workTimer = Timer(timeInterval: TimeInterval(self.workDuration + self.restDuration + 1), repeats: false) { timer in
-                self.workTimer?.invalidate()
-                self.workTimer = nil
-                EffectSoundHelper.shared.playSound(name: self.workAlert, type: "wav")
-                if self.allowNotificationAlert {
+            self.workTimer = Timer(timeInterval: TimeInterval(self.workDuration + self.restDuration + 1), repeats: false) {[weak self] timer in
+                guard let strongSelf = self else {return}
+                strongSelf.workTimer?.invalidate()
+                strongSelf.workTimer = nil
+                EffectSoundHelper.shared.playSound(name: strongSelf.workAlert, type: "wav")
+                if strongSelf.allowNotificationAlert {
                     let _ = displayNotificationCMD(title: "Get on with work!".localized(),
                                                    content: "You've rested for %d min."
-                                                    .localizeWithFormat(arguments: self.restDuration / 60),
+                                                    .localizeWithFormat(arguments: strongSelf.restDuration / 60),
                                                    subtitle: "Time's up.".localized())
                         .runAppleScript()
                 }
-                self.status = .none
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    NotificationCenter.default.post(name: changeSettingNotification, object: nil)
+            
+                strongSelf.cycleIndex += 1
+                if strongSelf.cycleCount == 0 || strongSelf.cycleIndex < strongSelf.cycleCount {
+                    strongSelf.startTimer()
+                } else {
+                    strongSelf.status = .none
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        NotificationCenter.default.post(name: changeSettingNotification, object: nil)
+                    }
                 }
             }
             RunLoop.current.add(self.restTimer!, forMode: .common)

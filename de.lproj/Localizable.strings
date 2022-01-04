@@ -82,3 +82,5 @@
 "There's not any Shortcuts." = "Es gibt keine Kurzbefehle.";
 "The maximum number of shortcuts is 6" = "Die maximale Anzahl von Kurzbefehle ist 6";
 "require password" = "Passwort anfordern";
+"Unlimited" = "Unbegrenzt";
+"Cycle Count:" = "Anzahl der Durchgänge:";

@@ -82,3 +82,5 @@
 "There's not any Shortcuts." = "没有快捷指令";
 "The maximum number of shortcuts is 6" = "最多6个快捷指令";
 "require password" = "需要密码";
+"Unlimited" = "无限循环";
+"Cycle Count:" = "循环次数:";

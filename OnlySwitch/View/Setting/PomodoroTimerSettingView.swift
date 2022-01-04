@@ -14,10 +14,12 @@ struct PomodoroTimerSettingView: View {
     
     var body: some View {
         HStack {
-            VStack(alignment:.trailing, spacing: 25) {
+            VStack(alignment:.trailing, spacing: 20) {
                 Text("Work:".localized())
                     .frame(height:30)
                 Text("Break:".localized())
+                    .frame(height:30)
+                Text("Cycle Count:".localized())
                     .frame(height:30)
                 Text("Notification Alert:".localized())
                     .frame(height:30)
@@ -28,7 +30,7 @@ struct PomodoroTimerSettingView: View {
                 Text("Break Alert:".localized())
                     .frame(height:30)
             }
-            VStack(alignment:.leading, spacing: 25) {
+            VStack(alignment:.leading, spacing: 20) {
                 MenuButton(label: Text("%d min".localizeWithFormat(arguments: ptSettingVM.workDuration / 60))) {
                     
                     ForEach(ptSettingVM.workDurationList, id:\.self) { duration in
@@ -44,6 +46,15 @@ struct PomodoroTimerSettingView: View {
                     ForEach(ptSettingVM.restDurationList, id:\.self) { duration in
                         Button("%d min".localizeWithFormat(arguments: duration)) {
                             ptSettingVM.restDuration = Int(duration) * 60
+                        }
+                    }
+                }
+                .frame(height: 30)
+                
+                MenuButton(label:Text(cycleCountText(count:ptSettingVM.cycleCount).localized())) {
+                    ForEach(ptSettingVM.cycleCountList, id:\.self) { count in
+                        Button(cycleCountText(count: count).localized()) {
+                            ptSettingVM.cycleCount = count
                         }
                     }
                 }
@@ -99,6 +110,14 @@ struct PomodoroTimerSettingView: View {
             }.frame(maxWidth:230)
         }
         
+    }
+    
+    func cycleCountText(count:Int) -> String {
+        if count == 0 {
+            return "Unlimited"
+        } else {
+            return String(count)
+        }
     }
 }
 
