@@ -10,6 +10,7 @@ import AppKit
 let showPopoverNotificationName = NSNotification.Name("showPopover")
 let hidePopoverNotificationName = NSNotification.Name("hidePopover")
 let shouldHidePopoverNotificationName = NSNotification.Name("shouldHidePopover")
+let changeMenuBarIconNotificationName = NSNotification.Name("changeMenuBarIcon")
 struct OtherPopover {
     static let name = NSNotification.Name("otherPopover")
     static func hasShown(_ hasShown:Bool) {
@@ -34,22 +35,25 @@ class StatusBarController {
             }
         }
     }
+    @UserDefaultValue(key: menubarIconKey, defaultValue: "menubar_0")
+    var currentMenubarIcon:String
+    
     private var otherPopoverBitwise:Int = 0
+    
     init(_ popover:NSPopover) {
         self.popover = popover
 
         statusItem = NSStatusBar.system.statusItem(withLength:NSStatusItem.squareLength)
-        if let statusBarButton = statusItem.button {
-            statusBarButton.image = #imageLiteral(resourceName: "statusbar")
-            statusBarButton.image?.size = NSSize(width: 18, height: 18)
-            statusBarButton.image?.isTemplate = true
-
-            statusBarButton.action = #selector(togglePopover(sender:))
-            statusBarButton.target = self
-        }
         
+        setStatusBarButton(image: currentMenubarIcon)
         
         eventMonitor = EventMonitor(mask: [.leftMouseDown, .rightMouseDown], handler: mouseEventHandler)
+        
+        NotificationCenter.default.addObserver(forName: changeMenuBarIconNotificationName, object: nil, queue: .main, using: {[weak self] notify in
+            guard let strongSelf = self else {return}
+            let newImageName = notify.object as! String
+            strongSelf.setStatusBarButton(image: newImageName)
+        })
         
         NotificationCenter.default.addObserver(forName: shouldHidePopoverNotificationName, object: nil, queue: .main, using: {[weak self] notify in
             guard let strongSelf = self else {return}
@@ -89,6 +93,17 @@ class StatusBarController {
         }
         else {
             showPopover(sender)
+        }
+    }
+    
+    func setStatusBarButton(image:String) {
+        if let statusBarButton = statusItem.button {
+            statusBarButton.image = NSImage(named: image)
+            statusBarButton.image?.size = NSSize(width: 18, height: 18)
+            statusBarButton.image?.isTemplate = true
+
+            statusBarButton.action = #selector(togglePopover(sender:))
+            statusBarButton.target = self
         }
     }
     

@@ -115,6 +115,7 @@
 		04A2FFFA275636FA00CE56A0 /* String++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A2FFF9275636FA00CE56A0 /* String++.swift */; };
 		04A6B54B27715F90003B2647 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 04A6B54A27715F90003B2647 /* Alamofire */; };
 		04A6B5502771F338003B2647 /* CheckUpdateTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A6B54F2771F338003B2647 /* CheckUpdateTool.swift */; };
+		04A9675A2786133F00F12830 /* GeneralVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A967592786133F00F12830 /* GeneralVM.swift */; };
 		04AA63CE276BC94000ED5DEA /* EmptyTrashSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AA63CD276BC94000ED5DEA /* EmptyTrashSwitch.swift */; };
 		04AA63D0276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AA63CF276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift */; };
 		04B856352784B1B60061B56C /* GetWallpaperURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B856342784B1B60061B56C /* GetWallpaperURL.swift */; };
@@ -283,6 +284,7 @@
 		04A2FFF62755A3E500CE56A0 /* NSImage++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSImage++.swift"; sourceTree = "<group>"; };
 		04A2FFF9275636FA00CE56A0 /* String++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String++.swift"; sourceTree = "<group>"; };
 		04A6B54F2771F338003B2647 /* CheckUpdateTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckUpdateTool.swift; sourceTree = "<group>"; };
+		04A967592786133F00F12830 /* GeneralVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralVM.swift; sourceTree = "<group>"; };
 		04AA63CD276BC94000ED5DEA /* EmptyTrashSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyTrashSwitch.swift; sourceTree = "<group>"; };
 		04AA63CF276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyPasteboardSwitch.swift; sourceTree = "<group>"; };
 		04B856342784B1B60061B56C /* GetWallpaperURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetWallpaperURL.swift; sourceTree = "<group>"; };
@@ -499,6 +501,7 @@
 				040C6EA9276B7D4500291DEB /* CustomizeVM.swift */,
 				04EB1CCF2780F36F00C612AB /* ShortcutsSettingVM.swift */,
 				047140BF2778A478005B160B /* PomodoroTimerSettingVM.swift */,
+				04A967592786133F00F12830 /* GeneralVM.swift */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -928,6 +931,7 @@
 				04581DB02764CBCF008ADF30 /* SettingVM.swift in Sources */,
 				04E03B06275FEBE200EA5FB9 /* AirPodsBatteryView.swift in Sources */,
 				04EB1CD62781299A00C612AB /* ShortcutsBarVM.swift in Sources */,
+				04A9675A2786133F00F12830 /* GeneralVM.swift in Sources */,
 				04581DC12765522A008ADF30 /* AboutView.swift in Sources */,
 				04938D12276948DE00713F1D /* WallpaperManager.swift in Sources */,
 				0493375127625A1E00AE779A /* Parser.swift in Sources */,
