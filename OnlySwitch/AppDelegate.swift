@@ -14,7 +14,7 @@ struct OnlySwitchApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     var body: some Scene {
         WindowGroup {
-            EmptyView().frame(width: 0, height: 0)
+            EmptyView().frame(width: 10, height: 10)
         }
     }
 }
@@ -40,6 +40,10 @@ class AppDelegate:NSObject, NSApplicationDelegate {
         Bundle.setLanguage(lang: LanguageManager.sharedManager.currentLang)
         
         checkUpdate()
+        //for issue #11
+        if let window = NSApplication.shared.windows.first {
+            window.close()
+        }
     }
     
     func applicationWillTerminate(_ notification: Notification) {

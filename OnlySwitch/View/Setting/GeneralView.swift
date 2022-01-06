@@ -10,22 +10,21 @@ import LaunchAtLogin
 
 struct GeneralView: View, EmailProvider {
     @ObservedObject var langManager = LanguageManager.sharedManager
-    @State var cacheSize:String = ""
-    @State var needtoUpdateAlert = false
-    @State var showProgress = false
-    @State var newestVersion = UserDefaults.standard.string(forKey: newestVersionKey) ?? ""
-    
-    
+    @ObservedObject var generalVM = GeneralVM()
+    @State var hoverItem = ""
     var body: some View {
         VStack {
             HStack {
-                VStack(alignment: .trailing, spacing: 25) {
+                VStack(alignment: .trailing, spacing: 15) {
                     Text("Launch:".localized())
                         .frame(height:20)
                         
                     Text("Language:".localized())
                         .frame(height:30)
                         .padding(.top,8)
+                    
+                    Text("Menu Bar Icon:".localized())
+                        .frame(height:30)
                     
                     Text("Updates:".localized())
                         .frame(height:30)
@@ -40,12 +39,14 @@ struct GeneralView: View, EmailProvider {
                     Text("Quit:".localized())
                         .frame(height:30)
                 }
-                VStack(alignment: .leading, spacing: 25) {
+                VStack(alignment: .leading, spacing: 15) {
+                    //launch at login
                     LaunchAtLogin.Toggle {
                         Text("Launch at login".localized())
                     }.frame(height:20)
                         .padding(.bottom,10)
-                
+                    
+                    //languages
                     VStack {
                         MenuButton(label: Text(displayLang(lang:langManager.currentLang))) {
                             Button("English") {
@@ -61,26 +62,61 @@ struct GeneralView: View, EmailProvider {
                         .frame(maxWidth:150)
                     }.frame(height:30)
                     
+                    //menubar icons
+                    Image(generalVM.currentMenubarIcon)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width:22,height: 22)
+                        .onTapGesture {
+                            generalVM.showMenubarIconPopover = true
+                        }
+                        .popover(isPresented: $generalVM.showMenubarIconPopover, arrowEdge: .bottom) {
+                            VStack {
+                                ForEach(generalVM.menubarIcons, id:\.self) { iconName in
+                                    HStack {
+                                        Button(action: {
+                                            generalVM.currentMenubarIcon = iconName
+                                        }, label: {
+                                            Image(iconName)
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(width:22,height: 22)
+                                        }).buttonStyle(PlainButtonStyle())
+                                    }
+                                    .frame(width:50)
+                                    .background(hoverItem == iconName ? Color.blue : Color.clear)
+                                    .onHover{_ in
+                                        withAnimation {
+                                            hoverItem = iconName
+                                        }
+                                    }
+                                }
+                            }.frame(width:50)
+                                .padding(.vertical, 10)
+                        }
+                        .frame(height:30)
+                    
+                    //check update
                     HStack {
                         Button("Check for updates".localized()) {
-                            showProgress = true
+                            generalVM.showProgress = true
                             CheckUpdateTool.shared.checkupdate(complete: { success in
                                 if success {
-                                    newestVersion = CheckUpdateTool.shared.latestVersion
-                                    UserDefaults.standard.set(newestVersion, forKey: newestVersionKey)
+                                    generalVM.newestVersion = CheckUpdateTool.shared.latestVersion
+                                    UserDefaults.standard.set(generalVM.newestVersion, forKey: newestVersionKey)
                                     UserDefaults.standard.synchronize()
-                                    needtoUpdateAlert = !CheckUpdateTool.shared.isTheNewestVersion()
-                                    showProgress = false
+                                    generalVM.needtoUpdateAlert = !CheckUpdateTool.shared.isTheNewestVersion()
+                                    generalVM.showProgress = false
                                 }
                             })
                         }
                         
-                        if !newestVersion.isEmpty {
+                        if !generalVM.newestVersion.isEmpty {
                             if CheckUpdateTool.shared.isTheNewestVersion() {
                                 Text("You’re up to date!".localized())
                                     .foregroundColor(.green)
                             } else {
-                                Text("The latest version is v%@".localizeWithFormat(arguments: newestVersion))
+                                Text("The latest version is v%@".localizeWithFormat(arguments: generalVM.newestVersion))
                                     .foregroundColor(.red)
                             }
                         }
@@ -88,26 +124,30 @@ struct GeneralView: View, EmailProvider {
                         ProgressView()
                             .progressViewStyle(.circular)
                             .scaleEffect(0.6)
-                            .isHidden(!showProgress,remove: true)
+                            .isHidden(!generalVM.showProgress,remove: true)
                     }.frame(height:30)
                     
+                    
+                    //clear cache
                     VStack(alignment:.leading,spacing: 15) {
                         HStack {
-                            Text(cacheSize)
+                            Text(generalVM.cacheSize)
                             Button("Clear cache".localized()) {
                                 WallpaperManager.shared.clearCache()
-                                cacheSize = WallpaperManager.shared.cacheSize()
+                                generalVM.cacheSize = WallpaperManager.shared.cacheSize()
                             }
                         }
                         Text("Cache for Hide Notch Switch".localized())
                             .foregroundColor(.gray)
                     }.frame(height: 50)
                     
+                    //feedback
                     Button("Send Email to Jacklandrin".localized()) {
                         sendEmail()
                     }
                     .frame(height:30)
                    
+                    //quit
                     Button("Quit Only Switch".localized()) {
                         NSApp.terminate(self)
                     }
@@ -117,9 +157,9 @@ struct GeneralView: View, EmailProvider {
             Spacer()
         }
         .onAppear{
-            cacheSize = WallpaperManager.shared.cacheSize()
+            generalVM.cacheSize = WallpaperManager.shared.cacheSize()
         }
-        .alert(isPresented: $needtoUpdateAlert) {
+        .alert(isPresented: $generalVM.needtoUpdateAlert) {
             Alert(title: Text("Update".localized()),
                   message: Text("You can update to new version. The latest version is v%@".localizeWithFormat(arguments: CheckUpdateTool.shared.latestVersion)),
                   primaryButton: .default(Text("Download".localized()), action: {
