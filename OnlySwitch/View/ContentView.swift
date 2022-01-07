@@ -39,7 +39,7 @@ struct ContentView: View {
                 Spacer()
                 BluredSoundWave()
                     .rotation3DEffect(.degrees(180), axis: (x: 1, y: 0, z: 0))
-                    .isHidden(!playerItem.isPlaying, remove: true)
+                    .isHidden(!switchVM.soundWaveEffectDisplay || !playerItem.isPlaying, remove: true)
             }
         )
         .id(id)

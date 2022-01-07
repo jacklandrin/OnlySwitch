@@ -14,6 +14,9 @@ class SwitchVM : ObservableObject, CurrentScreen {
     
     @Published var maxHeight:CGFloat = 0
     
+    @UserDefaultValue(key: soundWaveEffectDisplayKey, defaultValue: true)
+    var soundWaveEffectDisplay:Bool
+    
     init() {
         refreshMaxHeight()
     }

@@ -7,6 +7,7 @@
 
 import CoreData
 
+let soundWaveEffectDisplayKey = "soundWaveEffectDisplayKey"
 class RadioSettingVM:ObservableObject {
     @Published var radioList:[RadioPlayerItem] = [RadioPlayerItem]()
     @Published var selectRow:RadioPlayerItem.ID?
@@ -24,6 +25,14 @@ class RadioSettingVM:ObservableObject {
     @Published var showErrorToast = false
     @Published var errorInfo = ""
     @Published var currentTitle = ""
+    
+    @UserDefaultValue(key: soundWaveEffectDisplayKey, defaultValue: true)
+    var soundWaveEffectDisplay:Bool{
+        didSet {
+            objectWillChange.send()
+            NotificationCenter.default.post(name: changeSettingNotification, object: nil)
+        }
+    }
     
     private var managedObjectContext:NSManagedObjectContext?
     init() {

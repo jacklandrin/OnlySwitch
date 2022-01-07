@@ -14,6 +14,14 @@ struct RadioSettingView: View {
     @State var updateTable:UUID = UUID()
     var body: some View {
         VStack {
+            HStack {
+                Toggle("Sound Wave Effect".localized(), isOn: $radioSettingVM.soundWaveEffectDisplay)
+                    .frame(alignment:.leading)
+                Spacer()
+            }
+                .padding(.top, 10)
+                .padding(.leading, 10)
+            Divider()
             Table($radioSettingVM.radioList, selection: $radioSettingVM.selectRow) {
                 TableColumn("Name".localized()) { $row in
                     if row.isEditing {
