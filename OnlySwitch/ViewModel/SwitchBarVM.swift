@@ -6,9 +6,16 @@
 //
 
 import SwiftUI
-class SwitchBarVM : ObservableObject, Identifiable {
+class SwitchBarVM : BarProvider, ObservableObject {
+    var barName: String
+    {
+        switchType.barInfo().title
+    }
+  
+    @Published var weight: Int = 0
+    
     @Published var switchType:SwitchType
-    @Published var isHidden  = false
+    @Published var isHidden = false
     @Published var isOn:Bool = false
     @Published var processing = false
     @Published var info = ""
