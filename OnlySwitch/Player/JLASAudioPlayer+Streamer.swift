@@ -18,11 +18,17 @@ extension JLASAudioPlayer : StreamingDelegate {
     
     
     func streamer(_ streamer: Streaming, failedDownloadWithError error: Error, forURL url: URL) {
+        if let error = error as? MimeTypeError, error == .unsupportedFormat {
+            self.audioPlayer.stop()
+            self.avplayer.isMuted = false
+            return
+        }
         if url == self.audioPlayer.url && self.currentAudioStation!.isPlaying {
             self.audioPlayer.play()
         } else {
             if error.localizedDescription == "cancelled" && self.currentAudioStation?.streamUrl == url.absoluteString {
-                self.audioPlayer.stop()
+//                self.audioPlayer.stop()
+                self.currentAudioStation!.isPlaying = false
             } else {
                 self.audioPlayer.play()
             }

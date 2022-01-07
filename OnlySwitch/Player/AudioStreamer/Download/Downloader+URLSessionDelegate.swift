@@ -11,13 +11,26 @@ import os.log
 
 let supportFormat = ["audio/mpeg", "audio/aacp", "application/octet-stream"]
 
+enum MimeTypeError:Error {
+    case unsupportedFormat
+}
+
 extension Downloader: URLSessionDataDelegate {
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
 //        os_log("%@ - %d", log: Downloader.logger, type: .debug, #function, #line)
 
         totalBytesCount = response.expectedContentLength
 //        print("totalBytesCount:\(totalBytesCount)")
-        completionHandler(.allow)
+        let mimeType = response.mimeType
+        if mimeType == "audio/aac" {
+            let error = MimeTypeError.unsupportedFormat
+            delegate?.download(self, completedWithError: error)
+            completionHandler(.cancel)
+        } else {
+            completionHandler(.allow)
+        }
+        
+        
     }
 
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
@@ -25,9 +38,7 @@ extension Downloader: URLSessionDataDelegate {
         let response = dataTask.response
 //        print("\(String(describing: response?.mimeType))")
         guard let mimeType = response?.mimeType else {return}
-        if mimeType == "audio/x-scpls" {
-            
-        } else if supportFormat.contains(mimeType){
+        if supportFormat.contains(mimeType){
             totalBytesReceived += Int64(data.count)
             progress = Float(totalBytesReceived) / Float(totalBytesCount)
 //            print("totalBytesReceived:\(totalBytesReceived)")
