@@ -36,6 +36,7 @@ enum SwitchType:UInt64, CaseIterable {
     case pomodoroTimer = 262144
     case smallLaunchpadIcon = 524288
     case lowpowerMode = 1048576
+    case muteMicrophone = 2097152
     
     func barInfo() -> SwitchBarInfo {
         switch self {
@@ -126,6 +127,10 @@ enum SwitchType:UInt64, CaseIterable {
             return SwitchBarInfo(title: "Low Power Mode",
                                  onImage: NSImage(systemSymbolName: "bolt.circle"),
                                  offImage: NSImage(systemSymbolName: "bolt.circle.fill"))
+        case .muteMicrophone:
+            return SwitchBarInfo(title: "Mute Mic",
+                                 onImage: NSImage(systemSymbolName: "mic.slash.circle"),
+                                 offImage: NSImage(systemSymbolName: "mic.circle"))
         }
     }
     
@@ -173,6 +178,8 @@ enum SwitchType:UInt64, CaseIterable {
             return SmallLaunchpadIconSwitch()
         case .lowpowerMode:
             return LowPowerModeSwitch()
+        case .muteMicrophone:
+            return MuteMicSwitch()
         }
     }
 }

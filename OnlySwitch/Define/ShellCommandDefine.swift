@@ -32,9 +32,13 @@ let currentInferfaceStyle = "defaults read -g AppleInterfaceStyle"
 let getCurrentWallpaperUrl = "tell app \"finder\" to get posix path of (get desktop picture as alias)"
 let getDesktopProperties = "tell application \"System Events\" to get properties of every desktop"
 
-let getCurrentVolume = "set ovol to output volume of (get volume settings)"
+let getCurrentOutputVolume = "set ovol to output volume of (get volume settings)"
 
 let setOutputVolumeCMD = "set volume output volume " //+value
+
+let getCurrentInputVolume = "set ovol to input volume of (get volume settings)"
+
+let setInputVolumeCMD = "set volume input volume " //+value
 
 let screenSaverDisableCMD = "tell application \"System Events\" to tell screen saver preferences to set delay interval to 0"
 let setSceenSaverIntervalCMD = "tell application \"System Events\" to tell screen saver preferences to set delay interval to "
