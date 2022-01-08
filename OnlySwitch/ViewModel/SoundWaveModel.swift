@@ -16,18 +16,9 @@ class SoundWaveModel: ObservableObject {
     @Published var space:CGFloat = 0.0
     
     init() {
-        self.setSpectrum()
         self.setBarWidth()
     }
-    
-    func setSpectrum(){
-        NotificationCenter.default.addObserver(forName: spectraNofiticationName, object: nil, queue: .main, using: {[weak self] notification in
-            guard let strongSelf = self else {return}
-            let spectra = notification.object as! [[Float]]
-            strongSelf.spectra = spectra
-        })
-    }
-    
+        
     func setBarWidth() {
         let barSpace = soundWaveWidth / CGFloat(PlayerManager.shared.player.analyzer.frequencyBands * 3 - 1)
         self.barWidth = barSpace * 3

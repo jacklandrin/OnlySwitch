@@ -18,8 +18,13 @@ struct BluredSoundWave: View {
     @ObservedObject var soundWave:SoundWaveModel = SoundWaveModel()
     var body: some View {
         SoundWaveView(spectra: self.soundWave.spectra, barWidth: self.soundWave.barWidth, space: self.soundWave.space, leftColor: leftColors, rightColor: rightColors)
+            .onReceive(NotificationCenter.default.publisher(for: spectraNofiticationName)) { notification in
+                let spectra = notification.object as! [[Float]]
+                self.soundWave.spectra = spectra
+            }
             .frame(width: soundWaveWidth, height:soundWaveHeight)
             .blur(radius: 7.5)
+            
     }
 }
 

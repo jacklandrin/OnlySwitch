@@ -14,10 +14,10 @@ class JLAVAudioPlayer: NSObject ,AVPlayerItemMetadataOutputPushDelegate, AudioPl
     
     var audioPlayer: AVPlayer?
     var playerItem: AVPlayerItem?
-    var currentAudioStation: RadioPlayerItem?
+    weak var currentAudioStation: RadioPlayerItem?
     var analyzer = RealtimeAnalyzer(fftSize: bufferSize)
     var bufferring: Bool = false
-        
+    
     override init() {
         super.init()
 //        self.setupRemoteCommandCenter()

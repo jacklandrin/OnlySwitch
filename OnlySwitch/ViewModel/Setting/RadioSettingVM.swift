@@ -8,6 +8,7 @@
 import CoreData
 
 let soundWaveEffectDisplayKey = "soundWaveEffectDisplayKey"
+let soundWaveToggleNotification = NSNotification.Name("soundWaveToggleNotification")
 class RadioSettingVM:ObservableObject {
     @Published var radioList:[RadioPlayerItem] = [RadioPlayerItem]()
     @Published var selectRow:RadioPlayerItem.ID?
@@ -30,7 +31,9 @@ class RadioSettingVM:ObservableObject {
     var soundWaveEffectDisplay:Bool{
         didSet {
             objectWillChange.send()
+            NotificationCenter.default.post(name: soundWaveToggleNotification, object: nil)
             NotificationCenter.default.post(name: changeSettingNotification, object: nil)
+            
         }
     }
     

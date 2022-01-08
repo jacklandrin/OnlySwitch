@@ -521,10 +521,10 @@
 				0493375C27625AAC00AE779A /* AudioSpectrum */,
 				0493372727625A1E00AE779A /* AudioPlayer.swift */,
 				0493372827625A1E00AE779A /* JLASAudioPlayer.swift */,
+				0493374327625A1E00AE779A /* JLASAudioPlayer+Streamer.swift */,
 				0493372927625A1E00AE779A /* JLAVAudioPlayer.swift */,
 				0493372A27625A1E00AE779A /* PlayerManager.swift */,
 				0493372B27625A1E00AE779A /* AudioStreamer */,
-				0493374327625A1E00AE779A /* JLASAudioPlayer+Streamer.swift */,
 				0493376327625D6F00AE779A /* RadioPlayerItem.swift */,
 			);
 			path = Player;

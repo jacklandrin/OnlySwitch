@@ -20,7 +20,7 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
         audioPlayer.delegate = self
         return audioPlayer
     }()
-    var currentAudioStation: RadioPlayerItem?
+    weak var currentAudioStation: RadioPlayerItem?
     var analyzer:RealtimeAnalyzer = RealtimeAnalyzer(fftSize: bufferSize)
     var bufferring:Bool = false
     
@@ -37,6 +37,7 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
         NotificationCenter.default.addObserver(forName: hidePopoverNotificationName, object: nil, queue: .main, using: { _ in
             self.isAppActive = false
         })
+        
     }
     
     func play(stream item: RadioPlayerItem) {
@@ -55,8 +56,8 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
         
         
         setAVPlayer(url: url)
-        if notm3uStream(url: url.absoluteString){
-            audioPlayer.url = url
+        audioPlayer.url = url
+        if notm3uStream(url: url.absoluteString) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
                 self?.audioPlayer.play()
             }
@@ -93,15 +94,11 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
     }
     
     func stop() {
-        guard let currentAudioStation = currentAudioStation else {
-            return
-        }
-
-        if notm3uStream(url: currentAudioStation.streamUrl) {
-            audioPlayer.stop()
-        }
+        audioPlayer.stop()
         avplayer.stop()
     }
     
-    
+    deinit {
+        
+    }
 }
