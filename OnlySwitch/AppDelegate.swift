@@ -14,7 +14,7 @@ struct OnlySwitchApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     var body: some Scene {
         WindowGroup {
-            EmptyView().frame(width: 10, height: 10)
+            SettingView()
         }
     }
 }
