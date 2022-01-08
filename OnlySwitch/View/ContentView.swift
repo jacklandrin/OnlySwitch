@@ -28,8 +28,8 @@ struct ContentView: View {
                                 .font(.system(size: 20))
                                 .frame(width: 30, height: 30)
                                 .shadow(color: .gray, radius: 2, x: 0, y: 1)
-                                .isHidden(!switchVM.sortMode, remove: true)
-                                .cursor(currentCursor())
+                                .isHidden(isMoverHidden(index: index), remove: true)
+                        
                             if let item = switchVM.allItemList[index] as? SwitchBarVM {
                                 SwitchBarView().environmentObject(item)
                                     .frame(height:38)
@@ -228,6 +228,14 @@ struct ContentView: View {
         } else {
             return NSCursor.arrow
         }
+    }
+    
+    func isMoverHidden(index:Int) -> Bool {
+        var hiddenSwitch = false
+        if let item = switchVM.allItemList[index] as? SwitchBarVM {
+            hiddenSwitch = item.isHidden
+        }
+        return !switchVM.sortMode || hiddenSwitch
     }
 }
 
