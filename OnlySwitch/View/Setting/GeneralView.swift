@@ -58,6 +58,9 @@ struct GeneralView: View, EmailProvider {
                             Button("Deutsch") {
                                 langManager.setCertainLang("de")
                             }
+                            Button("Hrvatski") {
+                                langManager.setCertainLang("hr")
+                            }
                         }
                         .frame(maxWidth:150)
                     }.frame(height:30)
@@ -182,6 +185,8 @@ struct GeneralView: View, EmailProvider {
             return "简体中文"
         } else if lang == "de" {
             return "Deutsch"
+        } else if lang == "hr" {
+            return "Hrvatski"
         }
         return ""
     }

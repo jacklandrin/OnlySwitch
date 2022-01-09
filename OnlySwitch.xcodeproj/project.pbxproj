@@ -290,6 +290,7 @@
 		04A6F93E2788747600E3300F /* MuteMicSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuteMicSwitch.swift; sourceTree = "<group>"; };
 		04A6F9422788807800E3300F /* BarProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarProvider.swift; sourceTree = "<group>"; };
 		04A6F9442788EF4A00E3300F /* CursorModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CursorModifier.swift; sourceTree = "<group>"; };
+		04A6F950278B2D4A00E3300F /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = hr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		04A967592786133F00F12830 /* GeneralVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralVM.swift; sourceTree = "<group>"; };
 		04AA63CD276BC94000ED5DEA /* EmptyTrashSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyTrashSwitch.swift; sourceTree = "<group>"; };
 		04AA63CF276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyPasteboardSwitch.swift; sourceTree = "<group>"; };
@@ -768,6 +769,7 @@
 				"zh-Hans",
 				de,
 				Base,
+				hr,
 			);
 			mainGroup = 04447B4F2754F08000CD2900;
 			packageReferences = (
@@ -1004,6 +1006,7 @@
 				04938D012768CAEB00713F1D /* en */,
 				04938D032768CAEE00713F1D /* zh-Hans */,
 				04938D042768CAEF00713F1D /* de */,
+				04A6F950278B2D4A00E3300F /* hr */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
