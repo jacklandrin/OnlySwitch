@@ -88,10 +88,11 @@ func ReaderConverterCallback(_ converter: AudioConverterRef,
             reader.parser.packets.removeSubrange(0...255)
             reader.currentPacket = 1
         }
-//        print("packets count:\(reader.parser.packets.count)")
+        
     }
     
-    
+    print("packets count:\(reader.parser.packets.count)")
+    print("current packet:\(reader.currentPacket)")
     return noErr;
 }
 
