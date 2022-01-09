@@ -13,7 +13,7 @@
 brew install only-switch
 ```
 ## Manually Download
-[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_1.8.1/OnlySwitch.dmg)
+[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_1.9/OnlySwitch.dmg)
 
 ## What's the OnlySwitch?
 OnlySwitch provides a series of toggle switches to simply your routine work, such as Hiden desktop icons, dark mode and hide ugly notch of new Mackbook Pro. The switches show on your statusbar, you can easily control them.
@@ -22,7 +22,7 @@ Since Version 1.2, OnlySwitch supports **simplified Chinese** and **German**.
 
 Since Version 1.7, **Shortcuts** can be imported in OnlySwitch.
 <p align="center">
-<img alt="Sits in the status bar" src="https://www.jacklandrin.com/wp-content/uploads/2022/01/onlySwitch_17.png" width="60%" align="center" />
+<img alt="Sits in the status bar" src="https://www.jacklandrin.com/wp-content/uploads/2022/01/onlySwitch_19.png" width="60%" align="center" />
 </p>
 
 
@@ -49,20 +49,20 @@ Since Version 1.7, **Shortcuts** can be imported in OnlySwitch.
 | Show extension name      | finish            |
 | Pomodoro timer           | finish            |
 | Small launchpad icon     | finish            |
+| Mute mic                 | finish            |
 | Low power mode           | require password  |
 | Hide notch               | exist some issues |
-| No disturb mode          | todo              |
 
 Since Version 1.3, switches can be added or removed on list.
 
 ## Shortcuts Actions
 
-| Actions             | status |
-|---------------------|--------|
-| Get wallpaper image | finish |
-| Get wallpaper url   | finish |
-| is dark mode        | finish |
-| set dark mode       | finish |
+| Actions             | status            |
+|---------------------|-------------------|
+| Get wallpaper image | exist some issues |
+| Get wallpaper url   | finish            |
+| is dark mode        | finish            |
+| set dark mode       | finish            |
 
 ## Welcome to pull request for these
 
@@ -81,7 +81,7 @@ Now, the Hide notch switch supports dynamic wallpaper, just the processing takes
 I use classOfDevice(2360344) to check if a bluetooth device is Airpods Pro, but I'm not sure whether other AirPods modules are also 2360344, since I only have two AriPods Pros. If you are using AirPods 1~3, please tell me what the classOfDevice is. Or I can detect the count of battery value to check if AirPods(when count is 3, it's AirPods), like **AirPods Battery Monitor For MAC OS**.
 
 ## About Radio Player
-Radio Player supports m3u stream since version 1.6, but without sound wave effect. If your Radio Player crashes, please send the crash log and stream url to me.
+Radio Player supports m3u, acc stream, but without sound wave effect. If your Radio Player crashes, please send the crash log and stream url to me. You can close sound wave effect on Radio setting, and that player is AVPlayer, more stable.
 
 ## About Low Power Mode
 Low Power Mode uses Terminal commands that require root access, so the app will ask you to enter password on every toggle.
