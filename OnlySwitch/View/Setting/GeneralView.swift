@@ -109,8 +109,8 @@ struct GeneralView: View, EmailProvider {
                                     UserDefaults.standard.set(generalVM.newestVersion, forKey: newestVersionKey)
                                     UserDefaults.standard.synchronize()
                                     generalVM.needtoUpdateAlert = !CheckUpdateTool.shared.isTheNewestVersion()
-                                    generalVM.showProgress = false
                                 }
+                                generalVM.showProgress = false
                             })
                         }
                         
