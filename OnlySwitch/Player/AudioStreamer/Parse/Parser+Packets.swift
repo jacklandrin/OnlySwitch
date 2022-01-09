@@ -51,10 +51,6 @@ func ParserPacketCallback(_ context: UnsafeMutableRawPointer, _ byteCount: UInt3
         }
         
         
-//        if parser.packets.count > 2048 {
-//            parser.packets.removeSubrange(0...1023)
-//        }
-        //    os_log("%@ - %d [current_packets_count: %i]", log: Parser.loggerPacketCallback, type: .debug, #function, #line,  parser.packets.count)
     }
         
 

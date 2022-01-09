@@ -88,10 +88,15 @@ class RealtimeAnalyzer {
             let interleavedData = UnsafeBufferPointer(start: floatChannelData[0], count: self.fftSize * channelCount)
             var channelsTemp : [UnsafeMutablePointer<Float>] = []
             for i in 0..<channelCount {
-                var channelData = stride(from: i, to: interleavedData.count, by: channelCount).map{ interleavedData[$0] }
-                channelsTemp.append(UnsafeMutablePointer(&channelData))
+                let channelData = stride(from: i, to: interleavedData.count, by: channelCount).map{ interleavedData[$0] }
+                let dataptr = channelData.withUnsafeBufferPointer{$0}
+                let unsafePointer = dataptr.baseAddress!
+
+                channelsTemp.append(UnsafeMutablePointer(mutating: unsafePointer))
             }
-            channels = UnsafePointer(channelsTemp)
+            let channelsptr = channelsTemp.withUnsafeBufferPointer{$0}
+            
+            channels = UnsafePointer(channelsptr.baseAddress!)
         }
         
         for i in 0..<channelCount {
@@ -105,7 +110,9 @@ class RealtimeAnalyzer {
             //3: 将实数包装成FFT要求的复数fftInOut，既是输入也是输出
             var realp = [Float](repeating: 0.0, count: Int(fftSize / 2))
             var imagp = [Float](repeating: 0.0, count: Int(fftSize / 2))
-            var fftInOut = DSPSplitComplex(realp: &realp, imagp: &imagp)
+            let realptr = realp.withUnsafeMutableBufferPointer{$0}
+            let imagptr = imagp.withUnsafeMutableBufferPointer{$0}
+            var fftInOut = DSPSplitComplex(realp: realptr.baseAddress!, imagp: imagptr.baseAddress!)
             channel.withMemoryRebound(to: DSPComplex.self, capacity: fftSize) { (typeConvertedTransferBuffer) -> Void in
                 vDSP_ctoz(typeConvertedTransferBuffer, 2, &fftInOut, 1, vDSP_Length(fftSize / 2))
             }
