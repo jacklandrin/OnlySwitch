@@ -1,0 +1,88 @@
+/* 
+  Localizable.strings
+  OnlySwitch
+
+  Created by Jacklandrin on 2021/12/14.
+  Translated into Croatian translation by Milo Ivir <mail@milotype.de> on 2022/01/09.
+  
+*/
+"Hide Desktop" = "Sakrij radnu površinu";
+"Dark Mode" = "Tamni modus";
+"Hide Notch" = "Sakrij polje kamere";
+"Mute" = "Isključi zvuk";
+"Screen Saver" = "Zaštita ekrana";
+"Night Shift" = "Noćni rad";
+"Autohide Dock" = "Automatski sakrij traku programa";
+"AirPods" = "Bežične slušalice";
+"Bluetooth" = "Bluetooth";
+"Xcode Derived Data" = "Xcode izvedeni podaci";
+"Autohide Menu Bar" = "Automatski sakrij traku izbornika";
+"Show Hidden Files" = "Prikaži skrivene datoteke";
+"Radio Player" = "Radio player";
+"Keep Awake" = "Zadrži budno stanje";
+"Settings" = "Postavke";
+"Launch at login" = "Pokreni nakon prijave";
+"Clear cache" = "Isprazni predmemoriju";
+"Quit" = "Zatvori program";
+"More App, QRCobot" = "Više programa, QRCobot";
+"Download QRCobot" = "Preuzmi QRCobot";
+"Radio" = "Radio";
+"About" = "Informacije";
+"Name" = "Ime";
+"Stream URL" = "URL prijnosa";
+"Select" = "Odaberi";
+"Current: %@" = "Trenutačno: %@";
+"General" = "Opće";
+"Launch:" = "Pokreni:";
+"Language:" = "Jezik:";
+"Cache:" = "Predmemorija:";
+"Contact:" = "Kontakt:";
+"Quit:" = "Zatvori program:";
+"Cache for Hide Notch Switch" = "Predmemorija za prekidač „Sakrij polje kamere”";
+"Send Email to Jacklandrin" = "Pošalji e-mail Jacklandrinu";
+"Quit Only Switch" = "Zatvori program Only Switch";
+"Calculating..." = "Izračunavanje …";
+"Clear" = "Isprazni";
+"Customize" = "Prilagodi";
+"To add or remove any switches on list" = "Za dodavanje ili uklanjanje prekidača u popisu";
+"Empty Trash" = "Isprazni smeće";
+"Empty Pasteboard" = "Isprazni međuspremnik";
+"At least one radio station" = "Barem jedna radio stanica";
+"At lease remain 4 switches" = "Zadrži barem četiri prekidača";
+"Show User Library" = "Prikaži biblioteku korisnika";
+"Updates:" = "Nove verzije:";
+"Check for updates" = "Traži nove verzije";
+"You’re up to date!" = "Koristiš najnoviju verziju!";
+"The latest version is v%@" = "Najnovija verzija je v%@";
+"Update" = "Aktualiziraj";
+"Download" = "Preuzmi";
+"You can update to new version. The latest version is v%@" = "Možeš aktualizirati na najnoviju verziju. Najnovija verzija je v%@";
+"Cancel" = "Odustani";
+"Show Extension Name" = "Prikaži ime ekstenzije";
+"Pomodoro Timer" = "Pomodoro tehnika";
+"Work:" = "Rad:";
+"Break:" = "Pauza:";
+"Notification Alert:" = "Upozorenje s obavijestima:";
+"Sound Alert:" = "Upozorenje zvukom:";
+"Allow notification alert" = "Dozvoli upozorenje s obavijestima";
+"Turn on sound alert" = "Uključi upozorenje zvukom";
+"Work Alert:" = "Upozorenje za rad:";
+"Break Alert:" = "Upozorenje za pauzu:";
+"%d min" = "%d min";
+"Take a break!" = "Odmori se!";
+"Get on with work!" = "Nastavi s radom!";
+"You've rested for %d min." = "Odamrao/la si se %d min.";
+"You've worked for %d min." = "Radio/la si %d min.";
+"Time's up." = "Vrijeme je prošlo.";
+"The maximum number of switch is 14" = "Maksimalni broj prekidača je 14";
+"Small Launchpad Icon" = "Mala Launchpad ikona";
+"Low Power Mode" = "Modus slabe baterije";
+"Shortcuts" = "Prečaci";
+"Run" = "Pokreni";
+"To add or remove any shortcuts on list" = "Za dodavanje ili uklanjanje prečaca u popisu";
+"There's not any Shortcuts." = "Nema prečaca.";
+"The maximum number of shortcuts is 6" = "Maksimalni broj prečaca je 6";
+"require password" = "zatraži lozinku";
+"Unlimited" = "Neograničeno";
+"Cycle Count:" = "Broj prolaza:";
+"Menu Bar Icon:" = "Ikona u traci izbornika:";
