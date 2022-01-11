@@ -62,7 +62,7 @@ Since Version 1.3, switches can be added or removed on list.
 | is dark mode        | finish            |
 | set dark mode       | finish            |
 
-## Support Languages
+## Supported Languages
 English, simplified Chinese, German, Croatian
 
 ## Welcome to pull request for these
