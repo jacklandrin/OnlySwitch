@@ -120,6 +120,7 @@ I found I can't run the preview of SwiftUI by Xcode 13.2.1 on my M1 Pro Macbook.
 * v1tx https://www.v1tx.com/post/onlyswitch/
 * OSCHINA https://www.oschina.net/p/onlyswitch
 * Macken https://www.macken.xyz/2021/12/gratis-ar-gott-alla-installningar-pa-ett-stalle-onlyswitch/
+* APPL CH https://applech2.com/archives/20220111-onlyswitch-all-in-one-status-bar-button-for-mac.html
 
 ## About Apple's warning at first open
 Some users ask me why masOS shows a warning box below, when they first open Only Switch.
