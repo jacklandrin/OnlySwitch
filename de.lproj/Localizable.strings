@@ -23,8 +23,9 @@
 "Launch at login" = "Bei Anmeldung starten";
 "Clear cache" = "Cache leeren";
 "Quit" = "Beenden";
-"More App, QRCobot" = "Mehr Apps, QRCobot";
+"More App, QRCobot" = "Mehr Apps von Jack";
 "Download QRCobot" = "QRCobot herunterladen";
+"Download WallCard" = "WallCard herunterladen";
 "Radio" = "Radio";
 "About" = "Info";
 "Name" = "Name";

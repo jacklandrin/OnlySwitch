@@ -111,13 +111,22 @@ struct ContentView: View {
             RoundedRectangle(cornerRadius: 10)
                         .foregroundColor(colorScheme == .dark ? Color(nsColor: NSColor.darkGray) : .white)
                         .frame(height: 45)
-            HStack() {
-                Spacer()
+            HStack(spacing:5) {
+//                Spacer()
                 Text("More App, QRCobot".localized())
                     .font(.system(size: 14))
                     .fontWeight(.bold)
                     .padding(10)
                 Spacer()
+                Link(destination: URL(string: "https://apps.apple.com/us/app/wallcard/id1601311095")!, label: {
+                    Image("WallCard")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 45)
+                        .cornerRadius(10)
+                        .help(Text("Download WallCard".localized()))
+                })
+
                 Link(destination: URL(string: "https://apps.apple.com/us/app/id1590006394")!, label: {
                     Image("QRCobot")
                         .resizable()
