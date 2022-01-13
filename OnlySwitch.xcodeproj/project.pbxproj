@@ -386,6 +386,7 @@
 				04BF976C27908E0100E7C0E2 /* OnlySwitchList */,
 				04BF977927908FB900E7C0E2 /* SoundWave */,
 				049337952762C05200AE779A /* Setting */,
+				04447B7527550F6900CD2900 /* VisualEffectView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -472,7 +473,6 @@
 				04243485275641890044D0AD /* EverySwitch */,
 				043E5D672757C85500ADC004 /* View */,
 				043E5D682757C86400ADC004 /* ViewModel */,
-				04447B7527550F6900CD2900 /* VisualEffectView.swift */,
 				043E5D782758210000ADC004 /* StatusBar */,
 				043E5D77275820DD00ADC004 /* Define */,
 				043E5D76275820B300ADC004 /* Modifier */,
