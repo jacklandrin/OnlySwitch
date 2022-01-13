@@ -19,7 +19,8 @@ brew install only-switch
 OnlySwitch provides a series of toggle switches to simply your routine work, such as Hiden desktop icons, dark mode and hide ugly notch of new Mackbook Pro. The switches show on your statusbar, you can easily control them.
 
 Since Version 1.7, **Shortcuts** can be imported in OnlySwitch.
-Since Version 2.0, supports **keyboard shortcuts**.
+
+Since Version 2.0, supports **keyboard shortcuts**. You can control your all switches and Shortcuts by keyboard.
 <p align="center">
 <img alt="Sits in the status bar" src="https://www.jacklandrin.com/wp-content/uploads/2022/01/onlySwitch_19.png" width="60%" align="center" />
 </p>
