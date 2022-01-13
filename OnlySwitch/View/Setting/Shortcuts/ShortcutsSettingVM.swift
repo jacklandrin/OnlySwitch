@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import KeyboardShortcuts
 
 let shorcutsDicKey = "shorcutsDicKey"
 
@@ -36,11 +37,19 @@ class ShorcutsItem:ObservableObject {
         }
     }
     
+    @Published var keyboardShortcutName:KeyboardShortcuts.Name
+    
     init(name:String, toggle:Bool, error: @escaping (_ info:String) -> Void) {
         self.name = name
         self.toggle = toggle
         self.error = error
+        self.keyboardShortcutName = KeyboardShortcuts.Name(rawValue: name)!
     }
+    
+    func doShortcuts() {
+        let _ = runShortcut(name: self.name).runAppleScript(isShellCMD: true).0
+    }
+    
 }
 
 class ShortcutsSettingVM:ObservableObject {

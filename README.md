@@ -151,6 +151,7 @@ You can follow these steps to use Only Switch.
 * [AudioSpectrum](https://github.com/potato04/AudioSpectrum) modified for Appkit
 * [Alamofire](https://github.com/Alamofire/Alamofire)
 * Sound Source: [mixkit](https://mixkit.co)
+* [KeyboardShortcuts](https://github.com/sindresorhus/KeyboardShortcuts)
 
 ## License
 MIT

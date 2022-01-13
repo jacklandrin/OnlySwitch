@@ -7,6 +7,7 @@
 
 import SwiftUI
 import AlertToast
+import KeyboardShortcuts
 
 struct CustomizeView: View {
     @ObservedObject var customizeVM = CustomizeVM()
@@ -25,6 +26,14 @@ struct CustomizeView: View {
                             .scaledToFit()
                             .frame(width: 25, height: 25)
                         Text(barInfo(index:index).title.localized())
+                            .frame(width:170, alignment: .leading)
+                            .padding(.trailing, 10)
+                        KeyboardShortcuts.Recorder(for: customizeVM.allSwitches[index].keyboardShortcutName)
+                            
+                    }.task {
+                        KeyboardShortcuts.onKeyDown(for: customizeVM.allSwitches[index].keyboardShortcutName) {
+                            customizeVM.allSwitches[index].doSwitch()
+                        }
                     }
                     
                 }

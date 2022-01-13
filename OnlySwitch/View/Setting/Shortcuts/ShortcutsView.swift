@@ -7,6 +7,7 @@
 
 import SwiftUI
 import AlertToast
+import KeyboardShortcuts
 
 struct ShortcutsView: View {
     @EnvironmentObject var shortcutsVM:ShortcutsSettingVM
@@ -23,6 +24,14 @@ struct ShortcutsView: View {
                         HStack {
                             Toggle("", isOn: $shortcutsVM.shortcutsList[index].toggle)
                             Text(shortcutsVM.shortcutsList[index].name)
+                                .frame(width: 170, alignment: .leading)
+                                .padding(.trailing, 10)
+                            
+                            KeyboardShortcuts.Recorder(for: shortcutsVM.shortcutsList[index].keyboardShortcutName)
+                        }.task {
+                            KeyboardShortcuts.onKeyDown(for: shortcutsVM.shortcutsList[index].keyboardShortcutName) {
+                                shortcutsVM.shortcutsList[index].doShortcuts()
+                            }
                         }
                     }
                 }

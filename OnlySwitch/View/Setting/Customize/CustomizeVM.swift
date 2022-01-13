@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+import KeyboardShortcuts
 
 class CustomizeVM:ObservableObject {
     @Published var allSwitches:[CustomizeItem] = [CustomizeItem]()
@@ -65,11 +65,38 @@ class CustomizeItem:ObservableObject {
         }
     }
     
+    @Published var keyboardShortcutName:KeyboardShortcuts.Name
+    
     init(type:SwitchType, toggle:Bool, error:@escaping (_ info:String) -> Void) {
         self.type = type
         self.toggle = toggle
         self.error = error
+        self.keyboardShortcutName = KeyboardShortcuts.Name(rawValue: String(type.rawValue))!
     }
     
-    
+    func doSwitch() {
+        let switchOperator = type.getNewSwitchInstance()
+        let controlType = type.barInfo().controlType
+        if controlType == .Switch {
+            let status = switchOperator.currentStatus()
+            Task {
+                let success = await switchOperator.operationSwitch(isOn: !status)
+                if success {
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: changeSettingNotification, object: nil)
+                    }
+                }
+            }
+        } else if controlType == .Button {
+            Task {
+                let success = await switchOperator.operationSwitch(isOn: true)
+                if success {
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: changeSettingNotification, object: nil)
+                    }
+                }
+            }
+        }
+        
+    }
 }
