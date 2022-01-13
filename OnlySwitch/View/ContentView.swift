@@ -112,7 +112,7 @@ struct ContentView: View {
                         .foregroundColor(colorScheme == .dark ? Color(nsColor: NSColor.darkGray) : .white)
                         .frame(height: 45)
             HStack(spacing:5) {
-//                Spacer()
+
                 Text("More App, QRCobot".localized())
                     .font(.system(size: 14))
                     .fontWeight(.bold)

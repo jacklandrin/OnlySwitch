@@ -96,6 +96,11 @@ let unsetLowpowerModeCMD = "sudo pmset -a lowpowermode 0"
 
 let getShortcutsList = "shortcuts list"
 
+let getPathbarStatusCMD = "defaults read com.apple.finder ShowPathbar"
+let showPathbarCMD = "defaults write com.apple.finder ShowPathbar -bool true"
+let hidePathbarCMD = "defaults write com.apple.finder ShowPathbar -bool false"
+
+
 func runShortcut(name:String) -> String {
     return "shortcuts run \'\(name)\'"
 }

@@ -122,6 +122,7 @@
 		04AA63CE276BC94000ED5DEA /* EmptyTrashSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AA63CD276BC94000ED5DEA /* EmptyTrashSwitch.swift */; };
 		04AA63D0276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AA63CF276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift */; };
 		04B856352784B1B60061B56C /* GetWallpaperURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B856342784B1B60061B56C /* GetWallpaperURL.swift */; };
+		04BF97682790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BF97672790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift */; };
 		04D68B0D2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D68B0C2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift */; };
 		04E03AF8275E6B4E00EA5FB9 /* AutohideDockSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AF7275E6B4E00EA5FB9 /* AutohideDockSwitch.swift */; };
 		04E03AFE275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AFD275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift */; };
@@ -295,6 +296,7 @@
 		04AA63CD276BC94000ED5DEA /* EmptyTrashSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyTrashSwitch.swift; sourceTree = "<group>"; };
 		04AA63CF276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyPasteboardSwitch.swift; sourceTree = "<group>"; };
 		04B856342784B1B60061B56C /* GetWallpaperURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetWallpaperURL.swift; sourceTree = "<group>"; };
+		04BF97672790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowFinderPathbarSwitch.swift; sourceTree = "<group>"; };
 		04D68B0C2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowUserLibrarySwitch.swift; sourceTree = "<group>"; };
 		04E03AF7275E6B4E00EA5FB9 /* AutohideDockSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutohideDockSwitch.swift; sourceTree = "<group>"; };
 		04E03AFD275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothDevicesManager.swift; sourceTree = "<group>"; };
@@ -370,6 +372,7 @@
 				047140C12778D2A1005B160B /* SmallLaunchpadIconSwitch.swift */,
 				042661392780B885005DF2B9 /* LowPowerModeSwitch.swift */,
 				04A6F93E2788747600E3300F /* MuteMicSwitch.swift */,
+				04BF97672790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift */,
 			);
 			path = EverySwitch;
 			sourceTree = "<group>";
@@ -889,6 +892,7 @@
 				0493374C27625A1E00AE779A /* Streamer.swift in Sources */,
 				0493375327625A1E00AE779A /* Reading.swift in Sources */,
 				0493375427625A1E00AE779A /* ReaderError.swift in Sources */,
+				04BF97682790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift in Sources */,
 				0493375927625A1E00AE779A /* DownloadingState.swift in Sources */,
 				043E5D6A2757D68800ADC004 /* MuteSwitch.swift in Sources */,
 				0493378C2762654600AE779A /* LayoutDefine.swift in Sources */,
