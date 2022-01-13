@@ -11,6 +11,7 @@ import KeyboardShortcuts
 
 struct ShortcutsView: View {
     @EnvironmentObject var shortcutsVM:ShortcutsSettingVM
+    @ObservedObject var langManager = LanguageManager.sharedManager
     var body: some View {
         VStack(alignment:.leading) {
             Text("To add or remove any shortcuts on list".localized())
@@ -28,6 +29,7 @@ struct ShortcutsView: View {
                                 .padding(.trailing, 10)
                             
                             KeyboardShortcuts.Recorder(for: shortcutsVM.shortcutsList[index].keyboardShortcutName)
+                                .environment(\.locale, .init(identifier: langManager.currentLang))//Localizable doesn't work
                         }.task {
                             KeyboardShortcuts.onKeyDown(for: shortcutsVM.shortcutsList[index].keyboardShortcutName) {
                                 shortcutsVM.shortcutsList[index].doShortcuts()

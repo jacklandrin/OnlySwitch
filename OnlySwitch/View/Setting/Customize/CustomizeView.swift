@@ -11,6 +11,7 @@ import KeyboardShortcuts
 
 struct CustomizeView: View {
     @ObservedObject var customizeVM = CustomizeVM()
+    @ObservedObject var langManager = LanguageManager.sharedManager
     var body: some View {
         VStack(alignment:.leading) {
             Text("To add or remove any switches on list".localized())
@@ -29,8 +30,9 @@ struct CustomizeView: View {
                             .frame(width:170, alignment: .leading)
                             .padding(.trailing, 10)
                         KeyboardShortcuts.Recorder(for: customizeVM.allSwitches[index].keyboardShortcutName)
-                            
-                    }.task {
+                            .environment(\.locale, .init(identifier: langManager.currentLang))//Localizable doesn't work
+                    }
+                    .task {
                         KeyboardShortcuts.onKeyDown(for: customizeVM.allSwitches[index].keyboardShortcutName) {
                             customizeVM.allSwitches[index].doSwitch()
                         }
