@@ -123,6 +123,7 @@
 		04AA63D0276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AA63CF276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift */; };
 		04B856352784B1B60061B56C /* GetWallpaperURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B856342784B1B60061B56C /* GetWallpaperURL.swift */; };
 		04BF97682790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BF97672790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift */; };
+		04BF976B27908D5400E7C0E2 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 04BF976A27908D5400E7C0E2 /* KeyboardShortcuts */; };
 		04D68B0D2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D68B0C2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift */; };
 		04E03AF8275E6B4E00EA5FB9 /* AutohideDockSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AF7275E6B4E00EA5FB9 /* AutohideDockSwitch.swift */; };
 		04E03AFE275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AFD275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift */; };
@@ -326,6 +327,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0430887E275D707C00877E51 /* LaunchAtLogin in Frameworks */,
+				04BF976B27908D5400E7C0E2 /* KeyboardShortcuts in Frameworks */,
 				0493379027626FD200AE779A /* NetworkExtension.framework in Frameworks */,
 				04A23B23275D5FC500B454C8 /* CoreBrightness.framework in Frameworks */,
 				04A6B54B27715F90003B2647 /* Alamofire in Frameworks */,
@@ -380,17 +382,9 @@
 		043E5D672757C85500ADC004 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				04447B5D2754F08000CD2900 /* ContentView.swift */,
-				043E5D702758176B00ADC004 /* SwitchToggle.swift */,
-				043E5D7227581C2E00ADC004 /* SwitchBarView.swift */,
-				04EB1CD32781280900C612AB /* ShortCutBarView.swift */,
-				04447B7527550F6900CD2900 /* VisualEffectView.swift */,
-				04E03B05275FEBE200EA5FB9 /* AirPodsBatteryView.swift */,
-				049337202761286400AE779A /* CleanProgressView.swift */,
-				04933765276262EB00AE779A /* SoundWaveView.swift */,
-				04933787276264D400AE779A /* BluredSoundWave.swift */,
-				047140BB2778935B005B160B /* TimerCountDownView.swift */,
-				04581DBA27651EF1008ADF30 /* RollingText.swift */,
+				04BF976D27908E2800E7C0E2 /* SwitchItem */,
+				04BF976C27908E0100E7C0E2 /* OnlySwitchList */,
+				04BF977927908FB900E7C0E2 /* SoundWave */,
 				049337952762C05200AE779A /* Setting */,
 			);
 			path = View;
@@ -399,13 +393,7 @@
 		043E5D682757C86400ADC004 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				04447B712754FE3800CD2900 /* SwitchVM.swift */,
-				04A6F9422788807800E3300F /* BarProvider.swift */,
-				043E5D742758208D00ADC004 /* SwitchBarVM.swift */,
-				04EB1CD52781299A00C612AB /* ShortcutsBarVM.swift */,
-				049337892762651D00AE779A /* SoundWaveModel.swift */,
 				04938D072768CBA100713F1D /* LanguageManager.swift */,
-				04581DB12764D23C008ADF30 /* Setting */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -482,8 +470,9 @@
 				0493372627625A1E00AE779A /* Player */,
 				04A23B27275D607200B454C8 /* Header */,
 				04243485275641890044D0AD /* EverySwitch */,
-				043E5D682757C86400ADC004 /* ViewModel */,
 				043E5D672757C85500ADC004 /* View */,
+				043E5D682757C86400ADC004 /* ViewModel */,
+				04447B7527550F6900CD2900 /* VisualEffectView.swift */,
 				043E5D782758210000ADC004 /* StatusBar */,
 				043E5D77275820DD00ADC004 /* Define */,
 				043E5D76275820B300ADC004 /* Modifier */,
@@ -503,20 +492,6 @@
 				04447B622754F08100CD2900 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		04581DB12764D23C008ADF30 /* Setting */ = {
-			isa = PBXGroup;
-			children = (
-				04581DAF2764CBCF008ADF30 /* SettingVM.swift */,
-				049337982762C0B300AE779A /* RadioSettingVM.swift */,
-				04581DBE27653C4A008ADF30 /* AirPodsSettingVM.swift */,
-				040C6EA9276B7D4500291DEB /* CustomizeVM.swift */,
-				04EB1CCF2780F36F00C612AB /* ShortcutsSettingVM.swift */,
-				047140BF2778A478005B160B /* PomodoroTimerSettingVM.swift */,
-				04A967592786133F00F12830 /* GeneralVM.swift */,
-			);
-			path = Setting;
 			sourceTree = "<group>";
 		};
 		0493372627625A1E00AE779A /* Player */ = {
@@ -604,14 +579,14 @@
 		049337952762C05200AE779A /* Setting */ = {
 			isa = PBXGroup;
 			children = (
-				049337912762BA3200AE779A /* SettingView.swift */,
-				040C6EAB276B7D9F00291DEB /* CustomizeView.swift */,
-				049337962762C07600AE779A /* RadioSettingView.swift */,
-				04581DBC27653C35008ADF30 /* AirPodsSettingView.swift */,
-				04581DC02765522A008ADF30 /* AboutView.swift */,
-				04938D092769143300713F1D /* GeneralView.swift */,
-				047140BD2778A416005B160B /* PomodoroTimerSettingView.swift */,
-				04EB1CD12780F4F700C612AB /* ShortcutsView.swift */,
+				04BF977127908EBC00E7C0E2 /* SettingView */,
+				04BF977627908F1100E7C0E2 /* General */,
+				04BF977227908ECE00E7C0E2 /* Customize */,
+				04BF977827908F5400E7C0E2 /* Shortcuts */,
+				04BF977327908EDF00E7C0E2 /* Radio */,
+				04BF977427908EF000E7C0E2 /* AirPods */,
+				04BF977727908F3500E7C0E2 /* PomodoroTimer */,
+				04BF977527908F0000E7C0E2 /* About */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -638,6 +613,129 @@
 				0493376127625BBD00AE779A /* NSBezierPath++.swift */,
 			);
 			path = Extension;
+			sourceTree = "<group>";
+		};
+		04BF976C27908E0100E7C0E2 /* OnlySwitchList */ = {
+			isa = PBXGroup;
+			children = (
+				04447B5D2754F08000CD2900 /* ContentView.swift */,
+				04447B712754FE3800CD2900 /* SwitchVM.swift */,
+				04581DBA27651EF1008ADF30 /* RollingText.swift */,
+			);
+			path = OnlySwitchList;
+			sourceTree = "<group>";
+		};
+		04BF976D27908E2800E7C0E2 /* SwitchItem */ = {
+			isa = PBXGroup;
+			children = (
+				04BF976E27908E5100E7C0E2 /* SwitchBar */,
+				04BF976F27908E7300E7C0E2 /* ShortcutsItem */,
+				04A6F9422788807800E3300F /* BarProvider.swift */,
+			);
+			path = SwitchItem;
+			sourceTree = "<group>";
+		};
+		04BF976E27908E5100E7C0E2 /* SwitchBar */ = {
+			isa = PBXGroup;
+			children = (
+				043E5D7227581C2E00ADC004 /* SwitchBarView.swift */,
+				043E5D742758208D00ADC004 /* SwitchBarVM.swift */,
+				04E03B05275FEBE200EA5FB9 /* AirPodsBatteryView.swift */,
+				043E5D702758176B00ADC004 /* SwitchToggle.swift */,
+				049337202761286400AE779A /* CleanProgressView.swift */,
+				047140BB2778935B005B160B /* TimerCountDownView.swift */,
+			);
+			path = SwitchBar;
+			sourceTree = "<group>";
+		};
+		04BF976F27908E7300E7C0E2 /* ShortcutsItem */ = {
+			isa = PBXGroup;
+			children = (
+				04EB1CD32781280900C612AB /* ShortCutBarView.swift */,
+				04EB1CD52781299A00C612AB /* ShortcutsBarVM.swift */,
+			);
+			path = ShortcutsItem;
+			sourceTree = "<group>";
+		};
+		04BF977127908EBC00E7C0E2 /* SettingView */ = {
+			isa = PBXGroup;
+			children = (
+				049337912762BA3200AE779A /* SettingView.swift */,
+				04581DAF2764CBCF008ADF30 /* SettingVM.swift */,
+			);
+			path = SettingView;
+			sourceTree = "<group>";
+		};
+		04BF977227908ECE00E7C0E2 /* Customize */ = {
+			isa = PBXGroup;
+			children = (
+				040C6EAB276B7D9F00291DEB /* CustomizeView.swift */,
+				040C6EA9276B7D4500291DEB /* CustomizeVM.swift */,
+			);
+			path = Customize;
+			sourceTree = "<group>";
+		};
+		04BF977327908EDF00E7C0E2 /* Radio */ = {
+			isa = PBXGroup;
+			children = (
+				049337982762C0B300AE779A /* RadioSettingVM.swift */,
+				049337962762C07600AE779A /* RadioSettingView.swift */,
+			);
+			path = Radio;
+			sourceTree = "<group>";
+		};
+		04BF977427908EF000E7C0E2 /* AirPods */ = {
+			isa = PBXGroup;
+			children = (
+				04581DBE27653C4A008ADF30 /* AirPodsSettingVM.swift */,
+				04581DBC27653C35008ADF30 /* AirPodsSettingView.swift */,
+			);
+			path = AirPods;
+			sourceTree = "<group>";
+		};
+		04BF977527908F0000E7C0E2 /* About */ = {
+			isa = PBXGroup;
+			children = (
+				04581DC02765522A008ADF30 /* AboutView.swift */,
+			);
+			path = About;
+			sourceTree = "<group>";
+		};
+		04BF977627908F1100E7C0E2 /* General */ = {
+			isa = PBXGroup;
+			children = (
+				04938D092769143300713F1D /* GeneralView.swift */,
+				04A967592786133F00F12830 /* GeneralVM.swift */,
+			);
+			path = General;
+			sourceTree = "<group>";
+		};
+		04BF977727908F3500E7C0E2 /* PomodoroTimer */ = {
+			isa = PBXGroup;
+			children = (
+				047140BD2778A416005B160B /* PomodoroTimerSettingView.swift */,
+				047140BF2778A478005B160B /* PomodoroTimerSettingVM.swift */,
+			);
+			path = PomodoroTimer;
+			sourceTree = "<group>";
+		};
+		04BF977827908F5400E7C0E2 /* Shortcuts */ = {
+			isa = PBXGroup;
+			children = (
+				04EB1CD12780F4F700C612AB /* ShortcutsView.swift */,
+				04EB1CCF2780F36F00C612AB /* ShortcutsSettingVM.swift */,
+			);
+			path = Shortcuts;
+			sourceTree = "<group>";
+		};
+		04BF977927908FB900E7C0E2 /* SoundWave */ = {
+			isa = PBXGroup;
+			children = (
+				049337892762651D00AE779A /* SoundWaveModel.swift */,
+				04933765276262EB00AE779A /* SoundWaveView.swift */,
+				04933787276264D400AE779A /* BluredSoundWave.swift */,
+			);
+			path = SoundWave;
 			sourceTree = "<group>";
 		};
 		04E03B01275FD91200EA5FB9 /* Utilities */ = {
@@ -723,6 +821,7 @@
 				0430887D275D707C00877E51 /* LaunchAtLogin */,
 				04581DB5276506B9008ADF30 /* AlertToast */,
 				04A6B54A27715F90003B2647 /* Alamofire */,
+				04BF976A27908D5400E7C0E2 /* KeyboardShortcuts */,
 			);
 			productName = OnlySwitch;
 			productReference = 04447B582754F08000CD2900 /* OnlySwitch.app */;
@@ -779,6 +878,7 @@
 				0430887C275D707C00877E51 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */,
 				04581DB4276506B9008ADF30 /* XCRemoteSwiftPackageReference "AlertToast" */,
 				04A6B54927715F90003B2647 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				04BF976927908D5400E7C0E2 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
 			);
 			productRefGroup = 04447B592754F08000CD2900 /* Products */;
 			projectDirPath = "";
@@ -1356,6 +1456,14 @@
 				version = 5.5.0;
 			};
 		};
+		04BF976927908D5400E7C0E2 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/KeyboardShortcuts";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1373,6 +1481,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 04A6B54927715F90003B2647 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		04BF976A27908D5400E7C0E2 /* KeyboardShortcuts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04BF976927908D5400E7C0E2 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */;
+			productName = KeyboardShortcuts;
 		};
 /* End XCSwiftPackageProductDependency section */
 
