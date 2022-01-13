@@ -23,7 +23,7 @@ struct ShortCutBarView: View {
         
             ProgressView()
                 .progressViewStyle(.circular)
-                .scaleEffect(0.8)
+//                .scaleEffect(0.8)
                 .isHidden(!shortcutsBarVM.processing,remove: true)
             
             Button(action: {

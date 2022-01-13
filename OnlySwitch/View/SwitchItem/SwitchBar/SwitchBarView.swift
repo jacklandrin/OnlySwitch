@@ -36,7 +36,7 @@ struct SwitchBarView: View {
         
             ProgressView()
                 .progressViewStyle(.circular)
-                .scaleEffect(0.8)
+//                .scaleEffect(0.8)
                 .isHidden(!switchOption.processing,remove: true)
             
             switch switchOption.switchType.barInfo().controlType {
