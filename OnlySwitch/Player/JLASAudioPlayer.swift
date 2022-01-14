@@ -13,7 +13,7 @@ import SwiftUI
 
 let bufferSize = 512
 
-class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDelegate {
+class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDelegate {    
     let queue = DispatchQueue(label: "com.springRadio.spectrum")
     lazy var audioPlayer: Streamer = {
         let audioPlayer = Streamer()
@@ -38,6 +38,15 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
             self.isAppActive = false
         })
         
+        NotificationCenter.default.addObserver(forName: volumeChangeNotification, object: nil, queue: .main, using: { notification in
+            guard let userInfo = notification.userInfo,
+                    let newValue  = userInfo["newValue"] as? Float else {
+                        print("No userInfo found in notification")
+                        return
+                }
+            
+            self.avplayer.volume = newValue
+        })
     }
     
     func play(stream item: RadioPlayerItem) {

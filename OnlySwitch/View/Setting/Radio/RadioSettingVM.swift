@@ -7,6 +7,8 @@
 
 import CoreData
 
+let volumeKey = "volumeKey"
+let volumeChangeNotification = NSNotification.Name("volumeChange")
 let soundWaveEffectDisplayKey = "soundWaveEffectDisplayKey"
 let soundWaveToggleNotification = NSNotification.Name("soundWaveToggleNotification")
 class RadioSettingVM:ObservableObject {
@@ -34,6 +36,13 @@ class RadioSettingVM:ObservableObject {
             NotificationCenter.default.post(name: soundWaveToggleNotification, object: nil)
             NotificationCenter.default.post(name: changeSettingNotification, object: nil)
             
+        }
+    }
+    
+    var sliderValue: Float = 0.4 {
+        willSet	{
+            let userInfo = [ "newValue" : newValue ]
+            NotificationCenter.default.post(name: volumeChangeNotification, object: nil, userInfo: userInfo)
         }
     }
     

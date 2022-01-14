@@ -9,7 +9,7 @@ import SwiftUI
 import AlertToast
 
 struct RadioSettingView: View {
-
+    
     @ObservedObject var radioSettingVM = RadioSettingVM()
     @State var updateTable:UUID = UUID()
     var body: some View {
@@ -18,6 +18,10 @@ struct RadioSettingView: View {
                 Toggle("Sound Wave Effect".localized(), isOn: $radioSettingVM.soundWaveEffectDisplay)
                     .frame(alignment:.leading)
                 Spacer()
+                Text("Volume".localized() + ":")
+                Slider(value: $radioSettingVM.sliderValue)
+                    .frame(width: 200, height: 10, alignment: .trailing)
+                    .padding(.trailing, 10)
             }
                 .padding(.top, 10)
                 .padding(.leading, 10)
