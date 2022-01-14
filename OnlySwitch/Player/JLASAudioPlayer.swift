@@ -46,6 +46,7 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
                 }
             
             self.avplayer.volume = newValue
+            self.audioPlayer.volume = newValue
         })
     }
     
@@ -89,6 +90,7 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
         playerItem.add(metadataOutput)
         
         if UserDefaults.standard.object(forKey: volumeKey) != nil {
+            self.audioPlayer.volume = UserDefaults.standard.value(forKey: volumeKey) as! Float
             self.avplayer.volume = UserDefaults.standard.value(forKey: volumeKey) as! Float
         }
         
