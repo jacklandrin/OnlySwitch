@@ -38,6 +38,15 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
             self.isAppActive = false
         })
         
+        NotificationCenter.default.addObserver(forName: volumeChangeNotification, object: nil, queue: .main, using: { notification in
+            guard let userInfo = notification.userInfo,
+                    let newValue  = userInfo["newValue"] as? Float else {
+                        print("No userInfo found in notification")
+                        return
+                }
+            
+            self.avplayer.volume = newValue
+        })
     }
     
     func play(stream item: RadioPlayerItem) {
@@ -78,6 +87,11 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
         let metadataOutput = AVPlayerItemMetadataOutput(identifiers: nil)
         metadataOutput.setDelegate(self, queue: .main)
         playerItem.add(metadataOutput)
+        
+        if UserDefaults.standard.object(forKey: volumeKey) != nil {
+            self.avplayer.volume = UserDefaults.standard.value(forKey: volumeKey) as! Float
+        }
+        
         self.avplayer.play()
         self.avplayer.isMuted = notm3uStream(url: url.absoluteString)
     }

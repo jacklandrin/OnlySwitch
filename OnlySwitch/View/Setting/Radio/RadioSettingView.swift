@@ -18,6 +18,10 @@ struct RadioSettingView: View {
                 Toggle("Sound Wave Effect".localized(), isOn: $radioSettingVM.soundWaveEffectDisplay)
                     .frame(alignment:.leading)
                 Spacer()
+                Text("Volume".localized() + ":")
+                Slider(value: $radioSettingVM.sliderValue)
+                    .frame(width: 150, height: 10, alignment: .trailing)
+                    .padding(.trailing, 10)
             }
                 .padding(.top, 10)
                 .padding(.leading, 10)
