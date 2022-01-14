@@ -36,6 +36,7 @@ struct SwitchBarView: View {
         
             ProgressView()
                 .progressViewStyle(.circular)
+                .controlSize(.small)
 //                .scaleEffect(0.8)
                 .isHidden(!switchOption.processing,remove: true)
             
@@ -60,7 +61,7 @@ struct SwitchBarView: View {
                     }.frame(width: 46, height: 30)
                 }).buttonStyle(.plain)
                     .shadow(radius: 2)
-                    .padding(.trailing, 6)
+                    .padding(.horizontal, 6)
             }
             
            

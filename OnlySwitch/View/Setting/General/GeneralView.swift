@@ -126,6 +126,7 @@ struct GeneralView: View, EmailProvider {
                         
                         ProgressView()
                             .progressViewStyle(.circular)
+                            .controlSize(.small)
 //                            .scaleEffect(0.6)
                             .isHidden(!generalVM.showProgress,remove: true)
                     }.frame(height:30)
