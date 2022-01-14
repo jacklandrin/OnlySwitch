@@ -20,7 +20,7 @@ struct RadioSettingView: View {
                 Spacer()
                 Text("Volume".localized() + ":")
                 Slider(value: $radioSettingVM.sliderValue)
-                    .frame(width: 200, height: 10, alignment: .trailing)
+                    .frame(width: 150, height: 10, alignment: .trailing)
                     .padding(.trailing, 10)
             }
                 .padding(.top, 10)

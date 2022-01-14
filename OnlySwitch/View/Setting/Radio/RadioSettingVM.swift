@@ -29,6 +29,8 @@ class RadioSettingVM:ObservableObject {
     @Published var errorInfo = ""
     @Published var currentTitle = ""
     
+    var sliderVolume: Float = 1.0
+    
     @UserDefaultValue(key: soundWaveEffectDisplayKey, defaultValue: true)
     var soundWaveEffectDisplay:Bool{
         didSet {
@@ -39,9 +41,11 @@ class RadioSettingVM:ObservableObject {
         }
     }
     
-    var sliderValue: Float = 0.4 {
+    lazy var sliderValue: Float = sliderVolume {
         willSet	{
             let userInfo = [ "newValue" : newValue ]
+            UserDefaults.standard.set(newValue, forKey: volumeKey)
+            UserDefaults.standard.synchronize()
             NotificationCenter.default.post(name: volumeChangeNotification, object: nil, userInfo: userInfo)
         }
     }
@@ -63,6 +67,10 @@ class RadioSettingVM:ObservableObject {
             self.showErrorToast = true
         })
         currentTitle = RadioStationSwitch.shared.playerItem.title
+        
+        if UserDefaults.standard.object(forKey: volumeKey) != nil {
+            sliderVolume = UserDefaults.standard.value(forKey: volumeKey) as! Float
+        }
     }
     
     func endEditing() {
