@@ -17,7 +17,6 @@ class JLAVAudioPlayer: NSObject ,AVPlayerItemMetadataOutputPushDelegate, AudioPl
     weak var currentAudioStation: RadioPlayerItem?
     var analyzer = RealtimeAnalyzer(fftSize: bufferSize)
     var bufferring: Bool = false
-    var volume: Float = 0.4
     
     override init() {
         super.init()

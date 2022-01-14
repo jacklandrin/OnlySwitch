@@ -13,7 +13,7 @@ import SwiftUI
 
 let bufferSize = 512
 
-class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDelegate {    
+class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDelegate {
     let queue = DispatchQueue(label: "com.springRadio.spectrum")
     lazy var audioPlayer: Streamer = {
         let audioPlayer = Streamer()
@@ -91,7 +91,6 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
         if UserDefaults.standard.object(forKey: volumeKey) != nil {
             self.avplayer.volume = UserDefaults.standard.value(forKey: volumeKey) as! Float
         }
-        
         
         self.avplayer.play()
         self.avplayer.isMuted = notm3uStream(url: url.absoluteString)
