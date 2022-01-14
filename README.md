@@ -19,7 +19,8 @@ brew install only-switch
 OnlySwitch provides a series of toggle switches to simply your routine work, such as Hiden desktop icons, dark mode and hide ugly notch of new Mackbook Pro. The switches show on your statusbar, you can easily control them.
 
 Since Version 1.7, **Shortcuts** can be imported in OnlySwitch.
-Since Version 2.0, supports **keyboard shortcuts**.
+
+Since Version 2.0, supports **keyboard shortcuts**. You can control your all switches and Shortcuts by keyboard.
 <p align="center">
 <img alt="Sits in the status bar" src="https://www.jacklandrin.com/wp-content/uploads/2022/01/onlySwitch_19.png" width="60%" align="center" />
 </p>
@@ -90,10 +91,12 @@ Low Power Mode uses Terminal commands that require root access, so the app will 
 
 ## About Shortcuts
 Shortcuts is a powerful iOS app which can help people make fantasitic automation functions. It comes to macOS in Monterey as well. Many users eager OnlySwitch has more customizable features, and one good news is that the app supports Shortcuts display since Version 1.7. More menubar space therefore is saved. 
-In the next versions, OnlySwitch will also provide some Shortcuts actions to impove user experience.
+In the next versions, OnlySwitch will also provide more Shortcuts actions to impove user experience.
+
+Since Version 2.0, keyboard shortcuts can be set for Shortcuts.
 
 <p align="center">
-<img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2022/01/shortcutsDisplay.png" width="60%" align="center" />
+<img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2022/01/shortcutskeyboard.png" width="60%" align="center" />
 </p>
 
 OnlySwitch offers some Shortcus actions since Version 1.8. For example, you can config your own dark mode switch. (**Set Appearance** action by Shortcuts can also set dark mode, but the appearance status cannot be detected. So, OnlySwitch provides a set dark mode action)
