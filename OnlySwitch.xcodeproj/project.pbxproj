@@ -214,6 +214,7 @@
 		04447B732755015A00CD2900 /* ShellCommandDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShellCommandDefine.swift; sourceTree = "<group>"; };
 		04447B7527550F6900CD2900 /* VisualEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectView.swift; sourceTree = "<group>"; };
 		04447B772755129D00CD2900 /* EventMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventMonitor.swift; sourceTree = "<group>"; };
+		04464F4C2791D46B0065DF61 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0457C25C2760046A00B25BFA /* BluetoothSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothSwitch.swift; sourceTree = "<group>"; };
 		04581DAF2764CBCF008ADF30 /* SettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingVM.swift; sourceTree = "<group>"; };
 		04581DBA27651EF1008ADF30 /* RollingText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RollingText.swift; sourceTree = "<group>"; };
@@ -872,6 +873,7 @@
 				de,
 				Base,
 				hr,
+				tr,
 			);
 			mainGroup = 04447B4F2754F08000CD2900;
 			packageReferences = (
@@ -1111,6 +1113,7 @@
 				04938D032768CAEE00713F1D /* zh-Hans */,
 				04938D042768CAEF00713F1D /* de */,
 				04A6F950278B2D4A00E3300F /* hr */,
+				04464F4C2791D46B0065DF61 /* tr */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

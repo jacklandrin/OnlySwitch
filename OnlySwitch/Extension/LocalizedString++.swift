@@ -8,7 +8,7 @@
 import SwiftUI
 extension Bundle {
     private static var bundle: Bundle!
-    private static var supportLangs = ["en", "zh", "de"]
+    private static var supportLangs = ["en", "zh", "de", "hr", "tr"]
     public static func localizedBundle() -> Bundle! {
         if bundle == nil {
             let appLang = UserDefaults.standard.string(forKey: "app_lang") ?? "en"
