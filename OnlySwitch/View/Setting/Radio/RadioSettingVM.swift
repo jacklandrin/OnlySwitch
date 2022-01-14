@@ -68,8 +68,9 @@ class RadioSettingVM:ObservableObject {
         })
         currentTitle = RadioStationSwitch.shared.playerItem.title
         
-        if UserDefaults.standard.object(forKey: volumeKey) != nil {
-            sliderVolume = UserDefaults.standard.value(forKey: volumeKey) as! Float
+        if let newValue = UserDefaults.standard.value(forKey: volumeKey) as? Float
+        {
+            sliderVolume = newValue
         }
     }
     
