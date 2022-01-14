@@ -89,9 +89,10 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
         metadataOutput.setDelegate(self, queue: .main)
         playerItem.add(metadataOutput)
         
-        if UserDefaults.standard.object(forKey: volumeKey) != nil {
-            self.audioPlayer.volume = UserDefaults.standard.value(forKey: volumeKey) as! Float
-            self.avplayer.volume = UserDefaults.standard.value(forKey: volumeKey) as! Float
+        if let newValue = UserDefaults.standard.value(forKey: volumeKey) as? Float
+        {
+            self.audioPlayer.volume = newValue
+            self.avplayer.volume = newValue
         }
         
         self.avplayer.play()
