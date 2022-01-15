@@ -161,8 +161,11 @@ You can follow these steps to use Only Switch.
 ## Contributors
 
 @C0d3Br3aker for German translation
+
 @milotype for Croatian translation
+
 @berkbatuhans for Turkish translation
+
 @wrngwrld for volume slider of radio player
 
 ## License
