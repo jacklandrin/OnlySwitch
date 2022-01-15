@@ -8,7 +8,7 @@
 import Foundation
 
 class PomodoroTimerSwitch: SwitchProvider {
-    
+    static let shared = PomodoroTimerSwitch()
     enum Status:String {
         case none = "n"
         case work = "w"
@@ -29,7 +29,7 @@ class PomodoroTimerSwitch: SwitchProvider {
 
     @UserDefaultValue(key: WorkDurationKey, defaultValue: 25 * 60)
     var workDuration:Int
-    
+    // for test
 //    var restDuration:Int = 5
 //    var workDuration:Int = 10
     
@@ -70,7 +70,7 @@ class PomodoroTimerSwitch: SwitchProvider {
     }
     
     func currentStatus() -> Bool {
-        return isRestTimerValid && isWorkTimerValid
+        return self.status != .none//isRestTimerValid && isWorkTimerValid
     }
     
     func currentInfo() -> String {
@@ -139,7 +139,9 @@ class PomodoroTimerSwitch: SwitchProvider {
             
                 strongSelf.cycleIndex += 1
                 if strongSelf.cycleCount == 0 || strongSelf.cycleIndex < strongSelf.cycleCount {
-                    strongSelf.startTimer()
+                    if strongSelf.status != .none {
+                        strongSelf.startTimer()
+                    }
                 } else {
                     strongSelf.status = .none
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {

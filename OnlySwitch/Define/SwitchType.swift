@@ -178,7 +178,7 @@ enum SwitchType:UInt64, CaseIterable {
         case .showExtensionName:
             return ShowExtensionNameSwitch()
         case .pomodoroTimer:
-            return PomodoroTimerSwitch()
+            return PomodoroTimerSwitch.shared
         case .smallLaunchpadIcon:
             return SmallLaunchpadIconSwitch()
         case .lowpowerMode:

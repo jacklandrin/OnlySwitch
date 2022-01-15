@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Cocoa
+import KeyboardShortcuts
 
 @main
 struct OnlySwitchApp: App {
@@ -15,6 +16,19 @@ struct OnlySwitchApp: App {
     var body: some Scene {
         WindowGroup {
             SettingView()
+                .task {
+                    CustomizeVM.shared.allSwitches.forEach{ item in
+                        KeyboardShortcuts.onKeyDown(for: item.keyboardShortcutName) {
+                            item.doSwitch()
+                        }
+                    }
+                    
+                    ShortcutsSettingVM.shared.shortcutsList.forEach{ item in
+                        KeyboardShortcuts.onKeyDown(for: item.keyboardShortcutName) {
+                            item.doShortcuts()
+                        }
+                    }
+                }
         }
     }
 }

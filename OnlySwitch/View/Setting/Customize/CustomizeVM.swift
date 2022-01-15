@@ -9,6 +9,7 @@ import Foundation
 import KeyboardShortcuts
 
 class CustomizeVM:ObservableObject {
+    static let shared  = CustomizeVM()
     @Published var allSwitches:[CustomizeItem] = [CustomizeItem]()
     @Published var errorInfo = ""
     @Published var showErrorToast = false

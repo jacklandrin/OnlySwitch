@@ -18,12 +18,12 @@ class KeepAwakeSwitch:SwitchProvider {
     
     private let reasonForActivity = "Reason for activity" as CFString
     private var assertionID: IOPMAssertionID = IOPMAssertionID()
-    private var preventedSleep = false
+    @UserDefaultValue(key: KeepAwakeKey, defaultValue: false)
+    private var preventedSleep
     
     init() {
         switchBarVM.switchOperator = self
-        let iskeepingAwake = UserDefaults.standard.bool(forKey: KeepAwakeKey)
-        if iskeepingAwake {
+        if preventedSleep {
            let success = IOPMAssertionCreateWithName( kIOPMAssertionTypeNoDisplaySleep as CFString,
                                                         IOPMAssertionLevel(kIOPMAssertionLevelOn),
                                                         reasonForActivity,
@@ -52,8 +52,6 @@ class KeepAwakeSwitch:SwitchProvider {
                                                         &assertionID )
             if success == kIOReturnSuccess {
                 preventedSleep = true
-                UserDefaults.standard.set(preventedSleep, forKey: KeepAwakeKey)
-                UserDefaults.standard.synchronize()
                 return true
             }
             return false
@@ -61,8 +59,6 @@ class KeepAwakeSwitch:SwitchProvider {
             let success = IOPMAssertionRelease(assertionID)
             if success == kIOReturnSuccess {
                 preventedSleep = false
-                UserDefaults.standard.set(preventedSleep, forKey: KeepAwakeKey)
-                UserDefaults.standard.synchronize()
                 return true
             }
             return false

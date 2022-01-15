@@ -53,40 +53,44 @@ class ShorcutsItem:ObservableObject {
 }
 
 class ShortcutsSettingVM:ObservableObject {
+    static let shared = ShortcutsSettingVM()
     @Published var shortcutsList : [ShorcutsItem] = [ShorcutsItem]()
     @Published var errorInfo = ""
     @Published var showErrorToast = false
     func loadShortcutsList() {
-        let result = getShortcutsList.runAppleScript(isShellCMD: true)
-        if result.0 {
-            let allshortcuts = (result.1 as! String).split(separator: "\r")
-            let shortcutsDic = UserDefaults.standard.dictionary(forKey: shorcutsDicKey)
-            var newShortcutsDic:[String:Bool] = [String:Bool]()
-            if let shortcutsDic = shortcutsDic {
-                self.shortcutsList = [ShorcutsItem]()
-                for name in allshortcuts {
-                    if let toggle = shortcutsDic[String(name)] as? Bool {
-                        self.addItem(name: String(name), toggle: toggle)
-                        newShortcutsDic[String(name)] = toggle
-                    } else {
-                        self.addItem(name: String(name), toggle: false)
+        DispatchQueue.main.async {
+            let result = getShortcutsList.runAppleScript(isShellCMD: true)
+            if result.0 {
+                let allshortcuts = (result.1 as! String).split(separator: "\r")
+                let shortcutsDic = UserDefaults.standard.dictionary(forKey: shorcutsDicKey)
+                var newShortcutsDic:[String:Bool] = [String:Bool]()
+                if let shortcutsDic = shortcutsDic {
+                    self.shortcutsList = [ShorcutsItem]()
+                    for name in allshortcuts {
+                        if let toggle = shortcutsDic[String(name)] as? Bool {
+                            self.addItem(name: String(name), toggle: toggle)
+                            newShortcutsDic[String(name)] = toggle
+                        } else {
+                            self.addItem(name: String(name), toggle: false)
+                            newShortcutsDic[String(name)] = false
+                        }
+                    }
+                } else {
+                    self.shortcutsList = allshortcuts.map{ ShorcutsItem(name: String($0), toggle: false, error: {[weak self] info in
+                        guard let strongSelf = self else {return}
+                        strongSelf.errorInfo = info
+                        strongSelf.showErrorToast = true
+                    }) }
+                    for name in allshortcuts {
                         newShortcutsDic[String(name)] = false
                     }
                 }
-            } else {
-                self.shortcutsList = allshortcuts.map{ ShorcutsItem(name: String($0), toggle: false, error: {[weak self] info in
-                    guard let strongSelf = self else {return}
-                    strongSelf.errorInfo = info
-                    strongSelf.showErrorToast = true
-                }) }
-                for name in allshortcuts {
-                    newShortcutsDic[String(name)] = false
-                }
+                
+                UserDefaults.standard.set(newShortcutsDic, forKey: shorcutsDicKey)
+                UserDefaults.standard.synchronize()
             }
-            
-            UserDefaults.standard.set(newShortcutsDic, forKey: shorcutsDicKey)
-            UserDefaults.standard.synchronize()
         }
+        
     }
     
     func addItem(name:String, toggle:Bool) {
@@ -96,4 +100,44 @@ class ShortcutsSettingVM:ObservableObject {
             strongSelf.showErrorToast = true
         }))
     }
+    
+    func getAllInstalledShortcutName() -> [String]? {
+        let result = getShortcutsList.runAppleScript(isShellCMD: true)
+        if result.0 {
+            let allshortcuts = (result.1 as! String).split(separator: "\r")
+            return allshortcuts.map{String($0)}
+        }
+        return nil
+    }
+    
+    //TODO: read from json
+    @Published var sharedShortcutsList:[SharedShortcutsItem] = [SharedShortcutsItem(name: "Toggle Scroll Direction",
+                                                                                    link: "https://www.icloud.com/shortcuts/8d65c606d1924f098b22774de6dc08f8"),
+                                                                SharedShortcutsItem(name: "DarkMode Switch",
+                                                                                    link: "https://www.icloud.com/shortcuts/0a9a3cbbb84d4d7fa515909edef60556")]
+    func checkIfInstalled() {
+        let installedShortcuts = getAllInstalledShortcutName()
+        guard let installedShortcuts = installedShortcuts else {
+            return
+        }
+
+        for item in sharedShortcutsList {
+            if installedShortcuts.contains(item.name) {
+                item.hasInstalled = true
+            }
+        }
+        objectWillChange.send()
+    }
+    
 }
+
+class SharedShortcutsItem:ObservableObject {
+    let name:String
+    let link:String
+    @Published var hasInstalled = false
+    init(name:String, link:String) {
+        self.name = name
+        self.link = link
+    }
+}
+
