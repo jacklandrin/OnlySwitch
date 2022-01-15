@@ -50,6 +50,7 @@ Since Version 2.0, supports **keyboard shortcuts**. You can control your all swi
 | Pomodoro timer           | finish            |
 | Small launchpad icon     | finish            |
 | Mute mic                 | finish            |
+| Show Finder pathbar      | finish            |
 | Low power mode           | require password  |
 | Hide notch               | exist some issues |
 
