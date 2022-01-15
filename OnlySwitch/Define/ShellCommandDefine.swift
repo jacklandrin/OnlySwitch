@@ -105,6 +105,10 @@ func runShortcut(name:String) -> String {
     return "shortcuts run \'\(name)\'"
 }
 
+func showShortcut(name:String) -> String {
+    return "shortcuts view \'\(name)\'"
+}
+
 func displayNotificationCMD(title:String, content:String, subtitle:String) -> String {
     "display notification \"\(content)\" with title \"\(title)\" subtitle \"\(subtitle)\""
 }

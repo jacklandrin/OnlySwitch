@@ -10,7 +10,7 @@ import SwiftUI
 struct SettingView: View {
     @ObservedObject var settingVM = SettingVM()
     @ObservedObject var langManager = LanguageManager.sharedManager
-    @ObservedObject var shortcutsVM = ShortcutsSettingVM()
+    @ObservedObject var shortcutsVM = ShortcutsSettingVM.shared
     init() {
         settingVM.selection = settingVM.settingItems.first
     }
@@ -24,6 +24,7 @@ struct SettingView: View {
                             .environmentObject(shortcutsVM)
                             .onAppear{
                                 shortcutsVM.loadShortcutsList()
+                                shortcutsVM.checkIfInstalled()
                             }
                             
                     } else {
@@ -40,6 +41,7 @@ struct SettingView: View {
         .onAppear{
             settingVM.selection = settingVM.settingItems.first
             shortcutsVM.loadShortcutsList()
+            shortcutsVM.checkIfInstalled()
         }
         .onDisappear{
             print("disappear")

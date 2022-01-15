@@ -10,7 +10,7 @@ import AlertToast
 import KeyboardShortcuts
 
 struct CustomizeView: View {
-    @ObservedObject var customizeVM = CustomizeVM()
+    @ObservedObject var customizeVM = CustomizeVM.shared
     @ObservedObject var langManager = LanguageManager.sharedManager
     var body: some View {
         VStack(alignment:.leading) {
