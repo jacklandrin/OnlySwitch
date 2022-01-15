@@ -31,13 +31,7 @@ struct CustomizeView: View {
                             .padding(.trailing, 10)
                         KeyboardShortcuts.Recorder(for: customizeVM.allSwitches[index].keyboardShortcutName)
                             .environment(\.locale, .init(identifier: langManager.currentLang))//Localizable doesn't work
-                    }
-                    .task {
-                        KeyboardShortcuts.onKeyDown(for: customizeVM.allSwitches[index].keyboardShortcutName) {
-                            customizeVM.allSwitches[index].doSwitch()
-                        }
-                    }
-                    
+                    }                    
                 }
             }
             Divider()

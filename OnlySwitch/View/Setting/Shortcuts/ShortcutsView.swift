@@ -41,13 +41,6 @@ struct ShortcutsView: View {
                                     .environment(\.locale, .init(identifier: langManager.currentLang))//Localizable doesn't work
                                 
                                 Spacer().frame(width:30)
-                            }.task {
-                                if index < shortcutsVM.shortcutsList.count {
-                                    KeyboardShortcuts.onKeyDown(for: shortcutsVM.shortcutsList[index].keyboardShortcutName) {
-                                        shortcutsVM.shortcutsList[index].doShortcuts()
-                                    }
-                                }
-                                
                             }
                         }
                     }.frame(width: 380)

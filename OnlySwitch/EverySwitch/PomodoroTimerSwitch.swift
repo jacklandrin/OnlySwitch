@@ -8,7 +8,7 @@
 import Foundation
 
 class PomodoroTimerSwitch: SwitchProvider {
-    
+    static let shared = PomodoroTimerSwitch()
     enum Status:String {
         case none = "n"
         case work = "w"
