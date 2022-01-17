@@ -46,57 +46,56 @@ struct ShortcutsView: View {
                     }.frame(width: 380)
                 }
             }
-            VStack {
+            ScrollView {
                 LazyVGrid(columns: columns, spacing: 20) {
                     ForEach(shortcutsVM.sharedShortcutsList.indices, id: \.self) { index in
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 10)
-                                .frame(width: 120, height: 80)
-                                .foregroundColor(.blue)
-                            VStack {
-                                HStack{
-                                    Image(systemName: "square.2.stack.3d")
+                        VStack {
+                            HStack{
+                                Image(systemName: "square.2.stack.3d")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .foregroundColor(.white)
+                                    .frame(width: 20, height: 20)
+                                    
+                                Spacer()
+                                Button(action: {
+                                    NSWorkspace.shared.open(URL(string: shortcutsVM.sharedShortcutsList[index].shortcutInfo.link)!)
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+                                        shortcutsVM.checkIfInstalled()
+                                    }
+                                }, label: {
+                                    Image(systemName: shortcutsVM.sharedShortcutsList[index].hasInstalled ? "checkmark.circle.fill" : "plus.circle.fill")
                                         .resizable()
                                         .scaledToFit()
                                         .foregroundColor(.white)
                                         .frame(width: 20, height: 20)
-                                        
-                                    Spacer()
-                                    Button(action: {
-                                        NSWorkspace.shared.open(URL(string: shortcutsVM.sharedShortcutsList[index].link)!)
-                                        DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
-                                            shortcutsVM.checkIfInstalled()
-                                        }
-                                    }, label: {
-                                        Image(systemName: shortcutsVM.sharedShortcutsList[index].hasInstalled ? "checkmark.circle.fill" : "plus.circle.fill")
-                                            .resizable()
-                                            .scaledToFit()
-                                            .foregroundColor(.white)
-                                            .frame(width: 20, height: 20)
-                                    }).buttonStyle(.plain)
-                                        .disabled(shortcutsVM.sharedShortcutsList[index].hasInstalled)
+                                }).buttonStyle(.plain)
+                                    .disabled(shortcutsVM.sharedShortcutsList[index].hasInstalled)
+                            }
+                            .padding(.horizontal, 10)
+                            .padding(.top, 10)
+                            
+                            Spacer(minLength: 10)
+                            
+                            Text(shortcutsVM.sharedShortcutsList[index].shortcutInfo.name)
+                                .foregroundColor(.white)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .padding(.bottom, 5)
+                            Spacer()
+                        }.frame(width: 120, height: 80)
+                            .background(LinearGradient(gradient: Gradient(colors:[Color(AppColor.themePink), Color(AppColor.themeBlue)]), startPoint: .topLeading, endPoint: .bottomTrailing))
+                        
+                        .cornerRadius(10)
+                            .onTapGesture {
+                                if shortcutsVM.sharedShortcutsList[index].hasInstalled {
+                                    _ = showShortcut(name: shortcutsVM.sharedShortcutsList[index].shortcutInfo.name).runAppleScript(isShellCMD: true)
                                 }
-                                .padding(.horizontal, 10)
-                                .padding(.top, 10)
-                                
-                                Spacer(minLength: 10)
-                                
-                                Text(shortcutsVM.sharedShortcutsList[index].name)
-                                    .foregroundColor(.white)
-                                    .fixedSize(horizontal: false, vertical: true)
-                                    .padding(.bottom, 5)
-                                Spacer()
-                            }.frame(width: 120, height: 80)
-                                
-                                .onTapGesture {
-                                    if shortcutsVM.sharedShortcutsList[index].hasInstalled {
-                                        _ = showShortcut(name: shortcutsVM.sharedShortcutsList[index].name).runAppleScript(isShellCMD: true)
-                                    }
-                                }
+                            }
                         }
-                    }
+                    
                 }.frame(width:280)
                     .padding(.top, 60)
+                    .padding(.trailing, 10)
                 Spacer()
             }
             Spacer()

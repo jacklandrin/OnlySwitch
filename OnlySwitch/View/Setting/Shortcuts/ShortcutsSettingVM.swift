@@ -57,6 +57,11 @@ class ShortcutsSettingVM:ObservableObject {
     @Published var shortcutsList : [ShorcutsItem] = [ShorcutsItem]()
     @Published var errorInfo = ""
     @Published var showErrorToast = false
+    
+    init() {
+        self.loadData()
+    }
+    
     func loadShortcutsList() {
         DispatchQueue.main.async {
             let result = getShortcutsList.runAppleScript(isShellCMD: true)
@@ -110,11 +115,7 @@ class ShortcutsSettingVM:ObservableObject {
         return nil
     }
     
-    //TODO: read from json
-    @Published var sharedShortcutsList:[SharedShortcutsItem] = [SharedShortcutsItem(name: "Toggle Scroll Direction",
-                                                                                    link: "https://www.icloud.com/shortcuts/8d65c606d1924f098b22774de6dc08f8"),
-                                                                SharedShortcutsItem(name: "DarkMode Switch",
-                                                                                    link: "https://www.icloud.com/shortcuts/0a9a3cbbb84d4d7fa515909edef60556")]
+    @Published var sharedShortcutsList:[SharedShortcutsItem] = [SharedShortcutsItem]()
     func checkIfInstalled() {
         let installedShortcuts = getAllInstalledShortcutName()
         guard let installedShortcuts = installedShortcuts else {
@@ -122,22 +123,44 @@ class ShortcutsSettingVM:ObservableObject {
         }
 
         for item in sharedShortcutsList {
-            if installedShortcuts.contains(item.name) {
+            if installedShortcuts.contains(item.shortcutInfo.name) {
                 item.hasInstalled = true
             }
         }
         objectWillChange.send()
     }
     
+    func loadData() {
+        guard let url = Bundle.main.url(forResource: "ShortcutsMarket", withExtension: "json") else {
+            print("json file not found")
+            return
+        }
+        do {
+            let data = try Data(contentsOf: url)
+            let allShortcutsOnMarket = try JSONDecoder().decode([ShortcutOnMarket].self, from: data)
+            self.sharedShortcutsList = allShortcutsOnMarket.map{SharedShortcutsItem(shortcutInfo: $0)}
+        } catch {
+            print("json convert failed")
+        }
+        
+    }
+    
 }
 
 class SharedShortcutsItem:ObservableObject {
-    let name:String
-    let link:String
+    let shortcutInfo:ShortcutOnMarket
     @Published var hasInstalled = false
-    init(name:String, link:String) {
-        self.name = name
-        self.link = link
+    init(shortcutInfo:ShortcutOnMarket) {
+        self.shortcutInfo = shortcutInfo
     }
 }
 
+struct ShortcutOnMarket:Codable, Identifiable {
+    enum CodingKeys:CodingKey {
+        case name
+        case link
+    }
+    var id = UUID()
+    var name:String
+    var link:String
+}
