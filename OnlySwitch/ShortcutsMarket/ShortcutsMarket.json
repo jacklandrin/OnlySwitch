@@ -2,10 +2,38 @@
 [
     {
         "name": "Toggle Scroll Direction",
-        "link": "https://www.icloud.com/shortcuts/8d65c606d1924f098b22774de6dc08f8"
+        "link": "https://www.icloud.com/shortcuts/8d65c606d1924f098b22774de6dc08f8",
+        "author": "jacklandrin",
+        "description": "Toggle scroll direction of trackpad and mouse wheel"
     },
     {
         "name": "DarkMode Switch",
-        "link": "https://www.icloud.com/shortcuts/0a9a3cbbb84d4d7fa515909edef60556"
+        "link": "https://www.icloud.com/shortcuts/0a9a3cbbb84d4d7fa515909edef60556",
+        "author": "jacklandrin",
+        "description": "Toggle apperence of mac between dark mode and light mode"
+    },
+    {
+        "name": "Network tool",
+        "link": "https://www.icloud.com/shortcuts/85ab6e6fd31c45569ae27e107fe79f59",
+        "author": "Simon Stevens",
+        "description": "Display current network information"
+    },
+    {
+        "name": "Split-Screen Apps",
+        "link": "https://www.icloud.com/shortcuts/e9c97888171a4b33bf6d6c45d6596b5b",
+        "author": "Tim Brookes",
+        "description": "Open two apps by split-screen"
+    },
+    {
+        "name": "Passwords",
+        "link": "https://www.icloud.com/shortcuts/e0e7fd0be0474934a9717a8942b22c31",
+        "author": "Tim Brookes",
+        "description": "Show Passwords in System Preferences"
+    },
+    {
+        "name": "Google Translate",
+        "link": "https://www.icloud.com/shortcuts/5e651e793db34bddb0779c2489beb944",
+        "author": "brechtbakker",
+        "description": "Translate clipboard text or input text by Google"
     }
 ]

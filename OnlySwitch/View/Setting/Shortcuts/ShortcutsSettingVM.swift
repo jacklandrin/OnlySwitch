@@ -57,6 +57,7 @@ class ShortcutsSettingVM:ObservableObject {
     @Published var shortcutsList : [ShorcutsItem] = [ShorcutsItem]()
     @Published var errorInfo = ""
     @Published var showErrorToast = false
+    @Published var sharedShortcutsList:[SharedShortcutsItem] = [SharedShortcutsItem]()
     
     init() {
         self.loadData()
@@ -115,7 +116,8 @@ class ShortcutsSettingVM:ObservableObject {
         return nil
     }
     
-    @Published var sharedShortcutsList:[SharedShortcutsItem] = [SharedShortcutsItem]()
+    
+    
     func checkIfInstalled() {
         let installedShortcuts = getAllInstalledShortcutName()
         guard let installedShortcuts = installedShortcuts else {
@@ -159,8 +161,12 @@ struct ShortcutOnMarket:Codable, Identifiable {
     enum CodingKeys:CodingKey {
         case name
         case link
+        case author
+        case description
     }
     var id = UUID()
     var name:String
     var link:String
+    var author:String
+    var description: String
 }
