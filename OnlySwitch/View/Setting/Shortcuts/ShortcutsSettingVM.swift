@@ -7,6 +7,7 @@
 
 import Foundation
 import KeyboardShortcuts
+import Alamofire
 
 let shorcutsDicKey = "shorcutsDicKey"
 
@@ -58,10 +59,7 @@ class ShortcutsSettingVM:ObservableObject {
     @Published var errorInfo = ""
     @Published var showErrorToast = false
     @Published var sharedShortcutsList:[SharedShortcutsItem] = [SharedShortcutsItem]()
-    
-    init() {
-        self.loadData()
-    }
+
     
     func loadShortcutsList() {
         DispatchQueue.main.async {
@@ -133,6 +131,16 @@ class ShortcutsSettingVM:ObservableObject {
     }
     
     func loadData() {
+        let request = AF.request("https://raw.githubusercontent.com/jacklandrin/OnlySwitch/main/OnlySwitch/ShortcutsMarket/ShortcutsMarket.json")
+        request.responseDecodable(of:[ShortcutOnMarket].self) { response in
+            guard let list = response.value else {
+                self.loadDataFromLocal()
+                return
+            }
+            self.sharedShortcutsList = list.map{SharedShortcutsItem(shortcutInfo: $0)}
+            self.checkIfInstalled()
+        }
+        
         guard let url = Bundle.main.url(forResource: "ShortcutsMarket", withExtension: "json") else {
             print("json file not found")
             return
@@ -141,12 +149,17 @@ class ShortcutsSettingVM:ObservableObject {
             let data = try Data(contentsOf: url)
             let allShortcutsOnMarket = try JSONDecoder().decode([ShortcutOnMarket].self, from: data)
             self.sharedShortcutsList = allShortcutsOnMarket.map{SharedShortcutsItem(shortcutInfo: $0)}
+            self.checkIfInstalled()
         } catch {
             print("json convert failed")
         }
         
     }
     
+    
+    func loadDataFromLocal() {
+        
+    }
 }
 
 class SharedShortcutsItem:ObservableObject {

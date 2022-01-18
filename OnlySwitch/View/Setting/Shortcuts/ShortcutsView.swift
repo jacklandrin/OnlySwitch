@@ -54,7 +54,7 @@ struct ShortcutsView: View {
                     Spacer()
                     Button(action: {
                         shortcutsVM.loadShortcutsList()
-                        shortcutsVM.checkIfInstalled()
+                        shortcutsVM.loadData()
                     }, label: {
                         Image(systemName: "arrow.clockwise")
                     }).help("refresh".localized())

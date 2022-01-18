@@ -41,7 +41,7 @@ struct SettingView: View {
         .onAppear{
             settingVM.selection = settingVM.settingItems.first
             shortcutsVM.loadShortcutsList()
-            shortcutsVM.checkIfInstalled()
+            shortcutsVM.loadData()
         }
         .onDisappear{
             print("disappear")
