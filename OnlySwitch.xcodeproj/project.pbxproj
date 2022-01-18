@@ -146,6 +146,7 @@
 		04E2AD1C2783A54000BC5DF3 /* URL++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E2AD1B2783A54000BC5DF3 /* URL++.swift */; };
 		04E2AD1E2783B63600BC5DF3 /* CurrentScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E2AD1D2783B63600BC5DF3 /* CurrentScreen.swift */; };
 		04E2AD1F2783B6C400BC5DF3 /* CurrentScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E2AD1D2783B63600BC5DF3 /* CurrentScreen.swift */; };
+		04E8BE3A2797241F00FF12B7 /* ShortcutsGalleryContributing.md in Resources */ = {isa = PBXBuildFile; fileRef = 04E8BE392797241F00FF12B7 /* ShortcutsGalleryContributing.md */; };
 		04EB1CD02780F36F00C612AB /* ShortcutsSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CCF2780F36F00C612AB /* ShortcutsSettingVM.swift */; };
 		04EB1CD22780F4F700C612AB /* ShortcutsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CD12780F4F700C612AB /* ShortcutsView.swift */; };
 		04EB1CD42781280900C612AB /* ShortCutBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CD32781280900C612AB /* ShortCutBarView.swift */; };
@@ -319,6 +320,7 @@
 		04E2AD192783A50000BC5DF3 /* Data++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data++.swift"; sourceTree = "<group>"; };
 		04E2AD1B2783A54000BC5DF3 /* URL++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL++.swift"; sourceTree = "<group>"; };
 		04E2AD1D2783B63600BC5DF3 /* CurrentScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentScreen.swift; sourceTree = "<group>"; };
+		04E8BE392797241F00FF12B7 /* ShortcutsGalleryContributing.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ShortcutsGalleryContributing.md; sourceTree = "<group>"; };
 		04EB1CCF2780F36F00C612AB /* ShortcutsSettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsSettingVM.swift; sourceTree = "<group>"; };
 		04EB1CD12780F4F700C612AB /* ShortcutsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsView.swift; sourceTree = "<group>"; };
 		04EB1CD32781280900C612AB /* ShortCutBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortCutBarView.swift; sourceTree = "<group>"; };
@@ -451,6 +453,7 @@
 			children = (
 				04938D022768CAEB00713F1D /* Localizable.strings */,
 				0443A6B527599AAC00A3BCFD /* README.md */,
+				04E8BE392797241F00FF12B7 /* ShortcutsGalleryContributing.md */,
 				04447B5A2754F08000CD2900 /* OnlySwitch */,
 				04E2ACFA278267DE00BC5DF3 /* IntentsExtension */,
 				04447B592754F08000CD2900 /* Products */,
@@ -914,6 +917,7 @@
 				04938D002768CAEB00713F1D /* Localizable.strings in Resources */,
 				0443A6B627599AAC00A3BCFD /* README.md in Resources */,
 				04447B632754F08100CD2900 /* Preview Assets.xcassets in Resources */,
+				04E8BE3A2797241F00FF12B7 /* ShortcutsGalleryContributing.md in Resources */,
 				04E03B04275FD98500EA5FB9 /* battery-airpods-monterey.sh in Resources */,
 				047140B327788364005B160B /* mixkit-alert-bells-echo-765.wav in Resources */,
 				047140B427788364005B160B /* mixkit-bell-notification-933.wav in Resources */,
