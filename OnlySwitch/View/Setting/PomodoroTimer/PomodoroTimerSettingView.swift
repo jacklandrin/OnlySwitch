@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PomodoroTimerSettingView: View {
-    @ObservedObject var ptSettingVM = PomodoroTimerSettingVM()
+    @StateObject var ptSettingVM = PomodoroTimerSettingVM()
     @ObservedObject var effectSoundHelper = EffectSoundHelper.shared
     @Environment(\.colorScheme) private var colorScheme
     

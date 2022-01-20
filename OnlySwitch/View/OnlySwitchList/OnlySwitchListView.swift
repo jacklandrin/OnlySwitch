@@ -8,7 +8,7 @@
 import SwiftUI
 import LaunchAtLogin
 
-struct ContentView: View {
+struct OnlySwitchListView: View {
     @EnvironmentObject var switchVM:SwitchVM
     @Environment(\.colorScheme) private var colorScheme
     @State private var id = UUID()
@@ -250,7 +250,7 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        OnlySwitchListView()
             .frame(width: popoverWidth, height: popoverHeight)
             .environmentObject(SwitchVM())
     }

@@ -34,7 +34,7 @@
 		0443A6B627599AAC00A3BCFD /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0443A6B527599AAC00A3BCFD /* README.md */; };
 		0443A6B82759A99700A3BCFD /* ScreenSaverSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0443A6B72759A99700A3BCFD /* ScreenSaverSwitch.swift */; };
 		04447B5C2754F08000CD2900 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B5B2754F08000CD2900 /* AppDelegate.swift */; };
-		04447B5E2754F08000CD2900 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B5D2754F08000CD2900 /* ContentView.swift */; };
+		04447B5E2754F08000CD2900 /* OnlySwitchListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B5D2754F08000CD2900 /* OnlySwitchListView.swift */; };
 		04447B602754F08100CD2900 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04447B5F2754F08100CD2900 /* Assets.xcassets */; };
 		04447B632754F08100CD2900 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04447B622754F08100CD2900 /* Preview Assets.xcassets */; };
 		04447B702754F21A00CD2900 /* StatusBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B6F2754F21A00CD2900 /* StatusBarController.swift */; };
@@ -208,7 +208,7 @@
 		0443A6B72759A99700A3BCFD /* ScreenSaverSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenSaverSwitch.swift; sourceTree = "<group>"; };
 		04447B582754F08000CD2900 /* OnlySwitch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnlySwitch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04447B5B2754F08000CD2900 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		04447B5D2754F08000CD2900 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		04447B5D2754F08000CD2900 /* OnlySwitchListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlySwitchListView.swift; sourceTree = "<group>"; };
 		04447B5F2754F08100CD2900 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		04447B622754F08100CD2900 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		04447B692754F08100CD2900 /* OnlySwitch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OnlySwitch.entitlements; sourceTree = "<group>"; };
@@ -636,7 +636,7 @@
 		04BF976C27908E0100E7C0E2 /* OnlySwitchList */ = {
 			isa = PBXGroup;
 			children = (
-				04447B5D2754F08000CD2900 /* ContentView.swift */,
+				04447B5D2754F08000CD2900 /* OnlySwitchListView.swift */,
 				04447B712754FE3800CD2900 /* SwitchVM.swift */,
 				04581DBA27651EF1008ADF30 /* RollingText.swift */,
 			);
@@ -696,8 +696,8 @@
 		04BF977327908EDF00E7C0E2 /* Radio */ = {
 			isa = PBXGroup;
 			children = (
-				049337982762C0B300AE779A /* RadioSettingVM.swift */,
 				049337962762C07600AE779A /* RadioSettingView.swift */,
+				049337982762C0B300AE779A /* RadioSettingVM.swift */,
 			);
 			path = Radio;
 			sourceTree = "<group>";
@@ -705,8 +705,8 @@
 		04BF977427908EF000E7C0E2 /* AirPods */ = {
 			isa = PBXGroup;
 			children = (
-				04581DBE27653C4A008ADF30 /* AirPodsSettingVM.swift */,
 				04581DBC27653C35008ADF30 /* AirPodsSettingView.swift */,
+				04581DBE27653C4A008ADF30 /* AirPodsSettingVM.swift */,
 			);
 			path = AirPods;
 			sourceTree = "<group>";
@@ -986,7 +986,7 @@
 				049337942762BD1B00AE779A /* OpenWindow.swift in Sources */,
 				0424348B275642D20044D0AD /* DarkModeSwitch.swift in Sources */,
 				0493374F27625A1E00AE779A /* Parser+Packets.swift in Sources */,
-				04447B5E2754F08000CD2900 /* ContentView.swift in Sources */,
+				04447B5E2754F08000CD2900 /* OnlySwitchListView.swift in Sources */,
 				046331D52795E1BC00C5F894 /* ColorDefine.swift in Sources */,
 				040C6EAC276B7D9F00291DEB /* CustomizeView.swift in Sources */,
 				04E03AFE275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift in Sources */,
@@ -1385,7 +1385,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.1.1;
+				MARKETING_VERSION = 2.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.IntentsExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1415,7 +1415,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.1.1;
+				MARKETING_VERSION = 2.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.IntentsExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

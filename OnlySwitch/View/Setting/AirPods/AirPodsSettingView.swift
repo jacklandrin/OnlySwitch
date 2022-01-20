@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AirPodsSettingView: View {
-    @ObservedObject var airPodsSettingVM = AirPodsSettingVM()
+    @StateObject var airPodsSettingVM = AirPodsSettingVM()
     @State var updateID = UUID()
     var body: some View {
         List{

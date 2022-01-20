@@ -10,7 +10,7 @@ import AlertToast
 
 struct RadioSettingView: View {
 
-    @ObservedObject var radioSettingVM = RadioSettingVM()
+    @StateObject var radioSettingVM = RadioSettingVM()
     @State var updateTable:UUID = UUID()
     var body: some View {
         VStack {

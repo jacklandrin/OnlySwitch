@@ -15,7 +15,7 @@ let columns = [
     ]
 
 struct ShortcutsView: View {
-    @EnvironmentObject var shortcutsVM:ShortcutsSettingVM
+    @StateObject var shortcutsVM = ShortcutsSettingVM()
     @ObservedObject var langManager = LanguageManager.sharedManager
 
     var body: some View {
@@ -64,6 +64,10 @@ struct ShortcutsView: View {
             
             Spacer()
         }
+        .onAppear{
+            shortcutsVM.loadShortcutsList()
+            shortcutsVM.checkIfInstalled()
+        }
         .toast(isPresenting: $shortcutsVM.showErrorToast) {
             AlertToast(displayMode: .alert,
                        type: .error(.red),
@@ -85,7 +89,7 @@ struct ShortcutsView: View {
                                 
                             Spacer()
                             Button(action: {
-                                NSWorkspace.shared.open(URL(string: shortcutsVM.sharedShortcutsList[index].shortcutInfo.link)!)
+                                NSWorkspace.shared.open(URL(string: shortcutsVM.sharedShortcutsList[index].link)!)
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
                                     shortcutsVM.checkIfInstalled()
                                 }
@@ -103,23 +107,23 @@ struct ShortcutsView: View {
                         
                         Spacer(minLength: 10)
                         
-                        Text(shortcutsVM.sharedShortcutsList[index].shortcutInfo.name)
+                        Text(shortcutsVM.sharedShortcutsList[index].name)
                             .foregroundColor(.white)
                             .fixedSize(horizontal: false, vertical: true)
                         Spacer()
                         HStack {
                             Spacer()
-                            Text("by \(shortcutsVM.sharedShortcutsList[index].shortcutInfo.author)")
+                            Text("by \(shortcutsVM.sharedShortcutsList[index].author)")
                                 .font(.system(size: 10))
                         }.padding(.trailing, 10)
                             .padding(.bottom, 5)
                     }.frame(width: 140, height: 100)
                         .background(LinearGradient(gradient: Gradient(colors:[Color(AppColor.themePink), Color(AppColor.themeBlue)]), startPoint: .topLeading, endPoint: .bottomTrailing))
-                        .help(shortcutsVM.sharedShortcutsList[index].shortcutInfo.description)
+                        .help(shortcutsVM.sharedShortcutsList[index].description)
                     .cornerRadius(10)
                         .onTapGesture {
                             if shortcutsVM.sharedShortcutsList[index].hasInstalled {
-                                _ = showShortcut(name: shortcutsVM.sharedShortcutsList[index].shortcutInfo.name).runAppleScript(isShellCMD: true)
+                                _ = showShortcut(name: shortcutsVM.sharedShortcutsList[index].name).runAppleScript(isShellCMD: true)
                             }
                         }
                     }

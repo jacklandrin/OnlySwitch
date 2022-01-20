@@ -18,19 +18,7 @@ struct SettingView: View {
         NavigationView {
             List(settingVM.settingItems, id:\.self, selection: $settingVM.selection) { item in
                 NavigationLink{
-                    if item == .Shortcuts {
-                        item
-                            .page()
-                            .environmentObject(shortcutsVM)
-                            .onAppear{
-                                shortcutsVM.loadShortcutsList()
-                                shortcutsVM.checkIfInstalled()
-                            }
-                            
-                    } else {
-                        item.page()
-                    }
-                    
+                    item.page()
                 }label:{
                     Text(item.rawValue.localized())
                 }.frame(width:170, alignment:.leading)
@@ -40,8 +28,6 @@ struct SettingView: View {
         }.navigationTitle("Setting")
         .onAppear{
             settingVM.selection = settingVM.settingItems.first
-            shortcutsVM.loadShortcutsList()
-            shortcutsVM.checkIfInstalled()
         }
         .onDisappear{
             print("disappear")

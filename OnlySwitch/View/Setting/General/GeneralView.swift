@@ -10,7 +10,7 @@ import LaunchAtLogin
 
 struct GeneralView: View, EmailProvider {
     @ObservedObject var langManager = LanguageManager.sharedManager
-    @ObservedObject var generalVM = GeneralVM()
+    @StateObject var generalVM = GeneralVM()
     @State var hoverItem = ""
     var body: some View {
         VStack {

@@ -125,7 +125,7 @@ class ShortcutsSettingVM:ObservableObject {
         }
 
         for item in sharedShortcutsList {
-            if installedShortcuts.contains(item.shortcutInfo.name) {
+            if installedShortcuts.contains(item.name) {
                 item.hasInstalled = true
             }
         }
@@ -150,8 +150,25 @@ class ShortcutsSettingVM:ObservableObject {
 }
 
 class SharedShortcutsItem:ObservableObject {
-    let shortcutInfo:ShortcutOnMarket
+    @Published private var shortcutInfo:ShortcutOnMarket
     @Published var hasInstalled = false
+    
+    var name:String {
+        return shortcutInfo.name
+    }
+    
+    var link:String {
+        return shortcutInfo.link
+    }
+    
+    var author:String {
+        return shortcutInfo.author
+    }
+    
+    var description:String {
+        return shortcutInfo.description
+    }
+    
     init(shortcutInfo:ShortcutOnMarket) {
         self.shortcutInfo = shortcutInfo
     }

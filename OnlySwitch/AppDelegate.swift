@@ -40,7 +40,7 @@ class AppDelegate:NSObject, NSApplicationDelegate {
     let switchVM = SwitchVM()
     var blManager:BluetoothDevicesManager?
     func applicationDidFinishLaunching(_ notification: Notification) {
-        let contentView = ContentView()
+        let contentView = OnlySwitchListView()
             .environmentObject(switchVM)
         popover.contentSize = NSSize(width: popoverWidth, height: 300)
         popover.contentViewController = NSHostingController(rootView: contentView)
