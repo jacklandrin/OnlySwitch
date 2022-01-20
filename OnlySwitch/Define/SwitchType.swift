@@ -150,7 +150,7 @@ enum SwitchType:UInt64, CaseIterable {
         case .mute:
             return MuteSwitch()
         case .keepAwake:
-            return KeepAwakeSwitch()
+            return KeepAwakeSwitch.shared
         case .screenSaver:
             return ScreenSaverSwitch()
         case .nightShift:

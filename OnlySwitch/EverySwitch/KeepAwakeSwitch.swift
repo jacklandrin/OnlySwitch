@@ -12,7 +12,7 @@ import IOKit.pwr_mgt
 let KeepAwakeKey = "KeepAwakeKey"
 
 class KeepAwakeSwitch:SwitchProvider {
-//    static let shared = KeepAwakeSwitch()
+    static let shared = KeepAwakeSwitch()
     var type: SwitchType = .keepAwake
     var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .keepAwake)
     
