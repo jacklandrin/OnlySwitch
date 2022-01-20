@@ -10,11 +10,6 @@ import AppKit
 class NightShiftSwitch:SwitchProvider {
     
     var type: SwitchType = .nightShift
-    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .nightShift)
-    
-    init() {
-        switchBarVM.switchOperator = self
-    }
     
     func isVisable() -> Bool {
         return NightShiftTool.supportsNightShift

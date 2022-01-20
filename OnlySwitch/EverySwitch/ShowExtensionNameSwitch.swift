@@ -8,10 +8,7 @@
 import Foundation
 
 class ShowExtensionNameSwitch:SwitchProvider {
-    
-    init() {
-        self.switchBarVM.switchOperator = self
-    }
+    var type: SwitchType = .showExtensionName
     
     func currentStatus() -> Bool {
         let result = getExtensionNameStateCMD.runAppleScript(isShellCMD: true)
@@ -36,10 +33,5 @@ class ShowExtensionNameSwitch:SwitchProvider {
     func isVisable() -> Bool {
         return true
     }
-    
-    var type: SwitchType = .showExtensionName
-    
-    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .showExtensionName)
-    
-    
+
 }

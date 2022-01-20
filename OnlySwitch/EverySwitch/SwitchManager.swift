@@ -39,7 +39,8 @@ class SwitchManager {
         var switchBarVMs = [SwitchBarVM]()
         for (_, value) in sortedSwitchMap {
             if let aswitch = value {
-                switchBarVMs.append(aswitch.switchBarVM)
+                let switchBarVM = SwitchBarVM(switchOperator: aswitch)
+                switchBarVMs.append(switchBarVM)
             }
         }
         return switchBarVMs

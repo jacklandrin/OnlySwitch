@@ -11,12 +11,6 @@ class EmptyTrashSwitch:SwitchProvider {
     
     var type: SwitchType = .emptyTrash
     
-    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .emptyTrash)
-    
-    init() {
-        switchBarVM.switchOperator = self
-    }
-    
     func currentInfo() -> String {
         return ""
     }

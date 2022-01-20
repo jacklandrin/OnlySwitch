@@ -19,7 +19,7 @@ struct SwitchBarView: View {
                 .scaledToFit()
                 .frame(width: 25, height: 25)
             
-            Text(switchOption.switchType.barInfo().title.localized())
+            Text(switchOption.title.localized())
                 .frame(alignment: .leading)
             if switchOption.switchType == .airPods {
                 AirPodsBatteryView(batteryValues: convertBattery(info: switchOption.info))
@@ -40,7 +40,7 @@ struct SwitchBarView: View {
 //                .scaleEffect(0.8)
                 .isHidden(!switchOption.processing,remove: true)
             
-            switch switchOption.switchType.barInfo().controlType {
+            switch switchOption.controlType {
             case .Switch:
                 SwitchToggle(isOn: $switchOption.isOn) { isOn in
                     switchOption.doSwitch(isOn: isOn)
@@ -70,9 +70,9 @@ struct SwitchBarView: View {
     
     func barImage(option:SwitchBarVM) -> NSImage {
         if option.isOn {
-            return option.switchType.barInfo().onImage
+            return option.onImage
         } else {
-            return option.switchType.barInfo().offImage
+            return option.offImage
         }
     }
 
@@ -87,7 +87,7 @@ struct SwitchBarView: View {
 struct SwitchBar_Previews: PreviewProvider {
     static var previews: some View {
         SwitchBarView()
-            .environmentObject(SwitchBarVM(switchType: .topNotch))
+            .environmentObject(SwitchBarVM(switchOperator: PomodoroTimerSwitch.shared))
             .frame(width: 300)
     }
 }

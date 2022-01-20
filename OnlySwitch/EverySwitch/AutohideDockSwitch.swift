@@ -10,11 +10,7 @@ import AppKit
 class AutohideDockSwitch:SwitchProvider {
 
     var type: SwitchType = .autohideDock
-    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .autohideDock)
-    
-    init() {
-        switchBarVM.switchOperator = self
-    }
+
     func currentStatus() -> Bool {
         let result = getAutohideDockCMD.runAppleScript()
         if result.0 {

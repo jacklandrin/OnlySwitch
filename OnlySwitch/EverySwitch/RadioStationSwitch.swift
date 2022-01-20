@@ -16,14 +16,12 @@ let defaultRadioStations = [["title":"Country Radio", "url":"https://live.leanst
 class RadioStationSwitch:SwitchProvider {
     static let shared = RadioStationSwitch()
     var type: SwitchType = .radioStation
-    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .radioStation)
     
     private var managedObjectContext:NSManagedObjectContext?
     
     var playerItem:RadioPlayerItem = RadioPlayerItem(isPlaying: false, title: "Country Radio", streamUrl: "http://uk2.internet-radio.com:8024/stream", streamInfo: "", id: UUID())
     
     init() {
-        switchBarVM.switchOperator = self
         self.managedObjectContext = PersistenceController.shared.container.viewContext
         
         let currentStationIDStr = UserDefaults.standard.string(forKey: radioStationKey)

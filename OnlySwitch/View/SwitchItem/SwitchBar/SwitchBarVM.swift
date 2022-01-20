@@ -14,23 +14,39 @@ class SwitchBarVM : BarProvider, ObservableObject {
   
     @Published var weight: Int = 0
     
-    @Published var switchType:SwitchType
+    var switchType:SwitchType
+    {
+        return switchOperator.type
+    }
+    
+    var title:String {
+        return switchType.barInfo().title
+    }
+    
+    var onImage:NSImage {
+        return switchType.barInfo().onImage
+    }
+    
+    var offImage:NSImage {
+        return switchType.barInfo().offImage
+    }
+    
+    var controlType:ControlType {
+        return switchType.barInfo().controlType
+    }
+    
     @Published var isHidden = false
     @Published var isOn:Bool = false
     @Published var processing = false
     @Published var info = ""
     
-    weak var switchOperator:SwitchProvider?
+    @Published var switchOperator:SwitchProvider
     
-    init(switchType:SwitchType) {
-        self.switchType = switchType
+    init(switchOperator:SwitchProvider) {
+        self.switchOperator = switchOperator
     }
     
     func refreshStatus() {
-        guard let switchOperator = switchOperator else {
-            return
-        }
-
         isHidden = !switchOperator.isVisable()
         if self.switchType == .xcodeCache {
             if self.info == "" || self.info != "Calculating..." {
@@ -49,10 +65,6 @@ class SwitchBarVM : BarProvider, ObservableObject {
     }
     
     func refreshSwitchStatus() {
-        guard let switchOperator = switchOperator else {
-            return
-        }
-
         Task {
             let isOn = await switchOperator.currentStatusAsync()
             DispatchQueue.main.async { [self] in
@@ -62,9 +74,6 @@ class SwitchBarVM : BarProvider, ObservableObject {
     }
     
     func refreshInfo() {
-        guard let switchOperator = switchOperator else {
-            return
-        }
         Task {
             let info = await switchOperator.currentInfoAsync()
             DispatchQueue.main.async { [self] in
@@ -74,9 +83,6 @@ class SwitchBarVM : BarProvider, ObservableObject {
     }
     
     func doSwitch(isOn:Bool) {
-        guard let switchOperator = switchOperator else {
-            return
-        }
         processing = true
         Task {
             let success = await switchOperator.operationSwitch(isOn: isOn)

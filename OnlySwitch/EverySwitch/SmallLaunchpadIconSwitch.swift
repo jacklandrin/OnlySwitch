@@ -10,12 +10,6 @@ import Foundation
 class SmallLaunchpadIconSwitch:SwitchProvider {
     var type: SwitchType = .smallLaunchpadIcon
     
-    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .smallLaunchpadIcon)
-    
-    init() {
-        self.switchBarVM.switchOperator = self
-    }
-    
     func currentStatus() -> Bool {
         let result = getLaunchpadRowCMD.runAppleScript(isShellCMD: true)
         if result.0 {

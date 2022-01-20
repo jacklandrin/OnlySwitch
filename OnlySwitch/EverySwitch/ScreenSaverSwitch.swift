@@ -10,11 +10,6 @@ import AppKit
 class ScreenSaverSwitch:SwitchProvider {
 
     var type: SwitchType = .screenSaver
-    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .screenSaver)
-    
-    init() {
-        switchBarVM.switchOperator = self
-    }
     var getScreenSaverIntervalResult:(Bool,Any) = (true,"")
     let ScreenSaverIntervalKey = "ScreenSaverIntervalKey"
     func operationSwitch(isOn: Bool) async -> Bool {

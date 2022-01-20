@@ -11,11 +11,7 @@ import AppKit
 class XcodeCacheSwitch:SwitchProvider {
 
     var type: SwitchType = .xcodeCache
-    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .xcodeCache)
-    
-    init() {
-        switchBarVM.switchOperator = self
-    }
+
     
     let derivedData = "Library/Developer/Xcode/DerivedData/"
     let xcodepath = "Library/Developer/Xcode/"

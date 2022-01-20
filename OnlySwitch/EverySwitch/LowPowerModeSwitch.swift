@@ -10,12 +10,6 @@ import Foundation
 class LowPowerModeSwitch:SwitchProvider {
     var type: SwitchType = .lowpowerMode
     
-    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .lowpowerMode)
-    
-    init() {
-        self.switchBarVM.switchOperator = self
-    }
-    
     func currentStatus() -> Bool {
         let result = getLowpowerModeCMD.runAppleScript(isShellCMD: true)
         let content = result.1 as! String

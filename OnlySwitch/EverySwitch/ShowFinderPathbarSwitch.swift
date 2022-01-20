@@ -10,12 +10,6 @@ import Foundation
 class ShowFinderPathbarSwitch:SwitchProvider {
     var type: SwitchType = .showFinderPathbar
     
-    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .showFinderPathbar)
-    
-    init() {
-        self.switchBarVM.switchOperator = self
-    }
-    
     func currentStatus() -> Bool {
         let result = getPathbarStatusCMD.runAppleScript(isShellCMD: true)
         if result.0 {

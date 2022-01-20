@@ -10,11 +10,6 @@ import AppKit
 class HiddenDesktopSwitch:SwitchProvider {
     
     var type: SwitchType = .hiddeDesktop
-    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .hiddeDesktop)
-    
-    init() {
-        switchBarVM.switchOperator = self
-    }
     
     func currentStatus() -> Bool {
         let result = currentDesktopStatusCMD.runAppleScript(isShellCMD: true)

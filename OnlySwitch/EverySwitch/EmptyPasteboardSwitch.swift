@@ -10,12 +10,6 @@ import AppKit
 class EmptyPasteboardSwitch:SwitchProvider {
     var type: SwitchType = .emptyPasteboard
     
-    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .emptyPasteboard)
-    
-    init() {
-        switchBarVM.switchOperator = self
-    }
-    
     func currentStatus() -> Bool {
         return true
     }

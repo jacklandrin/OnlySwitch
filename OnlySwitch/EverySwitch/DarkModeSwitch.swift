@@ -10,11 +10,6 @@ import AppKit
 class DarkModeSwitch:SwitchProvider {
 
     var type: SwitchType = .darkMode
-    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .darkMode)
-    
-    init() {
-        switchBarVM.switchOperator = self
-    }
     
     func currentStatus() -> Bool {
         let result = currentInferfaceStyle.runAppleScript(isShellCMD: true)

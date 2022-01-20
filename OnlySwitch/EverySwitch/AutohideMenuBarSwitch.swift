@@ -10,11 +10,6 @@ import AppKit
 class AutohideMenuBarSwitch:SwitchProvider {
 
     var type: SwitchType = .autohideMenuBar
-    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .autohideMenuBar)
-    
-    init() {
-        switchBarVM.switchOperator = self
-    }
     
     func currentStatus() -> Bool {
         let result = getAutoHideMenuBarCMD.runAppleScript()

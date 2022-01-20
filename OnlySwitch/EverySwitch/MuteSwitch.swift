@@ -13,11 +13,6 @@ let ASVolumeKey = "ASVolumeKey"
 class MuteSwitch:SwitchProvider {
 
     var type: SwitchType = .mute
-    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .mute)
-    
-    init() {
-        switchBarVM.switchOperator = self
-    }
     private let muteSwitchOperator:MuteSwitchProtocal = ASMuteSwitchOperator()
     
     func operationSwitch(isOn: Bool) async -> Bool {

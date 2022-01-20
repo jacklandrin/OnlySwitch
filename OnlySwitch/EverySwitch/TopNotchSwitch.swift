@@ -12,11 +12,6 @@ import AVFoundation
 class TopNotchSwitch:SwitchProvider, CurrentScreen {
     
     var type: SwitchType = .topNotch
-    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .topNotch)
-    
-    init() {
-        switchBarVM.switchOperator = self
-    }
     // Mark: - private properties
     
     private var currentImageName = ""

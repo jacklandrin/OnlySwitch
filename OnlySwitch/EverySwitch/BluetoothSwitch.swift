@@ -10,11 +10,6 @@ import AppKit
 class BluetoothSwitch:SwitchProvider {
 
     var type: SwitchType = .bluetooth
-    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .bluetooth)
-    
-    init() {
-        switchBarVM.switchOperator = self
-    }
     let blManager = BluetoothDevicesManager.shared
     func currentInfo() -> String {
         return ""

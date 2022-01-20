@@ -10,13 +10,7 @@ import Foundation
 let MicVolumeKey = "MicVolumeKey"
 class MuteMicSwitch:SwitchProvider {
     var type: SwitchType = .muteMicrophone
-    
-    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .muteMicrophone)
-    
-    init() {
-        self.switchBarVM.switchOperator = self
-    }
-    
+        
     func currentStatus() -> Bool {
         let result = getCurrentInputVolume.runAppleScript()
         if result.0 {

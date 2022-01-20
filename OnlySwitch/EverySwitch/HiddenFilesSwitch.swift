@@ -10,11 +10,6 @@ import AppKit
 class HiddenFilesSwitch:SwitchProvider {
 
     var type: SwitchType = .hiddenFiles
-    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .hiddenFiles)
-    
-    init() {
-        switchBarVM.switchOperator = self
-    }
     
     func currentInfo() -> String {
         return ""

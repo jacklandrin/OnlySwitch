@@ -9,15 +9,12 @@ import Foundation
 
 class ShowUserLibrarySwitch:SwitchProvider {
     var type: SwitchType = .showUserLibrary
-    
-    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .showUserLibrary)
-    
+        
     private let manager = FileManager.default
     
     private var userLibaray : URL?
     
     init() {
-        self.switchBarVM.switchOperator = self
         self.userLibaray = manager.homeDirectoryForCurrentUser.appendingPathComponent("Library")
     }
     

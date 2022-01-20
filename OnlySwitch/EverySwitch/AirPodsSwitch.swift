@@ -13,10 +13,8 @@ let AirPodsAddressKey = "AirPodsAddressKey"
 class AirPodsSwitch:SwitchProvider {
 
     var type: SwitchType = .airPods
-    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .airPods)
     
     init() {
-        switchBarVM.switchOperator = self
         setCurrentDevice()
     }
     var blManager = BluetoothDevicesManager.shared

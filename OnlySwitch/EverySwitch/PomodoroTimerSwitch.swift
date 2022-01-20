@@ -18,7 +18,6 @@ class PomodoroTimerSwitch: SwitchProvider {
     var restTimer:Timer?
     var workTimer:Timer?
     var type: SwitchType = .pomodoroTimer
-    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .pomodoroTimer)
     
     var nextDate:Date?
     
@@ -63,7 +62,6 @@ class PomodoroTimerSwitch: SwitchProvider {
     }
     
     init() {
-        self.switchBarVM.switchOperator = self
         NotificationCenter.default.addObserver(forName: ChangePTDurationNotification, object: nil, queue: .main) { _ in
             self.stopTimer()
         }

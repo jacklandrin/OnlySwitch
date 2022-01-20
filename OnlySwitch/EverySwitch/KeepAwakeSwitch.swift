@@ -14,7 +14,6 @@ let KeepAwakeKey = "KeepAwakeKey"
 class KeepAwakeSwitch:SwitchProvider {
     static let shared = KeepAwakeSwitch()
     var type: SwitchType = .keepAwake
-    var switchBarVM: SwitchBarVM = SwitchBarVM(switchType: .keepAwake)
     
     private let reasonForActivity = "Reason for activity" as CFString
     private var assertionID: IOPMAssertionID = IOPMAssertionID()
@@ -22,7 +21,6 @@ class KeepAwakeSwitch:SwitchProvider {
     private var preventedSleep
     
     init() {
-        switchBarVM.switchOperator = self
         if preventedSleep {
            let success = IOPMAssertionCreateWithName( kIOPMAssertionTypeNoDisplaySleep as CFString,
                                                         IOPMAssertionLevel(kIOPMAssertionLevelOn),
