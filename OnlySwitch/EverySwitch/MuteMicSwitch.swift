@@ -12,7 +12,7 @@ class MuteMicSwitch:SwitchProvider {
     var type: SwitchType = .muteMicrophone
         
     func currentStatus() -> Bool {
-        let result = getCurrentInputVolume.runAppleScript()
+        let result = VolumeCMD.getInput.runAppleScript()
         if result.0 {
             let volume:String = result.1 as! String
             let volumeValue:Int = Int(volume) ?? 50
@@ -30,12 +30,12 @@ class MuteMicSwitch:SwitchProvider {
     
     func operationSwitch(isOn: Bool) async -> Bool {
         if isOn {
-            let cmd = setInputVolumeCMD + "0"
+            let cmd = VolumeCMD.setInput + "0"
             return cmd.runAppleScript().0
         } else {
             var volumeValue = UserDefaults.standard.integer(forKey: MicVolumeKey)
             volumeValue = (volumeValue == 0) ? 50 : volumeValue
-            let cmd = setInputVolumeCMD + String(volumeValue)
+            let cmd = VolumeCMD.setInput + String(volumeValue)
             return cmd.runAppleScript().0
         }
     }

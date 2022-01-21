@@ -11,7 +11,7 @@ class SmallLaunchpadIconSwitch:SwitchProvider {
     var type: SwitchType = .smallLaunchpadIcon
     
     func currentStatus() -> Bool {
-        let result = getLaunchpadRowCMD.runAppleScript(isShellCMD: true)
+        let result = SmallLaunchpadCMD.status.runAppleScript(isShellCMD: true)
         if result.0 {
             if (result.1 as! NSString).intValue > 5 {
                 return true
@@ -26,9 +26,9 @@ class SmallLaunchpadIconSwitch:SwitchProvider {
     
     func operationSwitch(isOn: Bool) async -> Bool {
         if isOn {
-            return smallLaunchpadIconCMD.runAppleScript(isShellCMD: true).0
+            return SmallLaunchpadCMD.on.runAppleScript(isShellCMD: true).0
         } else {
-            return bigLaunchpadIconCMD.runAppleScript(isShellCMD: true).0
+            return SmallLaunchpadCMD.off.runAppleScript(isShellCMD: true).0
         }
     }
     

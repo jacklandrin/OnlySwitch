@@ -7,67 +7,85 @@
 
 import Foundation
 
-let hideDesktopCMD = "defaults write com.apple.finder CreateDesktop 0; killall Finder"
-let showDesktopCMD = "defaults write com.apple.finder CreateDesktop 1; killall Finder"
-let currentDesktopStatusCMD = "defaults read com.apple.finder CreateDesktop"
+protocol SwitchCMD {
+    static var status:String { get }
+    static var on:String { get }
+    static var off:String { get }
+}
 
-let turnOnDarkModeCMD = """
-                        tell application "System Events"
-                            tell appearance preferences
-                                set dark mode to true
+struct HideDesktopCMD:SwitchCMD {
+    static var status: String = "defaults read com.apple.finder CreateDesktop"
+    static var on: String = "defaults write com.apple.finder CreateDesktop 0; killall Finder"
+    static var off: String = "defaults write com.apple.finder CreateDesktop 1; killall Finder"
+}
+
+struct DarkModeCMD:SwitchCMD {
+    static var status: String = "defaults read -g AppleInterfaceStyle"
+    static var on: String = """
+                            tell application "System Events"
+                                tell appearance preferences
+                                    set dark mode to true
+                                end tell
                             end tell
-                        end tell
-                        """
-
-let turnOffDarkModeCMD = """
-                           tell application "System Events"
-                               tell appearance preferences
-                                   set dark mode to false
+                            """
+    static var off: String = """
+                               tell application "System Events"
+                                   tell appearance preferences
+                                       set dark mode to false
+                                   end tell
                                end tell
-                           end tell
-                        """
+                             """
+}
 
-let currentInferfaceStyle = "defaults read -g AppleInterfaceStyle"
 
 let getCurrentWallpaperUrl = "tell app \"finder\" to get posix path of (get desktop picture as alias)"
-let getDesktopProperties = "tell application \"System Events\" to get properties of every desktop"
 
-let getCurrentOutputVolume = "set ovol to output volume of (get volume settings)"
+struct VolumeCMD {
+    static let getOutput = "set ovol to output volume of (get volume settings)"
+    static let setOutput = "set volume output volume " //+value
+    static let getInput = "set ovol to input volume of (get volume settings)"
+    static let setInput = "set volume input volume " //+value
+}
 
-let setOutputVolumeCMD = "set volume output volume " //+value
 
-let getCurrentInputVolume = "set ovol to input volume of (get volume settings)"
+struct ScreenSaverCMD:SwitchCMD {
+    static var status: String = "tell application \"System Events\" to tell screen saver preferences to get delay interval"
+    static var on: String = "tell application \"System Events\" to tell screen saver preferences to set delay interval to " // + value
+    static var off: String = "tell application \"System Events\" to tell screen saver preferences to set delay interval to 0"
+}
 
-let setInputVolumeCMD = "set volume input volume " //+value
+struct AutohideDockCMD:SwitchCMD {
+    static var status: String = "tell application \"System Events\" to get the autohide of the dock preferences"
+    static var on: String = "tell application \"System Events\" to set the autohide of the dock preferences to true"
+    static var off: String = "tell application \"System Events\" to set the autohide of the dock preferences to false"
+}
 
-let screenSaverDisableCMD = "tell application \"System Events\" to tell screen saver preferences to set delay interval to 0"
-let setSceenSaverIntervalCMD = "tell application \"System Events\" to tell screen saver preferences to set delay interval to "
-let getScreenSaverIntervalCMD = "tell application \"System Events\" to tell screen saver preferences to get delay interval"
 
-let getAutohideDockCMD = "tell application \"System Events\" to get the autohide of the dock preferences"
-let setAutohideDockEnableCMD = "tell application \"System Events\" to set the autohide of the dock preferences to true"
-let setAutohideDockDisableCMD = "tell application \"System Events\" to set the autohide of the dock preferences to false"
-
-let getAutoHideMenuBarCMD = """
+struct AutoHideMenuBarCMD:SwitchCMD {
+    static var status: String = """
+                                    tell application "System Events"
+                                        tell dock preferences to get autohide menu bar
+                                    end tell
+                                """
+    static var on: String = """
                                 tell application "System Events"
-                                    tell dock preferences to get autohide menu bar
+                                    tell dock preferences to set autohide menu bar to true
                                 end tell
                             """
-let setAutohideMenuBarEnableCMD = """
-                                    tell application "System Events"
-                                        tell dock preferences to set autohide menu bar to true
-                                    end tell
-                                  """
+    static var off: String = """
+                                tell application "System Events"
+                                    tell dock preferences to set autohide menu bar to true
+                                end tell
+                            """
+}
 
-let setAutohideMenuBarDisableCMD = """
-                                        tell application "System Events"
-                                            tell dock preferences to set autohide menu bar to false
-                                        end tell
-                                    """
 
-let getHiddenFilesStateCMD = "defaults read com.apple.Finder AppleShowAllFiles"
-let setHiddenFilesShowCMD = "defaults write com.apple.Finder AppleShowAllFiles true; killall Finder"
-let setHiddenFilesHideCMD = "defaults write com.apple.Finder AppleShowAllFiles false; killall Finder"
+struct ShowHiddenFilesCMD:SwitchCMD {
+    static var status: String = "defaults read com.apple.Finder AppleShowAllFiles"
+    static var on: String = "defaults write com.apple.Finder AppleShowAllFiles true; killall Finder"
+    static var off: String = "defaults write com.apple.Finder AppleShowAllFiles false; killall Finder"
+}
+
 
 let emptyTrashCMD = """
                     tell application "Finder"
@@ -76,43 +94,56 @@ let emptyTrashCMD = """
                     end tell
                     """
 
-
-let getExtensionNameStateCMD = "defaults read NSGlobalDomain AppleShowAllExtensions"
-let showExtensionNameCMD = "defaults write NSGlobalDomain AppleShowAllExtensions -bool true; killall Finder"
-let hideExtensionNameCMD = "defaults write NSGlobalDomain AppleShowAllExtensions -bool false; killall Finder"
-
-let getLaunchpadRowCMD = "defaults read com.apple.dock springboard-rows"
-let smallLaunchpadIconCMD = """
-                            defaults write com.apple.dock springboard-rows -int 6; killall Dock
-                            """
-let bigLaunchpadIconCMD = """
-                            defaults write com.apple.dock springboard-rows -int 5; killall Dock
-                            """
-
-let getLowpowerModeCMD = "pmset -g | grep lowpowermode"
-let setLowpowerModeCMD = "sudo pmset -a lowpowermode 1"
-let unsetLowpowerModeCMD = "sudo pmset -a lowpowermode 0"
-
-
-let getShortcutsList = "shortcuts list"
-
-let getPathbarStatusCMD = "defaults read com.apple.finder ShowPathbar"
-let showPathbarCMD = "defaults write com.apple.finder ShowPathbar -bool true"
-let hidePathbarCMD = "defaults write com.apple.finder ShowPathbar -bool false"
-
-struct DockRecentCMD {
-    static let read = "defaults read com.apple.dock show-recents"
-    static let hide = "defaults write com.apple.dock show-recents -bool false; killall Dock"
-    static let show = "defaults write com.apple.dock show-recents -bool true; killall Dock"
+struct ShowExtensionNameCMD:SwitchCMD {
+    static var status: String = "defaults read NSGlobalDomain AppleShowAllExtensions"
+    static var on: String = "defaults write NSGlobalDomain AppleShowAllExtensions -bool true; killall Finder"
+    static var off: String = "defaults write NSGlobalDomain AppleShowAllExtensions -bool false; killall Finder"
 }
 
-func runShortcut(name:String) -> String {
-    return "shortcuts run \'\(name)\'"
+struct SmallLaunchpadCMD:SwitchCMD {
+    static let status: String = "defaults read com.apple.dock springboard-rows"
+    static let on: String = """
+                        defaults write com.apple.dock springboard-rows -int 6; killall Dock
+                        """
+    static let off: String = """
+                    defaults write com.apple.dock springboard-rows -int 5; killall Dock
+                    """
 }
 
-func showShortcut(name:String) -> String {
-    return "shortcuts view \'\(name)\'"
+struct LowpowerModeCMD:SwitchCMD {
+    static let status: String = "pmset -g | grep lowpowermode"
+    static let on = "sudo pmset -a lowpowermode 1"
+    static let off = "sudo pmset -a lowpowermode 0"
 }
+
+
+
+struct ShowPathBarCMD:SwitchCMD {
+    static let status: String = "defaults read com.apple.finder ShowPathbar"
+    static let on: String = "defaults write com.apple.finder ShowPathbar -bool true"
+    static let off: String = "defaults write com.apple.finder ShowPathbar -bool false"
+}
+
+struct ShowDockRecentCMD:SwitchCMD {
+    static var on: String = "defaults write com.apple.dock show-recents -bool false; killall Dock"
+    
+    static var off: String = "defaults write com.apple.dock show-recents -bool true; killall Dock"
+    
+    static let status:String = "defaults read com.apple.dock show-recents"
+}
+
+struct ShorcutsCMD {
+    static let getList = "shortcuts list"
+    
+    static func runShortcut(name:String) -> String {
+        return "shortcuts run \'\(name)\'"
+    }
+    
+    static func showShortcut(name:String) -> String {
+        return "shortcuts view \'\(name)\'"
+    }
+}
+
 
 func displayNotificationCMD(title:String, content:String, subtitle:String) -> String {
     "display notification \"\(content)\" with title \"\(title)\" subtitle \"\(subtitle)\""

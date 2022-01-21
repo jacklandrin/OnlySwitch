@@ -33,6 +33,6 @@ class ShortcutsBarVM:BarProvider,ObservableObject {
     }
     
     func operateCMD() async -> Bool {
-        runShortcut(name: self.name).runAppleScript(isShellCMD: true).0
+        ShorcutsCMD.runShortcut(name: self.name).runAppleScript(isShellCMD: true).0
     }
 }

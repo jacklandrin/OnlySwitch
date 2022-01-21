@@ -70,7 +70,7 @@ class NSMuteSwitchOperator:MuteSwitchProtocal {
 
 class ASMuteSwitchOperator:MuteSwitchProtocal {
     func currentStatus() -> Bool {
-        let result = getCurrentOutputVolume.runAppleScript()
+        let result = VolumeCMD.getOutput.runAppleScript()
         if result.0 {
             let volume:String = result.1 as! String
             let volumeValue:Int = Int(volume) ?? 50
@@ -85,12 +85,12 @@ class ASMuteSwitchOperator:MuteSwitchProtocal {
     
     func operationSwitch(isOn: Bool) -> Bool {
         if isOn {
-            let cmd = setOutputVolumeCMD + "0"
+            let cmd = VolumeCMD.setOutput + "0"
             return cmd.runAppleScript().0
         } else {
             var volumeValue = UserDefaults.standard.integer(forKey: ASVolumeKey)
             volumeValue = (volumeValue == 0) ? 50 : volumeValue
-            let cmd = setOutputVolumeCMD + String(volumeValue)
+            let cmd = VolumeCMD.setOutput + String(volumeValue)
             return cmd.runAppleScript().0
         }
 

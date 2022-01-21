@@ -11,7 +11,7 @@ class ShowExtensionNameSwitch:SwitchProvider {
     var type: SwitchType = .showExtensionName
     
     func currentStatus() -> Bool {
-        let result = getExtensionNameStateCMD.runAppleScript(isShellCMD: true)
+        let result = ShowExtensionNameCMD.status.runAppleScript(isShellCMD: true)
         if result.0 {
             return (result.1 as! NSString).boolValue
         }
@@ -24,9 +24,9 @@ class ShowExtensionNameSwitch:SwitchProvider {
     
     func operationSwitch(isOn: Bool) async -> Bool {
         if isOn {
-            return showExtensionNameCMD.runAppleScript(isShellCMD: true).0
+            return ShowExtensionNameCMD.on.runAppleScript(isShellCMD: true).0
         } else {
-            return hideExtensionNameCMD.runAppleScript(isShellCMD: true).0
+            return ShowExtensionNameCMD.off.runAppleScript(isShellCMD: true).0
         }
     }
     

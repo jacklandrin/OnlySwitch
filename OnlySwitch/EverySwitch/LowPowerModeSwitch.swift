@@ -11,7 +11,7 @@ class LowPowerModeSwitch:SwitchProvider {
     var type: SwitchType = .lowpowerMode
     
     func currentStatus() -> Bool {
-        let result = getLowpowerModeCMD.runAppleScript(isShellCMD: true)
+        let result = LowpowerModeCMD.status.runAppleScript(isShellCMD: true)
         let content = result.1 as! String
         return content.contains("1")
     }
@@ -22,9 +22,9 @@ class LowPowerModeSwitch:SwitchProvider {
     
     func operationSwitch(isOn: Bool) async -> Bool {
         if isOn {
-            return setLowpowerModeCMD.runAppleScript(isShellCMD: true, with: true).0
+            return LowpowerModeCMD.on.runAppleScript(isShellCMD: true, with: true).0
         } else {
-            return unsetLowpowerModeCMD.runAppleScript(isShellCMD: true, with: true).0
+            return LowpowerModeCMD.off.runAppleScript(isShellCMD: true, with: true).0
         }
     }
     

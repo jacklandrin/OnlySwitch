@@ -11,7 +11,7 @@ class DockRecentSwitch:SwitchProvider {
     var type: SwitchType = .dockRecent
     
     func currentStatus() -> Bool {
-        let result = DockRecentCMD.read.runAppleScript(isShellCMD: true)
+        let result = ShowDockRecentCMD.status.runAppleScript(isShellCMD: true)
         if result.0 {
             return (result.1 as! NSString).boolValue
         }
@@ -24,9 +24,9 @@ class DockRecentSwitch:SwitchProvider {
     
     func operationSwitch(isOn: Bool) async -> Bool {
         if isOn {
-            return DockRecentCMD.show.runAppleScript(isShellCMD: true).0
+            return ShowDockRecentCMD.on.runAppleScript(isShellCMD: true).0
         } else {
-            return DockRecentCMD.hide.runAppleScript(isShellCMD: true).0
+            return ShowDockRecentCMD.off.runAppleScript(isShellCMD: true).0
         }
     }
     

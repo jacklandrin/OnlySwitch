@@ -12,7 +12,7 @@ class DarkModeSwitch:SwitchProvider {
     var type: SwitchType = .darkMode
     
     func currentStatus() -> Bool {
-        let result = currentInferfaceStyle.runAppleScript(isShellCMD: true)
+        let result = DarkModeCMD.status.runAppleScript(isShellCMD: true)
         if result.0 {
             if (result.1 as! String) == "Dark" {
                 return true
@@ -25,9 +25,9 @@ class DarkModeSwitch:SwitchProvider {
     
     func operationSwitch(isOn: Bool) async -> Bool {
         if isOn {
-            return turnOnDarkModeCMD.runAppleScript().0
+            return DarkModeCMD.on.runAppleScript().0
         } else {
-            return turnOffDarkModeCMD.runAppleScript().0
+            return DarkModeCMD.off.runAppleScript().0
         }
     }
     

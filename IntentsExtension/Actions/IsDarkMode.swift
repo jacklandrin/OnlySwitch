@@ -11,7 +11,7 @@ import Foundation
 final class IsDarkModeIntentHandler:NSObject, IsDarkModeIntentHandling {
     func handle(intent: IsDarkModeIntent) async -> IsDarkModeIntentResponse {
         let response = IsDarkModeIntentResponse(code: .success, userActivity: nil)
-        let isDarkMode = currentInferfaceStyle.runAppleScript(isShellCMD: true).1 as! String == "Dark"
+        let isDarkMode = DarkModeCMD.status.runAppleScript(isShellCMD: true).1 as! String == "Dark"
         response.isDarkMode = isDarkMode as NSNumber
         return response
     }

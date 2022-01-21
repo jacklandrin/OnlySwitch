@@ -12,7 +12,7 @@ class AutohideDockSwitch:SwitchProvider {
     var type: SwitchType = .autohideDock
 
     func currentStatus() -> Bool {
-        let result = getAutohideDockCMD.runAppleScript()
+        let result = AutohideDockCMD.status.runAppleScript()
         if result.0 {
             return (result.1 as! NSString).boolValue
         }
@@ -30,9 +30,9 @@ class AutohideDockSwitch:SwitchProvider {
     
     func operationSwitch(isOn: Bool) async -> Bool {
         if isOn {
-            return setAutohideDockEnableCMD.runAppleScript().0
+            return AutohideDockCMD.on.runAppleScript().0
         } else {
-            return setAutohideDockDisableCMD.runAppleScript().0
+            return AutohideDockCMD.off.runAppleScript().0
         }
     }
 }

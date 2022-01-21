@@ -16,7 +16,7 @@ class HiddenFilesSwitch:SwitchProvider {
     }
     
     func currentStatus() -> Bool {
-        let result = getHiddenFilesStateCMD.runAppleScript(isShellCMD: true)
+        let result = ShowHiddenFilesCMD.status.runAppleScript(isShellCMD: true)
         if result.0 {
             return (result.1 as! NSString).boolValue
         }
@@ -29,9 +29,9 @@ class HiddenFilesSwitch:SwitchProvider {
     
     func operationSwitch(isOn: Bool) async -> Bool {
         if isOn {
-            return setHiddenFilesShowCMD.runAppleScript(isShellCMD: true).0
+            return ShowHiddenFilesCMD.on.runAppleScript(isShellCMD: true).0
         } else {
-            return setHiddenFilesHideCMD.runAppleScript(isShellCMD: true).0
+            return ShowHiddenFilesCMD.off.runAppleScript(isShellCMD: true).0
         }
     }
 }

@@ -16,15 +16,15 @@ class ScreenSaverSwitch:SwitchProvider {
         if isOn {
             var interval = UserDefaults.standard.integer(forKey: ScreenSaverIntervalKey)
             interval = (interval == 0) ? 300 : interval
-            let cmd = setSceenSaverIntervalCMD + String(interval)
+            let cmd = ScreenSaverCMD.on + String(interval)
             return cmd.runAppleScript().0
         } else {
-            return screenSaverDisableCMD.runAppleScript().0
+            return ScreenSaverCMD.off.runAppleScript().0
         }
     }
     
     func currentStatus() -> Bool {
-        getScreenSaverIntervalResult = getScreenSaverIntervalCMD.runAppleScript()
+        getScreenSaverIntervalResult = ScreenSaverCMD.status.runAppleScript()
         if getScreenSaverIntervalResult.0 {
             let intervalStr = getScreenSaverIntervalResult.1 as! String
             let interval:Int = Int(intervalStr) ?? 300
