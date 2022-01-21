@@ -13,7 +13,7 @@
 brew install only-switch
 ```
 ## Manually Download
-[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_2.1.1/OnlySwitch.dmg)
+[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_2.1.3/OnlySwitch.dmg)
 
 ## What's the OnlySwitch?
 OnlySwitch provides a series of toggle switches to simply your routine work, such as Hiden desktop icons, dark mode and hide notch of new Macbook Pro. The switches show on your statusbar, you can control them effortlessly. Switch and Shortcuts items can be customized (remove/add or sort) to show on the list.
@@ -37,31 +37,20 @@ Everyone can contribute macOS Shortcuts for OnlySwitch now. Please read [How to 
 
 ## Switch list
 
-| Switch                   | status            |
-|:-------------------------|-------------------|
-| Hide desktop             | finish            |
-| Dark mode                | finish            |
-| Screen Saver             | finish            |
-| Night Shift              | finish            |
-| Autohide Dock            | finish            |
-| Airpods                  | finish            |
-| Bluetooth                | finish            |
-| Xcode cache              | finish            |
-| Autohide Menu Bar        | finish            |
-| Show hidden files        | finish            |
-| Radio Station            | finish            |
-| Keep awake               | finish            |
-| Empty trash              | finish            |
-| Empty pasteboard         | finish            |
-| Mute                     | finish            |
-| Show user library folder | finish            |
-| Show extension name      | finish            |
-| Pomodoro timer           | finish            |
-| Small launchpad icon     | finish            |
-| Mute mic                 | finish            |
-| Show Finder pathbar      | finish            |
-| Low power mode           | require password  |
-| Hide notch               | exist some issues |
+| Switch            | status | Switch                   | status            |
+|:------------------|--------|:-------------------------|:------------------|
+| Hide desktop      | finish | Hide notch               | exist some issues |
+| Dark mode         | finish | Low power mode           | require password  |
+| Screen Saver      | finish | Show Finder pathbar      | finish            |
+| Night Shift       | finish | Mute mic                 | finish            |
+| Autohide Dock     | finish | Small launchpad icon     | finish            |
+| Airpods           | finish | Pomodoro timer           | finish            |
+| Bluetooth         | finish | Show extension name      | finish            |
+| Xcode cache       | finish | Show user library folder | finish            |
+| Autohide Menu Bar | finish | Mute                     | finish            |
+| Show hidden files | finish | Empty pasteboard         | finish            |
+| Radio Station     | finish | Empty trash              | finish            |
+| Keep awake        | finish | Show Recent Apps on Dock | finish            |
 
 Since Version 1.3, switches can be added or removed on list.
 
