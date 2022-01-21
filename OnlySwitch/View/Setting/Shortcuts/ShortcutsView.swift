@@ -27,7 +27,9 @@ struct ShortcutsView: View {
                 Divider()
                     .frame(width: 360)
                 if shortcutsVM.shortcutsList.count == 0 {
+                    Spacer()
                     Text("There's not any Shortcuts.".localized())
+                    Spacer()
                 } else {
                     List {
                         ForEach(shortcutsVM.shortcutsList.indices, id:\.self) { index in
@@ -53,7 +55,6 @@ struct ShortcutsView: View {
                     Button(action: {
                         shortcutsVM.loadShortcutsList()
                         shortcutsVM.loadData()
-                        shortcutsVM.checkIfInstalled()
                     }, label: {
                         Image(systemName: "arrow.clockwise")
                     }).help("refresh".localized())
@@ -66,6 +67,7 @@ struct ShortcutsView: View {
         }
         .onAppear{
             shortcutsVM.loadShortcutsList()
+            shortcutsVM.loadData()
             shortcutsVM.checkIfInstalled()
         }
         .toast(isPresenting: $shortcutsVM.showErrorToast) {
@@ -113,7 +115,7 @@ struct ShortcutsView: View {
                         Spacer()
                         HStack {
                             Spacer()
-                            Text("by \(shortcutsVM.sharedShortcutsList[index].author)")
+                            Text("@\(shortcutsVM.sharedShortcutsList[index].author)")
                                 .font(.system(size: 10))
                         }.padding(.trailing, 10)
                             .padding(.bottom, 5)

@@ -74,7 +74,7 @@ struct AutoHideMenuBarCMD:SwitchCMD {
                             """
     static var off: String = """
                                 tell application "System Events"
-                                    tell dock preferences to set autohide menu bar to true
+                                    tell dock preferences to set autohide menu bar to false
                                 end tell
                             """
 }
@@ -125,9 +125,9 @@ struct ShowPathBarCMD:SwitchCMD {
 }
 
 struct ShowDockRecentCMD:SwitchCMD {
-    static var on: String = "defaults write com.apple.dock show-recents -bool false; killall Dock"
+    static var on: String = "defaults write com.apple.dock show-recents -bool true; killall Dock"
     
-    static var off: String = "defaults write com.apple.dock show-recents -bool true; killall Dock"
+    static var off: String = "defaults write com.apple.dock show-recents -bool false; killall Dock"
     
     static let status:String = "defaults read com.apple.dock show-recents"
 }
