@@ -52,6 +52,7 @@
 		04581DC327677ADC008ADF30 /* KeepAwakeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04581DC227677ADC008ADF30 /* KeepAwakeSwitch.swift */; };
 		046331D32795DACB00C5F894 /* ShortcutsMarket.json in Resources */ = {isa = PBXBuildFile; fileRef = 046331D22795DACB00C5F894 /* ShortcutsMarket.json */; };
 		046331D52795E1BC00C5F894 /* ColorDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046331D42795E1BC00C5F894 /* ColorDefine.swift */; };
+		046FF3C6279A2C0B00506953 /* DockRecentSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046FF3C5279A2C0B00506953 /* DockRecentSwitch.swift */; };
 		047140B327788364005B160B /* mixkit-alert-bells-echo-765.wav in Resources */ = {isa = PBXBuildFile; fileRef = 047140B127788364005B160B /* mixkit-alert-bells-echo-765.wav */; };
 		047140B427788364005B160B /* mixkit-bell-notification-933.wav in Resources */ = {isa = PBXBuildFile; fileRef = 047140B227788364005B160B /* mixkit-bell-notification-933.wav */; };
 		047140B627788486005B160B /* EffectSoundHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140B527788486005B160B /* EffectSoundHelper.swift */; };
@@ -227,6 +228,7 @@
 		04581DC227677ADC008ADF30 /* KeepAwakeSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeepAwakeSwitch.swift; sourceTree = "<group>"; };
 		046331D22795DACB00C5F894 /* ShortcutsMarket.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ShortcutsMarket.json; sourceTree = "<group>"; };
 		046331D42795E1BC00C5F894 /* ColorDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorDefine.swift; sourceTree = "<group>"; };
+		046FF3C5279A2C0B00506953 /* DockRecentSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockRecentSwitch.swift; sourceTree = "<group>"; };
 		047140B127788364005B160B /* mixkit-alert-bells-echo-765.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "mixkit-alert-bells-echo-765.wav"; sourceTree = "<group>"; };
 		047140B227788364005B160B /* mixkit-bell-notification-933.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "mixkit-bell-notification-933.wav"; sourceTree = "<group>"; };
 		047140B527788486005B160B /* EffectSoundHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectSoundHelper.swift; sourceTree = "<group>"; };
@@ -382,6 +384,7 @@
 				042661392780B885005DF2B9 /* LowPowerModeSwitch.swift */,
 				04A6F93E2788747600E3300F /* MuteMicSwitch.swift */,
 				04BF97672790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift */,
+				046FF3C5279A2C0B00506953 /* DockRecentSwitch.swift */,
 			);
 			path = EverySwitch;
 			sourceTree = "<group>";
@@ -1031,6 +1034,7 @@
 				049337922762BA3200AE779A /* SettingView.swift in Sources */,
 				0493376427625D6F00AE779A /* RadioPlayerItem.swift in Sources */,
 				04A23B2B275D61BC00B454C8 /* NightShiftSwitch.swift in Sources */,
+				046FF3C6279A2C0B00506953 /* DockRecentSwitch.swift in Sources */,
 				0424348D275643560044D0AD /* TopNotchSwitch.swift in Sources */,
 				040E972B27611C9C003D9D42 /* URL++.swift in Sources */,
 				04A6F93F2788747600E3300F /* MuteMicSwitch.swift in Sources */,
@@ -1372,7 +1376,7 @@
 				CODE_SIGN_ENTITLEMENTS = IntentsExtension/IntentsExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 44;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1385,7 +1389,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.IntentsExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1402,7 +1406,7 @@
 				CODE_SIGN_ENTITLEMENTS = IntentsExtension/IntentsExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 44;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1415,7 +1419,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.IntentsExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

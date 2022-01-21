@@ -100,6 +100,11 @@ let getPathbarStatusCMD = "defaults read com.apple.finder ShowPathbar"
 let showPathbarCMD = "defaults write com.apple.finder ShowPathbar -bool true"
 let hidePathbarCMD = "defaults write com.apple.finder ShowPathbar -bool false"
 
+struct DockRecentCMD {
+    static let read = "defaults read com.apple.dock show-recents"
+    static let hide = "defaults write com.apple.dock show-recents -bool false; killall Dock"
+    static let show = "defaults write com.apple.dock show-recents -bool true; killall Dock"
+}
 
 func runShortcut(name:String) -> String {
     return "shortcuts run \'\(name)\'"

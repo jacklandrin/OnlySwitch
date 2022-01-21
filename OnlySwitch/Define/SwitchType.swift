@@ -38,6 +38,7 @@ enum SwitchType:UInt64, CaseIterable {
     case lowpowerMode = 1048576
     case muteMicrophone = 2097152
     case showFinderPathbar = 4194304
+    case dockRecent = 8388608
     
     func barInfo() -> SwitchBarInfo {
         switch self {
@@ -136,6 +137,10 @@ enum SwitchType:UInt64, CaseIterable {
             return SwitchBarInfo(title: "Show Finder Pathbar",
                                  onImage: NSImage(systemSymbolName: "greaterthan.square.fill"),
                                  offImage: NSImage(systemSymbolName: "greaterthan.square"))
+        case .dockRecent:
+            return SwitchBarInfo(title: "Recent Apps in Dock",
+                                 onImage: NSImage(named: "dock_recent_on")!,
+                                 offImage: NSImage(named: "dock_recent_off")!)
         }
     }
     
@@ -187,6 +192,8 @@ enum SwitchType:UInt64, CaseIterable {
             return MuteMicSwitch()
         case .showFinderPathbar:
             return ShowFinderPathbarSwitch()
+        case .dockRecent:
+            return DockRecentSwitch()
         }
     }
 }
