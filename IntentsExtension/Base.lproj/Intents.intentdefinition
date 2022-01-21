@@ -252,7 +252,7 @@
 			<key>INIntentConfigurable</key>
 			<true/>
 			<key>INIntentDescription</key>
-			<string>Set Dark Mode On</string>
+			<string>Switch between Dark Mode and Light Mode</string>
 			<key>INIntentDescriptionID</key>
 			<string>gsMO4t</string>
 			<key>INIntentIneligibleForSuggestions</key>
