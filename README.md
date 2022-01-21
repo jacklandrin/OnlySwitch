@@ -22,7 +22,6 @@ Since Version 1.7, **Shortcuts** can be imported in OnlySwitch.
 
 Since Version 2.0, supports **keyboard shortcuts**. You can control your all switches and Shortcuts by keyboard.
 
-
 <p align="center">
 <img alt="Sits in the status bar" src="https://www.jacklandrin.com/wp-content/uploads/2022/01/onlySwitch_19.png" width="60%" align="center" />
 </p>
@@ -121,7 +120,9 @@ I found I can't run the preview of SwiftUI by Xcode 13.2.1 on my M1 Pro Macbook.
 * Macken https://www.macken.xyz/2021/12/gratis-ar-gott-alla-installningar-pa-ett-stalle-onlyswitch/
 * AAPL Ch https://applech2.com/archives/20220111-onlyswitch-all-in-one-status-bar-button-for-mac.html
 
-## About Apple's warning at first open
+## About Apple's warning at first open before version 2.1.3
+Note: OnlySwitch has been notarized by Apple since version 2.1.3, so the warning box won't show in the new version.
+
 Some users ask me why masOS shows a warning box below, when they first open Only Switch.
 <p align="center">
 <img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2021/12/os_warning.png" width="35%" align="center" />
