@@ -8,6 +8,7 @@
 import Foundation
 
 let menubarIconKey = "menubarIconKey"
+let appearanceColumnCountKey = "appearanceColumnCountKey"
 
 class GeneralVM:ObservableObject {
     @Published var cacheSize:String = ""
@@ -26,4 +27,17 @@ class GeneralVM:ObservableObject {
             NotificationCenter.default.post(name: changeMenuBarIconNotificationName, object: currentMenubarIcon)
         }
     }
+    
+    @UserDefaultValue(key: appearanceColumnCountKey, defaultValue: SwitchListAppearance.single.rawValue)
+    var currentAppearance:String {
+        didSet {
+            objectWillChange.send()
+            NotificationCenter.default.post(name: changePopoverAppearanceNotificationName, object: nil)
+        }
+    }
+}
+
+enum SwitchListAppearance:String {
+    case single = "Single Column"
+    case dual = "Two Columns"
 }

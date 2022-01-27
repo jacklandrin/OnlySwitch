@@ -24,6 +24,9 @@ class SwitchVM: ObservableObject, CurrentScreen {
     @UserDefaultValue(key: soundWaveEffectDisplayKey, defaultValue: true)
     var soundWaveEffectDisplay:Bool
     
+    @UserDefaultValue(key: appearanceColumnCountKey, defaultValue: SwitchListAppearance.single.rawValue)
+    var currentAppearance:String
+    
     init() {
         refreshMaxHeight()
     }

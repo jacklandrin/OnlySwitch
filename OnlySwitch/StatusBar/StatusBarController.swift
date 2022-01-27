@@ -11,6 +11,8 @@ let showPopoverNotificationName = NSNotification.Name("showPopover")
 let hidePopoverNotificationName = NSNotification.Name("hidePopover")
 let shouldHidePopoverNotificationName = NSNotification.Name("shouldHidePopover")
 let changeMenuBarIconNotificationName = NSNotification.Name("changeMenuBarIcon")
+let changePopoverAppearanceNotificationName = NSNotification.Name("changePopoverAppearanceNotificationName")
+
 struct OtherPopover {
     static let name = NSNotification.Name("otherPopover")
     static func hasShown(_ hasShown:Bool) {
@@ -38,11 +40,15 @@ class StatusBarController {
     @UserDefaultValue(key: menubarIconKey, defaultValue: "menubar_0")
     var currentMenubarIcon:String
     
+    @UserDefaultValue(key: appearanceColumnCountKey, defaultValue: SwitchListAppearance.single.rawValue)
+    var currentAppearance:String
+    
     private var otherPopoverBitwise:Int = 0
     
     init(_ popover:NSPopover) {
         self.popover = popover
-
+        
+        
         statusItem = NSStatusBar.system.statusItem(withLength:NSStatusItem.squareLength)
         
         setStatusBarButton(image: currentMenubarIcon)
@@ -82,6 +88,17 @@ class StatusBarController {
                 strongSelf.hasOtherPopover = existOtherPopover
             }
         })
+        
+        NotificationCenter.default.addObserver(forName: changePopoverAppearanceNotificationName, object: nil, queue: .main, using: { [weak self] notify in
+            guard let strongSelf = self else {return}
+            strongSelf.hidePopover(nil)
+            let appearance = SwitchListAppearance(rawValue: strongSelf.currentAppearance)
+            if appearance == .single {
+                strongSelf.popover.contentSize.width = popoverWidth
+            } else if appearance == .dual {
+                strongSelf.popover.contentSize.width = popoverWidth * 2 - 40
+            }
+        })
     }
     
     @objc func togglePopover(sender:AnyObject) {
@@ -90,8 +107,7 @@ class StatusBarController {
         }
         if(popover.isShown) {
             hidePopover(sender)
-        }
-        else {
+        } else {
             showPopover(sender)
         }
     }
@@ -116,7 +132,7 @@ class StatusBarController {
         }
     }
         
-    func hidePopover(_ sender: AnyObject) {
+    func hidePopover(_ sender: AnyObject?) {
         popover.performClose(sender)
         NotificationCenter.default.post(name: hidePopoverNotificationName, object: nil)
         eventMonitor?.stop()
@@ -127,7 +143,7 @@ class StatusBarController {
             return
         }
         if popover.isShown {
-            hidePopover(event!)
+            hidePopover(event)
         }
     }
     

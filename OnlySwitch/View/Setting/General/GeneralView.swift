@@ -15,13 +15,16 @@ struct GeneralView: View, EmailProvider {
     var body: some View {
         VStack {
             HStack {
-                VStack(alignment: .trailing, spacing: 15) {
+                VStack(alignment: .trailing, spacing: 10) {
                     Text("Launch:".localized())
                         .frame(height:20)
                         
                     Text("Language:".localized())
                         .frame(height:30)
                         .padding(.top,8)
+                    
+                    Text("Appearance:".localized())
+                        .frame(height: 30)
                     
                     Text("Menu Bar Icon:".localized())
                         .frame(height:30)
@@ -39,7 +42,7 @@ struct GeneralView: View, EmailProvider {
                     Text("Quit:".localized())
                         .frame(height:30)
                 }
-                VStack(alignment: .leading, spacing: 15) {
+                VStack(alignment: .leading, spacing: 10) {
                     //launch at login
                     LaunchAtLogin.Toggle {
                         Text("Launch at login".localized())
@@ -66,6 +69,19 @@ struct GeneralView: View, EmailProvider {
                             }
                         }
                         .frame(maxWidth:150)
+                    }.frame(height:30)
+                    
+                    //Appearance
+                    VStack {
+                        MenuButton(label: Text(generalVM.currentAppearance)) {
+                            Button(SwitchListAppearance.single.rawValue.localized()) {
+                                generalVM.currentAppearance = SwitchListAppearance.single.rawValue
+                            }
+                            
+                            Button(SwitchListAppearance.dual.rawValue.localized()) {
+                                generalVM.currentAppearance = SwitchListAppearance.dual.rawValue
+                            }
+                        }.frame(maxWidth:150)
                     }.frame(height:30)
                     
                     //menubar icons
