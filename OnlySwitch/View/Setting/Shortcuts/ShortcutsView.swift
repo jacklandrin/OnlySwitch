@@ -116,6 +116,7 @@ struct ShortcutsView: View {
                         HStack {
                             Spacer()
                             Text("@\(shortcutsVM.sharedShortcutsList[index].author)")
+                                .foregroundColor(.white)
                                 .font(.system(size: 10))
                         }.padding(.trailing, 10)
                             .padding(.bottom, 5)
