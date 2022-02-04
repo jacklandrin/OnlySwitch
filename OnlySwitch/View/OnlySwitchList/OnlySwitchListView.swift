@@ -27,6 +27,7 @@ struct OnlySwitchListView: View {
         VStack {
             bottomBar
                 .offset(y: 20)
+                .opacity(0.7)
                 .isHidden(SwitchListAppearance(rawValue: switchVM.currentAppearance) == .single, remove: true)
             
             ScrollView {
@@ -128,20 +129,95 @@ struct OnlySwitchListView: View {
     }
     
     var dualcolumnList: some View {
-        LazyVGrid(columns: columns, spacing: 0) {
-            ForEach(switchVM.allItemList.indices, id:\.self) { index in
-                HStack {
-                
-                    if let item = switchVM.allItemList[index] as? SwitchBarVM {
-                        SwitchBarView().environmentObject(item)
-                            .frame(height:38)
+        VStack(spacing:0) {
+            if switchVM.uncategoryItemList.count > 0 {
+                LazyVGrid(columns: columns, spacing: 0) {
+                    ForEach(switchVM.uncategoryItemList.indices, id:\.self) { index in
+                        HStack {
                         
-                    } else if let item = switchVM.allItemList[index] as? ShortcutsBarVM {
-                        ShortCutBarView().environmentObject(item)
-                            .frame(height:38)
+                            if let item = switchVM.uncategoryItemList[index] {
+                                SwitchBarView().environmentObject(item)
+                                    .frame(height:38)
+                                
+                            }
+                        }
                     }
                 }
             }
+            
+            if switchVM.audioItemList.count > 0 {
+                HStack {
+                    Rectangle().frame(height: 1)
+                        .foregroundColor(.gray)
+                    Text("AUDIO")
+                    Rectangle().frame(height: 1)
+                        .foregroundColor(.gray)
+                }.frame(height:30)
+                    .opacity(0.7)
+                    .shadow(radius: 1)
+                
+                LazyVGrid(columns: columns, spacing: 0) {
+                    ForEach(switchVM.audioItemList.indices, id:\.self) { index in
+                        HStack {
+                        
+                            if let item = switchVM.audioItemList[index] {
+                                SwitchBarView().environmentObject(item)
+                                    .frame(height:38)
+                                
+                            }
+                        }
+                    }
+                }
+            }
+            if switchVM.cleanupItemList.count > 0 {
+                HStack {
+                    Rectangle().frame(height: 1)
+                        .foregroundColor(.gray)
+                    Text("CLEANUP")
+                    Rectangle().frame(height: 1)
+                        .foregroundColor(.gray)
+                }.frame(height:30)
+                    .opacity(0.7)
+                    .shadow(radius: 1)
+                
+                LazyVGrid(columns: columns, spacing: 0) {
+                    ForEach(switchVM.cleanupItemList.indices, id:\.self) { index in
+                        HStack {
+                        
+                            if let item = switchVM.cleanupItemList[index] {
+                                SwitchBarView().environmentObject(item)
+                                    .frame(height:38)
+                                
+                            }
+                        }
+                    }
+                }
+            }
+            
+            if switchVM.shortcutsList.count > 0 {
+                HStack {
+                    Rectangle().frame(height: 1)
+                        .foregroundColor(.gray)
+                    Text("ACTIONS")
+                    Rectangle().frame(height: 1)
+                        .foregroundColor(.gray)
+                }.frame(height:30)
+                    .opacity(0.7)
+                    .shadow(radius: 1)
+                
+                LazyVGrid(columns: columns, spacing: 0) {
+                    ForEach(switchVM.shortcutsList.indices, id:\.self) { index in
+                        HStack {
+                        
+                            if let item = switchVM.shortcutsList[index] {
+                                ShortCutBarView().environmentObject(item)
+                                    .frame(height:38)
+                            }
+                        }
+                    }
+                }
+            }
+            
         }.padding(.horizontal, 15)
     }
     
@@ -235,16 +311,28 @@ struct OnlySwitchListView: View {
         let switchCount = visableSwitchCount + switchVM.shortcutsList.count
         var totalHeight = CGFloat((switchCount)) * 38.0
         if switchVM.currentAppearance == SwitchListAppearance.dual.rawValue {
-            if switchCount / 2 == 0 {
-                totalHeight = totalHeight / 2
-            } else {
-                totalHeight = totalHeight / 2 + 20.0
-            }
+            totalHeight = categoryHeight(count: switchVM.uncategoryItemList.count)
+            totalHeight += categoryHeight(count: switchVM.audioItemList.count)
+            totalHeight += categoryHeight(count: switchVM.cleanupItemList.count)
+            totalHeight += categoryHeight(count: switchVM.shortcutsList.count)
+            totalHeight -= 30.0
         }
         
         let height = min(totalHeight, switchVM.maxHeight - 150)
         print("scroll view height:\(height)")
         
+        return height
+    }
+    
+    func categoryHeight(count:Int) -> CGFloat {
+        var height = 0.0
+        if count > 0 {
+            height += 30.0
+            height += Double((count / 2)) * 38.0
+            if count % 2 == 1 {
+                height += 38.0
+            }
+        }
         return height
     }
     

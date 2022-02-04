@@ -35,6 +35,10 @@ class SwitchBarVM : BarProvider, ObservableObject {
         return switchType.barInfo().controlType
     }
     
+    var category:SwitchCategory {
+        return switchType.barInfo().category
+    }
+    
     @Published var isHidden = false
     @Published var isOn:Bool = false
     @Published var processing = false

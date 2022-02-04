@@ -14,6 +14,7 @@ struct SwitchToggle: View {
         self._isOn = isOn
         self.pressButton = pressButton
     }
+    
     var body: some View {
         Button(action: {
            pressButton(!isOn)

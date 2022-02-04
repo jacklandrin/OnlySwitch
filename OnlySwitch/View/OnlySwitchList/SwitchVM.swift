@@ -17,6 +17,12 @@ class SwitchVM: ObservableObject, CurrentScreen {
     
     @Published var allItemList = Array<BarProvider>()
     
+    @Published var uncategoryItemList = Array<SwitchBarVM>()
+    
+    @Published var audioItemList = Array<SwitchBarVM>()
+    
+    @Published var cleanupItemList = Array<SwitchBarVM>()
+    
     @Published var updateID = UUID()
     
     @Published var sortMode = false
@@ -61,6 +67,10 @@ class SwitchVM: ObservableObject, CurrentScreen {
             item.weight = weight
         }
         self.allItemList = self.allItemList.sorted{$0.weight < $1.weight}
+        self.uncategoryItemList = self.switchList.filter{ $0.category == .none }
+        self.audioItemList = self.switchList.filter{ $0.category == .audio }
+        self.cleanupItemList = self.switchList.filter{ $0.category == .cleanup }
+        
         updateID = UUID()
         print("refresh")
     }

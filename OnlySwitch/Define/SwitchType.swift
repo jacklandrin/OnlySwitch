@@ -12,6 +12,7 @@ struct SwitchBarInfo {
     let onImage:NSImage
     let offImage:NSImage
     var controlType:ControlType = .Switch
+    var category:SwitchCategory = .none
 }
 
 enum SwitchType:UInt64, CaseIterable {
@@ -57,7 +58,8 @@ enum SwitchType:UInt64, CaseIterable {
         case .mute:
             return SwitchBarInfo(title: "Mute",
                                  onImage: NSImage(systemSymbolName: "speaker.slash.circle"),
-                                 offImage: NSImage(systemSymbolName: "speaker.wave.2.circle"))
+                                 offImage: NSImage(systemSymbolName: "speaker.wave.2.circle"),
+                                 category: .audio)
         case .keepAwake:
             return SwitchBarInfo(title: "Keep Awake",
                                 onImage: NSImage(systemSymbolName: "lock.slash.fill"),
@@ -81,7 +83,8 @@ enum SwitchType:UInt64, CaseIterable {
         case .airPods:
             return SwitchBarInfo(title: "AirPods",
                                  onImage: NSImage(systemSymbolName: "airpodspro"),
-                                 offImage: NSImage(systemSymbolName: "airpodspro"))
+                                 offImage: NSImage(systemSymbolName: "airpodspro"),
+                                 category: .audio)
         case .bluetooth:
             return SwitchBarInfo(title: "Bluetooth",
                                  onImage: NSImage(named: "bluetooth_on")!,
@@ -90,7 +93,8 @@ enum SwitchType:UInt64, CaseIterable {
             return SwitchBarInfo(title: "Xcode Derived Data",
                                  onImage: NSImage(systemSymbolName: "hammer.circle.fill"),
                                  offImage: NSImage(systemSymbolName: "hammer.circle"),
-                                 controlType: .Button)
+                                 controlType: .Button,
+                                 category: .cleanup)
         case .hiddenFiles:
             return SwitchBarInfo(title: "Show Hidden Files",
                                  onImage: NSImage(systemSymbolName: "eye"),
@@ -98,17 +102,20 @@ enum SwitchType:UInt64, CaseIterable {
         case .radioStation:
             return SwitchBarInfo(title: "Radio Player",
                                  onImage: NSImage(systemSymbolName: "radio"),
-                                 offImage: NSImage(systemSymbolName: "radio"))
+                                 offImage: NSImage(systemSymbolName: "radio"),
+                                 category: .audio)
         case .emptyTrash:
             return SwitchBarInfo(title: "Empty Trash",
                                  onImage: NSImage(systemSymbolName: "trash"),
                                  offImage: NSImage(systemSymbolName: "trash"),
-                                 controlType: .Button)
+                                 controlType: .Button,
+                                 category: .cleanup)
         case .emptyPasteboard:
             return SwitchBarInfo(title: "Empty Pasteboard",
                                  onImage: NSImage(systemSymbolName: "doc.on.clipboard"),
                                  offImage: NSImage(systemSymbolName: "doc.on.clipboard"),
-                                 controlType: .Button)
+                                 controlType: .Button,
+                                 category: .cleanup)
         case .showUserLibrary:
             return SwitchBarInfo(title: "Show User Library",
                                  onImage: NSImage(systemSymbolName: "building.columns.fill"),
@@ -132,7 +139,8 @@ enum SwitchType:UInt64, CaseIterable {
         case .muteMicrophone:
             return SwitchBarInfo(title: "Mute Mic",
                                  onImage: NSImage(systemSymbolName: "mic.slash.circle"),
-                                 offImage: NSImage(systemSymbolName: "mic.circle"))
+                                 offImage: NSImage(systemSymbolName: "mic.circle"),
+                                 category: .audio)
         case .showFinderPathbar:
             return SwitchBarInfo(title: "Show Finder Pathbar",
                                  onImage: NSImage(systemSymbolName: "greaterthan.square.fill"),
@@ -203,4 +211,10 @@ let switchTypeCount = SwitchType.allCases.count
 enum ControlType{
     case Switch
     case Button
+}
+
+enum SwitchCategory{
+    case none
+    case audio
+    case cleanup
 }
