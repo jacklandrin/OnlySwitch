@@ -23,8 +23,8 @@ class ShorcutsItem:ObservableObject {
             }
             if toggle {
                 let showShortcutsCount = shortcutsDic.filter{$0.value as! Bool == true}.count
-                if showShortcutsCount > 5 {
-                    error("The maximum number of shortcuts is 6")
+                if showShortcutsCount > 9 {
+                    error("The maximum number of shortcuts is 10")
                     toggle = false
                     return
                 }
