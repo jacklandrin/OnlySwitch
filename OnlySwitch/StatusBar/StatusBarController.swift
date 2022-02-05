@@ -96,7 +96,7 @@ class StatusBarController {
             if appearance == .single {
                 strongSelf.popover.contentSize.width = popoverWidth
             } else if appearance == .dual {
-                strongSelf.popover.contentSize.width = popoverWidth * 2 - 40
+                strongSelf.popover.contentSize.width = popoverWidth * 2 - 50
             }
         })
     }

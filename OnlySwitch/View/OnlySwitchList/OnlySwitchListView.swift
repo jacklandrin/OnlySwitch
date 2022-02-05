@@ -18,8 +18,8 @@ struct OnlySwitchListView: View {
     @ObservedObject private var languageManager = LanguageManager.sharedManager
     
     let columns = [
-        GridItem(.fixed(popoverWidth - 40)),
-        GridItem(.fixed(popoverWidth - 40))
+        GridItem(.fixed(popoverWidth - 50)),
+        GridItem(.fixed(popoverWidth - 50))
         ]
 
     
@@ -40,9 +40,12 @@ struct OnlySwitchListView: View {
             }
             .frame(height: scrollViewHeight)
                 .padding(.vertical,15)
+            
             recommendApp.opacity(0.8)
+            
             bottomBar
                 .isHidden(SwitchListAppearance(rawValue: switchVM.currentAppearance) == .dual, remove: true)
+            
             Spacer().frame(height:SwitchListAppearance(rawValue: switchVM.currentAppearance) == .dual ? 20 : 0)
         }
         .background(
@@ -60,7 +63,7 @@ struct OnlySwitchListView: View {
         .onReceive(NotificationCenter.default.publisher(for: changeSettingNotification, object: nil)) { _ in
             switchVM.refreshData()
         }
-        .frame(width:SwitchListAppearance(rawValue: switchVM.currentAppearance) == .single ? popoverWidth : popoverWidth * 2 - 40 ,height:scrollViewHeight + 130)
+        .frame(width:SwitchListAppearance(rawValue: switchVM.currentAppearance) == .single ? popoverWidth : popoverWidth * 2 - 50 ,height:scrollViewHeight + 130)
     }
     
     var singleSwitchList: some View {
@@ -149,7 +152,7 @@ struct OnlySwitchListView: View {
                 HStack {
                     Rectangle().frame(height: 1)
                         .foregroundColor(.gray)
-                    Text("AUDIO")
+                    Text("AUDIO".localized())
                     Rectangle().frame(height: 1)
                         .foregroundColor(.gray)
                 }.frame(height:30)
@@ -173,7 +176,7 @@ struct OnlySwitchListView: View {
                 HStack {
                     Rectangle().frame(height: 1)
                         .foregroundColor(.gray)
-                    Text("CLEANUP")
+                    Text("CLEANUP".localized())
                     Rectangle().frame(height: 1)
                         .foregroundColor(.gray)
                 }.frame(height:30)
@@ -198,7 +201,7 @@ struct OnlySwitchListView: View {
                 HStack {
                     Rectangle().frame(height: 1)
                         .foregroundColor(.gray)
-                    Text("ACTIONS")
+                    Text("ACTIONS".localized())
                     Rectangle().frame(height: 1)
                         .foregroundColor(.gray)
                 }.frame(height:30)
