@@ -163,6 +163,8 @@ You can follow these steps to use Only Switch.
 
 @wrngwrld for volume slider of radio player
 
+@kpacholak for Polish translation
+
 ## License
 MIT
 ## Donate
