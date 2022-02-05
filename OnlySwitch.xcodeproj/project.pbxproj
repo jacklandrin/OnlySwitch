@@ -332,6 +332,7 @@
 		04F118C327AED8BC005DA861 /* GitHubReleaseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubReleaseModel.swift; sourceTree = "<group>"; };
 		04F118C527AED8EE005DA861 /* AboutVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutVM.swift; sourceTree = "<group>"; };
 		04FE2C912772880300C79FF9 /* ShowExtensionNameSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowExtensionNameSwitch.swift; sourceTree = "<group>"; };
+		A6B4818E27AF1FBD00583416 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -908,6 +909,7 @@
 				Base,
 				hr,
 				tr,
+				pl,
 			);
 			mainGroup = 04447B4F2754F08000CD2900;
 			packageReferences = (
@@ -1154,6 +1156,7 @@
 				04938D042768CAEF00713F1D /* de */,
 				04A6F950278B2D4A00E3300F /* hr */,
 				04464F4C2791D46B0065DF61 /* tr */,
+				A6B4818E27AF1FBD00583416 /* pl */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
