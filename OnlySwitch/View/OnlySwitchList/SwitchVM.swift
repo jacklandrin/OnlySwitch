@@ -67,9 +67,9 @@ class SwitchVM: ObservableObject, CurrentScreen {
             item.weight = weight
         }
         self.allItemList = self.allItemList.sorted{$0.weight < $1.weight}
-        self.uncategoryItemList = self.switchList.filter{ $0.category == .none }
-        self.audioItemList = self.switchList.filter{ $0.category == .audio }
-        self.cleanupItemList = self.switchList.filter{ $0.category == .cleanup }
+        self.uncategoryItemList = self.switchList.filter{ $0.category == .none && !$0.isHidden }
+        self.audioItemList = self.switchList.filter{ $0.category == .audio && !$0.isHidden }
+        self.cleanupItemList = self.switchList.filter{ $0.category == .cleanup && !$0.isHidden }
         
         updateID = UUID()
         print("refresh")
