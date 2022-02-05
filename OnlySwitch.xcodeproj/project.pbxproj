@@ -152,6 +152,8 @@
 		04EB1CD22780F4F700C612AB /* ShortcutsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CD12780F4F700C612AB /* ShortcutsView.swift */; };
 		04EB1CD42781280900C612AB /* ShortCutBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CD32781280900C612AB /* ShortCutBarView.swift */; };
 		04EB1CD62781299A00C612AB /* ShortcutsBarVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CD52781299A00C612AB /* ShortcutsBarVM.swift */; };
+		04F118C427AED8BC005DA861 /* GitHubReleaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F118C327AED8BC005DA861 /* GitHubReleaseModel.swift */; };
+		04F118C627AED8EE005DA861 /* AboutVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F118C527AED8EE005DA861 /* AboutVM.swift */; };
 		04FE2C922772880300C79FF9 /* ShowExtensionNameSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FE2C912772880300C79FF9 /* ShowExtensionNameSwitch.swift */; };
 /* End PBXBuildFile section */
 
@@ -327,6 +329,8 @@
 		04EB1CD12780F4F700C612AB /* ShortcutsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsView.swift; sourceTree = "<group>"; };
 		04EB1CD32781280900C612AB /* ShortCutBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortCutBarView.swift; sourceTree = "<group>"; };
 		04EB1CD52781299A00C612AB /* ShortcutsBarVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsBarVM.swift; sourceTree = "<group>"; };
+		04F118C327AED8BC005DA861 /* GitHubReleaseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubReleaseModel.swift; sourceTree = "<group>"; };
+		04F118C527AED8EE005DA861 /* AboutVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutVM.swift; sourceTree = "<group>"; };
 		04FE2C912772880300C79FF9 /* ShowExtensionNameSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowExtensionNameSwitch.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -484,6 +488,7 @@
 				04A23B27275D607200B454C8 /* Header */,
 				043E5D672757C85500ADC004 /* View */,
 				043E5D682757C86400ADC004 /* ViewModel */,
+				04F118C227AED897005DA861 /* Model */,
 				04243485275641890044D0AD /* EverySwitch */,
 				043E5D782758210000ADC004 /* StatusBar */,
 				043E5D77275820DD00ADC004 /* Define */,
@@ -718,6 +723,7 @@
 			isa = PBXGroup;
 			children = (
 				04581DC02765522A008ADF30 /* AboutView.swift */,
+				04F118C527AED8EE005DA861 /* AboutVM.swift */,
 			);
 			path = About;
 			sourceTree = "<group>";
@@ -816,6 +822,14 @@
 				04E2AD1B2783A54000BC5DF3 /* URL++.swift */,
 			);
 			path = Extension;
+			sourceTree = "<group>";
+		};
+		04F118C227AED897005DA861 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				04F118C327AED8BC005DA861 /* GitHubReleaseModel.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1005,6 +1019,7 @@
 				0493374827625A1E00AE779A /* StreamingDelegate.swift in Sources */,
 				0457C25D2760046A00B25BFA /* BluetoothSwitch.swift in Sources */,
 				04A2FFFA275636FA00CE56A0 /* String++.swift in Sources */,
+				04F118C627AED8EE005DA861 /* AboutVM.swift in Sources */,
 				043E5D752758208D00ADC004 /* SwitchBarVM.swift in Sources */,
 				04938D1027692B6900713F1D /* SwitchManager.swift in Sources */,
 				0493374527625A1E00AE779A /* JLASAudioPlayer.swift in Sources */,
@@ -1022,6 +1037,7 @@
 				043E5D6A2757D68800ADC004 /* MuteSwitch.swift in Sources */,
 				0493378C2762654600AE779A /* LayoutDefine.swift in Sources */,
 				049337992762C0B300AE779A /* RadioSettingVM.swift in Sources */,
+				04F118C427AED8BC005DA861 /* GitHubReleaseModel.swift in Sources */,
 				047140B627788486005B160B /* EffectSoundHelper.swift in Sources */,
 				0493375B27625A1E00AE779A /* JLASAudioPlayer+Streamer.swift in Sources */,
 				04AA63CE276BC94000ED5DEA /* EmptyTrashSwitch.swift in Sources */,

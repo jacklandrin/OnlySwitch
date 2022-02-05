@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct AboutView: View {
+    @StateObject var aboutVM = AboutVM()
     var body: some View {
         VStack {
             Image("only_switch")
@@ -28,10 +29,28 @@ struct AboutView: View {
                     Text("Jacklandrin")
                 })
             }
-            Link(destination: URL(string: "https://github.com/jacklandrin/OnlySwitch")!, label: {
-                Text("GitHub Repo")
-            })
+            HStack {
+                Link(destination: URL(string: "https://github.com/jacklandrin/OnlySwitch")!, label: {
+                    Text("GitHub Repo")
+                })
+                if aboutVM.downloadCount > 0 {
+                    Text("%@ downloads".localizeWithFormat(arguments: formatDownloadCount))
+                }
+            }
+            
+        }.onAppear {
+            aboutVM.requestDownloadCount()
         }
+    }
+    
+    var formatDownloadCount:String {
+        let number = NSNumber(value: aboutVM.downloadCount)
+        let numberFormatter = NumberFormatter()
+        numberFormatter.usesGroupingSeparator = true
+        numberFormatter.groupingSeparator = ","
+        numberFormatter.groupingSize = 3
+        let format = numberFormatter.string(from: number)
+        return format!
     }
 }
 
