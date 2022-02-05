@@ -137,11 +137,9 @@ struct OnlySwitchListView: View {
                 LazyVGrid(columns: columns, spacing: 0) {
                     ForEach(switchVM.uncategoryItemList.indices, id:\.self) { index in
                         HStack {
-                        
                             if let item = switchVM.uncategoryItemList[index] {
                                 SwitchBarView().environmentObject(item)
                                     .frame(height:38)
-                                
                             }
                         }
                     }
@@ -162,11 +160,9 @@ struct OnlySwitchListView: View {
                 LazyVGrid(columns: columns, spacing: 0) {
                     ForEach(switchVM.audioItemList.indices, id:\.self) { index in
                         HStack {
-                        
                             if let item = switchVM.audioItemList[index] {
                                 SwitchBarView().environmentObject(item)
                                     .frame(height:38)
-                                
                             }
                         }
                     }
@@ -186,11 +182,9 @@ struct OnlySwitchListView: View {
                 LazyVGrid(columns: columns, spacing: 0) {
                     ForEach(switchVM.cleanupItemList.indices, id:\.self) { index in
                         HStack {
-                        
                             if let item = switchVM.cleanupItemList[index] {
                                 SwitchBarView().environmentObject(item)
                                     .frame(height:38)
-                                
                             }
                         }
                     }
@@ -323,7 +317,7 @@ struct OnlySwitchListView: View {
         
         let height = min(totalHeight, switchVM.maxHeight - 150)
         print("scroll view height:\(height)")
-        
+        guard height > 0 else {return 300}
         return height
     }
     
