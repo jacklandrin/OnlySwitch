@@ -3,7 +3,7 @@
   OnlySwitch
 
   Created by Jacklandrin on 2021/12/14.
-  Translated into Polish  by Krzysztof Pacholak <pacholak@gmail.com> on 2022/02/06.
+  Translated into Polish by Krzysztof Pacholak <pacholak@gmail.com> on 2022/02/06.
 
 */
 "Hide Desktop" = "Ukryj ikony na biurku";
@@ -19,7 +19,7 @@
 "Autohide Menu Bar" = "Ukrywanie paska menu";
 "Show Hidden Files" = "Pokaż pliki ukryte";
 "Radio Player" = "Odtwarzacz radiowy";
-"Keep Awake" = "Nie usypiaj";
+"Keep Awake" = "Zapobiegaj usypianiu";
 "Settings" = "Preferencje";
 "Launch at login" = "Uruchom przy starcie";
 "Clear cache" = "Wyczyść cache";
@@ -66,7 +66,7 @@
 "Notification Alert:" = "Alarm powiadomień:";
 "Sound Alert:" = "Alarm dźwiękowy:";
 "Allow notification alert" = "Zezwól na alarm powiadomień";
-"Turn on sound alert" = "Zezwól na alarm dźwiękowy";
+"Turn on sound alert" = "Włącz alarm dźwiękowy";
 "Work Alert:" = "Alarm Praca:";
 "Break Alert:" = "Alarm Przerwa:";
 "%d min" = "%d min";
@@ -92,9 +92,9 @@
 "Sort" = "Sortuj";
 "Volume" = "Głośność";
 "Shortcuts Gallery" = "Galeria skrótów";
-"refresh" = "Odśwież";
+"refresh" = "odśwież";
 "Recent Apps in Dock" = "Ostatnio używane aplikacje w Docku";
 "AUDIO" = "AUDIO";
-"CLEANUP" = "SPRZĄTANIE";
+"CLEANUP" = "PORZĄDKI";
 "ACTIONS" = "AKCJE";
 "%@ downloads" = "%@ pobrane";
