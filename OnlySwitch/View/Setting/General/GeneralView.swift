@@ -70,6 +70,12 @@ struct GeneralView: View, EmailProvider {
                             Button("Polski") {
                                 langManager.setCertainLang("pl")
                             }
+                            Button("Filipino") {
+                                langManager.setCertainLang("fil")
+                            }
+                            Button("Nederlands") {
+                                langManager.setCertainLang("nl")
+                            }
                         }
                         .frame(maxWidth:150)
                     }.frame(height:30)
@@ -214,6 +220,10 @@ struct GeneralView: View, EmailProvider {
             return "Türkçe"
         } else if lang == "pl" {
             return "Polski"
+        } else if lang == "fil" {
+            return "Filipino"
+        } else if lang == "nl" {
+            return "Nederlands"
         }
         return ""
     }

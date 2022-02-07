@@ -19,6 +19,7 @@ struct ShortCutBarView: View {
             
             Text(shortcutsBarVM.name)
                 .frame(alignment: .leading)
+            
             Spacer()
         
             ProgressView()
@@ -35,8 +36,11 @@ struct ShortCutBarView: View {
                         .foregroundColor(.blue)
                         .frame(height:26)
                     Text("Run".localized())
+                        .font(.system(size: "Run".localized().count > 6 ? 300 : 11))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.01)
                         .foregroundColor(.white)
-                        .font(.system(size: 11))
+                        .padding(1)
                 }.frame(width: 46, height: 30)
             }).buttonStyle(.plain)
                 .shadow(radius: 2)
