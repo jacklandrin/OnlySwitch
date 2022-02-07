@@ -22,7 +22,7 @@
 "Settings" = "Einstellungen";
 "Launch at login" = "Bei Anmeldung starten";
 "Clear cache" = "Cache leeren";
-"Quit" = "Beenden";
+"Quit" = "Halten";
 "More App, QRCobot" = "Mehr Apps von Jack";
 "Download QRCobot" = "QRCobot herunterladen";
 "Download WallCard" = "WallCard herunterladen";
@@ -38,7 +38,7 @@
 "Cache:" = "Cache:";
 "Contact:" = "Kontaktieren:";
 "Quit:" = "Beenden:";
-"Cache for Hide Notch Switch" = "Cache für den Notch-Schalter";
+"Cache for Hide Notch Switch" = "Cache für den Notch-Switch";
 "Send Email to Jacklandrin" = "E-Mail an Jacklandrin senden";
 "Quit Only Switch" = "Only Switch beenden";
 "Calculating..." = "Berechnen...";
@@ -69,7 +69,7 @@
 "Work Alert:" = "Arbeitsalarm:";
 "Break Alert:" = "Pausenalarm:";
 "%d min" = "%d Min";
-"Take a break!" = "Mach eine Pause!";
+"Take a break!" = "Bitte machen Sie eine Pause!";
 "Get on with work!" = "Mach weiter mit der Arbeit!";
 "You've rested for %d min." = "Sie haben sich %d Min lang ausgeruht.";
 "You've worked for %d min." = "Sie haben %d Min gearbeitet.";
@@ -78,7 +78,7 @@
 "Small Launchpad Icon" = "Kleines Launchpad-Icon";
 "Low Power Mode" = "Stromsparmodus";
 "Shortcuts" = "Kurzbefehle";
-"Run" = "Laufen";
+"Run" = "Ausführen";
 "To add or remove any shortcuts on list" = "Um Kurzbefehle in der Liste hinzuzufügen oder zu entfernen";
 "There's not any Shortcuts." = "Es gibt keine Kurzbefehle.";
 "The maximum number of shortcuts is 6" = "Die maximale Anzahl von Kurzbefehle ist 6";
@@ -87,7 +87,7 @@
 "Cycle Count:" = "Anzahl der Durchgänge:";
 "Menu Bar Icon:" = "Menüleisten-Icon:";
 "Sound Wave Effect" = "Schallwelleneffekt";
-"Mute Mic" = " Mikrofon Stumm";
+"Mute Mic" = "Mikrofon stumm schalten";
 "Sort" = "Sortieren";
 "Volume" = "Lautstärke";
 "Shortcuts Gallery" = "Kurzbefehle-Galerie";
