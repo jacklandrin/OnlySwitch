@@ -51,30 +51,11 @@ struct GeneralView: View, EmailProvider {
                     
                     //languages
                     VStack {
-                        MenuButton(label: Text(displayLang(lang:langManager.currentLang))) {
-                            Button("English") {
-                                langManager.setCertainLang("en")
-                            }
-                            Button("简体中文") {
-                                langManager.setCertainLang("zh-Hans")
-                            }
-                            Button("Deutsch") {
-                                langManager.setCertainLang("de")
-                            }
-                            Button("Hrvatski") {
-                                langManager.setCertainLang("hr")
-                            }
-                            Button("Türkçe") {
-                                langManager.setCertainLang("tr")
-                            }
-                            Button("Polski") {
-                                langManager.setCertainLang("pl")
-                            }
-                            Button("Filipino") {
-                                langManager.setCertainLang("fil")
-                            }
-                            Button("Nederlands") {
-                                langManager.setCertainLang("nl")
+                        MenuButton(label: Text(SupportedLanguages.getLangName(code: langManager.currentLang))) {
+                            ForEach(generalVM.supportedLanguages, id:\.self) { lang in
+                                Button(lang.name) {
+                                    langManager.setCertainLang(lang.code)
+                                }
                             }
                         }
                         .frame(maxWidth:150)
@@ -82,7 +63,7 @@ struct GeneralView: View, EmailProvider {
                     
                     //Appearance
                     VStack {
-                        MenuButton(label: Text(generalVM.currentAppearance)) {
+                        MenuButton(label: Text(generalVM.currentAppearance.localized())) {
                             Button(SwitchListAppearance.single.rawValue.localized()) {
                                 generalVM.currentAppearance = SwitchListAppearance.single.rawValue
                             }
@@ -206,28 +187,7 @@ struct GeneralView: View, EmailProvider {
                   secondaryButton:.default(Text("Cancel".localized())))
         }
     }
-    
-    func displayLang(lang:String) -> String {
-        if lang == "en" {
-            return "English"
-        } else if lang == "zh-Hans" {
-            return "简体中文"
-        } else if lang == "de" {
-            return "Deutsch"
-        } else if lang == "hr" {
-            return "Hrvatski"
-        } else if lang == "tr" {
-            return "Türkçe"
-        } else if lang == "pl" {
-            return "Polski"
-        } else if lang == "fil" {
-            return "Filipino"
-        } else if lang == "nl" {
-            return "Nederlands"
-        }
-        return ""
-    }
-    
+        
     func openDMG(path:String) {
         let finder = NSWorkspace.shared.urlForApplication(withBundleIdentifier: "com.apple.finder")
         let configuration: NSWorkspace.OpenConfiguration = NSWorkspace.OpenConfiguration()

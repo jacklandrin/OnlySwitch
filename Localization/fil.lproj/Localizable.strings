@@ -98,3 +98,6 @@
 "CLEANUP" = "Linisin";
 "ACTIONS" = "Mga aksyon";
 "%@ downloads" = "%@ Downloads";
+"Appearance:" = "Hitsura:";
+"Single Column" = "Isang Hanay";
+"Two Columns" = "Dalawang Hanay";

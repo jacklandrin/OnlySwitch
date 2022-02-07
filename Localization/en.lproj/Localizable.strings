@@ -97,3 +97,6 @@
 "CLEANUP" = "CLEANUP";
 "ACTIONS" = "ACTIONS";
 "%@ downloads" = "%@ downloads";
+"Appearance:" = "Appearance:";
+"Single Column" = "Single Column";
+"Two Columns" = "Two Columns";

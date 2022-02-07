@@ -97,3 +97,6 @@
 "CLEANUP" = "LEEREN";
 "ACTIONS" = "KURZBEFEHLE";
 "%@ downloads" = "%@ Downloads";
+"Appearance:" = "Aussehen:";
+"Single Column" = "Einzelne Spalte";
+"Two Columns" = "Zwei Spalten";

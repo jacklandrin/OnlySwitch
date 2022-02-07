@@ -97,3 +97,6 @@
 "CLEANUP" = "清理";
 "ACTIONS" = "快捷指令";
 "%@ downloads" = "%@次下载";
+"Appearance:" = "样式:";
+"Single Column" = "单列";
+"Two Columns" = "双列";

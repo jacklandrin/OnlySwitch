@@ -98,3 +98,6 @@
 "CLEANUP" = "PORZĄDKI";
 "ACTIONS" = "AKCJE";
 "%@ downloads" = "%@ pobrane";
+"Appearance:" = "Wygląd zewnętrzny:";
+"Single Column" = "Pojedyncza kolumna";
+"Two Columns" = "Dwie kolumny";

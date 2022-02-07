@@ -98,3 +98,6 @@
 "CLEANUP" = "TEMIZLE";
 "ACTIONS" = "KISAYOLLAR";
 "%@ downloads" = "%@ indirme";
+"Appearance:" = "Görünüm:";
+"Single Column" = "Tek sütun";
+"Two Columns" = "İki Sütun";

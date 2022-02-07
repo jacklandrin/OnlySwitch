@@ -97,3 +97,6 @@
 "CLEANUP" = "Legen";
 "ACTIONS" = "Acties";
 "%@ downloads" = "%@ Downloads";
+"Appearance:" = "Verschijning:";
+"Single Column" = "Enkele kolom";
+"Two Columns" = "Twee kolommen";

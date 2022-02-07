@@ -15,7 +15,7 @@ class GeneralVM:ObservableObject {
     @Published var needtoUpdateAlert = false
     @Published var showProgress = false
     @Published var newestVersion = UserDefaults.standard.string(forKey: newestVersionKey) ?? ""
-    
+    @Published var supportedLanguages = SupportedLanguages.langList
     @Published var showMenubarIconPopover = false
     @Published var menubarIcons = ["menubar_0", "menubar_1", "menubar_2", "menubar_3"]
     
@@ -40,4 +40,34 @@ class GeneralVM:ObservableObject {
 enum SwitchListAppearance:String {
     case single = "Single Column"
     case dual = "Two Columns"
+}
+
+struct Language:Hashable {
+    let name:String
+    let code:String
+}
+
+struct SupportedLanguages {
+    static let english = Language(name: "English", code: "en")
+    static let simplifiedChinese = Language(name: "简体中文", code: "zh-Hans")
+    static let german = Language(name: "Deutsch", code: "de")
+    static let croatian = Language(name: "Hrvatski", code: "hr")
+    static let turkish = Language(name: "Türkçe", code: "tr")
+    static let polish = Language(name: "Polski", code: "pl")
+    static let filipino = Language(name: "Filipino", code: "fil")
+    static let dutch = Language(name: "Nederlands", code: "nl")
+    
+    static let langList = [SupportedLanguages.english,
+                       SupportedLanguages.simplifiedChinese,
+                       SupportedLanguages.german,
+                       SupportedLanguages.croatian,
+                       SupportedLanguages.turkish,
+                       SupportedLanguages.polish,
+                       SupportedLanguages.filipino,
+                       SupportedLanguages.dutch]
+    
+    static func getLangName(code:String) -> String {
+        let lang = SupportedLanguages.langList.filter{$0.code == code}.first!
+        return lang.name
+    }
 }
