@@ -334,6 +334,7 @@
 		04F118C727B1A51D005DA861 /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = fil.lproj/Localizable.strings; sourceTree = "<group>"; };
 		04F118C827B1C33D005DA861 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		04FE2C912772880300C79FF9 /* ShowExtensionNameSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowExtensionNameSwitch.swift; sourceTree = "<group>"; };
+		8958B4A927BD0EA500EE4A6D /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A6B4818E27AF1FBD00583416 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -922,6 +923,7 @@
 				pl,
 				fil,
 				nl,
+				it,
 			);
 			mainGroup = 04447B4F2754F08000CD2900;
 			packageReferences = (
@@ -1171,6 +1173,7 @@
 				A6B4818E27AF1FBD00583416 /* pl */,
 				04F118C727B1A51D005DA861 /* fil */,
 				04F118C827B1C33D005DA861 /* nl */,
+				8958B4A927BD0EA500EE4A6D /* it */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
