@@ -57,7 +57,7 @@ struct SupportedLanguages {
     static let filipino = Language(name: "Filipino", code: "fil")
     static let dutch = Language(name: "Nederlands", code: "nl")
 	static let italian = Language(name: "Italiano", code: "it")
-    static let russian = Language(name: "Русский язык", code: "ru")
+    static let russian = Language(name: "Русский", code: "ru")
     
 	static let langList = [SupportedLanguages.english,
 						   SupportedLanguages.simplifiedChinese,
