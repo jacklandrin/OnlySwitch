@@ -196,6 +196,7 @@
 		0424348E27565F9F0044D0AD /* NSAppleEventDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSAppleEventDescriptor.swift; sourceTree = "<group>"; };
 		042661392780B885005DF2B9 /* LowPowerModeSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LowPowerModeSwitch.swift; sourceTree = "<group>"; };
 		042661402780C147005DF2B9 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
+		0427364127BFF1D90068108F /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0427B25A275D786400AD783A /* SystemInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemInfo.swift; sourceTree = "<group>"; };
 		043E5D652757C84900ADC004 /* HiddenModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HiddenModifier.swift; sourceTree = "<group>"; };
 		043E5D692757D68800ADC004 /* MuteSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuteSwitch.swift; sourceTree = "<group>"; };
@@ -924,6 +925,7 @@
 				fil,
 				nl,
 				it,
+				ru,
 			);
 			mainGroup = 04447B4F2754F08000CD2900;
 			packageReferences = (
@@ -1174,6 +1176,7 @@
 				04F118C727B1A51D005DA861 /* fil */,
 				04F118C827B1C33D005DA861 /* nl */,
 				8958B4A927BD0EA500EE4A6D /* it */,
+				0427364127BFF1D90068108F /* ru */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
