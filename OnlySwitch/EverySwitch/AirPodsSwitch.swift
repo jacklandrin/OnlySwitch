@@ -11,7 +11,7 @@ import IOBluetooth
 let AirPodsAddressKey = "AirPodsAddressKey"
 
 class AirPodsSwitch:SwitchProvider {
-
+    var delegate: SwitchDelegate?
     var type: SwitchType = .airPods
     
     init() {

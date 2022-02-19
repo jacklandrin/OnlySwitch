@@ -8,7 +8,7 @@
 import AppKit
 
 class DarkModeSwitch:SwitchProvider {
-
+    var delegate: SwitchDelegate?
     var type: SwitchType = .darkMode
     
     func currentStatus() -> Bool {

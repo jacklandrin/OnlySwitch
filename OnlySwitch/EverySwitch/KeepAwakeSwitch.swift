@@ -14,7 +14,7 @@ let KeepAwakeKey = "KeepAwakeKey"
 class KeepAwakeSwitch:SwitchProvider {
     static let shared = KeepAwakeSwitch()
     var type: SwitchType = .keepAwake
-    
+    var delegate: SwitchDelegate?
     private let reasonForActivity = "Reason for activity" as CFString
     private var assertionID: IOPMAssertionID = IOPMAssertionID()
     @UserDefaultValue(key: KeepAwakeKey, defaultValue: false)

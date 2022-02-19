@@ -33,6 +33,8 @@ class SwitchVM: ObservableObject, CurrentScreen {
     @UserDefaultValue(key: appearanceColumnCountKey, defaultValue: SwitchListAppearance.single.rawValue)
     var currentAppearance:String
     
+    var spotifyPlayer = SpotifyPlayer()
+    
     init() {
         refreshMaxHeight()
     }

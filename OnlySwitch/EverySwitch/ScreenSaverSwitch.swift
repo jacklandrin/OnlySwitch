@@ -8,7 +8,7 @@
 import AppKit
 
 class ScreenSaverSwitch:SwitchProvider {
-
+    var delegate: SwitchDelegate?
     var type: SwitchType = .screenSaver
     var getScreenSaverIntervalResult:(Bool,Any) = (true,"")
     let ScreenSaverIntervalKey = "ScreenSaverIntervalKey"

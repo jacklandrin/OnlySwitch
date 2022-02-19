@@ -8,7 +8,7 @@
 import AppKit
 
 class HiddenFilesSwitch:SwitchProvider {
-
+    var delegate: SwitchDelegate?
     var type: SwitchType = .hiddenFiles
     
     func currentInfo() -> String {

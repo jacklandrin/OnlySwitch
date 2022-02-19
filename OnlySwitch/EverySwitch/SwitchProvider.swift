@@ -8,12 +8,17 @@
 import Foundation
 import Combine
 
-protocol SwitchProvider:AnyObject {
+protocol SwitchProvider {
     var type:SwitchType {get set}
+    var delegate:SwitchDelegate? {get set}
     func currentStatus() -> Bool
     func currentInfo() -> String
     func operationSwitch(isOn:Bool) async -> Bool
     func isVisable() -> Bool
+}
+
+protocol SwitchDelegate {
+    func shouldRefreshIfNeed()
 }
 
 extension SwitchProvider {

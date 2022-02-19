@@ -10,7 +10,7 @@ import UniformTypeIdentifiers
 import AVFoundation
 
 class TopNotchSwitch:SwitchProvider, CurrentScreen {
-    
+    var delegate: SwitchDelegate?
     var type: SwitchType = .topNotch
     // Mark: - private properties
     

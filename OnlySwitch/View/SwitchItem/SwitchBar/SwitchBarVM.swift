@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-class SwitchBarVM : BarProvider, ObservableObject {
+class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
     var barName: String
     {
         switchType.barInfo().title
@@ -48,6 +48,7 @@ class SwitchBarVM : BarProvider, ObservableObject {
     
     init(switchOperator:SwitchProvider) {
         self.switchOperator = switchOperator
+        self.switchOperator.delegate = self
     }
     
     func refreshStatus() {
@@ -101,5 +102,9 @@ class SwitchBarVM : BarProvider, ObservableObject {
                 }
             }
         }
+    }
+    
+    func shouldRefreshIfNeed() {
+        refreshAsync()
     }
 }

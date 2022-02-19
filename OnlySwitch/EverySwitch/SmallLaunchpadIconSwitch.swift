@@ -9,7 +9,7 @@ import Foundation
 
 class SmallLaunchpadIconSwitch:SwitchProvider {
     var type: SwitchType = .smallLaunchpadIcon
-    
+    var delegate: SwitchDelegate?
     func currentStatus() -> Bool {
         let result = SmallLaunchpadCMD.status.runAppleScript(isShellCMD: true)
         if result.0 {

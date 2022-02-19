@@ -8,6 +8,7 @@
 import AppKit
 
 class HiddenDesktopSwitch:SwitchProvider {
+    var delegate: SwitchDelegate?
     
     var type: SwitchType = .hiddeDesktop
     

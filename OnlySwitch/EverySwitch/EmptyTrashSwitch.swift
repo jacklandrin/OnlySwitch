@@ -10,7 +10,7 @@ import Foundation
 class EmptyTrashSwitch:SwitchProvider {
     
     var type: SwitchType = .emptyTrash
-    
+    var delegate: SwitchDelegate?
     func currentInfo() -> String {
         return ""
     }

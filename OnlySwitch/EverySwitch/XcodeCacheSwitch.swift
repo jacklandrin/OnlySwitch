@@ -9,7 +9,7 @@ import Foundation
 import AppKit
 
 class XcodeCacheSwitch:SwitchProvider {
-
+    var delegate: SwitchDelegate?
     var type: SwitchType = .xcodeCache
 
     

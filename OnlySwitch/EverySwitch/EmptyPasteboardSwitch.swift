@@ -9,7 +9,7 @@ import Foundation
 import AppKit
 class EmptyPasteboardSwitch:SwitchProvider {
     var type: SwitchType = .emptyPasteboard
-    
+    var delegate: SwitchDelegate?
     func currentStatus() -> Bool {
         return true
     }

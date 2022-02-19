@@ -8,7 +8,7 @@
 import AppKit
 
 class BluetoothSwitch:SwitchProvider {
-
+    var delegate: SwitchDelegate?
     var type: SwitchType = .bluetooth
     let blManager = BluetoothDevicesManager.shared
     func currentInfo() -> String {
