@@ -172,7 +172,7 @@ Rosel for Filipino translation
 
 @bellaposa for Italian translation
 
-Kirill for Russian translation
+@kirillyakopov for Russian translation
 
 ## License
 MIT
