@@ -20,7 +20,15 @@ class JLAVAudioPlayer: NSObject ,AVPlayerItemMetadataOutputPushDelegate, AudioPl
     
     override init() {
         super.init()
-//        self.setupRemoteCommandCenter()
+        NotificationCenter.default.addObserver(forName: volumeChangeNotification, object: nil, queue: .main, using: { notification in
+            guard let userInfo = notification.userInfo,
+                    let newValue  = userInfo["newValue"] as? Float else {
+                        print("No userInfo found in notification")
+                        return
+                }
+            
+            self.audioPlayer?.volume = newValue
+        })
     }
     
     func play(stream item: RadioPlayerItem) {
