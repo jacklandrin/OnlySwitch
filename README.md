@@ -50,7 +50,7 @@ Everyone can contribute macOS Shortcuts for OnlySwitch now. Please read [How to 
 | Show hidden files | finished | Empty pasteboard         | finished          |
 | Radio Station     | finished | Empty trash              | finished          |
 | Keep awake        | finished | Show Recent Apps on Dock | finished          |
-| Spotify           | finished |                          |                   |
+| Spotify           | finished | Apple Music              | finished          |
 
 Since Version 1.3, switches can be added or removed on list.
 
@@ -155,6 +155,7 @@ You can follow these steps to use Only Switch.
 * [Alamofire](https://github.com/Alamofire/Alamofire)
 * Sound Source: [mixkit](https://mixkit.co)
 * [KeyboardShortcuts](https://github.com/sindresorhus/KeyboardShortcuts)
+* Apple Music & Spotify Switch refer to [SpotMenu](https://github.com/kmikiy/SpotMenu)
 
 ## Contributors
 

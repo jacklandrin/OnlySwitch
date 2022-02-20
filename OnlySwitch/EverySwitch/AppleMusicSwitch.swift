@@ -1,20 +1,21 @@
 //
-//  SpotifySwitch.swift
+//  AppleMusicSwitch.swift
 //  OnlySwitch
 //
-//  Created by Jacklandrin on 2022/2/19.
+//  Created by Jacklandrin on 2022/2/20.
 //
 
 import Foundation
 
-class SpotifySwitch: SwitchProvider, MusicPlayerDelegate {
+class AppleMusicSwitch:SwitchProvider, MusicPlayerDelegate {
     
-    static let shared = SpotifySwitch()
+    static let shared = AppleMusicSwitch()
+    
+    var type: SwitchType = .applemusic
     
     weak var delegate: SwitchDelegate?
     
-    var type: SwitchType = .spotify
-    var player = SpotifyPlayer()
+    var player = AppleMusicPlayer()
     
     var state:MusicPlaybackState = .stopped
     
@@ -48,7 +49,7 @@ class SpotifySwitch: SwitchProvider, MusicPlayerDelegate {
     func isVisable() -> Bool {
         //for Spotify installation after Only Switch launched
         if player == nil {
-            player = SpotifyPlayer()
+            player = AppleMusicPlayer()
         }
         guard let player = player else {
             return false
@@ -69,6 +70,5 @@ class SpotifySwitch: SwitchProvider, MusicPlayerDelegate {
         self.state = .stopped
         self.delegate?.shouldRefreshIfNeed(aSwitch: self)
     }
-    
     
 }

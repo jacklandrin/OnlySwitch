@@ -13,11 +13,11 @@ protocol MusicPlayerDelegate: AnyObject {
     /// - Parameters:
     ///   - player: The player which triggers this event.
     ///   - position: Player position.
-    func player(_ player: SpotifyPlayer, playbackStateChanged playbackState: MusicPlaybackState)
+    func player(_ player: MusicPlayer, playbackStateChanged playbackState: MusicPlaybackState)
     
     
     /// Tells the delegate the player has quitted.
     ///
     /// - Parameter player: The player which triggers this event.
-    func playerDidQuit(_ player: SpotifyPlayer)
+    func playerDidQuit(_ player: MusicPlayer)
 }

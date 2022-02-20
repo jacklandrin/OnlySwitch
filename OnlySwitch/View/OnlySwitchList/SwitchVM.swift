@@ -54,6 +54,7 @@ class SwitchVM: ObservableObject, CurrentScreen {
         self.refreshList()
         self.refreshSwitchStatus()
         self.allItemList = self.switchList + self.shortcutsList
+        //for sorting
         let orderDic = UserDefaults.standard.dictionary(forKey: orderWeightKey) as? [String:Int] ?? [String:Int]()
         for item in allItemList {
             let type:String
@@ -66,6 +67,7 @@ class SwitchVM: ObservableObject, CurrentScreen {
             let weight = orderDic[key] ?? 10000
             item.weight = weight
         }
+        //for two columns
         self.allItemList = self.allItemList.sorted{$0.weight < $1.weight}
         self.uncategoryItemList = self.switchList.filter{ $0.category == .none && !$0.isHidden }
         self.audioItemList = self.switchList.filter{ $0.category == .audio && !$0.isHidden }

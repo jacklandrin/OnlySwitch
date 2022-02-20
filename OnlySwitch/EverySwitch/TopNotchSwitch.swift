@@ -12,13 +12,13 @@ import AVFoundation
 class TopNotchSwitch:SwitchProvider, CurrentScreen {
     weak var delegate: SwitchDelegate?
     var type: SwitchType = .topNotch
-    // Mark: - private properties
+    // MARK: - private properties
     
     private var currentImageName = ""
     private var notchHeight:CGFloat = 0
     
     
-    // Mark: - SwitchProvider functions
+    // MARK:- SwitchProvider functions
     
     func currentStatus() -> Bool {
         
@@ -54,7 +54,7 @@ class TopNotchSwitch:SwitchProvider, CurrentScreen {
     }
     
     
-    // Mark: - private functions
+    // MARK: - private functions
     
     private var isNotchScreen:Bool {
         if #available(macOS 12, *) {

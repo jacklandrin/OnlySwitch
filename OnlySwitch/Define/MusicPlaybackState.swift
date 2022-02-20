@@ -6,7 +6,7 @@
 //
 
 import Foundation
-public enum MusicPlaybackState {
+enum MusicPlaybackState {
     case stopped
     case playing
     case paused
