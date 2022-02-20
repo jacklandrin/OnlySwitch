@@ -60,6 +60,9 @@ class ShortcutsSettingVM:ObservableObject {
     @Published var showErrorToast = false
     @Published var sharedShortcutsList:[SharedShortcutsItem] = [SharedShortcutsItem]()
 
+    init() {
+        loadShortcutsList()
+    }
     
     func loadShortcutsList() {
         DispatchQueue.main.async {
