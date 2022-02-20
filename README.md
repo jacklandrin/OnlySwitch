@@ -36,20 +36,21 @@ Everyone can contribute macOS Shortcuts for OnlySwitch now. Please read [How to 
 
 ## Switch list
 
-| Switch            | status | Switch                   | status            |
-|:------------------|--------|:-------------------------|:------------------|
-| Hide desktop      | finish | Hide notch               | exist some issues |
-| Dark mode         | finish | Low power mode           | require password  |
-| Screen Saver      | finish | Show Finder pathbar      | finish            |
-| Night Shift       | finish | Mute mic                 | finish            |
-| Autohide Dock     | finish | Small launchpad icon     | finish            |
-| Airpods           | finish | Pomodoro timer           | finish            |
-| Bluetooth         | finish | Show extension name      | finish            |
-| Xcode cache       | finish | Show user library folder | finish            |
-| Autohide Menu Bar | finish | Mute                     | finish            |
-| Show hidden files | finish | Empty pasteboard         | finish            |
-| Radio Station     | finish | Empty trash              | finish            |
-| Keep awake        | finish | Show Recent Apps on Dock | finish            |
+| Switch            | status   | Switch                   | status            |
+|:------------------|----------|:-------------------------|:------------------|
+| Hide desktop      | finished | Hide notch               | exist some issues |
+| Dark mode         | finished | Low power mode           | require password  |
+| Screen Saver      | finished | Show Finder pathbar      | finished          |
+| Night Shift       | finished | Mute mic                 | finished          |
+| Autohide Dock     | finished | Small launchpad icon     | finished          |
+| Airpods           | finished | Pomodoro timer           | finished          |
+| Bluetooth         | finished | Show extension name      | finished          |
+| Xcode cache       | finished | Show user library folder | finished          |
+| Autohide Menu Bar | finished | Mute                     | finished          |
+| Show hidden files | finished | Empty pasteboard         | finished          |
+| Radio Station     | finished | Empty trash              | finished          |
+| Keep awake        | finished | Show Recent Apps on Dock | finished          |
+| Spotify           | finished |                          |                   |
 
 Since Version 1.3, switches can be added or removed on list.
 
@@ -58,9 +59,9 @@ Since Version 1.3, switches can be added or removed on list.
 | Actions             | status            |
 |---------------------|-------------------|
 | Get wallpaper image | exist some issues |
-| Get wallpaper url   | finish            |
-| is dark mode        | finish            |
-| set dark mode       | finish            |
+| Get wallpaper url   | finished          |
+| is dark mode        | finished          |
+| set dark mode       | finished          |
 
 ## Supported Languages
 English, simplified Chinese, German, Croatian, Turkish, Polish, Filipino, Dutch, Italian, Russian
@@ -71,7 +72,7 @@ English, simplified Chinese, German, Croatian, Turkish, Polish, Filipino, Dutch,
 * support other languages
 * fix bug: radio player crash
 
-If you have other good idea💡, send E-mail to me.
+If you have other good idea💡, feel free to send E-mail to me.
 
 ## About hiding new Macbook Notch 
 
