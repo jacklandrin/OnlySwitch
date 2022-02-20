@@ -9,7 +9,7 @@ import Foundation
 
 class LowPowerModeSwitch:SwitchProvider {
     var type: SwitchType = .lowpowerMode
-    var delegate: SwitchDelegate?
+    weak var delegate: SwitchDelegate?
     func currentStatus() -> Bool {
         let result = LowpowerModeCMD.status.runAppleScript(isShellCMD: true)
         let content = result.1 as! String

@@ -9,7 +9,7 @@ import Foundation
 
 class PomodoroTimerSwitch: SwitchProvider {
     static let shared = PomodoroTimerSwitch()
-    var delegate: SwitchDelegate?
+    weak var delegate: SwitchDelegate?
     enum Status:String {
         case none = "n"
         case work = "w"

@@ -9,7 +9,7 @@ import Foundation
 
 class SpotifySwitch: SwitchProvider, MusicPlayerDelegate {
 
-    var delegate: SwitchDelegate?
+    weak var delegate: SwitchDelegate?
     
     var type: SwitchType = .spotify
     var player = SpotifyPlayer()
@@ -51,13 +51,13 @@ class SpotifySwitch: SwitchProvider, MusicPlayerDelegate {
     func player(_ player: SpotifyPlayer, playbackStateChanged playbackState: MusicPlaybackState) {
         guard player === self.player else {return}
         self.state = playbackState
-        self.delegate?.shouldRefreshIfNeed()
+        self.delegate?.shouldRefreshIfNeed(aSwitch: self)
     }
     
     func playerDidQuit(_ player: SpotifyPlayer) {
         guard player === self.player else {return}
         self.state = .stopped
-        self.delegate?.shouldRefreshIfNeed()
+        self.delegate?.shouldRefreshIfNeed(aSwitch: self)
     }
     
     

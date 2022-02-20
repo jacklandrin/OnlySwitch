@@ -8,7 +8,7 @@
 import AppKit
 
 class NightShiftSwitch:SwitchProvider {
-    var delegate: SwitchDelegate?
+    weak var delegate: SwitchDelegate?
     var type: SwitchType = .nightShift
     
     func isVisable() -> Bool {

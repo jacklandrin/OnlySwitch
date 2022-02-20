@@ -9,7 +9,7 @@ import Foundation
 
 class ShowFinderPathbarSwitch:SwitchProvider {
     var type: SwitchType = .showFinderPathbar
-    var delegate: SwitchDelegate?
+    weak var delegate: SwitchDelegate?
     func currentStatus() -> Bool {
         let result = ShowPathBarCMD.status.runAppleScript(isShellCMD: true)
         if result.0 {

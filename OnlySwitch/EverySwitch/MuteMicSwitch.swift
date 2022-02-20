@@ -10,7 +10,7 @@ import Foundation
 let MicVolumeKey = "MicVolumeKey"
 class MuteMicSwitch:SwitchProvider {
     var type: SwitchType = .muteMicrophone
-    var delegate: SwitchDelegate?
+    weak var delegate: SwitchDelegate?
     func currentStatus() -> Bool {
         let result = VolumeCMD.getInput.runAppleScript()
         if result.0 {

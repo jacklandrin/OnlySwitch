@@ -16,7 +16,7 @@ let defaultRadioStations = [["title":"Country Radio", "url":"https://live.leanst
 class RadioStationSwitch:SwitchProvider {
     static let shared = RadioStationSwitch()
     var type: SwitchType = .radioStation
-    var delegate: SwitchDelegate?
+    weak var delegate: SwitchDelegate?
     private var managedObjectContext:NSManagedObjectContext?
     
     var playerItem:RadioPlayerItem = RadioPlayerItem(isPlaying: false, title: "Country Radio", streamUrl: "http://uk2.internet-radio.com:8024/stream", streamInfo: "", id: UUID())

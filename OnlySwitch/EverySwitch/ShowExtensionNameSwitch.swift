@@ -9,7 +9,7 @@ import Foundation
 
 class ShowExtensionNameSwitch:SwitchProvider {
     var type: SwitchType = .showExtensionName
-    var delegate: SwitchDelegate?
+    weak var delegate: SwitchDelegate?
     func currentStatus() -> Bool {
         let result = ShowExtensionNameCMD.status.runAppleScript(isShellCMD: true)
         if result.0 {

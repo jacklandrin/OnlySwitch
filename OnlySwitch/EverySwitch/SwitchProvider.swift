@@ -8,7 +8,9 @@
 import Foundation
 import Combine
 
-protocol SwitchProvider {
+
+/// protocol for every switch
+protocol SwitchProvider:AnyObject {
     var type:SwitchType {get set}
     var delegate:SwitchDelegate? {get set}
     func currentStatus() -> Bool
@@ -17,10 +19,14 @@ protocol SwitchProvider {
     func isVisable() -> Bool
 }
 
-protocol SwitchDelegate {
-    func shouldRefreshIfNeed()
+
+protocol SwitchDelegate:AnyObject {
+    
+    /// switch need to update itself for UI
+    func shouldRefreshIfNeed(aSwitch:SwitchProvider)
 }
 
+/// for async operations
 extension SwitchProvider {
     func currentStatusAsync() async -> Bool {
         return currentStatus()

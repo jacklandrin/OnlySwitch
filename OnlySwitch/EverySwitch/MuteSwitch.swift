@@ -11,7 +11,7 @@ import AppKit
 let NSVolumeKey = "NSVolumeKey"
 let ASVolumeKey = "ASVolumeKey"
 class MuteSwitch:SwitchProvider {
-    var delegate: SwitchDelegate?
+    weak var delegate: SwitchDelegate?
     var type: SwitchType = .mute
     private let muteSwitchOperator:MuteSwitchProtocal = ASMuteSwitchOperator()
     

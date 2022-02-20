@@ -104,7 +104,8 @@ class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
         }
     }
     
-    func shouldRefreshIfNeed() {
+    func shouldRefreshIfNeed(aSwitch:SwitchProvider) {
+        guard self.switchOperator === aSwitch else {return}
         refreshAsync()
     }
 }

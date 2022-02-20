@@ -1,11 +1,12 @@
 //
 //  GitHubReleaseModel.swift
 //  OnlySwitch
-//
+//  json model of github
 //  Created by Jacklandrin on 2022/2/5.
 //
 
 import Foundation
+
 struct ReleaseAssets:Decodable {
     let id:Int
     let label:String?

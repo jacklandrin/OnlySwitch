@@ -9,7 +9,7 @@ import Foundation
 
 class DockRecentSwitch:SwitchProvider {
     var type: SwitchType = .dockRecent
-    var delegate: SwitchDelegate?
+    weak var delegate: SwitchDelegate?
     func currentStatus() -> Bool {
         let result = ShowDockRecentCMD.status.runAppleScript(isShellCMD: true)
         if result.0 {

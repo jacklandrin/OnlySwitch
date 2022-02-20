@@ -8,7 +8,7 @@
 import AppKit
 
 class AutohideDockSwitch:SwitchProvider {
-    var delegate: SwitchDelegate?
+    weak var delegate: SwitchDelegate?
     var type: SwitchType = .autohideDock
 
     func currentStatus() -> Bool {

@@ -8,7 +8,7 @@
 import AppKit
 
 class AutohideMenuBarSwitch:SwitchProvider {
-    var delegate: SwitchDelegate?
+    weak var delegate: SwitchDelegate?
     var type: SwitchType = .autohideMenuBar
     
     func currentStatus() -> Bool {

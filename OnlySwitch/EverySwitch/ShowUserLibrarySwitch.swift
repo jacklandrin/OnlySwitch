@@ -9,7 +9,7 @@ import Foundation
 
 class ShowUserLibrarySwitch:SwitchProvider {
     var type: SwitchType = .showUserLibrary
-    var delegate: SwitchDelegate?
+    weak var delegate: SwitchDelegate?
     private let manager = FileManager.default
     
     private var userLibaray : URL?

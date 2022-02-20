@@ -15,15 +15,15 @@ class SwitchVM: ObservableObject, CurrentScreen {
     
     @Published var maxHeight:CGFloat = 0
     
-    @Published var allItemList = Array<BarProvider>()
+    @Published var allItemList = Array<BarProvider>() //items which should be shown
     
-    @Published var uncategoryItemList = Array<SwitchBarVM>()
+    @Published var uncategoryItemList = Array<SwitchBarVM>() //for two columns
     
-    @Published var audioItemList = Array<SwitchBarVM>()
+    @Published var audioItemList = Array<SwitchBarVM>() //for two columns
     
-    @Published var cleanupItemList = Array<SwitchBarVM>()
+    @Published var cleanupItemList = Array<SwitchBarVM>() //for two columns
     
-    @Published var updateID = UUID()
+    @Published var updateID = UUID() //for refresh UI
     
     @Published var sortMode = false
     
@@ -32,8 +32,6 @@ class SwitchVM: ObservableObject, CurrentScreen {
     
     @UserDefaultValue(key: appearanceColumnCountKey, defaultValue: SwitchListAppearance.single.rawValue)
     var currentAppearance:String
-    
-    var spotifyPlayer = SpotifyPlayer()
     
     init() {
         refreshMaxHeight()
@@ -77,6 +75,8 @@ class SwitchVM: ObservableObject, CurrentScreen {
         print("refresh")
     }
     
+    
+    /// calculate list max height
     func refreshMaxHeight() {
         guard let screen = getScreenWithMouse() else {return}
         let menuBarHeight = NSApplication.shared.mainMenu?.menuBarHeight ?? 0
@@ -85,6 +85,7 @@ class SwitchVM: ObservableObject, CurrentScreen {
     }
     
     
+    /// save the result of sorting
     func saveOrder() {
         var orderDic = [String:Int]()
         for index in self.allItemList.indices {
