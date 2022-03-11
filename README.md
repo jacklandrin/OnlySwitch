@@ -179,6 +179,8 @@ Rosel for Filipino translation
 
 @kirillyakopov for Russian translation
 
+@kant for syntax issue
+
 ## License
 MIT
 ## Donate
