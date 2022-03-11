@@ -23,7 +23,7 @@ The shared Shortcuts are stored in a [JSON file](OnlySwitch/ShortcutsMarket/Shor
 * name: Shortcuts' name, it must be as same as in the macOS Shortcuts App. Don't rename it here.
 * link: shared iCloud link
 * author: author's name
-* description: descripe functions of the Shortcut.
+* description: describe functions of the Shortcut.
 
 ## Contributing
 
