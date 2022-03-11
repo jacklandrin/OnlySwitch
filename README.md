@@ -16,7 +16,7 @@ brew install only-switch
 [**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_2.2.3/OnlySwitch.dmg)
 
 ## What's the OnlySwitch?
-OnlySwitch provides a series of toggle switches to simply your routine work, such as Hiden desktop icons, dark mode and hide notch of new Macbook Pro. The switches show on your statusbar, you can control them effortlessly. Switch and Shortcuts items can be customized (remove/add or sort) to show on the list.
+OnlySwitch provides a series of toggle switches to simply your routine work, such as Hidden desktop icons, dark mode and hide notch of new Macbook Pro. The switches show on your statusbar, you can control them effortlessly. Switch and Shortcuts items can be customized (remove/add or sort) to show on the list.
 
 Since Version 1.7, **Shortcuts** can be imported in OnlySwitch.
 
@@ -80,7 +80,7 @@ The Hide notch switch only shows on build-in display of M1 Pro/Max Macbook Pro. 
 Now, the Hide notch switch supports dynamic wallpaper, just the processing takes much longer time.
 ## About AirPods Switch 
 
-I use classOfDevice(2360344) to check if a bluetooth device is Airpods Pro, but I'm not sure whether other AirPods modules are also 2360344, since I only have two AriPods Pros. If you are using AirPods 1~3, please tell me what the classOfDevice is. Or I can detect the count of battery value to check if AirPods(when count is 3, it's AirPods), like **AirPods Battery Monitor For MAC OS**.
+I use classOfDevice(2360344) to check if a bluetooth device is Airpods Pro, but I'm not sure whether other AirPods modules are also 2360344, since I only have two AirPods Pros. If you are using AirPods 1~3, please tell me what the classOfDevice is. Or I can detect the count of battery value to check if AirPods (when count is 3, it's AirPods), like **AirPods Battery Monitor For MAC OS**.
 
 ## About Radio Player
 Radio Player supports m3u, acc stream, but without sound wave effect. If your Radio Player crashes, please send the crash log and stream url to me. You can close sound wave effect on Radio setting, and that player is AVPlayer, more stable.
@@ -89,12 +89,12 @@ Radio Player supports m3u, acc stream, but without sound wave effect. If your Ra
 Low Power Mode uses Terminal commands that require root access, so the app will ask you to enter password on every toggle.
 
 ## About Shortcuts
-Shortcuts is a powerful iOS app which can help people make fantasitic automation functions. It comes to macOS in Monterey as well. Many users eager OnlySwitch has more customizable features, and one good news is that the app supports Shortcuts display since Version 1.7. More menubar space therefore is saved. 
+Shortcuts is a powerful iOS app which can help people make fantastic automation functions. It comes to macOS in Monterey as well. Many users eager OnlySwitch has more customizable features, and one good news is that the app supports Shortcuts display since Version 1.7. More menubar space therefore is saved. 
 In the next versions, OnlySwitch will also provide more Shortcuts actions to impove user experience.
 
 Since Version 2.0, keyboard shortcuts can be set for Shortcuts.
 
-OnlySwitch offers some Shortcus actions since Version 1.8. For example, you can config your own dark mode switch. (**Set Appearance** action by Shortcuts can also set dark mode, but the appearance status cannot be detected. So, OnlySwitch provides a set dark mode action)
+OnlySwitch offers some Shortcuts actions since Version 1.8. For example, you can config your own dark mode switch. (**Set Appearance** action by Shortcuts can also set dark mode, but the appearance status cannot be detected. So, OnlySwitch provides a set dark mode action)
 
 <p align="center">
 <img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2022/01/shortcutsdarkmode.png" width="60%" align="center" />
@@ -135,7 +135,7 @@ Some users ask me why masOS shows a warning box below, when they first open Only
 
 Because the app isn't got from App Store, and I use some private API in project. You can at [here](https://support.apple.com/guide/mac-help/apple-cant-check-app-for-malicious-software-mchleab3a043/mac) to learn more about it.
 You can follow these steps to use Only Switch.
-1. Open System Preference
+1. Open System Preferences
 2. Click Security & Privacy
 3. Select General
 4. Click **Open Anyway**
