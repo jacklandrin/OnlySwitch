@@ -64,7 +64,7 @@ Since Version 1.3, switches can be added or removed on list.
 | set dark mode       | finished          |
 
 ## Supported Languages
-English, simplified Chinese, German, Croatian, Turkish, Polish, Filipino, Dutch, Italian, Russian
+English, simplified Chinese, German, Croatian, Turkish, Polish, Filipino, Dutch, Italian, Russian, Spanish
 
 ## Welcome to pull request for these
 
