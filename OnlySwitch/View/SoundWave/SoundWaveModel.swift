@@ -20,7 +20,7 @@ class SoundWaveModel: ObservableObject {
     }
         
     func setBarWidth() {
-        let barSpace = soundWaveWidth / CGFloat(PlayerManager.shared.player.analyzer.frequencyBands * 3 - 1)
+        let barSpace = Layout.soundWaveWidth / CGFloat(PlayerManager.shared.player.analyzer.frequencyBands * 3 - 1)
         self.barWidth = barSpace * 3
     }
 }

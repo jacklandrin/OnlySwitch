@@ -22,7 +22,7 @@ struct BluredSoundWave: View {
                 let spectra = notification.object as! [[Float]]
                 self.soundWave.spectra = spectra
             }
-            .frame(width: soundWaveWidth, height:soundWaveHeight)
+            .frame(width: Layout.soundWaveWidth, height:Layout.soundWaveHeight)
             .blur(radius: 7.5)
             
     }

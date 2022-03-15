@@ -48,7 +48,7 @@ class AppDelegate:NSObject, NSApplicationDelegate {
             .environmentObject(switchVM)
         let apperearance = SwitchListAppearance(rawValue: currentAppearance)
         
-        popover.contentSize = NSSize(width: apperearance == .single ? popoverWidth : popoverWidth * 2 - 60, height: 300)
+        popover.contentSize = NSSize(width: apperearance == .single ? Layout.popoverWidth : Layout.popoverWidth * 2 - 60, height: 300)
         popover.contentViewController = NSHostingController(rootView: contentView)
         
         statusBar = StatusBarController(popover)

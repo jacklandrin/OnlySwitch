@@ -7,9 +7,14 @@
 
 import Foundation
 
-let popoverWidth:CGFloat = 360
-let popoverHeight:CGFloat = 650
-let soundWaveWidth:CGFloat = popoverWidth
-let soundWaveHeight:CGFloat = 150
-let settingWindowHeight:CGFloat = 400
-let settingWindowWidth:CGFloat = 900
+struct Layout{
+    static let popoverWidth:CGFloat = 360
+    static let popoverHeight:CGFloat = 650
+    static let soundWaveWidth:CGFloat = Layout.popoverWidth
+    static let soundWaveHeight:CGFloat = 150
+    static let settingWindowHeight:CGFloat = 400
+    static let settingWindowWidth:CGFloat = 900
+    static let singleSwitchHeight:CGFloat = 38.0
+}
+
+

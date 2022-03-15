@@ -18,8 +18,8 @@ struct OnlySwitchListView: View {
     @ObservedObject private var languageManager = LanguageManager.sharedManager
     
     let columns = [
-        GridItem(.fixed(popoverWidth - 50)),
-        GridItem(.fixed(popoverWidth - 50))
+        GridItem(.fixed(Layout.popoverWidth - 50)),
+        GridItem(.fixed(Layout.popoverWidth - 50))
         ]
 
     
@@ -63,7 +63,7 @@ struct OnlySwitchListView: View {
         .onReceive(NotificationCenter.default.publisher(for: changeSettingNotification, object: nil)) { _ in
             switchVM.refreshData()
         }
-        .frame(width:SwitchListAppearance(rawValue: switchVM.currentAppearance) == .single ? popoverWidth : popoverWidth * 2 - 50 ,height:scrollViewHeight + 130)
+        .frame(width:SwitchListAppearance(rawValue: switchVM.currentAppearance) == .single ? Layout.popoverWidth : Layout.popoverWidth * 2 - 50 ,height:scrollViewHeight + 130)
     }
     
     var singleSwitchList: some View {
@@ -78,10 +78,10 @@ struct OnlySwitchListView: View {
                 
                     if let item = switchVM.allItemList[index] as? SwitchBarVM {
                         SwitchBarView().environmentObject(item)
-                            .frame(height:38)
+                            .frame(height:Layout.singleSwitchHeight)
                     } else if let item = switchVM.allItemList[index] as? ShortcutsBarVM {
                         ShortCutBarView().environmentObject(item)
-                            .frame(height:38)
+                            .frame(height:Layout.singleSwitchHeight)
                     }
                 }
                 .offset(y: itemOffsetY(index: index))
@@ -102,14 +102,14 @@ struct OnlySwitchListView: View {
                             }
                             
                             if abs(self.distanceY) > 10 {
-                                let newIndex = movingIndex + Int(self.distanceY + 28 * (distanceY / abs(distanceY))) / 38
+                                let newIndex = movingIndex + Int(self.distanceY + 28 * (distanceY / abs(distanceY))) / Int(Layout.singleSwitchHeight)
                                 print("new index:\(newIndex), moving index:\(movingIndex), distance:\(self.distanceY)")
                             }
                         }
                         .onEnded{ gesture in
                             NSCursor.closedHand.pop()
                             if abs(self.distanceY) > 10 {
-                                let indexOffset = Int(self.distanceY + 28 * (distanceY / abs(distanceY))) / 38
+                                let indexOffset = Int(self.distanceY + 28 * (distanceY / abs(distanceY))) / Int(Layout.singleSwitchHeight)
                                 
                                 var newIndex = index + indexOffset
                                 if newIndex < 0 {
@@ -139,7 +139,7 @@ struct OnlySwitchListView: View {
                         HStack {
                             if let item = switchVM.uncategoryItemList[index] {
                                 SwitchBarView().environmentObject(item)
-                                    .frame(height:38)
+                                    .frame(height:Layout.singleSwitchHeight)
                             }
                         }
                     }
@@ -162,7 +162,7 @@ struct OnlySwitchListView: View {
                         HStack {
                             if let item = switchVM.audioItemList[index] {
                                 SwitchBarView().environmentObject(item)
-                                    .frame(height:38)
+                                    .frame(height:Layout.singleSwitchHeight)
                             }
                         }
                     }
@@ -184,7 +184,7 @@ struct OnlySwitchListView: View {
                         HStack {
                             if let item = switchVM.cleanupItemList[index] {
                                 SwitchBarView().environmentObject(item)
-                                    .frame(height:38)
+                                    .frame(height:Layout.singleSwitchHeight)
                             }
                         }
                     }
@@ -208,7 +208,7 @@ struct OnlySwitchListView: View {
                         
                             if let item = switchVM.shortcutsList[index] {
                                 ShortCutBarView().environmentObject(item)
-                                    .frame(height:38)
+                                    .frame(height:Layout.singleSwitchHeight)
                             }
                         }
                     }
@@ -306,7 +306,8 @@ struct OnlySwitchListView: View {
     
     var scrollViewHeight : CGFloat {
         let switchCount = visableSwitchCount + switchVM.shortcutsList.count
-        var totalHeight = CGFloat((switchCount)) * 38.0
+        var totalHeight = CGFloat((switchCount)) * Layout.singleSwitchHeight
+        //two columns
         if switchVM.currentAppearance == SwitchListAppearance.dual.rawValue {
             totalHeight = categoryHeight(count: switchVM.uncategoryItemList.count)
             totalHeight += categoryHeight(count: switchVM.audioItemList.count)
@@ -316,7 +317,7 @@ struct OnlySwitchListView: View {
         }
         
         let height = min(totalHeight, switchVM.maxHeight - 150)
-        print("scroll view height:\(height)")
+        print("scroll view height:\(height) maxHeight:\(switchVM.maxHeight)")
         guard height > 0 else {return 300}
         return height
     }
@@ -325,16 +326,16 @@ struct OnlySwitchListView: View {
         var height = 0.0
         if count > 0 {
             height += 30.0
-            height += Double((count / 2)) * 38.0
+            height += Double((count / 2)) * Layout.singleSwitchHeight
             if count % 2 == 1 {
-                height += 38.0
+                height += Layout.singleSwitchHeight
             }
         }
         return height
     }
     
     var visableSwitchCount:Int {
-        switchVM.switchList.filter{!$0.isHidden}.count
+        return switchVM.switchList.filter{!$0.isHidden}.count
     }
     
     func move(from source: IndexSet, to destination: Int) {
@@ -344,7 +345,7 @@ struct OnlySwitchListView: View {
     func itemOffsetY(index:Int) -> CGFloat {
         var newIndex = index
         if abs(self.distanceY) > 10 {
-            let indexOffset = Int(self.distanceY + 28 * (distanceY / abs(distanceY))) / 38
+            let indexOffset = Int(self.distanceY + 28 * (distanceY / abs(distanceY))) / Int(Layout.singleSwitchHeight)
             print("indexOffset:\(indexOffset)")
             newIndex = movingIndex + indexOffset
         }
@@ -358,7 +359,7 @@ struct OnlySwitchListView: View {
         if movingIndex == index {
             return distanceY
         } else if (distanceY > 0 && index < newIndex && index > movingIndex) || (distanceY < 0 && index >= newIndex && index < movingIndex)  {
-            return -38 * (distanceY / abs(distanceY))
+            return -Layout.singleSwitchHeight * (distanceY / abs(distanceY))
         } else {
             return 0
         }
@@ -388,7 +389,7 @@ struct OnlySwitchListView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         OnlySwitchListView()
-            .frame(width: popoverWidth, height: popoverHeight)
+            .frame(width: Layout.popoverWidth, height: Layout.popoverHeight)
             .environmentObject(SwitchVM())
     }
 }

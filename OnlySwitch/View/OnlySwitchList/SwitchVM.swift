@@ -53,7 +53,7 @@ class SwitchVM: ObservableObject, CurrentScreen {
         self.sortMode = false
         self.refreshList()
         self.refreshSwitchStatus()
-        self.allItemList = self.switchList + self.shortcutsList
+        self.allItemList = self.switchList.filter{!$0.isHidden} + self.shortcutsList
         //for sorting
         let orderDic = UserDefaults.standard.dictionary(forKey: orderWeightKey) as? [String:Int] ?? [String:Int]()
         for item in allItemList {
@@ -69,9 +69,9 @@ class SwitchVM: ObservableObject, CurrentScreen {
         }
         //for two columns
         self.allItemList = self.allItemList.sorted{$0.weight < $1.weight}
-        self.uncategoryItemList = self.switchList.filter{ $0.category == .none && !$0.isHidden }
-        self.audioItemList = self.switchList.filter{ $0.category == .audio && !$0.isHidden }
-        self.cleanupItemList = self.switchList.filter{ $0.category == .cleanup && !$0.isHidden }
+        self.uncategoryItemList = self.switchList.filter{ $0.category == .none }
+        self.audioItemList = self.switchList.filter{ $0.category == .audio }
+        self.cleanupItemList = self.switchList.filter{ $0.category == .cleanup }
         
         updateID = UUID()
         print("refresh")

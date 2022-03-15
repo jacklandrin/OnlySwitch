@@ -21,9 +21,9 @@ enum OpenWindows:String, CaseIterable, CurrentScreen {
             } else {
                 let hostingController = NSHostingController(rootView:SettingView().environment(\.managedObjectContext, persistenceController.container.viewContext))
                 let settingWindow = HostWindow(contentViewController: hostingController)
-                settingWindow.setContentSize(NSSize(width: settingWindowWidth, height: settingWindowHeight))
-                let xPos = getScreenWithMouse()!.frame.width / 2 - settingWindowWidth / 2
-                let yPos = getScreenWithMouse()!.frame.height / 2 - settingWindowHeight / 2
+                settingWindow.setContentSize(NSSize(width: Layout.settingWindowWidth, height: Layout.settingWindowHeight))
+                let xPos = getScreenWithMouse()!.frame.width / 2 - Layout.settingWindowWidth / 2
+                let yPos = getScreenWithMouse()!.frame.height / 2 - Layout.settingWindowHeight / 2
                 settingWindow.setFrameOrigin(NSPoint(x: xPos, y: yPos))
                 settingWindow.title = "Settings".localized()
                 let controller = NSWindowController(window: settingWindow)

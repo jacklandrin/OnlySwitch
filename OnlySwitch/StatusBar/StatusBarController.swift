@@ -94,9 +94,9 @@ class StatusBarController {
             strongSelf.hidePopover(nil)
             let appearance = SwitchListAppearance(rawValue: strongSelf.currentAppearance)
             if appearance == .single {
-                strongSelf.popover.contentSize.width = popoverWidth
+                strongSelf.popover.contentSize.width = Layout.popoverWidth
             } else if appearance == .dual {
-                strongSelf.popover.contentSize.width = popoverWidth * 2 - 50
+                strongSelf.popover.contentSize.width = Layout.popoverWidth * 2 - 50
             }
         })
     }
