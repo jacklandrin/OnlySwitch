@@ -179,7 +179,7 @@ Rosel for Filipino translation
 
 @kirillyakopov for Russian translation
 
-@kant for syntax issue
+@kant for syntax issue and Spanish translation
 
 ## License
 MIT

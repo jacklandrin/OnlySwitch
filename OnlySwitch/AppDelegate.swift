@@ -33,7 +33,6 @@ struct OnlySwitchApp: App {
     }
 }
 
-@MainActor
 class AppDelegate:NSObject, NSApplicationDelegate {
     var statusBar: StatusBarController?
     var popover = NSPopover()

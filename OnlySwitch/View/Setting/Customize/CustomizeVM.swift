@@ -48,7 +48,7 @@ class CustomizeItem:ObservableObject {
                 
             } else {
                 if SwitchManager.shared.shownSwitchCount < 5 {
-                    error("At lease remain 4 switches")
+                    error("At least remain 4 switches")
                     toggle = true
                     return
                 }
