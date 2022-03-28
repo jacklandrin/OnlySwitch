@@ -124,6 +124,7 @@ I found I can't run the preview of SwiftUI by Xcode 13.2.1 on my M1 Pro Macbook.
 * lifehacker https://lifehacker.ru/onlyswitch
 * appletechnikblog https://appletechnikblog.com/de/2022/02/25/app-tipp-der-woche-only-switch-fuer-die-menueleiste-auf-dem-mac/
 * All-in-One person https://en.blog.themarfa.name/how-to-quickly-manage-macos-system-settings/
+* Mac Gadget https://www.macgadget.de/News/2022/03/24/OnlySwitch-Schnellzugriff-auf-viele-Systemfunktionen-per-Mac-Menueleiste
 
 ## About Apple's warning at first open before version 2.1.3
 Note: OnlySwitch has been notarized by Apple since version 2.1.3, so the warning box won't show in the new version.
