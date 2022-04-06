@@ -33,6 +33,9 @@ class SwitchVM: ObservableObject, CurrentScreen {
     @UserDefaultValue(key: appearanceColumnCountKey, defaultValue: SwitchListAppearance.single.rawValue)
     var currentAppearance:String
     
+    @UserDefaultValue(key: showAdsKey, defaultValue: true)
+    var showAds:Bool
+    
     init() {
         refreshMaxHeight()
     }
