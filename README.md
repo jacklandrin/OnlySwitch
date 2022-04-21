@@ -13,7 +13,7 @@
 brew install only-switch
 ```
 ## Manually Download
-[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_2.2.4/OnlySwitch.dmg)
+[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_2.2.5/OnlySwitch.dmg)
 
 ## What's the OnlySwitch?
 OnlySwitch provides a series of toggle switches to simply your routine work, such as Hidden desktop icons, dark mode and hide notch of new Macbook Pro. The switches show on your statusbar, you can control them effortlessly. Switch and Shortcuts items can be customized (remove/add or sort) to show on the list.
@@ -60,11 +60,11 @@ Since Version 1.3, switches can be added or removed on list.
 |---------------------|-------------------|
 | Get wallpaper image | exist some issues |
 | Get wallpaper url   | finished          |
-| is dark mode        | finished          |
-| set dark mode       | finished          |
+| Is dark mode        | finished          |
+| Set dark mode       | finished          |
 
 ## Supported Languages
-English, simplified Chinese, German, Croatian, Turkish, Polish, Filipino, Dutch, Italian, Russian, Spanish
+English, simplified Chinese, German, Croatian, Turkish, Polish, Filipino, Dutch, Italian, Russian, Spanish, Japanese
 
 ## Welcome to pull request for these
 
@@ -126,26 +126,6 @@ I found I can't run the preview of SwiftUI by Xcode 13.2.1 on my M1 Pro Macbook.
 * All-in-One person https://en.blog.themarfa.name/how-to-quickly-manage-macos-system-settings/
 * Mac Gadget https://www.macgadget.de/News/2022/03/24/OnlySwitch-Schnellzugriff-auf-viele-Systemfunktionen-per-Mac-Menueleiste
 
-## About Apple's warning at first open before version 2.1.3
-Note: OnlySwitch has been notarized by Apple since version 2.1.3, so the warning box won't show in the new version.
-
-Some users ask me why masOS shows a warning box below, when they first open Only Switch.
-<p align="center">
-<img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2021/12/os_warning.png" width="35%" align="center" />
-</p>
-
-Because the app isn't got from App Store, and I use some private API in project. You can at [here](https://support.apple.com/guide/mac-help/apple-cant-check-app-for-malicious-software-mchleab3a043/mac) to learn more about it.
-You can follow these steps to use Only Switch.
-1. Open System Preferences
-2. Click Security & Privacy
-3. Select General
-4. Click **Open Anyway**
-5. Finally click Open on the dialog box. Now macOS won't block that you open the app.
-<p align="center">
-<img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2021/12/os_tip.png" width="60%" align="center" />
-</p>
-
-
 ## Reference
 
 * NightShift switch refer to [Nocturnal](https://github.com/joshjon/nocturnal)
@@ -181,6 +161,8 @@ Rosel for Filipino translation
 @kirillyakopov for Russian translation
 
 @kant for syntax issue and Spanish translation
+
+@ShogoKoyama for Japanese translation
 
 ## License
 MIT
