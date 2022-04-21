@@ -8,12 +8,18 @@
 import SwiftUI
 extension Bundle {
     private static var bundle: Bundle!
-    private static var supportLangs = ["en", "zh", "de", "hr", "tr","pl", "fil", "nl", "it", "ru", "es"]
+    private static var supportLangs = ["en", "zh", "de", "hr", "tr","pl", "fil", "nl", "it", "ru", "es","ja"]
     public static func localizedBundle() -> Bundle! {
         if bundle == nil {
             let appLang = UserDefaults.standard.string(forKey: "app_lang") ?? "en"
             let path = Bundle.main.path(forResource: appLang, ofType: "lproj")
-            bundle = Bundle(path: path!)
+            if let path = path {
+                bundle = Bundle(path: path)
+            } else {
+                let path = Bundle.main.path(forResource: "en", ofType: "lproj")
+                bundle = Bundle(path: path!)
+            }
+            
         }
 
         return bundle;
@@ -22,7 +28,12 @@ extension Bundle {
     public static func setLanguage(lang: String) {
         UserDefaults.standard.set(lang, forKey: "app_lang")
         let path = Bundle.main.path(forResource: lang, ofType: "lproj")
-        bundle = Bundle(path: path!)
+        if let path = path {
+            bundle = Bundle(path: path)
+        } else {
+            let path = Bundle.main.path(forResource: "en", ofType: "lproj")
+            bundle = Bundle(path: path!)
+        }
     }
     
     public static func currentLanguage() -> String {
