@@ -9,6 +9,7 @@ import Foundation
 
 let menubarIconKey = "menubarIconKey"
 let appearanceColumnCountKey = "appearanceColumnCountKey"
+let showAdsKey = "showAdsKey"
 
 class GeneralVM:ObservableObject {
     @Published var cacheSize:String = ""
@@ -33,6 +34,14 @@ class GeneralVM:ObservableObject {
         didSet {
             objectWillChange.send()
             NotificationCenter.default.post(name: changePopoverAppearanceNotificationName, object: nil)
+        }
+    }
+    
+    @UserDefaultValue(key: showAdsKey, defaultValue: true)
+    var showAds:Bool {
+        didSet {
+            objectWillChange.send()
+            NotificationCenter.default.post(name: changeSettingNotification, object: nil)
         }
     }
 }

@@ -15,34 +15,36 @@ struct GeneralView: View, EmailProvider {
     var body: some View {
         VStack {
             HStack {
-                VStack(alignment: .trailing, spacing: 10) {
+                VStack(alignment: .trailing, spacing: Layout.generalSettingSpacing) {
                     Text("Launch:".localized())
-                        .frame(height:20)
+                        .frame(height:Layout.generalSettingItemHeight)
                         
                     Text("Language:".localized())
-                        .frame(height:30)
-                        .padding(.top,8)
+                        .frame(height:Layout.generalSettingItemHeight)
                     
                     Text("Appearance:".localized())
-                        .frame(height: 30)
+                        .frame(height: Layout.generalSettingItemHeight)
+                    
+                    Text("Recommendation:".localized())
+                        .frame(height:Layout.generalSettingItemHeight)
                     
                     Text("Menu Bar Icon:".localized())
-                        .frame(height:30)
+                        .frame(height:Layout.generalSettingItemHeight)
                     
                     Text("Updates:".localized())
-                        .frame(height:30)
+                        .frame(height:Layout.generalSettingItemHeight)
                     
                     Text("Cache:".localized())
                         .frame(height: 50, alignment: .top)
                         .padding(.top,5)
                     
                     Text("Contact:".localized())
-                        .frame(height:30)
+                        .frame(height:Layout.generalSettingItemHeight)
                     
                     Text("Quit:".localized())
-                        .frame(height:30)
+                        .frame(height:Layout.generalSettingItemHeight)
                 }
-                VStack(alignment: .leading, spacing: 10) {
+                VStack(alignment: .leading, spacing: Layout.generalSettingSpacing) {
                     //launch at login
                     LaunchAtLogin.Toggle {
                         Text("Launch at login".localized())
@@ -59,7 +61,7 @@ struct GeneralView: View, EmailProvider {
                             }
                         }
                         .frame(maxWidth:150)
-                    }.frame(height:30)
+                    }.frame(height:Layout.generalSettingItemHeight)
                     
                     //Appearance
                     VStack {
@@ -72,7 +74,10 @@ struct GeneralView: View, EmailProvider {
                                 generalVM.currentAppearance = SwitchListAppearance.dual.rawValue
                             }
                         }.frame(maxWidth:150)
-                    }.frame(height:30)
+                    }.frame(height:Layout.generalSettingItemHeight)
+                    
+                    Toggle(isOn: $generalVM.showAds, label: {Text("Show Jack's App".localized())})
+                        .frame(height: Layout.generalSettingItemHeight)
                     
                     //menubar icons
                     Image(generalVM.currentMenubarIcon)
@@ -106,7 +111,7 @@ struct GeneralView: View, EmailProvider {
                             }.frame(width:50)
                                 .padding(.vertical, 10)
                         }
-                        .frame(height:30)
+                        .frame(height:Layout.generalSettingItemHeight)
                     
                     //check update
                     HStack {
@@ -138,7 +143,7 @@ struct GeneralView: View, EmailProvider {
                             .controlSize(.small)
 //                            .scaleEffect(0.6)
                             .isHidden(!generalVM.showProgress,remove: true)
-                    }.frame(height:30)
+                    }.frame(height:Layout.generalSettingItemHeight)
                     
                     
                     //clear cache
@@ -158,15 +163,15 @@ struct GeneralView: View, EmailProvider {
                     Button("Send Email to Jacklandrin".localized()) {
                         sendEmail()
                     }
-                    .frame(height:30)
+                    .frame(height:Layout.generalSettingItemHeight)
                    
                     //quit
                     Button("Quit Only Switch".localized()) {
                         NSApp.terminate(self)
                     }
-                    .frame(height:30)
+                    .frame(height:Layout.generalSettingItemHeight)
                 }
-            }.padding(.top, 40)
+            }.padding(.top, 25)
             Spacer()
         }
         .onAppear{

@@ -41,7 +41,9 @@ struct OnlySwitchListView: View {
             .frame(height: scrollViewHeight)
                 .padding(.vertical,15)
             
-            recommendApp.opacity(0.8)
+            if switchVM.showAds {
+                recommendApp.opacity(0.8)
+            }
             
             bottomBar
                 .isHidden(SwitchListAppearance(rawValue: switchVM.currentAppearance) == .dual, remove: true)
@@ -63,7 +65,7 @@ struct OnlySwitchListView: View {
         .onReceive(NotificationCenter.default.publisher(for: changeSettingNotification, object: nil)) { _ in
             switchVM.refreshData()
         }
-        .frame(width:SwitchListAppearance(rawValue: switchVM.currentAppearance) == .single ? Layout.popoverWidth : Layout.popoverWidth * 2 - 50 ,height:scrollViewHeight + 130)
+        .frame(width:SwitchListAppearance(rawValue: switchVM.currentAppearance) == .single ? Layout.popoverWidth : Layout.popoverWidth * 2 - 50 , height:scrollViewHeight + (switchVM.showAds ? 130 : 90))
     }
     
     var singleSwitchList: some View {
@@ -315,7 +317,7 @@ struct OnlySwitchListView: View {
             totalHeight += categoryHeight(count: switchVM.shortcutsList.count)
             totalHeight -= 30.0
         }
-        
+
         let height = min(totalHeight, switchVM.maxHeight - 150)
         print("scroll view height:\(height) maxHeight:\(switchVM.maxHeight)")
         guard height > 0 else {return 300}
