@@ -15,6 +15,8 @@ struct Layout{
     static let settingWindowHeight:CGFloat = 400
     static let settingWindowWidth:CGFloat = 900
     static let singleSwitchHeight:CGFloat = 38.0
+    static let generalSettingItemHeight:CGFloat = 30.0
+    static let generalSettingSpacing:CGFloat = 7.0
 }
 
 

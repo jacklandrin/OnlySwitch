@@ -1,43 +1,41 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "Alamofire",
-        "repositoryURL": "https://github.com/Alamofire/Alamofire.git",
-        "state": {
-          "branch": null,
-          "revision": "f82c23a8a7ef8dc1a49a8bfc6a96883e79121864",
-          "version": "5.5.0"
-        }
-      },
-      {
-        "package": "AlertToast",
-        "repositoryURL": "https://github.com/elai950/AlertToast.git",
-        "state": {
-          "branch": null,
-          "revision": "a4f4267f6454259ba4ed8f9dadb87334a789c26c",
-          "version": "1.3.7"
-        }
-      },
-      {
-        "package": "KeyboardShortcuts",
-        "repositoryURL": "https://github.com/sindresorhus/KeyboardShortcuts",
-        "state": {
-          "branch": "main",
-          "revision": "e72d2ff50408062062ef5486e0c216fae7e61610",
-          "version": null
-        }
-      },
-      {
-        "package": "LaunchAtLogin",
-        "repositoryURL": "https://github.com/sindresorhus/LaunchAtLogin",
-        "state": {
-          "branch": null,
-          "revision": "e8171b3e38a2816f579f58f3dac1522aa39efe41",
-          "version": "4.2.0"
-        }
+  "pins" : [
+    {
+      "identity" : "alamofire",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Alamofire/Alamofire.git",
+      "state" : {
+        "revision" : "f82c23a8a7ef8dc1a49a8bfc6a96883e79121864",
+        "version" : "5.5.0"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "alerttoast",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/elai950/AlertToast.git",
+      "state" : {
+        "revision" : "a4f4267f6454259ba4ed8f9dadb87334a789c26c",
+        "version" : "1.3.7"
+      }
+    },
+    {
+      "identity" : "keyboardshortcuts",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sindresorhus/KeyboardShortcuts",
+      "state" : {
+        "branch" : "main",
+        "revision" : "e72d2ff50408062062ef5486e0c216fae7e61610"
+      }
+    },
+    {
+      "identity" : "launchatlogin",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sindresorhus/LaunchAtLogin",
+      "state" : {
+        "revision" : "e8171b3e38a2816f579f58f3dac1522aa39efe41",
+        "version" : "4.2.0"
+      }
+    }
+  ],
+  "version" : 2
 }
