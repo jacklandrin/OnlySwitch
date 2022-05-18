@@ -37,11 +37,15 @@ class TopNotchSwitch:SwitchProvider, CurrentScreen {
     }
     
     
-    func operationSwitch(isOn: Bool) async -> Bool {
+    func operationSwitch(isOn: Bool) async throws {
+        var success = false
         if isOn {
-            return hiddenNotch()
+            success = hiddenNotch()
         } else {
-            return recoverNotch()
+            success = recoverNotch()
+        }
+        if !success {
+            throw SwitchError.OperationFailed
         }
     }
     

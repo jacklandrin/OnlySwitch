@@ -11,21 +11,29 @@ class LowPowerModeSwitch:SwitchProvider {
     var type: SwitchType = .lowpowerMode
     weak var delegate: SwitchDelegate?
     func currentStatus() -> Bool {
-        let result = LowpowerModeCMD.status.runAppleScript(isShellCMD: true)
-        let content = result.1 as! String
-        return content.contains("1")
+        do {
+            let result = try LowpowerModeCMD.status.runAppleScript(isShellCMD: true)
+            return result.contains("1")
+        } catch {
+            return false
+        }
     }
     
     func currentInfo() -> String {
         return "require password"
     }
     
-    func operationSwitch(isOn: Bool) async -> Bool {
-        if isOn {
-            return LowpowerModeCMD.on.runAppleScript(isShellCMD: true, with: true).0
-        } else {
-            return LowpowerModeCMD.off.runAppleScript(isShellCMD: true, with: true).0
+    func operationSwitch(isOn: Bool) async throws {
+        do {
+            if isOn {
+                _ = try LowpowerModeCMD.on.runAppleScript(isShellCMD: true, with: true)
+            } else {
+                _ = try LowpowerModeCMD.off.runAppleScript(isShellCMD: true, with: true)
+            }
+        } catch {
+            throw SwitchError.OperationFailed
         }
+        
     }
     
     func isVisable() -> Bool {

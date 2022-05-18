@@ -44,20 +44,17 @@ class RadioStationSwitch:SwitchProvider {
         self.playerItem.streamInfo = ""
     }
     
-    func operationSwitch(isOn: Bool) async -> Bool {
+    func operationSwitch(isOn: Bool) async throws {
         if isOn {
             DispatchQueue.main.async {
                 self.playerItem.isPlaying = true
             }
             
-            return true
         } else {
             DispatchQueue.main.async {
                 self.playerItem.isPlaying = false
                 self.playerItem.streamInfo = ""
             }
-            
-            return true
         }
     }
     

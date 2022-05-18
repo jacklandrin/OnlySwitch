@@ -126,7 +126,7 @@ struct ShortcutsView: View {
                     .cornerRadius(10)
                         .onTapGesture {
                             if shortcutsVM.sharedShortcutsList[index].hasInstalled {
-                                _ = ShorcutsCMD.showShortcut(name: shortcutsVM.sharedShortcutsList[index].name).runAppleScript(isShellCMD: true)
+                                _ = try? ShorcutsCMD.showShortcut(name: shortcutsVM.sharedShortcutsList[index].name).runAppleScript(isShellCMD: true)
                             }
                         }
                     }

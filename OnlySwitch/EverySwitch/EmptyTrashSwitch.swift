@@ -19,11 +19,15 @@ class EmptyTrashSwitch:SwitchProvider {
         return false
     }
     
-    func operationSwitch(isOn: Bool) async -> Bool {
-        if isOn {
-            return emptyTrashCMD.runAppleScript().0
+    func operationSwitch(isOn: Bool) async throws {
+        do {
+            if isOn {
+                _ = try emptyTrashCMD.runAppleScript()
+            }
+        } catch {
+            throw SwitchError.OperationFailed
         }
-        return true
+        
     }
     
     func isVisable() -> Bool {

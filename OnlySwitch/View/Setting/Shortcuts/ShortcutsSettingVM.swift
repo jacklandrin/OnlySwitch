@@ -48,7 +48,7 @@ class ShorcutsItem:ObservableObject {
     }
     
     func doShortcuts() {
-        let _ = ShorcutsCMD.runShortcut(name: self.name).runAppleScript(isShellCMD: true).0
+        _ = try? ShorcutsCMD.runShortcut(name: self.name).runAppleScript(isShellCMD: true)
     }
     
 }
@@ -66,9 +66,10 @@ class ShortcutsSettingVM:ObservableObject {
     
     func loadShortcutsList() {
         DispatchQueue.main.async {
-            let result = ShorcutsCMD.getList.runAppleScript(isShellCMD: true)
-            if result.0 {
-                let allshortcuts = (result.1 as! String).split(separator: "\r")
+            do {
+                let result = try ShorcutsCMD.getList.runAppleScript(isShellCMD: true)
+                
+                let allshortcuts = result.split(separator: "\r")
                 let shortcutsDic = UserDefaults.standard.dictionary(forKey: shorcutsDicKey)
                 var newShortcutsDic:[String:Bool] = [String:Bool]()
                 if let shortcutsDic = shortcutsDic {
@@ -95,6 +96,8 @@ class ShortcutsSettingVM:ObservableObject {
                 
                 UserDefaults.standard.set(newShortcutsDic, forKey: shorcutsDicKey)
                 UserDefaults.standard.synchronize()
+            } catch {
+                
             }
         }
         
@@ -109,12 +112,14 @@ class ShortcutsSettingVM:ObservableObject {
     }
     
     func getAllInstalledShortcutName() -> [String]? {
-        let result = ShorcutsCMD.getList.runAppleScript(isShellCMD: true)
-        if result.0 {
-            let allshortcuts = (result.1 as! String).split(separator: "\r")
+        do {
+            let result = try ShorcutsCMD.getList.runAppleScript(isShellCMD: true)
+            let allshortcuts = result.split(separator: "\r")
             return allshortcuts.map{String($0)}
+        } catch {
+            return nil
         }
-        return nil
+        
     }
     
     

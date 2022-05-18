@@ -41,27 +41,30 @@ class BluetoothDevicesManager:NSObject {
     
     func getAirPodsBattery(device:IOBluetoothDevice) -> String {
         let command = "sh \(scriptDiskFilePath(scriptName: getAirpodsBatteryShell))"
-        let result = command.runAppleScript(isShellCMD: true)
-        guard result.0 else {return ""}
-        let value = result.1 as! String
-        let valueGroupedBySpaces = value.split(separator: "\n")
-        guard valueGroupedBySpaces.count > 0 else {
+        do {
+            let value = try command.runAppleScript(isShellCMD: true)
+            let valueGroupedBySpaces = value.split(separator: "\n")
+            guard valueGroupedBySpaces.count > 0 else {
+                return ""
+            }
+            var currentAirPodsBattery = ""
+            for item in valueGroupedBySpaces {
+                let datas = String(item).components(separatedBy: "@@")
+                guard datas.count > 1,
+                      let address = datas.first,
+                      let batteryInfo = datas.last else {
+                          continue
+                      }
+                if address.trimmingCharacters(in: .whitespaces) == device.addressString.convertMacAdrress() {
+                    currentAirPodsBattery = batteryInfo
+                    break
+                }
+            }
+            return currentAirPodsBattery
+        } catch {
             return ""
         }
-        var currentAirPodsBattery = ""
-        for item in valueGroupedBySpaces {
-            let datas = String(item).components(separatedBy: "@@")
-            guard datas.count > 1,
-                  let address = datas.first,
-                  let batteryInfo = datas.last else {
-                      continue
-                  }
-            if address.trimmingCharacters(in: .whitespaces) == device.addressString.convertMacAdrress() {
-                currentAirPodsBattery = batteryInfo
-                break
-            }
-        }
-        return currentAirPodsBattery
+
     }
     
     

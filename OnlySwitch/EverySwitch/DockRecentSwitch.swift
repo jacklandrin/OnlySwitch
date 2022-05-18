@@ -11,23 +11,30 @@ class DockRecentSwitch:SwitchProvider {
     var type: SwitchType = .dockRecent
     weak var delegate: SwitchDelegate?
     func currentStatus() -> Bool {
-        let result = ShowDockRecentCMD.status.runAppleScript(isShellCMD: true)
-        if result.0 {
-            return (result.1 as! NSString).boolValue
+        do {
+            let result = try ShowDockRecentCMD.status.runAppleScript(isShellCMD: true)
+            return (result as NSString).boolValue
+        } catch {
+            return false
         }
-        return false
+        
     }
     
     func currentInfo() -> String {
         return ""
     }
     
-    func operationSwitch(isOn: Bool) async -> Bool {
-        if isOn {
-            return ShowDockRecentCMD.on.runAppleScript(isShellCMD: true).0
-        } else {
-            return ShowDockRecentCMD.off.runAppleScript(isShellCMD: true).0
+    func operationSwitch(isOn: Bool) async throws {
+        do {
+            if isOn {
+                _ = try ShowDockRecentCMD.on.runAppleScript(isShellCMD: true)
+            } else {
+                _ = try ShowDockRecentCMD.off.runAppleScript(isShellCMD: true)
+            }
+        } catch {
+            throw SwitchError.OperationFailed
         }
+        
     }
     
     func isVisable() -> Bool {

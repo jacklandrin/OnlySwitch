@@ -24,11 +24,6 @@ extension NSImage {
     
 }
 
-extension NSImage {
-    public convenience init(systemSymbolName:String) {
-        self.init(systemSymbolName: systemSymbolName, accessibilityDescription:nil)!
-    }
-}
 
 extension NSImage {
 

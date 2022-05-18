@@ -11,25 +11,34 @@ class SmallLaunchpadIconSwitch:SwitchProvider {
     var type: SwitchType = .smallLaunchpadIcon
     weak var delegate: SwitchDelegate?
     func currentStatus() -> Bool {
-        let result = SmallLaunchpadCMD.status.runAppleScript(isShellCMD: true)
-        if result.0 {
-            if (result.1 as! NSString).intValue > 5 {
+        do {
+            let result = try SmallLaunchpadCMD.status.runAppleScript(isShellCMD: true)
+            
+            if (result as NSString).intValue > 5 {
                 return true
             }
+            return false
+        } catch {
+            return false
         }
-        return false
+        
     }
     
     func currentInfo() -> String {
         return ""
     }
     
-    func operationSwitch(isOn: Bool) async -> Bool {
-        if isOn {
-            return SmallLaunchpadCMD.on.runAppleScript(isShellCMD: true).0
-        } else {
-            return SmallLaunchpadCMD.off.runAppleScript(isShellCMD: true).0
+    func operationSwitch(isOn: Bool) async throws {
+        do {
+            if isOn {
+                _ = try SmallLaunchpadCMD.on.runAppleScript(isShellCMD: true)
+            } else {
+                _ = try SmallLaunchpadCMD.off.runAppleScript(isShellCMD: true)
+            }
+        } catch {
+            throw SwitchError.OperationFailed
         }
+        
     }
     
     func isVisable() -> Bool {

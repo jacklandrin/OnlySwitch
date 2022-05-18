@@ -69,19 +69,17 @@ class XcodeCacheSwitch:SwitchProvider {
         return exist
     }
     
-    func operationSwitch(isOn: Bool) async -> Bool {
+    func operationSwitch(isOn: Bool) async throws {
         let home = manager.homeDirectoryForCurrentUser
         let url = home.appendingPathComponent(derivedData)
         do {
             if isOn {
                 lastSizeBeforeCleaning = try derivedDataURL.directoryTotalAllocatedSize(includingSubfolders: true)
                 try manager.removeItem(at: url)
-                return true
             }
         } catch {
-            return false
+            throw error
         }
-        return false
     }
     
     

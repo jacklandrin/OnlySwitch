@@ -15,8 +15,8 @@ class MuteSwitch:SwitchProvider {
     var type: SwitchType = .mute
     private let muteSwitchOperator:MuteSwitchProtocal = ASMuteSwitchOperator()
     
-    func operationSwitch(isOn: Bool) async -> Bool {
-        return muteSwitchOperator.operationSwitch(isOn: isOn)
+    func operationSwitch(isOn: Bool) async throws {
+        try muteSwitchOperator.operationSwitch(isOn: isOn)
     }
     
     func currentStatus() -> Bool {
@@ -34,7 +34,7 @@ class MuteSwitch:SwitchProvider {
 
 protocol MuteSwitchProtocal {
     func currentStatus() -> Bool
-    func operationSwitch(isOn: Bool) -> Bool
+    func operationSwitch(isOn: Bool) throws
 }
 
 class NSMuteSwitchOperator:MuteSwitchProtocal {
@@ -49,12 +49,15 @@ class NSMuteSwitchOperator:MuteSwitchProtocal {
         }
     }
     
-    func operationSwitch(isOn: Bool) -> Bool {
+    func operationSwitch(isOn: Bool) throws {
+        
         if isOn {
             NSSound.systemVolumeFadeToMute(seconds: 0, blocking: true)
             let isMuted = NSSound.systemVolumeIsMuted
             print("turn on, isMuted:\(isMuted)")
-            return isMuted
+            if !isMuted {
+                throw SwitchError.OperationFailed
+            }
         } else {
             var volumeValue = Float(UserDefaults.standard.float(forKey: NSVolumeKey))
             if volumeValue == 0 {
@@ -63,36 +66,44 @@ class NSMuteSwitchOperator:MuteSwitchProtocal {
             NSSound.systemVolume = volumeValue
             let isMuted = NSSound.systemVolumeIsMuted
             print("turn off, isMuted:\(isMuted)")
-            return !isMuted
+            if isMuted {
+                throw SwitchError.OperationFailed
+            }
         }
     }
 }
 
 class ASMuteSwitchOperator:MuteSwitchProtocal {
     func currentStatus() -> Bool {
-        let result = VolumeCMD.getOutput.runAppleScript()
-        if result.0 {
-            let volume:String = result.1 as! String
+        do {
+            let result = try VolumeCMD.getOutput.runAppleScript()
+            
+            let volume:String = result
             let volumeValue:Int = Int(volume) ?? 50
             UserDefaults.standard.set(volume, forKey: ASVolumeKey)
             UserDefaults.standard.synchronize()
             return volumeValue == 0
-        } else {
+            
+        } catch {
             return false
         }
-
+        
     }
     
-    func operationSwitch(isOn: Bool) -> Bool {
-        if isOn {
-            let cmd = VolumeCMD.setOutput + "0"
-            return cmd.runAppleScript().0
-        } else {
-            var volumeValue = UserDefaults.standard.integer(forKey: ASVolumeKey)
-            volumeValue = (volumeValue == 0) ? 50 : volumeValue
-            let cmd = VolumeCMD.setOutput + String(volumeValue)
-            return cmd.runAppleScript().0
+    func operationSwitch(isOn: Bool) throws {
+        do {
+            if isOn {
+                let cmd = VolumeCMD.setOutput + "0"
+                _ = try cmd.runAppleScript()
+            } else {
+                var volumeValue = UserDefaults.standard.integer(forKey: ASVolumeKey)
+                volumeValue = (volumeValue == 0) ? 50 : volumeValue
+                let cmd = VolumeCMD.setOutput + String(volumeValue)
+                _ = try cmd.runAppleScript()
+            }
+        } catch {
+            throw SwitchError.OperationFailed
         }
-
+        
     }
 }

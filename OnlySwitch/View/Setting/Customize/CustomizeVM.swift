@@ -81,21 +81,26 @@ class CustomizeItem:ObservableObject {
         if controlType == .Switch {
             let status = switchOperator.currentStatus()
             Task {
-                let success = await switchOperator.operationSwitch(isOn: !status)
-                if success {
+                do {
+                    _ = try await switchOperator.operationSwitch(isOn: !status)
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: changeSettingNotification, object: nil)
                     }
+                } catch {
+                    
                 }
             }
         } else if controlType == .Button {
             Task {
-                let success = await switchOperator.operationSwitch(isOn: true)
-                if success {
+                do {
+                    _ = try await switchOperator.operationSwitch(isOn: true)
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: changeSettingNotification, object: nil)
                     }
+                } catch {
+                    
                 }
+                
             }
         }
         

@@ -11,22 +11,27 @@ class ShowFinderPathbarSwitch:SwitchProvider {
     var type: SwitchType = .showFinderPathbar
     weak var delegate: SwitchDelegate?
     func currentStatus() -> Bool {
-        let result = ShowPathBarCMD.status.runAppleScript(isShellCMD: true)
-        if result.0 {
-            return (result.1 as! NSString).boolValue
+        do {
+            let result = try ShowPathBarCMD.status.runAppleScript(isShellCMD: true)
+            return (result as NSString).boolValue
+        } catch {
+            return false
         }
-        return false
     }
     
     func currentInfo() -> String {
         return ""
     }
     
-    func operationSwitch(isOn: Bool) async -> Bool {
-        if isOn {
-            return ShowPathBarCMD.on.runAppleScript(isShellCMD: true).0
-        } else {
-            return ShowPathBarCMD.off.runAppleScript(isShellCMD: true).0
+    func operationSwitch(isOn: Bool) async throws {
+        do {
+            if isOn {
+                _ = try ShowPathBarCMD.on.runAppleScript(isShellCMD: true)
+            } else {
+                _ = try ShowPathBarCMD.off.runAppleScript(isShellCMD: true)
+            }
+        } catch {
+            throw SwitchError.OperationFailed
         }
     }
     

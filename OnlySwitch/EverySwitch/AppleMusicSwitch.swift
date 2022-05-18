@@ -35,14 +35,18 @@ class AppleMusicSwitch:SwitchProvider, MusicPlayerDelegate {
         return ""
     }
     
-    func operationSwitch(isOn: Bool) async -> Bool {
+    func operationSwitch(isOn: Bool) async throws {
         guard let player = player else {
-            return false
+            throw SwitchError.OperationFailed
         }
+        var success = false
         if isOn {
-            return player.play()
+            success = player.play()
         } else {
-            return player.pause()
+            success = player.pause()
+        }
+        if !success {
+            throw SwitchError.OperationFailed
         }
     }
     

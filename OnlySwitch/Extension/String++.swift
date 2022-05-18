@@ -9,7 +9,7 @@ import Foundation
 import OSAKit
 
 extension String {
-    func runAppleScript(isShellCMD:Bool = false, with administratorPrivilege:Bool = false) -> (Bool, Any) {
+    func runAppleScript(isShellCMD:Bool = false, with administratorPrivilege:Bool = false) throws -> String {
         var finalCommand = self
         if isShellCMD {
             finalCommand = "do shell script \"\(self)\""
@@ -21,16 +21,16 @@ extension String {
         var error: NSDictionary?
         let osaScript = OSAScript(source: finalCommand)
         guard let descriptor = osaScript.executeAndReturnError(&error) else {
-            return (false, "failed")
+            throw SwitchError.ScriptFailed
         }
         if let outputString = descriptor.stringValue {
             print(outputString)
-            return (true, outputString)
+            return outputString
         } else if error != nil {
             print("error:\(String(describing: error!))")
-            return (false, String(describing: error!))
+            throw SwitchError.ScriptFailed
         }
-        return (true, "")
+        return ""
     }
     
     

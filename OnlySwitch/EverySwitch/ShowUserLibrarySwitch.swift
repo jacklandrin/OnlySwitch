@@ -30,8 +30,11 @@ class ShowUserLibrarySwitch:SwitchProvider {
         return ""
     }
     
-    func operationSwitch(isOn: Bool) async -> Bool {
-        return userLibaray?.doHide(!isOn) ?? false
+    func operationSwitch(isOn: Bool) async throws {
+        let result = userLibaray?.doHide(!isOn) ?? false
+        if !result {
+            throw SwitchError.OperationFailed
+        }
     }
     
     func isVisable() -> Bool {

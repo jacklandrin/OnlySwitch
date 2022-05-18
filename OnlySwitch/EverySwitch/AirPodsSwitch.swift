@@ -52,20 +52,22 @@ class AirPodsSwitch:SwitchProvider {
         return true
     }
     
-    func operationSwitch(isOn: Bool) async -> Bool {
-        guard let currentDevice = currentDevice else {return false}
+    func operationSwitch(isOn: Bool) async throws {
+        guard let currentDevice = currentDevice else {throw SwitchError.OperationFailed}
+        
         if isOn {
             let result = blManager.connect(device: currentDevice)
             if !result.0 {
                 print(result.1)
+                throw SwitchError.OperationFailed
             }
-            return result.0
         } else {
             let result = blManager.disconnect(device: currentDevice)
             if !result.0 {
                 print(result.1)
+                throw SwitchError.OperationFailed
             }
-            return result.0
         }
+        
     }
 }

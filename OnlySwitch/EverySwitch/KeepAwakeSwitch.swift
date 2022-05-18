@@ -42,7 +42,7 @@ class KeepAwakeSwitch:SwitchProvider {
         return preventedSleep
     }
     
-    func operationSwitch(isOn: Bool) async -> Bool {
+    func operationSwitch(isOn: Bool) async throws {
         if isOn {
             let success = IOPMAssertionCreateWithName( kIOPMAssertionTypeNoDisplaySleep as CFString,
                                                         IOPMAssertionLevel(kIOPMAssertionLevelOn),
@@ -50,16 +50,17 @@ class KeepAwakeSwitch:SwitchProvider {
                                                         &assertionID )
             if success == kIOReturnSuccess {
                 preventedSleep = true
-                return true
+            } else {
+                throw SwitchError.OperationFailed
             }
-            return false
+            
         } else {
             let success = IOPMAssertionRelease(assertionID)
             if success == kIOReturnSuccess {
                 preventedSleep = false
-                return true
+            } else {
+                throw SwitchError.OperationFailed
             }
-            return false
         }
     }
     

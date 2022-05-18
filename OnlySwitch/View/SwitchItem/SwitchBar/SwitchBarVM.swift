@@ -90,16 +90,18 @@ class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
     func doSwitch(isOn:Bool) {
         processing = true
         Task {
-            let success = await switchOperator.operationSwitch(isOn: isOn)
-            DispatchQueue.main.async { [self] in
-                if success {
+            do {
+                _ = try await switchOperator.operationSwitch(isOn: isOn)
+                DispatchQueue.main.async { [self] in
                     self.isOn = isOn
+                    self.processing = false
+                    if info != "" {
+                        let _ = switchOperator.currentStatus()
+                        info = switchOperator.currentInfo()
+                    }
                 }
-                self.processing = false
-                if info != "" {
-                    let _ = switchOperator.currentStatus()
-                    info = switchOperator.currentInfo()
-                }
+            } catch {
+                
             }
         }
     }

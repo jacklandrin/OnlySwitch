@@ -11,11 +11,16 @@ import Foundation
 final class SetDarkModeIntentHandler:NSObject, SetDarkModeIntentHandling {
     func handle(intent: SetDarkModeIntent) async -> SetDarkModeIntentResponse {
         let response = SetDarkModeIntentResponse(code: .success, userActivity: nil)
-        if intent.State?.boolValue == true {
-            _ = DarkModeCMD.on.runAppleScript()
-        } else {
-            _ = DarkModeCMD.off.runAppleScript()
+        do {
+            if intent.State?.boolValue == true {
+                _ = try DarkModeCMD.on.runAppleScript()
+            } else {
+                _ = try DarkModeCMD.off.runAppleScript()
+            }
+        } catch {
+            
         }
+        
         return response
     }
 }

@@ -23,8 +23,7 @@ class BluetoothSwitch:SwitchProvider {
         return true
     }
     
-    func operationSwitch(isOn: Bool) async -> Bool {
+    func operationSwitch(isOn: Bool) async throws {
         blManager.setBluetooth(isOn: isOn)
-        return true
     }
 }

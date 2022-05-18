@@ -87,14 +87,12 @@ class PomodoroTimerSwitch: SwitchProvider {
         }
     }
     
-    func operationSwitch(isOn: Bool) async -> Bool {
+    func operationSwitch(isOn: Bool) async throws {
         if isOn {
             self.cycleIndex = 0
             self.startTimer()
-            return true
         } else {
             self.stopTimer()
-            return true
         }
     }
     
@@ -113,11 +111,12 @@ class PomodoroTimerSwitch: SwitchProvider {
                 strongSelf.restTimer = nil
                 EffectSoundHelper.shared.playSound(name: strongSelf.restAlert, type: "wav")
                 if strongSelf.allowNotificationAlert {
-                    let _ = displayNotificationCMD(title: "Take a break!".localized(),
+                    let _ = try? displayNotificationCMD(title: "Take a break!".localized(),
                                                    content: "You've worked for %d min."
                                                     .localizeWithFormat(arguments: strongSelf.workDuration / 60),
                                                    subtitle: "Time's up.".localized())
                         .runAppleScript()
+                   
                 }
                 strongSelf.nextDate = .now + TimeInterval(strongSelf.restDuration + 1)
                 strongSelf.status = .rest
@@ -129,7 +128,7 @@ class PomodoroTimerSwitch: SwitchProvider {
                 strongSelf.workTimer = nil
                 EffectSoundHelper.shared.playSound(name: strongSelf.workAlert, type: "wav")
                 if strongSelf.allowNotificationAlert {
-                    let _ = displayNotificationCMD(title: "Get on with work!".localized(),
+                    let _ = try? displayNotificationCMD(title: "Get on with work!".localized(),
                                                    content: "You've rested for %d min."
                                                     .localizeWithFormat(arguments: strongSelf.restDuration / 60),
                                                    subtitle: "Time's up.".localized())

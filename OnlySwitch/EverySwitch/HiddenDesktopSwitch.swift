@@ -13,22 +13,28 @@ class HiddenDesktopSwitch:SwitchProvider {
     var type: SwitchType = .hiddeDesktop
     
     func currentStatus() -> Bool {
-        let result = HideDesktopCMD.status.runAppleScript(isShellCMD: true)
-        if result.0 {
-            if (result.1 as! String) == "0" {
+        do {
+            let result = try HideDesktopCMD.status.runAppleScript(isShellCMD: true)
+            
+            if result == "0" {
                 return true
             } else {
                 return false
             }
+        } catch {
+            return false
         }
-        return false
     }
     
-    func operationSwitch(isOn: Bool) async -> Bool {
-        if isOn {
-            return HideDesktopCMD.on.runAppleScript(isShellCMD: true).0
-        } else {
-            return HideDesktopCMD.off.runAppleScript(isShellCMD: true).0
+    func operationSwitch(isOn: Bool) async throws {
+        do {
+            if isOn {
+               _ = try HideDesktopCMD.on.runAppleScript(isShellCMD: true)
+            } else {
+               _ = try HideDesktopCMD.off.runAppleScript(isShellCMD: true)
+            }
+        } catch {
+            throw SwitchError.OperationFailed
         }
     }
     

@@ -12,11 +12,13 @@ class AutohideDockSwitch:SwitchProvider {
     var type: SwitchType = .autohideDock
 
     func currentStatus() -> Bool {
-        let result = AutohideDockCMD.status.runAppleScript()
-        if result.0 {
-            return (result.1 as! NSString).boolValue
+        do {
+            let result = try AutohideDockCMD.status.runAppleScript()
+            return (result as NSString).boolValue
+            
+        } catch {
+            return false
         }
-        return false
     }
     
     func currentInfo() -> String {
@@ -28,11 +30,15 @@ class AutohideDockSwitch:SwitchProvider {
         return true
     }
     
-    func operationSwitch(isOn: Bool) async -> Bool {
-        if isOn {
-            return AutohideDockCMD.on.runAppleScript().0
-        } else {
-            return AutohideDockCMD.off.runAppleScript().0
+    func operationSwitch(isOn: Bool) async throws {
+        do {
+            if isOn {
+                _ = try AutohideDockCMD.on.runAppleScript()
+            } else {
+                _ = try AutohideDockCMD.off.runAppleScript()
+            }
+        } catch {
+            throw SwitchError.OperationFailed
         }
     }
 }

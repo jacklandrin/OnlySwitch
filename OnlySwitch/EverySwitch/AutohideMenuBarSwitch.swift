@@ -12,11 +12,13 @@ class AutohideMenuBarSwitch:SwitchProvider {
     var type: SwitchType = .autohideMenuBar
     
     func currentStatus() -> Bool {
-        let result = AutoHideMenuBarCMD.status.runAppleScript()
-        if result.0 {
-            return (result.1 as! NSString).boolValue
+        do {
+            let result = try AutoHideMenuBarCMD.status.runAppleScript()
+            return (result as NSString).boolValue
+        } catch {
+            return false
         }
-        return false
+        
     }
     
     func currentInfo() -> String {
@@ -27,11 +29,16 @@ class AutohideMenuBarSwitch:SwitchProvider {
         return true
     }
     
-    func operationSwitch(isOn: Bool) async -> Bool {
-        if isOn {
-            return AutoHideMenuBarCMD.on.runAppleScript().0
-        } else {
-            return AutoHideMenuBarCMD.off.runAppleScript().0
+    func operationSwitch(isOn: Bool) async throws {
+        do {
+            if isOn {
+                _ = try AutoHideMenuBarCMD.on.runAppleScript()
+            } else {
+                _ = try AutoHideMenuBarCMD.off.runAppleScript()
+            }
+        } catch {
+            throw SwitchError.OperationFailed
         }
+        
     }
 }
