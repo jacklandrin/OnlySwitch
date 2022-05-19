@@ -116,20 +116,11 @@ struct GeneralView: View, EmailProvider {
                     //check update
                     HStack {
                         Button("Check for updates".localized()) {
-                            generalVM.showProgress = true
-                            CheckUpdateTool.shared.checkupdate(complete: { success in
-                                if success {
-                                    generalVM.newestVersion = CheckUpdateTool.shared.latestVersion
-                                    UserDefaults.standard.set(generalVM.newestVersion, forKey: newestVersionKey)
-                                    UserDefaults.standard.synchronize()
-                                    generalVM.needtoUpdateAlert = !CheckUpdateTool.shared.isTheNewestVersion()
-                                }
-                                generalVM.showProgress = false
-                            })
+                            generalVM.checkUpdate()
                         }
                         
                         if !generalVM.newestVersion.isEmpty {
-                            if CheckUpdateTool.shared.isTheNewestVersion() {
+                            if generalVM.isTheNewestVersion {
                                 Text("You’re up to date!".localized())
                                     .foregroundColor(.green)
                             } else {
@@ -179,26 +170,15 @@ struct GeneralView: View, EmailProvider {
         }
         .alert(isPresented: $generalVM.needtoUpdateAlert) {
             Alert(title: Text("Update".localized()),
-                  message: Text("You can update to new version. The latest version is v%@".localizeWithFormat(arguments: CheckUpdateTool.shared.latestVersion)),
+                  message: Text("You can update to new version. The latest version is v%@".localizeWithFormat(arguments: generalVM.latestVersion)),
                   primaryButton: .default(Text("Download".localized()), action: {
-                CheckUpdateTool.shared.downloadDMG{ success, path in
-                    guard success, let path = path else {return}
-                    openDMG(path: path)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                        NSApp.terminate(self)
-                    }
-                }
+                generalVM.downloadDMG()
             }),
                   secondaryButton:.default(Text("Cancel".localized())))
         }
     }
         
-    func openDMG(path:String) {
-        let finder = NSWorkspace.shared.urlForApplication(withBundleIdentifier: "com.apple.finder")
-        let configuration: NSWorkspace.OpenConfiguration = NSWorkspace.OpenConfiguration()
-        configuration.promptsUserIfNeeded = true
-        NSWorkspace.shared.open([URL(fileURLWithPath: path)], withApplicationAt: finder!, configuration: configuration, completionHandler: nil)
-    }
+    
 }
 
 struct GeneralView_Previews: PreviewProvider {

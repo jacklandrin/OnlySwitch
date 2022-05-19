@@ -61,6 +61,19 @@
 		04447B742755015A00CD2900 /* ShellCommandDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B732755015A00CD2900 /* ShellCommandDefine.swift */; };
 		04447B7627550F6900CD2900 /* VisualEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B7527550F6900CD2900 /* VisualEffectView.swift */; };
 		04447B782755129D00CD2900 /* EventMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B772755129D00CD2900 /* EventMonitor.swift */; };
+		0444D5CA283677DA00327D0B /* EverySwitchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0444D5C9283677DA00327D0B /* EverySwitchTests.swift */; };
+		0444D5CB28367A1B00327D0B /* HiddenDesktopSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04243488275642370044D0AD /* HiddenDesktopSwitch.swift */; };
+		0444D5CD2836836E00327D0B /* NetworkingTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0444D5CC2836836E00327D0B /* NetworkingTest.swift */; };
+		0444D5CE283683B100327D0B /* CheckUpdatePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A6B54F2771F338003B2647 /* CheckUpdatePresenter.swift */; };
+		0444D5CF283683D800327D0B /* SystemInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0427B25A275D786400AD783A /* SystemInfo.swift */; };
+		0444D5D0283683DF00327D0B /* GitHubReleaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F118C327AED8BC005DA861 /* GitHubReleaseModel.swift */; };
+		0444D5D22836D87E00327D0B /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 0444D5D12836D87E00327D0B /* Alamofire */; };
+		0444D5D42836D93A00327D0B /* RequestError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0444D5D32836D93A00327D0B /* RequestError.swift */; };
+		0444D5D82836F19D00327D0B /* TopNotchSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0424348C275643560044D0AD /* TopNotchSwitch.swift */; };
+		0444D5D92836F1BA00327D0B /* CurrentScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E2AD1D2783B63600BC5DF3 /* CurrentScreen.swift */; };
+		0444D5DA2836F1CD00327D0B /* NSImage++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A2FFF62755A3E500CE56A0 /* NSImage++.swift */; };
+		0444D5DB2836F1DC00327D0B /* MetadataExtractorError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040E97262760FF3E003D9D42 /* MetadataExtractorError.swift */; };
+		0444D5DC2836F1E700327D0B /* CGImage++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040CD2BB2756D497002E0CC6 /* CGImage++.swift */; };
 		0451765C27C27AFC00006BA0 /* MusicPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0451765B27C27AFC00006BA0 /* MusicPlayer.swift */; };
 		0451766527C283BC00006BA0 /* AppleMusicPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0451766427C283BC00006BA0 /* AppleMusicPlayer.swift */; };
 		0451766B27C284D600006BA0 /* iTunesScripting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0451766727C284D600006BA0 /* iTunesScripting.swift */; };
@@ -141,7 +154,7 @@
 		04A2FFF72755A3E500CE56A0 /* NSImage++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A2FFF62755A3E500CE56A0 /* NSImage++.swift */; };
 		04A2FFFA275636FA00CE56A0 /* String++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A2FFF9275636FA00CE56A0 /* String++.swift */; };
 		04A6B54B27715F90003B2647 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 04A6B54A27715F90003B2647 /* Alamofire */; };
-		04A6B5502771F338003B2647 /* CheckUpdateTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A6B54F2771F338003B2647 /* CheckUpdateTool.swift */; };
+		04A6B5502771F338003B2647 /* CheckUpdatePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A6B54F2771F338003B2647 /* CheckUpdatePresenter.swift */; };
 		04A6F93F2788747600E3300F /* MuteMicSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A6F93E2788747600E3300F /* MuteMicSwitch.swift */; };
 		04A6F9432788807800E3300F /* BarProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A6F9422788807800E3300F /* BarProvider.swift */; };
 		04A6F9452788EF4A00E3300F /* CursorModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A6F9442788EF4A00E3300F /* CursorModifier.swift */; };
@@ -265,6 +278,9 @@
 		04447B732755015A00CD2900 /* ShellCommandDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShellCommandDefine.swift; sourceTree = "<group>"; };
 		04447B7527550F6900CD2900 /* VisualEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectView.swift; sourceTree = "<group>"; };
 		04447B772755129D00CD2900 /* EventMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventMonitor.swift; sourceTree = "<group>"; };
+		0444D5C9283677DA00327D0B /* EverySwitchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EverySwitchTests.swift; sourceTree = "<group>"; };
+		0444D5CC2836836E00327D0B /* NetworkingTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingTest.swift; sourceTree = "<group>"; };
+		0444D5D32836D93A00327D0B /* RequestError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestError.swift; sourceTree = "<group>"; };
 		04464F4C2791D46B0065DF61 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0451765B27C27AFC00006BA0 /* MusicPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlayer.swift; sourceTree = "<group>"; };
 		0451766427C283BC00006BA0 /* AppleMusicPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleMusicPlayer.swift; sourceTree = "<group>"; };
@@ -349,7 +365,7 @@
 		04A23B2D275D69F700B454C8 /* CBBlueLightClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CBBlueLightClient.h; sourceTree = "<group>"; };
 		04A2FFF62755A3E500CE56A0 /* NSImage++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSImage++.swift"; sourceTree = "<group>"; };
 		04A2FFF9275636FA00CE56A0 /* String++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String++.swift"; sourceTree = "<group>"; };
-		04A6B54F2771F338003B2647 /* CheckUpdateTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckUpdateTool.swift; sourceTree = "<group>"; };
+		04A6B54F2771F338003B2647 /* CheckUpdatePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckUpdatePresenter.swift; sourceTree = "<group>"; };
 		04A6F93E2788747600E3300F /* MuteMicSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuteMicSwitch.swift; sourceTree = "<group>"; };
 		04A6F9422788807800E3300F /* BarProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarProvider.swift; sourceTree = "<group>"; };
 		04A6F9442788EF4A00E3300F /* CursorModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CursorModifier.swift; sourceTree = "<group>"; };
@@ -396,6 +412,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0444D5D22836D87E00327D0B /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -428,6 +445,9 @@
 			isa = PBXGroup;
 			children = (
 				041D725628353A160083092D /* OnlySwitchTests.swift */,
+				0444D5C9283677DA00327D0B /* EverySwitchTests.swift */,
+				0444D5CC2836836E00327D0B /* NetworkingTest.swift */,
+				0444D5D32836D93A00327D0B /* RequestError.swift */,
 			);
 			path = OnlySwitchTests;
 			sourceTree = "<group>";
@@ -944,7 +964,7 @@
 				0427B25A275D786400AD783A /* SystemInfo.swift */,
 				04938D0D2769247A00713F1D /* SendEmail.swift */,
 				04938D11276948DE00713F1D /* WallpaperManager.swift */,
-				04A6B54F2771F338003B2647 /* CheckUpdateTool.swift */,
+				04A6B54F2771F338003B2647 /* CheckUpdatePresenter.swift */,
 				047140B527788486005B160B /* EffectSoundHelper.swift */,
 				04E2AD1D2783B63600BC5DF3 /* CurrentScreen.swift */,
 			);
@@ -1028,6 +1048,9 @@
 				041D725928353A160083092D /* PBXTargetDependency */,
 			);
 			name = OnlySwitchTests;
+			packageProductDependencies = (
+				0444D5D12836D87E00327D0B /* Alamofire */,
+			);
 			productName = OnlySwitchTests;
 			productReference = 041D725428353A150083092D /* OnlySwitchTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -1194,14 +1217,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0444D5D82836F19D00327D0B /* TopNotchSwitch.swift in Sources */,
+				0444D5D0283683DF00327D0B /* GitHubReleaseModel.swift in Sources */,
+				0444D5DB2836F1DC00327D0B /* MetadataExtractorError.swift in Sources */,
 				041D726B2835865C0083092D /* SwitchError.swift in Sources */,
 				041D726128353AFF0083092D /* String++.swift in Sources */,
+				0444D5D92836F1BA00327D0B /* CurrentScreen.swift in Sources */,
 				041D725E28353A4D0083092D /* SwitchType.swift in Sources */,
 				041D726028353AF50083092D /* SwitchProvider.swift in Sources */,
 				041D725F28353A500083092D /* ShellCommandDefine.swift in Sources */,
 				041D726428353B430083092D /* NSImage+SymbolName.swift in Sources */,
+				0444D5CA283677DA00327D0B /* EverySwitchTests.swift in Sources */,
 				041D725D28353A3F0083092D /* DarkModeSwitch.swift in Sources */,
+				0444D5CD2836836E00327D0B /* NetworkingTest.swift in Sources */,
+				0444D5DC2836F1E700327D0B /* CGImage++.swift in Sources */,
+				0444D5CB28367A1B00327D0B /* HiddenDesktopSwitch.swift in Sources */,
+				0444D5D42836D93A00327D0B /* RequestError.swift in Sources */,
+				0444D5DA2836F1CD00327D0B /* NSImage++.swift in Sources */,
+				0444D5CE283683B100327D0B /* CheckUpdatePresenter.swift in Sources */,
 				041D725728353A160083092D /* OnlySwitchTests.swift in Sources */,
+				0444D5CF283683D800327D0B /* SystemInfo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1273,7 +1308,7 @@
 				040E972B27611C9C003D9D42 /* URL++.swift in Sources */,
 				0451766B27C284D600006BA0 /* iTunesScripting.swift in Sources */,
 				04A6F93F2788747600E3300F /* MuteMicSwitch.swift in Sources */,
-				04A6B5502771F338003B2647 /* CheckUpdateTool.swift in Sources */,
+				04A6B5502771F338003B2647 /* CheckUpdatePresenter.swift in Sources */,
 				04581DBB27651EF1008ADF30 /* RollingText.swift in Sources */,
 				0493374427625A1E00AE779A /* AudioPlayer.swift in Sources */,
 				0493374E27625A1E00AE779A /* ParserError.swift in Sources */,
@@ -1424,7 +1459,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OnlySwitch.app/Contents/MacOS/OnlySwitch";
+				TEST_HOST = "$(BUNDLE_LOADER)";
 			};
 			name = Debug;
 		};
@@ -1442,7 +1477,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OnlySwitch.app/Contents/MacOS/OnlySwitch";
+				TEST_HOST = "$(BUNDLE_LOADER)";
 			};
 			name = Release;
 		};
@@ -1610,6 +1645,7 @@
 					"$(inherited)",
 					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks/CoreBrightness.framework/Versions/A",
 				);
+				TEST_HOST = "";
 			};
 			name = Debug;
 		};
@@ -1660,6 +1696,7 @@
 					"$(inherited)",
 					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks/CoreBrightness.framework/Versions/A",
 				);
+				TEST_HOST = "";
 			};
 			name = Release;
 		};
@@ -1804,6 +1841,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0430887C275D707C00877E51 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */;
 			productName = LaunchAtLogin;
+		};
+		0444D5D12836D87E00327D0B /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04A6B54927715F90003B2647 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
 		};
 		04581DB5276506B9008ADF30 /* AlertToast */ = {
 			isa = XCSwiftPackageProductDependency;

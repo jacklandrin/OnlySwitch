@@ -40,7 +40,7 @@ class AppDelegate:NSObject, NSApplicationDelegate {
     var blManager:BluetoothDevicesManager?
     @UserDefaultValue(key: appearanceColumnCountKey, defaultValue: SwitchListAppearance.single.rawValue)
     var currentAppearance:String
-    
+    var checkUpdatePresenter = CheckUpdatePresenter()
     
     func applicationDidFinishLaunching(_ notification: Notification) {
         let contentView = OnlySwitchListView()
@@ -70,9 +70,9 @@ class AppDelegate:NSObject, NSApplicationDelegate {
     }
     
     func checkUpdate() {
-        CheckUpdateTool.shared.checkupdate(complete: { success in
+        checkUpdatePresenter.checkUpdate(complete: { success in
             if success {
-                let newestVersion = CheckUpdateTool.shared.latestVersion
+                let newestVersion = self.checkUpdatePresenter.latestVersion
                 UserDefaults.standard.set(newestVersion, forKey: newestVersionKey)
                 UserDefaults.standard.synchronize()
             }

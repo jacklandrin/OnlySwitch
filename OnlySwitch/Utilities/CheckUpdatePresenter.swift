@@ -11,27 +11,11 @@ import SwiftUI
 
 let newestVersionKey = "newestVersionKey"
 
-class CheckUpdateTool{
-    static let shared = CheckUpdateTool()
+class CheckUpdatePresenter{
     var latestVersion:String = ""
     var downloadURL:String = ""
-    func checkupdate(complete:@escaping (_ success:Bool) -> Void) {
-        let request = AF.request("https://api.github.com/repos/jacklandrin/OnlySwitch/releases/latest")
-        request.responseDecodable(of:GitHubRelease.self) { response in
-            guard let latestRelease = response.value else {
-                complete(false)
-                return
-            }
-            self.latestVersion = latestRelease.name.replacingOccurrences(of: "release_", with: "")
-            if let asset = latestRelease.assets.first {
-                self.downloadURL = asset.browser_download_url
-                complete(true)
-            }
-            complete(false)
-        }
-    }
     
-    func isTheNewestVersion() -> Bool {
+    var isTheNewestVersion: Bool {
         let currentVersion = SystemInfo.majorVersion as! String
         let currentVersionSplited = currentVersion.split(separator: ".")
         let latestVersionSplited = latestVersion.split(separator: ".")
@@ -47,6 +31,23 @@ class CheckUpdateTool{
         }
         return true
     }
+    
+    func checkUpdate(complete:@escaping (_ success:Bool) -> Void) {
+        let request = AF.request("https://api.github.com/repos/jacklandrin/OnlySwitch/releases/latest")
+        request.responseDecodable(of:GitHubRelease.self) { response in
+            guard let latestRelease = response.value else {
+                complete(false)
+                return
+            }
+            self.latestVersion = latestRelease.name.replacingOccurrences(of: "release_", with: "")
+            if let asset = latestRelease.assets.first {
+                self.downloadURL = asset.browser_download_url
+                complete(true)
+            }
+            complete(false)
+        }
+    }
+    
     
     func downloadDMG(complete:@escaping (_ success:Bool, _ path:String?) -> Void ) {
         let filePath = myAppPath?.appendingPathComponent(string: "OnlySwitch.dmg")
