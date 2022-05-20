@@ -10,24 +10,30 @@ import XCTest
 class EverySwitchTests: XCTestCase {
     func testDarkModeSwitch() throws {
         let darkModeSwitch = DarkModeSwitch()
-        Task {
-            try await darkModeSwitch.operationSwitch(isOn: true)
-            DispatchQueue.main.async {
-                let currentStatus = darkModeSwitch.currentStatus()
-                XCTAssertEqual(currentStatus, true)
-            }
-        }
+        try testSwitch(aSwitch: darkModeSwitch)
     }
 
     func testHiddenDesktopSwitch() throws {
         let hiddenDesktopSwitch = HiddenDesktopSwitch()
-        Task {
-            try await hiddenDesktopSwitch.operationSwitch(isOn:true)
-            DispatchQueue.main.async {
-                let currentStatus = hiddenDesktopSwitch.currentStatus()
-                XCTAssertEqual(currentStatus, true)
-            }
-        }
+        try testSwitch(aSwitch: hiddenDesktopSwitch)
     }
     
+    func testTopNotchSwitch() throws {
+        let topNotchSwitch = TopNotchSwitch()
+        try testSwitch(aSwitch: topNotchSwitch)
+    }
+    
+    
+    private func testSwitch(aSwitch:SwitchProvider) throws {
+        let exp = expectation(description: "get status")
+        Task {
+            try await aSwitch.operationSwitch(isOn:true)
+            DispatchQueue.main.async {
+                let currentStatus = aSwitch.currentStatus()
+                XCTAssertEqual(currentStatus, true)
+                exp.fulfill()
+            }
+        }
+        wait(for: [exp], timeout: 5.0)
+    }
 }

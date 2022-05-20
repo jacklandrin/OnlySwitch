@@ -6,7 +6,7 @@
 //
 
 import XCTest
-import Alamofire
+@testable import Alamofire
 
 class NetworkingTest:XCTestCase {
     var reachabilityManager = NetworkReachabilityManager(host: "api.github.com")
