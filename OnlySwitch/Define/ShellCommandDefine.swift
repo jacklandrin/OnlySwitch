@@ -166,11 +166,11 @@ func scriptDiskFilePath(scriptName: String) -> String {
                 return ""
             }
         }
-        guard let localScriptPath =  Bundle.main.path(forResource: scriptName, ofType: "sh") else {return ""}
-        guard let _ = try? FileManager.default.createFile(atPath: scriptFilePath, contents: Data(contentsOf: URL(fileURLWithPath: localScriptPath)), attributes: nil) else {
-            print("File has not been created at \(scriptFilePath)")
-            return ""
-        }
+    }
+    guard let localScriptPath =  Bundle.main.path(forResource: scriptName, ofType: "sh") else {return ""}
+    guard let _ = try? FileManager.default.createFile(atPath: scriptFilePath, contents: Data(contentsOf: URL(fileURLWithPath: localScriptPath)), attributes: nil) else {
+        print("File has not been created at \(scriptFilePath)")
+        return ""
     }
     return scriptFilePath
 }
@@ -186,7 +186,6 @@ func fileExistAtPath(_ path:String) -> Bool {
     let exists = FileManager.default.fileExists(atPath: path, isDirectory: &isDirectory)
     return exists && isDirectory.boolValue
 }
-
 
 
 
