@@ -42,6 +42,7 @@ enum SwitchType:UInt64, CaseIterable {
     case dockRecent = 8388608
     case spotify = 16777216
     case applemusic = 33554432
+    case screenTest = 67108864
     
     func barInfo() -> SwitchBarInfo {
         switch self {
@@ -159,6 +160,10 @@ enum SwitchType:UInt64, CaseIterable {
             return SwitchBarInfo(title: "Apple Music",
                                  onImage: NSImage(named: "apple_music_icon")!,
                                  offImage: NSImage(named: "apple_music_icon")!)
+        case .screenTest:
+            return SwitchBarInfo(title: "Screen Test",
+                                 onImage: NSImage(systemSymbolName: "display.trianglebadge.exclamationmark"),
+                                 offImage: NSImage(systemSymbolName: "display.trianglebadge.exclamationmark"))
         }
     }
     
@@ -175,6 +180,7 @@ enum SwitchCategory{
     case none
     case audio
     case cleanup
+    case tool
 }
 
 

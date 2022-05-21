@@ -61,6 +61,8 @@ extension SwitchType {
             return SpotifySwitch.shared
         case .applemusic:
             return AppleMusicSwitch.shared
+        case .screenTest:
+            return ScreenTestSwitch()
         }
     }
 }

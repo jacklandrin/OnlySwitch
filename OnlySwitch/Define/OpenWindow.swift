@@ -10,6 +10,7 @@ import AppKit
 
 enum OpenWindows:String, CaseIterable, CurrentScreen {
     case Setting = "setting"
+    case PureColor = "pureColor"
     
     func open() {
         let persistenceController = PersistenceController.shared
@@ -33,6 +34,32 @@ enum OpenWindows:String, CaseIterable, CurrentScreen {
                 NSApp.activate(ignoringOtherApps: true)
                 
             }
+        case .PureColor:
+            if let controller = Router.pureColorWindowController {
+                controller.showWindow(self)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
+                    controller.window?.toggleFullScreen(self)
+                })
+            } else {
+                let hostingController = NSHostingController(rootView:PureColorView())
+                let pureColorWindow = HostWindow(contentViewController: hostingController)
+                let width = getScreenWithMouse()!.frame.width
+                let height = getScreenWithMouse()!.frame.height
+                pureColorWindow.setContentSize(NSSize(width: width, height: height))
+                let xPos = width / 2
+                let yPos = height / 2
+                pureColorWindow.setFrameOrigin(NSPoint(x: xPos, y: yPos))
+                pureColorWindow.title = "Screen Test".localized()
+                pureColorWindow.backgroundColor = NSColor.clear
+                let controller = NSWindowController(window: pureColorWindow)
+                Router.pureColorWindowController = controller
+                controller.showWindow(self)
+                pureColorWindow.makeKeyAndOrderFront(self)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
+                    pureColorWindow.toggleFullScreen(self)
+                })
+            }
+            NSApp.activate(ignoringOtherApps: true)
         }
         NSApplication.shared.setActivationPolicy(.regular)
     }
@@ -40,6 +67,18 @@ enum OpenWindows:String, CaseIterable, CurrentScreen {
 
 struct Router {
     static var settingWindowController:NSWindowController?
+    static var pureColorWindowController:NSWindowController?
+    
+    static func isShown(windowController:NSWindowController?) -> Bool {
+        windowController?.window?.isVisible ?? false
+    }
+    
+    static func closeWindow(controller:NSWindowController?) {
+        controller?.close()
+        if controller === pureColorWindowController {
+            pureColorWindowController = nil
+        }
+    }
 }
 
 class HostWindow:NSWindow, NSWindowDelegate {

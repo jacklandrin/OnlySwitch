@@ -55,8 +55,8 @@ struct SwitchBarView: View {
                         RoundedRectangle(cornerRadius: 15)
                             .foregroundColor(.blue)
                             .frame(height:26)
-                        Text("Clear".localized())
-                            .font(.system(size: "Clear".localized().count > 6 ? 300 : 11))
+                        Text(buttonTitle(category:switchOption.category).localized())
+                            .font(.system(size: buttonTitle(category:switchOption.category).localized().count > 6 ? 300 : 11))
                             .lineLimit(1)
                             .minimumScaleFactor(0.01)
                             .foregroundColor(.white)
@@ -69,6 +69,16 @@ struct SwitchBarView: View {
             
            
         }.isHidden(switchOption.isHidden, remove: true)
+    }
+    
+    func buttonTitle(category:SwitchCategory) -> String {
+        if category == .cleanup {
+            return "Clear"
+        } else if category == .tool {
+            return "Run"
+        } else {
+            return ""
+        }
     }
     
     func barImage(option:SwitchBarVM) -> NSImage {
