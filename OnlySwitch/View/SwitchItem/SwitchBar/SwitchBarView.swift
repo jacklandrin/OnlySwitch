@@ -14,10 +14,10 @@ struct SwitchBarView: View {
         HStack {
             Image(nsImage:
                     barImage(option: switchOption).resizeMaintainingAspectRatio(withSize: NSSize(width: 50, height: 50))!)
-                .renderingMode(.template)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 25, height: 25)
+            .renderingMode(.template)
+            .resizable()
+            .scaledToFit()
+            .frame(width: 25, height: 25)
             
             Text(switchOption.title.localized())
                 .frame(alignment: .leading)
@@ -37,7 +37,7 @@ struct SwitchBarView: View {
             ProgressView()
                 .progressViewStyle(.circular)
                 .controlSize(.small)
-//                .scaleEffect(0.8)
+            //                .scaleEffect(0.8)
                 .isHidden(!switchOption.processing,remove: true)
             
             switch switchOption.controlType {
