@@ -74,6 +74,28 @@
 		0444D5DA2836F1CD00327D0B /* NSImage++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A2FFF62755A3E500CE56A0 /* NSImage++.swift */; };
 		0444D5DB2836F1DC00327D0B /* MetadataExtractorError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040E97262760FF3E003D9D42 /* MetadataExtractorError.swift */; };
 		0444D5DC2836F1E700327D0B /* CGImage++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040CD2BB2756D497002E0CC6 /* CGImage++.swift */; };
+		0444D5DD283854E900327D0B /* MuteSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D692757D68800ADC004 /* MuteSwitch.swift */; };
+		0444D5DE2838553B00327D0B /* NSSound_SystemVolumeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D6E2758116800ADC004 /* NSSound_SystemVolumeExtension.swift */; };
+		0444D5DF283855CD00327D0B /* ScreenSaverSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0443A6B72759A99700A3BCFD /* ScreenSaverSwitch.swift */; };
+		0444D5E028385F5200327D0B /* NightShiftSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A23B2A275D61BC00B454C8 /* NightShiftSwitch.swift */; };
+		0444D5E32838611600327D0B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 043E5D6C2757DADB00ADC004 /* AVFoundation.framework */; };
+		0444D5E42838616900327D0B /* CoreBrightness.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04A23B22275D5FC500B454C8 /* CoreBrightness.framework */; };
+		0444D5E528392D6500327D0B /* AutohideDockSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AF7275E6B4E00EA5FB9 /* AutohideDockSwitch.swift */; };
+		0444D5E62839311E00327D0B /* AirPodsSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AFF275F93B900EA5FB9 /* AirPodsSwitch.swift */; };
+		0444D5E72839315A00327D0B /* BluetoothDevicesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AFD275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift */; };
+		0444D5EB28393FF800327D0B /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0444D5EA28393FF800327D0B /* Info.plist */; };
+		0444D5EC2839446A00327D0B /* AutohideMenuBarSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493372227615A4900AE779A /* AutohideMenuBarSwitch.swift */; };
+		0444D5ED2839453400327D0B /* HiddenFilesSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493372427615EA400AE779A /* HiddenFilesSwitch.swift */; };
+		0444D5EE283946EC00327D0B /* KeepAwakeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04581DC227677ADC008ADF30 /* KeepAwakeSwitch.swift */; };
+		0444D5EF2839471100327D0B /* UserDefaultValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140B7277884EE005B160B /* UserDefaultValue.swift */; };
+		0444D5F02839483500327D0B /* EmptyTrashSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AA63CD276BC94000ED5DEA /* EmptyTrashSwitch.swift */; };
+		0444D5F128394A1900327D0B /* ShowUserLibrarySwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D68B0C2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift */; };
+		0444D5F228394B1B00327D0B /* ShowExtensionNameSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FE2C912772880300C79FF9 /* ShowExtensionNameSwitch.swift */; };
+		0444D5F328394B5F00327D0B /* SmallLaunchpadIconSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140C12778D2A1005B160B /* SmallLaunchpadIconSwitch.swift */; };
+		0444D5F428394BD400327D0B /* LowPowerModeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042661392780B885005DF2B9 /* LowPowerModeSwitch.swift */; };
+		0444D5F528394CAA00327D0B /* MuteMicSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A6F93E2788747600E3300F /* MuteMicSwitch.swift */; };
+		0444D5F628394F1200327D0B /* ShowFinderPathbarSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BF97672790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift */; };
+		0444D5F728394FDD00327D0B /* DockRecentSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046FF3C5279A2C0B00506953 /* DockRecentSwitch.swift */; };
 		0451765C27C27AFC00006BA0 /* MusicPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0451765B27C27AFC00006BA0 /* MusicPlayer.swift */; };
 		0451766527C283BC00006BA0 /* AppleMusicPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0451766427C283BC00006BA0 /* AppleMusicPlayer.swift */; };
 		0451766B27C284D600006BA0 /* iTunesScripting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0451766727C284D600006BA0 /* iTunesScripting.swift */; };
@@ -281,6 +303,8 @@
 		0444D5C9283677DA00327D0B /* EverySwitchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EverySwitchTests.swift; sourceTree = "<group>"; };
 		0444D5CC2836836E00327D0B /* NetworkingTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingTest.swift; sourceTree = "<group>"; };
 		0444D5D32836D93A00327D0B /* RequestError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestError.swift; sourceTree = "<group>"; };
+		0444D5E12838600000327D0B /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		0444D5EA28393FF800327D0B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04464F4C2791D46B0065DF61 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0451765B27C27AFC00006BA0 /* MusicPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlayer.swift; sourceTree = "<group>"; };
 		0451766427C283BC00006BA0 /* AppleMusicPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleMusicPlayer.swift; sourceTree = "<group>"; };
@@ -412,7 +436,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0444D5E32838611600327D0B /* AVFoundation.framework in Frameworks */,
 				0444D5D22836D87E00327D0B /* Alamofire in Frameworks */,
+				0444D5E42838616900327D0B /* CoreBrightness.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -448,6 +474,7 @@
 				0444D5C9283677DA00327D0B /* EverySwitchTests.swift */,
 				0444D5CC2836836E00327D0B /* NetworkingTest.swift */,
 				0444D5D32836D93A00327D0B /* RequestError.swift */,
+				0444D5EA28393FF800327D0B /* Info.plist */,
 			);
 			path = OnlySwitchTests;
 			sourceTree = "<group>";
@@ -572,6 +599,7 @@
 		043E5D6B2757DADB00ADC004 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0444D5E12838600000327D0B /* CoreBluetooth.framework */,
 				0493378F27626FD200AE779A /* NetworkExtension.framework */,
 				04A23B22275D5FC500B454C8 /* CoreBrightness.framework */,
 				043E5D6C2757DADB00ADC004 /* AVFoundation.framework */,
@@ -1162,6 +1190,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0444D5EB28393FF800327D0B /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1217,24 +1246,43 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0444D5E62839311E00327D0B /* AirPodsSwitch.swift in Sources */,
 				0444D5D82836F19D00327D0B /* TopNotchSwitch.swift in Sources */,
 				0444D5D0283683DF00327D0B /* GitHubReleaseModel.swift in Sources */,
+				0444D5E72839315A00327D0B /* BluetoothDevicesManager.swift in Sources */,
+				0444D5EF2839471100327D0B /* UserDefaultValue.swift in Sources */,
 				0444D5DB2836F1DC00327D0B /* MetadataExtractorError.swift in Sources */,
+				0444D5E028385F5200327D0B /* NightShiftSwitch.swift in Sources */,
+				0444D5F328394B5F00327D0B /* SmallLaunchpadIconSwitch.swift in Sources */,
 				041D726B2835865C0083092D /* SwitchError.swift in Sources */,
 				041D726128353AFF0083092D /* String++.swift in Sources */,
 				0444D5D92836F1BA00327D0B /* CurrentScreen.swift in Sources */,
 				041D725E28353A4D0083092D /* SwitchType.swift in Sources */,
+				0444D5DF283855CD00327D0B /* ScreenSaverSwitch.swift in Sources */,
 				041D726028353AF50083092D /* SwitchProvider.swift in Sources */,
 				041D725F28353A500083092D /* ShellCommandDefine.swift in Sources */,
 				041D726428353B430083092D /* NSImage+SymbolName.swift in Sources */,
+				0444D5F228394B1B00327D0B /* ShowExtensionNameSwitch.swift in Sources */,
+				0444D5F728394FDD00327D0B /* DockRecentSwitch.swift in Sources */,
 				0444D5CA283677DA00327D0B /* EverySwitchTests.swift in Sources */,
 				041D725D28353A3F0083092D /* DarkModeSwitch.swift in Sources */,
 				0444D5CD2836836E00327D0B /* NetworkingTest.swift in Sources */,
+				0444D5DE2838553B00327D0B /* NSSound_SystemVolumeExtension.swift in Sources */,
+				0444D5EE283946EC00327D0B /* KeepAwakeSwitch.swift in Sources */,
+				0444D5F02839483500327D0B /* EmptyTrashSwitch.swift in Sources */,
+				0444D5F628394F1200327D0B /* ShowFinderPathbarSwitch.swift in Sources */,
+				0444D5F128394A1900327D0B /* ShowUserLibrarySwitch.swift in Sources */,
 				0444D5DC2836F1E700327D0B /* CGImage++.swift in Sources */,
+				0444D5F428394BD400327D0B /* LowPowerModeSwitch.swift in Sources */,
+				0444D5E528392D6500327D0B /* AutohideDockSwitch.swift in Sources */,
+				0444D5DD283854E900327D0B /* MuteSwitch.swift in Sources */,
 				0444D5CB28367A1B00327D0B /* HiddenDesktopSwitch.swift in Sources */,
+				0444D5F528394CAA00327D0B /* MuteMicSwitch.swift in Sources */,
 				0444D5D42836D93A00327D0B /* RequestError.swift in Sources */,
 				0444D5DA2836F1CD00327D0B /* NSImage++.swift in Sources */,
 				0444D5CE283683B100327D0B /* CheckUpdatePresenter.swift in Sources */,
+				0444D5EC2839446A00327D0B /* AutohideMenuBarSwitch.swift in Sources */,
+				0444D5ED2839453400327D0B /* HiddenFilesSwitch.swift in Sources */,
 				041D725728353A160083092D /* OnlySwitchTests.swift in Sources */,
 				0444D5CF283683D800327D0B /* SystemInfo.swift in Sources */,
 			);
@@ -1453,12 +1501,18 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Only Switch requests Bluetooth usage to switch Airpods connection";
 				MACOSX_DEPLOYMENT_TARGET = 12.3;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitchTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "OnlySwitch/Header/OnlySwitch-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
+				);
 				TEST_HOST = "$(BUNDLE_LOADER)";
 			};
 			name = Debug;
@@ -1471,12 +1525,18 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Only Switch requests Bluetooth usage to switch Airpods connection";
 				MACOSX_DEPLOYMENT_TARGET = 12.3;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitchTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "OnlySwitch/Header/OnlySwitch-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
+				);
 				TEST_HOST = "$(BUNDLE_LOADER)";
 			};
 			name = Release;
@@ -1632,7 +1692,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.2.5;
+				MARKETING_VERSION = 2.3;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1683,7 +1743,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.2.5;
+				MARKETING_VERSION = 2.3;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";

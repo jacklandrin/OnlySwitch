@@ -16,7 +16,7 @@ class EmptyTrashSwitch:SwitchProvider {
     }
     
     func currentStatus() -> Bool {
-        return false
+        return true
     }
     
     func operationSwitch(isOn: Bool) async throws {
