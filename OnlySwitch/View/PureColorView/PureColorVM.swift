@@ -50,8 +50,9 @@ class PureColorVM:ObservableObject {
         // populate with other key codes you're interested in
     ]
 
-    fileprivate let sleepSem = DispatchSemaphore(value: 0)
-    fileprivate let keyboardDetectConcurrentQueue = DispatchQueue(label: "polling", attributes: .concurrent)
+    
+    private let pollingInterval: DispatchTimeInterval = .milliseconds(50)
+    private let pollingQueue = DispatchQueue.main
     
     private func dispatchKeyDown(_ key:CGKeyCode) {
         DispatchQueue.main.async {
@@ -75,38 +76,32 @@ class PureColorVM:ObservableObject {
         }
     }
     
-    func startDetectKeyboard() {
-        var condition = true
-        keyboardDetectConcurrentQueue.async
-        {
-            while condition
-            {
-                for (code, wasPressed) in self.keyStates
-                {
-                    if code.isPressed
-                    {
-                        if !wasPressed
-                        {
-                            self.dispatchKeyDown(code)
-                            self.keyStates[code] = true
-                        }
-                    }
-                    else if wasPressed
-                    {
-                        self.dispatchKeyUp(code)
-                        self.keyStates[code] = false
-                    }
+    private func pollKeyStates() {
+        for (code, wasPressed) in keyStates {
+            if code.isPressed {
+                if !wasPressed {
+                    dispatchKeyDown(code)
+                    keyStates[code] = true
                 }
-                
-                // Sleep long enough to avoid wasting CPU cycles, but
-                // not so long that you miss key presses.  You may
-                // need to experiment with the .milliseconds value.
-                let _ = self.sleepSem.wait(timeout: .now() + .milliseconds(50))
-                DispatchQueue.main.async {
-                    condition = Router.isShown(windowController: Router.pureColorWindowController)
-                }
+            } else if wasPressed {
+                dispatchKeyUp(code)
+                keyStates[code] = false
             }
         }
+        if Router.isShown(windowController: Router.pureColorWindowController) {
+            scheduleNextPoll(on: pollingQueue)
+        }
+    }
+    
+    
+    private func scheduleNextPoll(on queue: DispatchQueue) {
+       queue.asyncAfter(deadline: .now() + pollingInterval) {
+           self.pollKeyStates()
+       }
+    }
+
+    func startDetectKeyboard() {
+        scheduleNextPoll(on: pollingQueue)
     }
 
 }

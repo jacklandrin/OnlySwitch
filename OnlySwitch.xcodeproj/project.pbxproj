@@ -98,10 +98,10 @@
 		0444D5F728394FDD00327D0B /* DockRecentSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046FF3C5279A2C0B00506953 /* DockRecentSwitch.swift */; };
 		0444D5FB2839827A00327D0B /* PureColorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0444D5FA2839827A00327D0B /* PureColorView.swift */; };
 		0444D5FD2839873100327D0B /* ScreenTestSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0444D5FC2839873100327D0B /* ScreenTestSwitch.swift */; };
-		0444D5FE2839933300327D0B /* OpenWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337932762BD1B00AE779A /* OpenWindow.swift */; };
 		0444D600283998B000327D0B /* CGKeyCode++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0444D5FF283998B000327D0B /* CGKeyCode++.swift */; };
 		0444D6032839997B00327D0B /* PureColorVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0444D6022839997B00327D0B /* PureColorVM.swift */; };
 		0444D6052839A05100327D0B /* ColorChangeGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0444D6042839A05100327D0B /* ColorChangeGuide.swift */; };
+		0444D60C2839B21600327D0B /* CGKeyCode++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0444D5FF283998B000327D0B /* CGKeyCode++.swift */; };
 		0451765C27C27AFC00006BA0 /* MusicPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0451765B27C27AFC00006BA0 /* MusicPlayer.swift */; };
 		0451766527C283BC00006BA0 /* AppleMusicPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0451766427C283BC00006BA0 /* AppleMusicPlayer.swift */; };
 		0451766B27C284D600006BA0 /* iTunesScripting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0451766727C284D600006BA0 /* iTunesScripting.swift */; };
@@ -1283,10 +1283,10 @@
 				0444D5D92836F1BA00327D0B /* CurrentScreen.swift in Sources */,
 				041D725E28353A4D0083092D /* SwitchType.swift in Sources */,
 				0444D5DF283855CD00327D0B /* ScreenSaverSwitch.swift in Sources */,
-				0444D5FE2839933300327D0B /* OpenWindow.swift in Sources */,
 				041D726028353AF50083092D /* SwitchProvider.swift in Sources */,
 				041D725F28353A500083092D /* ShellCommandDefine.swift in Sources */,
 				041D726428353B430083092D /* NSImage+SymbolName.swift in Sources */,
+				0444D60C2839B21600327D0B /* CGKeyCode++.swift in Sources */,
 				0444D5F228394B1B00327D0B /* ShowExtensionNameSwitch.swift in Sources */,
 				0444D5F728394FDD00327D0B /* DockRecentSwitch.swift in Sources */,
 				0444D5CA283677DA00327D0B /* EverySwitchTests.swift in Sources */,
