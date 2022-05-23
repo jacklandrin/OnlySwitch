@@ -59,34 +59,24 @@ class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
                 refreshAsync()
             }
         } else {
-            isOn = switchOperator.currentStatus()
-            info = switchOperator.currentInfo()
+            refreshAsync()
         }
     }
+    
     
     func refreshAsync() {
-        refreshSwitchStatus()
-        refreshInfo()
-    }
-    
-    func refreshSwitchStatus() {
-        Task {
-            let isOn = await switchOperator.currentStatusAsync()
-            DispatchQueue.main.async { [self] in
-                self.isOn = isOn
+        DispatchQueue.global().async {
+            self.processing = true
+            let _isOn = self.switchOperator.currentStatus()
+            let _info = self.switchOperator.currentInfo()
+            DispatchQueue.main.async {
+                self.processing = false
+                self.isOn = _isOn
+                self.info = _info
             }
         }
     }
-    
-    func refreshInfo() {
-        Task {
-            let info = await switchOperator.currentInfoAsync()
-            DispatchQueue.main.async { [self] in
-                self.info = info
-            }
-        }
-    }
-    
+        
     func doSwitch(isOn:Bool) {
         processing = true
         Task {
