@@ -12,13 +12,51 @@ let appearanceColumnCountKey = "appearanceColumnCountKey"
 let showAdsKey = "showAdsKey"
 
 class GeneralVM:ObservableObject {
-    @Published var cacheSize:String = ""
-    @Published var needtoUpdateAlert = false
-    @Published var showProgress = false
-    @Published var newestVersion = UserDefaults.standard.string(forKey: newestVersionKey) ?? ""
-    @Published var supportedLanguages = SupportedLanguages.langList
-    @Published var showMenubarIconPopover = false
-    @Published var menubarIcons = ["menubar_0", "menubar_1", "menubar_2", "menubar_3"]
+    
+    @Published private var model = GeneralModel()
+    
+    var cacheSize:String {
+        get {
+            return model.cacheSize
+        }
+        set {
+            model.cacheSize = newValue
+        }
+    }
+    
+    var needtoUpdateAlert:Bool {
+        get {
+            return model.needtoUpdateAlert
+        }
+        set {
+            model.needtoUpdateAlert = newValue
+        }
+    }
+    
+    var showProgress:Bool {
+        return model.showProgress
+    }
+    
+    var newestVersion:String {
+        return model.newestVersion
+    }
+    
+    var supportedLanguages:[Language] {
+        return model.supportedLanguages
+    }
+    
+    var showMenubarIconPopover:Bool {
+        get {
+            return model.showMenubarIconPopover
+        }
+        set {
+            model.showMenubarIconPopover = newValue
+        }
+    }
+    
+    var menubarIcons:[String] {
+        return model.menubarIcons
+    }
     
     private let checkUpdatePresenter = CheckUpdatePresenter()
     
@@ -56,15 +94,15 @@ class GeneralVM:ObservableObject {
     }
     
     func checkUpdate() {
-        self.showProgress = true
+        self.model.showProgress = true
         checkUpdatePresenter.checkUpdate(complete: { success in
             if success {
-                self.newestVersion = self.checkUpdatePresenter.latestVersion
+                self.model.newestVersion = self.checkUpdatePresenter.latestVersion
                 UserDefaults.standard.set(self.newestVersion, forKey: newestVersionKey)
                 UserDefaults.standard.synchronize()
-                self.needtoUpdateAlert = !self.checkUpdatePresenter.isTheNewestVersion
+                self.model.needtoUpdateAlert = !self.checkUpdatePresenter.isTheNewestVersion
             }
-            self.showProgress = false
+            self.model.showProgress = false
         })
     }
     
