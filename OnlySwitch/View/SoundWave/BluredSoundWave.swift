@@ -15,12 +15,12 @@ let rightColors = [NSColor(red: 133/255, green: 116/255, blue: 210/255, alpha: 0
 
 
 struct BluredSoundWave: View {
-    @StateObject var soundWave:SoundWaveModel = SoundWaveModel()
+    @StateObject var soundWave:SoundWaveVM = SoundWaveVM()
     var body: some View {
         SoundWaveView(spectra: self.soundWave.spectra, barWidth: self.soundWave.barWidth, space: self.soundWave.space, leftColor: leftColors, rightColor: rightColors)
             .onReceive(NotificationCenter.default.publisher(for: spectraNofiticationName)) { notification in
                 let spectra = notification.object as! [[Float]]
-                self.soundWave.spectra = spectra
+                self.soundWave.setSpectra(spectra: spectra)
             }
             .frame(width: Layout.soundWaveWidth, height:Layout.soundWaveHeight)
             .blur(radius: 7.5)

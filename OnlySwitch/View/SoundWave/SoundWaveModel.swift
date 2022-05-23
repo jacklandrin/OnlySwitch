@@ -1,26 +1,14 @@
 //
 //  SoundWaveModel.swift
-//  SpringRadio
+//  OnlySwitch
 //
-//  Created by jack on 2020/4/19.
-//  Copyright © 2020 jack. All rights reserved.
+//  Created by Jacklandrin on 2022/5/23.
 //
 
-import AppKit
-import Combine
+import Foundation
 
-class SoundWaveModel: ObservableObject {
-    @Published var spectra: [[Float]] = [[Float]]()
-    
-    @Published var barWidth:CGFloat = 3.0
-    @Published var space:CGFloat = 0.0
-    
-    init() {
-        self.setBarWidth()
-    }
-        
-    func setBarWidth() {
-        let barSpace = Layout.soundWaveWidth / CGFloat(PlayerManager.shared.player.analyzer.frequencyBands * 3 - 1)
-        self.barWidth = barSpace * 3
-    }
+struct SoundWaveModel {
+    var spectra: [[Float]] = [[Float]]()
+    var barWidth:CGFloat = 3.0
+    var space:CGFloat = 0.0
 }

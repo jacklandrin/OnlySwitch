@@ -160,7 +160,7 @@
 		0493376427625D6F00AE779A /* RadioPlayerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493376327625D6F00AE779A /* RadioPlayerItem.swift */; };
 		04933766276262EB00AE779A /* SoundWaveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04933765276262EB00AE779A /* SoundWaveView.swift */; };
 		04933788276264D400AE779A /* BluredSoundWave.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04933787276264D400AE779A /* BluredSoundWave.swift */; };
-		0493378A2762651D00AE779A /* SoundWaveModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337892762651D00AE779A /* SoundWaveModel.swift */; };
+		0493378A2762651D00AE779A /* SoundWaveVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337892762651D00AE779A /* SoundWaveVM.swift */; };
 		0493378C2762654600AE779A /* LayoutDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493378B2762654600AE779A /* LayoutDefine.swift */; };
 		0493378E2762665A00AE779A /* RadioStationSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493378D2762665A00AE779A /* RadioStationSwitch.swift */; };
 		0493379027626FD200AE779A /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0493378F27626FD200AE779A /* NetworkExtension.framework */; };
@@ -189,6 +189,7 @@
 		04A9675A2786133F00F12830 /* GeneralVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A967592786133F00F12830 /* GeneralVM.swift */; };
 		04AA63CE276BC94000ED5DEA /* EmptyTrashSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AA63CD276BC94000ED5DEA /* EmptyTrashSwitch.swift */; };
 		04AA63D0276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AA63CF276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift */; };
+		04B2544F283BE94E00D253E2 /* SoundWaveModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B2544E283BE94E00D253E2 /* SoundWaveModel.swift */; };
 		04B856352784B1B60061B56C /* GetWallpaperURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B856342784B1B60061B56C /* GetWallpaperURL.swift */; };
 		04BF97682790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BF97672790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift */; };
 		04BF976B27908D5400E7C0E2 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 04BF976A27908D5400E7C0E2 /* KeyboardShortcuts */; };
@@ -375,7 +376,7 @@
 		0493376327625D6F00AE779A /* RadioPlayerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioPlayerItem.swift; sourceTree = "<group>"; };
 		04933765276262EB00AE779A /* SoundWaveView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundWaveView.swift; sourceTree = "<group>"; };
 		04933787276264D400AE779A /* BluredSoundWave.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BluredSoundWave.swift; sourceTree = "<group>"; };
-		049337892762651D00AE779A /* SoundWaveModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundWaveModel.swift; sourceTree = "<group>"; };
+		049337892762651D00AE779A /* SoundWaveVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundWaveVM.swift; sourceTree = "<group>"; };
 		0493378B2762654600AE779A /* LayoutDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutDefine.swift; sourceTree = "<group>"; };
 		0493378D2762665A00AE779A /* RadioStationSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioStationSwitch.swift; sourceTree = "<group>"; };
 		0493378F27626FD200AE779A /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
@@ -408,6 +409,7 @@
 		04A967592786133F00F12830 /* GeneralVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralVM.swift; sourceTree = "<group>"; };
 		04AA63CD276BC94000ED5DEA /* EmptyTrashSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyTrashSwitch.swift; sourceTree = "<group>"; };
 		04AA63CF276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyPasteboardSwitch.swift; sourceTree = "<group>"; };
+		04B2544E283BE94E00D253E2 /* SoundWaveModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundWaveModel.swift; sourceTree = "<group>"; };
 		04B856342784B1B60061B56C /* GetWallpaperURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetWallpaperURL.swift; sourceTree = "<group>"; };
 		04BF97672790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowFinderPathbarSwitch.swift; sourceTree = "<group>"; };
 		04D68B0C2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowUserLibrarySwitch.swift; sourceTree = "<group>"; };
@@ -1001,9 +1003,10 @@
 		04BF977927908FB900E7C0E2 /* SoundWave */ = {
 			isa = PBXGroup;
 			children = (
-				049337892762651D00AE779A /* SoundWaveModel.swift */,
+				049337892762651D00AE779A /* SoundWaveVM.swift */,
 				04933765276262EB00AE779A /* SoundWaveView.swift */,
 				04933787276264D400AE779A /* BluredSoundWave.swift */,
+				04B2544E283BE94E00D253E2 /* SoundWaveModel.swift */,
 			);
 			path = SoundWave;
 			sourceTree = "<group>";
@@ -1347,7 +1350,7 @@
 				04938D1027692B6900713F1D /* SwitchManager.swift in Sources */,
 				0493374527625A1E00AE779A /* JLASAudioPlayer.swift in Sources */,
 				04938D0A2769143300713F1D /* GeneralView.swift in Sources */,
-				0493378A2762651D00AE779A /* SoundWaveModel.swift in Sources */,
+				0493378A2762651D00AE779A /* SoundWaveVM.swift in Sources */,
 				04938D082768CBA100713F1D /* LanguageManager.swift in Sources */,
 				043E5D7327581C2E00ADC004 /* SwitchBarView.swift in Sources */,
 				0427B25B275D786400AD783A /* SystemInfo.swift in Sources */,
@@ -1361,6 +1364,7 @@
 				043E5D6A2757D68800ADC004 /* MuteSwitch.swift in Sources */,
 				0493378C2762654600AE779A /* LayoutDefine.swift in Sources */,
 				049337992762C0B300AE779A /* RadioSettingVM.swift in Sources */,
+				04B2544F283BE94E00D253E2 /* SoundWaveModel.swift in Sources */,
 				04F118C427AED8BC005DA861 /* GitHubReleaseModel.swift in Sources */,
 				047140B627788486005B160B /* EffectSoundHelper.swift in Sources */,
 				0493375B27625A1E00AE779A /* JLASAudioPlayer+Streamer.swift in Sources */,
@@ -1530,8 +1534,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = B22726TNGH;
-				GENERATE_INFOPLIST_FILE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Only Switch requests Bluetooth usage to switch Airpods connection";
+				INFOPLIST_OUTPUT_FORMAT = binary;
 				MACOSX_DEPLOYMENT_TARGET = 12.3;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitchTests;
@@ -1554,8 +1560,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = B22726TNGH;
-				GENERATE_INFOPLIST_FILE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Only Switch requests Bluetooth usage to switch Airpods connection";
+				INFOPLIST_OUTPUT_FORMAT = binary;
 				MACOSX_DEPLOYMENT_TARGET = 12.3;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitchTests;
