@@ -89,6 +89,9 @@ Radio Player supports m3u, acc stream, but without sound wave effect. If your Ra
 ## About Low Power Mode
 Low Power Mode uses Terminal commands that require root access, so the app will ask you to enter password on every toggle.
 
+## About Screen Test
+In Version 2.3, Only Switch brings new feature, screen test. It provides a pure color view by full screen mode, you can check dead pixel via it. Press left and right arrow key, the color will change among black, white, red, green and blue. This function also can be used for screen cleaning, as you can clearly see the stains on screen.
+
 ## About Shortcuts
 Shortcuts is a powerful iOS app which can help people make fantastic automation functions. It comes to macOS in Monterey as well. Many users eager OnlySwitch has more customizable features, and one good news is that the app supports Shortcuts display since Version 1.7. More menubar space therefore is saved. 
 In the next versions, OnlySwitch will also provide more Shortcuts actions to impove user experience.
