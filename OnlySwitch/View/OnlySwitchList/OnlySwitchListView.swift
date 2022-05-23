@@ -9,9 +9,8 @@ import SwiftUI
 import LaunchAtLogin
 
 struct OnlySwitchListView: View {
-    @EnvironmentObject var switchVM:SwitchVM
+    @EnvironmentObject var switchVM:SwitchListVM
     @Environment(\.colorScheme) private var colorScheme
-    @State private var id = UUID()
     @State private var distanceY:CGFloat = 0
     @State private var movingIndex = 0
     @ObservedObject private var playerItem = RadioStationSwitch.shared.playerItem
@@ -82,7 +81,7 @@ struct OnlySwitchListView: View {
                         SwitchBarView().environmentObject(item)
                             .frame(height:Layout.singleSwitchHeight)
                     } else if let item = switchVM.allItemList[index] as? ShortcutsBarVM {
-                        ShortCutBarView().environmentObject(item)
+                        ShortcutsBarView().environmentObject(item)
                             .frame(height:Layout.singleSwitchHeight)
                     }
                 }
@@ -209,7 +208,7 @@ struct OnlySwitchListView: View {
                         HStack {
                         
                             if let item = switchVM.shortcutsList[index] {
-                                ShortCutBarView().environmentObject(item)
+                                ShortcutsBarView().environmentObject(item)
                                     .frame(height:Layout.singleSwitchHeight)
                             }
                         }
@@ -259,7 +258,7 @@ struct OnlySwitchListView: View {
         HStack {
             Button(action: {
                 withAnimation {
-                    switchVM.sortMode.toggle()
+                    switchVM.toggleSortMode()
                 }
             }, label: {
                 Image(systemName: switchVM.sortMode ? "line.3.horizontal.circle.fill" : "line.3.horizontal.circle")
@@ -341,7 +340,7 @@ struct OnlySwitchListView: View {
     }
     
     func move(from source: IndexSet, to destination: Int) {
-        switchVM.allItemList.move(fromOffsets: source, toOffset: destination)
+        switchVM.moveItem(from: source, to: destination)
     }
     
     func itemOffsetY(index:Int) -> CGFloat {
@@ -392,6 +391,6 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         OnlySwitchListView()
             .frame(width: Layout.popoverWidth, height: Layout.popoverHeight)
-            .environmentObject(SwitchVM())
+            .environmentObject(SwitchListVM())
     }
 }

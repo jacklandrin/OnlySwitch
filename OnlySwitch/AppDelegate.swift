@@ -36,7 +36,7 @@ struct OnlySwitchApp: App {
 class AppDelegate:NSObject, NSApplicationDelegate {
     var statusBar: StatusBarController?
     var popover = NSPopover()
-    let switchVM = SwitchVM()
+    let switchVM = SwitchListVM()
     var blManager:BluetoothDevicesManager?
     @UserDefaultValue(key: appearanceColumnCountKey, defaultValue: SwitchListAppearance.single.rawValue)
     var currentAppearance:String

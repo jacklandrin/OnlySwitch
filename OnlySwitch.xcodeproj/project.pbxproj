@@ -57,7 +57,7 @@
 		04447B602754F08100CD2900 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04447B5F2754F08100CD2900 /* Assets.xcassets */; };
 		04447B632754F08100CD2900 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04447B622754F08100CD2900 /* Preview Assets.xcassets */; };
 		04447B702754F21A00CD2900 /* StatusBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B6F2754F21A00CD2900 /* StatusBarController.swift */; };
-		04447B722754FE3800CD2900 /* SwitchVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B712754FE3800CD2900 /* SwitchVM.swift */; };
+		04447B722754FE3800CD2900 /* SwitchListVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B712754FE3800CD2900 /* SwitchListVM.swift */; };
 		04447B742755015A00CD2900 /* ShellCommandDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B732755015A00CD2900 /* ShellCommandDefine.swift */; };
 		04447B7627550F6900CD2900 /* VisualEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B7527550F6900CD2900 /* VisualEffectView.swift */; };
 		04447B782755129D00CD2900 /* EventMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B772755129D00CD2900 /* EventMonitor.swift */; };
@@ -191,6 +191,9 @@
 		04AA63D0276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AA63CF276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift */; };
 		04B2544F283BE94E00D253E2 /* SoundWaveModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B2544E283BE94E00D253E2 /* SoundWaveModel.swift */; };
 		04B25451283BEB8400D253E2 /* SwitchBarModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B25450283BEB8400D253E2 /* SwitchBarModel.swift */; };
+		04B25453283BEF3800D253E2 /* SupportedLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B25452283BEF3800D253E2 /* SupportedLanguage.swift */; };
+		04B25455283C06C700D253E2 /* SwitchListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B25454283C06C700D253E2 /* SwitchListModel.swift */; };
+		04B25457283C0F8800D253E2 /* ShortcutsBarModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B25456283C0F8800D253E2 /* ShortcutsBarModel.swift */; };
 		04B856352784B1B60061B56C /* GetWallpaperURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B856342784B1B60061B56C /* GetWallpaperURL.swift */; };
 		04BF97682790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BF97672790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift */; };
 		04BF976B27908D5400E7C0E2 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 04BF976A27908D5400E7C0E2 /* KeyboardShortcuts */; };
@@ -217,7 +220,7 @@
 		04E8BE3A2797241F00FF12B7 /* ShortcutsGalleryContributing.md in Resources */ = {isa = PBXBuildFile; fileRef = 04E8BE392797241F00FF12B7 /* ShortcutsGalleryContributing.md */; };
 		04EB1CD02780F36F00C612AB /* ShortcutsSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CCF2780F36F00C612AB /* ShortcutsSettingVM.swift */; };
 		04EB1CD22780F4F700C612AB /* ShortcutsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CD12780F4F700C612AB /* ShortcutsView.swift */; };
-		04EB1CD42781280900C612AB /* ShortCutBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CD32781280900C612AB /* ShortCutBarView.swift */; };
+		04EB1CD42781280900C612AB /* ShortcutsBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CD32781280900C612AB /* ShortcutsBarView.swift */; };
 		04EB1CD62781299A00C612AB /* ShortcutsBarVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CD52781299A00C612AB /* ShortcutsBarVM.swift */; };
 		04F118C427AED8BC005DA861 /* GitHubReleaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F118C327AED8BC005DA861 /* GitHubReleaseModel.swift */; };
 		04F118C627AED8EE005DA861 /* AboutVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F118C527AED8EE005DA861 /* AboutVM.swift */; };
@@ -304,7 +307,7 @@
 		04447B622754F08100CD2900 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		04447B692754F08100CD2900 /* OnlySwitch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OnlySwitch.entitlements; sourceTree = "<group>"; };
 		04447B6F2754F21A00CD2900 /* StatusBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
-		04447B712754FE3800CD2900 /* SwitchVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchVM.swift; sourceTree = "<group>"; };
+		04447B712754FE3800CD2900 /* SwitchListVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchListVM.swift; sourceTree = "<group>"; };
 		04447B732755015A00CD2900 /* ShellCommandDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShellCommandDefine.swift; sourceTree = "<group>"; };
 		04447B7527550F6900CD2900 /* VisualEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectView.swift; sourceTree = "<group>"; };
 		04447B772755129D00CD2900 /* EventMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventMonitor.swift; sourceTree = "<group>"; };
@@ -412,6 +415,9 @@
 		04AA63CF276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyPasteboardSwitch.swift; sourceTree = "<group>"; };
 		04B2544E283BE94E00D253E2 /* SoundWaveModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundWaveModel.swift; sourceTree = "<group>"; };
 		04B25450283BEB8400D253E2 /* SwitchBarModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchBarModel.swift; sourceTree = "<group>"; };
+		04B25452283BEF3800D253E2 /* SupportedLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportedLanguage.swift; sourceTree = "<group>"; };
+		04B25454283C06C700D253E2 /* SwitchListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchListModel.swift; sourceTree = "<group>"; };
+		04B25456283C0F8800D253E2 /* ShortcutsBarModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsBarModel.swift; sourceTree = "<group>"; };
 		04B856342784B1B60061B56C /* GetWallpaperURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetWallpaperURL.swift; sourceTree = "<group>"; };
 		04BF97672790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowFinderPathbarSwitch.swift; sourceTree = "<group>"; };
 		04D68B0C2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowUserLibrarySwitch.swift; sourceTree = "<group>"; };
@@ -433,7 +439,7 @@
 		04E8BE392797241F00FF12B7 /* ShortcutsGalleryContributing.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ShortcutsGalleryContributing.md; sourceTree = "<group>"; };
 		04EB1CCF2780F36F00C612AB /* ShortcutsSettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsSettingVM.swift; sourceTree = "<group>"; };
 		04EB1CD12780F4F700C612AB /* ShortcutsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsView.swift; sourceTree = "<group>"; };
-		04EB1CD32781280900C612AB /* ShortCutBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortCutBarView.swift; sourceTree = "<group>"; };
+		04EB1CD32781280900C612AB /* ShortcutsBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsBarView.swift; sourceTree = "<group>"; };
 		04EB1CD52781299A00C612AB /* ShortcutsBarVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsBarVM.swift; sourceTree = "<group>"; };
 		04F10F9827E10D8D00810BEC /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		04F118C327AED8BC005DA861 /* GitHubReleaseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubReleaseModel.swift; sourceTree = "<group>"; };
@@ -892,7 +898,8 @@
 			isa = PBXGroup;
 			children = (
 				04447B5D2754F08000CD2900 /* OnlySwitchListView.swift */,
-				04447B712754FE3800CD2900 /* SwitchVM.swift */,
+				04447B712754FE3800CD2900 /* SwitchListVM.swift */,
+				04B25454283C06C700D253E2 /* SwitchListModel.swift */,
 				04581DBA27651EF1008ADF30 /* RollingText.swift */,
 			);
 			path = OnlySwitchList;
@@ -925,8 +932,9 @@
 		04BF976F27908E7300E7C0E2 /* ShortcutsItem */ = {
 			isa = PBXGroup;
 			children = (
-				04EB1CD32781280900C612AB /* ShortCutBarView.swift */,
+				04EB1CD32781280900C612AB /* ShortcutsBarView.swift */,
 				04EB1CD52781299A00C612AB /* ShortcutsBarVM.swift */,
+				04B25456283C0F8800D253E2 /* ShortcutsBarModel.swift */,
 			);
 			path = ShortcutsItem;
 			sourceTree = "<group>";
@@ -1025,6 +1033,7 @@
 				04A6B54F2771F338003B2647 /* CheckUpdatePresenter.swift */,
 				047140B527788486005B160B /* EffectSoundHelper.swift */,
 				04E2AD1D2783B63600BC5DF3 /* CurrentScreen.swift */,
+				04B25452283BEF3800D253E2 /* SupportedLanguage.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -1323,6 +1332,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04B25453283BEF3800D253E2 /* SupportedLanguage.swift in Sources */,
 				04EB1CD22780F4F700C612AB /* ShortcutsView.swift in Sources */,
 				040CD2BC2756D497002E0CC6 /* CGImage++.swift in Sources */,
 				04581DBF27653C4A008ADF30 /* AirPodsSettingVM.swift in Sources */,
@@ -1336,7 +1346,7 @@
 				0451766E27C28BA300006BA0 /* AppleMusicSwitch.swift in Sources */,
 				040C6EAC276B7D9F00291DEB /* CustomizeView.swift in Sources */,
 				04E03AFE275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift in Sources */,
-				04447B722754FE3800CD2900 /* SwitchVM.swift in Sources */,
+				04447B722754FE3800CD2900 /* SwitchListVM.swift in Sources */,
 				0493375227625A1E00AE779A /* Reader.swift in Sources */,
 				04581DC327677ADC008ADF30 /* KeepAwakeSwitch.swift in Sources */,
 				04933788276264D400AE779A /* BluredSoundWave.swift in Sources */,
@@ -1374,7 +1384,7 @@
 				0444D6052839A05100327D0B /* ColorChangeGuide.swift in Sources */,
 				04AA63CE276BC94000ED5DEA /* EmptyTrashSwitch.swift in Sources */,
 				0493378E2762665A00AE779A /* RadioStationSwitch.swift in Sources */,
-				04EB1CD42781280900C612AB /* ShortCutBarView.swift in Sources */,
+				04EB1CD42781280900C612AB /* ShortcutsBarView.swift in Sources */,
 				04243489275642370044D0AD /* HiddenDesktopSwitch.swift in Sources */,
 				0493374627625A1E00AE779A /* JLAVAudioPlayer.swift in Sources */,
 				0426613A2780B885005DF2B9 /* LowPowerModeSwitch.swift in Sources */,
@@ -1399,6 +1409,7 @@
 				047140C22778D2A1005B160B /* SmallLaunchpadIconSwitch.swift in Sources */,
 				040C6EAA276B7D4500291DEB /* CustomizeVM.swift in Sources */,
 				049337212761286400AE779A /* CleanProgressView.swift in Sources */,
+				04B25457283C0F8800D253E2 /* ShortcutsBarModel.swift in Sources */,
 				0493374927625A1E00AE779A /* Streaming.swift in Sources */,
 				0444D6032839997B00327D0B /* PureColorVM.swift in Sources */,
 				0451765C27C27AFC00006BA0 /* MusicPlayer.swift in Sources */,
@@ -1424,6 +1435,7 @@
 				0493374727625A1E00AE779A /* PlayerManager.swift in Sources */,
 				0493372527615EA400AE779A /* HiddenFilesSwitch.swift in Sources */,
 				04A6F9432788807800E3300F /* BarProvider.swift in Sources */,
+				04B25455283C06C700D253E2 /* SwitchListModel.swift in Sources */,
 				04E2AD0D2783624A00BC5DF3 /* Intents.intentdefinition in Sources */,
 				04AA63D0276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift in Sources */,
 				04E03AF8275E6B4E00EA5FB9 /* AutohideDockSwitch.swift in Sources */,
@@ -1543,7 +1555,7 @@
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Only Switch requests Bluetooth usage to switch Airpods connection";
 				INFOPLIST_OUTPUT_FORMAT = binary;
 				MACOSX_DEPLOYMENT_TARGET = 12.3;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitchTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -1569,7 +1581,7 @@
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Only Switch requests Bluetooth usage to switch Airpods connection";
 				INFOPLIST_OUTPUT_FORMAT = binary;
 				MACOSX_DEPLOYMENT_TARGET = 12.3;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitchTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -1821,7 +1833,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.2.5;
+				MARKETING_VERSION = 2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.IntentsExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1851,7 +1863,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.2.5;
+				MARKETING_VERSION = 2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.IntentsExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
