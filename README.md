@@ -169,6 +169,9 @@ Rosel for Filipino translation
 
 @ShogoKoyama for Japanese translation
 
+## Telegram group
+https://t.me/OnlySwitchforMac
+
 ## License
 MIT
 ## Donate
