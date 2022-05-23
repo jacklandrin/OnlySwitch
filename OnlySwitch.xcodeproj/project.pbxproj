@@ -190,6 +190,7 @@
 		04AA63CE276BC94000ED5DEA /* EmptyTrashSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AA63CD276BC94000ED5DEA /* EmptyTrashSwitch.swift */; };
 		04AA63D0276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AA63CF276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift */; };
 		04B2544F283BE94E00D253E2 /* SoundWaveModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B2544E283BE94E00D253E2 /* SoundWaveModel.swift */; };
+		04B25451283BEB8400D253E2 /* SwitchBarModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B25450283BEB8400D253E2 /* SwitchBarModel.swift */; };
 		04B856352784B1B60061B56C /* GetWallpaperURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B856342784B1B60061B56C /* GetWallpaperURL.swift */; };
 		04BF97682790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BF97672790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift */; };
 		04BF976B27908D5400E7C0E2 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 04BF976A27908D5400E7C0E2 /* KeyboardShortcuts */; };
@@ -410,6 +411,7 @@
 		04AA63CD276BC94000ED5DEA /* EmptyTrashSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyTrashSwitch.swift; sourceTree = "<group>"; };
 		04AA63CF276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyPasteboardSwitch.swift; sourceTree = "<group>"; };
 		04B2544E283BE94E00D253E2 /* SoundWaveModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundWaveModel.swift; sourceTree = "<group>"; };
+		04B25450283BEB8400D253E2 /* SwitchBarModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchBarModel.swift; sourceTree = "<group>"; };
 		04B856342784B1B60061B56C /* GetWallpaperURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetWallpaperURL.swift; sourceTree = "<group>"; };
 		04BF97672790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowFinderPathbarSwitch.swift; sourceTree = "<group>"; };
 		04D68B0C2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowUserLibrarySwitch.swift; sourceTree = "<group>"; };
@@ -911,6 +913,7 @@
 			children = (
 				043E5D7227581C2E00ADC004 /* SwitchBarView.swift */,
 				043E5D742758208D00ADC004 /* SwitchBarVM.swift */,
+				04B25450283BEB8400D253E2 /* SwitchBarModel.swift */,
 				04E03B05275FEBE200EA5FB9 /* AirPodsBatteryView.swift */,
 				043E5D702758176B00ADC004 /* SwitchToggle.swift */,
 				049337202761286400AE779A /* CleanProgressView.swift */,
@@ -1376,6 +1379,7 @@
 				0493374627625A1E00AE779A /* JLAVAudioPlayer.swift in Sources */,
 				0426613A2780B885005DF2B9 /* LowPowerModeSwitch.swift in Sources */,
 				0451766C27C284D600006BA0 /* iTunesBridge.swift in Sources */,
+				04B25451283BEB8400D253E2 /* SwitchBarModel.swift in Sources */,
 				04581DBD27653C35008ADF30 /* AirPodsSettingView.swift in Sources */,
 				049337922762BA3200AE779A /* SettingView.swift in Sources */,
 				0493376427625D6F00AE779A /* RadioPlayerItem.swift in Sources */,

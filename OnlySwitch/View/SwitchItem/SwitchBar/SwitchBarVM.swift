@@ -11,8 +11,6 @@ class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
     {
         switchType.barInfo().title
     }
-  
-    @Published var weight: Int = 0
     
     var switchType:SwitchType
     {
@@ -39,12 +37,38 @@ class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
         return switchType.barInfo().category
     }
     
-    @Published var isHidden = false
-    @Published var isOn:Bool = false
-    @Published var processing = false
-    @Published var info = ""
+    var isHidden:Bool {
+        return model.isHidden
+    }
     
-    @Published var switchOperator:SwitchProvider
+    var isOn:Bool {
+        get {
+            return model.isOn
+        }
+        set {
+            model.isOn = newValue
+        }
+    }
+    
+    var processing:Bool {
+        return model.processing
+    }
+    
+    var info:String {
+        return model.info
+    }
+
+    var weight : Int {
+        get {
+            return model.weight
+        }
+        set {
+            model.weight = newValue
+        }
+    }
+    
+    @Published private var model = SwitchBarModel()
+    @Published private(set) var switchOperator:SwitchProvider
     
     init(switchOperator:SwitchProvider) {
         self.switchOperator = switchOperator
@@ -52,10 +76,10 @@ class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
     }
     
     func refreshStatus() {
-        isHidden = !switchOperator.isVisable()
+        model.isHidden = !switchOperator.isVisable()
         if self.switchType == .xcodeCache {
             if self.info == "" || self.info != "Calculating..." {
-                self.info = "Calculating..."
+                self.model.info = "Calculating..."
                 refreshAsync()
             }
         } else {
@@ -66,28 +90,28 @@ class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
     
     func refreshAsync() {
         DispatchQueue.global().async {
-            self.processing = true
+            self.model.processing = true
             let _isOn = self.switchOperator.currentStatus()
             let _info = self.switchOperator.currentInfo()
             DispatchQueue.main.async {
-                self.processing = false
-                self.isOn = _isOn
-                self.info = _info
+                self.model.processing = false
+                self.model.isOn = _isOn
+                self.model.info = _info
             }
         }
     }
         
     func doSwitch(isOn:Bool) {
-        processing = true
+        model.processing = true
         Task {
             do {
                 _ = try await switchOperator.operationSwitch(isOn: isOn)
                 DispatchQueue.main.async { [self] in
-                    self.isOn = isOn
-                    self.processing = false
+                    self.model.isOn = isOn
+                    self.model.processing = false
                     if info != "" {
                         let _ = switchOperator.currentStatus()
-                        info = switchOperator.currentInfo()
+                        model.info = switchOperator.currentInfo()
                     }
                 }
             } catch {
