@@ -226,6 +226,7 @@
 		04F118C427AED8BC005DA861 /* GitHubReleaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F118C327AED8BC005DA861 /* GitHubReleaseModel.swift */; };
 		04F118C627AED8EE005DA861 /* AboutVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F118C527AED8EE005DA861 /* AboutVM.swift */; };
 		04FC160A283D8A9800D4A4AC /* GitHubInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FC1609283D8A9800D4A4AC /* GitHubInteractor.swift */; };
+		04FC160E283D9B9000D4A4AC /* GitHubInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FC1609283D8A9800D4A4AC /* GitHubInteractor.swift */; };
 		04FE2C922772880300C79FF9 /* ShowExtensionNameSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FE2C912772880300C79FF9 /* ShowExtensionNameSwitch.swift */; };
 /* End PBXBuildFile section */
 
@@ -1302,6 +1303,7 @@
 				0444D5E62839311E00327D0B /* AirPodsSwitch.swift in Sources */,
 				0444D5D82836F19D00327D0B /* TopNotchSwitch.swift in Sources */,
 				0444D5D0283683DF00327D0B /* GitHubReleaseModel.swift in Sources */,
+				04FC160E283D9B9000D4A4AC /* GitHubInteractor.swift in Sources */,
 				0444D5E72839315A00327D0B /* BluetoothDevicesManager.swift in Sources */,
 				0444D5EF2839471100327D0B /* UserDefaultValue.swift in Sources */,
 				0444D5DB2836F1DC00327D0B /* MetadataExtractorError.swift in Sources */,

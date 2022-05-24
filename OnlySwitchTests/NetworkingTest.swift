@@ -9,19 +9,41 @@ import XCTest
 @testable import Alamofire
 
 class NetworkingTest:XCTestCase {
-    var reachabilityManager = NetworkReachabilityManager(host: "api.github.com")
+    private var presenter:GitHubPresenter!
+    private var reachabilityManager: NetworkReachabilityManager!
+    
+    override func setUpWithError() throws {
+        presenter = GitHubPresenter()
+        reachabilityManager = NetworkReachabilityManager(host: "api.github.com")
+    }
+    
     func testCheckUpdate() throws {
         guard let reachabilityManager = reachabilityManager, reachabilityManager.isReachable else {
             throw RequestError.notReachable
         }
 
         let exp = expectation(description: "checkUpdate requestion finished")
-        let presenter = CheckUpdatePresenter()
+        
         presenter.checkUpdate(complete: { success in
             if success {
-                XCTAssertEqual(presenter.latestVersion, "2.2.5")
+                XCTAssertEqual(self.presenter.latestVersion, "2.3")
                 exp.fulfill()
             } 
+        })
+        wait(for: [exp], timeout: 10.0)
+    }
+    
+    func testRequestReleases() throws {
+        guard let reachabilityManager = reachabilityManager, reachabilityManager.isReachable else {
+            throw RequestError.notReachable
+        }
+        let exp = expectation(description: "releases requestion finished")
+        presenter.requestReleases(complete: { success in
+            if success {
+                XCTAssertGreaterThan(self.presenter.downloadCount, 0)
+                XCTAssertFalse(self.presenter.updateHistoryInfo.isEmpty)
+                exp.fulfill()
+            }
         })
         wait(for: [exp], timeout: 10.0)
     }
