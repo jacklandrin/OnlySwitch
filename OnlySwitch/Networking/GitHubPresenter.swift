@@ -11,25 +11,27 @@ import SwiftUI
 
 let newestVersionKey = "newestVersionKey"
 
-class CheckUpdatePresenter{
-    var latestVersion:String = ""
-    var downloadURL:String = ""
+class GitHubPresenter{
+    private let interactor = GitHubInteractor()
+    
+    var latestVersion:String {
+        return interactor.latestVersion
+    }
+    
+    var downloadURL:String {
+        return interactor.downloadURL
+    }
     
     var isTheNewestVersion: Bool {
-        let currentVersion = SystemInfo.majorVersion as! String
-        let currentVersionSplited = currentVersion.split(separator: ".")
-        let latestVersionSplited = latestVersion.split(separator: ".")
-        for index in 0..<(min(currentVersionSplited.count, latestVersionSplited.count)) {
-            let currentNumber = Int(currentVersionSplited[index])!
-            let latestNumber = Int(latestVersionSplited[index])!
-            if latestNumber > currentNumber {
-                return false
-            }
-        }
-        if latestVersionSplited.count > currentVersionSplited.count { //for example: 1.4.1 vs 1.4
-            return false
-        }
-        return true
+        return interactor.isTheNewestVersion
+    }
+    
+    var downloadCount:Int {
+        return interactor.downloadCount
+    }
+    
+    var updateHistoryInfo:String {
+        return interactor.updateHistoryInfo
     }
     
     func checkUpdate(complete:@escaping (_ success:Bool) -> Void) {
@@ -39,15 +41,21 @@ class CheckUpdatePresenter{
                 complete(false)
                 return
             }
-            self.latestVersion = latestRelease.name.replacingOccurrences(of: "release_", with: "")
-            if let asset = latestRelease.assets.first {
-                self.downloadURL = asset.browser_download_url
-                complete(true)
-            }
-            complete(false)
+            complete(self.interactor.analyzeLastRelease(model: latestRelease))
         }
     }
     
+    func requestReleases(complete:@escaping (_ success:Bool) -> Void) {
+        let request = AF.request("https://api.github.com/repos/jacklandrin/OnlySwitch/releases")
+        request.responseDecodable(of:[GitHubRelease].self) { response in
+            guard let releases = response.value else {
+                complete(false)
+                return
+            }
+            self.interactor.analyzeReleases(models: releases)
+            complete(true)
+        }
+    }
     
     func downloadDMG(complete:@escaping (_ success:Bool, _ path:String?) -> Void ) {
         let filePath = myAppPath?.appendingPathComponent(string: "OnlySwitch.dmg")

@@ -10,20 +10,16 @@ import Alamofire
 
 class AboutVM:ObservableObject {
     @Published var downloadCount:Int = 0
+    @Published var updateHistoryInfo:String = ""
     
-    func requestDownloadCount() {
-        let request = AF.request("https://api.github.com/repos/jacklandrin/OnlySwitch/releases")
-        request.responseDecodable(of:[GitHubRelease].self) { response in
-            guard let releases = response.value else {
-                return
+    private var presenter = GitHubPresenter()
+    
+    func requestReleases() {
+        presenter.requestReleases { [self] success in
+            if success {
+                downloadCount = presenter.downloadCount
+                updateHistoryInfo = presenter.updateHistoryInfo
             }
-            var count:Int = 0
-            for release in releases {
-                if let assert = release.assets.first {
-                    count += assert.download_count
-                }
-            }
-            self.downloadCount = count
         }
     }
     

@@ -10,36 +10,55 @@ import SwiftUI
 struct AboutView: View {
     @StateObject var aboutVM = AboutVM()
     var body: some View {
-        VStack {
-            Image("only_switch")
-                .resizable()
-                .scaledToFit().frame(width: 100, height: 100)
-            Spacer().frame(height:50)
-            HStack(alignment:.bottom) {
-                Text("Only Switch")
-                    .fontWeight(.bold)
-                    .font(.system(size: 30))
-                Text("v\(SystemInfo.majorVersion as! String)")
-                    .foregroundColor(Color(NSColor.lightGray))
-                    .font(.system(size: 22))
-            }
-            HStack {
-                Text("Copyright @ 2021-2022 ")
-                Link(destination: URL(string: "https://www.jacklandrin.com")!, label: {
-                    Text("Jacklandrin")
-                })
-            }
-            HStack {
-                Link(destination: URL(string: "https://github.com/jacklandrin/OnlySwitch")!, label: {
-                    Text("GitHub Repo")
-                })
-                if aboutVM.downloadCount > 0 {
-                    Text("%@ downloads".localizeWithFormat(arguments: formatDownloadCount))
+        HStack {
+            VStack {
+                Image("only_switch")
+                    .resizable()
+                    .scaledToFit().frame(width: 100, height: 100)
+                Spacer().frame(height:50)
+                HStack(alignment:.bottom) {
+                    Text("Only Switch")
+                        .fontWeight(.bold)
+                        .font(.system(size: 30))
+                    Text("v\(SystemInfo.majorVersion as! String)")
+                        .foregroundColor(Color(NSColor.lightGray))
+                        .font(.system(size: 22))
                 }
-            }
+                HStack {
+                    Text("Copyright @ 2021-2022 ")
+                        .font(.system(size: 15))
+                    Link(destination: URL(string: "https://www.jacklandrin.com")!, label: {
+                        Text("Jacklandrin")
+                            .font(.system(size: 15))
+                    })
+                }
+                HStack {
+                    Link(destination: URL(string: "https://github.com/jacklandrin/OnlySwitch")!, label: {
+                        Text("GitHub Repo")
+                    })
+                    if aboutVM.downloadCount > 0 {
+                        Text("%@ downloads".localizeWithFormat(arguments: formatDownloadCount))
+                    }
+                }
+                HStack {
+                    Text("Join:".localized())
+                    Link(destination: URL(string: "https://t.me/OnlySwitchforMac")!, label: {
+                        Text("Telegram Group")
+                    })
+                }
+            }.offset(y:20)
+            VStack {
+                Text("Version History:".localized())
+                    .fontWeight(.bold)
+                    .padding(.top, 10)
+                ScrollView {
+                    Text(aboutVM.updateHistoryInfo)
+                }.frame(width:Layout.settingWindowWidth / 2 - 140)
+            }.padding(.leading, 70)
             
-        }.onAppear {
-            aboutVM.requestDownloadCount()
+        }
+        .onAppear {
+            aboutVM.requestReleases()
         }
     }
     

@@ -58,7 +58,7 @@ class GeneralVM:ObservableObject {
         return model.menubarIcons
     }
     
-    private let checkUpdatePresenter = CheckUpdatePresenter()
+    private let checkUpdatePresenter = GitHubPresenter()
     
     @UserDefaultValue(key: menubarIconKey, defaultValue: "menubar_0")
     var currentMenubarIcon:String
