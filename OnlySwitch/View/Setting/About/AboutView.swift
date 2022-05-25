@@ -53,6 +53,7 @@ struct AboutView: View {
                     .padding(.top, 10)
                 ScrollView {
                     Text(aboutVM.updateHistoryInfo)
+                        .padding(.trailing, 10)
                 }.frame(width:Layout.settingWindowWidth / 2 - 140)
             }.padding(.leading, 70)
             
