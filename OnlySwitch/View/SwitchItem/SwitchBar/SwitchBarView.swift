@@ -18,6 +18,7 @@ struct SwitchBarView: View {
             .resizable()
             .scaledToFit()
             .frame(width: 25, height: 25)
+            .padding(.trailing, 8)
             
             Text(switchOption.title.localized())
                 .frame(alignment: .leading)

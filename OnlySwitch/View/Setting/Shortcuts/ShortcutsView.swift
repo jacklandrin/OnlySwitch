@@ -83,7 +83,7 @@ struct ShortcutsView: View {
                 ForEach(shortcutsVM.sharedShortcutsList.indices, id: \.self) { index in
                     VStack {
                         HStack{
-                            Image(systemName: "square.2.stack.3d")
+                            Image("shortcuts_icon")
                                 .resizable()
                                 .scaledToFit()
                                 .foregroundColor(.white)

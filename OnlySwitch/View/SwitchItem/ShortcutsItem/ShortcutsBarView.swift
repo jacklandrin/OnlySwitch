@@ -11,11 +11,12 @@ struct ShortcutsBarView: View {
     @EnvironmentObject var shortcutsBarVM:ShortcutsBarVM
     var body: some View {
         HStack {
-            Image(systemName: "square.2.stack.3d")
+            Image("shortcuts_icon")
                 .renderingMode(.template)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 25, height: 25)
+                .padding(.trailing, 8)
             
             Text(shortcutsBarVM.barName)
                 .frame(alignment: .leading)
