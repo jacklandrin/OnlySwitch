@@ -10,10 +10,6 @@ import AppKit
 import Combine
 
 class SoundWaveVM: ObservableObject {
-//    @Published var spectra: [[Float]] = [[Float]]()
-//
-//    @Published var barWidth:CGFloat = 3.0
-//    @Published var space:CGFloat = 0.0
     var spectra: [[Float]] {
         return model.spectra
     }
