@@ -142,7 +142,9 @@ class ShortcutsSettingVM:ObservableObject {
         let request = AF.request("https://raw.githubusercontent.com/jacklandrin/OnlySwitch/main/OnlySwitch/ShortcutsMarket/ShortcutsMarket.json")
         request.responseDecodable(of:[ShortcutOnMarket].self) { response in
             guard let list = response.value else {
-                self.loadDataFromLocal()
+                DispatchQueue.main.async {
+                    self.loadDataFromLocal()
+                }
                 return
             }
             self.sharedShortcutsList = list.map{SharedShortcutsItem(shortcutInfo: $0)}

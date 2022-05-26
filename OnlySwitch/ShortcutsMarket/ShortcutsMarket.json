@@ -35,5 +35,12 @@
         "link": "https://www.icloud.com/shortcuts/5e651e793db34bddb0779c2489beb944",
         "author": "brechtbakker",
         "description": "Translate clipboard text or input text by Google"
+    },
+    {
+        "name": "IP Address Information",
+        "link": "https://www.icloud.com/shortcuts/c492bf6cdbb645df94dedf7bdb8847d7",
+        "author": "jacklandrin",
+        "description": "Display current IP and address information"
     }
+    
 ]
