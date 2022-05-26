@@ -11,7 +11,7 @@ import Alamofire
 
 let shorcutsDicKey = "shorcutsDicKey"
 
-class ShorcutsItem:ObservableObject {
+class ShortcutsItem:ObservableObject {
     let error:(_ info:String) -> Void
     @Published var name:String
     @Published var toggle:Bool
@@ -55,11 +55,36 @@ class ShorcutsItem:ObservableObject {
 
 class ShortcutsSettingVM:ObservableObject {
     static let shared = ShortcutsSettingVM()
-    @Published var shortcutsList : [ShorcutsItem] = [ShorcutsItem]()
-    @Published var errorInfo = ""
-    @Published var showErrorToast = false
-    @Published var sharedShortcutsList:[SharedShortcutsItem] = [SharedShortcutsItem]()
 
+    var shortcutsList:[ShortcutsItem] {
+        get {
+            return model.shortcutsList
+        }
+        set {
+            model.shortcutsList = newValue
+        }
+    }
+    
+    var errorInfo:String {
+        return model.errorInfo
+    }
+    
+    var showErrorToast: Bool {
+        get {
+            return model.showErrorToast
+        }
+        set {
+            model.showErrorToast = newValue
+        }
+    }
+    
+    var sharedShortcutsList:[SharedShortcutsItem] {
+        return model.sharedShortcutsList
+    }
+    
+    @Published private var model = ShortcutsSettingModel()
+    private var presenter = GitHubPresenter()
+    
     init() {
         loadShortcutsList()
     }
@@ -73,7 +98,7 @@ class ShortcutsSettingVM:ObservableObject {
                 let shortcutsDic = UserDefaults.standard.dictionary(forKey: shorcutsDicKey)
                 var newShortcutsDic:[String:Bool] = [String:Bool]()
                 if let shortcutsDic = shortcutsDic {
-                    self.shortcutsList = [ShorcutsItem]()
+                    self.model.shortcutsList = [ShortcutsItem]()
                     for name in allshortcuts {
                         if let toggle = shortcutsDic[String(name)] as? Bool {
                             self.addItem(name: String(name), toggle: toggle)
@@ -84,10 +109,10 @@ class ShortcutsSettingVM:ObservableObject {
                         }
                     }
                 } else {
-                    self.shortcutsList = allshortcuts.map{ ShorcutsItem(name: String($0), toggle: false, error: {[weak self] info in
+                    self.model.shortcutsList = allshortcuts.map{ ShortcutsItem(name: String($0), toggle: false, error: {[weak self] info in
                         guard let strongSelf = self else {return}
-                        strongSelf.errorInfo = info
-                        strongSelf.showErrorToast = true
+                        strongSelf.model.errorInfo = info
+                        strongSelf.model.showErrorToast = true
                     }) }
                     for name in allshortcuts {
                         newShortcutsDic[String(name)] = false
@@ -104,10 +129,10 @@ class ShortcutsSettingVM:ObservableObject {
     }
     
     func addItem(name:String, toggle:Bool) {
-        self.shortcutsList.append(ShorcutsItem(name: String(name), toggle: toggle, error: {[weak self] info in
+        self.model.shortcutsList.append(ShortcutsItem(name: String(name), toggle: toggle, error: {[weak self] info in
             guard let strongSelf = self else {return}
-            strongSelf.errorInfo = info
-            strongSelf.showErrorToast = true
+            strongSelf.model.errorInfo = info
+            strongSelf.model.showErrorToast = true
         }))
     }
     
@@ -121,8 +146,6 @@ class ShortcutsSettingVM:ObservableObject {
         }
         
     }
-    
-    
     
     func checkIfInstalled() {
         let installedShortcuts = getAllInstalledShortcutName()
@@ -138,18 +161,19 @@ class ShortcutsSettingVM:ObservableObject {
         objectWillChange.send()
     }
     
+    
+    /// load json data from github
     func loadData() {
-        let request = AF.request("https://raw.githubusercontent.com/jacklandrin/OnlySwitch/main/OnlySwitch/ShortcutsMarket/ShortcutsMarket.json")
-        request.responseDecodable(of:[ShortcutOnMarket].self) { response in
-            guard let list = response.value else {
+        self.presenter.requestShortcutsJson(complete: { list in
+            guard let list = list else {
                 DispatchQueue.main.async {
                     self.loadDataFromLocal()
                 }
                 return
             }
-            self.sharedShortcutsList = list.map{SharedShortcutsItem(shortcutInfo: $0)}
+            self.model.sharedShortcutsList = list.map{SharedShortcutsItem(shortcutInfo: $0)}
             self.checkIfInstalled()
-        }
+        })
     }
     
     
@@ -161,7 +185,7 @@ class ShortcutsSettingVM:ObservableObject {
         do {
             let data = try Data(contentsOf: url)
             let allShortcutsOnMarket = try JSONDecoder().decode([ShortcutOnMarket].self, from: data)
-            self.sharedShortcutsList = allShortcutsOnMarket.map{SharedShortcutsItem(shortcutInfo: $0)}
+            self.model.sharedShortcutsList = allShortcutsOnMarket.map{SharedShortcutsItem(shortcutInfo: $0)}
             self.checkIfInstalled()
         } catch {
             print("json convert failed")
@@ -194,16 +218,4 @@ class SharedShortcutsItem:ObservableObject {
     }
 }
 
-struct ShortcutOnMarket:Codable, Identifiable {
-    enum CodingKeys:CodingKey {
-        case name
-        case link
-        case author
-        case description
-    }
-    var id = UUID()
-    var name:String
-    var link:String
-    var author:String
-    var description: String
-}
+

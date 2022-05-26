@@ -68,7 +68,9 @@ struct ShortcutsView: View {
         .onAppear{
             shortcutsVM.loadShortcutsList()
             shortcutsVM.loadData()
-            shortcutsVM.checkIfInstalled()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                shortcutsVM.checkIfInstalled()
+            }
         }
         .toast(isPresenting: $shortcutsVM.showErrorToast) {
             AlertToast(displayMode: .alert,

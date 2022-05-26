@@ -85,6 +85,21 @@ class GitHubPresenter{
         }
     }
     
+    func requestShortcutsJson(complete:@escaping (_ list:[ShortcutOnMarket]?) -> Void) {
+        guard let url = makeRequestURL(host:.userContent, path: .shortcutsJson) else {
+            complete(nil)
+            return
+        }
+        let request = AF.request(url)
+        request.responseDecodable(of:[ShortcutOnMarket].self) { response in
+            guard let list = response.value else {
+                complete(nil)
+                return
+            }
+            complete(list)
+        }
+    }
+    
     private var myAppPath:String? {
         let appBundleID = Bundle.main.infoDictionary?["CFBundleName"] as! String
         let paths = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).map(\.path)
@@ -93,10 +108,10 @@ class GitHubPresenter{
         return myAppPath
     }
     
-    private func makeRequestURL(path:EndPointKinds) -> URL? {
+    private func makeRequestURL(host:URLHost = .gitHubAPI, path:EndPointKinds) -> URL? {
         var components = URLComponents()
         components.scheme = httpsScheme
-        components.host = URLHost.production.rawValue
+        components.host = host.rawValue
         components.path = "/" + path.rawValue
         return components.url
     }

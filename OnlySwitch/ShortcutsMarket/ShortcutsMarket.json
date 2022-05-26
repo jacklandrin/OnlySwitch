@@ -13,7 +13,7 @@
         "description": "Toggle apperence of mac between dark mode and light mode"
     },
     {
-        "name": "Network tool",
+        "name": "Network Details",
         "link": "https://www.icloud.com/shortcuts/85ab6e6fd31c45569ae27e107fe79f59",
         "author": "Simon Stevens",
         "description": "Display current network information"

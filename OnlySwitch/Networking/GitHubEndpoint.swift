@@ -14,12 +14,17 @@ struct URLHost:RawRepresentable {
 }
 
 extension URLHost {
-    static var production:Self {
+    static var gitHubAPI:Self {
         URLHost(rawValue: "api.github.com")
+    }
+    
+    static var userContent:Self {
+        URLHost(rawValue: "raw.githubusercontent.com")
     }
 }
 
 enum EndPointKinds:String {
     case latestRelease = "repos/jacklandrin/OnlySwitch/releases/latest"
     case releases = "repos/jacklandrin/OnlySwitch/releases"
+    case shortcutsJson = "jacklandrin/OnlySwitch/main/OnlySwitch/ShortcutsMarket/ShortcutsMarket.json"
 }
