@@ -227,6 +227,8 @@
 		04F118C627AED8EE005DA861 /* AboutVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F118C527AED8EE005DA861 /* AboutVM.swift */; };
 		04FC160A283D8A9800D4A4AC /* GitHubInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FC1609283D8A9800D4A4AC /* GitHubInteractor.swift */; };
 		04FC160E283D9B9000D4A4AC /* GitHubInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FC1609283D8A9800D4A4AC /* GitHubInteractor.swift */; };
+		04FC1610283F92B200D4A4AC /* GitHubEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FC160F283F92B200D4A4AC /* GitHubEndpoint.swift */; };
+		04FC1611283F92B200D4A4AC /* GitHubEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FC160F283F92B200D4A4AC /* GitHubEndpoint.swift */; };
 		04FE2C922772880300C79FF9 /* ShowExtensionNameSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FE2C912772880300C79FF9 /* ShowExtensionNameSwitch.swift */; };
 /* End PBXBuildFile section */
 
@@ -451,6 +453,7 @@
 		04F118C727B1A51D005DA861 /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = fil.lproj/Localizable.strings; sourceTree = "<group>"; };
 		04F118C827B1C33D005DA861 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		04FC1609283D8A9800D4A4AC /* GitHubInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubInteractor.swift; sourceTree = "<group>"; };
+		04FC160F283F92B200D4A4AC /* GitHubEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubEndpoint.swift; sourceTree = "<group>"; };
 		04FE2C912772880300C79FF9 /* ShowExtensionNameSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowExtensionNameSwitch.swift; sourceTree = "<group>"; };
 		29107C0828111D3A00E88A86 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8958B4A927BD0EA500EE4A6D /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1109,6 +1112,7 @@
 			children = (
 				04A6B54F2771F338003B2647 /* GitHubPresenter.swift */,
 				04FC1609283D8A9800D4A4AC /* GitHubInteractor.swift */,
+				04FC160F283F92B200D4A4AC /* GitHubEndpoint.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -1303,6 +1307,7 @@
 				0444D5E62839311E00327D0B /* AirPodsSwitch.swift in Sources */,
 				0444D5D82836F19D00327D0B /* TopNotchSwitch.swift in Sources */,
 				0444D5D0283683DF00327D0B /* GitHubReleaseModel.swift in Sources */,
+				04FC1611283F92B200D4A4AC /* GitHubEndpoint.swift in Sources */,
 				04FC160E283D9B9000D4A4AC /* GitHubInteractor.swift in Sources */,
 				0444D5E72839315A00327D0B /* BluetoothDevicesManager.swift in Sources */,
 				0444D5EF2839471100327D0B /* UserDefaultValue.swift in Sources */,
@@ -1449,6 +1454,7 @@
 				04243487275641DB0044D0AD /* SwitchProvider.swift in Sources */,
 				047140C02778A478005B160B /* PomodoroTimerSettingVM.swift in Sources */,
 				04B25459283C12A800D253E2 /* GeneralModel.swift in Sources */,
+				04FC1610283F92B200D4A4AC /* GitHubEndpoint.swift in Sources */,
 				04EB1CD02780F36F00C612AB /* ShortcutsSettingVM.swift in Sources */,
 				0493374727625A1E00AE779A /* PlayerManager.swift in Sources */,
 				0493372527615EA400AE779A /* HiddenFilesSwitch.swift in Sources */,

@@ -35,7 +35,11 @@ class GitHubPresenter{
     }
     
     func checkUpdate(complete:@escaping (_ success:Bool) -> Void) {
-        let request = AF.request("https://api.github.com/repos/jacklandrin/OnlySwitch/releases/latest")
+        guard let url = makeRequestURL(path: .latestRelease) else {
+            complete(false)
+            return
+        }
+        let request = AF.request(url)
         request.responseDecodable(of:GitHubRelease.self) { response in
             guard let latestRelease = response.value else {
                 complete(false)
@@ -46,7 +50,11 @@ class GitHubPresenter{
     }
     
     func requestReleases(complete:@escaping (_ success:Bool) -> Void) {
-        let request = AF.request("https://api.github.com/repos/jacklandrin/OnlySwitch/releases")
+        guard let url = makeRequestURL(path: .releases) else {
+            complete(false)
+            return
+        }
+        let request = AF.request(url)
         request.responseDecodable(of:[GitHubRelease].self) { response in
             guard let releases = response.value else {
                 complete(false)
@@ -83,5 +91,13 @@ class GitHubPresenter{
         let directory = paths.first
         let myAppPath = directory?.appendingPathComponent(string: appBundleID)
         return myAppPath
+    }
+    
+    private func makeRequestURL(path:EndPointKinds) -> URL? {
+        var components = URLComponents()
+        components.scheme = httpsScheme
+        components.host = URLHost.production.rawValue
+        components.path = "/" + path.rawValue
+        return components.url
     }
 }
