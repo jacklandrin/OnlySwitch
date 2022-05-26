@@ -9,8 +9,7 @@ import SwiftUI
 
 struct PureColorView: View {
     @ObservedObject var vm = PureColorVM()
-    @State var closeButtonAlpha = 1.0
-    @State var isGuideHidden = false
+    @State var tipAlpha = 1.0
     var body: some View {
         ZStack {
             VStack {
@@ -22,31 +21,34 @@ struct PureColorView: View {
                     }, label: {
                         Image(systemName: "x.circle")
                             .font(.largeTitle)
-                            .foregroundColor(.gray)
-                            .opacity(closeButtonAlpha)
+                            .foregroundColor(vm.currentColor == .white ? .black : .white)
+                            .opacity(tipAlpha)
                     })
                     .buttonStyle(.borderless)
                     .shadow(radius: 3)
                     .onHover(perform: { hover in
                         withAnimation {
-                            closeButtonAlpha = hover ? 1.0 : 0.0
-                            isGuideHidden = !hover
+                            tipAlpha = hover ? 1.0 : 0.0
                         }
                     })
                     .padding(20)
                 }
                 Spacer()
             }
-            ColorChangeGuide()
+            ColorChangeGuide().environmentObject(vm)
                 .frame(width: 700, height: 700)
-                .isHidden(isGuideHidden, remove: true)
+                .opacity(tipAlpha)
+                .onHover(perform: { hover in
+                    withAnimation {
+                        tipAlpha = hover ? 1.0 : 0.0
+                    }
+                })
         }.background(vm.currentColor)
             .onAppear{
                 vm.startDetectKeyboard()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
                     withAnimation {
-                        closeButtonAlpha = 0.0
-                        isGuideHidden = true
+                        tipAlpha = 0.0
                     }
                 }
             }
