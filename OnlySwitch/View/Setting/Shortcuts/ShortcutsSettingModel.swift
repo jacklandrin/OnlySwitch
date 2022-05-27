@@ -14,16 +14,4 @@ struct ShortcutsSettingModel {
     var sharedShortcutsList:[SharedShortcutsItem] = [SharedShortcutsItem]()
 }
 
-struct ShortcutOnMarket:Codable, Identifiable {
-    enum CodingKeys:CodingKey {
-        case name
-        case link
-        case author
-        case description
-    }
-    var id = UUID()
-    var name:String
-    var link:String
-    var author:String
-    var description: String
-}
+

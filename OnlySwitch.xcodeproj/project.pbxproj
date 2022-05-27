@@ -230,6 +230,8 @@
 		04FC1610283F92B200D4A4AC /* GitHubEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FC160F283F92B200D4A4AC /* GitHubEndpoint.swift */; };
 		04FC1611283F92B200D4A4AC /* GitHubEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FC160F283F92B200D4A4AC /* GitHubEndpoint.swift */; };
 		04FC1613283FDE1D00D4A4AC /* ShortcutsSettingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FC1612283FDE1D00D4A4AC /* ShortcutsSettingModel.swift */; };
+		04FC161628402E5000D4A4AC /* ShortcutOnMarket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FC161528402E5000D4A4AC /* ShortcutOnMarket.swift */; };
+		04FC161728402E5200D4A4AC /* ShortcutOnMarket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FC161528402E5000D4A4AC /* ShortcutOnMarket.swift */; };
 		04FE2C922772880300C79FF9 /* ShowExtensionNameSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FE2C912772880300C79FF9 /* ShowExtensionNameSwitch.swift */; };
 /* End PBXBuildFile section */
 
@@ -456,6 +458,7 @@
 		04FC1609283D8A9800D4A4AC /* GitHubInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubInteractor.swift; sourceTree = "<group>"; };
 		04FC160F283F92B200D4A4AC /* GitHubEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubEndpoint.swift; sourceTree = "<group>"; };
 		04FC1612283FDE1D00D4A4AC /* ShortcutsSettingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsSettingModel.swift; sourceTree = "<group>"; };
+		04FC161528402E5000D4A4AC /* ShortcutOnMarket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutOnMarket.swift; sourceTree = "<group>"; };
 		04FE2C912772880300C79FF9 /* ShowExtensionNameSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowExtensionNameSwitch.swift; sourceTree = "<group>"; };
 		29107C0828111D3A00E88A86 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8958B4A927BD0EA500EE4A6D /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1020,6 +1023,7 @@
 				04EB1CD12780F4F700C612AB /* ShortcutsView.swift */,
 				04EB1CCF2780F36F00C612AB /* ShortcutsSettingVM.swift */,
 				04FC1612283FDE1D00D4A4AC /* ShortcutsSettingModel.swift */,
+				04FC161528402E5000D4A4AC /* ShortcutOnMarket.swift */,
 			);
 			path = Shortcuts;
 			sourceTree = "<group>";
@@ -1310,6 +1314,7 @@
 				0444D5E62839311E00327D0B /* AirPodsSwitch.swift in Sources */,
 				0444D5D82836F19D00327D0B /* TopNotchSwitch.swift in Sources */,
 				0444D5D0283683DF00327D0B /* GitHubReleaseModel.swift in Sources */,
+				04FC161728402E5200D4A4AC /* ShortcutOnMarket.swift in Sources */,
 				04FC1611283F92B200D4A4AC /* GitHubEndpoint.swift in Sources */,
 				04FC160E283D9B9000D4A4AC /* GitHubInteractor.swift in Sources */,
 				0444D5E72839315A00327D0B /* BluetoothDevicesManager.swift in Sources */,
@@ -1386,6 +1391,7 @@
 				043E5D752758208D00ADC004 /* SwitchBarVM.swift in Sources */,
 				04938D1027692B6900713F1D /* SwitchManager.swift in Sources */,
 				0493374527625A1E00AE779A /* JLASAudioPlayer.swift in Sources */,
+				04FC161628402E5000D4A4AC /* ShortcutOnMarket.swift in Sources */,
 				04938D0A2769143300713F1D /* GeneralView.swift in Sources */,
 				0493378A2762651D00AE779A /* SoundWaveVM.swift in Sources */,
 				04938D082768CBA100713F1D /* LanguageManager.swift in Sources */,

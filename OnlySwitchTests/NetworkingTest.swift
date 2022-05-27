@@ -47,4 +47,19 @@ class NetworkingTest:XCTestCase {
         })
         wait(for: [exp], timeout: 10.0)
     }
+    
+    func testRequestShortcutsJson() throws {
+        guard let reachabilityManager = reachabilityManager, reachabilityManager.isReachable else {
+            throw RequestError.notReachable
+        }
+        let exp = expectation(description: "shortcuts json requestion finished")
+        presenter.requestShortcutsJson(complete: { list in
+            guard let list = list else {
+                return
+            }
+            XCTAssertGreaterThan(list.count, 0)
+            exp.fulfill()
+        })
+        wait(for: [exp], timeout: 10.0)
+    }
 }
