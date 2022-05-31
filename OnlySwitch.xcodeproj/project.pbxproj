@@ -218,6 +218,7 @@
 		04E2AD1C2783A54000BC5DF3 /* URL++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E2AD1B2783A54000BC5DF3 /* URL++.swift */; };
 		04E2AD1E2783B63600BC5DF3 /* CurrentScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E2AD1D2783B63600BC5DF3 /* CurrentScreen.swift */; };
 		04E2AD1F2783B6C400BC5DF3 /* CurrentScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E2AD1D2783B63600BC5DF3 /* CurrentScreen.swift */; };
+		04E517052846C048009826AB /* PomodoroTimerSettingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E517042846C048009826AB /* PomodoroTimerSettingModel.swift */; };
 		04E8BE3A2797241F00FF12B7 /* ShortcutsGalleryContributing.md in Resources */ = {isa = PBXBuildFile; fileRef = 04E8BE392797241F00FF12B7 /* ShortcutsGalleryContributing.md */; };
 		04EB1CD02780F36F00C612AB /* ShortcutsSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CCF2780F36F00C612AB /* ShortcutsSettingVM.swift */; };
 		04EB1CD22780F4F700C612AB /* ShortcutsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CD12780F4F700C612AB /* ShortcutsView.swift */; };
@@ -445,6 +446,7 @@
 		04E2AD192783A50000BC5DF3 /* Data++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data++.swift"; sourceTree = "<group>"; };
 		04E2AD1B2783A54000BC5DF3 /* URL++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL++.swift"; sourceTree = "<group>"; };
 		04E2AD1D2783B63600BC5DF3 /* CurrentScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentScreen.swift; sourceTree = "<group>"; };
+		04E517042846C048009826AB /* PomodoroTimerSettingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimerSettingModel.swift; sourceTree = "<group>"; };
 		04E8BE392797241F00FF12B7 /* ShortcutsGalleryContributing.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ShortcutsGalleryContributing.md; sourceTree = "<group>"; };
 		04EB1CCF2780F36F00C612AB /* ShortcutsSettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsSettingVM.swift; sourceTree = "<group>"; };
 		04EB1CD12780F4F700C612AB /* ShortcutsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsView.swift; sourceTree = "<group>"; };
@@ -1013,6 +1015,7 @@
 			children = (
 				047140BD2778A416005B160B /* PomodoroTimerSettingView.swift */,
 				047140BF2778A478005B160B /* PomodoroTimerSettingVM.swift */,
+				04E517042846C048009826AB /* PomodoroTimerSettingModel.swift */,
 			);
 			path = PomodoroTimer;
 			sourceTree = "<group>";
@@ -1462,6 +1465,7 @@
 				0444D5FD2839873100327D0B /* ScreenTestSwitch.swift in Sources */,
 				047140BA2778890A005B160B /* PomodoroTimerSwitch.swift in Sources */,
 				04243487275641DB0044D0AD /* SwitchProvider.swift in Sources */,
+				04E517052846C048009826AB /* PomodoroTimerSettingModel.swift in Sources */,
 				047140C02778A478005B160B /* PomodoroTimerSettingVM.swift in Sources */,
 				04B25459283C12A800D253E2 /* GeneralModel.swift in Sources */,
 				04FC1610283F92B200D4A4AC /* GitHubEndpoint.swift in Sources */,

@@ -16,10 +16,23 @@ let PTimerCycleCountKey = "PTimerLoopCountKey"
 let ChangePTDurationNotification = NSNotification.Name(rawValue:"ChangePTDurationNotification")
 
 class PomodoroTimerSettingVM:ObservableObject {
-    @Published var workDurationList = [25, 30, 35, 40, 45]
-    @Published var restDurationList = [5, 10, 15]
-    @Published var cycleCountList = [0, 1, 2, 3, 4]
-    @Published var alertSounds:[EffectSound] = [.alertBells, .bellNotification]
+    @Published private var model = PomodoroTimerSettingModel()
+    
+    var workDurationList:[Int] {
+        model.workDurationList
+    }
+    
+    var restDurationList:[Int] {
+        model.restDurationList
+    }
+    
+    var cycleCountList:[Int] {
+        model.cycleCountList
+    }
+    
+    var alertSounds:[EffectSound] {
+        model.alertSounds
+    }
     
     @UserDefaultValue(key: WorkDurationKey, defaultValue: 25 * 60)
     var workDuration:Int {
