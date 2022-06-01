@@ -52,6 +52,9 @@ struct AboutView: View {
                     .fontWeight(.bold)
                     .padding(.top, 10)
                 ScrollView {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                        .isHidden(!aboutVM.updateHistoryInfo.isEmpty, remove: true)
                     Text(aboutVM.updateHistoryInfo)
                         .padding(.trailing, 10)
                 }.frame(width:Layout.settingWindowWidth / 2 - 140)
