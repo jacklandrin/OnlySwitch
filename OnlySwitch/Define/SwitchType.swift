@@ -145,7 +145,7 @@ enum SwitchType:UInt64, CaseIterable {
                                  offImage: NSImage(systemSymbolName: "mic.circle"),
                                  category: .audio)
         case .showFinderPathbar:
-            return SwitchBarInfo(title: "Show Finder Pathbar",
+            return SwitchBarInfo(title: "Show Finder Path Bar",
                                  onImage: NSImage(systemSymbolName: "greaterthan.square.fill"),
                                  offImage: NSImage(systemSymbolName: "greaterthan.square"))
         case .dockRecent:

@@ -40,7 +40,7 @@ Everyone can contribute macOS Shortcuts for OnlySwitch now. Please read [How to 
 |:------------------|----------|:-------------------------|:------------------|
 | Hide desktop      | finished | Hide notch               | exist some issues |
 | Dark mode         | finished | Low power mode           | require password  |
-| Screen Saver      | finished | Show Finder pathbar      | finished          |
+| Screen Saver      | finished | Show Finder Path Bar     | finished          |
 | Night Shift       | finished | Mute mic                 | finished          |
 | Autohide Dock     | finished | Small launchpad icon     | finished          |
 | Airpods           | finished | Pomodoro timer           | finished          |
