@@ -111,7 +111,7 @@ class GeneralVM:ObservableObject {
         checkUpdatePresenter.downloadDMG{ success, path in
             guard success, let path = path else {return}
             self.openDMG(path: path)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 NSApp.terminate(self)
             }
         }
