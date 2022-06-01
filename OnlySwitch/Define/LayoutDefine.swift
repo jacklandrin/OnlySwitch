@@ -8,7 +8,7 @@
 import Foundation
 
 struct Layout{
-    static let popoverWidth:CGFloat = 360
+    static let popoverWidth:CGFloat = 330
     static let popoverHeight:CGFloat = 650
     static let soundWaveWidth:CGFloat = Layout.popoverWidth
     static let soundWaveHeight:CGFloat = 150

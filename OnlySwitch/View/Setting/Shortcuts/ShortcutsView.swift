@@ -68,7 +68,9 @@ struct ShortcutsView: View {
         .onAppear{
             shortcutsVM.loadShortcutsList()
             shortcutsVM.loadData()
-            shortcutsVM.checkIfInstalled()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                shortcutsVM.checkIfInstalled()
+            }
         }
         .toast(isPresenting: $shortcutsVM.showErrorToast) {
             AlertToast(displayMode: .alert,
@@ -83,7 +85,7 @@ struct ShortcutsView: View {
                 ForEach(shortcutsVM.sharedShortcutsList.indices, id: \.self) { index in
                     VStack {
                         HStack{
-                            Image(systemName: "square.2.stack.3d")
+                            Image("shortcuts_icon")
                                 .resizable()
                                 .scaledToFit()
                                 .foregroundColor(.white)

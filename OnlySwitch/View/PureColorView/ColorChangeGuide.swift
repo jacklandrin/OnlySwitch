@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ColorChangeGuide: View {
+    @EnvironmentObject var vm:PureColorVM
     var body: some View {
         VStack {
             HStack {
@@ -30,12 +31,17 @@ struct ColorChangeGuide: View {
                     .scaledToFit()
                     .frame(width: 100, height: 100)
             }
-        }
+            
+            Text("Press left or right arrow key to change background color".localized())
+                .font(Font.system(size: 15))
+                .fontWeight(.bold)
+                .padding(.top, 20)
+        }.foregroundColor(vm.currentColor == .white ? .black : .white)
     }
 }
 
 struct ColorChangeGuide_Previews: PreviewProvider {
     static var previews: some View {
-        ColorChangeGuide()
+        ColorChangeGuide().environmentObject(PureColorVM())
     }
 }

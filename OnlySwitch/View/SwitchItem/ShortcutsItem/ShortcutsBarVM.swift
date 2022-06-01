@@ -9,11 +9,6 @@ import Foundation
 
 class ShortcutsBarVM:BarProvider,ObservableObject {
     
-//    @Published var name:String
-//    @Published var processing:Bool = false
-//    @Published var isHidden: Bool = false
-//    @Published var weight: Int = 0
-    
     @Published private var model = ShortcutsBarModel()
     
     var barName: String {

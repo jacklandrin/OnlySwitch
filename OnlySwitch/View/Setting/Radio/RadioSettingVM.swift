@@ -11,6 +11,7 @@ let volumeKey = "volumeKey"
 let volumeChangeNotification = NSNotification.Name("volumeChange")
 let soundWaveEffectDisplayKey = "soundWaveEffectDisplayKey"
 let soundWaveToggleNotification = NSNotification.Name("soundWaveToggleNotification")
+
 class RadioSettingVM:ObservableObject {
     @Published var radioList:[RadioPlayerItem] = [RadioPlayerItem]()
     @Published var selectRow:RadioPlayerItem.ID?

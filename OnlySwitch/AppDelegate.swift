@@ -40,7 +40,7 @@ class AppDelegate:NSObject, NSApplicationDelegate {
     var blManager:BluetoothDevicesManager?
     @UserDefaultValue(key: appearanceColumnCountKey, defaultValue: SwitchListAppearance.single.rawValue)
     var currentAppearance:String
-    var checkUpdatePresenter = CheckUpdatePresenter()
+    var checkUpdatePresenter = GitHubPresenter()
     
     func applicationDidFinishLaunching(_ notification: Notification) {
         let contentView = OnlySwitchListView()

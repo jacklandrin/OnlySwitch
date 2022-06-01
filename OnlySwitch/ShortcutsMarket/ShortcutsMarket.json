@@ -13,7 +13,7 @@
         "description": "Toggle apperence of mac between dark mode and light mode"
     },
     {
-        "name": "Network tool",
+        "name": "Network Details",
         "link": "https://www.icloud.com/shortcuts/85ab6e6fd31c45569ae27e107fe79f59",
         "author": "Simon Stevens",
         "description": "Display current network information"
@@ -35,5 +35,12 @@
         "link": "https://www.icloud.com/shortcuts/5e651e793db34bddb0779c2489beb944",
         "author": "brechtbakker",
         "description": "Translate clipboard text or input text by Google"
+    },
+    {
+        "name": "IP Address Information",
+        "link": "https://www.icloud.com/shortcuts/c492bf6cdbb645df94dedf7bdb8847d7",
+        "author": "jacklandrin",
+        "description": "Display current IP and address information"
     }
+    
 ]
