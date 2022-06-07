@@ -9,7 +9,6 @@ import Foundation
 import AppKit
 import LaunchAtLogin
 
-let SwitchStateKey = "SwitchStateKey"
 class SwitchManager {
     static let shared = SwitchManager()
     
@@ -86,11 +85,11 @@ class SwitchManager {
     }
     
     func getAllSwitchState() -> UInt64 {
-        if let stateStr = UserDefaults.standard.string(forKey: SwitchStateKey) {
+        if let stateStr = UserDefaults.standard.string(forKey: UserDefaults.Key.SwitchState) {
             let state = UInt64(stateStr) ?? 16383 // binary 11111111111111
             return state
         } else {
-            UserDefaults.standard.set("16383", forKey: SwitchStateKey)
+            UserDefaults.standard.set("16383", forKey: UserDefaults.Key.SwitchState)
             UserDefaults.standard.synchronize()
             return 16383
         }

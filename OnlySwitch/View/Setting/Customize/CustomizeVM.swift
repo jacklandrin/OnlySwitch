@@ -61,7 +61,7 @@ class CustomizeItem:ObservableObject {
             let state = SwitchManager.shared.getAllSwitchState()
             let newState:UInt64 = type.rawValue ^ state
             let newStateStr = String(newState)
-            UserDefaults.standard.set(newStateStr, forKey: SwitchStateKey)
+            UserDefaults.standard.set(newStateStr, forKey: UserDefaults.Key.SwitchState)
             UserDefaults.standard.synchronize()
         }
     }

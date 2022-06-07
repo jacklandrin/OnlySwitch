@@ -9,6 +9,10 @@ import Foundation
 
 extension UserDefaults {
     struct Key {
+        //General
+        static let menubarIcon = "menubarIconKey"
+        static let appearanceColumnCount = "appearanceColumnCountKey"
+        static let showAds = "showAdsKey"
         //PomodoroTimer
         static let WorkDuration = "WorkDurationKey"
         static let RestDuration = "RestDurationKey"
@@ -23,14 +27,12 @@ extension UserDefaults {
         static let volume = "volumeKey"
         static let hasRunRadio = "hasRunRadioKey"
         static let radioStation = "radioStationKey"
+        //Switch
+        static let SwitchState = "SwitchStateKey"
         //Shortcuts
         static let shortcutsDic = "shortcutsDicKey"
         //Sort
         static let orderWeight = "orderWeightKey"
-        //General
-        static let menubarIcon = "menubarIconKey"
-        static let appearanceColumnCount = "appearanceColumnCountKey"
-        static let showAds = "showAdsKey"
-
+        
     }
 }
