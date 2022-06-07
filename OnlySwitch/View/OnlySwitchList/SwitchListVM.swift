@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-let orderWeightKey = "orderWeightKey"
 class SwitchListVM: ObservableObject, CurrentScreen {
     
     var switchList:[SwitchBarVM] {
@@ -89,7 +88,7 @@ class SwitchListVM: ObservableObject, CurrentScreen {
         self.refreshSwitchStatus()
         self.model.allItemList = self.switchList.filter{!$0.isHidden} + self.shortcutsList
         //for sorting
-        let orderDic = UserDefaults.standard.dictionary(forKey: orderWeightKey) as? [String:Int] ?? [String:Int]()
+        let orderDic = UserDefaults.standard.dictionary(forKey: UserDefaults.Key.orderWeight) as? [String:Int] ?? [String:Int]()
         for item in allItemList {
             let type:String
             if item is SwitchBarVM {
@@ -141,7 +140,7 @@ class SwitchListVM: ObservableObject, CurrentScreen {
             let key = type + item.barName
             orderDic[key] = index
         }
-        UserDefaults.standard.set(orderDic, forKey: orderWeightKey)
+        UserDefaults.standard.set(orderDic, forKey: UserDefaults.Key.orderWeight)
         UserDefaults.standard.synchronize()
     }
 }

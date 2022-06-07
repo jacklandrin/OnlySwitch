@@ -25,5 +25,7 @@ extension UserDefaults {
         static let radioStation = "radioStationKey"
         //Shortcuts
         static let shortcutsDic = "shortcutsDicKey"
+        //sort
+        static let orderWeight = "orderWeightKey"
     }
 }
