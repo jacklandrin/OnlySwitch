@@ -81,7 +81,7 @@ class GeneralVM:ObservableObject {
     var showAds:Bool {
         didSet {
             objectWillChange.send()
-            NotificationCenter.default.post(name: changeSettingNotification, object: nil)
+            NotificationCenter.default.post(name: .changeSettings, object: nil)
         }
     }
     

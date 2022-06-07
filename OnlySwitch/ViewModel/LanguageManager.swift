@@ -25,7 +25,7 @@ class LanguageManager:ObservableObject {
     {
         didSet {
             Bundle.setLanguage(lang: currentLang)
-            NotificationCenter.default.post(name: changeSettingNotification, object: nil)
+            NotificationCenter.default.post(name: .changeSettings, object: nil)
         }
     }
     

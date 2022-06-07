@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-let changeSettingNotification = NSNotification.Name("changeSettingNotification")
+
 enum SettingItem:String {
     case AirPods = "AirPods"
     case Radio = "Radio"

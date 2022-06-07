@@ -21,13 +21,13 @@ class SwitchManager {
     
     func register(aswitch:SwitchProvider) {
         shownSwitchMap[aswitch.type] = aswitch
-        NotificationCenter.default.post(name: changeSettingNotification, object: nil)
+        NotificationCenter.default.post(name: .changeSettings, object: nil)
     }
     
     func unregister(for type:SwitchType) {
         shownSwitchMap.removeValue(forKey: type)
         shownSwitchMap[type]? = nil
-        NotificationCenter.default.post(name: changeSettingNotification, object: nil)
+        NotificationCenter.default.post(name: .changeSettings, object: nil)
     }
     
     func getSwitch(of type:SwitchType) -> SwitchProvider? {
@@ -47,7 +47,7 @@ class SwitchManager {
     }
     
     func shortcutsBarVMList() -> [ShortcutsBarVM] {
-        let shortcuts = UserDefaults.standard.dictionary(forKey: shorcutsDicKey)
+        let shortcuts = Preferences.shared.shortcutsDic
         var list = [ShortcutsBarVM]()
         guard let shortcuts = shortcuts, shortcuts.count > 0 else {
             return list
@@ -58,7 +58,7 @@ class SwitchManager {
         }
         
         for (name, toggle) in sortedDic {
-            if toggle as! Bool {
+            if toggle {
                 list.append(ShortcutsBarVM(name: name))
             }
         }

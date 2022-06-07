@@ -84,7 +84,7 @@ class CustomizeItem:ObservableObject {
                 do {
                     _ = try await switchOperator.operationSwitch(isOn: !status)
                     DispatchQueue.main.async {
-                        NotificationCenter.default.post(name: changeSettingNotification, object: nil)
+                        NotificationCenter.default.post(name: .changeSettings, object: nil)
                     }
                 } catch {
                     
@@ -95,7 +95,7 @@ class CustomizeItem:ObservableObject {
                 do {
                     _ = try await switchOperator.operationSwitch(isOn: true)
                     DispatchQueue.main.async {
-                        NotificationCenter.default.post(name: changeSettingNotification, object: nil)
+                        NotificationCenter.default.post(name: .changeSettings, object: nil)
                     }
                 } catch {
                     

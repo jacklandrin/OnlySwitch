@@ -81,7 +81,7 @@ class RadioPlayerItem:ObservableObject, Identifiable {
                     RadioStationSwitch.shared.playerItem.title = self.title
                 }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                    NotificationCenter.default.post(name: changeSettingNotification, object: nil)
+                    NotificationCenter.default.post(name: .changeSettings, object: nil)
                 }
             }
             
@@ -106,7 +106,7 @@ class RadioPlayerItem:ObservableObject, Identifiable {
             radio.id = id
             radio.timestamp = Date()
             PersistenceController.shared.saveContext()
-            NotificationCenter.default.post(name: changeSettingNotification, object: nil)
+            NotificationCenter.default.post(name: .changeSettings, object: nil)
         }
         
     }

@@ -17,7 +17,7 @@ struct PureColorView: View {
                     Spacer()
                     Button(action: {
                         Router.closeWindow(controller: Router.pureColorWindowController)
-                        NotificationCenter.default.post(name: changeSettingNotification, object: nil)
+                        NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.screenTest)
                     }, label: {
                         Image(systemName: "x.circle")
                             .font(.largeTitle)

@@ -68,4 +68,8 @@ struct Preferences {
     
     @UserDefaultValue(key: UserDefaults.Key.radioStation, defaultValue: nil)
     var radioStationID:String?
+    
+    // MARK: - Shortcuts
+    @UserDefaultValue(key: UserDefaults.Key.shortcutsDic, defaultValue: nil)
+    var shortcutsDic:[String:Bool]?
 }

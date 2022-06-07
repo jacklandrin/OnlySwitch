@@ -23,5 +23,7 @@ extension UserDefaults {
         static let volume = "volumeKey"
         static let hasRunRadio = "hasRunRadioKey"
         static let radioStation = "radioStationKey"
+        //Shortcuts
+        static let shortcutsDic = "shortcutsDicKey"
     }
 }

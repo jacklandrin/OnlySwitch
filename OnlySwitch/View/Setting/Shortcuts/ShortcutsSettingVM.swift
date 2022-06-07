@@ -9,7 +9,6 @@ import Foundation
 import KeyboardShortcuts
 import Alamofire
 
-let shorcutsDicKey = "shorcutsDicKey"
 
 class ShortcutsItem:ObservableObject {
     let error:(_ info:String) -> Void
@@ -17,12 +16,12 @@ class ShortcutsItem:ObservableObject {
     @Published var toggle:Bool
     {
         didSet {
-            let shortcutsDic = UserDefaults.standard.dictionary(forKey: shorcutsDicKey)
+            let shortcutsDic = Preferences.shared.shortcutsDic
             guard let shortcutsDic = shortcutsDic else {
                 return
             }
             if toggle {
-                let showShortcutsCount = shortcutsDic.filter{$0.value as! Bool == true}.count
+                let showShortcutsCount = shortcutsDic.filter{$0.value == true}.count
                 if showShortcutsCount > 9 {
                     error("The maximum number of shortcuts is 10")
                     toggle = false
@@ -32,9 +31,8 @@ class ShortcutsItem:ObservableObject {
             
             var newShortcutsDic = shortcutsDic
             newShortcutsDic[name] = toggle
-            UserDefaults.standard.set(newShortcutsDic, forKey: shorcutsDicKey)
-            UserDefaults.standard.synchronize()
-            NotificationCenter.default.post(name: changeSettingNotification, object: nil)
+            Preferences.shared.shortcutsDic = newShortcutsDic
+            NotificationCenter.default.post(name: .changeSettings, object: nil)
         }
     }
     
@@ -95,12 +93,12 @@ class ShortcutsSettingVM:ObservableObject {
                 let result = try ShorcutsCMD.getList.runAppleScript(isShellCMD: true)
                 
                 let allshortcuts = result.split(separator: "\r")
-                let shortcutsDic = UserDefaults.standard.dictionary(forKey: shorcutsDicKey)
+                let shortcutsDic = Preferences.shared.shortcutsDic
                 var newShortcutsDic:[String:Bool] = [String:Bool]()
                 if let shortcutsDic = shortcutsDic {
                     self.model.shortcutsList = [ShortcutsItem]()
                     for name in allshortcuts {
-                        if let toggle = shortcutsDic[String(name)] as? Bool {
+                        if let toggle = shortcutsDic[String(name)] {
                             self.addItem(name: String(name), toggle: toggle)
                             newShortcutsDic[String(name)] = toggle
                         } else {
@@ -119,8 +117,7 @@ class ShortcutsSettingVM:ObservableObject {
                     }
                 }
                 
-                UserDefaults.standard.set(newShortcutsDic, forKey: shorcutsDicKey)
-                UserDefaults.standard.synchronize()
+                Preferences.shared.shortcutsDic = newShortcutsDic
             } catch {
                 
             }

@@ -61,7 +61,7 @@ struct OnlySwitchListView: View {
             .onReceive(NotificationCenter.default.publisher(for: .showPopover, object: nil)) { _ in
             switchVM.refreshData()
         }
-        .onReceive(NotificationCenter.default.publisher(for: changeSettingNotification, object: nil)) { _ in
+            .onReceive(NotificationCenter.default.publisher(for: .changeSettings, object: nil)) { _ in
             switchVM.refreshData()
         }
         .onReceive(NotificationCenter.default.publisher(for: .refreshSingleSwitchStatus, object: nil)) { n in
