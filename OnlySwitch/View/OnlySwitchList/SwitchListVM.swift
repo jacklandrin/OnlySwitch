@@ -48,8 +48,9 @@ class SwitchListVM: ObservableObject, CurrentScreen {
     
     @Published private var model = SwitchListModel()
     
-    @UserDefaultValue(key: soundWaveEffectDisplayKey, defaultValue: true)
-    var soundWaveEffectDisplay:Bool
+    var soundWaveEffectDisplay:Bool {
+        return Preferences.shared.soundWaveEffectDisplay
+    }
     
     @UserDefaultValue(key: appearanceColumnCountKey, defaultValue: SwitchListAppearance.single.rawValue)
     var currentAppearance:String

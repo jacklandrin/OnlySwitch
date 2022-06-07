@@ -9,10 +9,12 @@ import Foundation
 
 extension Notification.Name {
     static let refreshSingleSwitchStatus = Notification.Name("refreshSingleSwitchStatus")
-    static let changePTDuration = NSNotification.Name(rawValue:"ChangePTDurationNotification")
-    static let showPopover = NSNotification.Name("showPopover")
-    static let hidePopover = NSNotification.Name("hidePopover")
-    static let shouldHidePopover = NSNotification.Name("shouldHidePopover")
-    static let changeMenuBarIcon = NSNotification.Name("changeMenuBarIcon")
-    static let changePopoverAppearance = NSNotification.Name("changePopoverAppearanceNotificationName")
+    static let changePTDuration = Notification.Name(rawValue:"ChangePTDurationNotification")
+    static let showPopover = Notification.Name("showPopover")
+    static let hidePopover = Notification.Name("hidePopover")
+    static let shouldHidePopover = Notification.Name("shouldHidePopover")
+    static let changeMenuBarIcon = Notification.Name("changeMenuBarIcon")
+    static let changePopoverAppearance = Notification.Name("changePopoverAppearanceNotificationName")
+    static let volumeChange = Notification.Name("volumeChange")
+    static let soundWaveToggle = Notification.Name("soundWaveToggleNotification")
 }

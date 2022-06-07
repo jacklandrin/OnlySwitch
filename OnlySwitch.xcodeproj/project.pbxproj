@@ -202,6 +202,8 @@
 		04BC8EC7284FEA52009E605F /* UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8EC5284FEA52009E605F /* UserDefaultsKeys.swift */; };
 		04BC8EC9284FF30A009E605F /* NotificationNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8EC8284FF30A009E605F /* NotificationNames.swift */; };
 		04BC8ECA284FF30A009E605F /* NotificationNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8EC8284FF30A009E605F /* NotificationNames.swift */; };
+		04BC8ECF285008C1009E605F /* RadioSettingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8ECE285008C1009E605F /* RadioSettingModel.swift */; };
+		04BC8ED0285008C1009E605F /* RadioSettingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8ECE285008C1009E605F /* RadioSettingModel.swift */; };
 		04BF97682790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BF97672790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift */; };
 		04BF976B27908D5400E7C0E2 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 04BF976A27908D5400E7C0E2 /* KeyboardShortcuts */; };
 		04D68B0D2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D68B0C2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift */; };
@@ -438,6 +440,7 @@
 		04BC8EC2284FE9B5009E605F /* Preference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preference.swift; sourceTree = "<group>"; };
 		04BC8EC5284FEA52009E605F /* UserDefaultsKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsKeys.swift; sourceTree = "<group>"; };
 		04BC8EC8284FF30A009E605F /* NotificationNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNames.swift; sourceTree = "<group>"; };
+		04BC8ECE285008C1009E605F /* RadioSettingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioSettingModel.swift; sourceTree = "<group>"; };
 		04BF97672790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowFinderPathbarSwitch.swift; sourceTree = "<group>"; };
 		04D68B0C2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowUserLibrarySwitch.swift; sourceTree = "<group>"; };
 		04E03AF7275E6B4E00EA5FB9 /* AutohideDockSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutohideDockSwitch.swift; sourceTree = "<group>"; };
@@ -989,6 +992,7 @@
 			children = (
 				049337962762C07600AE779A /* RadioSettingView.swift */,
 				049337982762C0B300AE779A /* RadioSettingVM.swift */,
+				04BC8ECE285008C1009E605F /* RadioSettingModel.swift */,
 			);
 			path = Radio;
 			sourceTree = "<group>";
@@ -1351,6 +1355,7 @@
 				0444D5F728394FDD00327D0B /* DockRecentSwitch.swift in Sources */,
 				04BC8EC7284FEA52009E605F /* UserDefaultsKeys.swift in Sources */,
 				0444D5CA283677DA00327D0B /* EverySwitchTests.swift in Sources */,
+				04BC8ED0285008C1009E605F /* RadioSettingModel.swift in Sources */,
 				041D725D28353A3F0083092D /* DarkModeSwitch.swift in Sources */,
 				0444D5CD2836836E00327D0B /* NetworkingTest.swift in Sources */,
 				0444D5DE2838553B00327D0B /* NSSound_SystemVolumeExtension.swift in Sources */,
@@ -1467,6 +1472,7 @@
 				04447B7627550F6900CD2900 /* VisualEffectView.swift in Sources */,
 				04A2FFF72755A3E500CE56A0 /* NSImage++.swift in Sources */,
 				0493375827625A1E00AE779A /* Downloader+URLSessionDelegate.swift in Sources */,
+				04BC8ECF285008C1009E605F /* RadioSettingModel.swift in Sources */,
 				04E2AD1E2783B63600BC5DF3 /* CurrentScreen.swift in Sources */,
 				043E5D7A2758212A00ADC004 /* SwitchType.swift in Sources */,
 				04E03B00275F93B900EA5FB9 /* AirPodsSwitch.swift in Sources */,

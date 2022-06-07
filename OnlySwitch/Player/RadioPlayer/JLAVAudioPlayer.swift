@@ -20,7 +20,7 @@ class JLAVAudioPlayer: NSObject ,AVPlayerItemMetadataOutputPushDelegate, AudioPl
     
     override init() {
         super.init()
-        NotificationCenter.default.addObserver(forName: volumeChangeNotification, object: nil, queue: .main, using: { notification in
+        NotificationCenter.default.addObserver(forName: .volumeChange, object: nil, queue: .main, using: { notification in
             guard let userInfo = notification.userInfo,
                     let newValue  = userInfo["newValue"] as? Float else {
                         print("No userInfo found in notification")
@@ -53,6 +53,7 @@ class JLAVAudioPlayer: NSObject ,AVPlayerItemMetadataOutputPushDelegate, AudioPl
         self.playerItem = AVPlayerItem(asset: asset)
         self.audioPlayer = AVPlayer(playerItem: playerItem)
         self.audioPlayer?.play()
+        self.audioPlayer?.volume = Preferences.shared.volume
 //        self.setupNowPlaying()
         self.bufferring = true
         

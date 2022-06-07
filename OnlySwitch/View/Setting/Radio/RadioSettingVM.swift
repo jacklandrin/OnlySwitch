@@ -7,49 +7,73 @@
 
 import CoreData
 
-let volumeKey = "volumeKey"
-let volumeChangeNotification = NSNotification.Name("volumeChange")
-let soundWaveEffectDisplayKey = "soundWaveEffectDisplayKey"
-let soundWaveToggleNotification = NSNotification.Name("soundWaveToggleNotification")
 
 class RadioSettingVM:ObservableObject {
-    @Published var radioList:[RadioPlayerItem] = [RadioPlayerItem]()
-    @Published var selectRow:RadioPlayerItem.ID?
-    {
-        didSet {
+    
+    @Published private var model = RadioSettingModel()
+    @Published private var preferences = Preferences.shared
+    
+    var radioList:[RadioPlayerItem] {
+        get {
+            model.radioList
+        }
+        set {
+            model.radioList = newValue
+        }
+    }
+    
+    var selectRow:RadioPlayerItem.ID? {
+        get {
+            return model.selectRow
+        }
+        set {
+            model.selectRow = newValue
             print("select row changed:\(String(describing: selectRow))")
             for radio in radioList where radio.id != selectRow {
                 radio.isEditing = false
             }
-            
-            currentTitle = RadioStationSwitch.shared.playerItem.title
-            
+
+            model.currentTitle = RadioStationSwitch.shared.playerItem.title
         }
     }
-    @Published var showErrorToast = false
-    @Published var errorInfo = ""
-    @Published var currentTitle = ""
+    
+    var showErrorToast:Bool {
+        get {
+            model.showErrorToast
+        }
+        set {
+            model.showErrorToast = newValue
+        }
+    }
+    
+    var errorInfo:String {
+        model.errorInfo
+    }
+    
+    var currentTitle:String {
+        model.currentTitle
+    }
     
     var sliderVolume: Float = 1.0
-    
-    @UserDefaultValue(key: soundWaveEffectDisplayKey, defaultValue: true)
-    var soundWaveEffectDisplay:Bool{
-        didSet {
-            objectWillChange.send()
-            NotificationCenter.default.post(name: soundWaveToggleNotification, object: nil)
-            NotificationCenter.default.post(name: changeSettingNotification, object: nil)
-            
+        
+    var soundWaveEffectDisplay:Bool {
+        get {
+            preferences.soundWaveEffectDisplay
+        }
+        set {
+            preferences.soundWaveEffectDisplay = newValue
         }
     }
     
-    lazy var sliderValue: Float = sliderVolume {
-        willSet	{
-            let userInfo = [ "newValue" : newValue ]
-            UserDefaults.standard.set(newValue, forKey: volumeKey)
-            UserDefaults.standard.synchronize()
-            NotificationCenter.default.post(name: volumeChangeNotification, object: nil, userInfo: userInfo)
+    var sliderValue:Float {
+        get {
+            preferences.volume
+        }
+        set {
+            preferences.volume = newValue
         }
     }
+    
     
     private var managedObjectContext:NSManagedObjectContext?
     init() {
@@ -60,16 +84,16 @@ class RadioSettingVM:ObservableObject {
                                             streamUrl: station.url!,
                                             streamInfo: "",
                                             id: station.id!)
-            radioList.append(radioItem)
+            self.model.radioList.append(radioItem)
         }
         
         NotificationCenter.default.addObserver(forName: illegalRadioInfoNotification, object: nil, queue: .main, using:{[self] notify in
-            self.errorInfo = notify.object as! String
-            self.showErrorToast = true
+            self.model.errorInfo = notify.object as! String
+            self.model.showErrorToast = true
         })
-        currentTitle = RadioStationSwitch.shared.playerItem.title
+        self.model.currentTitle = RadioStationSwitch.shared.playerItem.title
         
-        if let newValue = UserDefaults.standard.value(forKey: volumeKey) as? Float
+        if let newValue = UserDefaults.standard.value(forKey: UserDefaults.Key.volume) as? Float
         {
             sliderVolume = newValue
         }
@@ -96,11 +120,11 @@ class RadioSettingVM:ObservableObject {
             radio.isEditing = false
         }
         guard radioList.count > 1 else {
-            showErrorToast = true
-            errorInfo = "At least one radio station"
+            self.model.showErrorToast = true
+            self.model.errorInfo = "At least one radio station"
             return
         }
-        guard let currentRow = selectRow else {
+        guard let currentRow = self.model.selectRow else {
             return
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
@@ -113,8 +137,8 @@ class RadioSettingVM:ObservableObject {
             PersistenceController.shared.saveContext()
             let itemIndices = self.radioList.indices.filter{ self.radioList[$0].id == currentRow }
             guard itemIndices.count > 0 else {return}
-            self.radioList.remove(at: itemIndices.first!)
-            self.selectRow = nil
+            self.model.radioList.remove(at: itemIndices.first!)
+            self.model.selectRow = nil
         }
     }
     
@@ -126,15 +150,15 @@ class RadioSettingVM:ObservableObject {
         let newStation = RadioPlayerItem(isPlaying: false, title: "", streamUrl: "", streamInfo: "", id: newStationID)
         self.endEditing()
         newStation.isEditing = true
-        self.radioList.append(newStation)
-        selectRow = newStationID
+        self.model.radioList.append(newStation)
+        self.model.selectRow = newStationID
     }
     
     func selectStation() {
         for radio in radioList {
             radio.isEditing = false
         }
-        guard let currentRow = selectRow else {
+        guard let currentRow = self.model.selectRow else {
             return
         }
         let station = RadioStations.fetchRequest(by: currentRow).first
@@ -145,10 +169,9 @@ class RadioSettingVM:ObservableObject {
         RadioStationSwitch.shared.playerItem.streamUrl = station.url!
         RadioStationSwitch.shared.playerItem.streamInfo = ""
         RadioStationSwitch.shared.playerItem.id = station.id!
-        UserDefaults.standard.set(currentRow.uuidString, forKey: radioStationKey)
-        UserDefaults.standard.synchronize()
-        currentTitle = RadioStationSwitch.shared.playerItem.title
-        NotificationCenter.default.post(name: changeSettingNotification, object: nil)
+        Preferences.shared.radioStationID = currentRow.uuidString
+        self.model.currentTitle = RadioStationSwitch.shared.playerItem.title
+        NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.radioStation)
         
         
     }

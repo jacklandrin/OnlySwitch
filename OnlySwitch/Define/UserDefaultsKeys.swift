@@ -18,5 +18,10 @@ extension UserDefaults {
         static let PTimerCycleCount = "PTimerLoopCountKey"
         //AirPods
         static let AirPodsAddress = "AirPodsAddressKey"
+        //Radio
+        static let soundWaveEffectDisplay = "soundWaveEffectDisplayKey"
+        static let volume = "volumeKey"
+        static let hasRunRadio = "hasRunRadioKey"
+        static let radioStation = "radioStationKey"
     }
 }

@@ -11,10 +11,11 @@ import Foundation
 class PlayerManager {
     static let shared = PlayerManager()
     var player:AudioPlayer = JLASAudioPlayer()
-    @UserDefaultValue(key: soundWaveEffectDisplayKey, defaultValue: true)
-    var soundWaveEffectDisplay:Bool
+    var soundWaveEffectDisplay:Bool{
+        Preferences.shared.soundWaveEffectDisplay
+    }
     init() {
-        NotificationCenter.default.addObserver(forName: soundWaveToggleNotification, object: nil, queue: .main, using: { [self] _ in
+        NotificationCenter.default.addObserver(forName: .soundWaveToggle, object: nil, queue: .main, using: { [self] _ in
           
             self.player.currentAudioStation?.isPlaying = false
              

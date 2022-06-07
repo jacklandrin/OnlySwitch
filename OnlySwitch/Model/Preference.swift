@@ -46,4 +46,26 @@ struct Preferences {
     // MARK: - AirPods
     @UserDefaultValue(key: UserDefaults.Key.AirPodsAddress, defaultValue: nil)
     var airPodsAddress:String?
+    
+    // MARK: - Radio
+    @UserDefaultValue(key: UserDefaults.Key.volume, defaultValue: 1.0)
+    var volume:Float
+    {
+        didSet {
+            let userInfo = [ "newValue" : volume ]
+            NotificationCenter.default.post(name: .volumeChange, object: nil, userInfo: userInfo)
+        }
+    }
+    
+    @UserDefaultValue(key: UserDefaults.Key.soundWaveEffectDisplay, defaultValue: true)
+    var soundWaveEffectDisplay:Bool{
+        didSet {
+            NotificationCenter.default.post(name: .soundWaveToggle, object: nil)
+            NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.radioStation)
+            
+        }
+    }
+    
+    @UserDefaultValue(key: UserDefaults.Key.radioStation, defaultValue: nil)
+    var radioStationID:String?
 }

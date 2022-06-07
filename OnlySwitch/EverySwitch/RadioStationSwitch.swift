@@ -8,8 +8,7 @@
 import AppKit
 import CoreData
 
-let hasRunRadioKey = "hasRunRadioKey"
-let radioStationKey = "radioStationKey"
+
 let defaultRadioStations = [["title":"Country Radio", "url":"https://live.leanstream.co/CKRYFM"],
                             ["title":"Dance UK", "url":"http://uk2.internet-radio.com:8024/stream"],
                             ["title":"Box UK", "url":"http://51.75.170.46:6191/stream"]]
@@ -24,7 +23,7 @@ class RadioStationSwitch:SwitchProvider {
     init() {
         self.managedObjectContext = PersistenceController.shared.container.viewContext
         
-        let currentStationIDStr = UserDefaults.standard.string(forKey: radioStationKey)
+        let currentStationIDStr = Preferences.shared.radioStationID
         if let currentStationIDStr = currentStationIDStr, let currentStationID = UUID(uuidString: currentStationIDStr) {
             let station = RadioStations.fetchRequest(by: currentStationID).first
             guard let station = station else {return}
@@ -75,9 +74,9 @@ class RadioStationSwitch:SwitchProvider {
 //            managedObjectContext?.delete(station)
 //            PersistenceController.shared.saveContext()
 //        }
-        let hasRun = UserDefaults.standard.bool(forKey: hasRunRadioKey)
+        let hasRun = UserDefaults.standard.bool(forKey: UserDefaults.Key.hasRunRadio)
         if !hasRun {
-            UserDefaults.standard.set(true, forKey: hasRunRadioKey)
+            UserDefaults.standard.set(true, forKey: UserDefaults.Key.hasRunRadio)
             UserDefaults.standard.synchronize()
         }
         return !hasRun
