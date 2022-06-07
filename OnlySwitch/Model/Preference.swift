@@ -72,4 +72,27 @@ struct Preferences {
     // MARK: - Shortcuts
     @UserDefaultValue(key: UserDefaults.Key.shortcutsDic, defaultValue: nil)
     var shortcutsDic:[String:Bool]?
+    
+    // MARK: - General
+    @UserDefaultValue(key: UserDefaults.Key.menubarIcon, defaultValue: "menubar_0")
+    var currentMenubarIcon:String
+    {
+        didSet {
+            NotificationCenter.default.post(name: .changeMenuBarIcon, object: currentMenubarIcon)
+        }
+    }
+    
+    @UserDefaultValue(key: UserDefaults.Key.appearanceColumnCount, defaultValue: SwitchListAppearance.single.rawValue)
+    var currentAppearance:String {
+        didSet {
+            NotificationCenter.default.post(name: .changePopoverAppearance, object: nil)
+        }
+    }
+    
+    @UserDefaultValue(key: UserDefaults.Key.showAds, defaultValue: true)
+    var showAds:Bool {
+        didSet {
+            NotificationCenter.default.post(name: .changeSettings, object: nil)
+        }
+    }
 }

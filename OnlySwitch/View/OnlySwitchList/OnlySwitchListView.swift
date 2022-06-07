@@ -17,8 +17,8 @@ struct OnlySwitchListView: View {
     @ObservedObject private var languageManager = LanguageManager.sharedManager
     
     let columns = [
-        GridItem(.fixed(Layout.popoverWidth - 50)),
-        GridItem(.fixed(Layout.popoverWidth - 50))
+        GridItem(.fixed(Layout.popoverWidth - 40)),
+        GridItem(.fixed(Layout.popoverWidth - 40))
         ]
 
     
@@ -69,7 +69,7 @@ struct OnlySwitchListView: View {
                 switchVM.refreshSingleSwitchStatus(type: type)
             }
         }
-        .frame(width:SwitchListAppearance(rawValue: switchVM.currentAppearance) == .single ? Layout.popoverWidth : Layout.popoverWidth * 2 - 50 , height:scrollViewHeight + (switchVM.showAds ? 130 : 90))
+        .frame(width:SwitchListAppearance(rawValue: switchVM.currentAppearance) == .single ? Layout.popoverWidth : Layout.popoverWidth * 2 - 40 , height:scrollViewHeight + (switchVM.showAds ? 130 : 90))
     }
     
     var singleSwitchList: some View {

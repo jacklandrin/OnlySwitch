@@ -25,7 +25,12 @@ extension UserDefaults {
         static let radioStation = "radioStationKey"
         //Shortcuts
         static let shortcutsDic = "shortcutsDicKey"
-        //sort
+        //Sort
         static let orderWeight = "orderWeightKey"
+        //General
+        static let menubarIcon = "menubarIconKey"
+        static let appearanceColumnCount = "appearanceColumnCountKey"
+        static let showAds = "showAdsKey"
+
     }
 }

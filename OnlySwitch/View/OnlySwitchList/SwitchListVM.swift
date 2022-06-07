@@ -51,11 +51,13 @@ class SwitchListVM: ObservableObject, CurrentScreen {
         return Preferences.shared.soundWaveEffectDisplay
     }
     
-    @UserDefaultValue(key: appearanceColumnCountKey, defaultValue: SwitchListAppearance.single.rawValue)
-    var currentAppearance:String
+    var currentAppearance:String {
+        return Preferences.shared.currentAppearance
+    }
     
-    @UserDefaultValue(key: showAdsKey, defaultValue: true)
-    var showAds:Bool
+    var showAds:Bool {
+        return Preferences.shared.showAds
+    }
     
     init() {
         refreshMaxHeight()

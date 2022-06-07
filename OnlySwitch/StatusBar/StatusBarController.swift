@@ -32,11 +32,14 @@ class StatusBarController {
             }
         }
     }
-    @UserDefaultValue(key: menubarIconKey, defaultValue: "menubar_0")
-    var currentMenubarIcon:String
     
-    @UserDefaultValue(key: appearanceColumnCountKey, defaultValue: SwitchListAppearance.single.rawValue)
-    var currentAppearance:String
+    var currentMenubarIcon:String {
+        return Preferences.shared.currentMenubarIcon
+    }
+    
+    var currentAppearance:String {
+        return Preferences.shared.currentAppearance
+    }
     
     private var otherPopoverBitwise:Int = 0
     
@@ -91,7 +94,7 @@ class StatusBarController {
             if appearance == .single {
                 strongSelf.popover.contentSize.width = Layout.popoverWidth
             } else if appearance == .dual {
-                strongSelf.popover.contentSize.width = Layout.popoverWidth * 2 - 50
+                strongSelf.popover.contentSize.width = Layout.popoverWidth * 2 - 40
             }
         })
     }

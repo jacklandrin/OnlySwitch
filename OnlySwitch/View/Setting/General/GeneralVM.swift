@@ -7,13 +7,10 @@
 
 import AppKit
 
-let menubarIconKey = "menubarIconKey"
-let appearanceColumnCountKey = "appearanceColumnCountKey"
-let showAdsKey = "showAdsKey"
-
 class GeneralVM:ObservableObject {
     
     @Published private var model = GeneralModel()
+    @Published private var preferences = Preferences.shared
     
     var cacheSize:String {
         get {
@@ -60,28 +57,31 @@ class GeneralVM:ObservableObject {
     
     private let checkUpdatePresenter = GitHubPresenter()
     
-    @UserDefaultValue(key: menubarIconKey, defaultValue: "menubar_0")
     var currentMenubarIcon:String
     {
-        didSet {
-            objectWillChange.send()
-            NotificationCenter.default.post(name: .changeMenuBarIcon, object: currentMenubarIcon)
+        get {
+            preferences.currentMenubarIcon
+        }
+        set {
+            preferences.currentMenubarIcon = newValue
         }
     }
     
-    @UserDefaultValue(key: appearanceColumnCountKey, defaultValue: SwitchListAppearance.single.rawValue)
     var currentAppearance:String {
-        didSet {
-            objectWillChange.send()
-            NotificationCenter.default.post(name: .changePopoverAppearance, object: nil)
+        get {
+            preferences.currentAppearance
+        }
+        set {
+            preferences.currentAppearance = newValue
         }
     }
     
-    @UserDefaultValue(key: showAdsKey, defaultValue: true)
     var showAds:Bool {
-        didSet {
-            objectWillChange.send()
-            NotificationCenter.default.post(name: .changeSettings, object: nil)
+        get {
+            preferences.showAds
+        }
+        set {
+            preferences.showAds = newValue
         }
     }
     
