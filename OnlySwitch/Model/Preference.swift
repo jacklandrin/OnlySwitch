@@ -9,6 +9,7 @@ import Foundation
 
 struct Preferences {
     static var shared = Preferences()
+    // MARK: - Pomodoro Timer
     @UserDefaultValue(key: UserDefaults.Key.WorkDuration, defaultValue: 25 * 60)
     var workDuration:Int
     {
@@ -41,4 +42,8 @@ struct Preferences {
     
     @UserDefaultValue(key: UserDefaults.Key.PTimerCycleCount, defaultValue: 1)
     var cycleCount:Int
+    
+    // MARK: - AirPods
+    @UserDefaultValue(key: UserDefaults.Key.AirPodsAddress, defaultValue: nil)
+    var airPodsAddress:String?
 }

@@ -8,8 +8,6 @@
 import AppKit
 import IOBluetooth
 
-let AirPodsAddressKey = "AirPodsAddressKey"
-
 class AirPodsSwitch:SwitchProvider {
     weak var delegate: SwitchDelegate?
     var type: SwitchType = .airPods
@@ -21,7 +19,7 @@ class AirPodsSwitch:SwitchProvider {
     var currentDevice:IOBluetoothDevice?
     
     private func setCurrentDevice() {
-        let address = UserDefaults.standard.string(forKey: AirPodsAddressKey)
+        let address = Preferences.shared.airPodsAddress
         guard let address = address else {
             currentDevice = blManager.allPairedAirpods.first
             return

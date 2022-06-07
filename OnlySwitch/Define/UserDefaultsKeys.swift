@@ -16,5 +16,7 @@ extension UserDefaults {
         static let WorkAlert = "WorkAlertKey"
         static let AllowNotificationAlert = "AllowNotificationAlertKey"
         static let PTimerCycleCount = "PTimerLoopCountKey"
+        //AirPods
+        static let AirPodsAddress = "AirPodsAddressKey"
     }
 }
