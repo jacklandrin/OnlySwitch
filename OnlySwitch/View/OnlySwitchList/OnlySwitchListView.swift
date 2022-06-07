@@ -58,11 +58,16 @@ struct OnlySwitchListView: View {
             }
         )
             .id(switchVM.updateID)
-        .onReceive(NotificationCenter.default.publisher(for: showPopoverNotificationName, object: nil)) { _ in
+            .onReceive(NotificationCenter.default.publisher(for: .showPopover, object: nil)) { _ in
             switchVM.refreshData()
         }
         .onReceive(NotificationCenter.default.publisher(for: changeSettingNotification, object: nil)) { _ in
             switchVM.refreshData()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .refreshSingleSwitchStatus, object: nil)) { n in
+            if let type = n.object as? SwitchType {
+                switchVM.refreshSingleSwitchStatus(type: type)
+            }
         }
         .frame(width:SwitchListAppearance(rawValue: switchVM.currentAppearance) == .single ? Layout.popoverWidth : Layout.popoverWidth * 2 - 50 , height:scrollViewHeight + (switchVM.showAds ? 130 : 90))
     }
@@ -294,7 +299,7 @@ struct OnlySwitchListView: View {
             Spacer()
             Button(action: {
                 OpenWindows.Setting.open()
-                NotificationCenter.default.post(name: shouldHidePopoverNotificationName, object: nil)
+                NotificationCenter.default.post(name: .shouldHidePopover, object: nil)
             }, label: {
                 Image(systemName: "gearshape.circle")
                     .font(.system(size: 17))

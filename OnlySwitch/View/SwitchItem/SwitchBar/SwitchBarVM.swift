@@ -89,8 +89,8 @@ class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
     
     
     func refreshAsync() {
+        self.model.processing = true
         DispatchQueue.global().async {
-            self.model.processing = true
             let _isOn = self.switchOperator.currentStatus()
             let _info = self.switchOperator.currentInfo()
             DispatchQueue.main.async {

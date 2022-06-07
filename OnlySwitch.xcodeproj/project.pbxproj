@@ -196,6 +196,12 @@
 		04B25457283C0F8800D253E2 /* ShortcutsBarModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B25456283C0F8800D253E2 /* ShortcutsBarModel.swift */; };
 		04B25459283C12A800D253E2 /* GeneralModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B25458283C12A800D253E2 /* GeneralModel.swift */; };
 		04B856352784B1B60061B56C /* GetWallpaperURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B856342784B1B60061B56C /* GetWallpaperURL.swift */; };
+		04BC8EC3284FE9B5009E605F /* Preference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8EC2284FE9B5009E605F /* Preference.swift */; };
+		04BC8EC4284FE9B5009E605F /* Preference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8EC2284FE9B5009E605F /* Preference.swift */; };
+		04BC8EC6284FEA52009E605F /* UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8EC5284FEA52009E605F /* UserDefaultsKeys.swift */; };
+		04BC8EC7284FEA52009E605F /* UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8EC5284FEA52009E605F /* UserDefaultsKeys.swift */; };
+		04BC8EC9284FF30A009E605F /* NotificationNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8EC8284FF30A009E605F /* NotificationNames.swift */; };
+		04BC8ECA284FF30A009E605F /* NotificationNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8EC8284FF30A009E605F /* NotificationNames.swift */; };
 		04BF97682790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BF97672790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift */; };
 		04BF976B27908D5400E7C0E2 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 04BF976A27908D5400E7C0E2 /* KeyboardShortcuts */; };
 		04D68B0D2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D68B0C2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift */; };
@@ -429,6 +435,9 @@
 		04B25456283C0F8800D253E2 /* ShortcutsBarModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsBarModel.swift; sourceTree = "<group>"; };
 		04B25458283C12A800D253E2 /* GeneralModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralModel.swift; sourceTree = "<group>"; };
 		04B856342784B1B60061B56C /* GetWallpaperURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetWallpaperURL.swift; sourceTree = "<group>"; };
+		04BC8EC2284FE9B5009E605F /* Preference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preference.swift; sourceTree = "<group>"; };
+		04BC8EC5284FEA52009E605F /* UserDefaultsKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsKeys.swift; sourceTree = "<group>"; };
+		04BC8EC8284FF30A009E605F /* NotificationNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNames.swift; sourceTree = "<group>"; };
 		04BF97672790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowFinderPathbarSwitch.swift; sourceTree = "<group>"; };
 		04D68B0C2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowUserLibrarySwitch.swift; sourceTree = "<group>"; };
 		04E03AF7275E6B4E00EA5FB9 /* AutohideDockSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutohideDockSwitch.swift; sourceTree = "<group>"; };
@@ -663,10 +672,12 @@
 				0493378B2762654600AE779A /* LayoutDefine.swift */,
 				049337932762BD1B00AE779A /* OpenWindow.swift */,
 				047140B7277884EE005B160B /* UserDefaultValue.swift */,
+				04BC8EC5284FEA52009E605F /* UserDefaultsKeys.swift */,
 				046331D42795E1BC00C5F894 /* ColorDefine.swift */,
 				0427365127C1AADB0068108F /* MusicPlaybackState.swift */,
 				041D726628353BC20083092D /* SwitchType+Instance.swift */,
 				041D72682835865B0083092D /* SwitchError.swift */,
+				04BC8EC8284FF30A009E605F /* NotificationNames.swift */,
 			);
 			path = Define;
 			sourceTree = "<group>";
@@ -1105,6 +1116,7 @@
 			isa = PBXGroup;
 			children = (
 				04F118C327AED8BC005DA861 /* GitHubReleaseModel.swift */,
+				04BC8EC2284FE9B5009E605F /* Preference.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1332,10 +1344,12 @@
 				0444D5DF283855CD00327D0B /* ScreenSaverSwitch.swift in Sources */,
 				041D726028353AF50083092D /* SwitchProvider.swift in Sources */,
 				041D725F28353A500083092D /* ShellCommandDefine.swift in Sources */,
+				04BC8ECA284FF30A009E605F /* NotificationNames.swift in Sources */,
 				041D726428353B430083092D /* NSImage+SymbolName.swift in Sources */,
 				0444D60C2839B21600327D0B /* CGKeyCode++.swift in Sources */,
 				0444D5F228394B1B00327D0B /* ShowExtensionNameSwitch.swift in Sources */,
 				0444D5F728394FDD00327D0B /* DockRecentSwitch.swift in Sources */,
+				04BC8EC7284FEA52009E605F /* UserDefaultsKeys.swift in Sources */,
 				0444D5CA283677DA00327D0B /* EverySwitchTests.swift in Sources */,
 				041D725D28353A3F0083092D /* DarkModeSwitch.swift in Sources */,
 				0444D5CD2836836E00327D0B /* NetworkingTest.swift in Sources */,
@@ -1352,6 +1366,7 @@
 				0444D5F528394CAA00327D0B /* MuteMicSwitch.swift in Sources */,
 				0444D5D42836D93A00327D0B /* RequestError.swift in Sources */,
 				0444D5DA2836F1CD00327D0B /* NSImage++.swift in Sources */,
+				04BC8EC4284FE9B5009E605F /* Preference.swift in Sources */,
 				0444D5CE283683B100327D0B /* GitHubPresenter.swift in Sources */,
 				0444D5EC2839446A00327D0B /* AutohideMenuBarSwitch.swift in Sources */,
 				0444D5ED2839453400327D0B /* HiddenFilesSwitch.swift in Sources */,
@@ -1471,10 +1486,12 @@
 				04FC1610283F92B200D4A4AC /* GitHubEndpoint.swift in Sources */,
 				04EB1CD02780F36F00C612AB /* ShortcutsSettingVM.swift in Sources */,
 				0493374727625A1E00AE779A /* PlayerManager.swift in Sources */,
+				04BC8EC3284FE9B5009E605F /* Preference.swift in Sources */,
 				0493372527615EA400AE779A /* HiddenFilesSwitch.swift in Sources */,
 				04A6F9432788807800E3300F /* BarProvider.swift in Sources */,
 				04B25455283C06C700D253E2 /* SwitchListModel.swift in Sources */,
 				04E2AD0D2783624A00BC5DF3 /* Intents.intentdefinition in Sources */,
+				04BC8EC6284FEA52009E605F /* UserDefaultsKeys.swift in Sources */,
 				04AA63D0276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift in Sources */,
 				04E03AF8275E6B4E00EA5FB9 /* AutohideDockSwitch.swift in Sources */,
 				04581DB02764CBCF008ADF30 /* SettingVM.swift in Sources */,
@@ -1509,6 +1526,7 @@
 				0427364E27C1A5CD0068108F /* SpotifyPlayer.swift in Sources */,
 				043E5D712758176B00ADC004 /* SwitchToggle.swift in Sources */,
 				040E97272760FF3E003D9D42 /* MetadataExtractorError.swift in Sources */,
+				04BC8EC9284FF30A009E605F /* NotificationNames.swift in Sources */,
 				0443A6B82759A99700A3BCFD /* ScreenSaverSwitch.swift in Sources */,
 				04938D062768CB2000713F1D /* LocalizedString++.swift in Sources */,
 				0493379C2763C09000AE779A /* OnlySwitch.xcdatamodeld in Sources */,

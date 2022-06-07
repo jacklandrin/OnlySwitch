@@ -7,16 +7,9 @@
 
 import Foundation
 
-let AllowNotificationAlertKey = "AllowNotificationAlertKey"
-let WorkDurationKey = "WorkDurationKey"
-let RestDurationKey = "RestDurationKey"
-let WorkAlertKey = "WorkAlertKey"
-let RestAlertKey = "RestAlertKey"
-let PTimerCycleCountKey = "PTimerLoopCountKey"
-let ChangePTDurationNotification = NSNotification.Name(rawValue:"ChangePTDurationNotification")
-
 class PomodoroTimerSettingVM:ObservableObject {
     @Published private var model = PomodoroTimerSettingModel()
+    @Published private var preferences = Preferences.shared
     
     var workDurationList:[Int] {
         model.workDurationList
@@ -34,53 +27,57 @@ class PomodoroTimerSettingVM:ObservableObject {
         model.alertSounds
     }
     
-    @UserDefaultValue(key: WorkDurationKey, defaultValue: 25 * 60)
     var workDuration:Int {
-        didSet {
-            objectWillChange.send()
-            NotificationCenter.default.post(name: ChangePTDurationNotification, object: nil)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                NotificationCenter.default.post(name: changeSettingNotification, object: nil)
-            }
+        get {
+            return preferences.workDuration
+        }
+        set {
+            preferences.workDuration = newValue
         }
     }
     
-    @UserDefaultValue(key: RestDurationKey, defaultValue: 5 * 60)
     var restDuration:Int {
-        didSet {
-            objectWillChange.send()
-            NotificationCenter.default.post(name: ChangePTDurationNotification, object: nil)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                NotificationCenter.default.post(name: changeSettingNotification, object: nil)
-            }
+        get {
+            return preferences.restDuration
+        }
+        set {
+            preferences.restDuration = newValue
         }
     }
     
-    @UserDefaultValue(key: RestAlertKey, defaultValue: "mixkit-alert-bells-echo-765")
     var restAlert:String {
-        didSet {
-            objectWillChange.send()
+        get {
+            return preferences.restAlert
+        }
+        set {
+            preferences.restAlert = newValue
         }
     }
     
-    @UserDefaultValue(key: WorkAlertKey, defaultValue: "mixkit-bell-notification-933")
     var workAlert:String {
-        didSet {
-            objectWillChange.send()
+        get {
+            return preferences.workAlert
+        }
+        set {
+            preferences.workAlert = newValue
         }
     }
     
-    @UserDefaultValue(key: AllowNotificationAlertKey, defaultValue: true)
     var allowNotificationAlert:Bool {
-        didSet {
-            objectWillChange.send()
+        get {
+            return preferences.allowNotificationAlert
+        }
+        set {
+            preferences.allowNotificationAlert = newValue
         }
     }
     
-    @UserDefaultValue(key: PTimerCycleCountKey, defaultValue: 1)
     var cycleCount:Int {
-        didSet {
-            objectWillChange.send()
+        get {
+            return preferences.cycleCount
+        }
+        set {
+            preferences.cycleCount = newValue
         }
     }
 }

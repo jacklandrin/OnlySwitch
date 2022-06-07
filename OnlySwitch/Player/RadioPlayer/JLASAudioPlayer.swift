@@ -30,11 +30,11 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
     override init() {
         super.init()
 //        self.setupRemoteCommandCenter()
-        NotificationCenter.default.addObserver(forName: showPopoverNotificationName, object: nil, queue: .main, using: { _ in
+        NotificationCenter.default.addObserver(forName: .showPopover, object: nil, queue: .main, using: { _ in
             self.isAppActive = true
         })
 
-        NotificationCenter.default.addObserver(forName: hidePopoverNotificationName, object: nil, queue: .main, using: { _ in
+        NotificationCenter.default.addObserver(forName: .hidePopover, object: nil, queue: .main, using: { _ in
             self.isAppActive = false
         })
         

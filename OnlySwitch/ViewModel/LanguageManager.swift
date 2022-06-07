@@ -32,7 +32,7 @@ class LanguageManager:ObservableObject {
     init() {
         let _systemLangPriority = UserDefaults.standard.bool(forKey: systemLangPriorityKey)
         currentLang = _systemLangPriority ? Bundle.systemLanguage() : Bundle.currentLanguage()
-        NotificationCenter.default.addObserver(self, selector: #selector(didBecomeActiveNotification(_:)), name: showPopoverNotificationName, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didBecomeActiveNotification(_:)), name: .showPopover, object: nil)
     }
     
     @objc private func didBecomeActiveNotification(_ noti:Notification) {

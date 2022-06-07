@@ -16,38 +16,44 @@ class PomodoroTimerSwitch: SwitchProvider {
         case rest = "r"
     }
     
-    var restTimer:Timer?
-    var workTimer:Timer?
+    private var restTimer:Timer?
+    private var workTimer:Timer?
     var type: SwitchType = .pomodoroTimer
     
     var nextDate:Date?
     
     var status:Status = .none
     
-    @UserDefaultValue(key: RestDurationKey, defaultValue: 5 * 60)
-    var restDuration:Int
+    private var restDuration:Int {
+        Preferences.shared.restDuration
+    }
 
-    @UserDefaultValue(key: WorkDurationKey, defaultValue: 25 * 60)
-    var workDuration:Int
+    private var workDuration:Int {
+        Preferences.shared.workDuration
+    }
     // for test
-//    var restDuration:Int = 5
-//    var workDuration:Int = 10
+//    private var restDuration:Int = 5
+//    private var workDuration:Int = 10
     
-    @UserDefaultValue(key: RestAlertKey, defaultValue: "mixkit-alert-bells-echo-765")
-    var restAlert:String
+    private var restAlert:String {
+        Preferences.shared.restAlert
+    }
+
+    private var workAlert:String {
+        Preferences.shared.workAlert
+    }
     
-    @UserDefaultValue(key: WorkAlertKey, defaultValue: "mixkit-bell-notification-933")
-    var workAlert:String
+    private var allowNotificationAlert:Bool {
+        Preferences.shared.allowNotificationAlert
+    }
     
-    @UserDefaultValue(key: AllowNotificationAlertKey, defaultValue: true)
-    var allowNotificationAlert:Bool
+    private var cycleCount:Int {
+        Preferences.shared.cycleCount
+    }
     
-    @UserDefaultValue(key: PTimerCycleCountKey, defaultValue: 1)
-    var cycleCount:Int
+    private var cycleIndex:Int = 0
     
-    var cycleIndex:Int = 0
-    
-    var isRestTimerValid:Bool {
+    private var isRestTimerValid:Bool {
         guard let restTimer = restTimer else {
             return false
         }
@@ -55,7 +61,7 @@ class PomodoroTimerSwitch: SwitchProvider {
         return restTimer.isValid
     }
     
-    var isWorkTimerValid:Bool {
+    private var isWorkTimerValid:Bool {
         guard let workTimer = workTimer else {
             return false
         }
@@ -63,7 +69,7 @@ class PomodoroTimerSwitch: SwitchProvider {
     }
     
     init() {
-        NotificationCenter.default.addObserver(forName: ChangePTDurationNotification, object: nil, queue: .main) { _ in
+        NotificationCenter.default.addObserver(forName: .changePTDuration, object: nil, queue: .main) { _ in
             self.stopTimer()
         }
     }
@@ -143,7 +149,7 @@ class PomodoroTimerSwitch: SwitchProvider {
                 } else {
                     strongSelf.status = .none
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                        NotificationCenter.default.post(name: changeSettingNotification, object: nil)
+                        NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.pomodoroTimer)
                     }
                 }
             }

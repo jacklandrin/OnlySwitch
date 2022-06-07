@@ -65,7 +65,7 @@ class GeneralVM:ObservableObject {
     {
         didSet {
             objectWillChange.send()
-            NotificationCenter.default.post(name: changeMenuBarIconNotificationName, object: currentMenubarIcon)
+            NotificationCenter.default.post(name: .changeMenuBarIcon, object: currentMenubarIcon)
         }
     }
     
@@ -73,7 +73,7 @@ class GeneralVM:ObservableObject {
     var currentAppearance:String {
         didSet {
             objectWillChange.send()
-            NotificationCenter.default.post(name: changePopoverAppearanceNotificationName, object: nil)
+            NotificationCenter.default.post(name: .changePopoverAppearance, object: nil)
         }
     }
     

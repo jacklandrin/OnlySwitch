@@ -7,11 +7,6 @@
 
 import AppKit
 
-let showPopoverNotificationName = NSNotification.Name("showPopover")
-let hidePopoverNotificationName = NSNotification.Name("hidePopover")
-let shouldHidePopoverNotificationName = NSNotification.Name("shouldHidePopover")
-let changeMenuBarIconNotificationName = NSNotification.Name("changeMenuBarIcon")
-let changePopoverAppearanceNotificationName = NSNotification.Name("changePopoverAppearanceNotificationName")
 
 struct OtherPopover {
     static let name = NSNotification.Name("otherPopover")
@@ -55,13 +50,13 @@ class StatusBarController {
         
         eventMonitor = EventMonitor(mask: [.leftMouseDown, .rightMouseDown], handler: mouseEventHandler)
         
-        NotificationCenter.default.addObserver(forName: changeMenuBarIconNotificationName, object: nil, queue: .main, using: {[weak self] notify in
+        NotificationCenter.default.addObserver(forName: .changeMenuBarIcon, object: nil, queue: .main, using: {[weak self] notify in
             guard let strongSelf = self else {return}
             let newImageName = notify.object as! String
             strongSelf.setStatusBarButton(image: newImageName)
         })
         
-        NotificationCenter.default.addObserver(forName: shouldHidePopoverNotificationName, object: nil, queue: .main, using: {[weak self] notify in
+        NotificationCenter.default.addObserver(forName: .shouldHidePopover, object: nil, queue: .main, using: {[weak self] notify in
             guard let strongSelf = self else {return}
             if let statusBarButton = strongSelf.statusItem.button {
                 strongSelf.hidePopover(statusBarButton)
@@ -89,7 +84,7 @@ class StatusBarController {
             }
         })
         
-        NotificationCenter.default.addObserver(forName: changePopoverAppearanceNotificationName, object: nil, queue: .main, using: { [weak self] notify in
+        NotificationCenter.default.addObserver(forName: .changePopoverAppearance, object: nil, queue: .main, using: { [weak self] notify in
             guard let strongSelf = self else {return}
             strongSelf.hidePopover(nil)
             let appearance = SwitchListAppearance(rawValue: strongSelf.currentAppearance)
@@ -127,14 +122,14 @@ class StatusBarController {
         if let statusBarButton = statusItem.button {
             popover.show(relativeTo: statusBarButton.bounds, of: statusBarButton, preferredEdge: NSRectEdge.maxY)
             popover.contentViewController?.view.window?.makeKey()
-            NotificationCenter.default.post(name: showPopoverNotificationName, object: nil)
+            NotificationCenter.default.post(name: .showPopover, object: nil)
             eventMonitor?.start()
         }
     }
         
     func hidePopover(_ sender: AnyObject?) {
         popover.performClose(sender)
-        NotificationCenter.default.post(name: hidePopoverNotificationName, object: nil)
+        NotificationCenter.default.post(name: .hidePopover, object: nil)
         eventMonitor?.stop()
     }
 
