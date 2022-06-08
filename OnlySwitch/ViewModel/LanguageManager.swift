@@ -7,15 +7,13 @@
 
 import Foundation
 
-let systemLangPriorityKey = "systemLangPriority"
-
 class LanguageManager:ObservableObject {
     var systemLangPriority:Bool {
         get {
-            UserDefaults.standard.bool(forKey: systemLangPriorityKey)
+            UserDefaults.standard.bool(forKey: UserDefaults.Key.systemLangPriority)
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: systemLangPriorityKey)
+            UserDefaults.standard.set(newValue, forKey: UserDefaults.Key.systemLangPriority)
             UserDefaults.standard.synchronize()
             print("systemLangPriority:\(newValue)")
         }
@@ -30,7 +28,7 @@ class LanguageManager:ObservableObject {
     }
     
     init() {
-        let _systemLangPriority = UserDefaults.standard.bool(forKey: systemLangPriorityKey)
+        let _systemLangPriority = UserDefaults.standard.bool(forKey: UserDefaults.Key.systemLangPriority)
         currentLang = _systemLangPriority ? Bundle.systemLanguage() : Bundle.currentLanguage()
         NotificationCenter.default.addObserver(self, selector: #selector(didBecomeActiveNotification(_:)), name: .showPopover, object: nil)
     }

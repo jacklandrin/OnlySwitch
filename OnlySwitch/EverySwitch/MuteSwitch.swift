@@ -8,8 +8,7 @@
 import Foundation
 import AppKit
 
-let NSVolumeKey = "NSVolumeKey"
-let ASVolumeKey = "ASVolumeKey"
+
 class MuteSwitch:SwitchProvider {
     weak var delegate: SwitchDelegate?
     var type: SwitchType = .mute
@@ -43,7 +42,7 @@ class NSMuteSwitchOperator:MuteSwitchProtocal {
             return true
         } else {
             let volume = NSSound.systemVolume
-            UserDefaults.standard.set(volume, forKey: NSVolumeKey)
+            UserDefaults.standard.set(volume, forKey: UserDefaults.Key.NSVolume)
             UserDefaults.standard.synchronize()
             return false
         }
@@ -59,7 +58,7 @@ class NSMuteSwitchOperator:MuteSwitchProtocal {
                 throw SwitchError.OperationFailed
             }
         } else {
-            var volumeValue = Float(UserDefaults.standard.float(forKey: NSVolumeKey))
+            var volumeValue = Float(UserDefaults.standard.float(forKey: UserDefaults.Key.NSVolume))
             if volumeValue == 0 {
                 volumeValue = 0.5
             }
@@ -80,7 +79,7 @@ class ASMuteSwitchOperator:MuteSwitchProtocal {
             
             let volume:String = result
             let volumeValue:Int = Int(volume) ?? 50
-            UserDefaults.standard.set(volume, forKey: ASVolumeKey)
+            UserDefaults.standard.set(volume, forKey: UserDefaults.Key.ASVolume)
             UserDefaults.standard.synchronize()
             return volumeValue == 0
             
@@ -96,7 +95,7 @@ class ASMuteSwitchOperator:MuteSwitchProtocal {
                 let cmd = VolumeCMD.setOutput + "0"
                 _ = try cmd.runAppleScript()
             } else {
-                var volumeValue = UserDefaults.standard.integer(forKey: ASVolumeKey)
+                var volumeValue = UserDefaults.standard.integer(forKey: UserDefaults.Key.ASVolume)
                 volumeValue = (volumeValue == 0) ? 50 : volumeValue
                 let cmd = VolumeCMD.setOutput + String(volumeValue)
                 _ = try cmd.runAppleScript()

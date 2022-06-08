@@ -9,7 +9,6 @@ import Foundation
 import Alamofire
 import SwiftUI
 
-let newestVersionKey = "newestVersionKey"
 
 class GitHubPresenter{
     private let interactor = GitHubInteractor()

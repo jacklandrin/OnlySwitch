@@ -7,7 +7,6 @@
 
 import Foundation
 
-let MicVolumeKey = "MicVolumeKey"
 class MuteMicSwitch:SwitchProvider {
     var type: SwitchType = .muteMicrophone
     weak var delegate: SwitchDelegate?
@@ -15,7 +14,7 @@ class MuteMicSwitch:SwitchProvider {
         do {
             let volume = try VolumeCMD.getInput.runAppleScript()
             let volumeValue:Int = Int(volume) ?? 50
-            UserDefaults.standard.set(volume, forKey: MicVolumeKey)
+            UserDefaults.standard.set(volume, forKey: UserDefaults.Key.MicVolume)
             UserDefaults.standard.synchronize()
             return volumeValue == 0
         } catch {
@@ -34,7 +33,7 @@ class MuteMicSwitch:SwitchProvider {
                 let cmd = VolumeCMD.setInput + "0"
                 _ = try cmd.runAppleScript()
             } else {
-                var volumeValue = UserDefaults.standard.integer(forKey: MicVolumeKey)
+                var volumeValue = UserDefaults.standard.integer(forKey: UserDefaults.Key.MicVolume)
                 volumeValue = (volumeValue == 0) ? 50 : volumeValue
                 let cmd = VolumeCMD.setInput + String(volumeValue)
                 _ = try cmd.runAppleScript()

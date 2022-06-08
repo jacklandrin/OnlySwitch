@@ -11,7 +11,7 @@ extension Bundle {
     private static var supportLangs = ["en", "zh", "de", "hr", "tr","pl", "fil", "nl", "it", "ru", "es","ja"]
     public static func localizedBundle() -> Bundle! {
         if bundle == nil {
-            let appLang = UserDefaults.standard.string(forKey: "app_lang") ?? "en"
+            let appLang = UserDefaults.standard.string(forKey: UserDefaults.Key.AppLanguage) ?? "en"
             let path = Bundle.main.path(forResource: appLang, ofType: "lproj")
             if let path = path {
                 bundle = Bundle(path: path)
@@ -26,7 +26,7 @@ extension Bundle {
     }
 
     public static func setLanguage(lang: String) {
-        UserDefaults.standard.set(lang, forKey: "app_lang")
+        UserDefaults.standard.set(lang, forKey: UserDefaults.Key.AppLanguage)
         let path = Bundle.main.path(forResource: lang, ofType: "lproj")
         if let path = path {
             bundle = Bundle(path: path)
@@ -37,7 +37,7 @@ extension Bundle {
     }
     
     public static func currentLanguage() -> String {
-        guard let lang = UserDefaults.standard.string(forKey: "app_lang") else {
+        guard let lang = UserDefaults.standard.string(forKey: UserDefaults.Key.AppLanguage) else {
             return systemLanguage()
         }
         return lang

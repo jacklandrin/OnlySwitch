@@ -74,7 +74,7 @@ class AppDelegate:NSObject, NSApplicationDelegate {
         checkUpdatePresenter.checkUpdate(complete: { success in
             if success {
                 let newestVersion = self.checkUpdatePresenter.latestVersion
-                UserDefaults.standard.set(newestVersion, forKey: newestVersionKey)
+                UserDefaults.standard.set(newestVersion, forKey: UserDefaults.Key.newestVersion)
                 UserDefaults.standard.synchronize()
             }
         })

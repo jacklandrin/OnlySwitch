@@ -33,6 +33,13 @@ extension UserDefaults {
         static let shortcutsDic = "shortcutsDicKey"
         //Sort
         static let orderWeight = "orderWeightKey"
-        
+        //others
+        static let newestVersion = "newestVersionKey"
+        static let systemLangPriority = "systemLangPriority"
+        static let NSVolume = "NSVolumeKey"
+        static let ASVolume = "ASVolumeKey"
+        static let MicVolume = "MicVolumeKey"
+        static let ScreenSaverInterval = "ScreenSaverIntervalKey"
+        static let AppLanguage = "app_lang"
     }
 }

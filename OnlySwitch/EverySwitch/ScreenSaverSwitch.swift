@@ -11,11 +11,10 @@ class ScreenSaverSwitch:SwitchProvider {
     weak var delegate: SwitchDelegate?
     var type: SwitchType = .screenSaver
     var getScreenSaverIntervalResult:String = "300"
-    let ScreenSaverIntervalKey = "ScreenSaverIntervalKey"
     func operationSwitch(isOn: Bool) async throws {
         do {
             if isOn {
-                var interval = UserDefaults.standard.integer(forKey: ScreenSaverIntervalKey)
+                var interval = UserDefaults.standard.integer(forKey: UserDefaults.Key.ScreenSaverInterval)
                 interval = (interval == 0) ? 300 : interval
                 let cmd = ScreenSaverCMD.on + String(interval)
                 _ = try cmd.runAppleScript()
@@ -33,7 +32,7 @@ class ScreenSaverSwitch:SwitchProvider {
             getScreenSaverIntervalResult = try ScreenSaverCMD.status.runAppleScript()
             let intervalStr = getScreenSaverIntervalResult
             let interval:Int = Int(intervalStr) ?? 300
-            UserDefaults.standard.set(interval, forKey: ScreenSaverIntervalKey)
+            UserDefaults.standard.set(interval, forKey: UserDefaults.Key.ScreenSaverInterval)
             UserDefaults.standard.synchronize()
             return interval != 0
         } catch {

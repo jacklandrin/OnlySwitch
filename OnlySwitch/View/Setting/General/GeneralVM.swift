@@ -98,7 +98,7 @@ class GeneralVM:ObservableObject {
         checkUpdatePresenter.checkUpdate(complete: { success in
             if success {
                 self.model.newestVersion = self.checkUpdatePresenter.latestVersion
-                UserDefaults.standard.set(self.newestVersion, forKey: newestVersionKey)
+                UserDefaults.standard.set(self.newestVersion, forKey: UserDefaults.Key.newestVersion)
                 UserDefaults.standard.synchronize()
                 self.model.needtoUpdateAlert = !self.checkUpdatePresenter.isTheNewestVersion
             }
