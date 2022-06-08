@@ -69,6 +69,9 @@ struct OnlySwitchListView: View {
                 switchVM.refreshSingleSwitchStatus(type: type)
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: .toggleMenubarCollapse, object: nil)) { _ in
+            switchVM.refreshSingleSwitchStatus(type: .hideMenubarIcons)
+        }
         .frame(width:SwitchListAppearance(rawValue: switchVM.currentAppearance) == .single ? Layout.popoverWidth : Layout.popoverWidth * 2 - 40 , height:scrollViewHeight + (switchVM.showAds ? 130 : 90))
     }
     

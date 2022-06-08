@@ -206,6 +206,9 @@
 		04BC8ED0285008C1009E605F /* RadioSettingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8ECE285008C1009E605F /* RadioSettingModel.swift */; };
 		04BC8ED2285137D2009E605F /* HideMenubarIconsSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8ED1285137D2009E605F /* HideMenubarIconsSwitch.swift */; };
 		04BC8ED3285137D2009E605F /* HideMenubarIconsSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8ED1285137D2009E605F /* HideMenubarIconsSwitch.swift */; };
+		04BC8ED928513D3A009E605F /* HideMenubarIconsSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8ED828513D3A009E605F /* HideMenubarIconsSettingView.swift */; };
+		04BC8EDB285146BF009E605F /* HideMenubarIconsSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8EDA285146BF009E605F /* HideMenubarIconsSettingVM.swift */; };
+		04BC8EDD28515CE0009E605F /* NSView++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8EDC28515CE0009E605F /* NSView++.swift */; };
 		04BF97682790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BF97672790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift */; };
 		04BF976B27908D5400E7C0E2 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 04BF976A27908D5400E7C0E2 /* KeyboardShortcuts */; };
 		04D68B0D2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D68B0C2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift */; };
@@ -444,6 +447,9 @@
 		04BC8EC8284FF30A009E605F /* NotificationNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNames.swift; sourceTree = "<group>"; };
 		04BC8ECE285008C1009E605F /* RadioSettingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioSettingModel.swift; sourceTree = "<group>"; };
 		04BC8ED1285137D2009E605F /* HideMenubarIconsSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HideMenubarIconsSwitch.swift; sourceTree = "<group>"; };
+		04BC8ED828513D3A009E605F /* HideMenubarIconsSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HideMenubarIconsSettingView.swift; sourceTree = "<group>"; };
+		04BC8EDA285146BF009E605F /* HideMenubarIconsSettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HideMenubarIconsSettingVM.swift; sourceTree = "<group>"; };
+		04BC8EDC28515CE0009E605F /* NSView++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSView++.swift"; sourceTree = "<group>"; };
 		04BF97672790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowFinderPathbarSwitch.swift; sourceTree = "<group>"; };
 		04D68B0C2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowUserLibrarySwitch.swift; sourceTree = "<group>"; };
 		04E03AF7275E6B4E00EA5FB9 /* AutohideDockSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutohideDockSwitch.swift; sourceTree = "<group>"; };
@@ -897,6 +903,7 @@
 				04BF977327908EDF00E7C0E2 /* Radio */,
 				04BF977427908EF000E7C0E2 /* AirPods */,
 				04BF977727908F3500E7C0E2 /* PomodoroTimer */,
+				04BC8ED428513CC8009E605F /* HideMenubarIcons */,
 				04BF977527908F0000E7C0E2 /* About */,
 			);
 			path = Setting;
@@ -924,8 +931,18 @@
 				0493376127625BBD00AE779A /* NSBezierPath++.swift */,
 				041D726228353B380083092D /* NSImage+SymbolName.swift */,
 				0444D5FF283998B000327D0B /* CGKeyCode++.swift */,
+				04BC8EDC28515CE0009E605F /* NSView++.swift */,
 			);
 			path = Extension;
+			sourceTree = "<group>";
+		};
+		04BC8ED428513CC8009E605F /* HideMenubarIcons */ = {
+			isa = PBXGroup;
+			children = (
+				04BC8ED828513D3A009E605F /* HideMenubarIconsSettingView.swift */,
+				04BC8EDA285146BF009E605F /* HideMenubarIconsSettingVM.swift */,
+			);
+			path = HideMenubarIcons;
 			sourceTree = "<group>";
 		};
 		04BF976C27908E0100E7C0E2 /* OnlySwitchList */ = {
@@ -1434,6 +1451,7 @@
 				041D726328353B380083092D /* NSImage+SymbolName.swift in Sources */,
 				043E5D6A2757D68800ADC004 /* MuteSwitch.swift in Sources */,
 				0493378C2762654600AE779A /* LayoutDefine.swift in Sources */,
+				04BC8ED928513D3A009E605F /* HideMenubarIconsSettingView.swift in Sources */,
 				049337992762C0B300AE779A /* RadioSettingVM.swift in Sources */,
 				04B2544F283BE94E00D253E2 /* SoundWaveModel.swift in Sources */,
 				04F118C427AED8BC005DA861 /* GitHubReleaseModel.swift in Sources */,
@@ -1450,6 +1468,7 @@
 				04B25451283BEB8400D253E2 /* SwitchBarModel.swift in Sources */,
 				04581DBD27653C35008ADF30 /* AirPodsSettingView.swift in Sources */,
 				049337922762BA3200AE779A /* SettingView.swift in Sources */,
+				04BC8EDB285146BF009E605F /* HideMenubarIconsSettingVM.swift in Sources */,
 				0493376427625D6F00AE779A /* RadioPlayerItem.swift in Sources */,
 				04A23B2B275D61BC00B454C8 /* NightShiftSwitch.swift in Sources */,
 				04FC1613283FDE1D00D4A4AC /* ShortcutsSettingModel.swift in Sources */,
@@ -1490,6 +1509,7 @@
 				04447B782755129D00CD2900 /* EventMonitor.swift in Sources */,
 				0493372327615A4900AE779A /* AutohideMenuBarSwitch.swift in Sources */,
 				0444D5FD2839873100327D0B /* ScreenTestSwitch.swift in Sources */,
+				04BC8EDD28515CE0009E605F /* NSView++.swift in Sources */,
 				047140BA2778890A005B160B /* PomodoroTimerSwitch.swift in Sources */,
 				04243487275641DB0044D0AD /* SwitchProvider.swift in Sources */,
 				04E517052846C048009826AB /* PomodoroTimerSettingModel.swift in Sources */,

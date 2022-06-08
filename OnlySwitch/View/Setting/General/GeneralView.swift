@@ -76,6 +76,7 @@ struct GeneralView: View, EmailProvider {
                         }.frame(maxWidth:150)
                     }.frame(height:Layout.generalSettingItemHeight)
                     
+                    //Recommendation
                     Toggle(isOn: $generalVM.showAds, label: {Text("Show Jack's App".localized())})
                         .frame(height: Layout.generalSettingItemHeight)
                     

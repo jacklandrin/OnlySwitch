@@ -166,7 +166,7 @@ enum SwitchType:UInt64, CaseIterable {
                                  onImage: NSImage(systemSymbolName: "display.trianglebadge.exclamationmark"),
                                  offImage: NSImage(systemSymbolName: "display.trianglebadge.exclamationmark"))
         case .hideMenubarIcons:
-            return SwitchBarInfo(title: "Hide Menubar Icons",
+            return SwitchBarInfo(title: "Hide Menu Bar Icons",
                                  onImage: NSImage(named: "mark_icon")!,
                                  offImage: NSImage(named: "mark_icon_off")!)
         }

@@ -115,7 +115,9 @@ class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
                     }
                 }
             } catch {
-                
+                DispatchQueue.main.async { [self] in
+                    model.processing = false
+                }
             }
         }
     }

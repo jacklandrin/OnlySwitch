@@ -100,7 +100,7 @@ struct Preferences {
     @UserDefaultValue(key: UserDefaults.Key.menubarCollapsable, defaultValue: false)
     var menubarCollaspable:Bool {
         didSet {
-            NotificationCenter.default.post(name: .menubarCollapsable, object: nil)
+            NotificationCenter.default.post(name: .menubarCollapsable, object: menubarCollaspable)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 NotificationCenter.default.post(name: .changeSettings, object: nil)
             }
@@ -110,7 +110,11 @@ struct Preferences {
     @UserDefaultValue(key: UserDefaults.Key.autoCollapseMenubarTime, defaultValue: 0)
     var autoCollapseMenubarTime:Int {
         didSet {
-            NotificationCenter.default.post(name: .changeAutoMenubarCollapseTime, object: nil)
+            NotificationCenter.default.post(name: .changeAutoMenubarCollapseTime, object: autoCollapseMenubarTime)
         }
+    }
+    
+    var isAutoCollapseMenubar:Bool {
+        autoCollapseMenubarTime != 0
     }
 }

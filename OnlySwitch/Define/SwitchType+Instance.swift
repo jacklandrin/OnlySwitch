@@ -64,7 +64,7 @@ extension SwitchType {
         case .screenTest:
             return ScreenTestSwitch()
         case .hideMenubarIcons:
-            return HideMenubarIconsSwitch()
+            return HideMenubarIconsSwitch.shared
         }
     }
 }

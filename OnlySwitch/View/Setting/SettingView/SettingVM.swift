@@ -16,6 +16,7 @@ enum SettingItem:String {
     case General = "General"
     case Customize = "Customize"
     case Shortcuts = "Shortcuts"
+    case HideMenubarIcons = "Hide Menu Bar Icons"
     case About = "About"
     
     
@@ -33,6 +34,8 @@ enum SettingItem:String {
             return AnyView(GeneralView())
         case .Customize:
             return AnyView(CustomizeView())
+        case .HideMenubarIcons:
+            return AnyView(HideMenubarIconsSettingView())
         case .About:
             return AnyView(AboutView())
         }
@@ -40,6 +43,6 @@ enum SettingItem:String {
 }
 
 class SettingVM:ObservableObject {
-    @Published var settingItems:[SettingItem] = [.General, .Customize, .Shortcuts, .Radio, .AirPods, .PomodoroTimer,.About]
+    @Published var settingItems:[SettingItem] = [.General, .Customize, .Shortcuts, .Radio, .AirPods, .PomodoroTimer,.HideMenubarIcons,.About]
     @Published var selection:SettingItem?
 }
