@@ -16,12 +16,15 @@ struct HideMenubarIconsSettingView: View {
                 .scaledToFit()
             Text("When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ and drag the icon to configure hidden section.".localized())
                 .padding(.horizontal, 5)
+                .padding(.vertical)
             Divider()
+            Spacer()
             Group {
                 Toggle(isOn: $vm.isEnable, label: {
                     Text("Enable".localized())
                         .padding(.leading, 5)
                 }).frame(height:30)
+        
                 HStack {
                     Text("Automatically hide icon after:".localized())
                     Menu(vm.converTimeDescription(duration: vm.automaticallyHideTime)) {
@@ -30,11 +33,11 @@ struct HideMenubarIconsSettingView: View {
                                 vm.automaticallyHideTime = duration
                             }
                         }
-                    }.frame(width:150)
-                }
+                    }.frame(width:150, height: 30)
+                }.padding(.bottom, 20)
                 
-            }.padding()
-            
+            }.padding(.horizontal)
+           
         }
     }
 }

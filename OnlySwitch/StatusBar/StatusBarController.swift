@@ -115,10 +115,14 @@ class StatusBarController {
             guard let strongSelf = self, let enable = notify.object as? Bool else {return}
             if enable {
                 strongSelf.setMarkButton()
+                Task {
+                    try? await HideMenubarIconsSwitch.shared.operationSwitch(isOn: false)
+                }
+                
             } else {
                 if let markItem = strongSelf.markItem {
                     NSStatusBar.system.removeStatusItem(markItem)
-                    strongSelf.markItem = nil
+//                    strongSelf.markItem = nil
                 }
             }
         })
