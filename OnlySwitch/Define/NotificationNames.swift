@@ -19,4 +19,7 @@ extension Notification.Name {
     static let soundWaveToggle = Notification.Name("soundWaveToggleNotification")
     static let changeSettings = Notification.Name("changeSettingNotification")
     static let spectra = Notification.Name(rawValue: "com.springradio.spectrabuffer")
+    static let menubarCollapsable = Notification.Name(rawValue: "menubarCollapsableNotificationName")
+    static let changeAutoMenubarCollapseTime = Notification.Name(rawValue: "changeAutoMenubarCollapseTime")
+    static let toggleMenubarCollapse = Notification.Name(rawValue: "toggleMenubarCollapse")
 }

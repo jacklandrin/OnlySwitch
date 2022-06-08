@@ -63,6 +63,8 @@ extension SwitchType {
             return AppleMusicSwitch.shared
         case .screenTest:
             return ScreenTestSwitch()
+        case .hideMenubarIcons:
+            return HideMenubarIconsSwitch()
         }
     }
 }

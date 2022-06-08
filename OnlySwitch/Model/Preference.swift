@@ -95,4 +95,22 @@ struct Preferences {
             NotificationCenter.default.post(name: .changeSettings, object: nil)
         }
     }
+    
+    // MARK: - Hidden Menubar
+    @UserDefaultValue(key: UserDefaults.Key.menubarCollapsable, defaultValue: false)
+    var menubarCollaspable:Bool {
+        didSet {
+            NotificationCenter.default.post(name: .menubarCollapsable, object: nil)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                NotificationCenter.default.post(name: .changeSettings, object: nil)
+            }
+        }
+    }
+    
+    @UserDefaultValue(key: UserDefaults.Key.autoCollapseMenubarTime, defaultValue: 0)
+    var autoCollapseMenubarTime:Int {
+        didSet {
+            NotificationCenter.default.post(name: .changeAutoMenubarCollapseTime, object: nil)
+        }
+    }
 }

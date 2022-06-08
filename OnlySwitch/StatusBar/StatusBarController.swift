@@ -17,7 +17,13 @@ struct OtherPopover {
 
 class StatusBarController {
 
-    private var statusItem: NSStatusItem
+    struct MarkItemLength {
+        static let collapse:CGFloat = 10000
+        static let normal:CGFloat = NSStatusItem.squareLength
+    }
+    
+    private var mainItem: NSStatusItem
+    private var markItem: NSStatusItem
     private var popover: NSPopover
     private var eventMonitor : EventMonitor?
     private var hasOtherPopover = false
@@ -47,21 +53,23 @@ class StatusBarController {
         self.popover = popover
         
         
-        statusItem = NSStatusBar.system.statusItem(withLength:NSStatusItem.squareLength)
+        mainItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+        markItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         
-        setStatusBarButton(image: currentMenubarIcon)
+        setMainItemButton(image: currentMenubarIcon)
+        setMarkButton()
         
         eventMonitor = EventMonitor(mask: [.leftMouseDown, .rightMouseDown], handler: mouseEventHandler)
         
         NotificationCenter.default.addObserver(forName: .changeMenuBarIcon, object: nil, queue: .main, using: {[weak self] notify in
             guard let strongSelf = self else {return}
             let newImageName = notify.object as! String
-            strongSelf.setStatusBarButton(image: newImageName)
+            strongSelf.setMainItemButton(image: newImageName)
         })
         
         NotificationCenter.default.addObserver(forName: .shouldHidePopover, object: nil, queue: .main, using: {[weak self] notify in
             guard let strongSelf = self else {return}
-            if let statusBarButton = strongSelf.statusItem.button {
+            if let statusBarButton = strongSelf.mainItem.button {
                 strongSelf.hidePopover(statusBarButton)
             }
             
@@ -97,6 +105,11 @@ class StatusBarController {
                 strongSelf.popover.contentSize.width = Layout.popoverWidth * 2 - 40
             }
         })
+        
+        NotificationCenter.default.addObserver(forName: .toggleMenubarCollapse, object: nil, queue: .main, using: { [weak self] notify in
+            guard let strongSelf = self, let isOn = notify.object as? Bool else {return}
+            strongSelf.markItem.length = isOn ? MarkItemLength.collapse : MarkItemLength.normal
+        })
     }
     
     @objc func togglePopover(sender:AnyObject) {
@@ -110,19 +123,27 @@ class StatusBarController {
         }
     }
     
-    func setStatusBarButton(image:String) {
-        if let statusBarButton = statusItem.button {
-            statusBarButton.image = NSImage(named: image)
-            statusBarButton.image?.size = NSSize(width: 18, height: 18)
-            statusBarButton.image?.isTemplate = true
+   private func setMainItemButton(image:String) {
+        if let mainItemButton = mainItem.button {
+            mainItemButton.image = NSImage(named: image)
+            mainItemButton.image?.size = NSSize(width: 18, height: 18)
+            mainItemButton.image?.isTemplate = true
 
-            statusBarButton.action = #selector(togglePopover(sender:))
-            statusBarButton.target = self
+            mainItemButton.action = #selector(togglePopover(sender:))
+            mainItemButton.target = self
+        }
+    }
+    
+    private func setMarkButton() {
+        if let markItemButton = markItem.button {
+            markItemButton.image = NSImage(named: "mark_icon")
+            markItemButton.image?.size = NSSize(width: 22, height: 18)
+            markItemButton.image?.isTemplate = true
         }
     }
     
     func showPopover(_ sender: AnyObject) {
-        if let statusBarButton = statusItem.button {
+        if let statusBarButton = mainItem.button {
             popover.show(relativeTo: statusBarButton.bounds, of: statusBarButton, preferredEdge: NSRectEdge.maxY)
             popover.contentViewController?.view.window?.makeKey()
             NotificationCenter.default.post(name: .showPopover, object: nil)

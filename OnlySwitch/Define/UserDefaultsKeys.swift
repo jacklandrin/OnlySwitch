@@ -27,6 +27,10 @@ extension UserDefaults {
         static let volume = "volumeKey"
         static let hasRunRadio = "hasRunRadioKey"
         static let radioStation = "radioStationKey"
+        //Hidden menubar
+        static let isMenubarCollapse = "isMenubarCollapseKey"
+        static let autoCollapseMenubarTime = "autoCollapseMenubarTimeKey"
+        static let menubarCollapsable = "menubarCollapsableKey"
         //Switch
         static let SwitchState = "SwitchStateKey"
         //Shortcuts
@@ -41,5 +45,6 @@ extension UserDefaults {
         static let MicVolume = "MicVolumeKey"
         static let ScreenSaverInterval = "ScreenSaverIntervalKey"
         static let AppLanguage = "app_lang"
+        
     }
 }

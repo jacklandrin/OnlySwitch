@@ -204,6 +204,8 @@
 		04BC8ECA284FF30A009E605F /* NotificationNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8EC8284FF30A009E605F /* NotificationNames.swift */; };
 		04BC8ECF285008C1009E605F /* RadioSettingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8ECE285008C1009E605F /* RadioSettingModel.swift */; };
 		04BC8ED0285008C1009E605F /* RadioSettingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8ECE285008C1009E605F /* RadioSettingModel.swift */; };
+		04BC8ED2285137D2009E605F /* HideMenubarIconsSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8ED1285137D2009E605F /* HideMenubarIconsSwitch.swift */; };
+		04BC8ED3285137D2009E605F /* HideMenubarIconsSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8ED1285137D2009E605F /* HideMenubarIconsSwitch.swift */; };
 		04BF97682790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BF97672790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift */; };
 		04BF976B27908D5400E7C0E2 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 04BF976A27908D5400E7C0E2 /* KeyboardShortcuts */; };
 		04D68B0D2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D68B0C2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift */; };
@@ -441,6 +443,7 @@
 		04BC8EC5284FEA52009E605F /* UserDefaultsKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsKeys.swift; sourceTree = "<group>"; };
 		04BC8EC8284FF30A009E605F /* NotificationNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNames.swift; sourceTree = "<group>"; };
 		04BC8ECE285008C1009E605F /* RadioSettingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioSettingModel.swift; sourceTree = "<group>"; };
+		04BC8ED1285137D2009E605F /* HideMenubarIconsSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HideMenubarIconsSwitch.swift; sourceTree = "<group>"; };
 		04BF97672790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowFinderPathbarSwitch.swift; sourceTree = "<group>"; };
 		04D68B0C2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowUserLibrarySwitch.swift; sourceTree = "<group>"; };
 		04E03AF7275E6B4E00EA5FB9 /* AutohideDockSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutohideDockSwitch.swift; sourceTree = "<group>"; };
@@ -559,6 +562,7 @@
 				0427365527C1ADA60068108F /* SpotifySwitch.swift */,
 				0451766D27C28BA300006BA0 /* AppleMusicSwitch.swift */,
 				0444D5FC2839873100327D0B /* ScreenTestSwitch.swift */,
+				04BC8ED1285137D2009E605F /* HideMenubarIconsSwitch.swift */,
 			);
 			path = EverySwitch;
 			sourceTree = "<group>";
@@ -1355,6 +1359,7 @@
 				0444D5F728394FDD00327D0B /* DockRecentSwitch.swift in Sources */,
 				04BC8EC7284FEA52009E605F /* UserDefaultsKeys.swift in Sources */,
 				0444D5CA283677DA00327D0B /* EverySwitchTests.swift in Sources */,
+				04BC8ED3285137D2009E605F /* HideMenubarIconsSwitch.swift in Sources */,
 				04BC8ED0285008C1009E605F /* RadioSettingModel.swift in Sources */,
 				041D725D28353A3F0083092D /* DarkModeSwitch.swift in Sources */,
 				0444D5CD2836836E00327D0B /* NetworkingTest.swift in Sources */,
@@ -1478,6 +1483,7 @@
 				04E03B00275F93B900EA5FB9 /* AirPodsSwitch.swift in Sources */,
 				043E5D6F2758116800ADC004 /* NSSound_SystemVolumeExtension.swift in Sources */,
 				04D68B0D2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift in Sources */,
+				04BC8ED2285137D2009E605F /* HideMenubarIconsSwitch.swift in Sources */,
 				0493375F27625AAC00AE779A /* SpectrumView.swift in Sources */,
 				047140BE2778A416005B160B /* PomodoroTimerSettingView.swift in Sources */,
 				0424348F27565F9F0044D0AD /* NSAppleEventDescriptor.swift in Sources */,
