@@ -17,5 +17,6 @@ extension Notification.Name {
     static let changePopoverAppearance = Notification.Name("changePopoverAppearanceNotificationName")
     static let volumeChange = Notification.Name("volumeChange")
     static let soundWaveToggle = Notification.Name("soundWaveToggleNotification")
-    static let changeSettings = NSNotification.Name("changeSettingNotification")
+    static let changeSettings = Notification.Name("changeSettingNotification")
+    static let spectra = Notification.Name(rawValue: "com.springradio.spectrabuffer")
 }

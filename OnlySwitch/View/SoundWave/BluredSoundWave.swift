@@ -18,7 +18,7 @@ struct BluredSoundWave: View {
     @StateObject var soundWave:SoundWaveVM = SoundWaveVM()
     var body: some View {
         SoundWaveView(spectra: self.soundWave.spectra, barWidth: self.soundWave.barWidth, space: self.soundWave.space, leftColor: leftColors, rightColor: rightColors)
-            .onReceive(NotificationCenter.default.publisher(for: spectraNofiticationName)) { notification in
+            .onReceive(NotificationCenter.default.publisher(for: .spectra)) { notification in
                 let spectra = notification.object as! [[Float]]
                 self.soundWave.setSpectra(spectra: spectra)
             }

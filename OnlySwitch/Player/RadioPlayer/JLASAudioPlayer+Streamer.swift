@@ -59,7 +59,7 @@ extension JLASAudioPlayer : StreamingDelegate {
 //        print("buffer:\(buffer)")
         let spectra = self.analyzer.analyse(with: buffer)
         DispatchQueue.main.async {
-            NotificationCenter.default.post(name: spectraNofiticationName, object: spectra)
+            NotificationCenter.default.post(name: .spectra, object: spectra)
         }
 
         self.bufferring = false

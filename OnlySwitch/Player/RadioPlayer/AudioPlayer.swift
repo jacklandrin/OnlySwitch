@@ -8,8 +8,6 @@
 import AppKit
 import MediaPlayer
 
-let spectraNofiticationName = NSNotification.Name(rawValue: "com.springradio.spectrabuffer")
-
 protocol AudioPlayer {
     var currentAudioStation:RadioPlayerItem? {get set}
     var analyzer:RealtimeAnalyzer {get set}
