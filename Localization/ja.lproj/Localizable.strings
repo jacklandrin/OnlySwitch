@@ -108,3 +108,10 @@
 "Join:" = "加入:";
 "Press left or right arrow key to change background color" = "キーボードの左右の矢印キーを押して、背景色を切り替えます";
 "Show Finder Path Bar" = "ファインダーパスバーを表示";
+"Hide Menu Bar Icons" = "メニューバーのアイコンを非表示にする";
+"seconds" = "秒";
+"never" = "一度もない";
+"1 minute" = "1 分";
+"Switch enable" = "スイッチの有効化";
+"Automatically hide icons after:" = "にアイコンを自動的に非表示にします:";
+"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section." = "スイッチがオンの場合、矢印アイコンの左側の項目は非表示になります。 ⌘（command）を押しながらアイコンをドラッグして、非表示セクションを構成します。";

@@ -21,9 +21,11 @@ struct SettingView: View {
                     item.page()
                 }label:{
                     Text(item.rawValue.localized())
-                }.frame(width:170, alignment:.leading)
+                        .frame(minWidth: 190, alignment:.leading)
+                        .lineLimit(2)
+                }
             }.listStyle(SidebarListStyle())
-                .frame(width:170)
+                .frame(minWidth:190)
             settingVM.settingItems.first?.page()
         }.navigationTitle("Setting")
         .onAppear{

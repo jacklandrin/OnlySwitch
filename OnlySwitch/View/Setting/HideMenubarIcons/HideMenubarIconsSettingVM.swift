@@ -32,7 +32,7 @@ class HideMenubarIconsSettingVM:ObservableObject {
         if duration == 0 {
             return "never".localized()
         } else if duration == 60 {
-            return "1 minute"
+            return "1 minute".localized()
         } else {
             return "\(duration) " + "seconds".localized()
         }

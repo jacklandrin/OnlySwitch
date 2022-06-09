@@ -108,3 +108,10 @@
 "Join:" = "Katılmak:";
 "Press left or right arrow key to change background color" = "Arka plan rengini değiştirmek için sol veya sağ ok tuşuna basın";
 "Show Finder Path Bar" = "Bulucu Yol Çubuğunu Göster";
+"Hide Menu Bar Icons" = "Menü Çubuğu Simgelerini Gizle";
+"seconds" = "saniye";
+"never" = "asla";
+"1 minute" = "1 dakika";
+"Switch enable" = "Switch etkinleştirmek";
+"Automatically hide icons after:" = "Simgeleri otomatik olarak gizle:";
+"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section." = "Switch açıkken, okla gösterilen simgenin solundaki öğeler gizlenir. Gizli bölümü yapılandırmak için ⌘ (command) tuşunu basılı tutun ve simgeyi sürükleyin.";

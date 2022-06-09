@@ -56,12 +56,9 @@ class HideMenubarIconsSwitch:SwitchProvider {
     }
     
     private func autoCollapseIfNeeded() {
+        timer?.invalidate()
         guard Preferences.shared.isAutoCollapseMenubar else {return}
-        guard !isMenubarCollapse else
-        {
-            timer?.invalidate()
-            return
-        }
+        guard !isMenubarCollapse else { return }
         DispatchQueue.main.async {
             self.startTimerToCollapse()
         }

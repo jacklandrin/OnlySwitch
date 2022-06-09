@@ -105,3 +105,10 @@
 "Join:" = "pridružiti:";
 "Press left or right arrow key to change background color" = "Pritisnite tipku sa strelicom lijevo ili desno da promijenite boju pozadine";
 "Show Finder Path Bar" = "Prikaži traku puta Finder";
+"Hide Menu Bar Icons" = "Sakrij ikone trake izbornika";
+"seconds" = "sekundi";
+"never" = "nikada";
+"1 minute" = "1 minuta";
+"Switch enable" = "Switch omogućen";
+"Automatically hide icons after:" = "Automatski sakrijte ikone nakon:";
+"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section." = "Kada je switch uključen, stavke s lijeve strane ikone sa strelicom su skrivene. Držite ⌘ (command) i povucite ikonu da biste konfigurirali skriveni odjeljak.";

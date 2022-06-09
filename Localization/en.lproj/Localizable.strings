@@ -107,6 +107,10 @@
 "Join:" = "Join:";
 "Press left or right arrow key to change background color" = "Press left or right arrow key to change background color";
 "Show Finder Path Bar" = "Show Finder Path Bar";
+"Hide Menu Bar Icons" = "Hide Menu Bar Icons";
 "seconds" = "seconds";
 "never" = "never";
 "1 minute" = "1 minute";
+"Switch enable" = "Switch enable";
+"Automatically hide icons after:" = "Automatically hide icons after:";
+"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section." = "When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section.";
