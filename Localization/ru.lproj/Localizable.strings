@@ -107,3 +107,10 @@
 "Join:" = "Присоединиться:";
 "Press left or right arrow key to change background color" = "Нажмите клавишу со стрелкой влево или вправо, чтобы изменить цвет фона";
 "Show Finder Path Bar" = "Показать панель поиска";
+"Hide Menu Bar Icons" = "Скрыть значки строки меню";
+"seconds" = "секунды";
+"never" = "никогда";
+"1 minute" = "1 минута";
+"Switch enable" = "Включить переключатель";
+"Automatically hide icons after:" = "Автоматически скрывать значки через:";
+"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section." = "Когда переключатель включен, элементы слева от значка со стрелкой скрыты. Удерживайте ⌘ (command) и перетащите значок, чтобы настроить скрытый раздел.";

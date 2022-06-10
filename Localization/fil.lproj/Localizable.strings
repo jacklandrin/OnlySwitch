@@ -108,3 +108,10 @@
 "Join:" = "Sumali:";
 "Press left or right arrow key to change background color" = "Pindutin ang kaliwa o kanang arrow key upang baguhin ang kulay ng background";
 "Show Finder Path Bar" = "Ipakita ang Finder Pathbar";
+"Hide Menu Bar Icons" = "Itago ang Menu Bar Icons";
+"seconds" = "segundo";
+"never" = "hindi kailanman";
+"1 minute" = "1 minuto";
+"Switch enable" = "Paganahin ang switch";
+"Automatically hide icons after:" = "Awtomatikong itago ang mga icon pagkatapos ng:";
+"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section." = "Kapag naka-on ang switch, nakatago ang mga item sa kaliwa ng arrow-pointing icon. Pindutin ang ⌘ (command) at i-drag ang icon para i-configure ang nakatagong seksyon.";

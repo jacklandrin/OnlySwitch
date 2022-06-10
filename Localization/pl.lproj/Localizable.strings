@@ -108,3 +108,10 @@
 "Join:" = "Przystąp:";
 "Press left or right arrow key to change background color" = "Naciśnij klawisz strzałki w lewo lub w prawo, aby zmienić kolor tła";
 "Show Finder Path Bar" = "Pokaż pasek ścieżki Findera";
+"Hide Menu Bar Icons" = "Ukryj ikony paska menu";
+"seconds" = "sekundy";
+"never" = "nigdy";
+"1 minute" = "1 minuta";
+"Switch enable" = "Włącz Switch";
+"Automatically hide icons after:" = "Automatycznie ukryj ikony po:";
+"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section." = "Gdy przełącznik jest włączony, elementy po lewej stronie ikony wskazującej strzałkę są ukryte. Przytrzymaj ⌘ (command) i przeciągnij ikonę, aby skonfigurować ukrytą sekcję.";

@@ -106,3 +106,10 @@ Creado por Jacklandrin el día 14/12/2021.
 "Join:" = "Entrar:";
 "Press left or right arrow key to change background color" = "Presione la tecla de flecha izquierda o derecha para cambiar el color de fondo";
 "Show Finder Path Bar" = "Mostrar la barra de ruta del Finder";
+"Hide Menu Bar Icons" = "Ocultar iconos de la barra de menús";
+"seconds" = "segundos";
+"never" = "nunca";
+"1 minute" = "1 minuto";
+"Switch enable" = "habilitar switch";
+"Automatically hide icons after:" = "Ocultar iconos automáticamente después de:";
+"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section." = "Cuando el interruptor está encendido, los elementos a la izquierda del icono que apunta con la flecha están ocultos. Mantenga presionada la tecla ⌘ (command) y arrastre el icono para configurar la sección oculta.";
