@@ -161,6 +161,8 @@ class ShortcutsSettingVM:ObservableObject {
     
     /// load json data from github
     func loadData() {
+        //for test
+//        self.loadDataFromLocal()
         self.presenter.requestShortcutsJson(complete: { list in
             guard let list = list else {
                 DispatchQueue.main.async {

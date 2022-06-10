@@ -41,6 +41,12 @@
         "link": "https://www.icloud.com/shortcuts/c492bf6cdbb645df94dedf7bdb8847d7",
         "author": "jacklandrin",
         "description": "Display current IP and address information"
+    },
+    {
+        "name": "Autohide menu bar in full screen",
+        "link": "https://www.icloud.com/shortcuts/29341dfe669e4c898fd78faa6549dcbb",
+        "author": "jacklandrin",
+        "description": "Automatically hide and show menu bar in full screen (Monterey)"
     }
     
 ]
