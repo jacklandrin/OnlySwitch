@@ -36,22 +36,22 @@ Everyone can contribute macOS Shortcuts for OnlySwitch now. Please read [How to 
 
 ## Switch list
 
-| Switch            | status   | Switch                   | status            |
-|:------------------|----------|:-------------------------|:------------------|
-| Hide desktop      | finished | Hide notch               | exist some issues |
-| Dark mode         | finished | Low power mode           | require password  |
-| Screen Saver      | finished | Show Finder Path Bar     | finished          |
-| Night Shift       | finished | Mute mic                 | finished          |
-| Autohide Dock     | finished | Small launchpad icon     | finished          |
-| Airpods           | finished | Pomodoro timer           | finished          |
-| Bluetooth         | finished | Show extension name      | finished          |
-| Xcode cache       | finished | Show user library folder | finished          |
-| Autohide Menu Bar | finished | Mute                     | finished          |
-| Show hidden files | finished | Empty pasteboard         | finished          |
-| Radio Station     | finished | Empty trash              | finished          |
-| Keep awake        | finished | Show Recent Apps on Dock | finished          |
-| Spotify           | finished | Apple Music              | finished          |
-| Screen Test       | finished |                          |                   |
+| Switch            | status          | Switch                   | status            |
+|:------------------|-----------------|:-------------------------|:------------------|
+| Hide desktop      | finished        | Hide notch               | exist some issues |
+| Dark mode         | finished        | Low power mode           | require password  |
+| Screen Saver      | finished        | Show Finder Path Bar     | finished          |
+| Night Shift       | finished        | Mute mic                 | finished          |
+| Autohide Dock     | finished        | Small launchpad icon     | finished          |
+| Airpods           | finished        | Pomodoro timer           | finished          |
+| Bluetooth         | finished        | Show extension name      | finished          |
+| Xcode cache       | finished        | Show user library folder | finished          |
+| Autohide Menu Bar | finished        | Mute                     | finished          |
+| Show hidden files | finished        | Empty pasteboard         | finished          |
+| Radio Station     | finished        | Empty trash              | finished          |
+| Keep awake        | finished        | Show Recent Apps on Dock | finished          |
+| Spotify           | finished        | Apple Music              | finished          |
+| Screen Test       | partly finished | Hide Menu Bar Icons      | partly finished   |
 
 Since Version 1.3, switches can be added or removed on list.
 
@@ -91,6 +91,11 @@ Low Power Mode uses Terminal commands that require root access, so the app will 
 
 ## About Screen Test
 In Version 2.3, Only Switch brings new feature, screen test. It provides a pure color view by full screen mode, you can check dead pixel via it. Press left and right arrow key, the color will change among black, white, red, green and blue. This function also can be used for screen cleaning, as you can clearly see the stains on screen.
+
+## About Hide Menu Bar Icons
+This feature is new in version 2.3.2. To be honest, Hidden and Dozer are both good apps about this function. Many users install OnlySwitch and them simultaneously, but this also squeezes the menu bar, which is already lacking in space. Therefore, the feature integrates in OnlySwitch.
+![](https://www.jacklandrin.com/wp-content/uploads/2022/06/mark_icon_guide.png)
+When the switch is on, items in the left of the split(arrow-pointing) icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section. If you want to use it no longer, you can disable it in preferencs, the split icon will disappear. You also can set interval of autohide for it here.
 
 ## About Shortcuts
 Shortcuts is a powerful iOS app which can help people make fantastic automation functions. It comes to macOS in Monterey as well. Many users eager OnlySwitch has more customizable features, and one good news is that the app supports Shortcuts display since Version 1.7. More menubar space therefore is saved. 
@@ -145,6 +150,7 @@ I found I can't run the preview of SwiftUI by Xcode 13.2.1 on my M1 Pro Macbook.
 * Sound Source: [mixkit](https://mixkit.co)
 * [KeyboardShortcuts](https://github.com/sindresorhus/KeyboardShortcuts)
 * Apple Music & Spotify Switch refer to [SpotMenu](https://github.com/kmikiy/SpotMenu)
+* The idea of hide menu bar icons from [Hidden](https://github.com/dwarvesf/hidden)
 
 ## Contributors
 
