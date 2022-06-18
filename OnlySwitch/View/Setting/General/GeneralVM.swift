@@ -125,8 +125,5 @@ class GeneralVM:ObservableObject {
     }
 }
 
-enum SwitchListAppearance:String {
-    case single = "Single Column"
-    case dual = "Two Columns"
-}
+
 

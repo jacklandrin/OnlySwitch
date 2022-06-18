@@ -127,6 +127,9 @@
 		047140BE2778A416005B160B /* PomodoroTimerSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140BD2778A416005B160B /* PomodoroTimerSettingView.swift */; };
 		047140C02778A478005B160B /* PomodoroTimerSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140BF2778A478005B160B /* PomodoroTimerSettingVM.swift */; };
 		047140C22778D2A1005B160B /* SmallLaunchpadIconSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140C12778D2A1005B160B /* SmallLaunchpadIconSwitch.swift */; };
+		047F3A34285DE600004FFCDF /* EffectSoundHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140B527788486005B160B /* EffectSoundHelper.swift */; };
+		047F3A37285DE67A004FFCDF /* SwitchListApperanceDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047F3A36285DE67A004FFCDF /* SwitchListApperanceDefine.swift */; };
+		047F3A38285DE67A004FFCDF /* SwitchListApperanceDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047F3A36285DE67A004FFCDF /* SwitchListApperanceDefine.swift */; };
 		049337212761286400AE779A /* CleanProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337202761286400AE779A /* CleanProgressView.swift */; };
 		0493372327615A4900AE779A /* AutohideMenuBarSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493372227615A4900AE779A /* AutohideMenuBarSwitch.swift */; };
 		0493372527615EA400AE779A /* HiddenFilesSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493372427615EA400AE779A /* HiddenFilesSwitch.swift */; };
@@ -203,7 +206,6 @@
 		04BC8EC9284FF30A009E605F /* NotificationNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8EC8284FF30A009E605F /* NotificationNames.swift */; };
 		04BC8ECA284FF30A009E605F /* NotificationNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8EC8284FF30A009E605F /* NotificationNames.swift */; };
 		04BC8ECF285008C1009E605F /* RadioSettingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8ECE285008C1009E605F /* RadioSettingModel.swift */; };
-		04BC8ED0285008C1009E605F /* RadioSettingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8ECE285008C1009E605F /* RadioSettingModel.swift */; };
 		04BC8ED2285137D2009E605F /* HideMenubarIconsSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8ED1285137D2009E605F /* HideMenubarIconsSwitch.swift */; };
 		04BC8ED3285137D2009E605F /* HideMenubarIconsSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8ED1285137D2009E605F /* HideMenubarIconsSwitch.swift */; };
 		04BC8ED928513D3A009E605F /* HideMenubarIconsSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8ED828513D3A009E605F /* HideMenubarIconsSettingView.swift */; };
@@ -369,6 +371,7 @@
 		047140BD2778A416005B160B /* PomodoroTimerSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimerSettingView.swift; sourceTree = "<group>"; };
 		047140BF2778A478005B160B /* PomodoroTimerSettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimerSettingVM.swift; sourceTree = "<group>"; };
 		047140C12778D2A1005B160B /* SmallLaunchpadIconSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallLaunchpadIconSwitch.swift; sourceTree = "<group>"; };
+		047F3A36285DE67A004FFCDF /* SwitchListApperanceDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchListApperanceDefine.swift; sourceTree = "<group>"; };
 		049337202761286400AE779A /* CleanProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanProgressView.swift; sourceTree = "<group>"; };
 		0493372227615A4900AE779A /* AutohideMenuBarSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutohideMenuBarSwitch.swift; sourceTree = "<group>"; };
 		0493372427615EA400AE779A /* HiddenFilesSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HiddenFilesSwitch.swift; sourceTree = "<group>"; };
@@ -691,6 +694,7 @@
 				041D726628353BC20083092D /* SwitchType+Instance.swift */,
 				041D72682835865B0083092D /* SwitchError.swift */,
 				04BC8EC8284FF30A009E605F /* NotificationNames.swift */,
+				047F3A36285DE67A004FFCDF /* SwitchListApperanceDefine.swift */,
 			);
 			path = Define;
 			sourceTree = "<group>";
@@ -1377,13 +1381,14 @@
 				04BC8EC7284FEA52009E605F /* UserDefaultsKeys.swift in Sources */,
 				0444D5CA283677DA00327D0B /* EverySwitchTests.swift in Sources */,
 				04BC8ED3285137D2009E605F /* HideMenubarIconsSwitch.swift in Sources */,
-				04BC8ED0285008C1009E605F /* RadioSettingModel.swift in Sources */,
 				041D725D28353A3F0083092D /* DarkModeSwitch.swift in Sources */,
 				0444D5CD2836836E00327D0B /* NetworkingTest.swift in Sources */,
+				047F3A34285DE600004FFCDF /* EffectSoundHelper.swift in Sources */,
 				0444D5DE2838553B00327D0B /* NSSound_SystemVolumeExtension.swift in Sources */,
 				0444D5EE283946EC00327D0B /* KeepAwakeSwitch.swift in Sources */,
 				0444D5F02839483500327D0B /* EmptyTrashSwitch.swift in Sources */,
 				0444D5F628394F1200327D0B /* ShowFinderPathbarSwitch.swift in Sources */,
+				047F3A38285DE67A004FFCDF /* SwitchListApperanceDefine.swift in Sources */,
 				0444D5F128394A1900327D0B /* ShowUserLibrarySwitch.swift in Sources */,
 				0444D5DC2836F1E700327D0B /* CGImage++.swift in Sources */,
 				0444D5F428394BD400327D0B /* LowPowerModeSwitch.swift in Sources */,
@@ -1506,6 +1511,7 @@
 				0493375F27625AAC00AE779A /* SpectrumView.swift in Sources */,
 				047140BE2778A416005B160B /* PomodoroTimerSettingView.swift in Sources */,
 				0424348F27565F9F0044D0AD /* NSAppleEventDescriptor.swift in Sources */,
+				047F3A37285DE67A004FFCDF /* SwitchListApperanceDefine.swift in Sources */,
 				04447B782755129D00CD2900 /* EventMonitor.swift in Sources */,
 				0493372327615A4900AE779A /* AutohideMenuBarSwitch.swift in Sources */,
 				0444D5FD2839873100327D0B /* ScreenTestSwitch.swift in Sources */,
@@ -1636,7 +1642,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 58;
+				CURRENT_PROJECT_VERSION = 59;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -1662,7 +1668,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 58;
+				CURRENT_PROJECT_VERSION = 59;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -1810,7 +1816,7 @@
 				CODE_SIGN_IDENTITY = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 58;
+				CURRENT_PROJECT_VERSION = 59;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1861,7 +1867,7 @@
 				CODE_SIGN_IDENTITY = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 58;
+				CURRENT_PROJECT_VERSION = 59;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1908,7 +1914,7 @@
 				CODE_SIGN_ENTITLEMENTS = IntentsExtension/IntentsExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 58;
+				CURRENT_PROJECT_VERSION = 59;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1938,7 +1944,7 @@
 				CODE_SIGN_ENTITLEMENTS = IntentsExtension/IntentsExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 58;
+				CURRENT_PROJECT_VERSION = 59;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
