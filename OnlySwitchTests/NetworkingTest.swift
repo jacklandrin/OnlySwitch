@@ -26,7 +26,7 @@ class NetworkingTest:XCTestCase {
         
         presenter.checkUpdate(complete: { success in
             if success {
-                XCTAssertEqual(self.presenter.latestVersion, "2.3")
+                XCTAssertEqual(self.presenter.latestVersion, "2.3.1")
                 exp.fulfill()
             } 
         })
