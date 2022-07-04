@@ -106,7 +106,7 @@
 "Screen Test" = "スクリーンテスト";
 "Version History:" = "バージョン履歴:";
 "Join:" = "加入:";
-"Press left or right arrow key to change background color" = "キーボードの左右の矢印キーを押して、背景色を切り替えます";
+"Press left or right arrow button to change background color" = "左矢印ボタンまたは右矢印ボタンを押して、背景色を変更します";
 "Show Finder Path Bar" = "ファインダーパスバーを表示";
 "Hide Menu Bar Icons" = "メニューバーのアイコンを非表示にする";
 "seconds" = "秒";

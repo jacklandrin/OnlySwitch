@@ -6,15 +6,21 @@
 //
 
 import Foundation
+import AppKit
+import SwiftUI
 
-class ScreenTestSwitch:SwitchProvider {
+class ScreenTestSwitch:SwitchProvider, CurrentScreen {
+    
+    static let shared = ScreenTestSwitch()
+    
     var type: SwitchType = .screenTest
     
     var delegate: SwitchDelegate?
     
+    var view:NSView?
+    
     func currentStatus() -> Bool {
-        return Router.isShown(windowController: Router.pureColorWindowController)
-        
+        return view != nil
     }
     
     func currentInfo() -> String {
@@ -24,9 +30,11 @@ class ScreenTestSwitch:SwitchProvider {
     func operationSwitch(isOn: Bool) async throws {
         DispatchQueue.main.async {
             if isOn {
-                OpenWindows.PureColor.open()
+                self.view = NSHostingView(rootView: PureColorView())
+                self.view?.enterFullScreenMode(self.getScreenWithMouse()!)
             } else {
-                Router.closeWindow(controller: Router.pureColorWindowController)
+                self.view?.exitFullScreenMode()
+                self.view = nil
             }
         }
     }

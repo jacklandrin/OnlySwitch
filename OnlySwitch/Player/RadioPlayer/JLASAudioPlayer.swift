@@ -29,7 +29,7 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
     
     override init() {
         super.init()
-//        self.setupRemoteCommandCenter()
+        self.setupRemoteCommandCenter()
         NotificationCenter.default.addObserver(forName: .showPopover, object: nil, queue: .main, using: { _ in
             self.isAppActive = true
         })
@@ -75,7 +75,7 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
         
         self.bufferring = true
        
-//        self.setupNowPlaying()
+        self.setupNowPlaying()
     }
     
     func notm3uStream(url:String) -> Bool {

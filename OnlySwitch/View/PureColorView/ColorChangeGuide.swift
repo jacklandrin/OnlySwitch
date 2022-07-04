@@ -12,27 +12,29 @@ struct ColorChangeGuide: View {
     var body: some View {
         VStack {
             HStack {
-                Image(systemName: "arrow.up.square")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 100, height: 100)
-            }
-            HStack {
-                Image(systemName: "arrow.left.square.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 100, height: 100)
-                Image(systemName: "arrow.down.square")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 100, height: 100)
-                Image(systemName: "arrow.right.square.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 100, height: 100)
+                Button(action: {
+                    vm.pressLeftButton()
+                }, label: {
+                    Image(systemName: "arrow.left.square")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 100, height: 100)
+                }).buttonStyle(.plain)
+                
+                Spacer().frame(width:150)
+
+                Button(action: {
+                    vm.pressRightButton()
+                }, label: {
+                    Image(systemName: "arrow.right.square")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 100, height: 100)
+                }).buttonStyle(.plain)
+                
             }
             
-            Text("Press left or right arrow key to change background color".localized())
+            Text("Press left or right arrow button to change background color".localized())
                 .font(Font.system(size: 15))
                 .fontWeight(.bold)
                 .padding(.top, 20)

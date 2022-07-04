@@ -9,26 +9,25 @@ import SwiftUI
 
 struct PureColorView: View {
     @ObservedObject var vm = PureColorVM()
-    @State var tipAlpha = 1.0
+
     var body: some View {
         ZStack {
             VStack {
                 HStack{
                     Spacer()
                     Button(action: {
-                        Router.closeWindow(controller: Router.pureColorWindowController)
-                        NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.screenTest)
+                        vm.exitScreenTestMode()
                     }, label: {
-                        Image(systemName: "x.circle")
+                        Image(systemName: "xmark.circle")
                             .font(.largeTitle)
                             .foregroundColor(vm.currentColor == .white ? .black : .white)
-                            .opacity(tipAlpha)
+                            .opacity(vm.tipAlpha)
                     })
                     .buttonStyle(.borderless)
                     .shadow(radius: 3)
                     .onHover(perform: { hover in
                         withAnimation {
-                            tipAlpha = hover ? 1.0 : 0.0
+                            vm.isHovering = hover
                         }
                     })
                     .padding(20)
@@ -37,21 +36,23 @@ struct PureColorView: View {
             }
             ColorChangeGuide().environmentObject(vm)
                 .frame(width: 700, height: 700)
-                .opacity(tipAlpha)
+                .opacity(vm.tipAlpha)
                 .onHover(perform: { hover in
                     withAnimation {
-                        tipAlpha = hover ? 1.0 : 0.0
+                        vm.isHovering = hover
                     }
                 })
         }.background(vm.currentColor)
             .onAppear{
-                vm.startDetectKeyboard()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
                     withAnimation {
-                        tipAlpha = 0.0
+                        if !vm.isHovering {
+                            vm.tipAlpha = 0.0
+                        }
                     }
                 }
             }
+            .ignoresSafeArea()
     }
 }
 

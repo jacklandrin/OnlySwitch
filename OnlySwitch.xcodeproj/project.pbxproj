@@ -98,10 +98,8 @@
 		0444D5F728394FDD00327D0B /* DockRecentSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046FF3C5279A2C0B00506953 /* DockRecentSwitch.swift */; };
 		0444D5FB2839827A00327D0B /* PureColorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0444D5FA2839827A00327D0B /* PureColorView.swift */; };
 		0444D5FD2839873100327D0B /* ScreenTestSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0444D5FC2839873100327D0B /* ScreenTestSwitch.swift */; };
-		0444D600283998B000327D0B /* CGKeyCode++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0444D5FF283998B000327D0B /* CGKeyCode++.swift */; };
 		0444D6032839997B00327D0B /* PureColorVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0444D6022839997B00327D0B /* PureColorVM.swift */; };
 		0444D6052839A05100327D0B /* ColorChangeGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0444D6042839A05100327D0B /* ColorChangeGuide.swift */; };
-		0444D60C2839B21600327D0B /* CGKeyCode++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0444D5FF283998B000327D0B /* CGKeyCode++.swift */; };
 		0451765C27C27AFC00006BA0 /* MusicPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0451765B27C27AFC00006BA0 /* MusicPlayer.swift */; };
 		0451766527C283BC00006BA0 /* AppleMusicPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0451766427C283BC00006BA0 /* AppleMusicPlayer.swift */; };
 		0451766B27C284D600006BA0 /* iTunesScripting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0451766727C284D600006BA0 /* iTunesScripting.swift */; };
@@ -342,7 +340,6 @@
 		0444D5EA28393FF800327D0B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0444D5FA2839827A00327D0B /* PureColorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PureColorView.swift; sourceTree = "<group>"; };
 		0444D5FC2839873100327D0B /* ScreenTestSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenTestSwitch.swift; sourceTree = "<group>"; };
-		0444D5FF283998B000327D0B /* CGKeyCode++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGKeyCode++.swift"; sourceTree = "<group>"; };
 		0444D6022839997B00327D0B /* PureColorVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PureColorVM.swift; sourceTree = "<group>"; };
 		0444D6042839A05100327D0B /* ColorChangeGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorChangeGuide.swift; sourceTree = "<group>"; };
 		04464F4C2791D46B0065DF61 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -934,7 +931,6 @@
 				040E972A27611C9C003D9D42 /* URL++.swift */,
 				0493376127625BBD00AE779A /* NSBezierPath++.swift */,
 				041D726228353B380083092D /* NSImage+SymbolName.swift */,
-				0444D5FF283998B000327D0B /* CGKeyCode++.swift */,
 				04BC8EDC28515CE0009E605F /* NSView++.swift */,
 			);
 			path = Extension;
@@ -1375,7 +1371,6 @@
 				041D725F28353A500083092D /* ShellCommandDefine.swift in Sources */,
 				04BC8ECA284FF30A009E605F /* NotificationNames.swift in Sources */,
 				041D726428353B430083092D /* NSImage+SymbolName.swift in Sources */,
-				0444D60C2839B21600327D0B /* CGKeyCode++.swift in Sources */,
 				0444D5F228394B1B00327D0B /* ShowExtensionNameSwitch.swift in Sources */,
 				0444D5F728394FDD00327D0B /* DockRecentSwitch.swift in Sources */,
 				04BC8EC7284FEA52009E605F /* UserDefaultsKeys.swift in Sources */,
@@ -1487,7 +1482,6 @@
 				04A6B5502771F338003B2647 /* GitHubPresenter.swift in Sources */,
 				04581DBB27651EF1008ADF30 /* RollingText.swift in Sources */,
 				0493374427625A1E00AE779A /* AudioPlayer.swift in Sources */,
-				0444D600283998B000327D0B /* CGKeyCode++.swift in Sources */,
 				0493374E27625A1E00AE779A /* ParserError.swift in Sources */,
 				04447B5C2754F08000CD2900 /* AppDelegate.swift in Sources */,
 				047140C22778D2A1005B160B /* SmallLaunchpadIconSwitch.swift in Sources */,
@@ -1649,7 +1643,7 @@
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Only Switch requests Bluetooth usage to switch Airpods connection";
 				INFOPLIST_OUTPUT_FORMAT = binary;
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.2;
+				MARKETING_VERSION = 2.3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitchTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -1675,7 +1669,7 @@
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Only Switch requests Bluetooth usage to switch Airpods connection";
 				INFOPLIST_OUTPUT_FORMAT = binary;
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.2;
+				MARKETING_VERSION = 2.3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitchTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -1840,7 +1834,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.2;
+				MARKETING_VERSION = 2.3.3;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1891,7 +1885,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.2;
+				MARKETING_VERSION = 2.3.3;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1927,7 +1921,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.2;
+				MARKETING_VERSION = 2.3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.IntentsExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1957,7 +1951,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.2;
+				MARKETING_VERSION = 2.3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.IntentsExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

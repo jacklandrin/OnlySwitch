@@ -16,36 +16,39 @@ protocol AudioPlayer {
     func stop()
 }
 
-//extension AudioPlayer {
-//    func setupNowPlaying() {
-//        // Define Now Playing Info
-//        var nowPlayingInfo = [String : Any]()
-//        nowPlayingInfo[MPMediaItemPropertyTitle] = self.currentAudioStation?.title
-//        let image = NSImage(named: "AppIcon")!
-//        let newImage = image.resize(withSize: NSSize(width: 50, height: 50))!
-//        nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: CGSize(width: 50, height: 50), requestHandler: { _ in
-//            newImage
-//        })
-//
-//        // Set the metadata
-//        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
-//        MPNowPlayingInfoCenter.default().playbackState = .playing
-//    }
-//
-//    func setupRemoteCommandCenter() {
-//        let commandCenter = MPRemoteCommandCenter.shared();
-//        commandCenter.playCommand.isEnabled = true
-//        commandCenter.playCommand.addTarget { event in
-//            let station = self.currentAudioStation
-//            station?.isPlaying = true
-//            return .success
-//        }
-//        commandCenter.pauseCommand.isEnabled = true
-//        commandCenter.pauseCommand.addTarget {event in
-//            let station = self.currentAudioStation
-//            station?.isPlaying = false
-//            return .success
-//        }
+extension AudioPlayer {
+    func setupNowPlaying() {
+        // Define Now Playing Info
+        var nowPlayingInfo = [String : Any]()
+        nowPlayingInfo[MPMediaItemPropertyTitle] = self.currentAudioStation?.title
+        let image = NSImage(named: "AppIcon")!
+        let newImage = image.resize(withSize: NSSize(width: 50, height: 50))!
+        nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: CGSize(width: 50, height: 50), requestHandler: { _ in
+            newImage
+        })
+
+        // Set the metadata
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+        MPNowPlayingInfoCenter.default().playbackState = .playing
+    }
+
+    func setupRemoteCommandCenter() {
+        let commandCenter = MPRemoteCommandCenter.shared();
+        commandCenter.playCommand.isEnabled = true
+        commandCenter.playCommand.addTarget { event in
+            let station = self.currentAudioStation
+            station?.isPlaying = true
+            MPNowPlayingInfoCenter.default().playbackState = .playing
+            return .success
+        }
+        commandCenter.pauseCommand.isEnabled = true
+        commandCenter.pauseCommand.addTarget {event in
+            let station = self.currentAudioStation
+            station?.isPlaying = false
+            MPNowPlayingInfoCenter.default().playbackState = .paused
+            return .success
+        }
+        
 //        commandCenter.nextTrackCommand.isEnabled = self.currentAudioStation?.itemStatesInList == .Last ? false : true
 //        commandCenter.nextTrackCommand.addTarget { event in
 //            self.currentAudioStation?.nextStation()
@@ -58,8 +61,8 @@ protocol AudioPlayer {
 //            return .success
 //
 //        }
-//    }
-//}
+    }
+}
 
 
 
