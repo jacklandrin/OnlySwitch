@@ -13,7 +13,7 @@
 brew install only-switch
 ```
 ## Manually Download
-[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_2.3.2/OnlySwitch.dmg)
+[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_2.3.3/OnlySwitch.dmg)
 
 ## What's the OnlySwitch?
 OnlySwitch provides a series of toggle switches to simply your routine work, such as Hidden desktop icons, dark mode and hide notch of new Macbook Pro. The switches show on your statusbar, you can control them effortlessly. Switch and Shortcuts items can be customized (remove/add or sort) to show on the list.
@@ -136,6 +136,7 @@ I found I can't run the preview of SwiftUI by Xcode 13.2.1 on my M1 Pro Macbook.
 * Mac Gadget https://www.macgadget.de/News/2022/03/24/OnlySwitch-Schnellzugriff-auf-viele-Systemfunktionen-per-Mac-Menueleiste
 * MaxiApple https://www.maxiapple.com/2022/05/onlyswitch-macos-mac-gratuit.html
 * insmac https://insmac.org/macosx/5018-onlyswitch.html
+* tchgdns https://tchgdns.de/onlyswitch-macos-open-source/
 
 ## Reference
 
