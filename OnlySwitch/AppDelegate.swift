@@ -71,13 +71,16 @@ class AppDelegate:NSObject, NSApplicationDelegate {
     }
     
     func checkUpdate() {
-        checkUpdatePresenter.checkUpdate(complete: { success in
-            if success {
+        checkUpdatePresenter.checkUpdate { result in
+            switch result {
+            case .success:
                 let newestVersion = self.checkUpdatePresenter.latestVersion
                 UserDefaults.standard.set(newestVersion, forKey: UserDefaults.Key.newestVersion)
                 UserDefaults.standard.synchronize()
+            case let .failure(error):
+                print(error.localizedDescription)
             }
-        })
+        }
     }
     
 }

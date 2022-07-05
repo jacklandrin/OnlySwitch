@@ -163,16 +163,17 @@ class ShortcutsSettingVM:ObservableObject {
     func loadData() {
         //for test
 //        self.loadDataFromLocal()
-        self.presenter.requestShortcutsJson(complete: { list in
-            guard let list = list else {
+        self.presenter.requestShortcutsJson { result in
+            switch result {
+            case let .success(list):
+                self.model.sharedShortcutsList = list.map{SharedShortcutsItem(shortcutInfo: $0)}
+                self.checkIfInstalled()
+            case .failure(_):
                 DispatchQueue.main.async {
                     self.loadDataFromLocal()
                 }
-                return
             }
-            self.model.sharedShortcutsList = list.map{SharedShortcutsItem(shortcutInfo: $0)}
-            self.checkIfInstalled()
-        })
+        }
     }
     
     

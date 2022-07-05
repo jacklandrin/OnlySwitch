@@ -29,13 +29,13 @@ class GitHubInteractor {
     }
     var updateHistoryInfo:String = ""
     
-    func analyzeLastRelease(model:GitHubRelease) -> Bool {
+    func analyzeLastRelease(model:GitHubRelease) throws {
         self.latestVersion = model.name.replacingOccurrences(of: "release_", with: "")
         if let asset = model.assets.first {
             self.downloadURL = asset.browser_download_url
-            return true
+        } else {
+            throw RequestError.analyseModelFailed
         }
-        return false
     }
     
     func analyzeReleases(models:[GitHubRelease]) {

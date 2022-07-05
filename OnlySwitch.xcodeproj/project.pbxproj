@@ -40,6 +40,15 @@
 		0427365627C1ADA60068108F /* SpotifySwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0427365527C1ADA60068108F /* SpotifySwitch.swift */; };
 		0427B25B275D786400AD783A /* SystemInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0427B25A275D786400AD783A /* SystemInfo.swift */; };
 		0430887E275D707C00877E51 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 0430887D275D707C00877E51 /* LaunchAtLogin */; };
+		0434B4C0287388ED00F06AB9 /* GitHubRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0434B4BF287388ED00F06AB9 /* GitHubRepositoryProtocol.swift */; };
+		0434B4C1287388ED00F06AB9 /* GitHubRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0434B4BF287388ED00F06AB9 /* GitHubRepositoryProtocol.swift */; };
+		0434B4C728738EEA00F06AB9 /* GitHubMockRespository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0434B4C628738EEA00F06AB9 /* GitHubMockRespository.swift */; };
+		0434B4C82873A83D00F06AB9 /* RequestError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0444D5D32836D93A00327D0B /* RequestError.swift */; };
+		0434B4C92874DB2700F06AB9 /* ShortcutsMarket.json in Resources */ = {isa = PBXBuildFile; fileRef = 046331D22795DACB00C5F894 /* ShortcutsMarket.json */; };
+		0434B4CA2874E1B600F06AB9 /* Releases_mock.json in Resources */ = {isa = PBXBuildFile; fileRef = 0434B4BD2873882100F06AB9 /* Releases_mock.json */; };
+		0434B4CB2874E1B900F06AB9 /* Latest_release_mock.json in Resources */ = {isa = PBXBuildFile; fileRef = 0434B4C328738E7400F06AB9 /* Latest_release_mock.json */; };
+		0434B4CC2874E5CC00F06AB9 /* Releases_mock.json in Resources */ = {isa = PBXBuildFile; fileRef = 0434B4BD2873882100F06AB9 /* Releases_mock.json */; };
+		0434B4CD2874E5D300F06AB9 /* Latest_release_mock.json in Resources */ = {isa = PBXBuildFile; fileRef = 0434B4C328738E7400F06AB9 /* Latest_release_mock.json */; };
 		043E5D662757C84900ADC004 /* HiddenModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D652757C84900ADC004 /* HiddenModifier.swift */; };
 		043E5D6A2757D68800ADC004 /* MuteSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D692757D68800ADC004 /* MuteSwitch.swift */; };
 		043E5D6D2757DADB00ADC004 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 043E5D6C2757DADB00ADC004 /* AVFoundation.framework */; };
@@ -310,6 +319,10 @@
 		0427365127C1AADB0068108F /* MusicPlaybackState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlaybackState.swift; sourceTree = "<group>"; };
 		0427365527C1ADA60068108F /* SpotifySwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifySwitch.swift; sourceTree = "<group>"; };
 		0427B25A275D786400AD783A /* SystemInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemInfo.swift; sourceTree = "<group>"; };
+		0434B4BD2873882100F06AB9 /* Releases_mock.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Releases_mock.json; sourceTree = "<group>"; };
+		0434B4BF287388ED00F06AB9 /* GitHubRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubRepositoryProtocol.swift; sourceTree = "<group>"; };
+		0434B4C328738E7400F06AB9 /* Latest_release_mock.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Latest_release_mock.json; sourceTree = "<group>"; };
+		0434B4C628738EEA00F06AB9 /* GitHubMockRespository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubMockRespository.swift; sourceTree = "<group>"; };
 		043E5D652757C84900ADC004 /* HiddenModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HiddenModifier.swift; sourceTree = "<group>"; };
 		043E5D692757D68800ADC004 /* MuteSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuteSwitch.swift; sourceTree = "<group>"; };
 		043E5D6C2757DADB00ADC004 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -527,10 +540,9 @@
 		041D725528353A160083092D /* OnlySwitchTests */ = {
 			isa = PBXGroup;
 			children = (
+				0434B4C228738DAB00F06AB9 /* Networking */,
 				041D725628353A160083092D /* OnlySwitchTests.swift */,
 				0444D5C9283677DA00327D0B /* EverySwitchTests.swift */,
-				0444D5CC2836836E00327D0B /* NetworkingTest.swift */,
-				0444D5D32836D93A00327D0B /* RequestError.swift */,
 				0444D5EA28393FF800327D0B /* Info.plist */,
 			);
 			path = OnlySwitchTests;
@@ -635,6 +647,15 @@
 			path = MusicPlayer;
 			sourceTree = "<group>";
 		};
+		0434B4C228738DAB00F06AB9 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				0444D5CC2836836E00327D0B /* NetworkingTest.swift */,
+				0434B4C628738EEA00F06AB9 /* GitHubMockRespository.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
 		043E5D672757C85500ADC004 /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -732,7 +753,6 @@
 		04447B5A2754F08000CD2900 /* OnlySwitch */ = {
 			isa = PBXGroup;
 			children = (
-				046331D12795DA4C00C5F894 /* ShortcutsMarket */,
 				0493379A2763C09000AE779A /* OnlySwitch.xcdatamodeld */,
 				0493379D2763C0E800AE779A /* Persistence.swift */,
 				040CD2BD27579CEA002E0CC6 /* Info.plist */,
@@ -1096,9 +1116,12 @@
 		04E03B02275FD92D00EA5FB9 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				046331D12795DA4C00C5F894 /* ShortcutsMarket */,
 				047140B127788364005B160B /* mixkit-alert-bells-echo-765.wav */,
 				047140B227788364005B160B /* mixkit-bell-notification-933.wav */,
 				04E03B03275FD98500EA5FB9 /* battery-airpods-monterey.sh */,
+				0434B4BD2873882100F06AB9 /* Releases_mock.json */,
+				0434B4C328738E7400F06AB9 /* Latest_release_mock.json */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
@@ -1157,9 +1180,11 @@
 		04FC1608283D89A700D4A4AC /* Networking */ = {
 			isa = PBXGroup;
 			children = (
+				0444D5D32836D93A00327D0B /* RequestError.swift */,
 				04A6B54F2771F338003B2647 /* GitHubPresenter.swift */,
 				04FC1609283D8A9800D4A4AC /* GitHubInteractor.swift */,
 				04FC160F283F92B200D4A4AC /* GitHubEndpoint.swift */,
+				0434B4BF287388ED00F06AB9 /* GitHubRepositoryProtocol.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -1295,6 +1320,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0434B4CD2874E5D300F06AB9 /* Latest_release_mock.json in Resources */,
+				0434B4CC2874E5CC00F06AB9 /* Releases_mock.json in Resources */,
+				0434B4C92874DB2700F06AB9 /* ShortcutsMarket.json in Resources */,
 				0444D5EB28393FF800327D0B /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1306,6 +1334,8 @@
 				04938D002768CAEB00713F1D /* Localizable.strings in Resources */,
 				0443A6B627599AAC00A3BCFD /* README.md in Resources */,
 				04447B632754F08100CD2900 /* Preview Assets.xcassets in Resources */,
+				0434B4CB2874E1B900F06AB9 /* Latest_release_mock.json in Resources */,
+				0434B4CA2874E1B600F06AB9 /* Releases_mock.json in Resources */,
 				04E8BE3A2797241F00FF12B7 /* ShortcutsGalleryContributing.md in Resources */,
 				04E03B04275FD98500EA5FB9 /* battery-airpods-monterey.sh in Resources */,
 				047140B327788364005B160B /* mixkit-alert-bells-echo-765.wav in Resources */,
@@ -1356,6 +1386,7 @@
 				0444D5D0283683DF00327D0B /* GitHubReleaseModel.swift in Sources */,
 				04FC161728402E5200D4A4AC /* ShortcutOnMarket.swift in Sources */,
 				04FC1611283F92B200D4A4AC /* GitHubEndpoint.swift in Sources */,
+				0434B4C1287388ED00F06AB9 /* GitHubRepositoryProtocol.swift in Sources */,
 				04FC160E283D9B9000D4A4AC /* GitHubInteractor.swift in Sources */,
 				0444D5E72839315A00327D0B /* BluetoothDevicesManager.swift in Sources */,
 				0444D5EF2839471100327D0B /* UserDefaultValue.swift in Sources */,
@@ -1388,6 +1419,7 @@
 				0444D5DC2836F1E700327D0B /* CGImage++.swift in Sources */,
 				0444D5F428394BD400327D0B /* LowPowerModeSwitch.swift in Sources */,
 				0444D5E528392D6500327D0B /* AutohideDockSwitch.swift in Sources */,
+				0434B4C728738EEA00F06AB9 /* GitHubMockRespository.swift in Sources */,
 				0444D5DD283854E900327D0B /* MuteSwitch.swift in Sources */,
 				0444D5CB28367A1B00327D0B /* HiddenDesktopSwitch.swift in Sources */,
 				0444D5F528394CAA00327D0B /* MuteMicSwitch.swift in Sources */,
@@ -1507,6 +1539,7 @@
 				0424348F27565F9F0044D0AD /* NSAppleEventDescriptor.swift in Sources */,
 				047F3A37285DE67A004FFCDF /* SwitchListApperanceDefine.swift in Sources */,
 				04447B782755129D00CD2900 /* EventMonitor.swift in Sources */,
+				0434B4C0287388ED00F06AB9 /* GitHubRepositoryProtocol.swift in Sources */,
 				0493372327615A4900AE779A /* AutohideMenuBarSwitch.swift in Sources */,
 				0444D5FD2839873100327D0B /* ScreenTestSwitch.swift in Sources */,
 				04BC8EDD28515CE0009E605F /* NSView++.swift in Sources */,
@@ -1553,6 +1586,7 @@
 				043E5D662757C84900ADC004 /* HiddenModifier.swift in Sources */,
 				047140BC2778935B005B160B /* TimerCountDownView.swift in Sources */,
 				0493379E2763C0E800AE779A /* Persistence.swift in Sources */,
+				0434B4C82873A83D00F06AB9 /* RequestError.swift in Sources */,
 				0493375A27625A1E00AE779A /* DownloadingDelegate.swift in Sources */,
 				0451766527C283BC00006BA0 /* AppleMusicPlayer.swift in Sources */,
 				0427364E27C1A5CD0068108F /* SpotifyPlayer.swift in Sources */,

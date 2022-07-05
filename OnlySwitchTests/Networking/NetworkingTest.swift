@@ -9,12 +9,17 @@ import XCTest
 @testable import Alamofire
 
 class NetworkingTest:XCTestCase {
-    private var presenter:GitHubPresenter!
+    private var presenter:GitHubRepositoryProtocol!
     private var reachabilityManager: NetworkReachabilityManager!
     
-    override func setUpWithError() throws {
-        presenter = GitHubPresenter()
+    override func setUp() {
+        presenter = GitHubMockRespository()
         reachabilityManager = NetworkReachabilityManager(host: "api.github.com")
+    }
+    
+    override func tearDown() {
+        presenter = nil
+        reachabilityManager = nil
     }
     
     func testCheckUpdate() throws {
@@ -24,11 +29,14 @@ class NetworkingTest:XCTestCase {
 
         let exp = expectation(description: "checkUpdate requestion finished")
         
-        presenter.checkUpdate(complete: { success in
-            if success {
-                XCTAssertEqual(self.presenter.latestVersion, "2.3.1")
-                exp.fulfill()
-            } 
+        presenter.checkUpdate(complete: { result in
+            switch result {
+            case .success:
+                XCTAssertEqual(self.presenter.latestVersion, "2.3.2")
+            case let .failure(error):
+                XCTAssertThrowsError(error)
+            }
+            exp.fulfill()
         })
         wait(for: [exp], timeout: 10.0)
     }
@@ -38,12 +46,15 @@ class NetworkingTest:XCTestCase {
             throw RequestError.notReachable
         }
         let exp = expectation(description: "releases requestion finished")
-        presenter.requestReleases(complete: { success in
-            if success {
+        presenter.requestReleases(complete: { result in
+            switch result {
+            case .success:
                 XCTAssertGreaterThan(self.presenter.downloadCount, 0)
                 XCTAssertFalse(self.presenter.updateHistoryInfo.isEmpty)
-                exp.fulfill()
+            case let .failure(error):
+                XCTAssertThrowsError(error)
             }
+            exp.fulfill()
         })
         wait(for: [exp], timeout: 10.0)
     }
@@ -53,13 +64,15 @@ class NetworkingTest:XCTestCase {
             throw RequestError.notReachable
         }
         let exp = expectation(description: "shortcuts json requestion finished")
-        presenter.requestShortcutsJson(complete: { list in
-            guard let list = list else {
-                return
+        presenter.requestShortcutsJson { result in
+            switch result {
+            case let .success(list):
+                XCTAssertGreaterThan(list.count, 0)
+            case let .failure(error):
+                XCTAssertThrowsError(error)
             }
-            XCTAssertGreaterThan(list.count, 0)
             exp.fulfill()
-        })
+        }
         wait(for: [exp], timeout: 10.0)
     }
 }

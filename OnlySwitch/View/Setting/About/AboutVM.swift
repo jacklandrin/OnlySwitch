@@ -15,10 +15,13 @@ class AboutVM:ObservableObject {
     private var presenter = GitHubPresenter()
     
     func requestReleases() {
-        presenter.requestReleases { [self] success in
-            if success {
-                downloadCount = presenter.downloadCount
-                updateHistoryInfo = presenter.updateHistoryInfo
+        presenter.requestReleases { [self] result in
+            switch result {
+            case .success:
+                self.downloadCount = presenter.downloadCount
+                self.updateHistoryInfo = presenter.updateHistoryInfo
+            case let .failure(error):
+                print(error.localizedDescription)
             }
         }
     }

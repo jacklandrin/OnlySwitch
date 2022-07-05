@@ -95,12 +95,15 @@ class GeneralVM:ObservableObject {
     
     func checkUpdate() {
         self.model.showProgress = true
-        checkUpdatePresenter.checkUpdate(complete: { success in
-            if success {
+        checkUpdatePresenter.checkUpdate(complete: { result in
+            switch result {
+            case .success:
                 self.model.newestVersion = self.checkUpdatePresenter.latestVersion
                 UserDefaults.standard.set(self.newestVersion, forKey: UserDefaults.Key.newestVersion)
                 UserDefaults.standard.synchronize()
                 self.model.needtoUpdateAlert = !self.checkUpdatePresenter.isTheNewestVersion
+            case let .failure(error):
+                print(error.localizedDescription)
             }
             self.model.showProgress = false
         })
@@ -108,11 +111,15 @@ class GeneralVM:ObservableObject {
     
     
     func downloadDMG() {
-        checkUpdatePresenter.downloadDMG{ success, path in
-            guard success, let path = path else {return}
-            self.openDMG(path: path)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                NSApp.terminate(self)
+        checkUpdatePresenter.downloadDMG{ result in
+            switch result {
+            case let .success(path):
+                self.openDMG(path: path)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    NSApp.terminate(self)
+                }
+            case let .failure(error):
+                print(error.localizedDescription)
             }
         }
     }

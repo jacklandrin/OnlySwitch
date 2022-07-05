@@ -8,6 +8,8 @@
 import Foundation
 
 enum RequestError:Error {
-    case Failed
+    case failed
     case notReachable
+    case invalidURL
+    case analyseModelFailed
 }

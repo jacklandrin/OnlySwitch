@@ -10,7 +10,7 @@ import Alamofire
 import SwiftUI
 
 
-class GitHubPresenter{
+class GitHubPresenter: GitHubRepositoryProtocol{
     private let interactor = GitHubInteractor()
     
     var latestVersion:String {
@@ -33,41 +33,46 @@ class GitHubPresenter{
         return interactor.updateHistoryInfo
     }
     
-    func checkUpdate(complete:@escaping (_ success:Bool) -> Void) {
+    func checkUpdate(complete:@escaping (Result<Void,Error>) -> Void) {
         guard let url = makeRequestURL(path: .latestRelease) else {
-            complete(false)
+            complete(.failure(RequestError.invalidURL))
             return
         }
         let request = AF.request(url)
         request.responseDecodable(of:GitHubRelease.self) { response in
             guard let latestRelease = response.value else {
-                complete(false)
+                complete(.failure(RequestError.failed))
                 return
             }
-            complete(self.interactor.analyzeLastRelease(model: latestRelease))
+            do {
+                try self.interactor.analyzeLastRelease(model: latestRelease)
+                complete(.success(()))
+            } catch {
+                complete(.failure(error))
+            }
         }
     }
     
-    func requestReleases(complete:@escaping (_ success:Bool) -> Void) {
+    func requestReleases(complete:@escaping (Result<Void,Error>) -> Void) {
         guard let url = makeRequestURL(path: .releases) else {
-            complete(false)
+            complete(.failure(RequestError.invalidURL))
             return
         }
         let request = AF.request(url)
         request.responseDecodable(of:[GitHubRelease].self) { response in
             guard let releases = response.value else {
-                complete(false)
+                complete(.failure(RequestError.failed))
                 return
             }
             self.interactor.analyzeReleases(models: releases)
-            complete(true)
+            complete(.success(()))
         }
     }
     
-    func downloadDMG(complete:@escaping (_ success:Bool, _ path:String?) -> Void ) {
+    func downloadDMG(complete:@escaping (Result<String,Error>) -> Void ) {
         let filePath = myAppPath?.appendingPathComponent(string: "OnlySwitch.dmg")
         guard let filePath = filePath else {
-            complete(false, nil)
+            complete(.failure(RequestError.invalidURL))
             return
         }
         let destination: DownloadRequest.Destination = { _, _ in
@@ -77,41 +82,27 @@ class GitHubPresenter{
         let request = AF.download(downloadURL, to: destination)
         request.response { response in
             if response.error == nil, let path = response.fileURL?.path {
-                complete(true, path)
+                complete(.success(path))
             } else {
-                complete(false, nil)
+                complete(.failure(RequestError.failed))
             }
         }
     }
     
-    func requestShortcutsJson(complete:@escaping (_ list:[ShortcutOnMarket]?) -> Void) {
+    func requestShortcutsJson(complete:@escaping (Result<[ShortcutOnMarket], Error>) -> Void) {
         guard let url = makeRequestURL(host:.userContent, path: .shortcutsJson) else {
-            complete(nil)
+            complete(.failure(RequestError.invalidURL))
             return
         }
         let request = AF.request(url)
         request.responseDecodable(of:[ShortcutOnMarket].self) { response in
             guard let list = response.value else {
-                complete(nil)
+                complete(.failure(RequestError.failed))
                 return
             }
-            complete(list)
+            complete(.success(list))
         }
     }
     
-    private var myAppPath:String? {
-        let appBundleID = Bundle.main.infoDictionary?["CFBundleName"] as! String
-        let paths = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).map(\.path)
-        let directory = paths.first
-        let myAppPath = directory?.appendingPathComponent(string: appBundleID)
-        return myAppPath
-    }
     
-    private func makeRequestURL(host:URLHost = .gitHubAPI, path:EndPointKinds) -> URL? {
-        var components = URLComponents()
-        components.scheme = httpsScheme
-        components.host = host.rawValue
-        components.path = "/" + path.rawValue
-        return components.url
-    }
 }
