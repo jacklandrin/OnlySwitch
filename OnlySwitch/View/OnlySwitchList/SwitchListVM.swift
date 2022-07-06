@@ -11,6 +11,7 @@ class SwitchListVM: ObservableObject, CurrentScreen {
     
     @Published private var model = SwitchListModel()
     private var settingsWindowPresented:Bool = false
+    private var settingsWindow:NSWindow?
     
     var switchList:[SwitchBarVM] {
         return model.switchList
@@ -63,6 +64,12 @@ class SwitchListVM: ObservableObject, CurrentScreen {
     
     init() {
         refreshMaxHeight()
+        NotificationCenter.default.addObserver(forName: .settingsWindowOpened, object: nil, queue: .main, using: { notify in
+            if let window = notify.object as? NSWindow {
+                self.settingsWindow = window
+            }
+        })
+        
         NotificationCenter.default.addObserver(forName: .settingsWindowClosed, object: nil, queue: .main, using: { _ in
             self.settingsWindowPresented = false
         })
@@ -152,10 +159,14 @@ class SwitchListVM: ObservableObject, CurrentScreen {
     }
     
     func showSettingsWindow() {
-        guard !self.settingsWindowPresented else {return}
-        if let url = URL(string: "onlyswitch://SettingsWindow") {
-            NSWorkspace.shared.open(url)
-            self.settingsWindowPresented = true
+        if let window = self.settingsWindow {
+            NSApp.activate(ignoringOtherApps: true)
+            window.makeKeyAndOrderFront(self)
+        } else {
+            if let url = URL(string: "onlyswitch://SettingsWindow") {
+                NSWorkspace.shared.open(url)
+                self.settingsWindowPresented = true
+            }
         }
     }
 }

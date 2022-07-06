@@ -50,6 +50,7 @@
 		0434B4CC2874E5CC00F06AB9 /* Releases_mock.json in Resources */ = {isa = PBXBuildFile; fileRef = 0434B4BD2873882100F06AB9 /* Releases_mock.json */; };
 		0434B4CD2874E5D300F06AB9 /* Latest_release_mock.json in Resources */ = {isa = PBXBuildFile; fileRef = 0434B4C328738E7400F06AB9 /* Latest_release_mock.json */; };
 		0434B4CF2876031C00F06AB9 /* RadioPlayerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0434B4CE2876031C00F06AB9 /* RadioPlayerItem.swift */; };
+		0434B4D12876325B00F06AB9 /* HostWindowFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0434B4D02876325B00F06AB9 /* HostWindowFinder.swift */; };
 		043E5D662757C84900ADC004 /* HiddenModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D652757C84900ADC004 /* HiddenModifier.swift */; };
 		043E5D6A2757D68800ADC004 /* MuteSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D692757D68800ADC004 /* MuteSwitch.swift */; };
 		043E5D6D2757DADB00ADC004 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 043E5D6C2757DADB00ADC004 /* AVFoundation.framework */; };
@@ -325,6 +326,7 @@
 		0434B4C328738E7400F06AB9 /* Latest_release_mock.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Latest_release_mock.json; sourceTree = "<group>"; };
 		0434B4C628738EEA00F06AB9 /* GitHubMockRespository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubMockRespository.swift; sourceTree = "<group>"; };
 		0434B4CE2876031C00F06AB9 /* RadioPlayerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioPlayerItem.swift; sourceTree = "<group>"; };
+		0434B4D02876325B00F06AB9 /* HostWindowFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostWindowFinder.swift; sourceTree = "<group>"; };
 		043E5D652757C84900ADC004 /* HiddenModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HiddenModifier.swift; sourceTree = "<group>"; };
 		043E5D692757D68800ADC004 /* MuteSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuteSwitch.swift; sourceTree = "<group>"; };
 		043E5D6C2757DADB00ADC004 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -668,6 +670,7 @@
 				04BF977927908FB900E7C0E2 /* SoundWave */,
 				049337952762C05200AE779A /* Setting */,
 				04447B7527550F6900CD2900 /* VisualEffectView.swift */,
+				0434B4D02876325B00F06AB9 /* HostWindowFinder.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1568,6 +1571,7 @@
 				04EB1CD62781299A00C612AB /* ShortcutsBarVM.swift in Sources */,
 				04A9675A2786133F00F12830 /* GeneralVM.swift in Sources */,
 				0427365227C1AADB0068108F /* MusicPlaybackState.swift in Sources */,
+				0434B4D12876325B00F06AB9 /* HostWindowFinder.swift in Sources */,
 				04581DC12765522A008ADF30 /* AboutView.swift in Sources */,
 				0427365627C1ADA60068108F /* SpotifySwitch.swift in Sources */,
 				0427364827C1A5430068108F /* SpotifyScripting.swift in Sources */,

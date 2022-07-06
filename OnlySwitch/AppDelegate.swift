@@ -16,6 +16,7 @@ struct OnlySwitchApp: App {
     var body: some Scene {
         WindowGroup("SettingsWindow"){
             SettingView()
+                .frame(width: Layout.settingWindowWidth, height: Layout.settingWindowHeight)
                 .task {
                     CustomizeVM.shared.allSwitches.forEach{ item in
                         KeyboardShortcuts.onKeyDown(for: item.keyboardShortcutName) {
@@ -30,6 +31,9 @@ struct OnlySwitchApp: App {
                     }
                 }
         }.handlesExternalEvents(matching: Set(arrayLiteral: "*"))
+        Settings{
+            SettingView()
+        }
     }
 }
 
