@@ -27,7 +27,7 @@ struct SettingView: View {
             }.listStyle(SidebarListStyle())
                 .frame(minWidth:190)
             settingVM.settingItems.first?.page()
-        }.navigationTitle("Setting")
+        }.navigationTitle("Settings".localized())
         .onAppear{
             settingVM.selection = settingVM.settingItems.first
         }

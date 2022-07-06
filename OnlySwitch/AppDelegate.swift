@@ -29,7 +29,7 @@ struct OnlySwitchApp: App {
                         }
                     }
                 }
-        }
+        }.handlesExternalEvents(matching: Set(arrayLiteral: "SettingsWindow"))
     }
 }
 
@@ -64,6 +64,7 @@ class AppDelegate:NSObject, NSApplicationDelegate {
         if let window = NSApplication.shared.windows.first {
             window.close()
         }
+       
     }
     
     func applicationWillTerminate(_ notification: Notification) {

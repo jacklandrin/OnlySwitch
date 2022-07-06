@@ -301,8 +301,7 @@ struct OnlySwitchListView: View {
             
             Spacer()
             Button(action: {
-                OpenWindows.Setting.open()
-                NotificationCenter.default.post(name: .shouldHidePopover, object: nil)
+                switchVM.showSettingsWindow()
             }, label: {
                 Image(systemName: "gearshape.circle")
                     .font(.system(size: 17))

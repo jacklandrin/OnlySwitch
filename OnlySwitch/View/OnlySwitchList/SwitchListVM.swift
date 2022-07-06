@@ -145,4 +145,10 @@ class SwitchListVM: ObservableObject, CurrentScreen {
         UserDefaults.standard.set(orderDic, forKey: UserDefaults.Key.orderWeight)
         UserDefaults.standard.synchronize()
     }
+    
+    func showSettingsWindow() {
+        if let url = URL(string: "onlyswitch://SettingsWindow") {
+            NSWorkspace.shared.open(url)
+        }
+    }
 }
