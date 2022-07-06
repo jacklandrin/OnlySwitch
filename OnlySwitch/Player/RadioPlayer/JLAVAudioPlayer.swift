@@ -70,6 +70,7 @@ class JLAVAudioPlayer: NSObject ,AVPlayerItemMetadataOutputPushDelegate, AudioPl
         }
         self.currentAudioStation?.streamInfo = title.trimmingCharacters(in:.newlines)
         self.bufferring = false
+        self.updateStreamInfo(info: self.currentAudioStation?.streamInfo)
     }
     
     func stop(){

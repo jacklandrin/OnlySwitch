@@ -34,6 +34,8 @@ extension AudioPlayer {
         
     }
 
+    
+    
     func setupRemoteCommandCenter() {
         setupNowPlaying()
         MPNowPlayingInfoCenter.default().playbackState = .paused
@@ -56,23 +58,29 @@ extension AudioPlayer {
         commandCenter.togglePlayPauseCommand.addTarget{ event in
             guard let station = self.currentAudioStation else {return .commandFailed}
             station.isPlaying = !station.isPlaying
-            if MPNowPlayingInfoCenter.default().playbackState == .playing {
-                MPNowPlayingInfoCenter.default().playbackState = .paused
-            } else {
+            if station.isPlaying {
                 MPNowPlayingInfoCenter.default().playbackState = .playing
+            } else {
+                MPNowPlayingInfoCenter.default().playbackState = .paused
             }
             NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.radioStation)
             return .success
         }
         commandCenter.nextTrackCommand.isEnabled = true
         commandCenter.nextTrackCommand.addTarget { event in
-            self.currentAudioStation?.nextStation()
+            let station = self.currentAudioStation
+            station?.nextStation()
+            MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPMediaItemPropertyTitle] = station?.title
+            MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPMediaItemPropertyAlbumTitle] = nil
             return .success
         }
 
         commandCenter.previousTrackCommand.isEnabled = true
         commandCenter.previousTrackCommand.addTarget { event in
-            self.currentAudioStation?.previousStation()
+            let station = self.currentAudioStation
+            station?.previousStation()
+            MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPMediaItemPropertyTitle] = station?.title
+            MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPMediaItemPropertyAlbumTitle] = nil
             return .success
 
         }
@@ -80,6 +88,10 @@ extension AudioPlayer {
     
     func pauseCommandCenter() {
         MPNowPlayingInfoCenter.default().playbackState = .paused
+    }
+    
+    func updateStreamInfo(info:String?) {
+        MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPMediaItemPropertyAlbumTitle] = info
     }
     
 }
