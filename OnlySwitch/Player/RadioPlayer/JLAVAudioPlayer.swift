@@ -14,7 +14,7 @@ class JLAVAudioPlayer: NSObject ,AVPlayerItemMetadataOutputPushDelegate, AudioPl
     
     var audioPlayer: AVPlayer?
     var playerItem: AVPlayerItem?
-    weak var currentAudioStation: RadioPlayerItem?
+    weak var currentAudioStation: RadioPlayerItemViewModel?
     var analyzer = RealtimeAnalyzer(fftSize: bufferSize)
     var bufferring: Bool = false
     
@@ -31,7 +31,7 @@ class JLAVAudioPlayer: NSObject ,AVPlayerItemMetadataOutputPushDelegate, AudioPl
         })
     }
     
-    func play(stream item: RadioPlayerItem) {
+    func play(stream item: RadioPlayerItemViewModel) {
         
         guard let url = URL(string: item.streamUrl) else {
             return

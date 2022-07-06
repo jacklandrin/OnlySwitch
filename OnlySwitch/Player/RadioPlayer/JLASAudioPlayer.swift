@@ -20,7 +20,7 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
         audioPlayer.delegate = self
         return audioPlayer
     }()
-    weak var currentAudioStation: RadioPlayerItem?
+    weak var currentAudioStation: RadioPlayerItemViewModel?
     var analyzer:RealtimeAnalyzer = RealtimeAnalyzer(fftSize: bufferSize)
     var bufferring:Bool = false
     
@@ -29,7 +29,6 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
     
     override init() {
         super.init()
-        self.setupRemoteCommandCenter()
         NotificationCenter.default.addObserver(forName: .showPopover, object: nil, queue: .main, using: { _ in
             self.isAppActive = true
         })
@@ -50,7 +49,7 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
         })
     }
     
-    func play(stream item: RadioPlayerItem) {
+    func play(stream item: RadioPlayerItemViewModel) {
         guard let url = URL(string: item.streamUrl) else {
             return
         }

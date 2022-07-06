@@ -8,8 +8,8 @@
 import Foundation
 
 struct RadioSettingModel {
-    var radioList:[RadioPlayerItem] = [RadioPlayerItem]()
-    var selectRow:RadioPlayerItem.ID?
+    var radioList:[RadioPlayerItemViewModel] = [RadioPlayerItemViewModel]()
+    var selectRow:RadioPlayerItemViewModel.ID?
     var showErrorToast = false
     var errorInfo = ""
     var currentTitle = ""

@@ -6,14 +6,15 @@
 //
 
 import CoreData
-
+import Combine
 
 class RadioSettingVM:ObservableObject {
     
     @Published private var model = RadioSettingModel()
     @Published private var preferences = Preferences.shared
+    private var cancellables = Set<AnyCancellable>()
     
-    var radioList:[RadioPlayerItem] {
+    var radioList:[RadioPlayerItemViewModel] {
         get {
             model.radioList
         }
@@ -22,7 +23,7 @@ class RadioSettingVM:ObservableObject {
         }
     }
     
-    var selectRow:RadioPlayerItem.ID? {
+    var selectRow:RadioPlayerItemViewModel.ID? {
         get {
             return model.selectRow
         }
@@ -79,7 +80,7 @@ class RadioSettingVM:ObservableObject {
     init() {
         self.managedObjectContext = PersistenceController.shared.container.viewContext
         RadioStations.fetchResult.forEach{ station in
-            let radioItem = RadioPlayerItem(isPlaying: false,
+            let radioItem = RadioPlayerItemViewModel(isPlaying: false,
                                             title: station.title!,
                                             streamUrl: station.url!,
                                             streamInfo: "",
@@ -97,6 +98,13 @@ class RadioSettingVM:ObservableObject {
         {
             sliderVolume = newValue
         }
+        
+        RadioStationSwitch.shared.playerItem.$model.sink { item in
+            guard let item = item else {return}
+            self.endEditing()
+            self.model.currentTitle = item.title
+            self.model.selectRow = item.id
+        }.store(in: &cancellables)
     }
     
     func endEditing() {
@@ -105,7 +113,7 @@ class RadioSettingVM:ObservableObject {
         }
     }
     
-    func selectedItem(id:RadioPlayerItem.ID?) -> RadioPlayerItem? {
+    func selectedItem(id:RadioPlayerItemViewModel.ID?) -> RadioPlayerItemViewModel? {
         guard let id = id else {
             return nil
         }
@@ -147,7 +155,7 @@ class RadioSettingVM:ObservableObject {
             radio.isEditing = false
         }
         let newStationID = UUID()
-        let newStation = RadioPlayerItem(isPlaying: false, title: "", streamUrl: "", streamInfo: "", id: newStationID)
+        let newStation = RadioPlayerItemViewModel(isPlaying: false, title: "", streamUrl: "", streamInfo: "", id: newStationID)
         self.endEditing()
         newStation.isEditing = true
         self.model.radioList.append(newStation)
@@ -172,7 +180,7 @@ class RadioSettingVM:ObservableObject {
         Preferences.shared.radioStationID = currentRow.uuidString
         self.model.currentTitle = RadioStationSwitch.shared.playerItem.title
         NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.radioStation)
-        
-        
     }
+    
+    
 }

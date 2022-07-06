@@ -9,10 +9,11 @@ import AppKit
 import MediaPlayer
 
 protocol AudioPlayer {
-    var currentAudioStation:RadioPlayerItem? {get set}
+    var currentAudioStation:RadioPlayerItemViewModel? {get set}
     var analyzer:RealtimeAnalyzer {get set}
     var bufferring : Bool {get set}
-    func play(stream item: RadioPlayerItem)
+    
+    func play(stream item: RadioPlayerItemViewModel)
     func stop()
 }
 
@@ -20,7 +21,7 @@ extension AudioPlayer {
     func setupNowPlaying() {
         // Define Now Playing Info
         var nowPlayingInfo = [String : Any]()
-        nowPlayingInfo[MPMediaItemPropertyTitle] = self.currentAudioStation?.title
+        nowPlayingInfo[MPMediaItemPropertyTitle] = self.currentAudioStation?.title ?? "OnlySwitch Radio"
         let image = NSImage(named: "AppIcon")!
         let newImage = image.resize(withSize: NSSize(width: 100, height: 100))!
         nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: CGSize(width: 100, height: 100), requestHandler: { _ in
@@ -30,9 +31,12 @@ extension AudioPlayer {
         // Set the metadata
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
         MPNowPlayingInfoCenter.default().playbackState = .playing
+        
     }
 
     func setupRemoteCommandCenter() {
+        setupNowPlaying()
+        MPNowPlayingInfoCenter.default().playbackState = .paused
         let commandCenter = MPRemoteCommandCenter.shared();
         commandCenter.playCommand.isEnabled = true
         commandCenter.playCommand.addTarget { event in
@@ -57,21 +61,21 @@ extension AudioPlayer {
             } else {
                 MPNowPlayingInfoCenter.default().playbackState = .playing
             }
-           
+            NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.radioStation)
             return .success
         }
-//        commandCenter.nextTrackCommand.isEnabled = self.currentAudioStation?.itemStatesInList == .Last ? false : true
-//        commandCenter.nextTrackCommand.addTarget { event in
-//            self.currentAudioStation?.nextStation()
-//            return .success
-//        }
-//
-//        commandCenter.previousTrackCommand.isEnabled = self.currentAudioStation?.itemStatesInList == .First ? false : true
-//        commandCenter.previousTrackCommand.addTarget { event in
-//            self.currentAudioStation?.previousStation()
-//            return .success
-//
-//        }
+        commandCenter.nextTrackCommand.isEnabled = true
+        commandCenter.nextTrackCommand.addTarget { event in
+            self.currentAudioStation?.nextStation()
+            return .success
+        }
+
+        commandCenter.previousTrackCommand.isEnabled = true
+        commandCenter.previousTrackCommand.addTarget { event in
+            self.currentAudioStation?.previousStation()
+            return .success
+
+        }
     }
     
     func pauseCommandCenter() {

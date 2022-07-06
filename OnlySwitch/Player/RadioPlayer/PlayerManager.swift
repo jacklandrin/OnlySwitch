@@ -15,6 +15,7 @@ class PlayerManager {
         Preferences.shared.soundWaveEffectDisplay
     }
     init() {
+        self.player.setupRemoteCommandCenter()
         NotificationCenter.default.addObserver(forName: .soundWaveToggle, object: nil, queue: .main, using: { [self] _ in
           
             self.player.currentAudioStation?.isPlaying = false
