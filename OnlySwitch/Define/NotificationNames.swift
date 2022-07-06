@@ -22,4 +22,5 @@ extension Notification.Name {
     static let menubarCollapsable = Notification.Name(rawValue: "menubarCollapsableNotificationName")
     static let changeAutoMenubarCollapseTime = Notification.Name(rawValue: "changeAutoMenubarCollapseTime")
     static let toggleMenubarCollapse = Notification.Name(rawValue: "toggleMenubarCollapse")
+    static let settingsWindowClosed = Notification.Name(rawValue: "settingsWindowClosed")
 }

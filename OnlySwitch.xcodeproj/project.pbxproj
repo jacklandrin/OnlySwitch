@@ -757,9 +757,9 @@
 			isa = PBXGroup;
 			children = (
 				0493379A2763C09000AE779A /* OnlySwitch.xcdatamodeld */,
-				0493379D2763C0E800AE779A /* Persistence.swift */,
 				040CD2BD27579CEA002E0CC6 /* Info.plist */,
 				04447B5B2754F08000CD2900 /* AppDelegate.swift */,
+				0493379D2763C0E800AE779A /* Persistence.swift */,
 				04A23B27275D607200B454C8 /* Header */,
 				043E5D672757C85500ADC004 /* View */,
 				043E5D682757C86400ADC004 /* ViewModel */,

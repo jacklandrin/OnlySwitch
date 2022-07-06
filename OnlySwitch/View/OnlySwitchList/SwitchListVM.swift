@@ -9,6 +9,9 @@ import SwiftUI
 
 class SwitchListVM: ObservableObject, CurrentScreen {
     
+    @Published private var model = SwitchListModel()
+    private var settingsWindowPresented:Bool = false
+    
     var switchList:[SwitchBarVM] {
         return model.switchList
     }
@@ -45,8 +48,6 @@ class SwitchListVM: ObservableObject, CurrentScreen {
         return model.sortMode
     }
     
-    @Published private var model = SwitchListModel()
-    
     var soundWaveEffectDisplay:Bool {
         return Preferences.shared.soundWaveEffectDisplay
     }
@@ -59,8 +60,12 @@ class SwitchListVM: ObservableObject, CurrentScreen {
         return Preferences.shared.showAds
     }
     
+    
     init() {
         refreshMaxHeight()
+        NotificationCenter.default.addObserver(forName: .settingsWindowClosed, object: nil, queue: .main, using: { _ in
+            self.settingsWindowPresented = false
+        })
     }
     
     
@@ -147,8 +152,10 @@ class SwitchListVM: ObservableObject, CurrentScreen {
     }
     
     func showSettingsWindow() {
+        guard !self.settingsWindowPresented else {return}
         if let url = URL(string: "onlyswitch://SettingsWindow") {
             NSWorkspace.shared.open(url)
+            self.settingsWindowPresented = true
         }
     }
 }

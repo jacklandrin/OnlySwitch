@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SettingView: View {
-    @ObservedObject var settingVM = SettingVM()
+    @StateObject var settingVM = SettingVM()
     @ObservedObject var langManager = LanguageManager.sharedManager
     @ObservedObject var shortcutsVM = ShortcutsSettingVM.shared
     init() {
@@ -32,12 +32,7 @@ struct SettingView: View {
             settingVM.selection = settingVM.settingItems.first
         }
         .onDisappear{
-            print("disappear")
-            NSApplication.shared.setActivationPolicy(.accessory)
-            DispatchQueue.main.async {
-                NSApplication.shared.activate(ignoringOtherApps: true)
-                NSApplication.shared.windows.first!.makeKeyAndOrderFront(self)
-            }
+            settingVM.onDisappear()
         }
     }
 }

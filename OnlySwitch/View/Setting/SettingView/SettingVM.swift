@@ -45,4 +45,14 @@ enum SettingItem:String {
 class SettingVM:ObservableObject {
     @Published var settingItems:[SettingItem] = [.General, .Customize, .Shortcuts, .Radio, .AirPods, .PomodoroTimer,.HideMenubarIcons,.About]
     @Published var selection:SettingItem?
+    
+    func onDisappear() {
+        print("settings window disappear")
+        NSApplication.shared.setActivationPolicy(.accessory)
+        DispatchQueue.main.async {
+            NSApplication.shared.activate(ignoringOtherApps: true)
+            NSApplication.shared.windows.first!.makeKeyAndOrderFront(self)
+            NotificationCenter.default.post(name: .settingsWindowClosed, object: nil)
+        }
+    }
 }

@@ -14,7 +14,7 @@ struct OnlySwitchApp: App {
     let persistenceController = PersistenceController.shared
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     var body: some Scene {
-        WindowGroup {
+        WindowGroup("SettingsWindow"){
             SettingView()
                 .task {
                     CustomizeVM.shared.allSwitches.forEach{ item in
@@ -29,7 +29,7 @@ struct OnlySwitchApp: App {
                         }
                     }
                 }
-        }.handlesExternalEvents(matching: Set(arrayLiteral: "SettingsWindow"))
+        }.handlesExternalEvents(matching: Set(arrayLiteral: "*"))
     }
 }
 
