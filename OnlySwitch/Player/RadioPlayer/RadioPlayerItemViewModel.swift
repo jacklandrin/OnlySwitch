@@ -8,8 +8,6 @@
 import Foundation
 import CoreData
 
-let illegalRadioInfoNotification = NSNotification.Name("illegalRadioInfoNotification")
-
 class RadioPlayerItemViewModel:ObservableObject, Identifiable {
     enum ChangeStationAction {
         case next
@@ -67,7 +65,7 @@ class RadioPlayerItemViewModel:ObservableObject, Identifiable {
             model.isEditing
         }
         set {
-            if newValue {
+            if newValue != isEditing && !newValue {
                 storeEditedData()
             }
             model.isEditing = newValue
@@ -105,12 +103,12 @@ class RadioPlayerItemViewModel:ObservableObject, Identifiable {
         if let station = station {
             guard self.model.title != "" else {
                 self.model.title = station.title!
-                NotificationCenter.default.post(name: illegalRadioInfoNotification, object: "title cannot be null")
+                NotificationCenter.default.post(name: .illegalRadioInfoNotification, object: "title cannot be null")
                 return
             }
             guard streamUrl.isValidURL else {
                 self.model.streamUrl = station.url!
-                NotificationCenter.default.post(name: illegalRadioInfoNotification, object: "url is invalied")
+                NotificationCenter.default.post(name: .illegalRadioInfoNotification, object: "url is invalied")
                 return
             }
             var hasChanged = false
@@ -138,12 +136,12 @@ class RadioPlayerItemViewModel:ObservableObject, Identifiable {
             guard title != "" else {
                 self.model.title = "new radio station"
                 self.model.streamUrl = ""
-                NotificationCenter.default.post(name: illegalRadioInfoNotification, object: "title cannot be null")
+                NotificationCenter.default.post(name: .illegalRadioInfoNotification, object: "title cannot be null")
                 return
             }
             guard streamUrl.isValidURL else {
                 self.model.streamUrl = ""
-                NotificationCenter.default.post(name: illegalRadioInfoNotification, object: "url is invalied")
+                NotificationCenter.default.post(name: .illegalRadioInfoNotification, object: "url is invalied")
                 return
             }
             guard let managedObjectContext = self.managedObjectContext else {
@@ -169,7 +167,6 @@ class RadioPlayerItemViewModel:ObservableObject, Identifiable {
     }
     
     private func changeStation(action:ChangeStationAction) {
-        guard self.isPlaying else {return}
         
         let radios = RadioStations.fetchResult
         let currentIndex = radios.indices.filter{ radios[$0].id! == self.id }.first
@@ -188,6 +185,9 @@ class RadioPlayerItemViewModel:ObservableObject, Identifiable {
         self.model.updateItem(radio: newRadio)
         Preferences.shared.radioStationID = self.model.id.uuidString
         NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.radioStation)
-        PlayerManager.shared.player.play(stream: self)
+        if self.isPlaying {
+            PlayerManager.shared.player.play(stream: self)
+        }
+        
     }
 }

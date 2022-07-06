@@ -88,7 +88,7 @@ class RadioSettingVM:ObservableObject {
             self.model.radioList.append(radioItem)
         }
         
-        NotificationCenter.default.addObserver(forName: illegalRadioInfoNotification, object: nil, queue: .main, using:{[self] notify in
+        NotificationCenter.default.addObserver(forName: .illegalRadioInfoNotification, object: nil, queue: .main, using:{[self] notify in
             self.model.errorInfo = notify.object as! String
             self.model.showErrorToast = true
         })
@@ -101,7 +101,9 @@ class RadioSettingVM:ObservableObject {
         
         RadioStationSwitch.shared.playerItem.$model.sink { item in
             guard let item = item else {return}
-            self.endEditing()
+            if self.radioList.filter({ $0.isEditing == true }).count > 0 {
+                self.endEditing()
+            }
             self.model.currentTitle = item.title
             self.model.selectRow = item.id
         }.store(in: &cancellables)
@@ -135,9 +137,13 @@ class RadioSettingVM:ObservableObject {
         guard let currentRow = self.model.selectRow else {
             return
         }
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             guard let managedObjectContext = self.managedObjectContext else {
                 fatalError("No Managed Object Context Available")
+            }
+            if RadioStationSwitch.shared.playerItem.id == currentRow {
+                RadioStationSwitch.shared.playerItem.nextStation()
             }
             let station = RadioStations.fetchRequest(by: currentRow).first
             guard let station = station else {return}
@@ -148,6 +154,7 @@ class RadioSettingVM:ObservableObject {
             self.model.radioList.remove(at: itemIndices.first!)
             self.model.selectRow = nil
         }
+        
     }
     
     func addStation() {
