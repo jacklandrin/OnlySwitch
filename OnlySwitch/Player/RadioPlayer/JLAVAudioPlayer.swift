@@ -74,6 +74,7 @@ class JLAVAudioPlayer: NSObject ,AVPlayerItemMetadataOutputPushDelegate, AudioPl
     
     func stop(){
         self.audioPlayer?.stop()
+        pauseCommandCenter()
     }
 }
 

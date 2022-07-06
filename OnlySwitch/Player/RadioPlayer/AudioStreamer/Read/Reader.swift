@@ -78,6 +78,7 @@ public class Reader: Reading {
             }
             
             guard status == noErr else {
+//                AudioConverterReset(self.converter!);
                 switch status {
                 case ReaderMissingSourceFormatError:
                     throw ReaderError.parserMissingDataFormat

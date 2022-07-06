@@ -110,6 +110,7 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
     func stop() {
         audioPlayer.stop()
         avplayer.stop()
+        pauseCommandCenter()
     }
     
     deinit {

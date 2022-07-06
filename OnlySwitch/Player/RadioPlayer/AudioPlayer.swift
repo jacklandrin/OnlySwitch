@@ -22,8 +22,8 @@ extension AudioPlayer {
         var nowPlayingInfo = [String : Any]()
         nowPlayingInfo[MPMediaItemPropertyTitle] = self.currentAudioStation?.title
         let image = NSImage(named: "AppIcon")!
-        let newImage = image.resize(withSize: NSSize(width: 50, height: 50))!
-        nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: CGSize(width: 50, height: 50), requestHandler: { _ in
+        let newImage = image.resize(withSize: NSSize(width: 100, height: 100))!
+        nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: CGSize(width: 100, height: 100), requestHandler: { _ in
             newImage
         })
 
@@ -49,6 +49,17 @@ extension AudioPlayer {
             return .success
         }
         
+        commandCenter.togglePlayPauseCommand.addTarget{ event in
+            guard let station = self.currentAudioStation else {return .commandFailed}
+            station.isPlaying = !station.isPlaying
+            if MPNowPlayingInfoCenter.default().playbackState == .playing {
+                MPNowPlayingInfoCenter.default().playbackState = .paused
+            } else {
+                MPNowPlayingInfoCenter.default().playbackState = .playing
+            }
+           
+            return .success
+        }
 //        commandCenter.nextTrackCommand.isEnabled = self.currentAudioStation?.itemStatesInList == .Last ? false : true
 //        commandCenter.nextTrackCommand.addTarget { event in
 //            self.currentAudioStation?.nextStation()
@@ -62,6 +73,11 @@ extension AudioPlayer {
 //
 //        }
     }
+    
+    func pauseCommandCenter() {
+        MPNowPlayingInfoCenter.default().playbackState = .paused
+    }
+    
 }
 
 
