@@ -75,9 +75,10 @@ class PureColorVM:ObservableObject {
     func exitScreenTestMode() {
         Task {
             try? await ScreenTestSwitch.shared.operationSwitch(isOn: false)
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.screenTest)
+            }
         }
-        
-        NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.screenTest)
     }
     
 }
