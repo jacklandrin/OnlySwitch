@@ -109,9 +109,6 @@ OnlySwitch offers some Shortcuts actions since Version 1.8. For example, you can
 <img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2022/01/shortcutsdarkmode.png" width="60%" align="center" />
 </p>
 
-## Can't compile preview by Xcode 13.2.1 on some Macs
-I found I can't run the preview of SwiftUI by Xcode 13.2.1 on my M1 Pro Macbook. It'll show an error like this https://developer.apple.com/forums/thread/697037. Meanwhile, the OnlySwitch status bar icon will be missing, including old version app. However it's normal that I run it on my i7 Macbook. I'm not sure whether this is a bug of Xcode. The current workaround is installing back to Xcode 13.2.
-
 ## Screenshots
 
 <p align="center">
