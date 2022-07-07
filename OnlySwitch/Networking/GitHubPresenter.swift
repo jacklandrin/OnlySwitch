@@ -33,6 +33,10 @@ class GitHubPresenter: GitHubRepositoryProtocol{
         return interactor.updateHistoryInfo
     }
     
+    var updateHistoryList:[String] {
+        return interactor.updateHistoryList
+    }
+    
     func checkUpdate(complete:@escaping (Result<Void,Error>) -> Void) {
         guard let url = makeRequestURL(path: .latestRelease) else {
             complete(.failure(RequestError.invalidURL))

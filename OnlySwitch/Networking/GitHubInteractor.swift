@@ -28,6 +28,7 @@ class GitHubInteractor {
         return true
     }
     var updateHistoryInfo:String = ""
+    var updateHistoryList = [String]()
     
     func analyzeLastRelease(model:GitHubRelease) throws {
         self.latestVersion = model.name.replacingOccurrences(of: "release_", with: "")
@@ -41,13 +42,17 @@ class GitHubInteractor {
     func analyzeReleases(models:[GitHubRelease]) {
         var count:Int = 0
         var updateInfo:String = ""
+        var updateInfoList = [String]()
         for release in models {
             if let assert = release.assets.first {
                 count += assert.download_count
             }
-            updateInfo += "\(release.name):\r\n\(release.body)\r\n---------------------------------\r\n"
+            let releaseInfo = "\(release.name):\r\n\(release.body)"
+            updateInfoList.append(releaseInfo)
+            updateInfo += "\(releaseInfo)\r\n---------------------------------\r\n"
         }
         self.downloadCount = count
         self.updateHistoryInfo = updateInfo
+        self.updateHistoryList = updateInfoList
     }
 }

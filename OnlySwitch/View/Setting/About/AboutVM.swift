@@ -11,6 +11,7 @@ import Alamofire
 class AboutVM:ObservableObject {
     @Published var downloadCount:Int = 0
     @Published var updateHistoryInfo:String = ""
+    @Published var updateHistoryList = [String]()
     
     private var presenter = GitHubPresenter()
     
@@ -20,6 +21,7 @@ class AboutVM:ObservableObject {
             case .success:
                 self.downloadCount = presenter.downloadCount
                 self.updateHistoryInfo = presenter.updateHistoryInfo
+                self.updateHistoryList = presenter.updateHistoryList
             case let .failure(error):
                 print(error.localizedDescription)
             }

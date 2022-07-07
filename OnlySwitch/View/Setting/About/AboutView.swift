@@ -55,8 +55,14 @@ struct AboutView: View {
                     ProgressView()
                         .progressViewStyle(.circular)
                         .isHidden(!aboutVM.updateHistoryInfo.isEmpty, remove: true)
-                    Text(aboutVM.updateHistoryInfo)
-                        .padding(.trailing, 10)
+                    ForEach(aboutVM.updateHistoryList,id:\.self) { info in
+                        HStack {
+                            Text(info)
+                                .frame(alignment: .leading)
+                            Spacer()
+                        }
+                        Divider()
+                    }.padding(.trailing, 10)
                 }.frame(width:Layout.settingWindowWidth / 2 - 140)
             }.padding(.leading, 70)
             
@@ -80,5 +86,6 @@ struct AboutView: View {
 struct AboutView_Previews: PreviewProvider {
     static var previews: some View {
         AboutView()
+            .previewLayout(.fixed(width: Layout.settingWindowWidth, height: Layout.settingWindowHeight))
     }
 }
