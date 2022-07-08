@@ -16,11 +16,11 @@ brew install only-switch
 [**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_2.3.3/OnlySwitch.dmg)
 
 ## What's the OnlySwitch?
-OnlySwitch provides a series of toggle switches to simply your routine work, such as Hidden desktop icons, dark mode and hide notch of new Macbook Pro. The switches show on your statusbar, you can control them effortlessly. Switch and Shortcuts items can be customized (remove/add or sort) to show on the list.
+OnlySwitch provides a series of toggle switches to simplify your routine work, such as Hidden desktop icons, dark mode, and hide notch of the new Macbook Pro. The switches show on your status bar, you can control them effortlessly. Switch and Shortcuts items can be customized (remove/add or sort) to show on the list.
 
-Since Version 1.7, **Shortcuts** can be imported in OnlySwitch.
+Since Version 1.7, **Shortcuts** can be imported into OnlySwitch.
 
-Since Version 2.0, supports **keyboard shortcuts**. You can control your all switches and Shortcuts by keyboard.
+Since Version 2.0, supports **keyboard shortcuts**. You can control your all switches and Shortcuts by the keyboard.
 
 <p align="center">
 <img alt="Sits in the status bar" src="https://www.jacklandrin.com/wp-content/uploads/2022/01/onlySwitch_19.png" width="60%" align="center" />
@@ -158,7 +158,7 @@ OnlySwitch offers some Shortcuts actions since Version 1.8. For example, you can
 
 @berkbatuhans for Turkish translation
 
-@wrngwrld for volume slider of radio player
+@wrngwrld for volume slider of the radio player
 
 @kpacholak for Polish translation
 
