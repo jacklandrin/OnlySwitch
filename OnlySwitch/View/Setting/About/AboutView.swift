@@ -24,6 +24,9 @@ struct AboutView: View {
                         .foregroundColor(Color(NSColor.lightGray))
                         .font(.system(size: 22))
                 }
+                Text("(Build \(SystemInfo.minorVersion as! String))")
+                    .font(.footnote)
+                    .foregroundColor(.gray)
                 HStack {
                     Text("Copyright @ 2021-2022 ")
                         .font(.system(size: 15))
