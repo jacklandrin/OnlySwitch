@@ -66,7 +66,7 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
         
         setAVPlayer(url: url)
         audioPlayer.url = url
-        if notm3uStream(url: url.absoluteString) {
+        if wavableURL(url: url.absoluteString) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
                 self?.audioPlayer.play()
             }
@@ -77,8 +77,8 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
         self.setupNowPlaying()
     }
     
-    func notm3uStream(url:String) -> Bool {
-        return !url.hasSuffix(".m3u") && !url.hasSuffix(".m3u8")
+    func wavableURL(url:String) -> Bool {
+        return !url.hasSuffix(".m3u") && !url.hasSuffix(".m3u8") && !url.hasSuffix(".aac")
     }
     
     func setAVPlayer(url:URL)  {
@@ -92,7 +92,7 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
         self.avplayer.volume = Preferences.shared.volume
         
         self.avplayer.play()
-        self.avplayer.isMuted = notm3uStream(url: url.absoluteString)
+        self.avplayer.isMuted = wavableURL(url: url.absoluteString)
     }
     
     func metadataOutput(_ output: AVPlayerItemMetadataOutput, didOutputTimedMetadataGroups groups: [AVTimedMetadataGroup], from track: AVPlayerItemTrack?) {
