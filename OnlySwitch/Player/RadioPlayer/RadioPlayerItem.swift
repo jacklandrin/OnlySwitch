@@ -11,12 +11,13 @@ struct RadioPlayerItem {
     var isPlaying:Bool = false
     var title:String = ""
     {
-        didSet {
+        willSet {
+            guard title != newValue else {return}
             if isPlaying &&
-                !title.isEmpty &&
+                !newValue.isEmpty &&
                 Preferences.shared.allNotificationChangingStation {
                 let _ = try? displayNotificationCMD(title: "Now Playing".localized(),
-                                               content: title,
+                                               content: newValue,
                                                subtitle: "")
                     .runAppleScript()
             }
@@ -25,14 +26,15 @@ struct RadioPlayerItem {
     var streamUrl:String = ""
     var streamInfo:String = ""
     {
-        didSet {
+        willSet {
+            guard streamInfo != newValue else {return}
             if isPlaying &&
-                !streamInfo.isEmpty &&
+                !newValue.isEmpty &&
                 !title.isEmpty &&
                 Preferences.shared.allNotificationTrack {
                 let _ = try? displayNotificationCMD(title: "Now Playing".localized(),
                                                content: title,
-                                               subtitle: streamInfo)
+                                               subtitle: newValue)
                     .runAppleScript()
             }
         }
