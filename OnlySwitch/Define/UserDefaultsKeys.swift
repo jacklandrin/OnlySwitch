@@ -27,6 +27,8 @@ extension UserDefaults {
         static let volume = "volumeKey"
         static let hasRunRadio = "hasRunRadioKey"
         static let radioStation = "radioStationKey"
+        static let allowNotificationChangingStation = "allowNotificationChangingStationKey"
+        static let allowNotificationTrack = "allowNotificationTrack"
         //Hidden menubar
         static let isMenubarCollapse = "isMenubarCollapseKey"
         static let autoCollapseMenubarTime = "autoCollapseMenubarTimeKey"

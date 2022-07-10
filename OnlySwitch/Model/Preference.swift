@@ -66,6 +66,12 @@ struct Preferences {
         }
     }
     
+    @UserDefaultValue(key: UserDefaults.Key.allowNotificationChangingStation, defaultValue: false)
+    var allNotificationChangingStation:Bool
+    
+    @UserDefaultValue(key: UserDefaults.Key.allowNotificationTrack, defaultValue: false)
+    var allNotificationTrack:Bool
+    
     @UserDefaultValue(key: UserDefaults.Key.radioStation, defaultValue: nil)
     var radioStationID:String?
     

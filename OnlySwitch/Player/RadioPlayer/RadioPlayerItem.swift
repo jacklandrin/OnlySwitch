@@ -10,8 +10,33 @@ import Foundation
 struct RadioPlayerItem {
     var isPlaying:Bool = false
     var title:String = ""
+    {
+        didSet {
+            if isPlaying &&
+                !title.isEmpty &&
+                Preferences.shared.allNotificationChangingStation {
+                let _ = try? displayNotificationCMD(title: "Now Playing".localized(),
+                                               content: title,
+                                               subtitle: "")
+                    .runAppleScript()
+            }
+        }
+    }
     var streamUrl:String = ""
     var streamInfo:String = ""
+    {
+        didSet {
+            if isPlaying &&
+                !streamInfo.isEmpty &&
+                !title.isEmpty &&
+                Preferences.shared.allNotificationTrack {
+                let _ = try? displayNotificationCMD(title: "Now Playing".localized(),
+                                               content: title,
+                                               subtitle: streamInfo)
+                    .runAppleScript()
+            }
+        }
+    }
     var isEditing:Bool = false
     var id:UUID
     

@@ -14,14 +14,26 @@ struct RadioSettingView: View {
     @State var updateTable:UUID = UUID()
     var body: some View {
         VStack {
-            HStack {
-                Toggle("Sound Wave Effect".localized(), isOn: $radioSettingVM.soundWaveEffectDisplay)
-                    .frame(alignment:.leading)
+            HStack(alignment: .top) {
+                VStack(alignment:.leading) {
+                    Toggle("Allow Notification of Changing Station".localized(), isOn: $radioSettingVM.allowNotificationChangingStation)
+                    
+                    Toggle("Allow Notification of Track".localized(), isOn: $radioSettingVM.allowNotificationTrack)
+                }
+                
                 Spacer()
-                Text("Volume".localized() + ":")
-                Slider(value: $radioSettingVM.sliderValue)
-                    .frame(width: 150, height: 10, alignment: .trailing)
-                    .padding(.trailing, 10)
+                
+                VStack(alignment:.trailing) {
+                    HStack {
+                        Text("Volume".localized() + ":")
+                        Slider(value: $radioSettingVM.sliderValue)
+                            .frame(width: 150, height: 10)
+                    }
+                    
+                    Toggle("Sound Wave Effect".localized(), isOn: $radioSettingVM.soundWaveEffectDisplay)
+                    
+                } .padding(.trailing, 10)
+                
             }
                 .padding(.top, 10)
                 .padding(.leading, 10)
