@@ -114,3 +114,5 @@
 "Switch enable" = "开关可用";
 "Automatically hide icons after:" = "自动隐藏图标，在之后的:";
 "When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section." = "当开关开启时，箭头所指的图标左边的所有图标会被隐藏。长按⌘键（command）并拖拽图标可以设置隐藏的区域";
+"Allow Notification of Changing Station" = "允许切换电台时通知";
+"Allow Notification of Track" = "允许音轨通知";

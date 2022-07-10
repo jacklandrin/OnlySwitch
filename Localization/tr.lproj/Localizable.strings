@@ -115,3 +115,5 @@
 "Switch enable" = "Switch etkinleştirmek";
 "Automatically hide icons after:" = "Simgeleri otomatik olarak gizle:";
 "When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section." = "Switch açıkken, okla gösterilen simgenin solundaki öğeler gizlenir. Gizli bölümü yapılandırmak için ⌘ (command) tuşunu basılı tutun ve simgeyi sürükleyin.";
+"Allow Notification of Changing Station" = "Radyo İstasyonunu Değiştirme Bildirimine İzin Ver";
+"Allow Notification of Track" = "Ses Parçasının Bildirimine İzin Ver";
