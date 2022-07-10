@@ -23,6 +23,7 @@ struct RadioPlayerItem {
             }
         }
     }
+    
     var streamUrl:String = ""
     var streamInfo:String = ""
     {
@@ -39,6 +40,7 @@ struct RadioPlayerItem {
             }
         }
     }
+    
     var isEditing:Bool = false
     var id:UUID
     
