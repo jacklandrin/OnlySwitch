@@ -11,7 +11,7 @@ Before contributing, please make sure these:
 The unqualified contributions will be rejected.
 
 ## Format
-The shared Shortcuts are stored in a [JSON file](OnlySwitch/ShortcutsMarket/ShortcutsMarket.json), and the format is this:
+The shared Shortcuts are stored in a [JSON file](OnlySwitch/Resource/ShortcutsMarket/ShortcutsMarket.json), and the format is this:
 ```
 {
     "name": "Toggle Scroll Direction",
