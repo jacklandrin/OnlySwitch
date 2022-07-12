@@ -47,6 +47,11 @@
         "link": "https://www.icloud.com/shortcuts/29341dfe669e4c898fd78faa6549dcbb",
         "author": "jacklandrin",
         "description": "Automatically hide and show menu bar in full screen (Monterey, English)"
+    },
+    {
+        "name": "Flush DNS Cache",
+        "link": "https://www.icloud.com/shortcuts/5b25691b84ff4be490294c697b85d271",
+        "author": "nomadjimbob",
+        "description": "Flushes the local DNS Cache (El Capitan or higher)"
     }
-    
 ]
