@@ -5,7 +5,7 @@
 //  Created by Jacklandrin on 2021/11/30.
 //
 
-import Foundation
+import CoreGraphics
 
 extension CGImage {
     func crop(toSize targetSize: CGSize) -> CGImage? {
