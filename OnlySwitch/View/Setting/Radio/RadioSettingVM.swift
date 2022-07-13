@@ -75,6 +75,24 @@ class RadioSettingVM:ObservableObject {
         }
     }
     
+    var allowNotificationChangingStation: Bool {
+        get {
+            preferences.allNotificationChangingStation
+        }
+        set {
+            preferences.allNotificationChangingStation = newValue
+        }
+    }
+    
+    var allowNotificationTrack: Bool {
+        get {
+            preferences.allNotificationTrack
+        }
+        set {
+            preferences.allNotificationTrack = newValue
+        }
+    }
+    
     
     private var managedObjectContext:NSManagedObjectContext?
     init() {

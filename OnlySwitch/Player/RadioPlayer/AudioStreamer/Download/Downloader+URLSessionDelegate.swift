@@ -22,7 +22,8 @@ extension Downloader: URLSessionDataDelegate {
         totalBytesCount = response.expectedContentLength
 //        print("totalBytesCount:\(totalBytesCount)")
         let mimeType = response.mimeType
-        if mimeType == "audio/aac" {
+        print("mineType:\(String(describing: mimeType))")
+        if let mimeType = mimeType, !supportFormat.contains(mimeType) {
             let error = MimeTypeError.unsupportedFormat
             delegate?.download(self, completedWithError: error)
             completionHandler(.cancel)

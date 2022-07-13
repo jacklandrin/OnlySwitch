@@ -115,3 +115,5 @@
 "Switch enable" = "スイッチの有効化";
 "Automatically hide icons after:" = "にアイコンを自動的に非表示にします:";
 "When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section." = "スイッチがオンの場合、矢印アイコンの左側の項目は非表示になります。 ⌘（command）を押しながらアイコンをドラッグして、非表示セクションを構成します。";
+"Allow Notification of Changing Station" = "ステーションを切り替えるときに通知を許可する";
+"Allow Notification of Track" = "トラック通知を許可する";

@@ -114,3 +114,5 @@
 "Switch enable" = "Включить переключатель";
 "Automatically hide icons after:" = "Автоматически скрывать значки через:";
 "When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section." = "Когда переключатель включен, элементы слева от значка со стрелкой скрыты. Удерживайте ⌘ (command) и перетащите значок, чтобы настроить скрытый раздел.";
+"Allow Notification of Changing Station" = "Разрешить уведомление о смене радиостанции";
+"Allow Notification of Track" = "Разрешить уведомление о саундтреке";

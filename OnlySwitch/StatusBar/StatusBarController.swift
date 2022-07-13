@@ -61,6 +61,65 @@ class StatusBarController {
         
         eventMonitor = EventMonitor(mask: [.leftMouseDown, .rightMouseDown], handler: mouseEventHandler)
         
+        HideMenubarIconsSwitch.shared.isButtonPositionValid = {
+            var isValid:Bool!
+            DispatchQueue.main.sync {
+                isValid = self.isMarkItemValidPosition
+            }
+            return isValid
+        }
+        
+        if Preferences.shared.menubarCollaspable {
+            setMarkButton()
+            Task {
+                try? await HideMenubarIconsSwitch.shared.operationSwitch(isOn: isMenubarCollapse)
+            }
+
+        }
+        
+        observeNotifications()
+    }
+    
+    @objc func togglePopover(sender:AnyObject) {
+        if hasOtherPopover {
+            return
+        }
+        if(popover.isShown) {
+            hidePopover(sender)
+            
+        } else {
+            showPopover(sender)
+        }
+    }
+    
+    private var isMarkItemValidPosition:Bool {
+        guard let mainItemX = self.mainItem.button?.getOrigin?.x,
+              let markItemX = self.markItem?.button?.getOrigin?.x
+        else {return false}
+        return mainItemX >= markItemX
+    }
+    
+    private func setMainItemButton(image:String) {
+        if let mainItemButton = mainItem.button {
+            mainItemButton.image = NSImage(named: image)
+            mainItemButton.image?.size = NSSize(width: 18, height: 18)
+            mainItemButton.image?.isTemplate = true
+
+            mainItemButton.action = #selector(togglePopover(sender:))
+            mainItemButton.target = self
+        }
+    }
+    
+    private func setMarkButton() {
+        markItem = NSStatusBar.system.statusItem(withLength: MarkItemLength.normal)
+        if let markItemButton = markItem?.button {
+            markItemButton.image = NSImage(named: "mark_icon")
+            markItemButton.image?.size = NSSize(width: 22, height: 18)
+            markItemButton.image?.isTemplate = true
+        }
+    }
+    
+    private func observeNotifications() {
         NotificationCenter.default.addObserver(forName: .changeMenuBarIcon, object: nil, queue: .main, using: {[weak self] notify in
             guard let strongSelf = self else {return}
             let newImageName = notify.object as! String
@@ -122,64 +181,9 @@ class StatusBarController {
             } else {
                 if let markItem = strongSelf.markItem {
                     NSStatusBar.system.removeStatusItem(markItem)
-//                    strongSelf.markItem = nil
                 }
             }
         })
-        
-        HideMenubarIconsSwitch.shared.isButtonPositionValid = {
-            var isValid:Bool!
-            DispatchQueue.main.sync {
-                isValid = self.isMarkItemValidPosition
-            }
-            return isValid
-        }
-        
-        if Preferences.shared.menubarCollaspable {
-            setMarkButton()
-            Task {
-                try? await HideMenubarIconsSwitch.shared.operationSwitch(isOn: isMenubarCollapse)
-            }
-
-        }
-    }
-    
-    @objc func togglePopover(sender:AnyObject) {
-        if hasOtherPopover {
-            return
-        }
-        if(popover.isShown) {
-            hidePopover(sender)
-        } else {
-            showPopover(sender)
-        }
-    }
-    
-    private var isMarkItemValidPosition:Bool {
-        guard let mainItemX = self.mainItem.button?.getOrigin?.x,
-              let markItemX = self.markItem?.button?.getOrigin?.x
-        else {return false}
-        return mainItemX >= markItemX
-    }
-    
-    private func setMainItemButton(image:String) {
-        if let mainItemButton = mainItem.button {
-            mainItemButton.image = NSImage(named: image)
-            mainItemButton.image?.size = NSSize(width: 18, height: 18)
-            mainItemButton.image?.isTemplate = true
-
-            mainItemButton.action = #selector(togglePopover(sender:))
-            mainItemButton.target = self
-        }
-    }
-    
-    private func setMarkButton() {
-        markItem = NSStatusBar.system.statusItem(withLength: MarkItemLength.normal)
-        if let markItemButton = markItem?.button {
-            markItemButton.image = NSImage(named: "mark_icon")
-            markItemButton.image?.size = NSSize(width: 22, height: 18)
-            markItemButton.image?.isTemplate = true
-        }
     }
     
     func showPopover(_ sender: AnyObject) {

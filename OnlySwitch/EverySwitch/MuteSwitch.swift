@@ -12,7 +12,39 @@ import AppKit
 class MuteSwitch:SwitchProvider {
     weak var delegate: SwitchDelegate?
     var type: SwitchType = .mute
-    private let muteSwitchOperator:MuteSwitchProtocal = ASMuteSwitchOperator()
+    private let muteSwitchOperator:MuteSwitchProtocal = NSMuteSwitchOperator()
+    private let pollingInterval: DispatchTimeInterval = .seconds(1)
+    private let pollingQueue = DispatchQueue.main
+    private var isSuspendQueue = true
+    private var isMute:Bool = false {
+        willSet {
+//            print("isMute:\(newValue)")
+            if isMute != newValue {
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.mute)
+                }
+            }
+        }
+    }
+    
+    init() {
+//        print("mute init")
+        NotificationCenter.default.addObserver(forName: .showPopover, object: nil, queue: .main, using: { [weak self] _ in
+            guard let StrongSelf = self else {return}
+            StrongSelf.isSuspendQueue = false
+            StrongSelf.startVolumePoll()
+        })
+        
+        NotificationCenter.default.addObserver(forName: .hidePopover, object: nil, queue: .main, using: {[weak self] _ in
+            guard let StrongSelf = self else {return}
+            StrongSelf.pollingQueue.suspend()
+            StrongSelf.isSuspendQueue = true
+        })
+    }
+    
+    deinit{
+//        print("mute deinit")
+    }
     
     func operationSwitch(isOn: Bool) async throws {
         try muteSwitchOperator.operationSwitch(isOn: isOn)
@@ -20,6 +52,7 @@ class MuteSwitch:SwitchProvider {
     
     func currentStatus() -> Bool {
         return muteSwitchOperator.currentStatus()
+        
     }
     
     func isVisable() -> Bool {
@@ -29,6 +62,20 @@ class MuteSwitch:SwitchProvider {
     func currentInfo() -> String {
         return ""
     }
+    
+    private func scheduleNextPoll(on queue: DispatchQueue) {
+        queue.asyncAfter(deadline: .now() + pollingInterval) {
+            self.isMute = self.muteSwitchOperator.currentStatus()
+            if !self.isSuspendQueue {
+                self.scheduleNextPoll(on: queue)
+            }
+        }
+    }
+    
+    private func startVolumePoll() {
+        scheduleNextPoll(on: pollingQueue)
+    }
+
 }
 
 protocol MuteSwitchProtocal {

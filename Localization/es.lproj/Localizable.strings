@@ -113,3 +113,5 @@ Creado por Jacklandrin el día 14/12/2021.
 "Switch enable" = "habilitar switch";
 "Automatically hide icons after:" = "Ocultar iconos automáticamente después de:";
 "When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section." = "Cuando el interruptor está encendido, los elementos a la izquierda del icono que apunta con la flecha están ocultos. Mantenga presionada la tecla ⌘ (command) y arrastre el icono para configurar la sección oculta.";
+"Allow Notification of Changing Station" = "Permitir notificación de cambio de estación de radio";
+"Allow Notification of Track" = "Permitir notificación de banda sonora";
