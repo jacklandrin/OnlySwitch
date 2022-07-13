@@ -29,6 +29,7 @@ struct SettingView: View {
                 }
                 HostingWindowFinder{ window in
                     if let window = window {
+                        window.level = .popUpMenu + 1
                         NotificationCenter.default.post(name: .settingsWindowOpened, object: window)
                     }
                 }.frame(width: 0, height: 0)
