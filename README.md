@@ -65,7 +65,7 @@ Since Version 1.3, switches can be added or removed on list.
 | Set dark mode       | finished          |
 
 ## Supported Languages
-English, simplified Chinese, German, Croatian, Turkish, Polish, Filipino, Dutch, Italian, Russian, Spanish, Japanese
+English, simplified Chinese, German, Croatian, Turkish, Polish, Filipino, Dutch, Italian, Russian, Spanish, Japanese, Somali
 
 ## Welcome to pull request for these
 
@@ -173,6 +173,8 @@ Rosel for Filipino translation
 @kant for syntax issue and Spanish translation
 
 @ShogoKoyama for Japanese translation
+
+@abdorizak for Somali translation
 
 ## Telegram group
 https://t.me/OnlySwitchforMac
