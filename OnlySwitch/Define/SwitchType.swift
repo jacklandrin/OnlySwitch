@@ -156,11 +156,13 @@ enum SwitchType:UInt64, CaseIterable {
         case .spotify:
             return SwitchBarInfo(title: "Spotify",
                                  onImage: NSImage(named: "spotify_icon")!,
-                                 offImage: NSImage(named: "spotify_icon")!)
+                                 offImage: NSImage(named: "spotify_icon")!,
+                                 category: .audio)
         case .applemusic:
             return SwitchBarInfo(title: "Apple Music",
                                  onImage: NSImage(named: "apple_music_icon")!,
-                                 offImage: NSImage(named: "apple_music_icon")!)
+                                 offImage: NSImage(named: "apple_music_icon")!,
+                                 category: .audio)
         case .screenTest:
             return SwitchBarInfo(title: "Screen Test",
                                  onImage: NSImage(systemSymbolName: "display.trianglebadge.exclamationmark"),
