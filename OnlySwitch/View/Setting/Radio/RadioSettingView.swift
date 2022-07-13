@@ -104,7 +104,7 @@ struct RadioSettingView: View {
                 })
                     .contentShape(Rectangle())
             }.padding(10)
-        }.navigationTitle(Text("Radio Stations"))
+        }.navigationTitle(Text("Radio".localized()))
             .toast(isPresenting: $radioSettingVM.showErrorToast) {
                 AlertToast(displayMode: .alert,
                            type: .error(.red),

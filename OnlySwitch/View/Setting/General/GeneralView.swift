@@ -166,6 +166,7 @@ struct GeneralView: View, EmailProvider {
             }.padding(.top, 25)
             Spacer()
         }
+        .navigationTitle(Text("General".localized()))
         .onAppear{
             generalVM.cacheSize = WallpaperManager.shared.cacheSize()
         }

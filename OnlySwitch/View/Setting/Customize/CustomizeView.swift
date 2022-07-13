@@ -36,7 +36,9 @@ struct CustomizeView: View {
             }
             Divider()
                 .padding(.bottom,10)
-        }.toast(isPresenting: $customizeVM.showErrorToast) {
+        }
+        .navigationTitle(Text("Customize".localized()))
+        .toast(isPresenting: $customizeVM.showErrorToast) {
             AlertToast(displayMode: .alert,
                        type: .error(.red),
                        title: customizeVM.errorInfo.localized())

@@ -34,6 +34,7 @@ struct AirPodsSettingView: View {
                 }
             }
         }.id(updateID)
+            .navigationTitle(Text("AirPods".localized()))
     }
     
     func backgroundColor(item:AirPodsItem) -> Color {

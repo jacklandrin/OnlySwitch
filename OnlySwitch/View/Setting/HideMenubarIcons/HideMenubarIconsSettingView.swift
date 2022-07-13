@@ -38,7 +38,7 @@ struct HideMenubarIconsSettingView: View {
                 
             }.padding(.horizontal)
            
-        }
+        }.navigationTitle(Text("Hide Menu Bar Icons".localized()))
     }
 }
 

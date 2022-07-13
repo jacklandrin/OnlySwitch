@@ -70,6 +70,7 @@ struct AboutView: View {
             }.padding(.leading, 70)
             
         }
+        .navigationTitle(Text("About".localized()))
         .onAppear {
             aboutVM.requestReleases()
         }
