@@ -47,6 +47,7 @@ extension AudioPlayer {
             MPNowPlayingInfoCenter.default().playbackState = .playing
             return .success
         }
+        
         commandCenter.pauseCommand.isEnabled = true
         commandCenter.pauseCommand.addTarget {event in
             let station = self.currentAudioStation
@@ -84,7 +85,7 @@ extension AudioPlayer {
             return .success
 
         }
-    
+        
     }
     
     func pauseCommandCenter() {
@@ -93,6 +94,21 @@ extension AudioPlayer {
     
     func updateStreamInfo(info:String?) {
         MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPMediaItemPropertyAlbumTitle] = info
+    }
+    
+    func clearCommandCenter() {
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
+        MPNowPlayingInfoCenter.default().playbackState = .unknown
+        let commandCenter = MPRemoteCommandCenter.shared()
+        commandCenter.nextTrackCommand.isEnabled = false
+        commandCenter.previousTrackCommand.isEnabled = false
+        commandCenter.playCommand.isEnabled = false
+        commandCenter.pauseCommand.isEnabled = false
+        commandCenter.nextTrackCommand.removeTarget(nil)
+        commandCenter.previousTrackCommand.removeTarget(nil)
+        commandCenter.pauseCommand.removeTarget(nil)
+        commandCenter.playCommand.removeTarget(nil)
+        commandCenter.togglePlayPauseCommand.removeTarget(nil)
     }
     
 }

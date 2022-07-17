@@ -72,6 +72,15 @@ struct Preferences {
     @UserDefaultValue(key: UserDefaults.Key.allowNotificationTrack, defaultValue: false)
     var allNotificationTrack:Bool
     
+    @UserDefaultValue(key: UserDefaults.Key.radioEnable, defaultValue: true)
+    var radioEnable:Bool {
+        didSet {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                NotificationCenter.default.post(name: .changeSettings, object: nil)
+            }
+        }
+    }
+    
     @UserDefaultValue(key: UserDefaults.Key.radioStation, defaultValue: nil)
     var radioStationID:String?
     

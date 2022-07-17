@@ -112,5 +112,6 @@
 "Switch enable" = "Switch omogućen";
 "Automatically hide icons after:" = "Automatski sakrijte ikone nakon:";
 "When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section." = "Kada je switch uključen, stavke s lijeve strane ikone sa strelicom su skrivene. Držite ⌘ (command) i povucite ikonu da biste konfigurirali skriveni odjeljak.";
-"Allow Notification of Changing Station" = "Dopusti obavijest o promjeni radijske postaje";
-"Allow Notification of Track" = "Dopusti obavijest o zvučnom zapisu";
+"Allow Notification:" = "Dopusti obavijest:";
+"Changing Station" = "Promjena radijske postaje";
+"Soundtrack" = "Zvučni zapis";

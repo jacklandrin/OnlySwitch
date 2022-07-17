@@ -93,6 +93,21 @@ class RadioSettingVM:ObservableObject {
         }
     }
     
+    var switchEnable:Bool {
+        get {
+            preferences.radioEnable
+        }
+        
+        set {
+            preferences.radioEnable = newValue
+            if newValue {
+                PlayerManager.shared.player.setupRemoteCommandCenter()
+            } else {
+                RadioStationSwitch.shared.playerItem.isPlaying = false
+                PlayerManager.shared.player.clearCommandCenter()
+            }
+        }
+    }
     
     private var managedObjectContext:NSManagedObjectContext?
     init() {

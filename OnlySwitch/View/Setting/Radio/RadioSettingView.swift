@@ -16,9 +16,12 @@ struct RadioSettingView: View {
         VStack {
             HStack(alignment: .top) {
                 VStack(alignment:.leading) {
-                    Toggle("Allow Notification of Changing Station".localized(), isOn: $radioSettingVM.allowNotificationChangingStation)
-                    
-                    Toggle("Allow Notification of Track".localized(), isOn: $radioSettingVM.allowNotificationTrack)
+                    Toggle("Switch enable".localized(), isOn: $radioSettingVM.switchEnable)
+                    HStack {
+                        Text("Allow Notification:".localized())
+                        Toggle("Changing Station".localized(), isOn: $radioSettingVM.allowNotificationChangingStation)
+                        Toggle("Soundtrack".localized(), isOn: $radioSettingVM.allowNotificationTrack)
+                    }
                 }
                 
                 Spacer()

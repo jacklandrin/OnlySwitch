@@ -114,5 +114,6 @@
 "Switch enable" = "Switch aktivieren";
 "Automatically hide icons after:" = "Symbole automatisch ausblenden nach:";
 "When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section." = "Wenn der Switch eingeschaltet ist, werden Elemente links vom Pfeilsymbol ausgeblendet. Halten Sie ⌘ (command) gedrückt und ziehen Sie das Symbol, um den verborgenen Abschnitt zu konfigurieren.";
-"Allow Notification of Changing Station" = "Benachrichtigung über Senderwechsel zulassen";
-"Allow Notification of Track" = "Trackbenachrichtigung zulassen";
+"Allow Notification:" = "Benachrichtigung zulassen:";
+"Changing Station" = "Ändern des Radiosenders";
+"Soundtrack" = "Tonspur";

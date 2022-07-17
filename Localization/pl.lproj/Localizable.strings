@@ -115,5 +115,6 @@
 "Switch enable" = "Włącz Switch";
 "Automatically hide icons after:" = "Automatycznie ukryj ikony po:";
 "When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section." = "Gdy przełącznik jest włączony, elementy po lewej stronie ikony wskazującej strzałkę są ukryte. Przytrzymaj ⌘ (command) i przeciągnij ikonę, aby skonfigurować ukrytą sekcję.";
-"Allow Notification of Changing Station" = "Zezwól na powiadomienie o zmianie stacji radiowej";
-"Allow Notification of Track" = "Zezwól na powiadomienie o ścieżce dźwiękowej";
+"Allow Notification:" = "Zezwól na powiadomienie:";
+"Changing Station" = "Zmiana stacji radiowej";
+"Soundtrack" = "Ścieżka dźwiękowa";

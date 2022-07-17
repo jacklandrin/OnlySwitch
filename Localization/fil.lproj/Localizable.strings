@@ -115,5 +115,6 @@
 "Switch enable" = "Paganahin ang switch";
 "Automatically hide icons after:" = "Awtomatikong itago ang mga icon pagkatapos ng:";
 "When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section." = "Kapag naka-on ang switch, nakatago ang mga item sa kaliwa ng arrow-pointing icon. Pindutin ang ⌘ (command) at i-drag ang icon para i-configure ang nakatagong seksyon.";
-"Allow Notification of Changing Station" = "Payagan ang Notification ng Pagbabago ng Istasyon ng radyo";
-"Allow Notification of Track" = "Payagan ang Notification ng Sound Track";
+"Allow Notification:" = "Payagan ang Notification:";
+"Changing Station" = "Pagpapalit ng Istasyoni";
+"Soundtrack" = "Soundtrack";

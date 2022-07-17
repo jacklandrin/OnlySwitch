@@ -114,5 +114,6 @@
 "Switch enable" = "Switch inschakelen";
 "Automatically hide icons after:" = "Pictogrammen automatisch verbergen na:";
 "When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section." = "Als de switch is ingeschakeld, zijn items aan de linkerkant van het pijl-wijzende pictogram verborgen. Houd ⌘ (command) ingedrukt en sleep het pictogram om de verborgen sectie te configureren.";
-"Allow Notification of Changing Station" = "Melding toestaan van veranderen van radiostation";
-"Allow Notification of Track" = "Melding van soundtrack toestaan";
+"Allow Notification:" = "Melding toestaan:";
+"Changing Station" = "Van radiostation wisselen";
+"Soundtrack" = "Soundtrack";
