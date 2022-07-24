@@ -21,11 +21,11 @@ class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
         return switchType.barInfo().title
     }
     
-    var onImage:NSImage {
+    var onImage:NSImage? {
         return switchType.barInfo().onImage
     }
     
-    var offImage:NSImage {
+    var offImage:NSImage? {
         return switchType.barInfo().offImage
     }
     

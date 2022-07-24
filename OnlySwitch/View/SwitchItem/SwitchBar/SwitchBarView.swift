@@ -13,7 +13,7 @@ struct SwitchBarView: View {
     var body: some View {
         HStack {
             Image(nsImage:
-                    barImage(option: switchOption).resizeMaintainingAspectRatio(withSize: NSSize(width: 50, height: 50))!)
+                    barImage(option: switchOption)!.resizeMaintainingAspectRatio(withSize: NSSize(width: 50, height: 50))!)
             .renderingMode(.template)
             .resizable()
             .scaledToFit()
@@ -82,7 +82,7 @@ struct SwitchBarView: View {
         }
     }
     
-    func barImage(option:SwitchBarVM) -> NSImage {
+    func barImage(option:SwitchBarVM) -> NSImage? {
         if option.isOn {
             return option.onImage
         } else {

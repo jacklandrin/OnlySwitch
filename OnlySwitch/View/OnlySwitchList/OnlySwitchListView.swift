@@ -57,7 +57,7 @@ struct OnlySwitchListView: View {
                     .isHidden(!switchVM.soundWaveEffectDisplay || !playerItem.isPlaying, remove: true)
             }
         )
-            .id(switchVM.updateID)
+//            .id(switchVM.updateID)
             .onReceive(NotificationCenter.default.publisher(for: .showPopover, object: nil)) { _ in
             switchVM.refreshData()
         }

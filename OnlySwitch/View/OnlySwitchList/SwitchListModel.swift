@@ -21,7 +21,5 @@ struct SwitchListModel {
     
     var cleanupItemList = Array<SwitchBarVM>() //for two columns
     
-    var updateID = UUID() //for refresh UI
-    
     var sortMode = false
 }

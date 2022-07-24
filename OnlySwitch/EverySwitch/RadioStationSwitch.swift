@@ -12,6 +12,7 @@ import CoreData
 let defaultRadioStations = [["title":"Country Radio", "url":"https://live.leanstream.co/CKRYFM"],
                             ["title":"Dance UK", "url":"http://uk2.internet-radio.com:8024/stream"],
                             ["title":"Box UK", "url":"http://51.75.170.46:6191/stream"]]
+
 class RadioStationSwitch:SwitchProvider {
     static let shared = RadioStationSwitch()
     var type: SwitchType = .radioStation

@@ -21,7 +21,7 @@
 		041D726128353AFF0083092D /* String++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A2FFF9275636FA00CE56A0 /* String++.swift */; };
 		041D726328353B380083092D /* NSImage+SymbolName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041D726228353B380083092D /* NSImage+SymbolName.swift */; };
 		041D726428353B430083092D /* NSImage+SymbolName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041D726228353B380083092D /* NSImage+SymbolName.swift */; };
-		041D726728353BC20083092D /* SwitchType+Instance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041D726628353BC20083092D /* SwitchType+Instance.swift */; };
+		041D726728353BC20083092D /* SwitchType++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041D726628353BC20083092D /* SwitchType++.swift */; };
 		041D72692835865C0083092D /* SwitchError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041D72682835865B0083092D /* SwitchError.swift */; };
 		041D726A2835865C0083092D /* SwitchError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041D72682835865B0083092D /* SwitchError.swift */; };
 		041D726B2835865C0083092D /* SwitchError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041D72682835865B0083092D /* SwitchError.swift */; };
@@ -250,6 +250,32 @@
 		04EB1CD62781299A00C612AB /* ShortcutsBarVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CD52781299A00C612AB /* ShortcutsBarVM.swift */; };
 		04F118C427AED8BC005DA861 /* GitHubReleaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F118C327AED8BC005DA861 /* GitHubReleaseModel.swift */; };
 		04F118C627AED8EE005DA861 /* AboutVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F118C527AED8EE005DA861 /* AboutVM.swift */; };
+		04FB3E582888B4C100F3B5E1 /* UserDefaultValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140B7277884EE005B160B /* UserDefaultValue.swift */; };
+		04FB3E5A2888B4D000F3B5E1 /* SwitchType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D792758212A00ADC004 /* SwitchType.swift */; };
+		04FB3E5B2888B52B00F3B5E1 /* SwitchType++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041D726628353BC20083092D /* SwitchType++.swift */; };
+		04FB3E5D288D489500F3B5E1 /* SettingWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FB3E5C288D489500F3B5E1 /* SettingWindowController.swift */; };
+		04FB3E5E288D499100F3B5E1 /* SettingWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FB3E5C288D489500F3B5E1 /* SettingWindowController.swift */; };
+		04FB3E60288D49E100F3B5E1 /* SwitchListVM+SettingWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FB3E5F288D49E100F3B5E1 /* SwitchListVM+SettingWindowController.swift */; };
+		04FB3E64288D4BB500F3B5E1 /* SwitchListVM+SettingWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FB3E63288D4BB500F3B5E1 /* SwitchListVM+SettingWindowController.swift */; };
+		04FB3E65288D4BDF00F3B5E1 /* SwitchListVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B712754FE3800CD2900 /* SwitchListVM.swift */; };
+		04FB3E67288D4C4100F3B5E1 /* SwitchListTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FB3E66288D4C4100F3B5E1 /* SwitchListTest.swift */; };
+		04FB3E68288D4D4A00F3B5E1 /* BluetoothSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0457C25C2760046A00B25BFA /* BluetoothSwitch.swift */; };
+		04FB3E69288D4D5700F3B5E1 /* XcodeCacheSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040E972C27611DEA003D9D42 /* XcodeCacheSwitch.swift */; };
+		04FB3E6A288D4D7B00F3B5E1 /* PomodoroTimerSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140B92778890A005B160B /* PomodoroTimerSwitch.swift */; };
+		04FB3E6B288D520D00F3B5E1 /* EmptyPasteboardSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AA63CF276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift */; };
+		04FB3E6C288D545100F3B5E1 /* URL++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040E972A27611C9C003D9D42 /* URL++.swift */; };
+		04FB3E6D288D546300F3B5E1 /* LocalizedString++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04938D052768CB2000713F1D /* LocalizedString++.swift */; };
+		04FB3E6E288D547900F3B5E1 /* SwitchBarVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D742758208D00ADC004 /* SwitchBarVM.swift */; };
+		04FB3E6F288D548900F3B5E1 /* BarProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A6F9422788807800E3300F /* BarProvider.swift */; };
+		04FB3E70288D549C00F3B5E1 /* SwitchBarModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B25450283BEB8400D253E2 /* SwitchBarModel.swift */; };
+		04FB3E71288D54A500F3B5E1 /* SwitchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04938D0F27692B6900713F1D /* SwitchManager.swift */; };
+		04FB3E72288D54B700F3B5E1 /* SwitchListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B25454283C06C700D253E2 /* SwitchListModel.swift */; };
+		04FB3E73288D54C400F3B5E1 /* ShortcutsBarVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CD52781299A00C612AB /* ShortcutsBarVM.swift */; };
+		04FB3E74288D54D700F3B5E1 /* ShortcutsBarModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B25456283C0F8800D253E2 /* ShortcutsBarModel.swift */; };
+		04FB3E77288D6BE600F3B5E1 /* RadioStationSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FB3E76288D6BE600F3B5E1 /* RadioStationSwitch.swift */; };
+		04FB3E79288D6C9300F3B5E1 /* ScreenTestSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FB3E78288D6C9300F3B5E1 /* ScreenTestSwitch.swift */; };
+		04FB3E7B288D6E2800F3B5E1 /* SpotifySwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FB3E7A288D6E2800F3B5E1 /* SpotifySwitch.swift */; };
+		04FB3E7D288D6F1800F3B5E1 /* AppleMusicSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FB3E7C288D6F1800F3B5E1 /* AppleMusicSwitch.swift */; };
 		04FC160A283D8A9800D4A4AC /* GitHubInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FC1609283D8A9800D4A4AC /* GitHubInteractor.swift */; };
 		04FC160E283D9B9000D4A4AC /* GitHubInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FC1609283D8A9800D4A4AC /* GitHubInteractor.swift */; };
 		04FC1610283F92B200D4A4AC /* GitHubEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FC160F283F92B200D4A4AC /* GitHubEndpoint.swift */; };
@@ -302,7 +328,7 @@
 		041D725428353A150083092D /* OnlySwitchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnlySwitchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		041D725628353A160083092D /* OnlySwitchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlySwitchTests.swift; sourceTree = "<group>"; };
 		041D726228353B380083092D /* NSImage+SymbolName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSImage+SymbolName.swift"; sourceTree = "<group>"; };
-		041D726628353BC20083092D /* SwitchType+Instance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwitchType+Instance.swift"; sourceTree = "<group>"; };
+		041D726628353BC20083092D /* SwitchType++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwitchType++.swift"; sourceTree = "<group>"; };
 		041D72682835865B0083092D /* SwitchError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchError.swift; sourceTree = "<group>"; };
 		04243486275641DB0044D0AD /* SwitchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchProvider.swift; sourceTree = "<group>"; };
 		04243488275642370044D0AD /* HiddenDesktopSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HiddenDesktopSwitch.swift; sourceTree = "<group>"; };
@@ -495,6 +521,14 @@
 		04F118C527AED8EE005DA861 /* AboutVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutVM.swift; sourceTree = "<group>"; };
 		04F118C727B1A51D005DA861 /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = fil.lproj/Localizable.strings; sourceTree = "<group>"; };
 		04F118C827B1C33D005DA861 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
+		04FB3E5C288D489500F3B5E1 /* SettingWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingWindowController.swift; sourceTree = "<group>"; };
+		04FB3E5F288D49E100F3B5E1 /* SwitchListVM+SettingWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwitchListVM+SettingWindowController.swift"; sourceTree = "<group>"; };
+		04FB3E63288D4BB500F3B5E1 /* SwitchListVM+SettingWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwitchListVM+SettingWindowController.swift"; sourceTree = "<group>"; };
+		04FB3E66288D4C4100F3B5E1 /* SwitchListTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchListTest.swift; sourceTree = "<group>"; };
+		04FB3E76288D6BE600F3B5E1 /* RadioStationSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioStationSwitch.swift; sourceTree = "<group>"; };
+		04FB3E78288D6C9300F3B5E1 /* ScreenTestSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenTestSwitch.swift; sourceTree = "<group>"; };
+		04FB3E7A288D6E2800F3B5E1 /* SpotifySwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifySwitch.swift; sourceTree = "<group>"; };
+		04FB3E7C288D6F1800F3B5E1 /* AppleMusicSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleMusicSwitch.swift; sourceTree = "<group>"; };
 		04FC1609283D8A9800D4A4AC /* GitHubInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubInteractor.swift; sourceTree = "<group>"; };
 		04FC160F283F92B200D4A4AC /* GitHubEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubEndpoint.swift; sourceTree = "<group>"; };
 		04FC1612283FDE1D00D4A4AC /* ShortcutsSettingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsSettingModel.swift; sourceTree = "<group>"; };
@@ -544,6 +578,8 @@
 		041D725528353A160083092D /* OnlySwitchTests */ = {
 			isa = PBXGroup;
 			children = (
+				04FB3E75288D6BC100F3B5E1 /* Exemptions */,
+				04FB3E61288D4B3A00F3B5E1 /* ViewModel */,
 				0434B4C228738DAB00F06AB9 /* Networking */,
 				041D725628353A160083092D /* OnlySwitchTests.swift */,
 				0444D5C9283677DA00327D0B /* EverySwitchTests.swift */,
@@ -708,6 +744,7 @@
 			isa = PBXGroup;
 			children = (
 				043E5D792758212A00ADC004 /* SwitchType.swift */,
+				041D726628353BC20083092D /* SwitchType++.swift */,
 				04447B732755015A00CD2900 /* ShellCommandDefine.swift */,
 				0493378B2762654600AE779A /* LayoutDefine.swift */,
 				049337932762BD1B00AE779A /* OpenWindow.swift */,
@@ -715,7 +752,6 @@
 				04BC8EC5284FEA52009E605F /* UserDefaultsKeys.swift */,
 				046331D42795E1BC00C5F894 /* ColorDefine.swift */,
 				0427365127C1AADB0068108F /* MusicPlaybackState.swift */,
-				041D726628353BC20083092D /* SwitchType+Instance.swift */,
 				041D72682835865B0083092D /* SwitchError.swift */,
 				04BC8EC8284FF30A009E605F /* NotificationNames.swift */,
 				047F3A36285DE67A004FFCDF /* SwitchListApperanceDefine.swift */,
@@ -978,6 +1014,8 @@
 				04447B712754FE3800CD2900 /* SwitchListVM.swift */,
 				04B25454283C06C700D253E2 /* SwitchListModel.swift */,
 				04581DBA27651EF1008ADF30 /* RollingText.swift */,
+				04FB3E5C288D489500F3B5E1 /* SettingWindowController.swift */,
+				04FB3E5F288D49E100F3B5E1 /* SwitchListVM+SettingWindowController.swift */,
 			);
 			path = OnlySwitchList;
 			sourceTree = "<group>";
@@ -1181,6 +1219,34 @@
 				04938D022768CAEB00713F1D /* Localizable.strings */,
 			);
 			path = Localization;
+			sourceTree = "<group>";
+		};
+		04FB3E61288D4B3A00F3B5E1 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				04FB3E62288D4B6F00F3B5E1 /* SwitchList */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		04FB3E62288D4B6F00F3B5E1 /* SwitchList */ = {
+			isa = PBXGroup;
+			children = (
+				04FB3E63288D4BB500F3B5E1 /* SwitchListVM+SettingWindowController.swift */,
+				04FB3E66288D4C4100F3B5E1 /* SwitchListTest.swift */,
+			);
+			path = SwitchList;
+			sourceTree = "<group>";
+		};
+		04FB3E75288D6BC100F3B5E1 /* Exemptions */ = {
+			isa = PBXGroup;
+			children = (
+				04FB3E76288D6BE600F3B5E1 /* RadioStationSwitch.swift */,
+				04FB3E78288D6C9300F3B5E1 /* ScreenTestSwitch.swift */,
+				04FB3E7A288D6E2800F3B5E1 /* SpotifySwitch.swift */,
+				04FB3E7C288D6F1800F3B5E1 /* AppleMusicSwitch.swift */,
+			);
+			path = Exemptions;
 			sourceTree = "<group>";
 		};
 		04FC1608283D89A700D4A4AC /* Networking */ = {
@@ -1393,6 +1459,7 @@
 				04FC161728402E5200D4A4AC /* ShortcutOnMarket.swift in Sources */,
 				04FC1611283F92B200D4A4AC /* GitHubEndpoint.swift in Sources */,
 				0434B4C1287388ED00F06AB9 /* GitHubRepositoryProtocol.swift in Sources */,
+				04FB3E73288D54C400F3B5E1 /* ShortcutsBarVM.swift in Sources */,
 				04FC160E283D9B9000D4A4AC /* GitHubInteractor.swift in Sources */,
 				0444D5E72839315A00327D0B /* BluetoothDevicesManager.swift in Sources */,
 				0444D5EF2839471100327D0B /* UserDefaultValue.swift in Sources */,
@@ -1402,32 +1469,50 @@
 				041D726B2835865C0083092D /* SwitchError.swift in Sources */,
 				041D726128353AFF0083092D /* String++.swift in Sources */,
 				0444D5D92836F1BA00327D0B /* CurrentScreen.swift in Sources */,
+				04FB3E72288D54B700F3B5E1 /* SwitchListModel.swift in Sources */,
+				04FB3E6B288D520D00F3B5E1 /* EmptyPasteboardSwitch.swift in Sources */,
+				04FB3E6E288D547900F3B5E1 /* SwitchBarVM.swift in Sources */,
 				041D725E28353A4D0083092D /* SwitchType.swift in Sources */,
 				0444D5DF283855CD00327D0B /* ScreenSaverSwitch.swift in Sources */,
 				041D726028353AF50083092D /* SwitchProvider.swift in Sources */,
+				04FB3E6D288D546300F3B5E1 /* LocalizedString++.swift in Sources */,
 				041D725F28353A500083092D /* ShellCommandDefine.swift in Sources */,
 				04BC8ECA284FF30A009E605F /* NotificationNames.swift in Sources */,
 				041D726428353B430083092D /* NSImage+SymbolName.swift in Sources */,
 				0444D5F228394B1B00327D0B /* ShowExtensionNameSwitch.swift in Sources */,
 				0444D5F728394FDD00327D0B /* DockRecentSwitch.swift in Sources */,
+				04FB3E77288D6BE600F3B5E1 /* RadioStationSwitch.swift in Sources */,
 				04BC8EC7284FEA52009E605F /* UserDefaultsKeys.swift in Sources */,
+				04FB3E68288D4D4A00F3B5E1 /* BluetoothSwitch.swift in Sources */,
 				0444D5CA283677DA00327D0B /* EverySwitchTests.swift in Sources */,
 				04BC8ED3285137D2009E605F /* HideMenubarIconsSwitch.swift in Sources */,
 				041D725D28353A3F0083092D /* DarkModeSwitch.swift in Sources */,
+				04FB3E7B288D6E2800F3B5E1 /* SpotifySwitch.swift in Sources */,
+				04FB3E6A288D4D7B00F3B5E1 /* PomodoroTimerSwitch.swift in Sources */,
 				0444D5CD2836836E00327D0B /* NetworkingTest.swift in Sources */,
+				04FB3E6C288D545100F3B5E1 /* URL++.swift in Sources */,
+				04FB3E65288D4BDF00F3B5E1 /* SwitchListVM.swift in Sources */,
 				047F3A34285DE600004FFCDF /* EffectSoundHelper.swift in Sources */,
 				0444D5DE2838553B00327D0B /* NSSound_SystemVolumeExtension.swift in Sources */,
 				0444D5EE283946EC00327D0B /* KeepAwakeSwitch.swift in Sources */,
+				04FB3E69288D4D5700F3B5E1 /* XcodeCacheSwitch.swift in Sources */,
+				04FB3E70288D549C00F3B5E1 /* SwitchBarModel.swift in Sources */,
+				04FB3E64288D4BB500F3B5E1 /* SwitchListVM+SettingWindowController.swift in Sources */,
 				0444D5F02839483500327D0B /* EmptyTrashSwitch.swift in Sources */,
+				04FB3E67288D4C4100F3B5E1 /* SwitchListTest.swift in Sources */,
 				0444D5F628394F1200327D0B /* ShowFinderPathbarSwitch.swift in Sources */,
 				047F3A38285DE67A004FFCDF /* SwitchListApperanceDefine.swift in Sources */,
 				0444D5F128394A1900327D0B /* ShowUserLibrarySwitch.swift in Sources */,
 				0444D5DC2836F1E700327D0B /* CGImage++.swift in Sources */,
 				0444D5F428394BD400327D0B /* LowPowerModeSwitch.swift in Sources */,
+				04FB3E79288D6C9300F3B5E1 /* ScreenTestSwitch.swift in Sources */,
 				0444D5E528392D6500327D0B /* AutohideDockSwitch.swift in Sources */,
+				04FB3E7D288D6F1800F3B5E1 /* AppleMusicSwitch.swift in Sources */,
+				04FB3E5B2888B52B00F3B5E1 /* SwitchType++.swift in Sources */,
 				0434B4C728738EEA00F06AB9 /* GitHubMockRespository.swift in Sources */,
 				0444D5DD283854E900327D0B /* MuteSwitch.swift in Sources */,
 				0444D5CB28367A1B00327D0B /* HiddenDesktopSwitch.swift in Sources */,
+				04FB3E6F288D548900F3B5E1 /* BarProvider.swift in Sources */,
 				0444D5F528394CAA00327D0B /* MuteMicSwitch.swift in Sources */,
 				0444D5D42836D93A00327D0B /* RequestError.swift in Sources */,
 				0444D5DA2836F1CD00327D0B /* NSImage++.swift in Sources */,
@@ -1436,7 +1521,10 @@
 				0444D5EC2839446A00327D0B /* AutohideMenuBarSwitch.swift in Sources */,
 				0444D5ED2839453400327D0B /* HiddenFilesSwitch.swift in Sources */,
 				041D725728353A160083092D /* OnlySwitchTests.swift in Sources */,
+				04FB3E5E288D499100F3B5E1 /* SettingWindowController.swift in Sources */,
 				0444D5CF283683D800327D0B /* SystemInfo.swift in Sources */,
+				04FB3E71288D54A500F3B5E1 /* SwitchManager.swift in Sources */,
+				04FB3E74288D54D700F3B5E1 /* ShortcutsBarModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1449,7 +1537,8 @@
 				040CD2BC2756D497002E0CC6 /* CGImage++.swift in Sources */,
 				04581DBF27653C4A008ADF30 /* AirPodsSettingVM.swift in Sources */,
 				0493375627625A1E00AE779A /* Downloading.swift in Sources */,
-				041D726728353BC20083092D /* SwitchType+Instance.swift in Sources */,
+				04FB3E60288D49E100F3B5E1 /* SwitchListVM+SettingWindowController.swift in Sources */,
+				041D726728353BC20083092D /* SwitchType++.swift in Sources */,
 				049337942762BD1B00AE779A /* OpenWindow.swift in Sources */,
 				0424348B275642D20044D0AD /* DarkModeSwitch.swift in Sources */,
 				0493374F27625A1E00AE779A /* Parser+Packets.swift in Sources */,
@@ -1560,6 +1649,7 @@
 				0493374727625A1E00AE779A /* PlayerManager.swift in Sources */,
 				04BC8EC3284FE9B5009E605F /* Preference.swift in Sources */,
 				0493372527615EA400AE779A /* HiddenFilesSwitch.swift in Sources */,
+				04FB3E5D288D489500F3B5E1 /* SettingWindowController.swift in Sources */,
 				04A6F9432788807800E3300F /* BarProvider.swift in Sources */,
 				04B25455283C06C700D253E2 /* SwitchListModel.swift in Sources */,
 				04E2AD0D2783624A00BC5DF3 /* Intents.intentdefinition in Sources */,
@@ -1623,6 +1713,8 @@
 				04E2AD1C2783A54000BC5DF3 /* URL++.swift in Sources */,
 				04E2AD1A2783A50000BC5DF3 /* Data++.swift in Sources */,
 				04B856352784B1B60061B56C /* GetWallpaperURL.swift in Sources */,
+				04FB3E5A2888B4D000F3B5E1 /* SwitchType.swift in Sources */,
+				04FB3E582888B4C100F3B5E1 /* UserDefaultValue.swift in Sources */,
 				043F5AEB2784BE34001DFDF0 /* SetDarkMode.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1678,7 +1770,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 64;
+				CURRENT_PROJECT_VERSION = 65;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -1704,7 +1796,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 64;
+				CURRENT_PROJECT_VERSION = 65;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -1852,7 +1944,7 @@
 				CODE_SIGN_IDENTITY = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 64;
+				CURRENT_PROJECT_VERSION = 65;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1903,7 +1995,7 @@
 				CODE_SIGN_IDENTITY = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 64;
+				CURRENT_PROJECT_VERSION = 65;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1950,7 +2042,7 @@
 				CODE_SIGN_ENTITLEMENTS = IntentsExtension/IntentsExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 64;
+				CURRENT_PROJECT_VERSION = 65;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1980,7 +2072,7 @@
 				CODE_SIGN_ENTITLEMENTS = IntentsExtension/IntentsExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 64;
+				CURRENT_PROJECT_VERSION = 65;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;

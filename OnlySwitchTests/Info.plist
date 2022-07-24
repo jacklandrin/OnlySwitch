@@ -2,7 +2,9 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Only Switch requests Bluetooth usage to switch Airpods connection</string>
+    <key>NSBluetoothAlwaysUsageDescription</key>
+    <string>Only Switch requests Bluetooth usage to switch Airpods connection</string>
+    <key>NSBluetoothPeripheralUsageDescription</key>
+    <string>Only Switch requests Bluetooth usage to switch Airpods connection</string>
 </dict>
 </plist>

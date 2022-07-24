@@ -21,7 +21,7 @@ struct CustomizeView: View {
                 ForEach(customizeVM.allSwitches.indices, id:\.self) { index in
                     HStack {
                         Toggle("", isOn: $customizeVM.allSwitches[index].toggle)
-                        Image(nsImage: barInfo(index: index).onImage.resizeMaintainingAspectRatio(withSize: NSSize(width: 50, height: 50))!)
+                        Image(nsImage: barInfo(index: index).onImage!.resizeMaintainingAspectRatio(withSize: NSSize(width: 50, height: 50))!)
                             .renderingMode(.template)
                             .resizable()
                             .scaledToFit()
