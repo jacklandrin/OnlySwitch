@@ -120,13 +120,19 @@ class StatusBarController {
     }
     
     private func observeNotifications() {
-        NotificationCenter.default.addObserver(forName: .changeMenuBarIcon, object: nil, queue: .main, using: {[weak self] notify in
+        NotificationCenter.default.addObserver(forName: .changeMenuBarIcon,
+                                               object: nil,
+                                               queue: .main,
+                                               using: {[weak self] notify in
             guard let strongSelf = self else {return}
             let newImageName = notify.object as! String
             strongSelf.setMainItemButton(image: newImageName)
         })
         
-        NotificationCenter.default.addObserver(forName: .shouldHidePopover, object: nil, queue: .main, using: {[weak self] notify in
+        NotificationCenter.default.addObserver(forName: .shouldHidePopover,
+                                               object: nil,
+                                               queue: .main,
+                                               using: {[weak self] notify in
             guard let strongSelf = self else {return}
             if let statusBarButton = strongSelf.mainItem.button {
                 strongSelf.hidePopover(statusBarButton)
@@ -134,7 +140,10 @@ class StatusBarController {
             
         })
         
-        NotificationCenter.default.addObserver(forName: OtherPopover.name, object: nil, queue: .main, using: { [weak self] notify in
+        NotificationCenter.default.addObserver(forName: OtherPopover.name,
+                                               object: nil,
+                                               queue: .main,
+                                               using: { [weak self] notify in
             guard let strongSelf = self else {return}
             let hasShown = notify.object as! Bool
             if hasShown {
@@ -154,7 +163,10 @@ class StatusBarController {
             }
         })
         
-        NotificationCenter.default.addObserver(forName: .changePopoverAppearance, object: nil, queue: .main, using: { [weak self] notify in
+        NotificationCenter.default.addObserver(forName: .changePopoverAppearance,
+                                               object: nil,
+                                               queue: .main,
+                                               using: { [weak self] notify in
             guard let strongSelf = self else {return}
             strongSelf.hidePopover(nil)
             let appearance = SwitchListAppearance(rawValue: strongSelf.currentAppearance)
@@ -165,12 +177,18 @@ class StatusBarController {
             }
         })
         
-        NotificationCenter.default.addObserver(forName: .toggleMenubarCollapse, object: nil, queue: .main, using: { [weak self] notify in
+        NotificationCenter.default.addObserver(forName: .toggleMenubarCollapse,
+                                               object: nil,
+                                               queue: .main,
+                                               using: { [weak self] notify in
             guard let strongSelf = self, let isOn = notify.object as? Bool else {return}
             strongSelf.markItem?.length = isOn ? MarkItemLength.collapse : MarkItemLength.normal
         })
         
-        NotificationCenter.default.addObserver(forName: .menubarCollapsable, object: nil, queue: .main, using: {[weak self] notify in
+        NotificationCenter.default.addObserver(forName: .menubarCollapsable,
+                                               object: nil,
+                                               queue: .main,
+                                               using: {[weak self] notify in
             guard let strongSelf = self, let enable = notify.object as? Bool else {return}
             if enable {
                 strongSelf.setMarkButton()
@@ -188,7 +206,9 @@ class StatusBarController {
     
     func showPopover(_ sender: AnyObject) {
         if let statusBarButton = mainItem.button {
-            popover.show(relativeTo: statusBarButton.bounds, of: statusBarButton, preferredEdge: NSRectEdge.maxY)
+            popover.show(relativeTo: statusBarButton.bounds,
+                         of: statusBarButton,
+                         preferredEdge: NSRectEdge.maxY)
             popover.contentViewController?.view.window?.makeKey()
             NotificationCenter.default.post(name: .showPopover, object: nil)
             eventMonitor?.start()
