@@ -102,9 +102,9 @@ class SwitchListVM: ObservableObject, CurrentScreen {
         }
         //for two columns
         self.model.allItemList = self.allItemList.sorted{$0.weight < $1.weight}
-        self.model.uncategoryItemList = self.switchList.filter{ $0.category == .none }
-        self.model.audioItemList = self.switchList.filter{ $0.category == .audio }
-        self.model.cleanupItemList = self.switchList.filter{ $0.category == .cleanup }
+        self.model.uncategoryItemList = self.switchList.filter{ $0.category == .none && !$0.isHidden }
+        self.model.audioItemList = self.switchList.filter{ $0.category == .audio && !$0.isHidden }
+        self.model.cleanupItemList = self.switchList.filter{ $0.category == .cleanup && !$0.isHidden }
         
         print("refresh")
     }
