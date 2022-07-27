@@ -29,8 +29,8 @@ struct SettingView: View {
                 }
                 HostingWindowFinder{ window in
                     if let window = window {
-                        window.level = .popUpMenu + 1
                         NotificationCenter.default.post(name: .settingsWindowOpened, object: window)
+                        NotificationCenter.default.post(name: .shouldHidePopover, object: nil)
                     }
                 }.frame(width: 0, height: 0)
             }.listStyle(SidebarListStyle())
