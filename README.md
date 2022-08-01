@@ -13,7 +13,7 @@
 brew install only-switch
 ```
 ## Manually Download
-[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_2.3.4/OnlySwitch.dmg)
+[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_2.3.5/OnlySwitch.dmg)
 
 ## What's the OnlySwitch?
 OnlySwitch provides a series of toggle switches to simplify your routine work, such as Hidden desktop icons, dark mode, and hide notch of the new Macbook Pro. The switches show on your status bar, you can control them effortlessly. Switch and Shortcuts items can be customized (remove/add or sort) to show on the list.
@@ -116,24 +116,15 @@ OnlySwitch offers some Shortcuts actions since Version 1.8. For example, you can
 </p>
 
 ## They talk about it
-* German Article - itopnews.de https://www.itopnews.de/?s=OnlySwitch
-* Ifun.de https://www.ifun.de/suche/OnlySwitch
-* appgefahren.de https://www.appgefahren.de/onlyswitch-kleines-tool-mit-wichtigen-aktionen-fuer-die-mac-menueleiste-312135.html
-* CASCHYS BLOG https://stadt-bremerhaven.de/only-switch-fuer-macos-schnellzugriff-auf-einige-systemoptionen/
-* softpedia https://mac.softpedia.com/get/System-Utilities/OnlySwitch.shtml
-* macupdate https://www.macupdate.com/app/mac/63719/onlyswitch
-* v1tx https://www.v1tx.com/post/onlyswitch/
-* OSCHINA https://www.oschina.net/p/onlyswitch
-* Macken https://www.macken.xyz/2021/12/gratis-ar-gott-alla-installningar-pa-ett-stalle-onlyswitch/
-* AAPL Ch https://applech2.com/archives/20220111-onlyswitch-all-in-one-status-bar-button-for-mac.html
-* appsofter https://appsofter.com/download/1265.html
-* lifehacker https://lifehacker.ru/onlyswitch
-* appletechnikblog https://appletechnikblog.com/de/2022/02/25/app-tipp-der-woche-only-switch-fuer-die-menueleiste-auf-dem-mac/
-* All-in-One person https://en.blog.themarfa.name/how-to-quickly-manage-macos-system-settings/
-* Mac Gadget https://www.macgadget.de/News/2022/03/24/OnlySwitch-Schnellzugriff-auf-viele-Systemfunktionen-per-Mac-Menueleiste
-* MaxiApple https://www.maxiapple.com/2022/05/onlyswitch-macos-mac-gratuit.html
-* insmac https://insmac.org/macosx/5018-onlyswitch.html
-* tchgdns https://tchgdns.de/onlyswitch-macos-open-source/
+
+|                                                                                                                                 |                                                                                                        |                                                                                                                                  |                                                                                                               |
+|---------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------|
+| [German Article - itopnews.de](https://www.itopnews.de/?s=OnlySwitch)                                                           | [Ifun.de](https://www.ifun.de/suche/OnlySwitch)                                                        | [appgefahren.de](https://www.appgefahren.de/onlyswitch-kleines-tool-mit-wichtigen-aktionen-fuer-die-mac-menueleiste-312135.html) | [CASCHYS BLOG](https://stadt-bremerhaven.de/only-switch-fuer-macos-schnellzugriff-auf-einige-systemoptionen/) |
+| [softpedia](https://mac.softpedia.com/get/System-Utilities/OnlySwitch.shtml)                                                    | [macupdate](https://www.macupdate.com/app/mac/63719/onlyswitch)                                        | [v1tx](https://www.v1tx.com/post/onlyswitch/)                                                                                    | [OSCHINA](https://www.oschina.net/p/onlyswitch)                                                               |
+| [Macken](https://www.macken.xyz/2021/12/gratis-ar-gott-alla-installningar-pa-ett-stalle-onlyswitch/)                            | [AAPL Ch](https://applech2.com/archives/20220111-onlyswitch-all-in-one-status-bar-button-for-mac.html) | [appsofter](https://appsofter.com/download/1265.html)                                                                            | [lifehacker](https://lifehacker.ru/onlyswitch)                                                                |
+| [appletechnikblog](https://appletechnikblog.com/de/2022/02/25/app-tipp-der-woche-only-switch-fuer-die-menueleiste-auf-dem-mac/) | [All-in-One person](https://en.blog.themarfa.name/how-to-quickly-manage-macos-system-settings/)        | [Mac Gadget](https://www.macgadget.de/News/2022/03/24/OnlySwitch-Schnellzugriff-auf-viele-Systemfunktionen-per-Mac-Menueleiste)  | [MaxiApple](https://www.maxiapple.com/2022/05/onlyswitch-macos-mac-gratuit.html)                              |
+| [insmac](https://insmac.org/macosx/5018-onlyswitch.html)                                                                        | [tchgdns](https://tchgdns.de/onlyswitch-macos-open-source/)                                            |                                                                                                                                  |                                                                                                               |
+
 
 ## Reference
 
@@ -182,7 +173,7 @@ https://t.me/OnlySwitchforMac
 ## License
 MIT
 ## Donate
-If you like it, help supporting this app by giving me a cup of tea in order for me to keep coding.
+If you like it, help support this app by giving me a cup of tea in order for me to keep coding.
 <p align="center">
 <img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2021/12/donation.jpeg" width="20%" align="left" title="Made by QRCobot"/>
 </p>
