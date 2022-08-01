@@ -53,7 +53,7 @@ Everyone can contribute macOS Shortcuts for OnlySwitch now. Please read [How to 
 | Spotify           | finished        | Apple Music              | finished          |
 | Screen Test       | partly finished | Hide Menu Bar Icons      | partly finished   |
 
-Since Version 1.3, switches can be added or removed on list.
+Since Version 1.3, switches can be added to or removed from the list.
 
 ## Shortcuts Actions
 
@@ -65,7 +65,7 @@ Since Version 1.3, switches can be added or removed on list.
 | Set dark mode       | finished          |
 
 ## Supported Languages
-English, simplified Chinese, German, Croatian, Turkish, Polish, Filipino, Dutch, Italian, Russian, Spanish, Japanese, Somali
+English, Simplified Chinese, German, Croatian, Turkish, Polish, Filipino, Dutch, Italian, Russian, Spanish, Japanese, Somali
 
 ## Welcome to pull request for these
 
@@ -73,33 +73,33 @@ English, simplified Chinese, German, Croatian, Turkish, Polish, Filipino, Dutch,
 * support other languages
 * fix bug: radio player crash
 
-If you have other good idea💡, feel free to send E-mail to me.
+If you have other good ideas 💡, feel free to send an E-mail to me.
 
 ## About hiding new Macbook Notch 
 
-The Hide notch switch only shows on build-in display of M1 Pro/Max Macbook Pro. The switch just controls current desktop, not for all work desktops.
-Now, the Hide notch switch supports dynamic wallpaper, just the processing takes much longer time.
+The Hide notch switch only shows on the built-in display of M1 Pro/Max Macbook Pro. The switch just controls the current desktop, not for all work desktops.
+Now, the Hide notch switch supports dynamic wallpaper, just the processing takes a much longer time.
 ## About AirPods Switch 
 
-I use classOfDevice(2360344) to check if a bluetooth device is Airpods Pro, but I'm not sure whether other AirPods modules are also 2360344, since I only have two AirPods Pros. If you are using AirPods 1~3, please tell me what the classOfDevice is. Or I can detect the count of battery value to check if AirPods (when count is 3, it's AirPods), like **AirPods Battery Monitor For MAC OS**.
+I use `classOfDevice`(2360344) to check if a Bluetooth device is Airpods Pro, but I'm not sure whether other AirPods modules are also 2360344, since I only have two AirPods Pros. If you are using AirPods 1~3, please tell me what the `classOfDevice` is. Or I can detect the count of battery value to check if AirPods (when the count is 3, it's AirPods), like **AirPods Battery Monitor For MAC OS**.
 
 ## About Radio Player
-Radio Player supports m3u, aac stream, but without sound wave effect. If your Radio Player crashes, please send the crash log and stream url to me. You can close sound wave effect on Radio setting, and that player is AVPlayer, more stable.
+Radio Player supports m3u, and aac stream, but without sound wave effect. If your Radio Player crashes, please send the crash log and stream URL to me. You can close the sound wave effect on the Radio setting, and that player is AVPlayer, more stable. In version 2.3.5, the radio play can be set to enable/disabled. If the function is disabled, the switch will be invisible in the list, and the radio player will be unregistered from Now Playing.
 
 ## About Low Power Mode
-Low Power Mode uses Terminal commands that require root access, so the app will ask you to enter password on every toggle.
+Low Power Mode uses Terminal commands that require root access, so the app will ask you to enter the password on every toggle.
 
 ## About Screen Test
-In Version 2.3, Only Switch brings new feature, screen test. It provides a pure color view by full screen mode, you can check dead pixel via it. Press left and right arrow key, the color will change among black, white, red, green and blue. This function also can be used for screen cleaning, as you can clearly see the stains on screen.
+In Version 2.3, Only Switch brings a new feature, Screen Test. It provides a pure color view in full-screen mode, you can check dead pixels via it. Press the left and right arrow keys, the color will change from black, white, red, green, and blue. This function also can be used for screen cleaning, as you can clearly see the stains on the screen.
 
 ## About Hide Menu Bar Icons
-This feature is new in version 2.3.2. To be honest, Hidden and Dozer are both good apps about this function. Many users install OnlySwitch and them simultaneously, but this also squeezes the menu bar, which is already lacking in space. Therefore, the feature integrates in OnlySwitch.
+This feature is new in version 2.3.2. To be honest, Hidden and Dozer are both good apps for this function. Many users install OnlySwitch and them simultaneously, but this also squeezes the menu bar, which is already lacking in space. Therefore, the feature integrates into OnlySwitch.
 ![](https://www.jacklandrin.com/wp-content/uploads/2022/06/mark_icon_guide.png)
-When the switch is on, items in the left of the split(arrow-pointing) icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section. If you want to use it no longer, you can disable it in preferencs, the split icon will disappear. You also can set interval of autohide for it here.
+When the switch is on, items on the left of the split(arrow-pointing) icon are hidden. Hold ⌘ (command) and drag the icon to configure the hidden section. If you want to use it no longer, you can disable it in preferences, the split icon will disappear. You also can set the interval of autohide for it here.
 
 ## About Shortcuts
-Shortcuts is a powerful iOS app which can help people make fantastic automation functions. It comes to macOS in Monterey as well. Many users eager OnlySwitch has more customizable features, and one good news is that the app supports Shortcuts display since Version 1.7. More menubar space therefore is saved. 
-In the next versions, OnlySwitch will also provide more Shortcuts actions to impove user experience.
+Shortcuts is a powerful iOS app that can help people make fantastic automation functions. It comes to macOS in Monterey as well. Many users are eager OnlySwitch to have more customizable features, and one good news is that the app supports Shortcuts display since Version 1.7. More menubar space, therefore, is saved. 
+In the next versions, OnlySwitch will also provide more Shortcuts actions to improve user experience.
 
 Since Version 2.0, keyboard shortcuts can be set for Shortcuts.
 
@@ -130,7 +130,7 @@ OnlySwitch offers some Shortcuts actions since Version 1.8. For example, you can
 
 * NightShift switch refer to [Nocturnal](https://github.com/joshjon/nocturnal)
 * [LaunchAtLogin](https://github.com/sindresorhus/LaunchAtLogin)
-* AirPods Battery refer to [AirPods Battery Monitor For MAC OS](https://github.com/mohamed-arradi/AirpodsBattery-Monitor-For-Mac)
+* AirPods Battery refers to [AirPods Battery Monitor For MAC OS](https://github.com/mohamed-arradi/AirpodsBattery-Monitor-For-Mac)
 * Dynamic Wallpaper processing refer to https://itnext.io/macos-mojave-dynamic-wallpaper-fd26b0698223 and [wallpapper](https://github.com/mczachurski/wallpapper)
 * [AlertToast](https://github.com/elai950/AlertToast)
 * [AudioStreamer](https://github.com/syedhali/AudioStreamer) modified for live streaming
@@ -139,7 +139,7 @@ OnlySwitch offers some Shortcuts actions since Version 1.8. For example, you can
 * Sound Source: [mixkit](https://mixkit.co)
 * [KeyboardShortcuts](https://github.com/sindresorhus/KeyboardShortcuts)
 * Apple Music & Spotify Switch refer to [SpotMenu](https://github.com/kmikiy/SpotMenu)
-* The idea of hide menu bar icons from [Hidden](https://github.com/dwarvesf/hidden)
+* The idea of hiding menu bar icons from [Hidden](https://github.com/dwarvesf/hidden)
 
 ## Contributors
 
