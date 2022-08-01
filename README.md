@@ -84,7 +84,7 @@ Now, the Hide notch switch supports dynamic wallpaper, just the processing takes
 I use `classOfDevice`(2360344) to check if a Bluetooth device is Airpods Pro, but I'm not sure whether other AirPods modules are also 2360344, since I only have two AirPods Pros. If you are using AirPods 1~3, please tell me what the `classOfDevice` is. Or I can detect the count of battery value to check if AirPods (when the count is 3, it's AirPods), like **AirPods Battery Monitor For MAC OS**.
 
 ## About Radio Player
-Radio Player supports m3u, and aac stream, but without sound wave effect. If your Radio Player crashes, please send the crash log and stream URL to me. You can close the sound wave effect on the Radio setting, and that player is AVPlayer, more stable. In version 2.3.5, the radio play can be set to enable/disabled. If the function is disabled, the switch will be invisible in the list, and the radio player will be unregistered from Now Playing.
+Radio Player supports m3u, and aac stream, but without sound wave effect. If your Radio Player crashes, please send the crash log and stream URL to me. You can close the sound wave effect on the Radio setting, and that player is AVPlayer, more stable. In version 2.3.5, the radio play can be set to enable/disabled. If the function is disabled, the switch will be invisible in the list, and the radio player will be unregistered from Now Playing(But I don't know why there will be a little delay. It should be a problem by macOS).
 
 ## About Low Power Mode
 Low Power Mode uses Terminal commands that require root access, so the app will ask you to enter the password on every toggle.
