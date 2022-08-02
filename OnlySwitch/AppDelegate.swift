@@ -31,9 +31,15 @@ struct OnlySwitchApp: App {
                     }
                 }
         }.handlesExternalEvents(matching: Set(arrayLiteral: "*"))
-        Settings{
-            SettingView()
-        }
+            .commands{
+                CommandMenu("Switch Enable") {
+                    Button("Radio Player") {print("Radio Player")}
+                    Button("Hide Menu Bar Icons") {print("Hide Menu Bar Icons")}
+                }
+                CommandGroup(replacing: .newItem) {
+                    
+                }
+            }
     }
 }
 
@@ -67,6 +73,7 @@ class AppDelegate:NSObject, NSApplicationDelegate {
         //for issue #11
         if let window = NSApplication.shared.windows.first {
             window.close()
+            NSApplication.shared.setActivationPolicy(.accessory)
         }
        
     }
@@ -74,6 +81,7 @@ class AppDelegate:NSObject, NSApplicationDelegate {
     func applicationWillTerminate(_ notification: Notification) {
         
     }
+    
     
     func checkUpdate() {
         checkUpdatePresenter.checkUpdate { result in

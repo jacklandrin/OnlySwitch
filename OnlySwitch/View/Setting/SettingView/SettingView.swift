@@ -8,19 +8,17 @@
 import SwiftUI
 
 struct SettingView: View {
-    @ObservedObject var settingVM = SettingVM()
+    @StateObject var settingVM = SettingVM.shared
     @ObservedObject var langManager = LanguageManager.sharedManager
     @ObservedObject var shortcutsVM = ShortcutsSettingVM.shared
     
-    init() {
-        settingVM.selection = settingVM.settingItems.first
-    }
+
     var body: some View {
         NavigationView {
             List(selection:$settingVM.selection) {
                 ForEach(settingVM.settingItems, id:\.self ) { item in
                     NavigationLink{
-                        item.page()
+                        page
                     }label:{
                         Text(item.rawValue.localized())
                             .frame(minWidth: 190, alignment:.leading)
@@ -30,19 +28,37 @@ struct SettingView: View {
                 HostingWindowFinder{ window in
                     if let window = window {
                         NotificationCenter.default.post(name: .settingsWindowOpened, object: window)
-                        NotificationCenter.default.post(name: .shouldHidePopover, object: nil)
                     }
                 }.frame(width: 0, height: 0)
             }.listStyle(SidebarListStyle())
                 .frame(minWidth:190)
-            settingVM.settingItems.first?.page()
+            
+            GeneralView()
             
         }.navigationTitle("Settings".localized())
         .onAppear{
-            settingVM.selection = settingVM.settingItems.first
+            settingVM.selection = .General
         }
-        .onDisappear{
-            settingVM.onDisappear()
+    }
+    
+    private var page : some View {
+        switch settingVM.selection! {
+        case .AirPods:
+            return AirPodsSettingView().eraseToAnyView()
+        case .Radio:
+            return RadioSettingView().eraseToAnyView()
+        case .PomodoroTimer:
+            return PomodoroTimerSettingView().eraseToAnyView()
+        case .Shortcuts:
+            return ShortcutsView().eraseToAnyView()
+        case .General:
+            return GeneralView().eraseToAnyView()
+        case .Customize:
+            return CustomizeView().eraseToAnyView()
+        case .HideMenubarIcons:
+            return HideMenubarIconsSettingView().eraseToAnyView()
+        case .About:
+            return AboutView().eraseToAnyView()
         }
     }
 }

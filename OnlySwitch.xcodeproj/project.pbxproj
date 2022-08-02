@@ -243,6 +243,7 @@
 		04E2AD1E2783B63600BC5DF3 /* CurrentScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E2AD1D2783B63600BC5DF3 /* CurrentScreen.swift */; };
 		04E2AD1F2783B6C400BC5DF3 /* CurrentScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E2AD1D2783B63600BC5DF3 /* CurrentScreen.swift */; };
 		04E517052846C048009826AB /* PomodoroTimerSettingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E517042846C048009826AB /* PomodoroTimerSettingModel.swift */; };
+		04E89D572899B80C00667710 /* View+Erase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E89D562899B80C00667710 /* View+Erase.swift */; };
 		04E8BE3A2797241F00FF12B7 /* ShortcutsGalleryContributing.md in Resources */ = {isa = PBXBuildFile; fileRef = 04E8BE392797241F00FF12B7 /* ShortcutsGalleryContributing.md */; };
 		04EB1CD02780F36F00C612AB /* ShortcutsSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CCF2780F36F00C612AB /* ShortcutsSettingVM.swift */; };
 		04EB1CD22780F4F700C612AB /* ShortcutsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CD12780F4F700C612AB /* ShortcutsView.swift */; };
@@ -511,6 +512,7 @@
 		04E2AD1B2783A54000BC5DF3 /* URL++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL++.swift"; sourceTree = "<group>"; };
 		04E2AD1D2783B63600BC5DF3 /* CurrentScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentScreen.swift; sourceTree = "<group>"; };
 		04E517042846C048009826AB /* PomodoroTimerSettingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimerSettingModel.swift; sourceTree = "<group>"; };
+		04E89D562899B80C00667710 /* View+Erase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Erase.swift"; sourceTree = "<group>"; };
 		04E8BE392797241F00FF12B7 /* ShortcutsGalleryContributing.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ShortcutsGalleryContributing.md; sourceTree = "<group>"; };
 		04EB1CCF2780F36F00C612AB /* ShortcutsSettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsSettingVM.swift; sourceTree = "<group>"; };
 		04EB1CD12780F4F700C612AB /* ShortcutsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsView.swift; sourceTree = "<group>"; };
@@ -996,6 +998,7 @@
 				0493376127625BBD00AE779A /* NSBezierPath++.swift */,
 				041D726228353B380083092D /* NSImage+SymbolName.swift */,
 				04BC8EDC28515CE0009E605F /* NSView++.swift */,
+				04E89D562899B80C00667710 /* View+Erase.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -1617,6 +1620,7 @@
 				047140C22778D2A1005B160B /* SmallLaunchpadIconSwitch.swift in Sources */,
 				040C6EAA276B7D4500291DEB /* CustomizeVM.swift in Sources */,
 				049337212761286400AE779A /* CleanProgressView.swift in Sources */,
+				04E89D572899B80C00667710 /* View+Erase.swift in Sources */,
 				04B25457283C0F8800D253E2 /* ShortcutsBarModel.swift in Sources */,
 				0493374927625A1E00AE779A /* Streaming.swift in Sources */,
 				0434B4CF2876031C00F06AB9 /* RadioPlayerItem.swift in Sources */,
