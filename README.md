@@ -36,22 +36,23 @@ Everyone can contribute macOS Shortcuts for OnlySwitch now. Please read [How to 
 
 ## Switch list
 
-| Switch            | status          | Switch                   | status            |
-|:------------------|-----------------|:-------------------------|:------------------|
-| Hide desktop      | finished        | Hide notch               | exist some issues |
-| Dark mode         | finished        | Low power mode           | require password  |
-| Screen Saver      | finished        | Show Finder Path Bar     | finished          |
-| Night Shift       | finished        | Mute mic                 | finished          |
-| Autohide Dock     | finished        | Small launchpad icon     | finished          |
-| Airpods           | finished        | Pomodoro timer           | finished          |
-| Bluetooth         | finished        | Show extension name      | finished          |
-| Xcode cache       | finished        | Show user library folder | finished          |
-| Autohide Menu Bar | finished        | Mute                     | finished          |
-| Show hidden files | finished        | Empty pasteboard         | finished          |
-| Radio Station     | finished        | Empty trash              | finished          |
-| Keep awake        | finished        | Show Recent Apps on Dock | finished          |
-| Spotify           | finished        | Apple Music              | finished          |
-| Screen Test       | partly finished | Hide Menu Bar Icons      | partly finished   |
+| Switch            | status   | Switch                   | status            |
+|:------------------|----------|:-------------------------|:------------------|
+| Hide desktop      | finished | Hide notch               | exist some issues |
+| Dark mode         | finished | Low power mode           | require password  |
+| Screen Saver      | finished | Show Finder Path Bar     | finished          |
+| Night Shift       | finished | Mute mic                 | finished          |
+| Autohide Dock     | finished | Small launchpad icon     | finished          |
+| Airpods           | finished | Pomodoro timer           | finished          |
+| Bluetooth         | finished | Show extension name      | finished          |
+| Xcode cache       | finished | Show user library folder | finished          |
+| Autohide Menu Bar | finished | Mute                     | finished          |
+| Show hidden files | finished | Empty pasteboard         | finished          |
+| Radio Station     | finished | Empty trash              | finished          |
+| Keep awake        | finished | Show Recent Apps on Dock | finished          |
+| Spotify           | finished | Apple Music              | finished          |
+| Screen Test       | finished | Hide Menu Bar Icons      | partly finished   |
+| FKey              | finished |                          |                   |
 
 Since Version 1.3, switches can be added to or removed from the list.
 
@@ -95,7 +96,7 @@ In Version 2.3, Only Switch brings a new feature, Screen Test. It provides a pur
 ## About Hide Menu Bar Icons
 This feature is new in version 2.3.2. To be honest, Hidden and Dozer are both good apps for this function. Many users install OnlySwitch and them simultaneously, but this also squeezes the menu bar, which is already lacking in space. Therefore, the feature integrates into OnlySwitch.
 ![](https://www.jacklandrin.com/wp-content/uploads/2022/06/mark_icon_guide.png)
-When the switch is on, items on the left of the split(arrow-pointing) icon are hidden. Hold ⌘ (command) and drag the icon to configure the hidden section. If you want to use it no longer, you can disable it in preferences, the split icon will disappear. You also can set the interval of autohide for it here.
+When the switch is on, items on the left of the split(arrow-pointing) icon are hidden. Hold ⌘ (command) and drag the icon to configure the hidden section. If you want to use it no longer, you can disable it in preferences, the split icon will disappear. You also can set the interval of autohide for it here. If your date on the menu bar is truncated when it's on, you can set this: System Preferences -> Dock & Menu Bar -> Clock -> Show date -> always.
 
 ## About Shortcuts
 Shortcuts is a powerful iOS app that can help people make fantastic automation functions. It comes to macOS in Monterey as well. Many users are eager OnlySwitch to have more customizable features, and one good news is that the app supports Shortcuts display since Version 1.7. More menubar space, therefore, is saved. 
@@ -140,6 +141,7 @@ OnlySwitch offers some Shortcuts actions since Version 1.8. For example, you can
 * [KeyboardShortcuts](https://github.com/sindresorhus/KeyboardShortcuts)
 * Apple Music & Spotify Switch refer to [SpotMenu](https://github.com/kmikiy/SpotMenu)
 * The idea of hiding menu bar icons from [Hidden](https://github.com/dwarvesf/hidden)
+* FKey refer to [Fluor](https://github.com/Pyroh/Fluor)
 
 ## Contributors
 
