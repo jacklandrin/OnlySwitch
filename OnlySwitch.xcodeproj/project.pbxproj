@@ -244,6 +244,7 @@
 		04E2AD1F2783B6C400BC5DF3 /* CurrentScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E2AD1D2783B63600BC5DF3 /* CurrentScreen.swift */; };
 		04E517052846C048009826AB /* PomodoroTimerSettingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E517042846C048009826AB /* PomodoroTimerSettingModel.swift */; };
 		04E89D572899B80C00667710 /* View+Erase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E89D562899B80C00667710 /* View+Erase.swift */; };
+		04E89D592899F14100667710 /* FKeySwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E89D582899F14100667710 /* FKeySwitch.swift */; };
 		04E8BE3A2797241F00FF12B7 /* ShortcutsGalleryContributing.md in Resources */ = {isa = PBXBuildFile; fileRef = 04E8BE392797241F00FF12B7 /* ShortcutsGalleryContributing.md */; };
 		04EB1CD02780F36F00C612AB /* ShortcutsSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CCF2780F36F00C612AB /* ShortcutsSettingVM.swift */; };
 		04EB1CD22780F4F700C612AB /* ShortcutsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CD12780F4F700C612AB /* ShortcutsView.swift */; };
@@ -513,6 +514,7 @@
 		04E2AD1D2783B63600BC5DF3 /* CurrentScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentScreen.swift; sourceTree = "<group>"; };
 		04E517042846C048009826AB /* PomodoroTimerSettingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimerSettingModel.swift; sourceTree = "<group>"; };
 		04E89D562899B80C00667710 /* View+Erase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Erase.swift"; sourceTree = "<group>"; };
+		04E89D582899F14100667710 /* FKeySwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FKeySwitch.swift; sourceTree = "<group>"; };
 		04E8BE392797241F00FF12B7 /* ShortcutsGalleryContributing.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ShortcutsGalleryContributing.md; sourceTree = "<group>"; };
 		04EB1CCF2780F36F00C612AB /* ShortcutsSettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsSettingVM.swift; sourceTree = "<group>"; };
 		04EB1CD12780F4F700C612AB /* ShortcutsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsView.swift; sourceTree = "<group>"; };
@@ -625,6 +627,7 @@
 				0451766D27C28BA300006BA0 /* AppleMusicSwitch.swift */,
 				0444D5FC2839873100327D0B /* ScreenTestSwitch.swift */,
 				04BC8ED1285137D2009E605F /* HideMenubarIconsSwitch.swift */,
+				04E89D582899F14100667710 /* FKeySwitch.swift */,
 			);
 			path = EverySwitch;
 			sourceTree = "<group>";
@@ -1650,6 +1653,7 @@
 				04243487275641DB0044D0AD /* SwitchProvider.swift in Sources */,
 				04E517052846C048009826AB /* PomodoroTimerSettingModel.swift in Sources */,
 				047140C02778A478005B160B /* PomodoroTimerSettingVM.swift in Sources */,
+				04E89D592899F14100667710 /* FKeySwitch.swift in Sources */,
 				04B25459283C12A800D253E2 /* GeneralModel.swift in Sources */,
 				04FC1610283F92B200D4A4AC /* GitHubEndpoint.swift in Sources */,
 				04EB1CD02780F36F00C612AB /* ShortcutsSettingVM.swift in Sources */,

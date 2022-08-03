@@ -65,6 +65,8 @@ extension SwitchType {
             return ScreenTestSwitch.shared
         case .hideMenubarIcons:
             return HideMenubarIconsSwitch.shared
+        case .fkey:
+            return FKeySwitch.shared
         }
     }
     
@@ -194,6 +196,10 @@ extension SwitchType {
             return SwitchBarInfo(title: "Hide Menu Bar Icons",
                                  onImage: NSImage(named: "mark_icon"),
                                  offImage: NSImage(named: "mark_icon_off"))
+        case .fkey:
+            return SwitchBarInfo(title: "FKey",
+                                 onImage: NSImage(systemSymbolName: "fn"),
+                                 offImage: NSImage(systemSymbolName: "sun.max"))
         }
     }
 

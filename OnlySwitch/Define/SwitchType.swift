@@ -44,8 +44,7 @@ enum SwitchType:UInt64, CaseIterable {
     case applemusic = 33554432 // 1 << 25
     case screenTest = 67108864 // 1 << 26
     case hideMenubarIcons = 134217728 // 1 << 27
-    
-        
+    case fkey = 268435456 // 1 << 28
 }
 
 let switchTypeCount = SwitchType.allCases.count
