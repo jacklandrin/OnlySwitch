@@ -20,7 +20,7 @@ class FKeySwitch:SwitchProvider {
     }
     
     func currentInfo() -> String {
-        return ""
+        return "Macbook Keyboard"
     }
     
     func operationSwitch(isOn: Bool) async throws {
@@ -33,7 +33,8 @@ class FKeySwitch:SwitchProvider {
     
     func isVisable() -> Bool {
         do {
-            let connect = try FKeyManager.getServiceConnect()
+            let connect = try IOService.getServiceConnect(handle: FKeyManager.getIOHandle(),
+                                                          type: UInt32(kIOHIDParamConnectType))
             guard connect != .zero else {return false}
             return true
         } catch {
@@ -76,7 +77,8 @@ enum FKeyManager {
     }
     
     static func setCurrentFKeyMode(_ mode: FKeyMode) throws {
-        let connect = try FKeyManager.getServiceConnect()
+        let connect = try IOService.getServiceConnect(handle: FKeyManager.getIOHandle(),
+                                                      type: UInt32(kIOHIDParamConnectType))
         let value = mode.rawValue as CFNumber
         
         guard IOHIDSetCFTypeParameter(connect,
@@ -110,31 +112,17 @@ enum FKeyManager {
     }
     
     private static func getIORegistry() throws -> io_registry_entry_t {
-        var masterPort: mach_port_t = .zero
+        var mainPort: mach_port_t = .zero
         guard IOMainPort(bootstrap_port,
-                         &masterPort) == KERN_SUCCESS else {
+                         &mainPort) == KERN_SUCCESS else {
             throw FKeyManagerError.cannotCreateMasterPort
         }
-        
-        return IORegistryEntryFromPath(masterPort, "IOService:/IOResources/IOHIDSystem")
+
+        return IORegistryEntryFromPath(mainPort, "IOService:/IOResources/IOHIDSystem")
     }
     
-    private static func getIOHandle() throws -> io_service_t {
+    static func getIOHandle() throws -> io_service_t {
         try self.getIORegistry() as io_service_t
     }
-    
-    static func getServiceConnect() throws -> io_connect_t {
-        var service: io_connect_t = .zero
-        let handle = try self.getIOHandle()
-        defer { IOObjectRelease(handle) }
-        
-        guard IOServiceOpen(handle,
-                            mach_task_self_,
-                            UInt32(kIOHIDParamConnectType),
-                            &service) == KERN_SUCCESS else {
-            throw FKeyManagerError.cannotOpenService
-        }
-        
-        return service
-    }
+
 }
