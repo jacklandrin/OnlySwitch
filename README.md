@@ -80,12 +80,16 @@ If you have other good ideas 💡, feel free to send an E-mail to me.
 
 The Hide notch switch only shows on the built-in display of M1 Pro/Max Macbook Pro. The switch just controls the current desktop, not for all work desktops.
 Now, the Hide notch switch supports dynamic wallpaper, just the processing takes a much longer time.
+<p align="center">
+<img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2021/12/hidenotch.png" width="60%" align="center" />
+</p>
+
 ## About AirPods Switch 
 
 I use `classOfDevice`(2360344) to check if a Bluetooth device is Airpods Pro, but I'm not sure whether other AirPods modules are also 2360344, since I only have two AirPods Pros. If you are using AirPods 1~3, please tell me what the `classOfDevice` is. Or I can detect the count of battery value to check if AirPods (when the count is 3, it's AirPods), like **AirPods Battery Monitor For MAC OS**.
 
 ## About Radio Player
-Radio Player supports m3u, and aac stream, but without sound wave effect. If your Radio Player crashes, please send the crash log and stream URL to me. You can close the sound wave effect on the Radio setting, and that player is AVPlayer, more stable. In version 2.3.5, the radio play can be set to enable/disabled. If the function is disabled, the switch will be invisible in the list, and the radio player will be unregistered from Now Playing(But I don't know why there will be a little delay. It should be a problem by macOS).
+Radio Player supports m3u, and aac stream, but without sound wave effect. If your Radio Player crashes, please send me the crash log and stream URL. You can close the sound wave effect on the Radio setting, and that player is AVPlayer, more stable. In version 2.3.5, the radio play can be set to enable/disabled. If the function is disabled, the switch will be invisible in the list, and the radio player will be unregistered from Now Playing(But I don't know why there will be a little delay. It should be a problem by macOS).
 
 ## About Low Power Mode
 Low Power Mode uses Terminal commands that require root access, so the app will ask you to enter the password on every toggle.
@@ -104,27 +108,22 @@ In the next versions, OnlySwitch will also provide more Shortcuts actions to imp
 
 Since Version 2.0, keyboard shortcuts can be set for Shortcuts.
 
-OnlySwitch offers some Shortcuts actions since Version 1.8. For example, you can config your own dark mode switch. (**Set Appearance** action by Shortcuts can also set dark mode, but the appearance status cannot be detected. So, OnlySwitch provides a set dark mode action)
+OnlySwitch offers some Shortcuts actions since Version 1.8. For example, you can config your dark mode switch. (**Set Appearance** action by Shortcuts can also set dark mode, but the appearance status cannot be detected. So, OnlySwitch provides a set dark mode action)
 
 <p align="center">
 <img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2022/01/shortcutsdarkmode.png" width="60%" align="center" />
 </p>
 
-## Screenshots
-
-<p align="center">
-<img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2021/12/hidenotch.png" width="60%" align="center" />
-</p>
 
 ## They talk about it
 
 |                                                                                                                                 |                                                                                                        |                                                                                                                                  |                                                                                                               |
 |---------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------|
-| [German Article - itopnews.de](https://www.itopnews.de/?s=OnlySwitch)                                                           | [Ifun.de](https://www.ifun.de/suche/OnlySwitch)                                                        | [appgefahren.de](https://www.appgefahren.de/onlyswitch-kleines-tool-mit-wichtigen-aktionen-fuer-die-mac-menueleiste-312135.html) | [CASCHYS BLOG](https://stadt-bremerhaven.de/only-switch-fuer-macos-schnellzugriff-auf-einige-systemoptionen/) |
+| [itopnews.de](https://www.itopnews.de/?s=OnlySwitch)                                                           | [Ifun.de](https://www.ifun.de/suche/OnlySwitch)                                                        | [appgefahren.de](https://www.appgefahren.de/onlyswitch-kleines-tool-mit-wichtigen-aktionen-fuer-die-mac-menueleiste-312135.html) | [CASCHYS BLOG](https://stadt-bremerhaven.de/only-switch-fuer-macos-schnellzugriff-auf-einige-systemoptionen/) |
 | [softpedia](https://mac.softpedia.com/get/System-Utilities/OnlySwitch.shtml)                                                    | [macupdate](https://www.macupdate.com/app/mac/63719/onlyswitch)                                        | [v1tx](https://www.v1tx.com/post/onlyswitch/)                                                                                    | [OSCHINA](https://www.oschina.net/p/onlyswitch)                                                               |
 | [Macken](https://www.macken.xyz/2021/12/gratis-ar-gott-alla-installningar-pa-ett-stalle-onlyswitch/)                            | [AAPL Ch](https://applech2.com/archives/20220111-onlyswitch-all-in-one-status-bar-button-for-mac.html) | [appsofter](https://appsofter.com/download/1265.html)                                                                            | [lifehacker](https://lifehacker.ru/onlyswitch)                                                                |
 | [appletechnikblog](https://appletechnikblog.com/de/2022/02/25/app-tipp-der-woche-only-switch-fuer-die-menueleiste-auf-dem-mac/) | [All-in-One person](https://en.blog.themarfa.name/how-to-quickly-manage-macos-system-settings/)        | [Mac Gadget](https://www.macgadget.de/News/2022/03/24/OnlySwitch-Schnellzugriff-auf-viele-Systemfunktionen-per-Mac-Menueleiste)  | [MaxiApple](https://www.maxiapple.com/2022/05/onlyswitch-macos-mac-gratuit.html)                              |
-| [insmac](https://insmac.org/macosx/5018-onlyswitch.html)                                                                        | [tchgdns](https://tchgdns.de/onlyswitch-macos-open-source/)                                            |                                                                                                                                  |                                                                                                               |
+| [insmac](https://insmac.org/macosx/5018-onlyswitch.html)                                                                        | [tchgdns](https://tchgdns.de/onlyswitch-macos-open-source/)                                            | [insmac](https://insmac.org/macosx/5018-onlyswitch.html)                                                                         |                                                                                                               |
 
 
 ## Reference
@@ -135,7 +134,7 @@ OnlySwitch offers some Shortcuts actions since Version 1.8. For example, you can
 * Dynamic Wallpaper processing refer to https://itnext.io/macos-mojave-dynamic-wallpaper-fd26b0698223 and [wallpapper](https://github.com/mczachurski/wallpapper)
 * [AlertToast](https://github.com/elai950/AlertToast)
 * [AudioStreamer](https://github.com/syedhali/AudioStreamer) modified for live streaming
-* [AudioSpectrum](https://github.com/potato04/AudioSpectrum) modified for Appkit
+* [AudioSpectrum](https://github.com/potato04/AudioSpectrum) modified for AppKit
 * [Alamofire](https://github.com/Alamofire/Alamofire)
 * Sound Source: [mixkit](https://mixkit.co)
 * [KeyboardShortcuts](https://github.com/sindresorhus/KeyboardShortcuts)
@@ -175,7 +174,7 @@ https://t.me/OnlySwitchforMac
 ## License
 MIT
 ## Donate
-If you like it, help support this app by giving me a cup of tea in order for me to keep coding.
+If you like it, help support this app by giving me a cup of tea for me to keep coding.
 <p align="center">
 <img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2021/12/donation.jpeg" width="20%" align="left" title="Made by QRCobot"/>
 </p>
