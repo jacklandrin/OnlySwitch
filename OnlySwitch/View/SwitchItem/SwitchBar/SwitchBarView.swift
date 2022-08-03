@@ -67,9 +67,8 @@ struct SwitchBarView: View {
                     .shadow(radius: 2)
                     .padding(.horizontal, 6)
             }
-            
-           
-        }.isHidden(switchOption.isHidden, remove: true)
+        }
+        .isHidden(switchOption.isHidden, remove: true)
     }
     
     func buttonTitle(category:SwitchCategory) -> String {

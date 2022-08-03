@@ -13,6 +13,7 @@ struct OnlySwitchListView: View {
     @Environment(\.colorScheme) private var colorScheme
     @State private var distanceY:CGFloat = 0
     @State private var movingIndex = 0
+    @State private var hoverIndex = -1
     @ObservedObject private var playerItem = RadioStationSwitch.shared.playerItem
     @ObservedObject private var languageManager = LanguageManager.sharedManager
     
@@ -39,7 +40,7 @@ struct OnlySwitchListView: View {
             }
             .frame(height: scrollViewHeight)
                 .padding(.vertical,15)
-            
+                .padding(.horizontal, 0)
             if switchVM.showAds {
                 recommendApp.opacity(0.8)
             }
@@ -92,6 +93,16 @@ struct OnlySwitchListView: View {
                         ShortcutsBarView().environmentObject(item)
                             .frame(height:Layout.singleSwitchHeight)
                     }
+                }.padding(.horizontal, 15)
+                    .background(Color(AppColor.themeBlue)
+                        .opacity(0.15)
+                        .isHidden(index != self.hoverIndex))
+                .onHover{ isHovering in
+                    if isHovering {
+                        withAnimation(.easeOut) {
+                            self.hoverIndex = index
+                        }
+                    }
                 }
                 .offset(y: itemOffsetY(index: index))
                 .gesture(
@@ -136,8 +147,12 @@ struct OnlySwitchListView: View {
                 
             }
         }
-        .padding(.horizontal, 15)
-
+        .padding(.horizontal, 0)
+        .onHover{ isHovering in
+            if !isHovering {
+                hoverIndex = -1
+            }
+        }
     }
     
     var dualcolumnList: some View {
@@ -224,7 +239,7 @@ struct OnlySwitchListView: View {
                 }
             }
             
-        }.padding(.horizontal, 15)
+        }.padding(.horizontal, 0)
     }
     
     var recommendApp: some View {
@@ -325,7 +340,6 @@ struct OnlySwitchListView: View {
         }
 
         let height = min(totalHeight, switchVM.maxHeight - 150)
-        print("scroll view height:\(height) maxHeight:\(switchVM.maxHeight)")
         guard height > 0 else {return 300}
         return height
     }
