@@ -13,7 +13,8 @@ import KeyboardShortcuts
 struct OnlySwitchApp: App {
     let persistenceController = PersistenceController.shared
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    @StateObject var viewModel = AppViewModel()
+//    @StateObject var viewModel = AppViewModel()
+    @ObservedObject var preferencesvm = PreferencesPublisher.shared
     var body: some Scene {
         WindowGroup("SettingsWindow"){
             SettingView()
@@ -35,18 +36,18 @@ struct OnlySwitchApp: App {
             .commands{
                 CommandMenu("Switches Availability") {
                     Button(action: {
-                        viewModel.radioPlayEnable = !viewModel.radioPlayEnable
+                        preferencesvm.preferences.radioEnable = !preferencesvm.preferences.radioEnable
                     }, label: {
-                        if viewModel.radioPlayEnable {
+                        if preferencesvm.preferences.radioEnable {
                             Text("Disable Radio Player")
                         } else {
                             Text("Enable Radio Player")
                         }
                     })
                     Button(action: {
-                        viewModel.hideMenubarIconsEnable = !viewModel.hideMenubarIconsEnable
+                        preferencesvm.preferences.menubarCollaspable = !preferencesvm.preferences.menubarCollaspable
                     }, label: {
-                        if viewModel.hideMenubarIconsEnable {
+                        if preferencesvm.preferences.menubarCollaspable {
                             Text("Disable Hide Menu Bar Icons")
                         } else {
                             Text("Enale Hide Menu Bar Icons")
@@ -66,7 +67,10 @@ class AppDelegate:NSObject, NSApplicationDelegate {
     let switchVM = SwitchListVM()
     var blManager:BluetoothDevicesManager?
     var currentAppearance:String {
-        return Preferences.shared.currentAppearance
+        return PreferencesPublisher
+            .shared
+            .preferences
+            .currentAppearance
     }
     var checkUpdatePresenter = GitHubPresenter()
     

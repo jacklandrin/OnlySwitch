@@ -10,7 +10,7 @@ import AppKit
 class GeneralVM:ObservableObject {
     
     @Published private var model = GeneralModel()
-    @Published private var preferences = Preferences.shared
+    @Published var preferences = Preferences.shared
     
     var cacheSize:String {
         get {

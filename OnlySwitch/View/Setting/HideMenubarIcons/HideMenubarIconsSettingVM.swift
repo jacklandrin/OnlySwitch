@@ -7,8 +7,12 @@
 
 import Foundation
 import SwiftUI
+import Combine
+
 class HideMenubarIconsSettingVM:ObservableObject {
-    @Published private var preferences = Preferences.shared
+    private var cancellables = Set<AnyCancellable>()
+    private var preferencesPublisher = PreferencesPublisher.shared
+    private var preferences = PreferencesPublisher.shared.preferences
     var durationSet = [0, 5, 10, 15, 30, 60]
     var isEnable:Bool {
         get {
@@ -26,6 +30,13 @@ class HideMenubarIconsSettingVM:ObservableObject {
         set {
             preferences.autoCollapseMenubarTime = newValue
         }
+    }
+    
+    
+    init() {
+        preferencesPublisher.$preferences.sink{_ in
+            self.objectWillChange.send()
+        }.store(in: &cancellables)
     }
     
     func converTimeDescription(duration:Int) -> String {

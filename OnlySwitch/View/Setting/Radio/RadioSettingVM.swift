@@ -11,7 +11,8 @@ import Combine
 class RadioSettingVM:ObservableObject {
     
     @Published private var model = RadioSettingModel()
-    @Published private var preferences = Preferences.shared
+    private var preferencesPublisher = PreferencesPublisher.shared
+    private var preferences = PreferencesPublisher.shared.preferences
     private var cancellables = Set<AnyCancellable>()
     
     var radioList:[RadioPlayerItemViewModel] {
@@ -141,6 +142,9 @@ class RadioSettingVM:ObservableObject {
             self.model.selectRow = item.id
         }.store(in: &cancellables)
         
+        preferencesPublisher.$preferences.sink{ _ in
+            self.objectWillChange.send()
+        }.store(in: &cancellables)
     }
     
     deinit {

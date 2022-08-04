@@ -72,7 +72,9 @@ extension SwitchListVM: SettingWindowController {
         }
         
         NotificationCenter.default.post(name: .shouldHidePopover, object: nil)
-        NSApp.setActivationPolicy(.regular)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            NSApp.setActivationPolicy(.regular)
+        }
     }
     
     class Coordinator:NSObject, NSWindowDelegate {
