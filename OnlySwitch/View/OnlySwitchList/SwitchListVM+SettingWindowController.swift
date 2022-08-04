@@ -20,7 +20,6 @@ extension SwitchListVM: SettingWindowController {
             return Holder._settingsWindowPresented
         }
         set {
-            
             Holder._settingsWindowPresented = newValue
         }
     }
@@ -47,7 +46,6 @@ extension SwitchListVM: SettingWindowController {
             if let window = notify.object as? NSWindow {
                 self.settingsWindow = window
 //                self.settingsWindow?.center()
-                self.settingsWindow?.delegate = self.coodinator
             }
         })
         
