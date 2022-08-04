@@ -247,6 +247,8 @@
 		04E89D592899F14100667710 /* FKeySwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E89D582899F14100667710 /* FKeySwitch.swift */; };
 		04E89D5E289B054C00667710 /* IOService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E89D5D289B054C00667710 /* IOService.swift */; };
 		04E89D5F289B054C00667710 /* IOService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E89D5D289B054C00667710 /* IOService.swift */; };
+		04E89D61289C327E00667710 /* AppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E89D60289C327E00667710 /* AppViewModel.swift */; };
+		04E89D62289C327E00667710 /* AppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E89D60289C327E00667710 /* AppViewModel.swift */; };
 		04E8BE3A2797241F00FF12B7 /* ShortcutsGalleryContributing.md in Resources */ = {isa = PBXBuildFile; fileRef = 04E8BE392797241F00FF12B7 /* ShortcutsGalleryContributing.md */; };
 		04EB1CD02780F36F00C612AB /* ShortcutsSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CCF2780F36F00C612AB /* ShortcutsSettingVM.swift */; };
 		04EB1CD22780F4F700C612AB /* ShortcutsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CD12780F4F700C612AB /* ShortcutsView.swift */; };
@@ -518,6 +520,7 @@
 		04E89D562899B80C00667710 /* View+Erase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Erase.swift"; sourceTree = "<group>"; };
 		04E89D582899F14100667710 /* FKeySwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FKeySwitch.swift; sourceTree = "<group>"; };
 		04E89D5D289B054C00667710 /* IOService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOService.swift; sourceTree = "<group>"; };
+		04E89D60289C327E00667710 /* AppViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppViewModel.swift; sourceTree = "<group>"; };
 		04E8BE392797241F00FF12B7 /* ShortcutsGalleryContributing.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ShortcutsGalleryContributing.md; sourceTree = "<group>"; };
 		04EB1CCF2780F36F00C612AB /* ShortcutsSettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsSettingVM.swift; sourceTree = "<group>"; };
 		04EB1CD12780F4F700C612AB /* ShortcutsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsView.swift; sourceTree = "<group>"; };
@@ -710,10 +713,12 @@
 		043E5D672757C85500ADC004 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				0444D6012839995D00327D0B /* PureColorView */,
-				04BF976D27908E2800E7C0E2 /* SwitchItem */,
+				04447B5B2754F08000CD2900 /* AppDelegate.swift */,
+				04E89D60289C327E00667710 /* AppViewModel.swift */,
 				04BF976C27908E0100E7C0E2 /* OnlySwitchList */,
+				04BF976D27908E2800E7C0E2 /* SwitchItem */,
 				04BF977927908FB900E7C0E2 /* SoundWave */,
+				0444D6012839995D00327D0B /* PureColorView */,
 				049337952762C05200AE779A /* Setting */,
 				04447B7527550F6900CD2900 /* VisualEffectView.swift */,
 				0434B4D02876325B00F06AB9 /* HostWindowFinder.swift */,
@@ -807,7 +812,6 @@
 			children = (
 				0493379A2763C09000AE779A /* OnlySwitch.xcdatamodeld */,
 				040CD2BD27579CEA002E0CC6 /* Info.plist */,
-				04447B5B2754F08000CD2900 /* AppDelegate.swift */,
 				0493379D2763C0E800AE779A /* Persistence.swift */,
 				04A23B27275D607200B454C8 /* Header */,
 				043E5D672757C85500ADC004 /* View */,
@@ -1496,6 +1500,7 @@
 				0444D5F228394B1B00327D0B /* ShowExtensionNameSwitch.swift in Sources */,
 				0444D5F728394FDD00327D0B /* DockRecentSwitch.swift in Sources */,
 				04FB3E77288D6BE600F3B5E1 /* RadioStationSwitch.swift in Sources */,
+				04E89D62289C327E00667710 /* AppViewModel.swift in Sources */,
 				04BC8EC7284FEA52009E605F /* UserDefaultsKeys.swift in Sources */,
 				04FB3E68288D4D4A00F3B5E1 /* BluetoothSwitch.swift in Sources */,
 				0444D5CA283677DA00327D0B /* EverySwitchTests.swift in Sources */,
@@ -1696,6 +1701,7 @@
 				041D72692835865C0083092D /* SwitchError.swift in Sources */,
 				0493375727625A1E00AE779A /* Downloader.swift in Sources */,
 				0493376227625BBD00AE779A /* NSBezierPath++.swift in Sources */,
+				04E89D61289C327E00667710 /* AppViewModel.swift in Sources */,
 				040E972D27611DEA003D9D42 /* XcodeCacheSwitch.swift in Sources */,
 				04FE2C922772880300C79FF9 /* ShowExtensionNameSwitch.swift in Sources */,
 				043E5D662757C84900ADC004 /* HiddenModifier.swift in Sources */,

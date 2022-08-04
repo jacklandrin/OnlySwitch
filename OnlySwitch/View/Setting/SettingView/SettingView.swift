@@ -18,7 +18,7 @@ struct SettingView: View {
             List(selection:$settingVM.selection) {
                 ForEach(settingVM.settingItems, id:\.self ) { item in
                     NavigationLink{
-                        page
+                        item.page
                     }label:{
                         Text(item.rawValue.localized())
                             .frame(minWidth: 190, alignment:.leading)
@@ -33,7 +33,7 @@ struct SettingView: View {
             }.listStyle(SidebarListStyle())
                 .frame(minWidth:190)
             
-            GeneralView()
+//            GeneralView()
             
         }.navigationTitle("Settings".localized())
         .onAppear{
@@ -41,26 +41,6 @@ struct SettingView: View {
         }
     }
     
-    private var page : some View {
-        switch settingVM.selection! {
-        case .AirPods:
-            return AirPodsSettingView().eraseToAnyView()
-        case .Radio:
-            return RadioSettingView().eraseToAnyView()
-        case .PomodoroTimer:
-            return PomodoroTimerSettingView().eraseToAnyView()
-        case .Shortcuts:
-            return ShortcutsView().eraseToAnyView()
-        case .General:
-            return GeneralView().eraseToAnyView()
-        case .Customize:
-            return CustomizeView().eraseToAnyView()
-        case .HideMenubarIcons:
-            return HideMenubarIconsSettingView().eraseToAnyView()
-        case .About:
-            return AboutView().eraseToAnyView()
-        }
-    }
 }
 
 struct SettingView_Previews: PreviewProvider {

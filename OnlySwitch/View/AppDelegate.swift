@@ -13,6 +13,7 @@ import KeyboardShortcuts
 struct OnlySwitchApp: App {
     let persistenceController = PersistenceController.shared
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    @StateObject var viewModel = AppViewModel()
     var body: some Scene {
         WindowGroup("SettingsWindow"){
             SettingView()
@@ -32,9 +33,25 @@ struct OnlySwitchApp: App {
                 }
         }.handlesExternalEvents(matching: Set(arrayLiteral: "*"))
             .commands{
-                CommandMenu("Switch Enable") {
-                    Button("Radio Player") {print("Radio Player")}
-                    Button("Hide Menu Bar Icons") {print("Hide Menu Bar Icons")}
+                CommandMenu("Switches Availability") {
+                    Button(action: {
+                        viewModel.radioPlayEnable = !viewModel.radioPlayEnable
+                    }, label: {
+                        if viewModel.radioPlayEnable {
+                            Text("Disable Radio Player")
+                        } else {
+                            Text("Enable Radio Player")
+                        }
+                    })
+                    Button(action: {
+                        viewModel.hideMenubarIconsEnable = !viewModel.hideMenubarIconsEnable
+                    }, label: {
+                        if viewModel.hideMenubarIconsEnable {
+                            Text("Disable Hide Menu Bar Icons")
+                        } else {
+                            Text("Enale Hide Menu Bar Icons")
+                        }
+                    })
                 }
                 CommandGroup(replacing: .newItem) {
                     
@@ -75,7 +92,8 @@ class AppDelegate:NSObject, NSApplicationDelegate {
             window.close()
             NSApplication.shared.setActivationPolicy(.accessory)
         }
-       
+        
+        NSWindow.allowsAutomaticWindowTabbing = false
     }
     
     func applicationWillTerminate(_ notification: Notification) {

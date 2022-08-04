@@ -40,14 +40,24 @@ extension SwitchListVM: SettingWindowController {
     }
     
     func receiveSettingWindowOperation() {
-        NotificationCenter.default.addObserver(forName: .settingsWindowOpened, object: nil, queue: .main, using: { notify in
+        NotificationCenter.default.addObserver(forName: .settingsWindowOpened,
+                                               object: nil,
+                                               queue: .main,
+                                               using: { notify in
             if let window = notify.object as? NSWindow {
                 self.settingsWindow = window
+//                self.settingsWindow?.center()
+                self.settingsWindow?.delegate = self.coodinator
             }
         })
         
-        NotificationCenter.default.addObserver(forName: .settingsWindowClosed, object: nil, queue: .main, using: { _ in
+        NotificationCenter.default.addObserver(forName: .settingsWindowClosed,
+                                               object: nil,
+                                               queue: .main,
+                                               using: { _ in
             self.settingsWindowPresented = false
+            NSApp.activate(ignoringOtherApps: false)
+            self.settingsWindow = nil
         })
     }
     
@@ -59,10 +69,12 @@ extension SwitchListVM: SettingWindowController {
             if let url = URL(string: "onlyswitch://SettingsWindow") {
                 NSWorkspace.shared.open(url)
                 self.settingsWindowPresented = true
+                print("new setting window appears")
             }
         }
-        NSApp.setActivationPolicy(.regular)
+        
         NotificationCenter.default.post(name: .shouldHidePopover, object: nil)
+        NSApp.setActivationPolicy(.regular)
     }
     
     class Coordinator:NSObject, NSWindowDelegate {
@@ -72,12 +84,10 @@ extension SwitchListVM: SettingWindowController {
         }
         
         func onClose() {
-            print("settings window close")
-            DispatchQueue.main.async {
-                NSApplication.shared.activate(ignoringOtherApps: true)
-                NSApplication.shared.windows.first!.makeKeyAndOrderFront(self)
-                NotificationCenter.default.post(name: .settingsWindowClosed, object: nil)
-            }
+            print("settings window closing")
+            NSApp.activate(ignoringOtherApps: true)
+            NSApp.windows.first!.makeKeyAndOrderFront(self)
+            NotificationCenter.default.post(name: .settingsWindowClosed, object: nil)
             NSApplication.shared.setActivationPolicy(.accessory)
         }
     }

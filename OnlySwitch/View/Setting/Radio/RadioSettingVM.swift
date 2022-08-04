@@ -140,6 +140,11 @@ class RadioSettingVM:ObservableObject {
             self.model.currentTitle = item.title
             self.model.selectRow = item.id
         }.store(in: &cancellables)
+        
+    }
+    
+    deinit {
+        cancellables.removeAll()
     }
     
     func endEditing() {

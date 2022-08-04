@@ -61,6 +61,9 @@ class SwitchListVM: ObservableObject, CurrentScreen {
         receiveSettingWindowOperation()
     }
     
+    deinit{
+        print("switch list vm deinit")
+    }
     
     private func refreshList() {
         self.refreshMaxHeight()
