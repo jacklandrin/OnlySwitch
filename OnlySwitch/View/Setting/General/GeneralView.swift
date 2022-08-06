@@ -163,8 +163,7 @@ struct GeneralView: View, EmailProvider {
                     }
                     .frame(height:Layout.generalSettingItemHeight)
                 }
-            }.padding(.top, 25)
-            Spacer()
+            }
         }
         .navigationTitle(Text("General".localized()))
         .onAppear{

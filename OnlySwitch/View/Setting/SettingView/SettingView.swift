@@ -30,17 +30,28 @@ struct SettingView: View {
                         NotificationCenter.default.post(name: .settingsWindowOpened, object: window)
                     }
                 }.frame(width: 0, height: 0)
-            }.listStyle(SidebarListStyle())
+                    .padding(0)
+            }.listStyle(.sidebar)
                 .frame(minWidth:190)
             
-            GeneralView()
-            
         }.navigationTitle("Settings".localized())
+            .toolbar {
+                ToolbarItem(placement: .navigation) {
+                    Button(action: {
+                        toggleSidebar()
+                    }, label: {
+                        Image(systemName: "sidebar.leading")
+                    })
+                }
+            }
         .onAppear{
             settingVM.selection = .General
         }
     }
     
+    private func toggleSidebar() {
+        NSApp.keyWindow?.firstResponder?.tryToPerform(#selector(NSSplitViewController.toggleSidebar(_:)), with:nil)
+    }
 }
 
 struct SettingView_Previews: PreviewProvider {

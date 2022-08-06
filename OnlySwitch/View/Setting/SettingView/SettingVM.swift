@@ -46,7 +46,8 @@ class SettingVM:ObservableObject {
     
     static let shared = SettingVM()
     
-    @Published var settingItems:[SettingItem] = [.General,
+    @Published var settingItems:[SettingItem] = [
+                                                 .General,
                                                  .Customize,
                                                  .Shortcuts,
                                                  .Radio,

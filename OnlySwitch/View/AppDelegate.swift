@@ -32,40 +32,41 @@ struct OnlySwitchApp: App {
                         }
                     }
                 }
-                
+            
         }
         .handlesExternalEvents(matching: Set(arrayLiteral: "*"))
-            .commands{
-                CommandMenu("Switches Availability") {
-                    Button(action: {
-                        preferencesvm.preferences.radioEnable = !preferences.radioEnable
-                        if preferences.radioEnable {
-                            PlayerManager.shared.player.setupRemoteCommandCenter()
-                        } else {
-                            RadioStationSwitch.shared.playerItem.isPlaying = false
-                            PlayerManager.shared.player.clearCommandCenter()
-                        }
-                    }, label: {
-                        if preferencesvm.preferences.radioEnable {
-                            Text("Disable Radio Player")
-                        } else {
-                            Text("Enable Radio Player")
-                        }
-                    })
-                    Button(action: {
-                        preferencesvm.preferences.menubarCollaspable = !preferences.menubarCollaspable
-                    }, label: {
-                        if preferencesvm.preferences.menubarCollaspable {
-                            Text("Disable Hide Menu Bar Icons")
-                        } else {
-                            Text("Enale Hide Menu Bar Icons")
-                        }
-                    })
-                }
-                CommandGroup(replacing: .newItem) {
-                    
-                }
+        .commands{
+            CommandMenu("Switches Availability") {
+                Button(action: {
+                    preferencesvm.preferences.radioEnable = !preferences.radioEnable
+                    if preferences.radioEnable {
+                        PlayerManager.shared.player.setupRemoteCommandCenter()
+                    } else {
+                        RadioStationSwitch.shared.playerItem.isPlaying = false
+                        PlayerManager.shared.player.clearCommandCenter()
+                    }
+                }, label: {
+                    if preferencesvm.preferences.radioEnable {
+                        Text("Disable Radio Player")
+                    } else {
+                        Text("Enable Radio Player")
+                    }
+                })
+                Button(action: {
+                    preferencesvm.preferences.menubarCollaspable = !preferences.menubarCollaspable
+                }, label: {
+                    if preferencesvm.preferences.menubarCollaspable {
+                        Text("Disable Hide Menu Bar Icons")
+                    } else {
+                        Text("Enale Hide Menu Bar Icons")
+                    }
+                })
             }
+            CommandGroup(replacing: .newItem) {
+                
+            }
+        }
+        
     }
 }
 
@@ -105,7 +106,7 @@ class AppDelegate:NSObject, NSApplicationDelegate {
         
         checkUpdate()
         //for issue #11
-       
+        
     }
     
     func applicationWillTerminate(_ notification: Notification) {
