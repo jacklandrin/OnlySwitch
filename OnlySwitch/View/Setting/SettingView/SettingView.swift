@@ -33,7 +33,7 @@ struct SettingView: View {
             }.listStyle(SidebarListStyle())
                 .frame(minWidth:190)
             
-//            GeneralView()
+            GeneralView()
             
         }.navigationTitle("Settings".localized())
         .onAppear{

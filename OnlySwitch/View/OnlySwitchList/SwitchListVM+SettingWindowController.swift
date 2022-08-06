@@ -44,9 +44,15 @@ extension SwitchListVM: SettingWindowController {
                                                queue: .main,
                                                using: { notify in
             if let window = notify.object as? NSWindow {
-                self.settingsWindow?.close()
-                self.settingsWindow = window
-//                self.settingsWindow?.center()
+                if self.settingsWindow == nil {
+                    self.settingsWindow = window
+                } else {
+                    if self.settingsWindowPresented == false {
+                        self.showSettingsWindow()
+                    } else {
+                        self.settingsWindow?.close()
+                    }
+                }
             }
         })
         
@@ -56,26 +62,23 @@ extension SwitchListVM: SettingWindowController {
                                                using: { _ in
             self.settingsWindowPresented = false
             NSApp.activate(ignoringOtherApps: false)
-            self.settingsWindow = nil
         })
     }
     
     func showSettingsWindow() {
         if let window = self.settingsWindow {
+            NSApp.setActivationPolicy(.regular)
             NSApp.activate(ignoringOtherApps: true)
             window.makeKeyAndOrderFront(self)
         } else {
             if let url = URL(string: "onlyswitch://SettingsWindow") {
                 NSWorkspace.shared.open(url)
-                self.settingsWindowPresented = true
                 print("new setting window appears")
             }
         }
-        
+        self.settingsWindowPresented = true
         NotificationCenter.default.post(name: .shouldHidePopover, object: nil)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            NSApp.setActivationPolicy(.regular)
-        }
+
     }
     
     class Coordinator:NSObject, NSWindowDelegate {
@@ -88,8 +91,8 @@ extension SwitchListVM: SettingWindowController {
             print("settings window closing")
             NSApp.activate(ignoringOtherApps: true)
             NSApp.windows.first!.makeKeyAndOrderFront(self)
-            NotificationCenter.default.post(name: .settingsWindowClosed, object: nil)
             NSApp.setActivationPolicy(.accessory)
+            NotificationCenter.default.post(name: .settingsWindowClosed, object: nil)
         }
     }
 }
