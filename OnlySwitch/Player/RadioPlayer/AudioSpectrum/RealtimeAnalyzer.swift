@@ -136,6 +136,9 @@ class RealtimeAnalyzer {
     private func findMaxAmplitude(for band:(lowerFrequency: Float, upperFrequency: Float), in amplitudes: [Float], with bandWidth: Float) -> Float {
         let startIndex = Int(round(band.lowerFrequency / bandWidth))
         let endIndex = min(Int(round(band.upperFrequency / bandWidth)), amplitudes.count - 1)
+        guard startIndex < endIndex else {
+            return amplitudes[0...255].max()!
+        }
         return amplitudes[startIndex...endIndex].max()!
     }
     

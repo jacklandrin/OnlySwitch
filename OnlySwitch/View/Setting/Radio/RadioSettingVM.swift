@@ -111,6 +111,7 @@ class RadioSettingVM:ObservableObject {
     }
     
     private var managedObjectContext:NSManagedObjectContext?
+    
     init() {
         self.managedObjectContext = PersistenceController.shared.container.viewContext
         RadioStations.fetchResult.forEach{ station in
@@ -122,7 +123,10 @@ class RadioSettingVM:ObservableObject {
             self.model.radioList.append(radioItem)
         }
         
-        NotificationCenter.default.addObserver(forName: .illegalRadioInfoNotification, object: nil, queue: .main, using:{[self] notify in
+        NotificationCenter.default.addObserver(forName: .illegalRadioInfoNotification,
+                                               object: nil,
+                                               queue: .main,
+                                               using:{[self] notify in
             self.model.errorInfo = notify.object as! String
             self.model.showErrorToast = true
         })

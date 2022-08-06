@@ -25,19 +25,28 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
     var bufferring:Bool = false
     
     var avplayer: AVPlayer = AVPlayer()
-    public internal(set) var isAppActive = true
+    public internal(set) var isAppActive = false
     
     override init() {
         super.init()
-        NotificationCenter.default.addObserver(forName: .showPopover, object: nil, queue: .main, using: { _ in
+        NotificationCenter.default.addObserver(forName: .showPopover,
+                                               object: nil,
+                                               queue: .main,
+                                               using: { _ in
             self.isAppActive = true
         })
 
-        NotificationCenter.default.addObserver(forName: .hidePopover, object: nil, queue: .main, using: { _ in
+        NotificationCenter.default.addObserver(forName: .hidePopover,
+                                               object: nil,
+                                               queue: .main,
+                                               using: { _ in
             self.isAppActive = false
         })
         
-        NotificationCenter.default.addObserver(forName: .volumeChange, object: nil, queue: .main, using: { notification in
+        NotificationCenter.default.addObserver(forName: .volumeChange,
+                                               object: nil,
+                                               queue: .main,
+                                               using: { notification in
             guard let userInfo = notification.userInfo,
                     let newValue  = userInfo["newValue"] as? Float else {
                         print("No userInfo found in notification")

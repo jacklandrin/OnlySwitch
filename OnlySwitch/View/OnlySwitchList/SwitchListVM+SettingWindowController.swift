@@ -44,6 +44,7 @@ extension SwitchListVM: SettingWindowController {
                                                queue: .main,
                                                using: { notify in
             if let window = notify.object as? NSWindow {
+                self.settingsWindow?.close()
                 self.settingsWindow = window
 //                self.settingsWindow?.center()
             }
@@ -88,7 +89,7 @@ extension SwitchListVM: SettingWindowController {
             NSApp.activate(ignoringOtherApps: true)
             NSApp.windows.first!.makeKeyAndOrderFront(self)
             NotificationCenter.default.post(name: .settingsWindowClosed, object: nil)
-            NSApplication.shared.setActivationPolicy(.accessory)
+            NSApp.setActivationPolicy(.accessory)
         }
     }
 }

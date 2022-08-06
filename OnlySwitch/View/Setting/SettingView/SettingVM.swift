@@ -57,5 +57,4 @@ class SettingVM:ObservableObject {
     
     @Published var selection:SettingItem? = .General
     
-    
 }
