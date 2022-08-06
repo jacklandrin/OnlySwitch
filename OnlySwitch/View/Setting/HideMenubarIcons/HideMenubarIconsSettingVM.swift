@@ -39,6 +39,11 @@ class HideMenubarIconsSettingVM:ObservableObject {
         }.store(in: &cancellables)
     }
     
+    deinit{
+        cancellables.removeAll()
+        print("deinit HMBIS")
+    }
+    
     func converTimeDescription(duration:Int) -> String {
         if duration == 0 {
             return "never".localized()
