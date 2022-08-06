@@ -12,7 +12,7 @@ class RadioSettingVM:ObservableObject {
     
     @Published private var model = RadioSettingModel()
     private var preferencesPublisher = PreferencesPublisher.shared
-    private var preferences = PreferencesPublisher.shared.preferences
+    @Published private var preferences = PreferencesPublisher.shared.preferences
     private var cancellables = Set<AnyCancellable>()
     
     var radioList:[RadioPlayerItemViewModel] {
@@ -101,7 +101,7 @@ class RadioSettingVM:ObservableObject {
         
         set {
             preferences.radioEnable = newValue
-            if newValue {
+            if preferences.radioEnable {
                 PlayerManager.shared.player.setupRemoteCommandCenter()
             } else {
                 RadioStationSwitch.shared.playerItem.isPlaying = false
@@ -130,6 +130,7 @@ class RadioSettingVM:ObservableObject {
             self.model.errorInfo = notify.object as! String
             self.model.showErrorToast = true
         })
+        
         self.model.currentTitle = RadioStationSwitch.shared.playerItem.title
         
         if let newValue = UserDefaults.standard.value(forKey: UserDefaults.Key.volume) as? Float

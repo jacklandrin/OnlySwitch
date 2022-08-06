@@ -20,10 +20,10 @@ struct HideMenubarIconsSettingView: View {
             Divider()
             Spacer()
             Group {
-                Toggle(isOn: $vm.isEnable, label: {
-                    Text("Switch enable".localized())
-                        .padding(.leading, 5)
-                }).frame(height:30)
+//                Toggle(isOn: $vm.isEnable, label: {
+//                    Text("Switch enable".localized())
+//                        .padding(.leading, 5)
+//                }).frame(height:30)
         
                 HStack {
                     Text("Automatically hide icons after:".localized())

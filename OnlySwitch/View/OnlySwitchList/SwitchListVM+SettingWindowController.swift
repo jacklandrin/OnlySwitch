@@ -50,7 +50,7 @@ extension SwitchListVM: SettingWindowController {
                     if self.settingsWindowPresented == false {
                         self.showSettingsWindow()
                     } else {
-                        self.settingsWindow?.close()
+                        window.close()
                     }
                 }
             }

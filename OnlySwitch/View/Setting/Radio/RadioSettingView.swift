@@ -16,7 +16,9 @@ struct RadioSettingView: View {
         VStack {
             HStack(alignment: .top) {
                 VStack(alignment:.leading) {
-                    Toggle("Switch enable".localized(), isOn: $radioSettingVM.switchEnable)
+//                    Toggle("Switch enable".localized(), isOn: $radioSettingVM.switchEnable)
+                    Toggle("Sound Wave Effect".localized(), isOn: $radioSettingVM.soundWaveEffectDisplay)
+                    
                     HStack {
                         Text("Allow Notification:".localized())
                         Toggle("Changing Station".localized(), isOn: $radioSettingVM.allowNotificationChangingStation)
@@ -33,7 +35,6 @@ struct RadioSettingView: View {
                             .frame(width: 150, height: 10)
                     }
                     
-                    Toggle("Sound Wave Effect".localized(), isOn: $radioSettingVM.soundWaveEffectDisplay)
                     
                 } .padding(.trailing, 10)
                 

@@ -13,8 +13,8 @@ import KeyboardShortcuts
 struct OnlySwitchApp: App {
     let persistenceController = PersistenceController.shared
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-//    @StateObject var viewModel = AppViewModel()
     @ObservedObject var preferencesvm = PreferencesPublisher.shared
+    @State var preferences = PreferencesPublisher.shared.preferences
     var body: some Scene {
         WindowGroup("SettingsWindow"){
             SettingView()
@@ -32,11 +32,19 @@ struct OnlySwitchApp: App {
                         }
                     }
                 }
-        }.handlesExternalEvents(matching: Set(arrayLiteral: "*"))
+                
+        }
+        .handlesExternalEvents(matching: Set(arrayLiteral: "*"))
             .commands{
                 CommandMenu("Switches Availability") {
                     Button(action: {
-                        preferencesvm.preferences.radioEnable = !preferencesvm.preferences.radioEnable
+                        preferencesvm.preferences.radioEnable = !preferences.radioEnable
+                        if preferences.radioEnable {
+                            PlayerManager.shared.player.setupRemoteCommandCenter()
+                        } else {
+                            RadioStationSwitch.shared.playerItem.isPlaying = false
+                            PlayerManager.shared.player.clearCommandCenter()
+                        }
                     }, label: {
                         if preferencesvm.preferences.radioEnable {
                             Text("Disable Radio Player")
@@ -45,7 +53,7 @@ struct OnlySwitchApp: App {
                         }
                     })
                     Button(action: {
-                        preferencesvm.preferences.menubarCollaspable = !preferencesvm.preferences.menubarCollaspable
+                        preferencesvm.preferences.menubarCollaspable = !preferences.menubarCollaspable
                     }, label: {
                         if preferencesvm.preferences.menubarCollaspable {
                             Text("Disable Hide Menu Bar Icons")
@@ -75,6 +83,11 @@ class AppDelegate:NSObject, NSApplicationDelegate {
     var checkUpdatePresenter = GitHubPresenter()
     
     func applicationDidFinishLaunching(_ notification: Notification) {
+        if let window = NSApplication.shared.windows.first {
+            window.orderOut(nil)
+            NSApplication.shared.setActivationPolicy(.accessory)
+            NSWindow.allowsAutomaticWindowTabbing = false
+        }
         let contentView = OnlySwitchListView()
             .environmentObject(switchVM)
         let apperearance = SwitchListAppearance(rawValue: currentAppearance)
@@ -92,18 +105,23 @@ class AppDelegate:NSObject, NSApplicationDelegate {
         
         checkUpdate()
         //for issue #11
-        if let window = NSApplication.shared.windows.first {
-            window.close()
-            NSApplication.shared.setActivationPolicy(.accessory)
-        }
-        
-        NSWindow.allowsAutomaticWindowTabbing = false
+       
     }
     
     func applicationWillTerminate(_ notification: Notification) {
         
     }
     
+    func applicationDidUpdate(_ notification: Notification) {
+        if let event = NSApp.currentEvent {
+            if event.type == .appKitDefined,
+               let window = NSApp.mainWindow{
+                if window.delegate == nil {
+                    window.close()
+                }
+            }
+        }
+    }
     
     func checkUpdate() {
         checkUpdatePresenter.checkUpdate { result in
