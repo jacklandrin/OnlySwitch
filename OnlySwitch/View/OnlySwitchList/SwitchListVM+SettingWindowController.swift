@@ -9,13 +9,13 @@ import Foundation
 import AppKit
 
 extension SwitchListVM: SettingWindowController {
-    struct Holder {
+    private struct Holder {
         static var _settingsWindowPresented = false
         static var _settingsWindow:NSWindow?
         static var _coordinator:Coordinator = Coordinator()
     }
     
-    var settingsWindowPresented: Bool {
+    internal var settingsWindowPresented: Bool {
         get {
             return Holder._settingsWindowPresented
         }
@@ -24,7 +24,7 @@ extension SwitchListVM: SettingWindowController {
         }
     }
     
-    var settingsWindow: NSWindow? {
+    internal var settingsWindow: NSWindow? {
         get {
             return Holder._settingsWindow
         }
@@ -34,7 +34,7 @@ extension SwitchListVM: SettingWindowController {
         }
     }
     
-    var coodinator:Coordinator {
+    private var coodinator:Coordinator {
         return Holder._coordinator
     }
     
@@ -72,7 +72,7 @@ extension SwitchListVM: SettingWindowController {
         }
         
         NotificationCenter.default.post(name: .shouldHidePopover, object: nil)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             NSApp.setActivationPolicy(.regular)
         }
     }
