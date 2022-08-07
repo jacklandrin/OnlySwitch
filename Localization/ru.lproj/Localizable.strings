@@ -117,4 +117,8 @@
 "Allow Notification:" = "Разрешить уведомление:";
 "Changing Station" = "Изменение радиостанции";
 "SoundTrack" = "Саундтрек";
-
+"Switches Availability" = "Наличие Switch";
+"Disable Radio Player" = "Отключить Радиоплеер";
+"Enable Radio Player" = "Включить Радиоплеер";
+"Disable Hide Menu Bar Icons" = "Отключить Скрыть значки строки меню";
+"Enable Hide Menu Bar Icons" = "Включить Скрыть значки строки меню";

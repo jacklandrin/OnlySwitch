@@ -58,7 +58,7 @@ struct OnlySwitchApp: App {
                     if preferencesvm.preferences.menubarCollaspable {
                         Text("Disable Hide Menu Bar Icons")
                     } else {
-                        Text("Enale Hide Menu Bar Icons")
+                        Text("Enable Hide Menu Bar Icons")
                     }
                 })
             }

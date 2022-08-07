@@ -120,3 +120,8 @@
 "Allow Notification:" = "通知を許可する:";
 "Changing Station" = "ラジオ局の変更";
 "Soundtrack" = "サウンドトラック";
+"Switches Availability" = "スイッチの可用性";
+"Disable Radio Player" = "ラジオを無効にする";
+"Enable Radio Player" = "ラジオを有効にする";
+"Disable Hide Menu Bar Icons" = "メニューバーアイコンを非表示を無効にする";
+"Enable Hide Menu Bar Icons" = "メニューバーアイコンを非表示を有効にする";

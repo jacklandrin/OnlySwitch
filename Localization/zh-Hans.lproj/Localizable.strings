@@ -117,3 +117,8 @@
 "Allow Notification:" = "允许通知:";
 "Changing Station" = "切换电台";
 "Soundtrack" = "音轨";
+"Switches Availability" = "开关可用性";
+"Disable Radio Player" = "停用电台";
+"Enable Radio Player" = "启用电台";
+"Disable Hide Menu Bar Icons" = "停用隐藏菜单栏图标";
+"Enable Hide Menu Bar Icons" = "启用隐藏菜单栏图标";
