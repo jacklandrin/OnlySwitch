@@ -12,7 +12,7 @@ struct OnlySwitchListView: View {
     @EnvironmentObject var switchVM:SwitchListVM
     @Environment(\.colorScheme) private var colorScheme
     @State private var distanceY:CGFloat = 0
-    @State private var movingIndex = 0
+    @State private var movingIndex = -1
     @State private var hoverIndex = -1
     @ObservedObject private var playerItem = RadioStationSwitch.shared.playerItem
     @ObservedObject private var languageManager = LanguageManager.sharedManager
@@ -96,7 +96,8 @@ struct OnlySwitchListView: View {
                 }.padding(.horizontal, 15)
                     .background(Color(AppColor.themeBlue)
                         .opacity(0.15)
-                        .isHidden(index != self.hoverIndex))
+                        .isHidden(!itemHighlight(index: index)))
+                    .scaleEffect(itemScaleEffect(index: index))
                 .onHover{ isHovering in
                     if isHovering {
                         withAnimation(.easeOut) {
@@ -141,7 +142,7 @@ struct OnlySwitchListView: View {
                                 switchVM.saveOrder()
                             }
                             self.distanceY = 0
-                            movingIndex = 0
+                            movingIndex = -1
                         }
                 )
                 
@@ -405,6 +406,22 @@ struct OnlySwitchListView: View {
             hiddenSwitch = item.isHidden
         }
         return !switchVM.sortMode || hiddenSwitch
+    }
+    
+    func itemScaleEffect(index:Int) -> CGFloat {
+        if switchVM.sortMode {
+            return index == movingIndex ? 1.008 : 1.0
+        } else {
+            return index == self.hoverIndex ? 1.008 : 1.0
+        }
+    }
+    
+    func itemHighlight(index:Int) -> Bool {
+        if switchVM.sortMode {
+            return index == movingIndex ? true : false
+        } else {
+            return index == self.hoverIndex
+        }
     }
 }
 
