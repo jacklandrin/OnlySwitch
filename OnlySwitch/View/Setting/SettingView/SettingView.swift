@@ -33,7 +33,7 @@ struct SettingView: View {
                     .padding(0)
             }.listStyle(.sidebar)
                 .frame(minWidth:190)
-            
+            GeneralView()
         }.navigationTitle("Settings".localized())
             .toolbar {
                 ToolbarItem(placement: .navigation) {
