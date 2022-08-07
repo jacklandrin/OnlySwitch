@@ -121,8 +121,10 @@ struct PomodoroTimerSettingView: View {
     }
 }
 
+#if DEBUG
 struct PomodoroTimer_Previews: PreviewProvider {
     static var previews: some View {
         PomodoroTimerSettingView()
     }
 }
+#endif

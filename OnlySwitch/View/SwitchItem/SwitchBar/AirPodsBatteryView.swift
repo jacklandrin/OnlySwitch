@@ -44,8 +44,10 @@ struct AirPodsBatteryView: View {
     }
 }
 
+#if DEBUG
 struct AirPodsBatteryView_Previews: PreviewProvider {
     static var previews: some View {
         AirPodsBatteryView(batteryValues: [0.5,0.15,1]).frame(width: 140, height: 20)
     }
 }
+#endif

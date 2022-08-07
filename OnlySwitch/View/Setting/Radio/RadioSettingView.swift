@@ -117,9 +117,10 @@ struct RadioSettingView: View {
     }
 }
 
-
+#if DEBUG
 struct RadioSetting_Previews: PreviewProvider {
     static var previews: some View {
         RadioSettingView()
     }
 }
+#endif

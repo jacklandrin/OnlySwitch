@@ -36,8 +36,10 @@ struct SwitchToggle: View {
     }
 }
 
+#if DEBUG
 struct SwitchToggle_Previews: PreviewProvider {
     static var previews: some View {
         SwitchToggle(isOn: .constant(true), pressButton: {_ in})
     }
 }
+#endif

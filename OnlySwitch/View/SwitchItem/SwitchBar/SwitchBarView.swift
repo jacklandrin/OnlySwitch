@@ -97,6 +97,7 @@ struct SwitchBarView: View {
     
 }
 
+#if DEBUG
 struct SwitchBar_Previews: PreviewProvider {
     static var previews: some View {
         SwitchBarView()
@@ -104,3 +105,4 @@ struct SwitchBar_Previews: PreviewProvider {
             .frame(width: 300)
     }
 }
+#endif

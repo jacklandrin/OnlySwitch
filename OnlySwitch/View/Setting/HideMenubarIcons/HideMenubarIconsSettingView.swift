@@ -42,8 +42,10 @@ struct HideMenubarIconsSettingView: View {
     }
 }
 
+#if DEBUG
 struct HideMenubarIconsSettingView_Previews: PreviewProvider {
     static var previews: some View {
         HideMenubarIconsSettingView()
     }
 }
+#endif

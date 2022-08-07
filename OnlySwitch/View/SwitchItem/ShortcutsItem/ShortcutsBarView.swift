@@ -50,8 +50,10 @@ struct ShortcutsBarView: View {
     }
 }
 
+#if DEBUG
 struct ShortCutBarView_Previews: PreviewProvider {
     static var previews: some View {
         ShortcutsBarView()
     }
 }
+#endif

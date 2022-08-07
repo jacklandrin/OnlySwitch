@@ -51,8 +51,10 @@ struct CustomizeView: View {
     }
 }
 
+#if DEBUG
 struct CustomizeView_Previews: PreviewProvider {
     static var previews: some View {
         CustomizeView()
     }
 }
+#endif

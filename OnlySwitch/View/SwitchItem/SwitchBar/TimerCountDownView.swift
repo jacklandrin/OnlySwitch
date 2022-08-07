@@ -35,8 +35,10 @@ struct TimerCountDownView: View {
     }
 }
 
+#if DEBUG
 struct TimerCountDownView_Previews: PreviewProvider {
     static var previews: some View {
         TimerCountDownView(ptswitch: PomodoroTimerSwitch())
     }
 }
+#endif

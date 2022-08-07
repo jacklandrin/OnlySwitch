@@ -48,8 +48,10 @@ struct AirPodsSettingView: View {
     }
 }
 
+#if DEBUG
 struct AirPodsSettingView_Previews: PreviewProvider {
     static var previews: some View {
         AirPodsSettingView()
     }
 }
+#endif

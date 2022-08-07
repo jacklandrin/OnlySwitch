@@ -56,8 +56,10 @@ struct PureColorView: View {
     }
 }
 
+#if DEBUG
 struct PureColorView_Previews: PreviewProvider {
     static var previews: some View {
         PureColorView()
     }
 }
+#endif

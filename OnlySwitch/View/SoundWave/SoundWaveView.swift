@@ -34,8 +34,10 @@ struct SoundWaveView: NSViewRepresentable {
     }
 }
 
+#if DEBUG
 struct SoundWaveView_Previews: PreviewProvider {
     static var previews: some View {
         SoundWaveView(spectra: [[0.0],[0.0]], barWidth: 3.0, space: 0, leftColor: leftColors, rightColor: rightColors)
     }
 }
+#endif

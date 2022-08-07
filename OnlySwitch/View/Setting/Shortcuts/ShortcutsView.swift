@@ -140,8 +140,10 @@ struct ShortcutsView: View {
     }
 }
 
+#if DEBUG
 struct ShortcutsView_Previews: PreviewProvider {
     static var previews: some View {
         ShortcutsView()
     }
 }
+#endif
