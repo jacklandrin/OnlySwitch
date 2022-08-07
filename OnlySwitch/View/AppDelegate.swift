@@ -62,9 +62,17 @@ struct OnlySwitchApp: App {
                     }
                 })
             }
+//            CommandGroup(after: .appSettings) {
+//                Button(action: {
+//                    appDelegate.checkUpdate()
+//                }, label: {
+//                    Text("Check For Update...")
+//                })
+//            }
             CommandGroup(replacing: .newItem) {
                 
             }
+            
         }
         
     }
