@@ -13,8 +13,8 @@ import KeyboardShortcuts
 struct OnlySwitchApp: App {
     let persistenceController = PersistenceController.shared
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    @ObservedObject var preferencesvm = PreferencesPublisher.shared
-    @State var preferences = PreferencesPublisher.shared.preferences
+    @ObservedObject var preferencesvm = PreferencesObserver.shared
+    @State var preferences = PreferencesObserver.shared.preferences
     var body: some Scene {
         WindowGroup("SettingsWindow"){
             SettingView()
@@ -84,7 +84,7 @@ class AppDelegate:NSObject, NSApplicationDelegate {
     let switchVM = SwitchListVM()
     var blManager:BluetoothDevicesManager?
     var currentAppearance:String {
-        return PreferencesPublisher
+        return PreferencesObserver
             .shared
             .preferences
             .currentAppearance

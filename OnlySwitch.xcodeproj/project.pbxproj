@@ -249,7 +249,7 @@
 		04E89D592899F14100667710 /* FKeySwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E89D582899F14100667710 /* FKeySwitch.swift */; };
 		04E89D5E289B054C00667710 /* IOService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E89D5D289B054C00667710 /* IOService.swift */; };
 		04E89D5F289B054C00667710 /* IOService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E89D5D289B054C00667710 /* IOService.swift */; };
-		04E89D64289C890F00667710 /* PreferencesPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E89D63289C890F00667710 /* PreferencesPublisher.swift */; };
+		04E89D64289C890F00667710 /* PreferencesObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E89D63289C890F00667710 /* PreferencesObserver.swift */; };
 		04E8BE3A2797241F00FF12B7 /* ShortcutsGalleryContributing.md in Resources */ = {isa = PBXBuildFile; fileRef = 04E8BE392797241F00FF12B7 /* ShortcutsGalleryContributing.md */; };
 		04EB1CD02780F36F00C612AB /* ShortcutsSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CCF2780F36F00C612AB /* ShortcutsSettingVM.swift */; };
 		04EB1CD22780F4F700C612AB /* ShortcutsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CD12780F4F700C612AB /* ShortcutsView.swift */; };
@@ -523,7 +523,7 @@
 		04E89D562899B80C00667710 /* View+Erase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Erase.swift"; sourceTree = "<group>"; };
 		04E89D582899F14100667710 /* FKeySwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FKeySwitch.swift; sourceTree = "<group>"; };
 		04E89D5D289B054C00667710 /* IOService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOService.swift; sourceTree = "<group>"; };
-		04E89D63289C890F00667710 /* PreferencesPublisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesPublisher.swift; sourceTree = "<group>"; };
+		04E89D63289C890F00667710 /* PreferencesObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesObserver.swift; sourceTree = "<group>"; };
 		04E8BE392797241F00FF12B7 /* ShortcutsGalleryContributing.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ShortcutsGalleryContributing.md; sourceTree = "<group>"; };
 		04EB1CCF2780F36F00C612AB /* ShortcutsSettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsSettingVM.swift; sourceTree = "<group>"; };
 		04EB1CD12780F4F700C612AB /* ShortcutsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsView.swift; sourceTree = "<group>"; };
@@ -733,7 +733,7 @@
 			isa = PBXGroup;
 			children = (
 				04938D072768CBA100713F1D /* LanguageManager.swift */,
-				04E89D63289C890F00667710 /* PreferencesPublisher.swift */,
+				04E89D63289C890F00667710 /* PreferencesObserver.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -1625,7 +1625,7 @@
 				0493374627625A1E00AE779A /* JLAVAudioPlayer.swift in Sources */,
 				0426613A2780B885005DF2B9 /* LowPowerModeSwitch.swift in Sources */,
 				0451766C27C284D600006BA0 /* iTunesBridge.swift in Sources */,
-				04E89D64289C890F00667710 /* PreferencesPublisher.swift in Sources */,
+				04E89D64289C890F00667710 /* PreferencesObserver.swift in Sources */,
 				04B25451283BEB8400D253E2 /* SwitchBarModel.swift in Sources */,
 				04581DBD27653C35008ADF30 /* AirPodsSettingView.swift in Sources */,
 				049337922762BA3200AE779A /* SettingView.swift in Sources */,

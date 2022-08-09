@@ -11,8 +11,8 @@ import Combine
 
 class HideMenubarIconsSettingVM:ObservableObject {
     private var cancellables = Set<AnyCancellable>()
-    private var preferencesPublisher = PreferencesPublisher.shared
-    @Published private var preferences = PreferencesPublisher.shared.preferences
+    private var preferencesPublisher = PreferencesObserver.shared
+    @Published private var preferences = PreferencesObserver.shared.preferences
     var durationSet = [0, 5, 10, 15, 30, 60]
     var isEnable:Bool {
         get {

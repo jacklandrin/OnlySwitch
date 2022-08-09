@@ -11,8 +11,8 @@ import Combine
 class RadioSettingVM:ObservableObject {
     
     @Published private var model = RadioSettingModel()
-    private var preferencesPublisher = PreferencesPublisher.shared
-    @Published private var preferences = PreferencesPublisher.shared.preferences
+    private var preferencesPublisher = PreferencesObserver.shared
+    @Published private var preferences = PreferencesObserver.shared.preferences
     private var cancellables = Set<AnyCancellable>()
     
     var radioList:[RadioPlayerItemViewModel] {
