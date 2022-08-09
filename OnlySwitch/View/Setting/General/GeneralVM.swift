@@ -93,6 +93,34 @@ class GeneralVM:ObservableObject {
         return checkUpdatePresenter.isTheNewestVersion
     }
     
+    var showErrorToast:Bool {
+        get {
+            model.showErrorToast
+        }
+        set {
+            model.showErrorToast = newValue
+        }
+    }
+    
+    var errorInfo:String {
+        model.errorInfo
+    }
+    
+    func clearCache() {
+        do {
+            try WallpaperManager.shared.clearCache()
+        } catch { 
+            if let error = error as? WallpaperManager.WallpaperError,
+               error == WallpaperManager.WallpaperError.ExistsIgnoredFile {
+                model.errorInfo = "The cache is in use, can't be cleared"
+            } else {
+                model.errorInfo = error.localizedDescription
+            }
+            
+            model.showErrorToast = true
+        }
+    }
+    
     func checkUpdate() {
         self.model.showProgress = true
         checkUpdatePresenter.checkUpdate(complete: { result in

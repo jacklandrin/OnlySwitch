@@ -8,6 +8,11 @@
 import AppKit
 
 class WallpaperManager {
+    enum WallpaperError:Error {
+        case ExistsIgnoredFile
+    }
+    
+    
     static let shared = WallpaperManager()
     
     private var myAppPath:String? {
@@ -18,7 +23,7 @@ class WallpaperManager {
         return myAppPath
     }
     
-    func clearCache() {
+    func clearCache() throws {
         guard let myAppPath = myAppPath else {
             return
         }
@@ -36,8 +41,8 @@ class WallpaperManager {
         let processedUrl = URL(fileURLWithPath: processedPath)
         let originalUrl = URL(fileURLWithPath: originalPath)
         
-        removeAllFile(url: processedUrl, ignore: currentNames)
-        removeAllFile(url: originalUrl, ignore: currentNames)
+        try removeAllFile(url: processedUrl, ignore: currentNames)
+        try removeAllFile(url: originalUrl, ignore: currentNames)
         
     }
     
@@ -65,16 +70,22 @@ class WallpaperManager {
         return size
     }
     
-    private func removeAllFile(url:URL, ignore:[String]) {
+    private func removeAllFile(url:URL, ignore:[String]) throws {
         do {
             let fileUrls = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: .includesDirectoriesPostOrder)
+            var containsIgnoring = false
             for fileUrl in fileUrls {
                 if !ignore.contains(fileUrl.lastPathComponent) {
                     try FileManager.default.removeItem(at: fileUrl)
+                } else {
+                    containsIgnoring = true
                 }
             }
+            if containsIgnoring {
+                throw WallpaperError.ExistsIgnoredFile
+            }
         } catch {
-            
+            throw error
         }
     }
 }

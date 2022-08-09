@@ -7,6 +7,7 @@
 
 import SwiftUI
 import LaunchAtLogin
+import AlertToast
 
 struct GeneralView: View, EmailProvider {
     @ObservedObject var langManager = LanguageManager.sharedManager
@@ -143,7 +144,7 @@ struct GeneralView: View, EmailProvider {
                         HStack {
                             Text(generalVM.cacheSize)
                             Button("Clear cache".localized()) {
-                                WallpaperManager.shared.clearCache()
+                                generalVM.clearCache()
                                 generalVM.cacheSize = WallpaperManager.shared.cacheSize()
                             }
                         }
@@ -168,6 +169,11 @@ struct GeneralView: View, EmailProvider {
         .navigationTitle(Text("General".localized()))
         .onAppear{
             generalVM.cacheSize = WallpaperManager.shared.cacheSize()
+        }
+        .toast(isPresenting: $generalVM.showErrorToast) {
+            AlertToast(displayMode: .alert,
+                       type: .error(.red),
+                       title: generalVM.errorInfo.localized())
         }
         .alert(isPresented: $generalVM.needtoUpdateAlert) {
             Alert(title: Text("Update".localized()),
