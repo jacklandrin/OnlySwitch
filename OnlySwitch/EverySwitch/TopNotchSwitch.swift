@@ -247,11 +247,16 @@ class TopNotchSwitch:SwitchProvider, CurrentScreen {
             print("screenSize:\(screenSize)")
         }
         
-        let nsscreenSize = NSSize(width: screenSize.width, height: screenSize.height)
-        guard let resizeWallpaperImage = image.resizeMaintainingAspectRatio(withSize: nsscreenSize) else {return nil}
+        let nsscreenSize = NSSize(width: screenSize.width,
+                                  height: screenSize.height)
+        guard let resizeWallpaperImage = image
+            .resizeMaintainingAspectRatio(withSize: nsscreenSize) else {return nil}
         
-        var imageRect = CGRect(origin: .zero, size: CGSize(width: resizeWallpaperImage.width, height: resizeWallpaperImage.height))
-        guard let cgwallpaper = resizeWallpaperImage.cgImage(forProposedRect: &imageRect, context: nil, hints: nil) else {
+        var imageRect = CGRect(origin: .zero,
+                               size: CGSize(width: resizeWallpaperImage.width,
+                                            height: resizeWallpaperImage.height))
+        guard let cgwallpaper = resizeWallpaperImage
+            .cgImage(forProposedRect: &imageRect, context: nil, hints: nil) else {
             return nil
         }
         
@@ -279,14 +284,7 @@ class TopNotchSwitch:SwitchProvider, CurrentScreen {
         }
         return true
     }
-    
-//    private func getScreenWithMouse() -> NSScreen? {
-//        let mouseLocation = NSEvent.mouseLocation
-//        let screens = NSScreen.screens
-//        let screenWithMouse = (screens.first { NSMouseInRect(mouseLocation, $0.frame, false) })
-//        return screenWithMouse
-//    }
-    
+        
     private func saveImage(_ image:NSImage, isProcessed:Bool, imageName:String) -> URL? {
         guard let destinationURL = saveDestination(isProcessed: isProcessed, imageName: imageName, type: "jpg") else {
             return nil

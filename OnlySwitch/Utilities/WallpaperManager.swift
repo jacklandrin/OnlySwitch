@@ -67,7 +67,7 @@ class WallpaperManager {
     
     private func removeAllFile(url:URL, ignore:[String]) {
         do {
-            let fileUrls = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
+            let fileUrls = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: .includesDirectoriesPostOrder)
             for fileUrl in fileUrls {
                 if !ignore.contains(fileUrl.lastPathComponent) {
                     try FileManager.default.removeItem(at: fileUrl)
