@@ -168,8 +168,10 @@ Rosel for Filipino translation
 
 @abdorizak for Somali translation
 
-## Telegram group
-https://t.me/OnlySwitchforMac
+## Communities
+Telegram group: https://t.me/OnlySwitchforMac
+
+Discord: https://discord.gg/BkzgsMMW
 
 ## License
 MIT

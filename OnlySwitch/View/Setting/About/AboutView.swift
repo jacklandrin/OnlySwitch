@@ -46,7 +46,10 @@ struct AboutView: View {
                 HStack {
                     Text("Join:".localized())
                     Link(destination: URL(string: "https://t.me/OnlySwitchforMac")!, label: {
-                        Text("Telegram Group")
+                        Text("Telegram")
+                    })
+                    Link(destination: URL(string: "https://discord.gg/BkzgsMMW")!, label: {
+                        Text("Discord")
                     })
                 }
             }.offset(y:20)
