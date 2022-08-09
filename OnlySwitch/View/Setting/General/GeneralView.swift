@@ -117,7 +117,7 @@ struct GeneralView: View, EmailProvider {
                     
                     //check update
                     HStack {
-                        Button("Check for updates".localized()) {
+                        Button("Check For Update...".localized()) {
                             generalVM.checkUpdate()
                         }
                         
@@ -143,7 +143,7 @@ struct GeneralView: View, EmailProvider {
                     VStack(alignment:.leading,spacing: 15) {
                         HStack {
                             Text(generalVM.cacheSize)
-                            Button("Clear cache".localized()) {
+                            Button("Clear Cache".localized()) {
                                 generalVM.clearCache()
                                 generalVM.cacheSize = WallpaperManager.shared.cacheSize()
                             }
@@ -174,14 +174,6 @@ struct GeneralView: View, EmailProvider {
             AlertToast(displayMode: .alert,
                        type: .error(.red),
                        title: generalVM.errorInfo.localized())
-        }
-        .alert(isPresented: $generalVM.needtoUpdateAlert) {
-            Alert(title: Text("Update".localized()),
-                  message: Text("You can update to new version. The latest version is v%@".localizeWithFormat(arguments: generalVM.latestVersion)),
-                  primaryButton: .default(Text("Download".localized()), action: {
-                generalVM.downloadDMG()
-            }),
-                  secondaryButton:.default(Text("Cancel".localized())))
         }
     }
         

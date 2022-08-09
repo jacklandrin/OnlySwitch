@@ -46,6 +46,7 @@ extension SwitchListVM: SettingWindowController {
             if let window = notify.object as? NSWindow {
                 if self.settingsWindow == nil {
                     self.settingsWindow = window
+                    self.settingsWindow?.makeKeyAndOrderFront(self)
                 } else {
                     if self.settingsWindowPresented == false {
                         self.showSettingsWindow()

@@ -223,6 +223,8 @@
 		04BF97682790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BF97672790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift */; };
 		04BF976B27908D5400E7C0E2 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 04BF976A27908D5400E7C0E2 /* KeyboardShortcuts */; };
 		04D68B0D2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D68B0C2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift */; };
+		04DC6C5C28A2D04B00888BF9 /* UpdateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C5B28A2D04B00888BF9 /* UpdateView.swift */; };
+		04DC6C5E28A2E2B700888BF9 /* UpdateVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C5D28A2E2B700888BF9 /* UpdateVM.swift */; };
 		04E03AF8275E6B4E00EA5FB9 /* AutohideDockSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AF7275E6B4E00EA5FB9 /* AutohideDockSwitch.swift */; };
 		04E03AFE275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AFD275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift */; };
 		04E03B00275F93B900EA5FB9 /* AirPodsSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AFF275F93B900EA5FB9 /* AirPodsSwitch.swift */; };
@@ -500,6 +502,8 @@
 		04BC8EDC28515CE0009E605F /* NSView++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSView++.swift"; sourceTree = "<group>"; };
 		04BF97672790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowFinderPathbarSwitch.swift; sourceTree = "<group>"; };
 		04D68B0C2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowUserLibrarySwitch.swift; sourceTree = "<group>"; };
+		04DC6C5B28A2D04B00888BF9 /* UpdateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateView.swift; sourceTree = "<group>"; };
+		04DC6C5D28A2E2B700888BF9 /* UpdateVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateVM.swift; sourceTree = "<group>"; };
 		04E03AF7275E6B4E00EA5FB9 /* AutohideDockSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutohideDockSwitch.swift; sourceTree = "<group>"; };
 		04E03AFD275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothDevicesManager.swift; sourceTree = "<group>"; };
 		04E03AFF275F93B900EA5FB9 /* AirPodsSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPodsSwitch.swift; sourceTree = "<group>"; };
@@ -718,6 +722,7 @@
 				04BF977927908FB900E7C0E2 /* SoundWave */,
 				0444D6012839995D00327D0B /* PureColorView */,
 				049337952762C05200AE779A /* Setting */,
+				04DC6C5A28A2D02000888BF9 /* Update */,
 				04447B7527550F6900CD2900 /* VisualEffectView.swift */,
 				0434B4D02876325B00F06AB9 /* HostWindowFinder.swift */,
 			);
@@ -1156,6 +1161,15 @@
 			path = SoundWave;
 			sourceTree = "<group>";
 		};
+		04DC6C5A28A2D02000888BF9 /* Update */ = {
+			isa = PBXGroup;
+			children = (
+				04DC6C5B28A2D04B00888BF9 /* UpdateView.swift */,
+				04DC6C5D28A2E2B700888BF9 /* UpdateVM.swift */,
+			);
+			path = Update;
+			sourceTree = "<group>";
+		};
 		04E03B01275FD91200EA5FB9 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
@@ -1588,6 +1602,7 @@
 				043E5D7327581C2E00ADC004 /* SwitchBarView.swift in Sources */,
 				0427B25B275D786400AD783A /* SystemInfo.swift in Sources */,
 				0493375527625A1E00AE779A /* Reader+Converter.swift in Sources */,
+				04DC6C5E28A2E2B700888BF9 /* UpdateVM.swift in Sources */,
 				0493374C27625A1E00AE779A /* Streamer.swift in Sources */,
 				0493375327625A1E00AE779A /* Reading.swift in Sources */,
 				0493375427625A1E00AE779A /* ReaderError.swift in Sources */,
@@ -1643,6 +1658,7 @@
 				04447B7627550F6900CD2900 /* VisualEffectView.swift in Sources */,
 				04A2FFF72755A3E500CE56A0 /* NSImage++.swift in Sources */,
 				0493375827625A1E00AE779A /* Downloader+URLSessionDelegate.swift in Sources */,
+				04DC6C5C28A2D04B00888BF9 /* UpdateView.swift in Sources */,
 				04BC8ECF285008C1009E605F /* RadioSettingModel.swift in Sources */,
 				04E2AD1E2783B63600BC5DF3 /* CurrentScreen.swift in Sources */,
 				043E5D7A2758212A00ADC004 /* SwitchType.swift in Sources */,

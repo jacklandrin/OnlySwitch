@@ -21,7 +21,7 @@
 "Keep Awake" = "Mantieni Acceso";
 "Settings" = "Impostazioni";
 "Launch at login" = "Avvia al login";
-"Clear cache" = "Pulisci cache";
+"Clear Cache" = "Pulisci cache";
 "Quit" = "Esci";
 "More App, QRCobot" = "Altro da Jack";
 "Download QRCobot" = "Download QRCobot";
@@ -51,7 +51,7 @@
 "At least remain 4 switches" = "Almeno quattro interruttori";
 "Show User Library" = "Mostra Cartella Utente";
 "Updates:" = "Aggiornamenti:";
-"Check for updates" = "Controlla aggiornamenti";
+"Check For Update..." = "Controlla aggiornamenti";
 "You’re up to date!" = "Aggiornato!";
 "The latest version is v%@" = "Ultima versione v%@";
 "Update" = "Aggiornamento";

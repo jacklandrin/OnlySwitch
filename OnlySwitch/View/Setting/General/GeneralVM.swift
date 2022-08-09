@@ -6,6 +6,7 @@
 //
 
 import AppKit
+import Combine
 
 class GeneralVM:ObservableObject {
     
@@ -55,7 +56,7 @@ class GeneralVM:ObservableObject {
         return model.menubarIcons
     }
     
-    private let checkUpdatePresenter = GitHubPresenter()
+    private let checkUpdatePresenter = GitHubPresenter.shared
     
     var currentMenubarIcon:String
     {
@@ -106,10 +107,22 @@ class GeneralVM:ObservableObject {
         model.errorInfo
     }
     
+    private var cancellable = Set<AnyCancellable>()
+    
+    init() {
+        checkUpdatePresenter.objectWillChange.sink{ _ in
+            self.objectWillChange.send()
+        }.store(in: &cancellable)
+    }
+    
+    deinit {
+        cancellable.removeAll()
+    }
+    
     func clearCache() {
         do {
             try WallpaperManager.shared.clearCache()
-        } catch { 
+        } catch {
             if let error = error as? WallpaperManager.WallpaperError,
                error == WallpaperManager.WallpaperError.ExistsIgnoredFile {
                 model.errorInfo = "The cache is in use, can't be cleared"
@@ -127,36 +140,17 @@ class GeneralVM:ObservableObject {
             switch result {
             case .success:
                 self.model.newestVersion = self.checkUpdatePresenter.latestVersion
-                UserDefaults.standard.set(self.newestVersion, forKey: UserDefaults.Key.newestVersion)
+                UserDefaults.standard.set(self.newestVersion,
+                                          forKey: UserDefaults.Key.newestVersion)
                 UserDefaults.standard.synchronize()
-                self.model.needtoUpdateAlert = !self.checkUpdatePresenter.isTheNewestVersion
+                if !self.checkUpdatePresenter.isTheNewestVersion {
+                    OpenWindows.Update(self.checkUpdatePresenter).open()
+                }
             case let .failure(error):
                 print(error.localizedDescription)
             }
             self.model.showProgress = false
         })
-    }
-    
-    
-    func downloadDMG() {
-        checkUpdatePresenter.downloadDMG{ result in
-            switch result {
-            case let .success(path):
-                self.openDMG(path: path)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    NSApp.terminate(self)
-                }
-            case let .failure(error):
-                print(error.localizedDescription)
-            }
-        }
-    }
-    
-    private func openDMG(path:String) {
-        let finder = NSWorkspace.shared.urlForApplication(withBundleIdentifier: "com.apple.finder")
-        let configuration: NSWorkspace.OpenConfiguration = NSWorkspace.OpenConfiguration()
-        configuration.promptsUserIfNeeded = true
-        NSWorkspace.shared.open([URL(fileURLWithPath: path)], withApplicationAt: finder!, configuration: configuration, completionHandler: nil)
     }
 }
 

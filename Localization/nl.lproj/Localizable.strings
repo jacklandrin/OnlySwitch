@@ -21,7 +21,7 @@
 "Keep Awake" = "Wakker Blijven";
 "Settings" = "Instellingen";
 "Launch at login" = "Bij Aanmelding starten";
-"Clear cache" = "Cache legen";
+"Clear Cache" = "Cache legen";
 "Quit" = "Beëindigen";
 "More App, QRCobot" = "Meer Apps van Jack";
 "Download QRCobot" = "QRCobot Downloaden";
@@ -51,7 +51,7 @@
 "At least remain 4 switches" = "Minstens vier switches";
 "Show User Library" = "Toon gebruikersbibliotheek";
 "Updates:" = "Updates:";
-"Check for updates" = "Controleer op updates";
+"Check For Update..." = "Controleer op updates";
 "You’re up to date!" = "Dit is de nieuwste versie";
 "The latest version is v%@" = "De nieuwste versie is v%@";
 "Update" = "Update";

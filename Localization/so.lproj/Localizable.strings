@@ -21,7 +21,7 @@
 "Keep Awake" = "Quful ka hortagga hurdada";
 "Settings" = "Settinka";
 "Launch at login" = "La billow soo galida";
-"Clear cache" = "Nadiifi kaydka";
+"Clear Cache" = "Nadiifi kaydka";
 "Quit" = "Ka bax";
 "More App, QRCobot" = "Apps ka badan oo uu sameeyay Jack";
 "Download QRCobot" = "So Dagso QRCobot";
@@ -51,7 +51,7 @@
 "At least remain 4 switches" = "Ugu yaraan 4 switches";
 "Show User Library" = "Tusi Userka Libraryga Folderka";
 "Updates:" = "Cusbooneysii:";
-"Check for updates" = "Hubi wixii kusoo kordha";
+"Check For Update..." = "Hubi wixii kusoo kordha";
 "You’re up to date!" = "Waad lasocotaa waxi ugudambeyey";
 "The latest version is v%@" = "kani waa Soosaristi ugudambeyey v%@";
 "Update" = "Casriyeyn";

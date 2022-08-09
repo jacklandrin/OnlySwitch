@@ -22,7 +22,7 @@
 "Keep Awake" = "Zadrži budno stanje";
 "Settings" = "Postavke";
 "Launch at login" = "Pokreni nakon prijave";
-"Clear cache" = "Isprazni predmemoriju";
+"Clear Cache" = "Isprazni predmemoriju";
 "Quit" = "Zatvori program";
 "More App, QRCobot" = "Daljnji programi od Jacka";
 "Download QRCobot" = "Preuzmi QRCobot";
@@ -52,7 +52,7 @@
 "At least remain 4 switches" = "Zadrži barem četiri prekidača";
 "Show User Library" = "Prikaži korisničku mapu Medijateka";
 "Updates:" = "Nove verzije:";
-"Check for updates" = "Traži nove verzije";
+"Check For Update..." = "Traži nove verzije";
 "You’re up to date!" = "Koristiš najnoviju verziju!";
 "The latest version is v%@" = "Najnovija verzija je v%@";
 "Update" = "Aktualiziraj";

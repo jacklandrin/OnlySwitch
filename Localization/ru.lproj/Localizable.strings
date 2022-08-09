@@ -21,7 +21,7 @@
 "Keep Awake" = "Не засыпать";
 "Settings" = "Настройки";
 "Launch at login" = "Запускать при включении";
-"Clear cache" = "Очистить кэш";
+"Clear Cache" = "Очистить кэш";
 "Quit" = "Выйти";
 "More App, QRCobot" = "Больше приложений от Джека";
 "Download QRCobot" = "Скачать QRCobot";
@@ -51,7 +51,7 @@
 "At least remain 4 switches" = "Не менее четырех переключателей";
 "Show User Library" = "Показать папку пользователя";
 "Updates:" = "Обновления:";
-"Check for updates" = "Проверить обновления";
+"Check For Update..." = "Проверить обновления";
 "You’re up to date!" = "Вы обновлены до последней версии!";
 "The latest version is v%@" = "Последняя версия v%@";
 "Update" = "Обновить";

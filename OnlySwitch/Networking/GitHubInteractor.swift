@@ -7,7 +7,7 @@
 
 import Foundation
 
-class GitHubInteractor {
+struct GitHubInteractor {
     var latestVersion:String = ""
     var downloadURL:String = ""
     var downloadCount:Int = 0
@@ -30,7 +30,7 @@ class GitHubInteractor {
     var updateHistoryInfo:String = ""
     var updateHistoryList = [String]()
     
-    func analyzeLastRelease(model:GitHubRelease) throws {
+    mutating func analyzeLastRelease(model:GitHubRelease) throws {
         self.latestVersion = model.name.replacingOccurrences(of: "release_", with: "")
         if let asset = model.assets.first {
             self.downloadURL = asset.browser_download_url
@@ -39,7 +39,7 @@ class GitHubInteractor {
         }
     }
     
-    func analyzeReleases(models:[GitHubRelease]) {
+    mutating func analyzeReleases(models:[GitHubRelease]) {
         var count:Int = 0
         var updateInfo:String = ""
         var updateInfoList = [String]()

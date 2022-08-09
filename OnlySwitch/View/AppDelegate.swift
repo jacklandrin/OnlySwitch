@@ -62,13 +62,13 @@ struct OnlySwitchApp: App {
                     }
                 })
             }
-//            CommandGroup(after: .appSettings) {
-//                Button(action: {
-//                    appDelegate.checkUpdate()
-//                }, label: {
-//                    Text("Check For Update...")
-//                })
-//            }
+            CommandGroup(after: .appSettings) {
+                Button(action: {
+                    appDelegate.checkUpdate()
+                }, label: {
+                    Text("Check For Update...")
+                })
+            }
             CommandGroup(replacing: .newItem) {
                 
             }
@@ -89,9 +89,10 @@ class AppDelegate:NSObject, NSApplicationDelegate {
             .preferences
             .currentAppearance
     }
-    var checkUpdatePresenter = GitHubPresenter()
+    var checkUpdatePresenter = GitHubPresenter.shared
     
     func applicationDidFinishLaunching(_ notification: Notification) {
+        //for issue #11
         if let window = NSApplication.shared.windows.first {
             window.orderOut(nil)
             NSApplication.shared.setActivationPolicy(.accessory)
@@ -113,24 +114,22 @@ class AppDelegate:NSObject, NSApplicationDelegate {
         Bundle.setLanguage(lang: LanguageManager.sharedManager.currentLang)
         
         checkUpdate()
-        //for issue #11
-        
     }
     
     func applicationWillTerminate(_ notification: Notification) {
         
     }
     
-    func applicationDidUpdate(_ notification: Notification) {
-        if let event = NSApp.currentEvent {
-            if event.type == .appKitDefined,
-               let window = NSApp.mainWindow{
-                if window.delegate == nil {
-                    window.close()
-                }
-            }
-        }
-    }
+//    func applicationDidUpdate(_ notification: Notification) {
+//        if let event = NSApp.currentEvent {
+//            if event.type == .appKitDefined,
+//               let window = NSApp.mainWindow{
+//                if window.delegate == nil {
+//                    window.close()
+//                }
+//            }
+//        }
+//    }
     
     func checkUpdate() {
         checkUpdatePresenter.checkUpdate { result in
@@ -139,11 +138,14 @@ class AppDelegate:NSObject, NSApplicationDelegate {
                 let newestVersion = self.checkUpdatePresenter.latestVersion
                 UserDefaults.standard.set(newestVersion, forKey: UserDefaults.Key.newestVersion)
                 UserDefaults.standard.synchronize()
+                if !self.checkUpdatePresenter.isTheNewestVersion {
+                    OpenWindows.Update(self.checkUpdatePresenter).open()
+                }
+                
             case let .failure(error):
                 print(error.localizedDescription)
             }
         }
     }
-    
     
 }

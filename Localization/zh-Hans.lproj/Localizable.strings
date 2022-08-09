@@ -21,7 +21,7 @@
 "Keep Awake" = "防止锁屏";
 "Settings" = "设置";
 "Launch at login" = "开机启动";
-"Clear cache" = "清除缓存";
+"Clear Cache" = "清除缓存";
 "Quit" = "退出";
 "More App, QRCobot" = "Jack的更多应用";
 "Download QRCobot" = "下载 QRCobot";
@@ -51,7 +51,7 @@
 "At least remain 4 switches" = "至少保留4个开关";
 "Show User Library" = "显示用户库文件夹";
 "Updates:" = "更新:";
-"Check for updates" = "检查更新";
+"Check For Update..." = "检查更新";
 "You’re up to date!" = "当前为最新版本";
 "The latest version is v%@" = "最新版本为v%@";
 "Update" = "更新";

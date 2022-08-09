@@ -22,7 +22,7 @@
 "Keep Awake" = "Keep Awake";
 "Settings" = "Tercihler";
 "Launch at login" = "Launch at login";
-"Clear cache" = "Önbellek Temizle";
+"Clear Cache" = "Önbellek Temizle";
 "Quit" = "Çıkış";
 "More App, QRCobot" = "Jack'in Diğer Uygulamaları";
 "Download QRCobot" = "QRCobot'u indirin";
@@ -52,7 +52,7 @@
 "At least remain 4 switches" = "At least remain 4 switches";
 "Show User Library" = "Kullanıcı Kitaplığı Klasörünü Göster";
 "Updates:" = "Güncellemeler:";
-"Check for updates" = "Güncellemeleri kontrol et";
+"Check For Update..." = "Güncellemeleri kontrol et";
 "You’re up to date!" = "Güncel sürüm!";
 "The latest version is v%@" = "En son sürüm v%@";
 "Update" = "Güncelle";

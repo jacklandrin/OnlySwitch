@@ -21,7 +21,7 @@
 "Keep Awake" = "Wach bleiben";
 "Settings" = "Einstellungen";
 "Launch at login" = "Bei Anmeldung starten";
-"Clear cache" = "Cache leeren";
+"Clear Cache" = "Cache leeren";
 "Quit" = "Halten";
 "More App, QRCobot" = "Mehr Apps von Jack";
 "Download QRCobot" = "QRCobot herunterladen";
@@ -51,7 +51,7 @@
 "At least remain 4 switches" = "Mindestens vier Schalter";
 "Show User Library" = "Ordner Benutzer-Library anzeigen";
 "Updates:" = "Updates:";
-"Check for updates" = "Auf Updates prüfen";
+"Check For Update..." = "Auf Updates prüfen";
 "You’re up to date!" = "Dies ist die neueste Version";
 "The latest version is v%@" = "Die neueste Version ist v%@";
 "Update" = "Aktualisieren";
@@ -122,3 +122,4 @@
 "Enable Radio Player" = "Radioplayer aktivieren";
 "Disable Hide Menu Bar Icons" = "Menüleistensymbole-ausblenden deaktivieren";
 "Enable Hide Menu Bar Icons" = "Menüleistensymbole-ausblenden aktivieren";
+"Update" = "Update";

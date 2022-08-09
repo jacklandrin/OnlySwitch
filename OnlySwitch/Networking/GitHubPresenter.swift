@@ -9,9 +9,11 @@ import Foundation
 import Alamofire
 import SwiftUI
 
-
-class GitHubPresenter: GitHubRepositoryProtocol{
-    private let interactor = GitHubInteractor()
+class GitHubPresenter: ObservableObject, GitHubRepositoryProtocol{
+    
+    static let shared = GitHubPresenter()
+    
+    @Published private var interactor = GitHubInteractor()
     
     var latestVersion:String {
         return interactor.latestVersion

@@ -22,7 +22,7 @@
 "Keep Awake" = "Manatiling giving";
 "Settings" = "mga settings";
 "Launch at login" = "Ilunsad at login";
-"Clear cache" = "I - clear ang cache";
+"Clear Cache" = "I - clear ang cache";
 "Quit" = "huminto";
 "More App, QRCobot" = "Maraming App, QRCobot";
 "Download QRCobot" = "Download QRCobot";
@@ -52,7 +52,7 @@
 "At least remain 4 switches" = "Dapat may mananatiling 4 na switch";
 "Show User Library" = "Ipakita ang library ng gumagamit";
 "Updates:" = "Updates:";
-"Check for updates" = "Check updates";
+"Check For Update..." = "Check updates";
 "You’re up to date!" = "Ikaw ay napapanahon";
 "The latest version is v%@" = "Ang pinakabagong bersyon ay v%@";
 "Update" = "update";

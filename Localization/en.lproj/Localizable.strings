@@ -21,7 +21,7 @@
 "Keep Awake" = "Keep Awake";
 "Settings" = "Preferences";
 "Launch at login" = "Launch at login";
-"Clear cache" = "Clear cache";
+"Clear Cache" = "Clear Cache";
 "Quit" = "Quit";
 "More App, QRCobot" = "More Apps by Jack";
 "Download QRCobot" = "Download QRCobot";
@@ -51,7 +51,7 @@
 "At least remain 4 switches" = "At least remain 4 switches";
 "Show User Library" = "Show User Library Folder";
 "Updates:" = "Updates:";
-"Check for updates" = "Check for updates";
+"Check For Update..." ="Check For Update...";
 "You’re up to date!" = "You’re up to date!";
 "The latest version is v%@" = "The latest version is v%@";
 "Update" = "Update";

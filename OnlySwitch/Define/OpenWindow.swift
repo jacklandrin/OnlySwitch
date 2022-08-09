@@ -8,8 +8,9 @@
 import SwiftUI
 import AppKit
 
-enum OpenWindows:String, CaseIterable, CurrentScreen {
-    case Setting = "setting"
+enum OpenWindows: CurrentScreen {
+    case Setting
+    case Update(GitHubPresenter)
     
     func open() {
         let persistenceController = PersistenceController.shared
@@ -30,10 +31,17 @@ enum OpenWindows:String, CaseIterable, CurrentScreen {
                 Router.settingWindowController = controller
                 settingWindow.makeKeyAndOrderFront(self)
                 NSApp.activate(ignoringOtherApps: true)
+                NSApp.setActivationPolicy(.regular)
             }
-        
+        case .Update(let presenter):
+            let window = NSWindow(contentRect: NSRect(x: 20, y: 20, width: 320, height: 130), styleMask: [.titled], backing: .buffered, defer: false)
+            window.center()
+            window.contentView = NSHostingView(rootView: UpdateView(presenter:presenter,
+                                                                    updateWindow: window))
+            window.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
         }
-        NSApplication.shared.setActivationPolicy(.regular)
+        
     }
 }
 

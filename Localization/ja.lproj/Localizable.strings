@@ -22,7 +22,7 @@
 "Keep Awake" = "ロック・スリープの防止";
 "Settings" = "設定";
 "Launch at login" = "ログイン時に起動";
-"Clear cache" = "キャッシュをクリア";
+"Clear Cache" = "キャッシュをクリア";
 "Quit" = "終了";
 "More App, QRCobot" = "More Apps by Jack";
 "Download QRCobot" = "QRCobotをダウンロード";
@@ -52,7 +52,7 @@
 "At least remain 4 switches" = "最低４つのスイッチは残す必要があります";
 "Show User Library" = "ユーザーのライブラリフォルダを表示する";
 "Updates:" = "アップデート:";
-"Check for updates" = "アップデートを確認";
+"Check For Update..." = "アップデートを確認";
 "You’re up to date!" = "最新版です!";
 "The latest version is v%@" = "最終バージョンは v%@ です";
 "Update" = "アップデート";
