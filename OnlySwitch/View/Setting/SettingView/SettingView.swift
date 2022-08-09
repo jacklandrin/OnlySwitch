@@ -12,7 +12,7 @@ struct SettingView: View {
     @ObservedObject var langManager = LanguageManager.sharedManager
     @ObservedObject var shortcutsVM = ShortcutsSettingVM.shared
     
-
+    
     var body: some View {
         NavigationView {
             List(selection:$settingVM.selection) {
@@ -32,7 +32,6 @@ struct SettingView: View {
                 }.frame(width: 0, height: 0)
                     .padding(0)
             }.listStyle(.sidebar)
-                .frame(minWidth:190)
             GeneralView()
         }.navigationTitle("Settings".localized())
             .toolbar {
@@ -44,13 +43,20 @@ struct SettingView: View {
                     })
                 }
             }
-        .onAppear{
-            settingVM.selection = .General
-        }
+            .onAppear{
+                settingVM.selection = .General
+            }
     }
     
     private func toggleSidebar() {
-        NSApp.keyWindow?.firstResponder?.tryToPerform(#selector(NSSplitViewController.toggleSidebar(_:)), with:nil)
+        NSApp
+            .keyWindow?
+            .firstResponder?
+            .tryToPerform(
+                #selector(
+                    NSSplitViewController
+                        .toggleSidebar(_:)),
+                with:nil)
     }
 }
 
