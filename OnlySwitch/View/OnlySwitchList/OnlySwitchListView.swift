@@ -95,6 +95,7 @@ struct OnlySwitchListView: View {
                     }
                 }.padding(.horizontal, 15)
                     .background(Color(AppColor.themeBlue)
+                        .shadow(color: Color(nsColor: .darkGray), radius: 1, x: 0, y: 1)
                         .opacity(0.15)
                         .isHidden(!itemHighlight(index: index)))
                     .scaleEffect(itemScaleEffect(index: index))
