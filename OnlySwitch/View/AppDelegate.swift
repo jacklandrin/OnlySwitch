@@ -97,6 +97,9 @@ class AppDelegate:NSObject, NSApplicationDelegate {
             window.orderOut(nil)
             NSApplication.shared.setActivationPolicy(.accessory)
             NSWindow.allowsAutomaticWindowTabbing = false
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                window.close()
+            }
         }
         let contentView = OnlySwitchListView()
             .environmentObject(switchVM)
