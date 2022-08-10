@@ -52,6 +52,7 @@ let switchTypeCount = SwitchType.allCases.count
 enum ControlType{
     case Switch
     case Button
+    case Player
 }
 
 enum SwitchCategory{

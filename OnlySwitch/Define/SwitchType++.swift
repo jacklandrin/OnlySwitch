@@ -132,6 +132,7 @@ extension SwitchType {
             return SwitchBarInfo(title: "Radio Player",
                                  onImage: NSImage(systemSymbolName: "radio"),
                                  offImage: NSImage(systemSymbolName: "radio"),
+                                 controlType: .Player,
                                  category: .audio)
         case .emptyTrash:
             return SwitchBarInfo(title: "Empty Trash",
@@ -182,11 +183,13 @@ extension SwitchType {
             return SwitchBarInfo(title: "Spotify",
                                  onImage: NSImage(named: "spotify_icon"),
                                  offImage: NSImage(named: "spotify_icon"),
+                                 controlType: .Player,
                                  category: .audio)
         case .applemusic:
             return SwitchBarInfo(title: "Apple Music",
                                  onImage: NSImage(named: "apple_music_icon"),
                                  offImage: NSImage(named: "apple_music_icon"),
+                                 controlType: .Player,
                                  category: .audio)
         case .screenTest:
             return SwitchBarInfo(title: "Screen Test",

@@ -66,6 +66,19 @@ struct SwitchBarView: View {
                 }).buttonStyle(.plain)
                     .shadow(radius: 2)
                     .padding(.horizontal, 6)
+            case .Player:
+                Button(action: {
+                    switchOption.doSwitch(isOn: !switchOption.isOn)
+                }, label: {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 15)
+                            .foregroundColor(.blue)
+                            .frame(height:26)
+                        Image(systemName: switchOption.isOn ? "pause.fill" : "play.fill")
+                    }.frame(width: 46, height: 30)
+                }).buttonStyle(.plain)
+                    .shadow(radius: 2)
+                    .padding(.horizontal, 6)
             }
         }
         .isHidden(switchOption.isHidden, remove: true)
