@@ -47,6 +47,7 @@ extension SwitchListVM: SettingWindowController {
                 if self.settingsWindow == nil {
                     self.settingsWindow = window
                     self.settingsWindow?.makeKeyAndOrderFront(self)
+                    self.settingsWindow?.styleMask = [.titled, .closable, .miniaturizable]
                 } else {
                     if self.settingsWindowPresented == false {
                         self.showSettingsWindow()
