@@ -191,7 +191,9 @@ extension SwitchType {
         case .screenTest:
             return SwitchBarInfo(title: "Screen Test",
                                  onImage: NSImage(systemSymbolName: "display.trianglebadge.exclamationmark"),
-                                 offImage: NSImage(systemSymbolName: "display.trianglebadge.exclamationmark"))
+                                 offImage: NSImage(systemSymbolName: "display.trianglebadge.exclamationmark"),
+                                 controlType: .Button,
+                                 category: .tool)
         case .hideMenubarIcons:
             return SwitchBarInfo(title: "Hide Menu Bar Icons",
                                  onImage: NSImage(named: "mark_icon"),
