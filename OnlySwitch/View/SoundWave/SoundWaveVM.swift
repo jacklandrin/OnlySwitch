@@ -10,6 +10,7 @@ import AppKit
 import Combine
 
 class SoundWaveVM: ObservableObject {
+    
     var spectra: [[Float]] {
         return model.spectra
     }
@@ -24,16 +25,16 @@ class SoundWaveVM: ObservableObject {
     
     @Published private var model = SoundWaveModel()
     
-    init() {
-        self.setBarWidth()
+    init(soundWaveWidth:CGFloat) {
+        self.setBarWidth(soundWaveWidth: soundWaveWidth)
     }
         
     func setSpectra(spectra:[[Float]]) {
         model.spectra = spectra
     }
     
-    func setBarWidth() {
-        let barSpace = Layout.soundWaveWidth / CGFloat(PlayerManager.shared.player.analyzer.frequencyBands * 3 - 1)
+    func setBarWidth(soundWaveWidth:CGFloat) {
+        let barSpace = soundWaveWidth / CGFloat(PlayerManager.shared.player.analyzer.frequencyBands * 3 - 1)
         self.model.barWidth = barSpace * 3
     }
 }

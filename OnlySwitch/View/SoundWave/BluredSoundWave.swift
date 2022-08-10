@@ -15,14 +15,21 @@ let rightColors = [NSColor(red: 133/255, green: 116/255, blue: 210/255, alpha: 0
 
 
 struct BluredSoundWave: View {
-    @StateObject var soundWave:SoundWaveVM = SoundWaveVM()
+    @ObservedObject var soundWave:SoundWaveVM
+    @State var width:CGFloat
+    @State var height:CGFloat
+    init(width:CGFloat, height:CGFloat) {
+        self.width = width
+        self.height = height
+        self.soundWave = SoundWaveVM(soundWaveWidth: width)
+    }
     var body: some View {
         SoundWaveView(spectra: self.soundWave.spectra, barWidth: self.soundWave.barWidth, space: self.soundWave.space, leftColor: leftColors, rightColor: rightColors)
             .onReceive(NotificationCenter.default.publisher(for: .spectra)) { notification in
                 let spectra = notification.object as! [[Float]]
                 self.soundWave.setSpectra(spectra: spectra)
             }
-            .frame(width: Layout.soundWaveWidth, height:Layout.soundWaveHeight)
+            .frame(width: width, height:height)
             .blur(radius: 7.5)
             
     }
@@ -30,6 +37,6 @@ struct BluredSoundWave: View {
 
 struct BluredSoundWave_Previews: PreviewProvider {
     static var previews: some View {
-        BluredSoundWave()
+        BluredSoundWave(width: Layout.soundWaveWidth, height: Layout.soundWaveHeight)
     }
 }

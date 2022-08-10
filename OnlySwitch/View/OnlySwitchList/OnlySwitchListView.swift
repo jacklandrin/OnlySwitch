@@ -20,49 +20,48 @@ struct OnlySwitchListView: View {
     let columns = [
         GridItem(.fixed(Layout.popoverWidth - 40)),
         GridItem(.fixed(Layout.popoverWidth - 40))
-        ]
-
+    ]
+    
     
     var body: some View {
-        VStack {
-            bottomBar
-                .offset(y: 20)
-                .opacity(0.7)
-                .isHidden(SwitchListAppearance(rawValue: switchVM.currentAppearance) == .single, remove: true)
-            
-            ScrollView {
-                if switchVM.currentAppearance == SwitchListAppearance.single.rawValue {
-                    singleSwitchList
-                } else {
-                    dualcolumnList
-                }
-                
-            }
-            .frame(height: scrollViewHeight)
-                .padding(.vertical,15)
-                .padding(.horizontal, 0)
-            if switchVM.showAds {
-                recommendApp.opacity(0.8)
-            }
-            
-            bottomBar
-                .isHidden(SwitchListAppearance(rawValue: switchVM.currentAppearance) == .dual, remove: true)
-            
-            Spacer().frame(height:SwitchListAppearance(rawValue: switchVM.currentAppearance) == .dual ? 20 : 0)
-        }
-        .background(
+        ZStack {
             VStack {
                 Spacer()
-                BluredSoundWave()
+                BluredSoundWave(width: listWidth, height: soundWaveHeight)
                     .rotation3DEffect(.degrees(180), axis: (x: 1, y: 0, z: 0))
                     .isHidden(!switchVM.soundWaveEffectDisplay || !playerItem.isPlaying, remove: true)
             }
-        )
-//            .id(switchVM.updateID)
-            .onReceive(NotificationCenter.default.publisher(for: .showPopover, object: nil)) { _ in
+            VStack {
+                bottomBar
+                    .offset(y: 20)
+                    .opacity(0.7)
+                    .isHidden(SwitchListAppearance(rawValue: switchVM.currentAppearance) == .single, remove: true)
+                
+                ScrollView {
+                    if switchVM.currentAppearance == SwitchListAppearance.single.rawValue {
+                        singleSwitchList
+                    } else {
+                        dualcolumnList
+                    }
+                    
+                }
+                .frame(height: scrollViewHeight)
+                .padding(.vertical,15)
+                .padding(.horizontal, 0)
+                if switchVM.showAds {
+                    recommendApp.opacity(0.8)
+                }
+                
+                bottomBar
+                    .isHidden(SwitchListAppearance(rawValue: switchVM.currentAppearance) == .dual, remove: true)
+                
+                Spacer().frame(height:SwitchListAppearance(rawValue: switchVM.currentAppearance) == .dual ? 20 : 0)
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .showPopover, object: nil)) { _ in
             switchVM.refreshData()
         }
-            .onReceive(NotificationCenter.default.publisher(for: .changeSettings, object: nil)) { _ in
+        .onReceive(NotificationCenter.default.publisher(for: .changeSettings, object: nil)) { _ in
             switchVM.refreshData()
         }
         .onReceive(NotificationCenter.default.publisher(for: .refreshSingleSwitchStatus, object: nil)) { n in
@@ -73,7 +72,7 @@ struct OnlySwitchListView: View {
         .onReceive(NotificationCenter.default.publisher(for: .toggleMenubarCollapse, object: nil)) { _ in
             switchVM.refreshSingleSwitchStatus(type: .hideMenubarIcons)
         }
-        .frame(width:SwitchListAppearance(rawValue: switchVM.currentAppearance) == .single ? Layout.popoverWidth : Layout.popoverWidth * 2 - 40 , height:scrollViewHeight + (switchVM.showAds ? 130 : 90))
+        .frame(width:listWidth , height:scrollViewHeight + (switchVM.showAds ? 130 : 90))
     }
     
     var singleSwitchList: some View {
@@ -85,7 +84,7 @@ struct OnlySwitchListView: View {
                         .frame(width: 30, height: 30)
                         .shadow(color: .gray, radius: 2, x: 0, y: 1)
                         .isHidden(isMoverHidden(index: index), remove: true)
-                
+                    
                     if let item = switchVM.allItemList[index] as? SwitchBarVM {
                         SwitchBarView().environmentObject(item)
                             .frame(height:Layout.singleSwitchHeight)
@@ -99,53 +98,53 @@ struct OnlySwitchListView: View {
                         .opacity(0.15)
                         .isHidden(!itemHighlight(index: index)))
                     .scaleEffect(itemScaleEffect(index: index))
-                .onHover{ isHovering in
-                    if isHovering {
-                        withAnimation(.easeOut) {
-                            self.hoverIndex = index
+                    .onHover{ isHovering in
+                        if isHovering {
+                            withAnimation(.easeOut) {
+                                self.hoverIndex = index
+                            }
                         }
                     }
-                }
-                .offset(y: itemOffsetY(index: index))
-                .gesture(
-                    DragGesture()
-                        .onChanged{ gesture in
-                            guard switchVM.sortMode else {return}
-                            
-                            movingIndex = index
-                            let locationY = gesture.location.y
-                            if self.distanceY == 0 && locationY != 0 {
-                                NSCursor.closedHand.set()
-                                print("set closeHand")
-                            }
-                            
-                            withAnimation{
-                                self.distanceY = locationY
-                            }
-                            
-                            if abs(self.distanceY) > 10 {
-                                let newIndex = movingIndex + Int(self.distanceY + 28 * (distanceY / abs(distanceY))) / Int(Layout.singleSwitchHeight)
-                                print("new index:\(newIndex), moving index:\(movingIndex), distance:\(self.distanceY)")
-                            }
-                        }
-                        .onEnded{ gesture in
-                            NSCursor.closedHand.pop()
-                            if abs(self.distanceY) > 10 {
-                                let indexOffset = Int(self.distanceY + 28 * (distanceY / abs(distanceY))) / Int(Layout.singleSwitchHeight)
+                    .offset(y: itemOffsetY(index: index))
+                    .gesture(
+                        DragGesture()
+                            .onChanged{ gesture in
+                                guard switchVM.sortMode else {return}
                                 
-                                var newIndex = index + indexOffset
-                                if newIndex < 0 {
-                                    newIndex = 0
-                                } else if newIndex > switchVM.allItemList.count {
-                                    newIndex = switchVM.allItemList.count
+                                movingIndex = index
+                                let locationY = gesture.location.y
+                                if self.distanceY == 0 && locationY != 0 {
+                                    NSCursor.closedHand.set()
+                                    print("set closeHand")
                                 }
-                                move(from: IndexSet(integer: index), to: newIndex )
-                                switchVM.saveOrder()
+                                
+                                withAnimation{
+                                    self.distanceY = locationY
+                                }
+                                
+                                if abs(self.distanceY) > 10 {
+                                    let newIndex = movingIndex + Int(self.distanceY + 28 * (distanceY / abs(distanceY))) / Int(Layout.singleSwitchHeight)
+                                    print("new index:\(newIndex), moving index:\(movingIndex), distance:\(self.distanceY)")
+                                }
                             }
-                            self.distanceY = 0
-                            movingIndex = -1
-                        }
-                )
+                            .onEnded{ gesture in
+                                NSCursor.closedHand.pop()
+                                if abs(self.distanceY) > 10 {
+                                    let indexOffset = Int(self.distanceY + 28 * (distanceY / abs(distanceY))) / Int(Layout.singleSwitchHeight)
+                                    
+                                    var newIndex = index + indexOffset
+                                    if newIndex < 0 {
+                                        newIndex = 0
+                                    } else if newIndex > switchVM.allItemList.count {
+                                        newIndex = switchVM.allItemList.count
+                                    }
+                                    move(from: IndexSet(integer: index), to: newIndex )
+                                    switchVM.saveOrder()
+                                }
+                                self.distanceY = 0
+                                movingIndex = -1
+                            }
+                    )
                 
             }
         }
@@ -231,7 +230,7 @@ struct OnlySwitchListView: View {
                 LazyVGrid(columns: columns, spacing: 0) {
                     ForEach(switchVM.shortcutsList.indices, id:\.self) { index in
                         HStack {
-                        
+                            
                             if let item = switchVM.shortcutsList[index] {
                                 ShortcutsBarView().environmentObject(item)
                                     .frame(height:Layout.singleSwitchHeight)
@@ -247,10 +246,10 @@ struct OnlySwitchListView: View {
     var recommendApp: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 10)
-                        .foregroundColor(colorScheme == .dark ? Color(nsColor: NSColor.darkGray) : .white)
-                        .frame(height: 45)
+                .foregroundColor(colorScheme == .dark ? Color(nsColor: NSColor.darkGray) : .white)
+                .frame(height: 45)
             HStack(spacing:5) {
-
+                
                 Text("More App, QRCobot".localized())
                     .font(.system(size: 14))
                     .fontWeight(.bold)
@@ -264,7 +263,7 @@ struct OnlySwitchListView: View {
                         .cornerRadius(10)
                         .help(Text("Download WallCard".localized()))
                 })
-
+                
                 Link(destination: URL(string: "https://apps.apple.com/us/app/id1590006394")!, label: {
                     Image("QRCobot")
                         .resizable()
@@ -274,7 +273,7 @@ struct OnlySwitchListView: View {
                         .help(Text("Download QRCobot".localized()))
                 })
             }.frame(height: 45)
-                
+            
         }.padding(.horizontal, 15)
             .opacity(playerItem.isPlaying ? 0.5 : 1)
     }
@@ -299,7 +298,7 @@ struct OnlySwitchListView: View {
                     Text("Only Switch")
                         .fontWeight(.bold)
                         .padding(10)
-                        
+                    
                     Text("v\(SystemInfo.majorVersion as! String)")
                         .offset(x:-10)
                 }
@@ -310,9 +309,9 @@ struct OnlySwitchListView: View {
                             leftFade: 16,
                             rightFade: 16,
                             startDelay: 3)
-                    .frame(height:20)
-                    .padding(10)
-                    .transition(.move(edge: .bottom))
+                .frame(height:20)
+                .padding(10)
+                .transition(.move(edge: .bottom))
             }
             
             
@@ -340,7 +339,7 @@ struct OnlySwitchListView: View {
             totalHeight += categoryHeight(count: switchVM.shortcutsList.count)
             totalHeight -= 30.0
         }
-
+        
         let height = min(totalHeight, switchVM.maxHeight - 150)
         guard height > 0 else {return 300}
         return height
@@ -366,6 +365,14 @@ struct OnlySwitchListView: View {
         switchVM.moveItem(from: source, to: destination)
     }
     
+    var listWidth:CGFloat {
+        SwitchListAppearance(rawValue: switchVM.currentAppearance) == .single ? Layout.popoverWidth : Layout.popoverWidth * 2 - 40
+    }
+    
+    var soundWaveHeight:CGFloat {
+        SwitchListAppearance(rawValue: switchVM.currentAppearance) == .single ? Layout.soundWaveHeight : Layout.soundWaveHeight / 2
+    }
+    
     func itemOffsetY(index:Int) -> CGFloat {
         var newIndex = index
         if abs(self.distanceY) > 10 {
@@ -378,7 +385,7 @@ struct OnlySwitchListView: View {
         } else if newIndex > switchVM.allItemList.count {
             newIndex = switchVM.allItemList.count
         }
-       
+        
         
         if movingIndex == index {
             return distanceY
