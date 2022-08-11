@@ -20,7 +20,10 @@ class JLAVAudioPlayer: NSObject ,AVPlayerItemMetadataOutputPushDelegate, AudioPl
     
     override init() {
         super.init()
-        NotificationCenter.default.addObserver(forName: .volumeChange, object: nil, queue: .main, using: { notification in
+        NotificationCenter.default.addObserver(forName: .volumeChange,
+                                               object: nil,
+                                               queue: .main,
+                                               using: { notification in
             guard let userInfo = notification.userInfo,
                     let newValue  = userInfo["newValue"] as? Float else {
                         print("No userInfo found in notification")
@@ -59,10 +62,7 @@ class JLAVAudioPlayer: NSObject ,AVPlayerItemMetadataOutputPushDelegate, AudioPl
                                                         object: SwitchType.backNoises)
                     }
                 }
-            } else if currentPlayerItem.type == .BackNoises {
-                audioPlayer?.play()
-                return
-            }
+            } 
         }
         
         self.currentPlayerItem = item
@@ -72,6 +72,7 @@ class JLAVAudioPlayer: NSObject ,AVPlayerItemMetadataOutputPushDelegate, AudioPl
         let asset = AVAsset(url: url)
         
         self.playerItem = AVPlayerItem(asset: asset)
+        self.playerItem?.audioTimePitchAlgorithm = item.type == .BackNoises ? .varispeed : .spectral
         self.audioPlayer = AVPlayer(playerItem: playerItem)
         self.audioPlayer?.play()
         self.audioPlayer?.volume = Preferences.shared.volume
@@ -80,6 +81,7 @@ class JLAVAudioPlayer: NSObject ,AVPlayerItemMetadataOutputPushDelegate, AudioPl
         let metadataOutput = AVPlayerItemMetadataOutput(identifiers: nil)
         metadataOutput.setDelegate(self, queue: .main)
         self.playerItem?.add(metadataOutput)
+        self.setupNowPlaying()
     }
     
     func metadataOutput(_ output: AVPlayerItemMetadataOutput, didOutputTimedMetadataGroups groups: [AVTimedMetadataGroup], from track: AVPlayerItemTrack?) {

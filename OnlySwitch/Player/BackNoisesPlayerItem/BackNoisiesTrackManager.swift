@@ -61,7 +61,7 @@ class BackNoisesTrackManager {
         guard let trackURL = Bundle.main.path(forResource: track.rawValue, ofType: "mp3") else {
             return
         }
-        currentBackNoisesItem = BackNoisesPlayerItemViewModel()
+//        currentBackNoisesItem = BackNoisesPlayerItemViewModel()
         currentBackNoisesItem.url = URL(fileURLWithPath: trackURL)
         currentBackNoisesItem.title = track.rawValue
         currentBackNoisesItem.changeToPreviousTrack = {
@@ -75,6 +75,7 @@ class BackNoisesTrackManager {
     
     func changeTrack(action:ChangeTrackAction) {
         PlayerManager.shared.player.stop()
+        let isPlaying = currentBackNoisesItem.isPlaying
         let newIndex:Int!
         switch action {
         case .next:
@@ -83,7 +84,7 @@ class BackNoisesTrackManager {
             newIndex = self.currentTrackIndex > 0 ? self.currentTrackIndex - 1 : self.trackList.count - 1
         }
         self.currentTrack = self.trackList[newIndex]
-        self.currentBackNoisesItem.isPlaying = true
+        currentBackNoisesItem.isPlaying = isPlaying
         NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.backNoises)
     }
 

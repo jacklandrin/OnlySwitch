@@ -208,7 +208,7 @@ extension SwitchType {
                                  onImage: NSImage(systemSymbolName: "fn"),
                                  offImage: NSImage(systemSymbolName: "sun.max"))
         case .backNoises:
-            return SwitchBarInfo(title: "Background Noises",
+            return SwitchBarInfo(title: "Back Noises",
                                  onImage: NSImage(systemSymbolName: "ear.and.waveform"),
                                  offImage: NSImage(systemSymbolName: "ear"),
                                  controlType: .Player,

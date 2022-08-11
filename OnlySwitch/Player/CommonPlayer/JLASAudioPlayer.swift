@@ -88,10 +88,7 @@ class JLASAudioPlayer: NSObject, AVPlayerItemMetadataOutputPushDelegate, AudioPl
                     }
                     
                 }
-            } else if currentPlayerItem.type == .BackNoises {
-                avplayer.play()
-                return
-            }
+            } 
         }
                 
         self.currentPlayerItem = item
@@ -108,7 +105,7 @@ class JLASAudioPlayer: NSObject, AVPlayerItemMetadataOutputPushDelegate, AudioPl
         self.bufferring = true
        
         self.setupNowPlaying()
-    }
+    } 
     
     func wavableURL(url:String) -> Bool {
         return !url.hasSuffix(".m3u") && !url.hasSuffix(".m3u8") && !url.hasSuffix(".aac")
@@ -120,6 +117,7 @@ class JLASAudioPlayer: NSObject, AVPlayerItemMetadataOutputPushDelegate, AudioPl
     
     func setAVPlayer(url:URL, itemType:PlayerType)  {
         let playerItem = AVPlayerItem(url: url)
+        playerItem.audioTimePitchAlgorithm = itemType == .BackNoises ? .varispeed : .spectral
         self.avplayer = AVPlayer(playerItem: playerItem)
         let metadataOutput = AVPlayerItemMetadataOutput(identifiers: nil)
         metadataOutput.setDelegate(self, queue: .main)

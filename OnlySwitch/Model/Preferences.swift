@@ -63,6 +63,7 @@ struct Preferences {
         didSet {
             NotificationCenter.default.post(name: .soundWaveToggle, object: nil)
             NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.radioStation)
+            NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.backNoises)
         }
     }
     

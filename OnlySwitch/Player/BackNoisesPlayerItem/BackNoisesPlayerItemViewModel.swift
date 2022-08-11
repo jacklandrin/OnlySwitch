@@ -25,7 +25,7 @@ class BackNoisesPlayerItemViewModel: CommonPlayerItem,
             if newValue {
                 PlayerManager.shared.player.play(stream: self)
             } else {
-                PlayerManager.shared.player.pause()
+                PlayerManager.shared.player.stop()
             }
         }
     }
