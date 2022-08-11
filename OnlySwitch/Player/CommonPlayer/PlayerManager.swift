@@ -14,6 +14,7 @@ class PlayerManager {
     var soundWaveEffectDisplay:Bool{
         Preferences.shared.soundWaveEffectDisplay
     }
+    
     init() {
         if Preferences.shared.radioEnable {
             self.player.setupRemoteCommandCenter()
@@ -21,7 +22,7 @@ class PlayerManager {
         
         NotificationCenter.default.addObserver(forName: .soundWaveToggle, object: nil, queue: .main, using: { [self] _ in
           
-            self.player.currentAudioStation?.isPlaying = false
+            self.player.currentPlayerItem?.isPlaying = false
              
             if soundWaveEffectDisplay {
                 self.player = JLASAudioPlayer()

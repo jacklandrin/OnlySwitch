@@ -23,12 +23,16 @@ extension JLASAudioPlayer : StreamingDelegate {
             self.avplayer.isMuted = false
             return
         }
-        if url == self.audioPlayer.url && self.currentAudioStation!.isPlaying {
+        if url == self.audioPlayer.url && self.currentPlayerItem!.isPlaying {
             self.audioPlayer.play()
         } else {
-            if error.localizedDescription == "cancelled" && self.currentAudioStation?.streamUrl == url.absoluteString {
+            guard let currentUrl = self.currentPlayerItem?.url else {
+                self.audioPlayer.stop()
+                return
+            }
+            if error.localizedDescription == "cancelled" && currentUrl.absoluteString == url.absoluteString {
 //                self.audioPlayer.stop()
-                self.currentAudioStation!.isPlaying = false
+                self.currentPlayerItem!.isPlaying = false
             } else {
                 self.audioPlayer.play()
             }

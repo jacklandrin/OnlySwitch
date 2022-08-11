@@ -225,6 +225,7 @@
 		04D68B0D2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D68B0C2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift */; };
 		04DC6C5C28A2D04B00888BF9 /* UpdateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C5B28A2D04B00888BF9 /* UpdateView.swift */; };
 		04DC6C5E28A2E2B700888BF9 /* UpdateVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C5D28A2E2B700888BF9 /* UpdateVM.swift */; };
+		04DC6C6028A46ECE00888BF9 /* CommonPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C5F28A46ECE00888BF9 /* CommonPlayer.swift */; };
 		04E03AF8275E6B4E00EA5FB9 /* AutohideDockSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AF7275E6B4E00EA5FB9 /* AutohideDockSwitch.swift */; };
 		04E03AFE275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AFD275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift */; };
 		04E03B00275F93B900EA5FB9 /* AirPodsSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AFF275F93B900EA5FB9 /* AirPodsSwitch.swift */; };
@@ -504,6 +505,7 @@
 		04D68B0C2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowUserLibrarySwitch.swift; sourceTree = "<group>"; };
 		04DC6C5B28A2D04B00888BF9 /* UpdateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateView.swift; sourceTree = "<group>"; };
 		04DC6C5D28A2E2B700888BF9 /* UpdateVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateVM.swift; sourceTree = "<group>"; };
+		04DC6C5F28A46ECE00888BF9 /* CommonPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonPlayer.swift; sourceTree = "<group>"; };
 		04E03AF7275E6B4E00EA5FB9 /* AutohideDockSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutohideDockSwitch.swift; sourceTree = "<group>"; };
 		04E03AFD275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothDevicesManager.swift; sourceTree = "<group>"; };
 		04E03AFF275F93B900EA5FB9 /* AirPodsSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPodsSwitch.swift; sourceTree = "<group>"; };
@@ -676,23 +678,24 @@
 			path = SpotifyPlayer;
 			sourceTree = "<group>";
 		};
-		0427365327C1ABEC0068108F /* RadioPlayer */ = {
+		0427365327C1ABEC0068108F /* CommonPlayer */ = {
 			isa = PBXGroup;
 			children = (
 				0493375C27625AAC00AE779A /* AudioSpectrum */,
 				0493372B27625A1E00AE779A /* AudioStreamer */,
 				0493372727625A1E00AE779A /* AudioPlayer.swift */,
+				0493372A27625A1E00AE779A /* PlayerManager.swift */,
 				0493372827625A1E00AE779A /* JLASAudioPlayer.swift */,
 				0493374327625A1E00AE779A /* JLASAudioPlayer+Streamer.swift */,
 				0493372927625A1E00AE779A /* JLAVAudioPlayer.swift */,
-				0493372A27625A1E00AE779A /* PlayerManager.swift */,
 				0434B4CE2876031C00F06AB9 /* RadioPlayerItem.swift */,
 				0493376327625D6F00AE779A /* RadioPlayerItemViewModel.swift */,
+				04DC6C5F28A46ECE00888BF9 /* CommonPlayer.swift */,
 			);
-			path = RadioPlayer;
+			path = CommonPlayer;
 			sourceTree = "<group>";
 		};
-		0427365427C1AC010068108F /* MusicPlayer */ = {
+		0427365427C1AC010068108F /* MusicAppPlayer */ = {
 			isa = PBXGroup;
 			children = (
 				0451765B27C27AFC00006BA0 /* MusicPlayer.swift */,
@@ -701,7 +704,7 @@
 				0451765D27C2821300006BA0 /* AppleMusic */,
 				0427364227C1A5270068108F /* Spotify */,
 			);
-			path = MusicPlayer;
+			path = MusicAppPlayer;
 			sourceTree = "<group>";
 		};
 		0434B4C228738DAB00F06AB9 /* Networking */ = {
@@ -901,8 +904,8 @@
 		0493372627625A1E00AE779A /* Player */ = {
 			isa = PBXGroup;
 			children = (
-				0427365427C1AC010068108F /* MusicPlayer */,
-				0427365327C1ABEC0068108F /* RadioPlayer */,
+				0427365427C1AC010068108F /* MusicAppPlayer */,
+				0427365327C1ABEC0068108F /* CommonPlayer */,
 			);
 			path = Player;
 			sourceTree = "<group>";
@@ -1669,6 +1672,7 @@
 				0493375F27625AAC00AE779A /* SpectrumView.swift in Sources */,
 				047140BE2778A416005B160B /* PomodoroTimerSettingView.swift in Sources */,
 				0424348F27565F9F0044D0AD /* NSAppleEventDescriptor.swift in Sources */,
+				04DC6C6028A46ECE00888BF9 /* CommonPlayer.swift in Sources */,
 				047F3A37285DE67A004FFCDF /* SwitchListApperanceDefine.swift in Sources */,
 				04447B782755129D00CD2900 /* EventMonitor.swift in Sources */,
 				0434B4C0287388ED00F06AB9 /* GitHubRepositoryProtocol.swift in Sources */,

@@ -13,14 +13,16 @@ import SwiftUI
 
 let bufferSize = 512
 
-class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDelegate {
+class JLASAudioPlayer: NSObject, AVPlayerItemMetadataOutputPushDelegate, AudioPlayer {
+    
     let queue = DispatchQueue(label: "com.springRadio.spectrum")
     lazy var audioPlayer: Streamer = {
         let audioPlayer = Streamer()
         audioPlayer.delegate = self
         return audioPlayer
     }()
-    weak var currentAudioStation: RadioPlayerItemViewModel?
+    
+    weak var currentPlayerItem: CommonPlayerItem?
     var analyzer:RealtimeAnalyzer = RealtimeAnalyzer(fftSize: bufferSize)
     var bufferring:Bool = false
     
@@ -58,19 +60,19 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
         })
     }
     
-    func play(stream item: RadioPlayerItemViewModel) {
-        guard let url = URL(string: item.streamUrl) else {
+    func play(stream item: CommonPlayerItem) {
+        guard let url = item.url else {
             return
         }
                
-        if let currentAudioStation = currentAudioStation {
-            if currentAudioStation.streamUrl != item.streamUrl {
-                self.currentAudioStation?.isPlaying = false
-                self.currentAudioStation?.streamInfo = ""
+        if let currentPlayerItem = currentPlayerItem {
+            if currentPlayerItem.url?.absoluteURL != item.url?.absoluteURL {
+                self.currentPlayerItem?.isPlaying = false
+                self.currentPlayerItem?.trackInfo = ""
             }
         }
                 
-        self.currentAudioStation = item
+        self.currentPlayerItem = item
         
         
         setAVPlayer(url: url)
@@ -106,14 +108,14 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
     
     func metadataOutput(_ output: AVPlayerItemMetadataOutput, didOutputTimedMetadataGroups groups: [AVTimedMetadataGroup], from track: AVPlayerItemTrack?) {
         guard let item = groups.first?.items.first, let title = item.value(forKeyPath: "value") as? String else {
-            let currentStationTitle = self.currentAudioStation?.streamInfo
-            self.currentAudioStation?.streamInfo = currentStationTitle ?? ""
+            let currentTitle = self.currentPlayerItem?.trackInfo
+            self.currentPlayerItem?.trackInfo = currentTitle ?? ""
             return
         }
         withAnimation(.default) {
-            self.currentAudioStation?.streamInfo = title.trimmingCharacters(in:.newlines)
+            self.currentPlayerItem?.trackInfo = title.trimmingCharacters(in:.newlines)
         }
-        self.updateStreamInfo(info: self.currentAudioStation?.streamInfo)
+        self.updateStreamInfo(info: self.currentPlayerItem?.trackInfo)
     }
     
     func stop() {
@@ -122,7 +124,14 @@ class JLASAudioPlayer: NSObject, AudioPlayer, AVPlayerItemMetadataOutputPushDele
         pauseCommandCenter()
     }
     
+    func pause() {
+        audioPlayer.pause()
+        avplayer.pause()
+        pauseCommandCenter()
+    }
+    
     deinit {
         
     }
 }
+

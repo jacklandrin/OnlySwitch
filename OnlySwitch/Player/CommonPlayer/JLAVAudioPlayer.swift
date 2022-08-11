@@ -14,7 +14,7 @@ class JLAVAudioPlayer: NSObject ,AVPlayerItemMetadataOutputPushDelegate, AudioPl
     
     var audioPlayer: AVPlayer?
     var playerItem: AVPlayerItem?
-    weak var currentAudioStation: RadioPlayerItemViewModel?
+    weak var currentPlayerItem: CommonPlayerItem?
     var analyzer = RealtimeAnalyzer(fftSize: bufferSize)
     var bufferring: Bool = false
     
@@ -31,20 +31,20 @@ class JLAVAudioPlayer: NSObject ,AVPlayerItemMetadataOutputPushDelegate, AudioPl
         })
     }
     
-    func play(stream item: RadioPlayerItemViewModel) {
+    func play(stream item: CommonPlayerItem) {
         
-        guard let url = URL(string: item.streamUrl) else {
+        guard let url = item.url else {
             return
         }
         
-        if let station = self.currentAudioStation  {
-            if station.streamUrl != item.streamUrl {
-                self.currentAudioStation?.isPlaying = false
-                self.currentAudioStation?.streamInfo = ""
+        if let item = self.currentPlayerItem  {
+            if item.url?.absoluteString != url.absoluteString {
+                self.currentPlayerItem?.isPlaying = false
+                self.currentPlayerItem?.trackInfo = ""
             }
         }
         
-        self.currentAudioStation = item
+        self.currentPlayerItem = item
         
         self.audioPlayer?.stop()
         
@@ -54,7 +54,6 @@ class JLAVAudioPlayer: NSObject ,AVPlayerItemMetadataOutputPushDelegate, AudioPl
         self.audioPlayer = AVPlayer(playerItem: playerItem)
         self.audioPlayer?.play()
         self.audioPlayer?.volume = Preferences.shared.volume
-//        self.setupNowPlaying()
         self.bufferring = true
         
         let metadataOutput = AVPlayerItemMetadataOutput(identifiers: nil)
@@ -64,17 +63,22 @@ class JLAVAudioPlayer: NSObject ,AVPlayerItemMetadataOutputPushDelegate, AudioPl
     
     func metadataOutput(_ output: AVPlayerItemMetadataOutput, didOutputTimedMetadataGroups groups: [AVTimedMetadataGroup], from track: AVPlayerItemTrack?) {
         guard let item = groups.first?.items.first, let title = item.value(forKeyPath: "value") as? String else {
-            let currentStationTitle = self.currentAudioStation?.streamInfo ?? ""
-            self.currentAudioStation?.streamInfo = currentStationTitle
+            let title = self.currentPlayerItem?.trackInfo ?? ""
+            self.currentPlayerItem?.trackInfo = title
             return
         }
-        self.currentAudioStation?.streamInfo = title.trimmingCharacters(in:.newlines)
+        self.currentPlayerItem?.trackInfo = title.trimmingCharacters(in:.newlines)
         self.bufferring = false
-        self.updateStreamInfo(info: self.currentAudioStation?.streamInfo)
+        self.updateStreamInfo(info: self.currentPlayerItem?.trackInfo)
     }
     
     func stop(){
         self.audioPlayer?.stop()
+        pauseCommandCenter()
+    }
+    
+    func pause() {
+        self.audioPlayer?.pause()
         pauseCommandCenter()
     }
 }

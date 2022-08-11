@@ -8,7 +8,8 @@
 import Foundation
 import CoreData
 
-class RadioPlayerItemViewModel:ObservableObject, Identifiable {
+class RadioPlayerItemViewModel:CommonPlayerItem, ObservableObject, Identifiable  {
+    
     enum ChangeStationAction {
         case next
         case previous
@@ -78,6 +79,24 @@ class RadioPlayerItemViewModel:ObservableObject, Identifiable {
         }
         set {
             model.id = newValue
+        }
+    }
+    
+    var trackInfo: String {
+        get {
+            model.streamInfo
+        }
+        set {
+            model.streamInfo = newValue
+        }
+    }
+    
+    var url: URL? {
+        get {
+            URL(string: self.streamUrl)
+        }
+        set {
+            self.streamUrl = newValue?.absoluteString ?? ""
         }
     }
     
@@ -156,6 +175,14 @@ class RadioPlayerItemViewModel:ObservableObject, Identifiable {
             NotificationCenter.default.post(name: .changeSettings, object: nil)
         }
         
+    }
+    
+    func nextTrack() {
+        nextStation()
+    }
+    
+    func previousTrack() {
+        previousStation()
     }
     
     func nextStation() {

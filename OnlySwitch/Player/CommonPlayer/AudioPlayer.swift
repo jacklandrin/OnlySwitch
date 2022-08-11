@@ -9,19 +9,21 @@ import AppKit
 import MediaPlayer
 
 protocol AudioPlayer {
-    var currentAudioStation:RadioPlayerItemViewModel? {get set}
-    var analyzer:RealtimeAnalyzer {get set}
-    var bufferring : Bool {get set}
+    var currentPlayerItem: CommonPlayerItem? {get set}
+    var analyzer: RealtimeAnalyzer {get set}
     
-    func play(stream item: RadioPlayerItemViewModel)
+    var bufferring: Bool {get set}
+    func play(stream item: CommonPlayerItem)
     func stop()
+    func pause()
+    
 }
 
 extension AudioPlayer {
     func setupNowPlaying() {
         // Define Now Playing Info
         var nowPlayingInfo = [String : Any]()
-        nowPlayingInfo[MPMediaItemPropertyTitle] = self.currentAudioStation?.title ?? "OnlySwitch Radio"
+        nowPlayingInfo[MPMediaItemPropertyTitle] = self.currentPlayerItem?.title ?? "OnlySwitch"
         let image = NSImage(named: "AppIcon")!
         let newImage = image.resize(withSize: NSSize(width: 100, height: 100))!
         nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: CGSize(width: 100, height: 100), requestHandler: { _ in
@@ -42,24 +44,24 @@ extension AudioPlayer {
         let commandCenter = MPRemoteCommandCenter.shared();
         commandCenter.playCommand.isEnabled = true
         commandCenter.playCommand.addTarget { event in
-            let station = self.currentAudioStation
-            station?.isPlaying = true
+            let item = self.currentPlayerItem
+            item?.isPlaying = true
             MPNowPlayingInfoCenter.default().playbackState = .playing
             return .success
         }
         
         commandCenter.pauseCommand.isEnabled = true
         commandCenter.pauseCommand.addTarget {event in
-            let station = self.currentAudioStation
-            station?.isPlaying = false
+            let item = self.currentPlayerItem
+            item?.isPlaying = false
             MPNowPlayingInfoCenter.default().playbackState = .paused
             return .success
         }
         
         commandCenter.togglePlayPauseCommand.addTarget{ event in
-            guard let station = self.currentAudioStation else {return .commandFailed}
-            station.isPlaying = !station.isPlaying
-            if station.isPlaying {
+            guard let item = self.currentPlayerItem else {return .commandFailed}
+            item.isPlaying = !item.isPlaying
+            if item.isPlaying {
                 MPNowPlayingInfoCenter.default().playbackState = .playing
             } else {
                 MPNowPlayingInfoCenter.default().playbackState = .paused
@@ -69,18 +71,18 @@ extension AudioPlayer {
         }
         commandCenter.nextTrackCommand.isEnabled = true
         commandCenter.nextTrackCommand.addTarget { event in
-            let station = self.currentAudioStation
-            station?.nextStation()
-            MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPMediaItemPropertyTitle] = station?.title
+            let item = self.currentPlayerItem
+            item?.nextTrack()
+            MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPMediaItemPropertyTitle] = item?.title
             MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPMediaItemPropertyAlbumTitle] = nil
             return .success
         }
 
         commandCenter.previousTrackCommand.isEnabled = true
         commandCenter.previousTrackCommand.addTarget { event in
-            let station = self.currentAudioStation
-            station?.previousStation()
-            MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPMediaItemPropertyTitle] = station?.title
+            let item = self.currentPlayerItem
+            item?.previousTrack()
+            MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPMediaItemPropertyTitle] = item?.title
             MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPMediaItemPropertyAlbumTitle] = nil
             return .success
 
