@@ -9,11 +9,7 @@ import Foundation
 import CoreData
 
 class RadioPlayerItemViewModel:CommonPlayerItem, ObservableObject, Identifiable  {
-    
-    enum ChangeStationAction {
-        case next
-        case previous
-    }
+
     
     @Published var model:RadioPlayerItem!
     var isPlaying:Bool
@@ -195,7 +191,7 @@ class RadioPlayerItemViewModel:CommonPlayerItem, ObservableObject, Identifiable 
         changeStation(action: .previous)
     }
     
-    private func changeStation(action:ChangeStationAction) {
+    private func changeStation(action:ChangeTrackAction) {
         
         let radios = RadioStations.fetchResult
         let currentIndex = radios.indices.filter{ radios[$0].id! == self.id }.first

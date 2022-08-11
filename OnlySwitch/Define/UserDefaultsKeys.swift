@@ -40,6 +40,8 @@ extension UserDefaults {
         static let shortcutsDic = "shortcutsDicKey"
         //Sort
         static let orderWeight = "orderWeightKey"
+        //BackNoises
+        static let backNoisesTrack = "backNoisesTrackKey"
         //others
         static let newestVersion = "newestVersionKey"
         static let systemLangPriority = "systemLangPriority"

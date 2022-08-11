@@ -23,9 +23,14 @@ class BackNoisesTrackManager {
     
     static let shared = BackNoisesTrackManager()
     var currentBackNoisesItem = BackNoisesPlayerItemViewModel()
-    var currentTrack:Tracks! {
-        didSet {
-            setPlayItem(track: currentTrack)
+    
+    var currentTrack:Tracks {
+        get {
+            Tracks(rawValue: Preferences.shared.backNoisesTrack) ?? .WhiteNoise
+        }
+        set {
+            Preferences.shared.backNoisesTrack = newValue.rawValue
+            setPlayItem(track: newValue)
         }
     }
     
@@ -48,7 +53,7 @@ class BackNoisesTrackManager {
     ]
     
     init() {
-        self.currentTrack = .WhiteNoise
+//        self.currentTrack = .WhiteNoise
         setPlayItem(track: currentTrack)
     }
 
@@ -60,21 +65,26 @@ class BackNoisesTrackManager {
         currentBackNoisesItem.url = URL(fileURLWithPath: trackURL)
         currentBackNoisesItem.title = track.rawValue
         currentBackNoisesItem.changeToPreviousTrack = {
-            PlayerManager.shared.player.stop()
-            let newIndex = self.currentTrackIndex > 0 ? self.currentTrackIndex - 1 : self.trackList.count - 1
-            self.currentTrack = self.trackList[newIndex]
-            self.currentBackNoisesItem.isPlaying = true
-            NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.backNoises)
+            self.changeTrack(action: .previous)
         }
         
         currentBackNoisesItem.changeToNextTrack = {
-            PlayerManager.shared.player.stop()
-            let newIndex = self.currentTrackIndex < self.trackList.count - 1 ? self.currentTrackIndex + 1 : 0
-            self.currentTrack = self.trackList[newIndex]
-            self.currentBackNoisesItem.isPlaying = true
-            NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.backNoises)
+            self.changeTrack(action: .next)
         }
     }
     
+    func changeTrack(action:ChangeTrackAction) {
+        PlayerManager.shared.player.stop()
+        let newIndex:Int!
+        switch action {
+        case .next:
+            newIndex = self.currentTrackIndex < self.trackList.count - 1 ? self.currentTrackIndex + 1 : 0
+        case .previous:
+            newIndex = self.currentTrackIndex > 0 ? self.currentTrackIndex - 1 : self.trackList.count - 1
+        }
+        self.currentTrack = self.trackList[newIndex]
+        self.currentBackNoisesItem.isPlaying = true
+        NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.backNoises)
+    }
 
 }

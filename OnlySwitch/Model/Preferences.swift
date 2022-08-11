@@ -132,4 +132,8 @@ struct Preferences {
     var isAutoCollapseMenubar:Bool {
         autoCollapseMenubarTime != 0
     }
+    
+    // MARK: - BackNoises
+    @UserDefaultValue(key: UserDefaults.Key.backNoisesTrack, defaultValue: "White Noises")
+    var backNoisesTrack:String
 }

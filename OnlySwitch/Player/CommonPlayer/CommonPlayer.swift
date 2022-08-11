@@ -12,6 +12,11 @@ enum PlayerType {
     case BackNoises
 }
 
+enum ChangeTrackAction {
+    case next
+    case previous
+}
+
 protocol CommonPlayerItem:AnyObject {
     var isPlaying:Bool {get set}
     var title:String {get set}
