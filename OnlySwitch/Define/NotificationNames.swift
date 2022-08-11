@@ -25,4 +25,5 @@ extension Notification.Name {
     static let settingsWindowOpened = Notification.Name(rawValue: "settingsWindowOpened")
     static let settingsWindowClosed = Notification.Name(rawValue: "settingsWindowClosed")
     static let illegalRadioInfoNotification = Notification.Name("illegalRadioInfoNotification")
+    static let changeAutoStopNoiseTime = Notification.Name(rawValue: "changeAutoStopNoiseTime")
 }

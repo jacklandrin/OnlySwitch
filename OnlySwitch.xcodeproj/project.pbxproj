@@ -240,6 +240,8 @@
 		04DC6C7B28A5424D00888BF9 /* BackNoisesPlayerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C7A28A5424D00888BF9 /* BackNoisesPlayerItem.swift */; };
 		04DC6C7D28A5624600888BF9 /* BackNoisesSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C7C28A5624600888BF9 /* BackNoisesSwitch.swift */; };
 		04DC6C7F28A5675600888BF9 /* BackNoisiesTrackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C7E28A5675600888BF9 /* BackNoisiesTrackManager.swift */; };
+		04DC6C8228A5A8C300888BF9 /* BackNoisesSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C8128A5A8C300888BF9 /* BackNoisesSettingView.swift */; };
+		04DC6C8428A5A91300888BF9 /* BackNoisesSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C8328A5A91300888BF9 /* BackNoisesSettingVM.swift */; };
 		04E03AF8275E6B4E00EA5FB9 /* AutohideDockSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AF7275E6B4E00EA5FB9 /* AutohideDockSwitch.swift */; };
 		04E03AFE275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AFD275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift */; };
 		04E03B00275F93B900EA5FB9 /* AirPodsSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AFF275F93B900EA5FB9 /* AirPodsSwitch.swift */; };
@@ -534,6 +536,8 @@
 		04DC6C7A28A5424D00888BF9 /* BackNoisesPlayerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackNoisesPlayerItem.swift; sourceTree = "<group>"; };
 		04DC6C7C28A5624600888BF9 /* BackNoisesSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackNoisesSwitch.swift; sourceTree = "<group>"; };
 		04DC6C7E28A5675600888BF9 /* BackNoisiesTrackManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackNoisiesTrackManager.swift; sourceTree = "<group>"; };
+		04DC6C8128A5A8C300888BF9 /* BackNoisesSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackNoisesSettingView.swift; sourceTree = "<group>"; };
+		04DC6C8328A5A91300888BF9 /* BackNoisesSettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackNoisesSettingVM.swift; sourceTree = "<group>"; };
 		04E03AF7275E6B4E00EA5FB9 /* AutohideDockSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutohideDockSwitch.swift; sourceTree = "<group>"; };
 		04E03AFD275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothDevicesManager.swift; sourceTree = "<group>"; };
 		04E03AFF275F93B900EA5FB9 /* AirPodsSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPodsSwitch.swift; sourceTree = "<group>"; };
@@ -1242,6 +1246,8 @@
 		04DC6C8028A5955B00888BF9 /* BackNoises */ = {
 			isa = PBXGroup;
 			children = (
+				04DC6C8128A5A8C300888BF9 /* BackNoisesSettingView.swift */,
+				04DC6C8328A5A91300888BF9 /* BackNoisesSettingVM.swift */,
 			);
 			path = BackNoises;
 			sourceTree = "<group>";
@@ -1651,6 +1657,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				04B25453283BEF3800D253E2 /* SupportedLanguage.swift in Sources */,
+				04DC6C8228A5A8C300888BF9 /* BackNoisesSettingView.swift in Sources */,
 				04EB1CD22780F4F700C612AB /* ShortcutsView.swift in Sources */,
 				040CD2BC2756D497002E0CC6 /* CGImage++.swift in Sources */,
 				04581DBF27653C4A008ADF30 /* AirPodsSettingVM.swift in Sources */,
@@ -1676,6 +1683,7 @@
 				0493374B27625A1E00AE779A /* StreamingState.swift in Sources */,
 				04938D0E2769247A00713F1D /* SendEmail.swift in Sources */,
 				0493374D27625A1E00AE779A /* Parser+PropertyListener.swift in Sources */,
+				04DC6C8428A5A91300888BF9 /* BackNoisesSettingVM.swift in Sources */,
 				0493374827625A1E00AE779A /* StreamingDelegate.swift in Sources */,
 				0457C25D2760046A00B25BFA /* BluetoothSwitch.swift in Sources */,
 				04A2FFFA275636FA00CE56A0 /* String++.swift in Sources */,

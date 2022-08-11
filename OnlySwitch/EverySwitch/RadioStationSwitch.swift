@@ -37,14 +37,18 @@ class RadioStationSwitch:SwitchProvider {
     }
     
     func setPlayerItem(station:RadioStations) {
-        self.playerItem.isPlaying = false
+        if self.playerItem.isPlaying {
+            self.playerItem.isPlaying = false
+        }
+        
         self.playerItem.title = station.title!
         self.playerItem.streamUrl = station.url!
         self.playerItem.id = station.id!
         self.playerItem.streamInfo = ""
         //refresh player item
-        PlayerManager.shared.player.play(stream: self.playerItem)
-        PlayerManager.shared.player.stop()
+        PlayerManager.shared.player.currentPlayerItem = self.playerItem
+//        PlayerManager.shared.player.play(stream: self.playerItem)
+//        PlayerManager.shared.player.stop()
     }
     
     func operationSwitch(isOn: Bool) async throws {

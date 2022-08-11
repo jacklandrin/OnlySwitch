@@ -42,6 +42,7 @@ extension UserDefaults {
         static let orderWeight = "orderWeightKey"
         //BackNoises
         static let backNoisesTrack = "backNoisesTrackKey"
+        static let automaticallyStopPlayNoiseTime = "automaticallyStopPlayNoiseTimeKey"
         //others
         static let newestVersion = "newestVersionKey"
         static let systemLangPriority = "systemLangPriority"

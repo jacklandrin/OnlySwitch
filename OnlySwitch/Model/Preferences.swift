@@ -137,4 +137,15 @@ struct Preferences {
     // MARK: - BackNoises
     @UserDefaultValue(key: UserDefaults.Key.backNoisesTrack, defaultValue: "White Noises")
     var backNoisesTrack:String
+    
+    @UserDefaultValue(key: UserDefaults.Key.automaticallyStopPlayNoiseTime, defaultValue: 0)
+    var automaticallyStopPlayNoiseTime:Int {
+        didSet {
+            NotificationCenter.default.post(name: .changeAutoStopNoiseTime, object: nil)
+        }
+    }
+    
+    var isAutoStopNoise:Bool {
+        automaticallyStopPlayNoiseTime != 0
+    }
 }

@@ -17,6 +17,7 @@ enum SettingItem:String {
     case Customize = "Customize"
     case Shortcuts = "Shortcuts"
     case HideMenubarIcons = "Hide Menu Bar Icons"
+    case BackNoises = "Back Noises"
     case About = "About"
 
     var page: AnyView {
@@ -35,6 +36,8 @@ enum SettingItem:String {
             return CustomizeView().eraseToAnyView()
         case .HideMenubarIcons:
             return HideMenubarIconsSettingView().eraseToAnyView()
+        case .BackNoises:
+            return BackNoisesSettingView().eraseToAnyView()
         case .About:
             return AboutView().eraseToAnyView()
         }
@@ -51,6 +54,7 @@ class SettingVM:ObservableObject {
                                                  .Customize,
                                                  .Shortcuts,
                                                  .Radio,
+                                                 .BackNoises,
                                                  .AirPods,
                                                  .PomodoroTimer,
                                                  .HideMenubarIcons,
