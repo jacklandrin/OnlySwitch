@@ -7,11 +7,17 @@
 
 import Foundation
 
+enum PlayerType {
+    case Radio
+    case BackNoises
+}
+
 protocol CommonPlayerItem:AnyObject {
     var isPlaying:Bool {get set}
     var title:String {get set}
     var trackInfo:String {get set}
     var url:URL? {get set}
+    var type:PlayerType {get}
     func nextTrack()
     func previousTrack()
 }

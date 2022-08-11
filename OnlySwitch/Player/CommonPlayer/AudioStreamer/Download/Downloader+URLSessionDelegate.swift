@@ -56,7 +56,7 @@ extension Downloader: URLSessionDataDelegate {
         var networkError = error
         let statusCode = (task.response as? HTTPURLResponse)?.statusCode
         if networkError == nil && statusCode != 200 {
-             networkError = NSError(domain:"", code: statusCode!, userInfo: nil)
+            networkError = NSError(domain:"", code: statusCode ?? 0, userInfo: nil)
         }
         state = .completed
         delegate?.download(self, completedWithError: error)

@@ -226,6 +226,20 @@
 		04DC6C5C28A2D04B00888BF9 /* UpdateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C5B28A2D04B00888BF9 /* UpdateView.swift */; };
 		04DC6C5E28A2E2B700888BF9 /* UpdateVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C5D28A2E2B700888BF9 /* UpdateVM.swift */; };
 		04DC6C6028A46ECE00888BF9 /* CommonPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C5F28A46ECE00888BF9 /* CommonPlayer.swift */; };
+		04DC6C6D28A5413500888BF9 /* Crowd Urban.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 04DC6C6328A5413400888BF9 /* Crowd Urban.mp3 */; };
+		04DC6C6E28A5413500888BF9 /* Meadow Birds.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 04DC6C6428A5413400888BF9 /* Meadow Birds.mp3 */; };
+		04DC6C6F28A5413500888BF9 /* Motor Boat.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 04DC6C6528A5413400888BF9 /* Motor Boat.mp3 */; };
+		04DC6C7028A5413500888BF9 /* Forest Walking.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 04DC6C6628A5413400888BF9 /* Forest Walking.mp3 */; };
+		04DC6C7128A5413500888BF9 /* Meditation.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 04DC6C6728A5413400888BF9 /* Meditation.mp3 */; };
+		04DC6C7228A5413500888BF9 /* Brownian.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 04DC6C6828A5413400888BF9 /* Brownian.mp3 */; };
+		04DC6C7328A5413500888BF9 /* White Noise.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 04DC6C6928A5413400888BF9 /* White Noise.mp3 */; };
+		04DC6C7428A5413500888BF9 /* Pink Noise.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 04DC6C6A28A5413400888BF9 /* Pink Noise.mp3 */; };
+		04DC6C7528A5413500888BF9 /* Harbor Wave.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 04DC6C6B28A5413400888BF9 /* Harbor Wave.mp3 */; };
+		04DC6C7628A5413500888BF9 /* Soft Rain.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 04DC6C6C28A5413500888BF9 /* Soft Rain.mp3 */; };
+		04DC6C7928A541CE00888BF9 /* BackNoisesPlayerItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C7828A541CE00888BF9 /* BackNoisesPlayerItemViewModel.swift */; };
+		04DC6C7B28A5424D00888BF9 /* BackNoisesPlayerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C7A28A5424D00888BF9 /* BackNoisesPlayerItem.swift */; };
+		04DC6C7D28A5624600888BF9 /* BackNoisesSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C7C28A5624600888BF9 /* BackNoisesSwitch.swift */; };
+		04DC6C7F28A5675600888BF9 /* BackNoisiesTrackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C7E28A5675600888BF9 /* BackNoisiesTrackManager.swift */; };
 		04E03AF8275E6B4E00EA5FB9 /* AutohideDockSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AF7275E6B4E00EA5FB9 /* AutohideDockSwitch.swift */; };
 		04E03AFE275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AFD275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift */; };
 		04E03B00275F93B900EA5FB9 /* AirPodsSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AFF275F93B900EA5FB9 /* AirPodsSwitch.swift */; };
@@ -506,6 +520,20 @@
 		04DC6C5B28A2D04B00888BF9 /* UpdateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateView.swift; sourceTree = "<group>"; };
 		04DC6C5D28A2E2B700888BF9 /* UpdateVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateVM.swift; sourceTree = "<group>"; };
 		04DC6C5F28A46ECE00888BF9 /* CommonPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonPlayer.swift; sourceTree = "<group>"; };
+		04DC6C6328A5413400888BF9 /* Crowd Urban.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Crowd Urban.mp3"; sourceTree = "<group>"; };
+		04DC6C6428A5413400888BF9 /* Meadow Birds.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Meadow Birds.mp3"; sourceTree = "<group>"; };
+		04DC6C6528A5413400888BF9 /* Motor Boat.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Motor Boat.mp3"; sourceTree = "<group>"; };
+		04DC6C6628A5413400888BF9 /* Forest Walking.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Forest Walking.mp3"; sourceTree = "<group>"; };
+		04DC6C6728A5413400888BF9 /* Meditation.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Meditation.mp3; sourceTree = "<group>"; };
+		04DC6C6828A5413400888BF9 /* Brownian.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Brownian.mp3; sourceTree = "<group>"; };
+		04DC6C6928A5413400888BF9 /* White Noise.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "White Noise.mp3"; sourceTree = "<group>"; };
+		04DC6C6A28A5413400888BF9 /* Pink Noise.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Pink Noise.mp3"; sourceTree = "<group>"; };
+		04DC6C6B28A5413400888BF9 /* Harbor Wave.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Harbor Wave.mp3"; sourceTree = "<group>"; };
+		04DC6C6C28A5413500888BF9 /* Soft Rain.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Soft Rain.mp3"; sourceTree = "<group>"; };
+		04DC6C7828A541CE00888BF9 /* BackNoisesPlayerItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackNoisesPlayerItemViewModel.swift; sourceTree = "<group>"; };
+		04DC6C7A28A5424D00888BF9 /* BackNoisesPlayerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackNoisesPlayerItem.swift; sourceTree = "<group>"; };
+		04DC6C7C28A5624600888BF9 /* BackNoisesSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackNoisesSwitch.swift; sourceTree = "<group>"; };
+		04DC6C7E28A5675600888BF9 /* BackNoisiesTrackManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackNoisiesTrackManager.swift; sourceTree = "<group>"; };
 		04E03AF7275E6B4E00EA5FB9 /* AutohideDockSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutohideDockSwitch.swift; sourceTree = "<group>"; };
 		04E03AFD275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothDevicesManager.swift; sourceTree = "<group>"; };
 		04E03AFF275F93B900EA5FB9 /* AirPodsSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPodsSwitch.swift; sourceTree = "<group>"; };
@@ -639,6 +667,7 @@
 				0444D5FC2839873100327D0B /* ScreenTestSwitch.swift */,
 				04BC8ED1285137D2009E605F /* HideMenubarIconsSwitch.swift */,
 				04E89D582899F14100667710 /* FKeySwitch.swift */,
+				04DC6C7C28A5624600888BF9 /* BackNoisesSwitch.swift */,
 			);
 			path = EverySwitch;
 			sourceTree = "<group>";
@@ -683,14 +712,12 @@
 			children = (
 				0493375C27625AAC00AE779A /* AudioSpectrum */,
 				0493372B27625A1E00AE779A /* AudioStreamer */,
+				04DC6C5F28A46ECE00888BF9 /* CommonPlayer.swift */,
 				0493372727625A1E00AE779A /* AudioPlayer.swift */,
 				0493372A27625A1E00AE779A /* PlayerManager.swift */,
 				0493372827625A1E00AE779A /* JLASAudioPlayer.swift */,
 				0493374327625A1E00AE779A /* JLASAudioPlayer+Streamer.swift */,
 				0493372927625A1E00AE779A /* JLAVAudioPlayer.swift */,
-				0434B4CE2876031C00F06AB9 /* RadioPlayerItem.swift */,
-				0493376327625D6F00AE779A /* RadioPlayerItemViewModel.swift */,
-				04DC6C5F28A46ECE00888BF9 /* CommonPlayer.swift */,
 			);
 			path = CommonPlayer;
 			sourceTree = "<group>";
@@ -904,6 +931,8 @@
 		0493372627625A1E00AE779A /* Player */ = {
 			isa = PBXGroup;
 			children = (
+				04DC6C7728A5419200888BF9 /* BackNoisesPlayerItem */,
+				04DC6C6128A53D0C00888BF9 /* RadioPlayerItem */,
 				0427365427C1AC010068108F /* MusicAppPlayer */,
 				0427365327C1ABEC0068108F /* CommonPlayer */,
 			);
@@ -1173,6 +1202,42 @@
 			path = Update;
 			sourceTree = "<group>";
 		};
+		04DC6C6128A53D0C00888BF9 /* RadioPlayerItem */ = {
+			isa = PBXGroup;
+			children = (
+				0434B4CE2876031C00F06AB9 /* RadioPlayerItem.swift */,
+				0493376327625D6F00AE779A /* RadioPlayerItemViewModel.swift */,
+			);
+			path = RadioPlayerItem;
+			sourceTree = "<group>";
+		};
+		04DC6C6228A5409F00888BF9 /* BackgroundNoises */ = {
+			isa = PBXGroup;
+			children = (
+				04DC6C6928A5413400888BF9 /* White Noise.mp3 */,
+				04DC6C6A28A5413400888BF9 /* Pink Noise.mp3 */,
+				04DC6C6828A5413400888BF9 /* Brownian.mp3 */,
+				04DC6C6428A5413400888BF9 /* Meadow Birds.mp3 */,
+				04DC6C6628A5413400888BF9 /* Forest Walking.mp3 */,
+				04DC6C6C28A5413500888BF9 /* Soft Rain.mp3 */,
+				04DC6C6528A5413400888BF9 /* Motor Boat.mp3 */,
+				04DC6C6B28A5413400888BF9 /* Harbor Wave.mp3 */,
+				04DC6C6328A5413400888BF9 /* Crowd Urban.mp3 */,
+				04DC6C6728A5413400888BF9 /* Meditation.mp3 */,
+			);
+			path = BackgroundNoises;
+			sourceTree = "<group>";
+		};
+		04DC6C7728A5419200888BF9 /* BackNoisesPlayerItem */ = {
+			isa = PBXGroup;
+			children = (
+				04DC6C7A28A5424D00888BF9 /* BackNoisesPlayerItem.swift */,
+				04DC6C7828A541CE00888BF9 /* BackNoisesPlayerItemViewModel.swift */,
+				04DC6C7E28A5675600888BF9 /* BackNoisiesTrackManager.swift */,
+			);
+			path = BackNoisesPlayerItem;
+			sourceTree = "<group>";
+		};
 		04E03B01275FD91200EA5FB9 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
@@ -1192,6 +1257,7 @@
 		04E03B02275FD92D00EA5FB9 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				04DC6C6228A5409F00888BF9 /* BackgroundNoises */,
 				046331D12795DA4C00C5F894 /* ShortcutsMarket */,
 				047140B127788364005B160B /* mixkit-alert-bells-echo-765.wav */,
 				047140B227788364005B160B /* mixkit-bell-notification-933.wav */,
@@ -1437,12 +1503,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				04938D002768CAEB00713F1D /* Localizable.strings in Resources */,
+				04DC6C7628A5413500888BF9 /* Soft Rain.mp3 in Resources */,
 				0443A6B627599AAC00A3BCFD /* README.md in Resources */,
 				04447B632754F08100CD2900 /* Preview Assets.xcassets in Resources */,
+				04DC6C6F28A5413500888BF9 /* Motor Boat.mp3 in Resources */,
+				04DC6C7228A5413500888BF9 /* Brownian.mp3 in Resources */,
 				0434B4CB2874E1B900F06AB9 /* Latest_release_mock.json in Resources */,
+				04DC6C7328A5413500888BF9 /* White Noise.mp3 in Resources */,
+				04DC6C6D28A5413500888BF9 /* Crowd Urban.mp3 in Resources */,
+				04DC6C7428A5413500888BF9 /* Pink Noise.mp3 in Resources */,
 				0434B4CA2874E1B600F06AB9 /* Releases_mock.json in Resources */,
+				04DC6C6E28A5413500888BF9 /* Meadow Birds.mp3 in Resources */,
 				04E8BE3A2797241F00FF12B7 /* ShortcutsGalleryContributing.md in Resources */,
 				04E03B04275FD98500EA5FB9 /* battery-airpods-monterey.sh in Resources */,
+				04DC6C7128A5413500888BF9 /* Meditation.mp3 in Resources */,
+				04DC6C7528A5413500888BF9 /* Harbor Wave.mp3 in Resources */,
+				04DC6C7028A5413500888BF9 /* Forest Walking.mp3 in Resources */,
 				047140B327788364005B160B /* mixkit-alert-bells-echo-765.wav in Resources */,
 				047140B427788364005B160B /* mixkit-bell-notification-933.wav in Resources */,
 				04447B602754F08100CD2900 /* Assets.xcassets in Resources */,
@@ -1583,6 +1659,7 @@
 				040C6EAC276B7D9F00291DEB /* CustomizeView.swift in Sources */,
 				04E03AFE275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift in Sources */,
 				04447B722754FE3800CD2900 /* SwitchListVM.swift in Sources */,
+				04DC6C7B28A5424D00888BF9 /* BackNoisesPlayerItem.swift in Sources */,
 				0493375227625A1E00AE779A /* Reader.swift in Sources */,
 				04581DC327677ADC008ADF30 /* KeepAwakeSwitch.swift in Sources */,
 				04933788276264D400AE779A /* BluredSoundWave.swift in Sources */,
@@ -1612,6 +1689,7 @@
 				04BF97682790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift in Sources */,
 				0493375927625A1E00AE779A /* DownloadingState.swift in Sources */,
 				041D726328353B380083092D /* NSImage+SymbolName.swift in Sources */,
+				04DC6C7F28A5675600888BF9 /* BackNoisiesTrackManager.swift in Sources */,
 				043E5D6A2757D68800ADC004 /* MuteSwitch.swift in Sources */,
 				0493378C2762654600AE779A /* LayoutDefine.swift in Sources */,
 				04BC8ED928513D3A009E605F /* HideMenubarIconsSettingView.swift in Sources */,
@@ -1666,6 +1744,7 @@
 				04E2AD1E2783B63600BC5DF3 /* CurrentScreen.swift in Sources */,
 				043E5D7A2758212A00ADC004 /* SwitchType.swift in Sources */,
 				04E03B00275F93B900EA5FB9 /* AirPodsSwitch.swift in Sources */,
+				04DC6C7D28A5624600888BF9 /* BackNoisesSwitch.swift in Sources */,
 				043E5D6F2758116800ADC004 /* NSSound_SystemVolumeExtension.swift in Sources */,
 				04D68B0D2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift in Sources */,
 				04BC8ED2285137D2009E605F /* HideMenubarIconsSwitch.swift in Sources */,
@@ -1700,6 +1779,7 @@
 				04581DB02764CBCF008ADF30 /* SettingVM.swift in Sources */,
 				04E03B06275FEBE200EA5FB9 /* AirPodsBatteryView.swift in Sources */,
 				04EB1CD62781299A00C612AB /* ShortcutsBarVM.swift in Sources */,
+				04DC6C7928A541CE00888BF9 /* BackNoisesPlayerItemViewModel.swift in Sources */,
 				04A9675A2786133F00F12830 /* GeneralVM.swift in Sources */,
 				0427365227C1AADB0068108F /* MusicPlaybackState.swift in Sources */,
 				0434B4D12876325B00F06AB9 /* HostWindowFinder.swift in Sources */,

@@ -67,6 +67,8 @@ extension SwitchType {
             return HideMenubarIconsSwitch.shared
         case .fkey:
             return FKeySwitch.shared
+        case .backNoises:
+            return BackNoisesSwitch()
         }
     }
     
@@ -205,6 +207,12 @@ extension SwitchType {
             return SwitchBarInfo(title: "FKey",
                                  onImage: NSImage(systemSymbolName: "fn"),
                                  offImage: NSImage(systemSymbolName: "sun.max"))
+        case .backNoises:
+            return SwitchBarInfo(title: "Background Noises",
+                                 onImage: NSImage(systemSymbolName: "ear.and.waveform"),
+                                 offImage: NSImage(systemSymbolName: "ear"),
+                                 controlType: .Player,
+                                 category: .audio)
         }
     }
 

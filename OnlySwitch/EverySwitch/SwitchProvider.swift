@@ -11,7 +11,7 @@ import Combine
 
 /// protocol for every switch
 protocol SwitchProvider:AnyObject {
-    var type:SwitchType {get set}
+    var type:SwitchType {get}
     var delegate:SwitchDelegate? {get set}
     func currentStatus() -> Bool
     func currentInfo() -> String

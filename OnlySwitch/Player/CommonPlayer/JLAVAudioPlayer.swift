@@ -29,6 +29,14 @@ class JLAVAudioPlayer: NSObject ,AVPlayerItemMetadataOutputPushDelegate, AudioPl
             
             self.audioPlayer?.volume = newValue
         })
+        
+        NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: self.audioPlayer?.currentItem, queue: .main) { [weak self] _ in
+            guard self?.currentPlayerItem?.type == .BackNoises else {
+                return
+            }
+            self?.audioPlayer?.seek(to: CMTime.zero)
+            self?.audioPlayer?.play()
+        }
     }
     
     func play(stream item: CommonPlayerItem) {
@@ -37,10 +45,23 @@ class JLAVAudioPlayer: NSObject ,AVPlayerItemMetadataOutputPushDelegate, AudioPl
             return
         }
         
-        if let item = self.currentPlayerItem  {
-            if item.url?.absoluteString != url.absoluteString {
+        if let currentPlayerItem = self.currentPlayerItem  {
+            if currentPlayerItem.url?.absoluteString != url.absoluteString {
                 self.currentPlayerItem?.isPlaying = false
                 self.currentPlayerItem?.trackInfo = ""
+                if currentPlayerItem.type != item.type {
+                    switch currentPlayerItem.type {
+                    case .Radio:
+                        NotificationCenter.default.post(name: .refreshSingleSwitchStatus,
+                                                        object: SwitchType.radioStation)
+                    case .BackNoises:
+                        NotificationCenter.default.post(name: .refreshSingleSwitchStatus,
+                                                        object: SwitchType.backNoises)
+                    }
+                }
+            } else if currentPlayerItem.type == .BackNoises {
+                audioPlayer?.play()
+                return
             }
         }
         

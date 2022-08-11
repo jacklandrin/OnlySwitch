@@ -66,9 +66,16 @@ extension AudioPlayer {
             } else {
                 MPNowPlayingInfoCenter.default().playbackState = .paused
             }
-            NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.radioStation)
+            switch item.type {
+            case .Radio:
+                NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.radioStation)
+            case .BackNoises:
+                NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.backNoises)
+            }
+            
             return .success
         }
+        
         commandCenter.nextTrackCommand.isEnabled = true
         commandCenter.nextTrackCommand.addTarget { event in
             let item = self.currentPlayerItem

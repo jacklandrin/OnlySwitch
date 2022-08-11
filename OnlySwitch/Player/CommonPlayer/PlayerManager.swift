@@ -11,6 +11,7 @@ import Foundation
 class PlayerManager {
     static let shared = PlayerManager()
     var player:AudioPlayer = JLASAudioPlayer()
+    
     var soundWaveEffectDisplay:Bool{
         Preferences.shared.soundWaveEffectDisplay
     }

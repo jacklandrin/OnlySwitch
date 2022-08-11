@@ -58,6 +58,14 @@ class JLASAudioPlayer: NSObject, AVPlayerItemMetadataOutputPushDelegate, AudioPl
             self.audioPlayer.volume = newValue
             self.avplayer.volume = newValue
         })
+        
+        NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: self.avplayer.currentItem, queue: .main) { [weak self] _ in
+            guard self?.currentPlayerItem?.type == .BackNoises else {
+                return
+            }
+            self?.avplayer.seek(to: CMTime.zero)
+            self?.avplayer.play()
+        }
     }
     
     func play(stream item: CommonPlayerItem) {
@@ -69,15 +77,29 @@ class JLASAudioPlayer: NSObject, AVPlayerItemMetadataOutputPushDelegate, AudioPl
             if currentPlayerItem.url?.absoluteURL != item.url?.absoluteURL {
                 self.currentPlayerItem?.isPlaying = false
                 self.currentPlayerItem?.trackInfo = ""
+                if currentPlayerItem.type != item.type {
+                    switch currentPlayerItem.type {
+                    case .Radio:
+                        NotificationCenter.default.post(name: .refreshSingleSwitchStatus,
+                                                        object: SwitchType.radioStation)
+                    case .BackNoises:
+                        NotificationCenter.default.post(name: .refreshSingleSwitchStatus,
+                                                        object: SwitchType.backNoises)
+                    }
+                    
+                }
+            } else if currentPlayerItem.type == .BackNoises {
+                avplayer.play()
+                return
             }
         }
                 
         self.currentPlayerItem = item
         
         
-        setAVPlayer(url: url)
+        setAVPlayer(url: url, itemType: item.type)
         audioPlayer.url = url
-        if wavableURL(url: url.absoluteString) {
+        if avplayerMute(url: url.absoluteString, itemType: item.type) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
                 self?.audioPlayer.play()
             }
@@ -92,7 +114,11 @@ class JLASAudioPlayer: NSObject, AVPlayerItemMetadataOutputPushDelegate, AudioPl
         return !url.hasSuffix(".m3u") && !url.hasSuffix(".m3u8") && !url.hasSuffix(".aac")
     }
     
-    func setAVPlayer(url:URL)  {
+    func avplayerMute(url:String, itemType: PlayerType) -> Bool {
+        itemType == .Radio && wavableURL(url: url)
+    }
+    
+    func setAVPlayer(url:URL, itemType:PlayerType)  {
         let playerItem = AVPlayerItem(url: url)
         self.avplayer = AVPlayer(playerItem: playerItem)
         let metadataOutput = AVPlayerItemMetadataOutput(identifiers: nil)
@@ -103,7 +129,7 @@ class JLASAudioPlayer: NSObject, AVPlayerItemMetadataOutputPushDelegate, AudioPl
         self.avplayer.volume = Preferences.shared.volume
         
         self.avplayer.play()
-        self.avplayer.isMuted = wavableURL(url: url.absoluteString)
+        self.avplayer.isMuted = avplayerMute(url: url.absoluteString, itemType: itemType)
     }
     
     func metadataOutput(_ output: AVPlayerItemMetadataOutput, didOutputTimedMetadataGroups groups: [AVTimedMetadataGroup], from track: AVPlayerItemTrack?) {
