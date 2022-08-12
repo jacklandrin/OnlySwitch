@@ -122,3 +122,11 @@
 "Enable Player" = "Abilita Player";
 "Disable Hide Menu Bar Icons" = "Disabilita Nascondi icone della barra dei menu";
 "Enable Hide Menu Bar Icons" = "Abilita Nascondi icone della barra dei menu";
+"Back Noises" = "rumore di sottofondo";
+"Stop After:" = "quindi smetti di giocare:";
+"minutes" = "minuti";
+"1 hour" = "1 ora";
+"Keep Awake Until After:" = "Resta sveglio fino a dopo:";
+"Daily Schedule:" = "Programma giornaliero:";
+"from:" = "da:";
+"to:    " = "a:  ";

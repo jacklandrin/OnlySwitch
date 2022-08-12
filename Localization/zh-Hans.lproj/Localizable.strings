@@ -122,3 +122,11 @@
 "Enable Player" = "启用播放器";
 "Disable Hide Menu Bar Icons" = "停用隐藏菜单栏图标";
 "Enable Hide Menu Bar Icons" = "启用隐藏菜单栏图标";
+"Back Noises" = "背景噪音";
+"Stop After:" = "停止播放在此时间后:";
+"minutes" = "分钟";
+"1 hour" = "1 小时";
+"Keep Awake Until After:" = "防止锁屏在此时间后:";
+"Daily Schedule:" = "每日计划:";
+"from:" = "从:";
+"to:    " = "到:";

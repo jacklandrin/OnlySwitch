@@ -66,10 +66,12 @@ class KeepAwakeSettingVM: ObservableObject {
     func converTimeDescription(duration:Int) -> String {
         if duration == 0 {
             return "never".localized()
+        } else if duration == 1 {
+            return "1 minute".localized()
         } else if duration == 60 {
             return "1 hour".localized()
         } else {
-            return "\(duration) " + "minites".localized()
+            return "\(duration) " + "minutes".localized()
         }
     }
     

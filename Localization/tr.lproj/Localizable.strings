@@ -123,3 +123,11 @@
 "Enable Player" = "Oynatıcıyı etkinleştir";
 "Disable Hide Menu Bar Icons" = "Menü Çubuğu Simgelerini Gizle devre dışı bırakın";
 "Enable Hide Menu Bar Icons" = "Menü Çubuğu Simgelerini Gizle etkinleştir";
+"Back Noises" = "Arka Plan Gürültüleri";
+"Stop After:" = "sonra oynatmayı durdur:";
+"minutes" = "dakika";
+"1 hour" = "1 saat";
+"Keep Awake Until After:" = "bu saatten sonra uyanık kal:";
+"Daily Schedule:" = "Günlük program:";
+"from:" = "Başlangıç ​​saati:";
+"to:    " = "Bitiş zamanı:    ";

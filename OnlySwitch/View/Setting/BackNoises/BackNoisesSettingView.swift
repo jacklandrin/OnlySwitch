@@ -27,7 +27,7 @@ struct BackNoisesSettingView: View {
             Divider()
             
             List{
-                Section(header: Text("Back Noises")) {
+                Section(header: Text("Back Noises".localized())) {
                     ForEach(backNoisesSettingVM.trackList.indices, id:\.self) { index in
                         Button(action: {
                             backNoisesSettingVM.selectTrack(index: index)
@@ -48,7 +48,7 @@ struct BackNoisesSettingView: View {
                 .padding(0)
             
             HStack {
-                Text("Stop After:")
+                Text("Stop After:".localized())
                 Menu(backNoisesSettingVM.converTimeDescription(duration: backNoisesSettingVM.automaticallyStopPlayNoise)) {
                     ForEach(backNoisesSettingVM.durationSet, id:\.self) { duration in
                         Button(backNoisesSettingVM.converTimeDescription(duration: duration)){

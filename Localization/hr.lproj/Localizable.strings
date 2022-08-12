@@ -120,3 +120,11 @@
 "Enable Player" = "Omogući Player";
 "Disable Hide Menu Bar Icons" = "Onemogući Sakrij ikone trake izbornika";
 "Enable Hide Menu Bar Icons" = "Omogući Sakrij ikone trake izbornika";
+"Back Noises" = "Pozadinski šumovi";
+"Stop After:" = "Zaustavi reprodukciju nakon:";
+"minutes" = "minuta";
+"1 hour" = "1 sat";
+"Keep Awake Until After:" = "Ostani budnim do nakon:";
+"Daily Schedule:" = "Dnevni raspored:";
+"from:" = "od:";
+"to:    " = "do:";

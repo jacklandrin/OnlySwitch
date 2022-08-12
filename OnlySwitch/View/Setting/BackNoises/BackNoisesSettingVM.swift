@@ -68,7 +68,7 @@ class BackNoisesSettingVM:ObservableObject {
         if duration == 0 {
             return "never".localized()
         } else {
-            return "\(duration) " + "minites".localized()
+            return "\(duration) " + "minutes".localized()
         }
     }
 }

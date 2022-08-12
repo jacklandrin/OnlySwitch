@@ -123,3 +123,11 @@
 "Disable Hide Menu Bar Icons" = "Menüleistensymbole-ausblenden deaktivieren";
 "Enable Hide Menu Bar Icons" = "Menüleistensymbole-ausblenden aktivieren";
 "Update" = "Update";
+"Back Noises" = "Hintergeräusche";
+"Stop After:" = "Stoppen nach:";
+"minutes" = "Minuten";
+"1 hour" = "1 Stunde";
+"Keep Awake Until After:" = "Wach bleiben bis nach:";
+"Daily Schedule:" = "Tagesablauf:";
+"from:" = "von:  ";
+"to:    " = "nach:";

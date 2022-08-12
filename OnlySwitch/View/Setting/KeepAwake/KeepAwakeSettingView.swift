@@ -16,7 +16,7 @@ struct KeepAwakeSettingView: View {
                 Toggle(isOn: $vm.scheduleMode) {
                     Text("")
                 }.toggleStyle(.automatic)
-                Text("Keep until after:")
+                Text("Keep Awake Until After:".localized())
                 Menu(vm.converTimeDescription(duration: vm.currentDuration)) {
                     ForEach(vm.durationSet, id:\.self) { duration in
                         Button(vm.converTimeDescription(duration: duration)){
@@ -38,19 +38,19 @@ struct KeepAwakeSettingView: View {
                 
                 
                 VStack(alignment:.leading, spacing: 20) {
-                    Text("Daily Schedule Keep Awake:")
+                    Text("Daily Schedule:".localized())
                 
 
-                    DatePicker("from:",
+                    DatePicker("from:".localized(),
                                selection: $vm.startDate,
                                displayedComponents: .hourAndMinute)
-                    .frame(width:150)
+                    .frame(width:190)
                 
 
-                    DatePicker("to:    ",
+                    DatePicker("to:    ".localized(),
                                selection: $vm.endDate,
                                displayedComponents: .hourAndMinute)
-                    .frame(width:150)
+                    .frame(width:190)
                 
                 }.frame(height: 94)
                 

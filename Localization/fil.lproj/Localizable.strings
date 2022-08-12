@@ -123,3 +123,11 @@
 "Enable Player" = "Paganahin ang Player";
 "Disable Hide Menu Bar Icons" = "Huwag paganahin ang Itago ang Mga Icon ng Menu Bar";
 "Enable Hide Menu Bar Icons" = "Paganahin ang Itago ang Mga Icon ng Menu Bar";
+"Back Noises" = "Mga ingay sa background";
+"Stop After:" = "huminto sa paglalaro pagkatapos ng:";
+"minutes" = "minuto";
+"1 hour" = "1 oras";
+"Keep Awake Until After:" = "Manatiling Gising Hanggang Makalipas ang:";
+"Daily Schedule:" = "Pang-araw-araw na Iskedyul:";
+"from:" = "mula:        ";
+"to:    " = "hanggang:";
