@@ -43,6 +43,12 @@ extension UserDefaults {
         //BackNoises
         static let backNoisesTrack = "backNoisesTrackKey"
         static let automaticallyStopPlayNoiseTime = "automaticallyStopPlayNoiseTimeKey"
+        //Keep Awake
+        static let autoStopKeepAwakeMode = "autoStopKeepAwakeModeKey"
+        static let autoStopKeepAwakeTime = "autoStopKeepAwakeTimeKey"
+        static let autoStopKeepAwakeStartDate = "autoStopKeepAwakeStartDateKey"
+        static let autoStopKeepAwakeEndDate = "autoStopKeepAwakeEndDateKey"
+        static let KeepAwakeKey = "KeepAwakeKey"
         //others
         static let newestVersion = "newestVersionKey"
         static let systemLangPriority = "systemLangPriority"

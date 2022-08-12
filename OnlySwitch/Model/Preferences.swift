@@ -148,4 +148,36 @@ struct Preferences {
     var isAutoStopNoise:Bool {
         automaticallyStopPlayNoiseTime != 0
     }
+    
+    @UserDefaultValue(key: UserDefaults.Key.autoStopKeepAwakeMode, defaultValue: 1)
+    var autoStopKeepAwakeMode:Int
+    {
+        didSet {
+            NotificationCenter.default.post(name: .changeKeepAwakeSetting, object: nil)
+        }
+    }
+    
+    @UserDefaultValue(key: UserDefaults.Key.autoStopKeepAwakeTime, defaultValue: 0)
+    var autoStopKeepAwakeTime:Int
+    {
+        didSet {
+            NotificationCenter.default.post(name: .changeKeepAwakeSetting, object: nil)
+        }
+    }
+    
+    @UserDefaultValue(key: UserDefaults.Key.autoStopKeepAwakeStartDate, defaultValue: 0.0)
+    var autoStopKeepAwakeStartDate:Double
+    {
+        didSet {
+            NotificationCenter.default.post(name: .changeKeepAwakeSetting, object: nil)
+        }
+    }
+    
+    @UserDefaultValue(key: UserDefaults.Key.autoStopKeepAwakeEndDate, defaultValue: 0.0)
+    var autoStopKeepAwakeEndDate:Double
+    {
+        didSet {
+            NotificationCenter.default.post(name: .changeKeepAwakeSetting, object: nil)
+        }
+    }
 }

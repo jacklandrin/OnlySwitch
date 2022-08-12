@@ -242,6 +242,10 @@
 		04DC6C7F28A5675600888BF9 /* BackNoisiesTrackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C7E28A5675600888BF9 /* BackNoisiesTrackManager.swift */; };
 		04DC6C8228A5A8C300888BF9 /* BackNoisesSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C8128A5A8C300888BF9 /* BackNoisesSettingView.swift */; };
 		04DC6C8428A5A91300888BF9 /* BackNoisesSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C8328A5A91300888BF9 /* BackNoisesSettingVM.swift */; };
+		04DC6C8C28A6820400888BF9 /* KeepAwakeSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C8B28A6820400888BF9 /* KeepAwakeSettingView.swift */; };
+		04DC6C8E28A6888A00888BF9 /* KeepAwakeSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C8D28A6888A00888BF9 /* KeepAwakeSettingVM.swift */; };
+		04DC6C9028A6CBEB00888BF9 /* IntBool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C8F28A6CBEB00888BF9 /* IntBool.swift */; };
+		04DC6C9228A6D5EA00888BF9 /* Date+Today.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C9128A6D5EA00888BF9 /* Date+Today.swift */; };
 		04E03AF8275E6B4E00EA5FB9 /* AutohideDockSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AF7275E6B4E00EA5FB9 /* AutohideDockSwitch.swift */; };
 		04E03AFE275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AFD275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift */; };
 		04E03B00275F93B900EA5FB9 /* AirPodsSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AFF275F93B900EA5FB9 /* AirPodsSwitch.swift */; };
@@ -538,6 +542,10 @@
 		04DC6C7E28A5675600888BF9 /* BackNoisiesTrackManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackNoisiesTrackManager.swift; sourceTree = "<group>"; };
 		04DC6C8128A5A8C300888BF9 /* BackNoisesSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackNoisesSettingView.swift; sourceTree = "<group>"; };
 		04DC6C8328A5A91300888BF9 /* BackNoisesSettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackNoisesSettingVM.swift; sourceTree = "<group>"; };
+		04DC6C8B28A6820400888BF9 /* KeepAwakeSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeepAwakeSettingView.swift; sourceTree = "<group>"; };
+		04DC6C8D28A6888A00888BF9 /* KeepAwakeSettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeepAwakeSettingVM.swift; sourceTree = "<group>"; };
+		04DC6C8F28A6CBEB00888BF9 /* IntBool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntBool.swift; sourceTree = "<group>"; };
+		04DC6C9128A6D5EA00888BF9 /* Date+Today.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Today.swift"; sourceTree = "<group>"; };
 		04E03AF7275E6B4E00EA5FB9 /* AutohideDockSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutohideDockSwitch.swift; sourceTree = "<group>"; };
 		04E03AFD275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothDevicesManager.swift; sourceTree = "<group>"; };
 		04E03AFF275F93B900EA5FB9 /* AirPodsSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPodsSwitch.swift; sourceTree = "<group>"; };
@@ -1017,6 +1025,7 @@
 				04BF977627908F1100E7C0E2 /* General */,
 				04BF977227908ECE00E7C0E2 /* Customize */,
 				04BF977827908F5400E7C0E2 /* Shortcuts */,
+				04DC6C8A28A681B500888BF9 /* KeepAwake */,
 				04BF977327908EDF00E7C0E2 /* Radio */,
 				04DC6C8028A5955B00888BF9 /* BackNoises */,
 				04BF977427908EF000E7C0E2 /* AirPods */,
@@ -1050,6 +1059,8 @@
 				041D726228353B380083092D /* NSImage+SymbolName.swift */,
 				04BC8EDC28515CE0009E605F /* NSView++.swift */,
 				04E89D562899B80C00667710 /* View+Erase.swift */,
+				04DC6C8F28A6CBEB00888BF9 /* IntBool.swift */,
+				04DC6C9128A6D5EA00888BF9 /* Date+Today.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -1250,6 +1261,15 @@
 				04DC6C8328A5A91300888BF9 /* BackNoisesSettingVM.swift */,
 			);
 			path = BackNoises;
+			sourceTree = "<group>";
+		};
+		04DC6C8A28A681B500888BF9 /* KeepAwake */ = {
+			isa = PBXGroup;
+			children = (
+				04DC6C8B28A6820400888BF9 /* KeepAwakeSettingView.swift */,
+				04DC6C8D28A6888A00888BF9 /* KeepAwakeSettingVM.swift */,
+			);
+			path = KeepAwake;
 			sourceTree = "<group>";
 		};
 		04E03B01275FD91200EA5FB9 /* Utilities */ = {
@@ -1714,6 +1734,7 @@
 				04F118C427AED8BC005DA861 /* GitHubReleaseModel.swift in Sources */,
 				047140B627788486005B160B /* EffectSoundHelper.swift in Sources */,
 				0493375B27625A1E00AE779A /* JLASAudioPlayer+Streamer.swift in Sources */,
+				04DC6C8C28A6820400888BF9 /* KeepAwakeSettingView.swift in Sources */,
 				0444D6052839A05100327D0B /* ColorChangeGuide.swift in Sources */,
 				04AA63CE276BC94000ED5DEA /* EmptyTrashSwitch.swift in Sources */,
 				0493378E2762665A00AE779A /* RadioStationSwitch.swift in Sources */,
@@ -1728,6 +1749,7 @@
 				049337922762BA3200AE779A /* SettingView.swift in Sources */,
 				04BC8EDB285146BF009E605F /* HideMenubarIconsSettingVM.swift in Sources */,
 				0493376427625D6F00AE779A /* RadioPlayerItemViewModel.swift in Sources */,
+				04DC6C9028A6CBEB00888BF9 /* IntBool.swift in Sources */,
 				04A23B2B275D61BC00B454C8 /* NightShiftSwitch.swift in Sources */,
 				04FC1613283FDE1D00D4A4AC /* ShortcutsSettingModel.swift in Sources */,
 				046FF3C6279A2C0B00506953 /* DockRecentSwitch.swift in Sources */,
@@ -1785,6 +1807,7 @@
 				0493374727625A1E00AE779A /* PlayerManager.swift in Sources */,
 				04BC8EC3284FE9B5009E605F /* Preferences.swift in Sources */,
 				0493372527615EA400AE779A /* HiddenFilesSwitch.swift in Sources */,
+				04DC6C8E28A6888A00888BF9 /* KeepAwakeSettingVM.swift in Sources */,
 				04FB3E5D288D489500F3B5E1 /* SettingWindowController.swift in Sources */,
 				04A6F9432788807800E3300F /* BarProvider.swift in Sources */,
 				04B25455283C06C700D253E2 /* SwitchListModel.swift in Sources */,
@@ -1825,6 +1848,7 @@
 				0493375A27625A1E00AE779A /* DownloadingDelegate.swift in Sources */,
 				0451766527C283BC00006BA0 /* AppleMusicPlayer.swift in Sources */,
 				0427364E27C1A5CD0068108F /* SpotifyPlayer.swift in Sources */,
+				04DC6C9228A6D5EA00888BF9 /* Date+Today.swift in Sources */,
 				043E5D712758176B00ADC004 /* SwitchToggle.swift in Sources */,
 				040E97272760FF3E003D9D42 /* MetadataExtractorError.swift in Sources */,
 				04BC8EC9284FF30A009E605F /* NotificationNames.swift in Sources */,
