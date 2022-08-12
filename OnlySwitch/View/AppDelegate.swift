@@ -47,9 +47,9 @@ struct OnlySwitchApp: App {
                     }
                 }, label: {
                     if preferencesvm.preferences.radioEnable {
-                        Text("Disable Radio Player")
+                        Text("Disable Player")
                     } else {
-                        Text("Enable Radio Player")
+                        Text("Enable Player")
                     }
                 })
                 Button(action: {

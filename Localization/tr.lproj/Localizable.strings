@@ -119,7 +119,7 @@
 "Changing Station" = "Radyo İstasyonunu Değiştirme";
 "Soundtrack" = "Film müziği";
 "Switches Availability" = "Switches Kullanılabilirliği";
-"Disable Radio Player" = "Radyo Oynatıcıyı devre dışı bırakın";
-"Enable Radio Player" = "Radyo Oynatıcıyı etkinleştir";
+"Disable Player" = "Oynatıcıyı devre dışı bırakın";
+"Enable Player" = "Oynatıcıyı etkinleştir";
 "Disable Hide Menu Bar Icons" = "Menü Çubuğu Simgelerini Gizle devre dışı bırakın";
 "Enable Hide Menu Bar Icons" = "Menü Çubuğu Simgelerini Gizle etkinleştir";

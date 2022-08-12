@@ -118,8 +118,8 @@
 "Changing Station" = "Ändern des Radiosenders";
 "Soundtrack" = "Tonspur";
 "Switches Availability" = "Switchverfügbarkeit";
-"Disable Radio Player" = "Radioplayer deaktivieren";
-"Enable Radio Player" = "Radioplayer aktivieren";
+"Disable Player" = "Player deaktivieren";
+"Enable Player" = "Player aktivieren";
 "Disable Hide Menu Bar Icons" = "Menüleistensymbole-ausblenden deaktivieren";
 "Enable Hide Menu Bar Icons" = "Menüleistensymbole-ausblenden aktivieren";
 "Update" = "Update";
