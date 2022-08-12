@@ -162,16 +162,6 @@ class RadioSettingVM:ObservableObject {
         }
     }
     
-    func selectedItem(id:RadioPlayerItemViewModel.ID?) -> RadioPlayerItemViewModel? {
-        guard let id = id else {
-            return nil
-        }
-
-        let item = radioList.filter{ $0.id == id }
-        guard item.count > 0 else {return nil}
-        return item.first
-    }
-    
     func deleteStation() {
         for radio in radioList {
             radio.isEditing = false
@@ -225,15 +215,16 @@ class RadioSettingVM:ObservableObject {
         }
         let station = RadioStations.fetchRequest(by: currentRow).first
         guard let station = station else {return}
-        
-        RadioStationSwitch.shared.playerItem.isPlaying = false
+        let isPlaying = RadioStationSwitch.shared.playerItem.isPlaying
         RadioStationSwitch.shared.playerItem.title = station.title!
         RadioStationSwitch.shared.playerItem.streamUrl = station.url!
         RadioStationSwitch.shared.playerItem.streamInfo = ""
         RadioStationSwitch.shared.playerItem.id = station.id!
         Preferences.shared.radioStationID = currentRow.uuidString
         self.model.currentTitle = RadioStationSwitch.shared.playerItem.title
+        RadioStationSwitch.shared.playerItem.isPlaying = isPlaying
         NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.radioStation)
+        
     }
     
     

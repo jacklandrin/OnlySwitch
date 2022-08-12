@@ -12,11 +12,12 @@ struct RadioSettingView: View {
 
     @StateObject var radioSettingVM = RadioSettingVM()
     @State var updateTable:UUID = UUID()
+
+    
     var body: some View {
         VStack {
             HStack(alignment: .top) {
                 VStack(alignment:.leading) {
-//                    Toggle("Switch enable".localized(), isOn: $radioSettingVM.switchEnable)
                     Toggle("Sound Wave Effect".localized(), isOn: $radioSettingVM.soundWaveEffectDisplay)
                     
                     HStack {
@@ -42,7 +43,8 @@ struct RadioSettingView: View {
                 .padding(.top, 10)
                 .padding(.leading, 10)
             Divider()
-            Table($radioSettingVM.radioList, selection: $radioSettingVM.selectRow) {
+            Table($radioSettingVM.radioList,
+                  selection: $radioSettingVM.selectRow) {
                 TableColumn("Name".localized()) { $row in
                     if row.isEditing {
                         TextEditor(text: $row.title)
