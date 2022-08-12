@@ -61,7 +61,7 @@ struct RadioSettingView: View {
                                 guard row.id == radioSettingVM.selectRow else {return}
                                 radioSettingVM.endEditing()
                                 row.isEditing = true
-                                updateTable = UUID()
+                                radioSettingVM.objectWillChange.send()
                             }.allowsHitTesting(row.id == radioSettingVM.selectRow)
                     }
                 }
@@ -81,11 +81,11 @@ struct RadioSettingView: View {
                                 guard row.id == radioSettingVM.selectRow else {return}
                                 radioSettingVM.endEditing()
                                 row.isEditing = true
-                                updateTable = UUID()
+                                radioSettingVM.objectWillChange.send()
                             }.allowsHitTesting(row.id == radioSettingVM.selectRow)
                     }
                 }
-            }.id(updateTable)
+            }
                 
             HStack {
                 Button(action: {
