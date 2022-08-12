@@ -13,8 +13,8 @@ class BackNoisesSettingVM:ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     private var preferencesPublisher = PreferencesObserver.shared
     @Published private var preferences = PreferencesObserver.shared.preferences
+    @Published private var backNoisesTrackManager = BackNoisesTrackManager.shared
     
-    private let backNoisesTrackManager = BackNoisesTrackManager.shared
     var durationSet = [0, 5, 10, 15, 30]
     
     var trackList:[String] {
@@ -46,6 +46,10 @@ class BackNoisesSettingVM:ObservableObject {
     
     init() {
         preferencesPublisher.$preferences.sink{_ in
+            self.objectWillChange.send()
+        }.store(in: &cancellables)
+        
+        backNoisesTrackManager.objectWillChange.sink{ _ in
             self.objectWillChange.send()
         }.store(in: &cancellables)
     }

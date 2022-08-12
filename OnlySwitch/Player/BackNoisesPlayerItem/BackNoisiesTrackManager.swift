@@ -7,7 +7,7 @@
 
 import Foundation
 
-class BackNoisesTrackManager {
+class BackNoisesTrackManager:ObservableObject {
     enum Tracks:String {
         case WhiteNoise = "White Noise"
         case PinkNoise = "Pink Noise"
@@ -31,6 +31,7 @@ class BackNoisesTrackManager {
         set {
             Preferences.shared.backNoisesTrack = newValue.rawValue
             setPlayItem(track: newValue)
+            objectWillChange.send()
         }
     }
     
