@@ -72,7 +72,7 @@ class JLAVAudioPlayer: NSObject ,AVPlayerItemMetadataOutputPushDelegate, AudioPl
         let asset = AVAsset(url: url)
         
         self.playerItem = AVPlayerItem(asset: asset)
-        self.playerItem?.audioTimePitchAlgorithm = item.type == .BackNoises ? .varispeed : .spectral
+        self.playerItem?.audioTimePitchAlgorithm = .spectral
         self.audioPlayer = AVPlayer(playerItem: playerItem)
         self.audioPlayer?.play()
         self.audioPlayer?.volume = Preferences.shared.volume
