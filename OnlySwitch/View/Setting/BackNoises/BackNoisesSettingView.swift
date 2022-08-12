@@ -13,6 +13,19 @@ struct BackNoisesSettingView: View {
     
     var body: some View {
         VStack {
+            VStack(alignment:.trailing) {
+                HStack {
+                    Spacer()
+                    Text("Volume".localized() + ":")
+                    Slider(value: $backNoisesSettingVM.sliderValue)
+                        .frame(width: 150, height: 10)
+                }
+                
+            } .padding(.trailing, 10)
+                .padding(.top, 10)
+            
+            Divider()
+            
             List{
                 Section(header: Text("Back Noises")) {
                     ForEach(backNoisesSettingVM.trackList.indices, id:\.self) { index in
@@ -31,8 +44,11 @@ struct BackNoisesSettingView: View {
                 }
             }
             
+            Divider()
+                .padding(0)
+            
             HStack {
-                Text("Stop after:")
+                Text("Stop After:")
                 Menu(backNoisesSettingVM.converTimeDescription(duration: backNoisesSettingVM.automaticallyStopPlayNoise)) {
                     ForEach(backNoisesSettingVM.durationSet, id:\.self) { duration in
                         Button(backNoisesSettingVM.converTimeDescription(duration: duration)){
@@ -41,7 +57,8 @@ struct BackNoisesSettingView: View {
                     }
                 }.frame(width:150, height: 30)
                 Spacer()
-            }.padding()
+            }.padding(.horizontal)
+                .padding(.bottom)
         }
     }
 }

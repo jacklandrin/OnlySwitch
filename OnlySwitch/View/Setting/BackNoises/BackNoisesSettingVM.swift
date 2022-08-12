@@ -35,6 +35,15 @@ class BackNoisesSettingVM:ObservableObject {
         }
     }
     
+    var sliderValue:Float {
+        get {
+            preferences.volume
+        }
+        set {
+            preferences.volume = newValue
+        }
+    }
+    
     init() {
         preferencesPublisher.$preferences.sink{_ in
             self.objectWillChange.send()
