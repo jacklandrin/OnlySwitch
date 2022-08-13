@@ -49,6 +49,9 @@ extension UserDefaults {
         static let autoStopKeepAwakeStartDate = "autoStopKeepAwakeStartDateKey"
         static let autoStopKeepAwakeEndDate = "autoStopKeepAwakeEndDateKey"
         static let KeepAwakeKey = "KeepAwakeKey"
+        //Dim Screen
+        static let autoDimScreenTime = "autoDimScreenTimeKey"
+        static let dimScreenPercent = "dimScreenPercentKey"
         //others
         static let newestVersion = "newestVersionKey"
         static let systemLangPriority = "systemLangPriority"

@@ -180,4 +180,20 @@ struct Preferences {
             NotificationCenter.default.post(name: .changeKeepAwakeSetting, object: nil)
         }
     }
+    
+    @UserDefaultValue(key: UserDefaults.Key.autoDimScreenTime, defaultValue: 0)
+    var autoDimScreenTime:Int {
+        didSet {
+            NotificationCenter.default.post(name: .changeDimScreenSetting, object: nil)
+        }
+    }
+    
+    @UserDefaultValue(key: UserDefaults.Key.dimScreenPercent, defaultValue: 0.5)
+    var dimScreenPercent:Float {
+        didSet {
+            NotificationCenter.default.post(name: .changeDimScreenSetting, object: nil)
+        }
+    }
+    
+    
 }

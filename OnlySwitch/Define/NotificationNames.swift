@@ -27,4 +27,5 @@ extension Notification.Name {
     static let illegalRadioInfoNotification = Notification.Name("illegalRadioInfoNotification")
     static let changeAutoStopNoiseTime = Notification.Name(rawValue: "changeAutoStopNoiseTime")
     static let changeKeepAwakeSetting = Notification.Name(rawValue: "changeKeepAwakeSetting")
+    static let changeDimScreenSetting = Notification.Name(rawValue: "changeDimScreenSetting")
 }

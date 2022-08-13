@@ -69,6 +69,8 @@ extension SwitchType {
             return FKeySwitch.shared
         case .backNoises:
             return BackNoisesSwitch()
+        case .dimScreen:
+            return DimScreenSwitch()
         }
     }
     
@@ -213,6 +215,10 @@ extension SwitchType {
                                  offImage: NSImage(systemSymbolName: "ear"),
                                  controlType: .Player,
                                  category: .audio)
+        case .dimScreen:
+            return SwitchBarInfo(title: "Dim Screem",
+                                 onImage: NSImage(systemSymbolName: "sun.min.fill"),
+                                 offImage: NSImage(systemSymbolName: "sun.max.fill"))
         }
     }
 

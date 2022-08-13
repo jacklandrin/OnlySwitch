@@ -19,6 +19,7 @@ enum SettingItem:String {
     case HideMenubarIcons = "Hide Menu Bar Icons"
     case BackNoises = "Back Noises"
     case KeepAwake = "Keep Awake"
+    case DimScreen = "Dim Screen"
     case About = "About"
 
     var page: AnyView {
@@ -41,6 +42,8 @@ enum SettingItem:String {
             return BackNoisesSettingView().eraseToAnyView()
         case .KeepAwake:
             return KeepAwakeSettingView().eraseToAnyView()
+        case .DimScreen:
+            return DimScreenSettingView().eraseToAnyView()
         case .About:
             return AboutView().eraseToAnyView()
         }
@@ -57,6 +60,7 @@ class SettingVM:ObservableObject {
                                                  .Customize,
                                                  .Shortcuts,
                                                  .KeepAwake,
+                                                 .DimScreen,
                                                  .Radio,
                                                  .BackNoises,
                                                  .AirPods,

@@ -246,6 +246,13 @@
 		04DC6C8E28A6888A00888BF9 /* KeepAwakeSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C8D28A6888A00888BF9 /* KeepAwakeSettingVM.swift */; };
 		04DC6C9028A6CBEB00888BF9 /* IntBool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C8F28A6CBEB00888BF9 /* IntBool.swift */; };
 		04DC6C9228A6D5EA00888BF9 /* Date+Today.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C9128A6D5EA00888BF9 /* Date+Today.swift */; };
+		04DC6C9428A7B5C900888BF9 /* DimScreenSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C9328A7B5C900888BF9 /* DimScreenSwitch.swift */; };
+		04DC6C9628A7B6C800888BF9 /* DisplayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C9528A7B6C800888BF9 /* DisplayManager.swift */; };
+		04DC6C9828A7CA6A00888BF9 /* CoreDisplay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04DC6C9728A7CA6A00888BF9 /* CoreDisplay.framework */; };
+		04DC6C9C28A7CA7300888BF9 /* DisplayServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04DC6C9B28A7CA7300888BF9 /* DisplayServices.framework */; };
+		04DC6CA028A7D52300888BF9 /* DimScreenSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C9F28A7D52300888BF9 /* DimScreenSettingView.swift */; };
+		04DC6CA228A7D59B00888BF9 /* DimScreenSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6CA128A7D59B00888BF9 /* DimScreenSettingVM.swift */; };
+		04DC6CA428A7D73A00888BF9 /* Float++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6CA328A7D73A00888BF9 /* Float++.swift */; };
 		04E03AF8275E6B4E00EA5FB9 /* AutohideDockSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AF7275E6B4E00EA5FB9 /* AutohideDockSwitch.swift */; };
 		04E03AFE275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AFD275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift */; };
 		04E03B00275F93B900EA5FB9 /* AirPodsSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AFF275F93B900EA5FB9 /* AirPodsSwitch.swift */; };
@@ -546,6 +553,13 @@
 		04DC6C8D28A6888A00888BF9 /* KeepAwakeSettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeepAwakeSettingVM.swift; sourceTree = "<group>"; };
 		04DC6C8F28A6CBEB00888BF9 /* IntBool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntBool.swift; sourceTree = "<group>"; };
 		04DC6C9128A6D5EA00888BF9 /* Date+Today.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Today.swift"; sourceTree = "<group>"; };
+		04DC6C9328A7B5C900888BF9 /* DimScreenSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DimScreenSwitch.swift; sourceTree = "<group>"; };
+		04DC6C9528A7B6C800888BF9 /* DisplayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayManager.swift; sourceTree = "<group>"; };
+		04DC6C9728A7CA6A00888BF9 /* CoreDisplay.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreDisplay.framework; path = ../../../../System/Library/Frameworks/CoreDisplay.framework; sourceTree = "<group>"; };
+		04DC6C9B28A7CA7300888BF9 /* DisplayServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DisplayServices.framework; path = ../../../../System/Library/PrivateFrameworks/DisplayServices.framework; sourceTree = "<group>"; };
+		04DC6C9F28A7D52300888BF9 /* DimScreenSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DimScreenSettingView.swift; sourceTree = "<group>"; };
+		04DC6CA128A7D59B00888BF9 /* DimScreenSettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DimScreenSettingVM.swift; sourceTree = "<group>"; };
+		04DC6CA328A7D73A00888BF9 /* Float++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Float++.swift"; sourceTree = "<group>"; };
 		04E03AF7275E6B4E00EA5FB9 /* AutohideDockSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutohideDockSwitch.swift; sourceTree = "<group>"; };
 		04E03AFD275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothDevicesManager.swift; sourceTree = "<group>"; };
 		04E03AFF275F93B900EA5FB9 /* AirPodsSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPodsSwitch.swift; sourceTree = "<group>"; };
@@ -611,10 +625,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04DC6C9828A7CA6A00888BF9 /* CoreDisplay.framework in Frameworks */,
 				0430887E275D707C00877E51 /* LaunchAtLogin in Frameworks */,
 				04BF976B27908D5400E7C0E2 /* KeyboardShortcuts in Frameworks */,
 				0493379027626FD200AE779A /* NetworkExtension.framework in Frameworks */,
 				04A23B23275D5FC500B454C8 /* CoreBrightness.framework in Frameworks */,
+				04DC6C9C28A7CA7300888BF9 /* DisplayServices.framework in Frameworks */,
 				04A6B54B27715F90003B2647 /* Alamofire in Frameworks */,
 				04581DB6276506B9008ADF30 /* AlertToast in Frameworks */,
 				043E5D6D2757DADB00ADC004 /* AVFoundation.framework in Frameworks */,
@@ -680,6 +696,7 @@
 				04BC8ED1285137D2009E605F /* HideMenubarIconsSwitch.swift */,
 				04E89D582899F14100667710 /* FKeySwitch.swift */,
 				04DC6C7C28A5624600888BF9 /* BackNoisesSwitch.swift */,
+				04DC6C9328A7B5C900888BF9 /* DimScreenSwitch.swift */,
 			);
 			path = EverySwitch;
 			sourceTree = "<group>";
@@ -783,6 +800,8 @@
 		043E5D6B2757DADB00ADC004 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				04DC6C9B28A7CA7300888BF9 /* DisplayServices.framework */,
+				04DC6C9728A7CA6A00888BF9 /* CoreDisplay.framework */,
 				0444D5E12838600000327D0B /* CoreBluetooth.framework */,
 				0493378F27626FD200AE779A /* NetworkExtension.framework */,
 				04A23B22275D5FC500B454C8 /* CoreBrightness.framework */,
@@ -1026,6 +1045,7 @@
 				04BF977227908ECE00E7C0E2 /* Customize */,
 				04BF977827908F5400E7C0E2 /* Shortcuts */,
 				04DC6C8A28A681B500888BF9 /* KeepAwake */,
+				04DC6C9E28A7D4F700888BF9 /* DimScreen */,
 				04BF977327908EDF00E7C0E2 /* Radio */,
 				04DC6C8028A5955B00888BF9 /* BackNoises */,
 				04BF977427908EF000E7C0E2 /* AirPods */,
@@ -1061,6 +1081,7 @@
 				04E89D562899B80C00667710 /* View+Erase.swift */,
 				04DC6C8F28A6CBEB00888BF9 /* IntBool.swift */,
 				04DC6C9128A6D5EA00888BF9 /* Date+Today.swift */,
+				04DC6CA328A7D73A00888BF9 /* Float++.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -1272,6 +1293,15 @@
 			path = KeepAwake;
 			sourceTree = "<group>";
 		};
+		04DC6C9E28A7D4F700888BF9 /* DimScreen */ = {
+			isa = PBXGroup;
+			children = (
+				04DC6C9F28A7D52300888BF9 /* DimScreenSettingView.swift */,
+				04DC6CA128A7D59B00888BF9 /* DimScreenSettingVM.swift */,
+			);
+			path = DimScreen;
+			sourceTree = "<group>";
+		};
 		04E03B01275FD91200EA5FB9 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
@@ -1284,6 +1314,7 @@
 				04E2AD1D2783B63600BC5DF3 /* CurrentScreen.swift */,
 				04B25452283BEF3800D253E2 /* SupportedLanguage.swift */,
 				04E89D5D289B054C00667710 /* IOService.swift */,
+				04DC6C9528A7B6C800888BF9 /* DisplayManager.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -1680,6 +1711,7 @@
 				04DC6C8228A5A8C300888BF9 /* BackNoisesSettingView.swift in Sources */,
 				04EB1CD22780F4F700C612AB /* ShortcutsView.swift in Sources */,
 				040CD2BC2756D497002E0CC6 /* CGImage++.swift in Sources */,
+				04DC6CA428A7D73A00888BF9 /* Float++.swift in Sources */,
 				04581DBF27653C4A008ADF30 /* AirPodsSettingVM.swift in Sources */,
 				0493375627625A1E00AE779A /* Downloading.swift in Sources */,
 				04FB3E60288D49E100F3B5E1 /* SwitchListVM+SettingWindowController.swift in Sources */,
@@ -1695,6 +1727,7 @@
 				04E03AFE275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift in Sources */,
 				04447B722754FE3800CD2900 /* SwitchListVM.swift in Sources */,
 				04DC6C7B28A5424D00888BF9 /* BackNoisesPlayerItem.swift in Sources */,
+				04DC6CA228A7D59B00888BF9 /* DimScreenSettingVM.swift in Sources */,
 				0493375227625A1E00AE779A /* Reader.swift in Sources */,
 				04581DC327677ADC008ADF30 /* KeepAwakeSwitch.swift in Sources */,
 				04933788276264D400AE779A /* BluredSoundWave.swift in Sources */,
@@ -1704,11 +1737,13 @@
 				04938D0E2769247A00713F1D /* SendEmail.swift in Sources */,
 				0493374D27625A1E00AE779A /* Parser+PropertyListener.swift in Sources */,
 				04DC6C8428A5A91300888BF9 /* BackNoisesSettingVM.swift in Sources */,
+				04DC6C9628A7B6C800888BF9 /* DisplayManager.swift in Sources */,
 				0493374827625A1E00AE779A /* StreamingDelegate.swift in Sources */,
 				0457C25D2760046A00B25BFA /* BluetoothSwitch.swift in Sources */,
 				04A2FFFA275636FA00CE56A0 /* String++.swift in Sources */,
 				04F118C627AED8EE005DA861 /* AboutVM.swift in Sources */,
 				043E5D752758208D00ADC004 /* SwitchBarVM.swift in Sources */,
+				04DC6CA028A7D52300888BF9 /* DimScreenSettingView.swift in Sources */,
 				04938D1027692B6900713F1D /* SwitchManager.swift in Sources */,
 				0493374527625A1E00AE779A /* JLASAudioPlayer.swift in Sources */,
 				04FC161628402E5000D4A4AC /* ShortcutOnMarket.swift in Sources */,
@@ -1816,6 +1851,7 @@
 				04AA63D0276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift in Sources */,
 				04E03AF8275E6B4E00EA5FB9 /* AutohideDockSwitch.swift in Sources */,
 				04581DB02764CBCF008ADF30 /* SettingVM.swift in Sources */,
+				04DC6C9428A7B5C900888BF9 /* DimScreenSwitch.swift in Sources */,
 				04E03B06275FEBE200EA5FB9 /* AirPodsBatteryView.swift in Sources */,
 				04EB1CD62781299A00C612AB /* ShortcutsBarVM.swift in Sources */,
 				04DC6C7928A541CE00888BF9 /* BackNoisesPlayerItemViewModel.swift in Sources */,
