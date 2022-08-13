@@ -44,17 +44,29 @@ extension AudioPlayer {
         let commandCenter = MPRemoteCommandCenter.shared();
         commandCenter.playCommand.isEnabled = true
         commandCenter.playCommand.addTarget { event in
-            let item = self.currentPlayerItem
-            item?.isPlaying = true
+            guard let item = self.currentPlayerItem else {return .commandFailed}
+            item.isPlaying = true
             MPNowPlayingInfoCenter.default().playbackState = .playing
+            switch item.type {
+            case .Radio:
+                NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.radioStation)
+            case .BackNoises:
+                NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.backNoises)
+            }
             return .success
         }
         
         commandCenter.pauseCommand.isEnabled = true
         commandCenter.pauseCommand.addTarget {event in
-            let item = self.currentPlayerItem
-            item?.isPlaying = false
+            guard let item = self.currentPlayerItem else {return .commandFailed}
+            item.isPlaying = false
             MPNowPlayingInfoCenter.default().playbackState = .paused
+            switch item.type {
+            case .Radio:
+                NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.radioStation)
+            case .BackNoises:
+                NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.backNoises)
+            }
             return .success
         }
         
