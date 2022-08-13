@@ -73,7 +73,6 @@ English, Simplified Chinese, German, Croatian, Turkish, Polish, Filipino, Dutch,
 
 ## Welcome to pull request for these
 
-* support Big Sur
 * support other languages
 * fix bug: radio player crash
 
