@@ -113,7 +113,7 @@ struct Preferences {
     }
     
     // MARK: - Hidden Menubar
-    @UserDefaultValue(key: UserDefaults.Key.menubarCollapsable, defaultValue: false)
+    @UserDefaultValue(key: UserDefaults.Key.menubarCollapsable, defaultValue: true)
     var menubarCollaspable:Bool {
         didSet {
             NotificationCenter.default.post(name: .menubarCollapsable, object: menubarCollaspable)
@@ -180,6 +180,8 @@ struct Preferences {
             NotificationCenter.default.post(name: .changeKeepAwakeSetting, object: nil)
         }
     }
+    
+    // MARK: - Dim Screen
     
     @UserDefaultValue(key: UserDefaults.Key.autoDimScreenTime, defaultValue: 0)
     var autoDimScreenTime:Int {
