@@ -131,3 +131,7 @@
 "from:" = "da:";
 "to:    " = "a:  ";
 "Tomorrow" = "Domani";
+"Dim Screen" = "Schermo scuro";
+"Dim Brightness To" = "Luminosità ridotta al:";
+"Dim Screen After:" = "Schermo scuro dopo:";
+"Built-in Screen" = "Schermo integrato";

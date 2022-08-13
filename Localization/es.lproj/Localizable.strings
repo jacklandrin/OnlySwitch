@@ -50,7 +50,7 @@ Creado por Jacklandrin el día 14/12/2021.
 "At least remain 4 switches" = "Al menos quedan 4 cambios";
 "Show User Library" = "Mostrar carpeta de la biblioteca del usuario";
 "Updates:" = "Actualizaciones:";
-"Check for updates" = "Verificar actualizaciones";
+"Check For Update..." = "Verificar actualizaciones";
 "You’re up to date!" = "¡Está actualizado!";
 "The latest version is v%@" = "La última versión es v%@";
 "Update" = "Actualizar";
@@ -130,3 +130,7 @@ Creado por Jacklandrin el día 14/12/2021.
 "from:" = "de:";
 "to:    " = "a:  ";
 "Tomorrow" = "mañana";
+"Dim Screen" = "Pantalla tenue";
+"Dim Brightness To" = "Brillo tenue al:";
+"Dim Screen After:" = "Atenuar pantalla después de:";
+"Built-in Screen" = "Pantalla incorporada";

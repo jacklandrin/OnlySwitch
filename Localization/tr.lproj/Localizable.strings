@@ -132,3 +132,7 @@
 "from:" = "Başlangıç ​​saati:";
 "to:    " = "Bitiş zamanı:    ";
 "Tomorrow" = "Yarın";
+"Dim Screen" = "Karartma Ekranı";
+"Dim Brightness To" = "Parlaklığı Kısma:";
+"Dim Screen After:" = "Bu saatten sonra parlaklığı azalt:";
+"Built-in Screen" = "Dahili Ekran";

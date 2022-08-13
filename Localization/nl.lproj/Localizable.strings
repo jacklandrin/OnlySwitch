@@ -131,3 +131,7 @@
 "from:" = "van:";
 "to:    " = "tot:";
 "Tomorrow" = "morgen";
+"Dim Screen" = "Gedimd scherm";
+"Dim Brightness To" = "Dim helderheid tot:";
+"Dim Screen After:" = "Dim scherm na:";
+"Built-in Screen" = "Ingebouwd scherm";

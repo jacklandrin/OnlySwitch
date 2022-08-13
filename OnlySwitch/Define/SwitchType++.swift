@@ -216,7 +216,7 @@ extension SwitchType {
                                  controlType: .Player,
                                  category: .audio)
         case .dimScreen:
-            return SwitchBarInfo(title: "Dim Screem",
+            return SwitchBarInfo(title: "Dim Screen",
                                  onImage: NSImage(systemSymbolName: "sun.min.fill"),
                                  offImage: NSImage(systemSymbolName: "sun.max.fill"))
         }

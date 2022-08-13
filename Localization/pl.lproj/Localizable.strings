@@ -132,3 +132,7 @@
 "from:" = "od:";
 "to:    " = "do:";
 "Tomorrow" = "Jutro";
+"Dim Screen" = "Ciemny ekran";
+"Dim Brightness To" = "Przyciemnij jasność do:";
+"Dim Screen After:" = "Przyciemnij ekran po:";
+"Built-in Screen" = "Wbudowany ekran";

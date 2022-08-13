@@ -132,3 +132,7 @@
 "from:" = "mula:        ";
 "to:    " = "hanggang:";
 "Tomorrow" = "Huomenna";
+"Dim Screen" = "Dim Screen";
+"Dim Brightness To" = "Dim Brightness Hanggang:";
+"Dim Screen After:" = "Dim Screen Pagkatapos ng:";
+"Built-in Screen" = "Built-in na Screen";

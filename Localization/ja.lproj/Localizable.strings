@@ -134,3 +134,7 @@
 "from:" = "開始時間:";
 "to:    " = "終了時間:";
 "Tomorrow" = "明日";
+"Dim Screen" = "薄暗い画面";
+"Dim Brightness To" = "暗い明るさ:";
+"Dim Screen After:" = "この時間以降は薄暗い:";
+"Built-in Screen" = "ビルトインスクリーン";
