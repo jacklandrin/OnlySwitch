@@ -54,7 +54,8 @@ Everyone can contribute macOS Shortcuts for OnlySwitch now. Please read [How to 
 | Keep awake        | finished | Show Recent Apps on Dock | finished          |
 | Spotify           | finished | Apple Music              | finished          |
 | Screen Test       | finished | Hide Menu Bar Icons      | partly finished   |
-| FKey              | finished |                          |                   |
+| FKey              | finished | Back Noises              | finished          |
+| Dim Screen        | finished |                          |                   |
 
 Since Version 1.3, switches can be added to or removed from the list.
 
