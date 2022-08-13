@@ -129,7 +129,7 @@
 "Stop After:" = "この時間以降はプレイをやめてください:";
 "minutes" = "分";
 "1 hour" = "1 時間";
-"Keep Awake Until After:" = "この時間以降はロック画面を禁止する:";
+"Keep Awake Until After:" = "後までロック画面を防止する:";
 "Daily Schedule:" = "毎日のスケジュール:";
 "from:" = "開始時間:";
 "to:    " = "終了時間:";

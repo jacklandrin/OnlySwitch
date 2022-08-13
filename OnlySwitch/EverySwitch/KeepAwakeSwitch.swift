@@ -8,6 +8,7 @@
 import AppKit
 import IOKit
 import IOKit.pwr_mgt
+import Combine
 
 class KeepAwakeSwitch:SwitchProvider {
     static let shared = KeepAwakeSwitch()
@@ -19,7 +20,9 @@ class KeepAwakeSwitch:SwitchProvider {
     @UserDefaultValue(key: UserDefaults.Key.KeepAwakeKey, defaultValue: false)
     private var preventedSleep
     
-    private var secondTimer:Timer!
+    private let secondTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    
+    private var cancellable = Set<AnyCancellable>()
     
     private var afterTimeMode:Bool = Preferences
         .shared
@@ -57,6 +60,10 @@ class KeepAwakeSwitch:SwitchProvider {
         setTimer()
     }
     
+    deinit {
+        cancellable.removeAll()
+    }
+    
     private func setSettingNotification() {
         NotificationCenter.default.addObserver(forName: .changeKeepAwakeSetting, object: nil, queue: .main) { [weak self] _ in
             guard let strongSelf = self else {return}
@@ -76,15 +83,14 @@ class KeepAwakeSwitch:SwitchProvider {
     }
     
     private func setTimer() {
-        secondTimer = Timer(timeInterval: 1, repeats: true) { [weak self] _ in
+        secondTimer.sink{ [weak self] _ in
             guard let strongSelf = self else {return}
             if strongSelf.afterTimeMode {
                 strongSelf.stopAfterTime()
             } else {
                 strongSelf.scheduleTask()
             }
-        }
-        RunLoop.current.add(self.secondTimer, forMode: .common)
+        }.store(in: &cancellable)
     }
     
     private func stopAfterTime() {
@@ -142,6 +148,7 @@ class KeepAwakeSwitch:SwitchProvider {
                                                     &assertionID )
         if success == kIOReturnSuccess {
             preventedSleep = true
+            timerCounter = 0
         } else {
             throw SwitchError.OperationFailed
         }

@@ -126,7 +126,7 @@
 "Stop After:" = "停止播放在此时间后:";
 "minutes" = "分钟";
 "1 hour" = "1 小时";
-"Keep Awake Until After:" = "防止锁屏在此时间后:";
+"Keep Awake Until After:" = "防止锁屏直到此时间后:";
 "Daily Schedule:" = "每日计划:";
 "from:" = "从:";
 "to:    " = "到:";
