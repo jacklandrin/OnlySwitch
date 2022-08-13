@@ -46,12 +46,17 @@ struct KeepAwakeSettingView: View {
                                displayedComponents: .hourAndMinute)
                     .frame(width:190)
                 
-
-                    DatePicker("to:    ".localized(),
-                               selection: $vm.endDate,
-                               displayedComponents: .hourAndMinute)
-                    .frame(width:190)
-                
+                    HStack {
+                        DatePicker("to:    ".localized(),
+                                   selection: $vm.endDate,
+                                   displayedComponents: .hourAndMinute)
+                        .frame(width:190)
+                        
+                        Text("Tomorrow".localized())
+                            .foregroundColor(.green)
+                            .isHidden(!vm.isTomorrow)
+                    }
+                    
                 }.frame(height: 94)
                 
             }

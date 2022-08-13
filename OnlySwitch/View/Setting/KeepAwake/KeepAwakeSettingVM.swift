@@ -59,8 +59,11 @@ class KeepAwakeSettingVM: ObservableObject {
         
         set {
             preferences.autoStopKeepAwakeEndDate = newValue.timeIntervalSince1970 + timeZoneDifference
-            print(preferences.autoStopKeepAwakeEndDate)
         }
+    }
+    
+    var isTomorrow:Bool {
+        endDate.timeIntervalSince1970 <= startDate.timeIntervalSince1970
     }
     
     func converTimeDescription(duration:Int) -> String {
