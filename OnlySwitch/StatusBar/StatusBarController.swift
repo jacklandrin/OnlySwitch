@@ -63,8 +63,12 @@ class StatusBarController {
         
         HideMenubarIconsSwitch.shared.isButtonPositionValid = {
             var isValid:Bool!
-            DispatchQueue.main.sync {
+            if Thread.isMainThread {
                 isValid = self.isMarkItemValidPosition
+            } else {
+                DispatchQueue.main.sync {
+                    isValid = self.isMarkItemValidPosition
+                }
             }
             return isValid
         }
