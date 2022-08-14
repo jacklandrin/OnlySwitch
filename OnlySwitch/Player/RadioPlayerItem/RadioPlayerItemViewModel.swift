@@ -23,7 +23,10 @@ class RadioPlayerItemViewModel:CommonPlayerItem, ObservableObject, Identifiable 
             if newValue {
                 PlayerManager.shared.player.play(stream: self)
             } else {
-                PlayerManager.shared.player.stop()
+                if let currentItem = PlayerManager.shared.player.currentPlayerItem as? RadioPlayerItemViewModel,
+                currentItem === self {
+                    PlayerManager.shared.player.stop()
+                }
                 self.model.streamInfo = ""
             }
         }
