@@ -16,8 +16,8 @@ class DimScreenSettingVM: ObservableObject {
             preferences.dimScreenPercent
         }
         set {
-            if newValue < 0.1 { //brightness isn't allow to set below 10%
-                preferences.dimScreenPercent = 0.1
+            if newValue < 0.2 { //brightness isn't allow to set below 20%
+                preferences.dimScreenPercent = 0.2
             } else if newValue > 0.9 { //brightness isn't allow to set above 90%
                 preferences.dimScreenPercent = 0.9
             } else {

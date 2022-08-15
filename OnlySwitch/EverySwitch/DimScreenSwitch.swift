@@ -8,6 +8,10 @@
 import Foundation
 import Combine
 class DimScreenSwitch:SwitchProvider {
+    enum DimScreenError:Error {
+        case brightnessTooLow
+    }
+    
     var type: SwitchType = .dimScreen
     
     var delegate: SwitchDelegate?
@@ -35,7 +39,7 @@ class DimScreenSwitch:SwitchProvider {
             if strongSelf.dimPercent != Preferences.shared.dimScreenPercent {
                 strongSelf.dimPercent = Preferences.shared.dimScreenPercent
                 if strongSelf.isDimming {
-                    strongSelf.modifyDimPercent()
+                    try? strongSelf.modifyDimPercent()
                 }
             }
             strongSelf.autoDimScreenTime = Preferences.shared.autoDimScreenTime
@@ -58,7 +62,7 @@ class DimScreenSwitch:SwitchProvider {
     
     func operationSwitch(isOn: Bool) async throws {
         if isOn {
-            dimScreen()
+            try dimScreen()
         } else {
             restoreScreen()
         }
@@ -74,23 +78,23 @@ class DimScreenSwitch:SwitchProvider {
             self.timerCounter += 1
             if self.timerCounter == self.durationBySecond {
                 self.timerCounter = 0
-                self.dimScreen()
+                try? self.dimScreen()
                 NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: self.type)
             }
         }.store(in: &cancellable)
     }
     
-    private func dimScreen() {
+    private func dimScreen() throws {
         manager.configureDisplays()
         originalBrightness = manager.getBrightness()
-        modifyDimPercent()
+        try modifyDimPercent()
         isDimming = true
     }
     
-    private func modifyDimPercent() {
+    private func modifyDimPercent() throws {
         let dimBrightness = originalBrightness * dimPercent
-        if dimBrightness < 0.15 { // the minimum brightness is 0.15
-            return
+        guard dimBrightness >= 0.15 else { // the minimum brightness is 0.15
+            throw DimScreenError.brightnessTooLow
         }
         manager.setBrightness(level: dimBrightness)
     }
