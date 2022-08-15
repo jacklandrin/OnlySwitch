@@ -75,6 +75,7 @@ struct SwitchBarView: View {
                             .foregroundColor(.blue)
                             .frame(height:26)
                         Image(systemName: switchOption.isOn ? "pause.fill" : "play.fill")
+                            .foregroundColor(.white)
                     }.frame(width: 46, height: 30)
                 }).buttonStyle(.plain)
                     .shadow(radius: 2)
