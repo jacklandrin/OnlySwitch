@@ -15,6 +15,11 @@ brew install only-switch
 ## Manually Download
 [**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_2.3.7/OnlySwitch.dmg)
 
+## Communities
+Telegram group: https://t.me/OnlySwitchforMac
+
+Discord: https://discord.gg/BkzgsMMW
+
 ## What's the OnlySwitch?
 OnlySwitch provides a series of toggle switches to simplify your routine work, such as Hidden desktop icons, dark mode, and hide notch of the new Macbook Pro. The switches show on your status bar, you can control them effortlessly. Switch and Shortcuts items can be customized (remove/add or sort) to show on the list.
 
@@ -22,11 +27,13 @@ Since Version 1.7, **Shortcuts** can be imported into OnlySwitch.
 
 Since Version 2.0, supports **keyboard shortcuts**. You can control your all switches and Shortcuts by the keyboard.
 
-Since Version 2.3.5, the Switches Availability (including Player and Hide Menu Bar Icons) is moved to System's menu bar.
-
 <p align="center">
 <img alt="Sits in the status bar" src="https://www.jacklandrin.com/wp-content/uploads/2022/01/onlySwitch_19.png" width="60%" align="center" />
 </p>
+
+Since Version 2.3.6, the Switches Availability (including Player and Hide Menu Bar Icons) is moved to System's menu bar.
+
+![](http://www.jacklandrin.com/wp-content/uploads/2022/08/Screenshot-2022-08-16-at-10.11.35.png)
 
 ## Shortcuts Gallery
 
@@ -77,6 +84,13 @@ English, Simplified Chinese, German, Croatian, Turkish, Polish, Filipino, Dutch,
 * fix bug: radio player crash
 
 If you have other good ideas 💡, feel free to send an E-mail to me.
+
+## Donate
+If you like it, help support this app by giving me a cup of tea for me to keep coding.
+<p align="center">
+<img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2021/12/donation.jpeg" width="20%" align="medium" title="Made by QRCobot"/>
+</p>
+
 
 ## About hiding new Macbook Notch 
 
@@ -170,15 +184,5 @@ Rosel for Filipino translation
 
 @abdorizak for Somali translation
 
-## Communities
-Telegram group: https://t.me/OnlySwitchforMac
-
-Discord: https://discord.gg/BkzgsMMW
-
 ## License
 MIT
-## Donate
-If you like it, help support this app by giving me a cup of tea for me to keep coding.
-<p align="center">
-<img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2021/12/donation.jpeg" width="20%" align="left" title="Made by QRCobot"/>
-</p>
