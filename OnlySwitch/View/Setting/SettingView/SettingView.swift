@@ -10,8 +10,6 @@ import SwiftUI
 struct SettingView: View {
     @StateObject var settingVM = SettingVM.shared
     @ObservedObject var langManager = LanguageManager.sharedManager
-    @ObservedObject var shortcutsVM = ShortcutsSettingVM.shared
-    
     
     var body: some View {
         NavigationView {
