@@ -18,7 +18,7 @@ brew install only-switch
 ## Communities
 Telegram group: https://t.me/OnlySwitchforMac
 
-Discord: https://discord.gg/BkzgsMMW
+Discord: https://discord.gg/UzSNpYdPZj
 
 ## What's the OnlySwitch?
 OnlySwitch provides a series of toggle switches to simplify your routine work, such as Hidden desktop icons, dark mode, and hide notch of the new Macbook Pro. The switches show on your status bar, you can control them effortlessly. Switch and Shortcuts items can be customized (remove/add or sort) to show on the list.

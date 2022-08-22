@@ -48,7 +48,7 @@ struct AboutView: View {
                     Link(destination: URL(string: "https://t.me/OnlySwitchforMac")!, label: {
                         Text("Telegram")
                     })
-                    Link(destination: URL(string: "https://discord.gg/BkzgsMMW")!, label: {
+                    Link(destination: URL(string: "https://discord.gg/UzSNpYdPZj")!, label: {
                         Text("Discord")
                     })
                 }
