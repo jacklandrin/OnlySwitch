@@ -62,9 +62,9 @@ struct AboutView: View {
                         .progressViewStyle(.circular)
                         .isHidden(!aboutVM.updateHistoryInfo.isEmpty, remove: true)
                     ForEach(aboutVM.updateHistoryList,id:\.self) { info in
-                        HStack {
+                        LazyHStack {
                             Text(info)
-                                .frame(alignment: .leading)
+                                .frame(width: Layout.settingWindowWidth / 2 - 150,alignment: .leading)
                             Spacer()
                         }
                         Divider()
