@@ -22,30 +22,31 @@ enum SettingItem:String {
     case DimScreen = "Dim Screen"
     case About = "About"
 
-    var page: AnyView {
+    @ViewBuilder
+    var page: some View {
         switch self {
         case .AirPods:
-            return AirPodsSettingView().eraseToAnyView()
+            AirPodsSettingView()
         case .Radio:
-            return RadioSettingView().eraseToAnyView()
+            RadioSettingView()
         case .PomodoroTimer:
-            return PomodoroTimerSettingView().eraseToAnyView()
+            PomodoroTimerSettingView()
         case .Shortcuts:
-            return ShortcutsView().eraseToAnyView()
+            ShortcutsView()
         case .General:
-            return GeneralView().eraseToAnyView()
+            GeneralView()
         case .Customize:
-            return CustomizeView().eraseToAnyView()
+            CustomizeView()
         case .HideMenubarIcons:
-            return HideMenubarIconsSettingView().eraseToAnyView()
+            HideMenubarIconsSettingView()
         case .BackNoises:
-            return BackNoisesSettingView().eraseToAnyView()
+            BackNoisesSettingView()
         case .KeepAwake:
-            return KeepAwakeSettingView().eraseToAnyView()
+            KeepAwakeSettingView()
         case .DimScreen:
-            return DimScreenSettingView().eraseToAnyView()
+            DimScreenSettingView()
         case .About:
-            return AboutView().eraseToAnyView()
+            AboutView()
         }
     }
 
