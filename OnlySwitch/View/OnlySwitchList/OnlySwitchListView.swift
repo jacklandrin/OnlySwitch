@@ -93,7 +93,7 @@ struct OnlySwitchListView: View {
                             .frame(height:Layout.singleSwitchHeight)
                     }
                 }.padding(.horizontal, 15)
-                    .background(Color(AppColor.themeBlue)
+                    .background(Color.accentColor
                         .shadow(color: Color(nsColor: .darkGray), radius: 1, x: 0, y: 1)
                         .opacity(0.15)
                         .isHidden(!itemHighlight(index: index)))

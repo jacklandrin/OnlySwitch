@@ -33,7 +33,7 @@ struct ShortcutsBarView: View {
             }, label: {
                 ZStack {
                     RoundedRectangle(cornerRadius: 15)
-                        .foregroundColor(.blue)
+                        .foregroundColor(.accentColor)
                         .frame(height:26)
                     Text("Run".localized())
                         .font(.system(size: "Run".localized().count > 6 ? 300 : 11))

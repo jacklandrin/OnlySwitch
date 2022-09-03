@@ -54,7 +54,7 @@ struct SwitchBarView: View {
                 }, label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 15)
-                            .foregroundColor(.blue)
+                            .foregroundColor(.accentColor)
                             .frame(height:26)
                         Text(buttonTitle(category:switchOption.category).localized())
                             .font(.system(size: buttonTitle(category:switchOption.category).localized().count > 6 ? 300 : 11))
@@ -72,7 +72,7 @@ struct SwitchBarView: View {
                 }, label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 15)
-                            .foregroundColor(.blue)
+                            .foregroundColor(.accentColor)
                             .frame(height:26)
                         Image(systemName: switchOption.isOn ? "pause.fill" : "play.fill")
                             .foregroundColor(.white)
