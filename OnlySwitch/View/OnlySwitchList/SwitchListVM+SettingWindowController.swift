@@ -72,10 +72,12 @@ extension SwitchListVM: SettingWindowController {
             NSApp.setActivationPolicy(.regular)
             NSApp.activate(ignoringOtherApps: true)
             window.makeKeyAndOrderFront(self)
-            var windowFrame = window.frame
-            windowFrame.size.height = Layout.settingWindowHeight
-            window.setFrame(windowFrame, display: true)
-            window.styleMask.remove(.resizable)
+            if #available(macOS 13.0, *) {
+                var windowFrame = window.frame
+                windowFrame.size.height = Layout.settingWindowHeight
+                window.setFrame(windowFrame, display: true)
+                window.styleMask.remove(.resizable)
+            }
         } else {
             if let url = URL(string: "onlyswitch://SettingsWindow") {
                 NSWorkspace.shared.open(url)
