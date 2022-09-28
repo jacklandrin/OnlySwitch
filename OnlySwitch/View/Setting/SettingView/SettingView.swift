@@ -12,38 +12,59 @@ struct SettingView: View {
     @ObservedObject var langManager = LanguageManager.sharedManager
     
     var body: some View {
-        NavigationView {
-            List(selection:$settingVM.selection) {
-                ForEach(settingVM.settingItems, id:\.self ) { item in
-                    NavigationLink{
-                        item.page
-                    }label:{
+        if #available(macOS 13.0, *) {
+            NavigationSplitView {
+                List(selection:$settingVM.selection) {
+                    ForEach(settingVM.settingItems, id:\.self ) { item in
                         Text(item.rawValue.localized())
                             .frame(minWidth: 190, alignment:.leading)
                             .lineLimit(2)
                     }
-                }
-                HostingWindowFinder{ window in
-                    if let window = window {
-                        NotificationCenter.default.post(name: .settingsWindowOpened, object: window)
+                    HostingWindowFinder{ window in
+                        if let window = window {
+                            NotificationCenter.default.post(name: .settingsWindowOpened, object: window)
+                        }
+                    }.frame(width: 0, height: 0)
+                        .padding(0)
+                }.listStyle(.sidebar)
+            } detail: {
+                settingVM.selection?.page
+            }
+        } else {
+            NavigationView {
+                List(selection:$settingVM.selection) {
+                    ForEach(settingVM.settingItems, id:\.self ) { item in
+                        NavigationLink{
+                            item.page
+                        } label:{
+                            Text(item.rawValue.localized())
+                                .frame(minWidth: 190, alignment:.leading)
+                                .lineLimit(2)
+                        }
                     }
-                }.frame(width: 0, height: 0)
-                    .padding(0)
-            }.listStyle(.sidebar)
-            GeneralView()
-        }.navigationTitle("Settings".localized())
-            .toolbar {
-                ToolbarItem(placement: .navigation) {
-                    Button(action: {
-                        toggleSidebar()
-                    }, label: {
-                        Image(systemName: "sidebar.leading")
-                    })
+                    HostingWindowFinder{ window in
+                        if let window = window {
+                            NotificationCenter.default.post(name: .settingsWindowOpened, object: window)
+                        }
+                    }.frame(width: 0, height: 0)
+                        .padding(0)
+                }.listStyle(.sidebar)
+                GeneralView()
+            }.navigationTitle("Settings".localized())
+                .toolbar {
+                    ToolbarItem(placement: .navigation) {
+                        Button(action: {
+                            toggleSidebar()
+                        }, label: {
+                            Image(systemName: "sidebar.leading")
+                        })
+                    }
                 }
-            }
-            .onAppear{
-                settingVM.selection = .General
-            }
+                .onAppear{
+                    settingVM.selection = .General
+                }
+        }
+        
     }
     
     private func toggleSidebar() {
