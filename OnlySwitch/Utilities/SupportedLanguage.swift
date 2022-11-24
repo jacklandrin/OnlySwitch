@@ -26,6 +26,7 @@ struct SupportedLanguages {
     static let spanish = Language(name: "Español", code: "es")
     static let japanese = Language(name: "日本語", code: "ja")
     static let somali = Language(name: "Somali", code: "so")
+    static let korean = Language(name: "한국어", code: "ko")
     
     static let langList = [SupportedLanguages.english,
                            SupportedLanguages.simplifiedChinese,
@@ -39,7 +40,8 @@ struct SupportedLanguages {
                            SupportedLanguages.russian,
                            SupportedLanguages.spanish,
                            SupportedLanguages.japanese,
-                           SupportedLanguages.somali]
+                           SupportedLanguages.somali,
+                           SupportedLanguages.korean]
     
     static func getLangName(code:String) -> String {
         let lang = SupportedLanguages.langList.filter{$0.code == code}.first
