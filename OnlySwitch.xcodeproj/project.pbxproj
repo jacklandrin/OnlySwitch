@@ -220,6 +220,7 @@
 		04BC8ED928513D3A009E605F /* HideMenubarIconsSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8ED828513D3A009E605F /* HideMenubarIconsSettingView.swift */; };
 		04BC8EDB285146BF009E605F /* HideMenubarIconsSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8EDA285146BF009E605F /* HideMenubarIconsSettingVM.swift */; };
 		04BC8EDD28515CE0009E605F /* NSView++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8EDC28515CE0009E605F /* NSView++.swift */; };
+		04BEF6DC293025D0009DB981 /* EjectDiscsSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BEF6DB293025D0009DB981 /* EjectDiscsSwitch.swift */; };
 		04BF97682790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BF97672790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift */; };
 		04BF976B27908D5400E7C0E2 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 04BF976A27908D5400E7C0E2 /* KeyboardShortcuts */; };
 		04D68B0D2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D68B0C2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift */; };
@@ -528,6 +529,7 @@
 		04BC8ED828513D3A009E605F /* HideMenubarIconsSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HideMenubarIconsSettingView.swift; sourceTree = "<group>"; };
 		04BC8EDA285146BF009E605F /* HideMenubarIconsSettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HideMenubarIconsSettingVM.swift; sourceTree = "<group>"; };
 		04BC8EDC28515CE0009E605F /* NSView++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSView++.swift"; sourceTree = "<group>"; };
+		04BEF6DB293025D0009DB981 /* EjectDiscsSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EjectDiscsSwitch.swift; sourceTree = "<group>"; };
 		04BF97672790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowFinderPathbarSwitch.swift; sourceTree = "<group>"; };
 		04D68B0C2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowUserLibrarySwitch.swift; sourceTree = "<group>"; };
 		04DC6C5B28A2D04B00888BF9 /* UpdateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateView.swift; sourceTree = "<group>"; };
@@ -698,6 +700,7 @@
 				04E89D582899F14100667710 /* FKeySwitch.swift */,
 				04DC6C7C28A5624600888BF9 /* BackNoisesSwitch.swift */,
 				04DC6C9328A7B5C900888BF9 /* DimScreenSwitch.swift */,
+				04BEF6DB293025D0009DB981 /* EjectDiscsSwitch.swift */,
 			);
 			path = EverySwitch;
 			sourceTree = "<group>";
@@ -1788,6 +1791,7 @@
 				0493376427625D6F00AE779A /* RadioPlayerItemViewModel.swift in Sources */,
 				04DC6C9028A6CBEB00888BF9 /* IntBool.swift in Sources */,
 				04A23B2B275D61BC00B454C8 /* NightShiftSwitch.swift in Sources */,
+				04BEF6DC293025D0009DB981 /* EjectDiscsSwitch.swift in Sources */,
 				04FC1613283FDE1D00D4A4AC /* ShortcutsSettingModel.swift in Sources */,
 				046FF3C6279A2C0B00506953 /* DockRecentSwitch.swift in Sources */,
 				04FC160A283D8A9800D4A4AC /* GitHubInteractor.swift in Sources */,
@@ -1979,7 +1983,7 @@
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Only Switch requests Bluetooth usage to switch Airpods connection";
 				INFOPLIST_OUTPUT_FORMAT = binary;
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.8;
+				MARKETING_VERSION = 2.3.9;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitchTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -2005,7 +2009,7 @@
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Only Switch requests Bluetooth usage to switch Airpods connection";
 				INFOPLIST_OUTPUT_FORMAT = binary;
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.8;
+				MARKETING_VERSION = 2.3.9;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitchTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -2172,7 +2176,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.8;
+				MARKETING_VERSION = 2.3.9;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2226,7 +2230,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.8;
+				MARKETING_VERSION = 2.3.9;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2265,7 +2269,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.8;
+				MARKETING_VERSION = 2.3.9;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.IntentsExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2298,7 +2302,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.8;
+				MARKETING_VERSION = 2.3.9;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.IntentsExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

@@ -194,3 +194,5 @@ let getAirpodsBatteryShell = "battery-airpods-monterey"
 func notificationCMD(content:String, title:String) -> String {
     "display notification \"\(content)\" with title \"\(title)\""
 }
+
+let ejectDiscs = "tell application \"Finder\" to eject (every disk whose ejectable is true)"

@@ -47,6 +47,7 @@ enum SwitchType:UInt64, CaseIterable {
     case fkey = 268_435_456 // 1 << 28
     case backNoises = 536_870_912 // 1 << 29
     case dimScreen = 1_073_741_824 // 1 << 30
+    case ejectDiscs = 2_147_483_648 // 1 << 31
 }
 
 let switchTypeCount = SwitchType.allCases.count

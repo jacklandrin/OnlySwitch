@@ -71,6 +71,8 @@ extension SwitchType {
             return BackNoisesSwitch()
         case .dimScreen:
             return DimScreenSwitch()
+        case .ejectDiscs:
+            return EjectDiscsSWitch()
         }
     }
     
@@ -219,6 +221,12 @@ extension SwitchType {
             return SwitchBarInfo(title: "Dim Screen",
                                  onImage: NSImage(systemSymbolName: "sun.min.fill"),
                                  offImage: NSImage(systemSymbolName: "sun.max.fill"))
+        case .ejectDiscs:
+            return SwitchBarInfo(title: "Eject Discs",
+                                 onImage: NSImage(systemSymbolName: "eject.circle"),
+                                 offImage: NSImage(systemSymbolName: "eject.circle"),
+                                 controlType: .Button,
+                                 category: .tool)
         }
     }
 
