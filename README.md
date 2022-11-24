@@ -13,7 +13,7 @@
 brew install only-switch
 ```
 ## Manually Download
-[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_2.3.7/OnlySwitch.dmg)
+[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_2.3.8/OnlySwitch.dmg)
 
 ## Communities
 Telegram group: https://t.me/OnlySwitchforMac
@@ -25,7 +25,7 @@ OnlySwitch provides a series of toggle switches to simplify your routine work, s
 
 Since Version 1.7, **Shortcuts** can be imported into OnlySwitch.
 
-Since Version 2.0, supports **keyboard shortcuts**. You can control your all switches and Shortcuts by the keyboard.
+Since Version 2.0, supports **keyboard shortcuts**. You can control your all switches and Shortcuts with the keyboard.
 
 <p align="center">
 <img alt="Sits in the status bar" src="https://www.jacklandrin.com/wp-content/uploads/2022/01/onlySwitch_19.png" width="60%" align="center" />
@@ -76,9 +76,9 @@ Since Version 1.3, switches can be added to or removed from the list.
 | Set dark mode       | finished          |
 
 ## Supported Languages
-English, Simplified Chinese, German, Croatian, Turkish, Polish, Filipino, Dutch, Italian, Russian, Spanish, Japanese, Somali
+English, Simplified Chinese, German, Croatian, Turkish, Polish, Filipino, Dutch, Italian, Russian, Spanish, Japanese, Somali, Korean
 
-## Welcome to pull request for these
+## Welcome to pull requests for these
 
 * support other languages
 * fix bug: radio player crash
@@ -94,7 +94,7 @@ If you like it, help support this app by giving me a cup of tea for me to keep c
 
 ## About hiding new Macbook Notch 
 
-The Hide notch switch only shows on the built-in display of M1 Pro/Max Macbook Pro. The switch just controls the current desktop, not for all work desktops.
+The Hide notch switch only shows on the built-in display of M1 Pro/Max Macbook Pro. The switch just controls the current desktop, not all work desktops.
 Now, the Hide notch switch supports dynamic wallpaper, just the processing takes a much longer time.
 <p align="center">
 <img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2021/12/hidenotch.png" width="60%" align="center" />
@@ -144,7 +144,7 @@ OnlySwitch offers some Shortcuts actions since Version 1.8. For example, you can
 
 ## Reference
 
-* NightShift switch refer to [Nocturnal](https://github.com/joshjon/nocturnal)
+* NightShift switch refers to [Nocturnal](https://github.com/joshjon/nocturnal)
 * [LaunchAtLogin](https://github.com/sindresorhus/LaunchAtLogin)
 * AirPods Battery refers to [AirPods Battery Monitor For MAC OS](https://github.com/mohamed-arradi/AirpodsBattery-Monitor-For-Mac)
 * Dynamic Wallpaper processing refer to https://itnext.io/macos-mojave-dynamic-wallpaper-fd26b0698223 and [wallpapper](https://github.com/mczachurski/wallpapper)
@@ -183,6 +183,8 @@ Rosel for Filipino translation
 @ShogoKoyama for Japanese translation
 
 @abdorizak for Somali translation
+
+@iosdevted for Korean translation
 
 ## License
 MIT
