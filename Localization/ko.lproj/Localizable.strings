@@ -111,7 +111,7 @@
 "Hide Menu Bar Icons" = "Menu Bar 아이콘 숨기기";
 "seconds" = "초";
 "never" = "비활성화";
-"1 minute" = "1분";
+"1 minute" = "1 분";
 "Switch enable" = "스위치 활성화";
 "Automatically hide icons after:" = "아이콘 자동 숨기기 시작 시간:";
 "When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section." = "스위치가 켜져 있으면 화살표 아이콘의 왼쪽에 있는 항목은 숨겨집니다. ⌘(command)를 누른 상태에서 아이콘을 드래그하여 숨겨진 섹션을 구성합니다.";
@@ -123,8 +123,8 @@
 "Switches Availability" = "스위치 가용성";
 "Disable Player" = "플레이어 비활성화";
 "Enable Player" = "플레이어 활성화";
-"Disable Hide Menu Bar Icons" = "Menu Bar 아이콘 숨기기를 비활성화";
-"Enable Hide Menu Bar Icons" = "Menu Bar 아이콘 숨기기를 활성화";
+"Disable Hide Menu Bar Icons" = "Menu Bar 아이콘 숨기기 비활성화";
+"Enable Hide Menu Bar Icons" = "Menu Bar 아이콘 숨기기 활성화";
 "Back Noises" = "배경 노이즈";
 "Stop After:" = "종료 시간:";
 "minutes" = "분";
