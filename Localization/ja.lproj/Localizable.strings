@@ -57,7 +57,7 @@
 "The latest version is v%@" = "最終バージョンは v%@ です";
 "Update" = "アップデート";
 "Download" = "ダウンロード";
-"You can update to new version. The latest version is v%@" = "Y新しいバージョンにアップデートできます。 最新のバージョンはv%@です。";
+"You can update to new version. The latest version is v%@" = "新しいバージョンにアップデートできます。 最新のバージョンはv%@です。";
 "Cancel" = "キャンセル";
 "Show Extension Name" = "拡張子を表示";
 "Pomodoro Timer" = "ポモドーロタイマー";
