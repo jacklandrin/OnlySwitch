@@ -9,7 +9,6 @@ import Foundation
 import KeyboardShortcuts
 import Alamofire
 
-
 class ShortcutsItem:ObservableObject {
     let error:(_ info:String) -> Void
     @Published var name:String
@@ -88,41 +87,41 @@ class ShortcutsSettingVM:ObservableObject {
     }
     
     func loadShortcutsList() {
-        DispatchQueue.main.async {
+        DispatchQueue.global().async {
             do {
                 let result = try ShorcutsCMD.getList.runAppleScript(isShellCMD: true)
-                
-                let allshortcuts = result.split(separator: "\r")
-                let shortcutsDic = Preferences.shared.shortcutsDic
-                var newShortcutsDic:[String:Bool] = [String:Bool]()
-                if let shortcutsDic = shortcutsDic {
-                    self.model.shortcutsList = [ShortcutsItem]()
-                    for name in allshortcuts {
-                        if let toggle = shortcutsDic[String(name)] {
-                            self.addItem(name: String(name), toggle: toggle)
-                            newShortcutsDic[String(name)] = toggle
-                        } else {
-                            self.addItem(name: String(name), toggle: false)
+                DispatchQueue.main.async {
+                    let allshortcuts = result.split(separator: "\r")
+                    let shortcutsDic = Preferences.shared.shortcutsDic
+                    var newShortcutsDic:[String:Bool] = [String:Bool]()
+                    if let shortcutsDic = shortcutsDic {
+                        self.model.shortcutsList = [ShortcutsItem]()
+                        for name in allshortcuts {
+                            if let toggle = shortcutsDic[String(name)] {
+                                self.addItem(name: String(name), toggle: toggle)
+                                newShortcutsDic[String(name)] = toggle
+                            } else {
+                                self.addItem(name: String(name), toggle: false)
+                                newShortcutsDic[String(name)] = false
+                            }
+                        }
+                    } else {
+                        self.model.shortcutsList = allshortcuts.map{ ShortcutsItem(name: String($0), toggle: false, error: {[weak self] info in
+                            guard let strongSelf = self else {return}
+                            strongSelf.model.errorInfo = info
+                            strongSelf.model.showErrorToast = true
+                        }) }
+                        for name in allshortcuts {
                             newShortcutsDic[String(name)] = false
                         }
                     }
-                } else {
-                    self.model.shortcutsList = allshortcuts.map{ ShortcutsItem(name: String($0), toggle: false, error: {[weak self] info in
-                        guard let strongSelf = self else {return}
-                        strongSelf.model.errorInfo = info
-                        strongSelf.model.showErrorToast = true
-                    }) }
-                    for name in allshortcuts {
-                        newShortcutsDic[String(name)] = false
-                    }
+                    
+                    Preferences.shared.shortcutsDic = newShortcutsDic
                 }
-                
-                Preferences.shared.shortcutsDic = newShortcutsDic
             } catch {
                 
             }
         }
-        
     }
     
     func addItem(name:String, toggle:Bool) {
