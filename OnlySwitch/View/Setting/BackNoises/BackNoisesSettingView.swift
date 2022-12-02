@@ -39,7 +39,7 @@ struct BackNoisesSettingView: View {
                                 Spacer()
                             }
                         }).buttonStyle(.plain)
-                            .background(backNoisesSettingVM.trackList[index] == backNoisesSettingVM.currentTrack ? Color.blue : Color.clear)
+                            .background(backNoisesSettingVM.trackList[index] == backNoisesSettingVM.currentTrack ? Color.accentColor.opacity(0.65) : Color.clear)
                     }
                 }
             }
