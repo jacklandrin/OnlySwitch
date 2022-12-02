@@ -56,6 +56,8 @@ class SettingVM:ObservableObject {
     
     static let shared = SettingVM()
     
+    var window:NSWindow?
+    
     @Published var settingItems:[SettingItem] = [
                                                  .General,
                                                  .Customize,
@@ -70,5 +72,5 @@ class SettingVM:ObservableObject {
                                                  .About]
     
     @Published var selection:SettingItem? = .General
-    
+
 }

@@ -47,7 +47,15 @@ extension SwitchListVM: SettingWindowController {
                 if self.settingsWindow == nil {
                     self.settingsWindow = window
                     self.settingsWindow?.makeKeyAndOrderFront(self)
-                    self.settingsWindow?.styleMask = [.titled, .closable, .miniaturizable]
+                    
+                    if #available(macOS 13.0, *) {
+                        var windowFrame = window.frame
+                        windowFrame.size.height = Layout.settingWindowHeight
+                        window.setFrame(windowFrame, display: true)
+                        window.styleMask.remove(.resizable)
+                    } else {
+                        self.settingsWindow?.styleMask = [.titled, .closable, .miniaturizable]
+                    }
                 } else {
                     if self.settingsWindowPresented == false {
                         self.showSettingsWindow()

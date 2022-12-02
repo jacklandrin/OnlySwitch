@@ -11,6 +11,7 @@ struct SettingView: View {
     @StateObject var settingVM = SettingVM.shared
     @ObservedObject var langManager = LanguageManager.sharedManager
     
+    
     var body: some View {
         NavigationView {
             List(selection:$settingVM.selection) {
@@ -23,14 +24,16 @@ struct SettingView: View {
                             .lineLimit(2)
                     }
                 }
-                HostingWindowFinder{ window in
-                    if let window = window {
-                        NotificationCenter.default.post(name: .settingsWindowOpened, object: window)
-                    }
-                }.frame(width: 0, height: 0)
-                    .padding(0)
+                
             }.listStyle(.sidebar)
-            GeneralView()
+            HostingWindowFinder{ window in
+                if let window = window {
+                    self.settingVM.window = window
+                    NotificationCenter.default.post(name: .settingsWindowOpened, object: window)
+                }
+                settingVM.selection = .General
+            }.frame(width: 0, height: 0)
+                .padding(0)
         }.navigationTitle("Settings".localized())
             .toolbar {
                 ToolbarItem(placement: .navigation) {
@@ -41,14 +44,11 @@ struct SettingView: View {
                     })
                 }
             }
-            .onAppear{
-                settingVM.selection = .General
-            }
     }
     
     private func toggleSidebar() {
-        NSApp
-            .keyWindow?
+        settingVM
+            .window?
             .firstResponder?
             .tryToPerform(
                 #selector(
