@@ -263,8 +263,13 @@ struct OnlySwitchListView: View {
                             .resizable()
                             .scaledToFit()
                             .frame(width: 45)
-                            .cornerRadius(10)
+                            .cornerRadius(12)
                             .help(Text(ad.hint.localized()))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                .stroke(.gray, lineWidth: 1)
+                                .opacity(0.5)
+                                )
                     })
                 }
             }.frame(height: 45)
