@@ -24,7 +24,7 @@
 "Launch at login" = "ログイン時に起動";
 "Clear Cache" = "キャッシュをクリア";
 "Quit" = "終了";
-"More App, QRCobot" = "More Apps by Jack";
+"More App, QRCobot" = "More Apps";
 "Download QRCobot" = "QRCobotをダウンロード";
 "Download WallCard" = "WallCardをダウンロード";
 "Radio" = "ラジオ";
@@ -101,8 +101,8 @@
 "Appearance:" = "メニューの外観:";
 "Single Column" = "1列表示";
 "Two Columns" = "2列表示";
-"Recommendation:" = "推薦:";
-"Show Jack's Apps" = "Jackのアプリを表示";
+"Promotion:" = "推薦:";
+"Show More Apps" = "もっとアプリを表示";
 "Screen Test" = "スクリーンテスト";
 "Version History:" = "バージョン履歴:";
 "Join:" = "加入:";

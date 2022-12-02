@@ -23,7 +23,7 @@
 "Launch at login" = "Avvia al login";
 "Clear Cache" = "Pulisci cache";
 "Quit" = "Esci";
-"More App, QRCobot" = "Altro da Jack";
+"More Apps" = "Più applicazioni";
 "Download QRCobot" = "Download QRCobot";
 "Download WallCard" = "Download WallCard";
 "Radio" = "Radio";
@@ -100,8 +100,8 @@
 "Appearance:" = "Aspetto:";
 "Single Column" = "Singola Colonna";
 "Two Columns" = "Due Colonne";
-"Recommendation:" = "Raccomandazione:";
-"Show Jack's Apps" = "Mostra l'app di Jack";
+"Promotion:" = "Promozione:";
+"Show More Apps" = "Mostra più app";
 "Screen Test" = "Monitorare il test";
 "Version History:" = "Cronologia delle versioni:";
 "Join:" = "Giuntura:";

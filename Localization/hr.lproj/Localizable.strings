@@ -24,7 +24,7 @@
 "Launch at login" = "Pokreni nakon prijave";
 "Clear Cache" = "Isprazni predmemoriju";
 "Quit" = "Zatvori program";
-"More App, QRCobot" = "Daljnji programi od Jacka";
+"More Apps" = "Daljnji programi";
 "Download QRCobot" = "Preuzmi QRCobot";
 "Download WallCard" = "Preuzmi WallCard";
 "Radio" = "Radio";
@@ -98,8 +98,8 @@
 "Appearance:" = "Izgled:";
 "Single Column" = "Jedan stupac";
 "Two Columns" = "Dva stupca";
-"Recommendation:" = "Preporuka:";
-"Show Jack's Apps" = "Prikaži Jackov program";
+"Promotion:" = "Preporuka:";
+"Show More Apps" = "Prikaži više aplikacija";
 "Screen Test" = "Test ekrana";
 "Version History:" = "Povijest verzija:";
 "Join:" = "Pridruži:";

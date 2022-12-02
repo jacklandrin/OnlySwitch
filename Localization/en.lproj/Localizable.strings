@@ -23,7 +23,7 @@
 "Launch at login" = "Launch at login";
 "Clear Cache" = "Clear Cache";
 "Quit" = "Quit";
-"More App, QRCobot" = "More Apps by Jack";
+"More Apps" = "More Apps";
 "Download QRCobot" = "Download QRCobot";
 "Download WallCard" = "Download WallCard";
 "Radio" = "Radio";
@@ -100,8 +100,8 @@
 "Appearance:" = "Appearance:";
 "Single Column" = "Single Column";
 "Two Columns" = "Two Columns";
-"Recommendation:" = "Recommendation:";
-"Show Jack's Apps" = "Show Jack's Apps";
+"Promotion:" = "Promotion:";
+"Show More Apps" = "Show More Apps";
 "Screen Test" = "Screen Test";
 "Version History:" = "Version History:";
 "Join:" = "Join:";

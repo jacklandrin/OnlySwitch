@@ -24,7 +24,7 @@
 "Launch at login" = "로그인시 자동 실행";
 "Clear Cache" = "캐시 삭제";
 "Quit" = "종료";
-"More App, QRCobot" = "More Apps by Jack";
+"More Apps" = "More Apps";
 "Download QRCobot" = "QRCobot 다운로드";
 "Download WallCard" = "WallCard 다운로드";
 "Radio" = "라디오";
@@ -101,8 +101,8 @@
 "Appearance:" = "메뉴 모양:";
 "Single Column" = "1열 표시";
 "Two Columns" = "2열 표시";
-"Recommendation:" = "추천:";
-"Show Jack's Apps" = "Jack의 앱 보기";
+"Promotion:" = "추천:";
+"Show More Apps" = "더 많은 앱 표시";
 "Screen Test" = "스크린 테스트";
 "Version History:" = "버전 히스토리:";
 "Join:" = "가입:";

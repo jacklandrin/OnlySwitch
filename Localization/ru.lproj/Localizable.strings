@@ -23,7 +23,7 @@
 "Launch at login" = "Запускать при включении";
 "Clear Cache" = "Очистить кэш";
 "Quit" = "Выйти";
-"More App, QRCobot" = "Больше приложений от Джека";
+"More Apps" = "Больше приложений";
 "Download QRCobot" = "Скачать QRCobot";
 "Download WallCard" = "Скачать WallCard";
 "Radio" = "Радио";
@@ -100,8 +100,8 @@
 "Appearance:" = "Внешний вид:";
 "Single Column" = "Одна колонка";
 "Two Columns" = "Две колонки";
-"Recommendation:" = "Рекомендация:";
-"Show Jack's Apps" = "Показать приложение Джека";
+"Promotion:" = "Рекомендация:";
+"Show More Apps" = "Показать больше приложений";
 "Screen Test" = "Тест монитора";
 "Version History:" = "История версий:";
 "Join:" = "Присоединиться:";

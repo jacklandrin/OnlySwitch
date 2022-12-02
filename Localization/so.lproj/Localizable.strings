@@ -23,7 +23,7 @@
 "Launch at login" = "La billow soo galida";
 "Clear Cache" = "Nadiifi kaydka";
 "Quit" = "Ka bax";
-"More App, QRCobot" = "Apps ka badan oo uu sameeyay Jack";
+"More Apps" = "Apps badan";
 "Download QRCobot" = "So Dagso QRCobot";
 "Download WallCard" = "So Dagso WallCard";
 "Radio" = "Raadiyaha";
@@ -100,8 +100,8 @@
 "Appearance:" = "Muuqashada:";
 "Single Column" = "Hal Column";
 "Two Columns" = "Labo Column";
-"Recommendation:" = "Talo:";
-"Show Jack's Apps" = "Muuji Apps ka Jack";
+"Promotion:" = "Talo:";
+"Show More Apps" = "Muuji Apps badan";
 "Screen Test" = "Tijaabada Shaashada";
 "Version History:" = "Nooca Taariikhda:";
 "Join:" = "Ku biir:";

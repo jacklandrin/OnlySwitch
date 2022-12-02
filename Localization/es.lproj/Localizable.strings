@@ -23,7 +23,7 @@ Creado por Jacklandrin el día 14/12/2021.
 "Launch at login" = "Abrir con el inicio de sesión";
 "Clear Cache" = "Limpiar caché";
 "Quit" = "Salir";
-"More App, QRCobot" = "Más aplicaciones hechas por Jack";
+"More Apps" = "Más aplicaciones";
 "Download QRCobot" = "Descargar QRCobot";
 "Download WallCard" = "Descargar WallCard";
 "Radio" = "Radio";
@@ -99,8 +99,8 @@ Creado por Jacklandrin el día 14/12/2021.
 "Appearance:" = "Apariencia:";
 "Single Column" = "Una columna";
 "Two Columns" = "Dos columnas";
-"Recommendation:" = "Recomendación:";
-"Show Jack's Apps" = "Mostrar la aplicación de Jack";
+"Promotion:" = "Recomendación:";
+"Show More Apps" = "Mostrar más aplicaciones";
 "Screen Test" = "Prueba de pantalla";
 "Version History:" = "Historial de versiones:";
 "Join:" = "Entrar:";

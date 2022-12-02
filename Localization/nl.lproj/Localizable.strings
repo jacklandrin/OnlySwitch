@@ -23,7 +23,7 @@
 "Launch at login" = "Bij Aanmelding starten";
 "Clear Cache" = "Cache legen";
 "Quit" = "Beëindigen";
-"More App, QRCobot" = "Meer Apps van Jack";
+"More Apps" = "Meer Apps";
 "Download QRCobot" = "QRCobot Downloaden";
 "Download WallCard" = "WallCard Downloaden";
 "Radio" = "Radio";
@@ -100,8 +100,8 @@
 "Appearance:" = "Verschijning:";
 "Single Column" = "Enkele kolom";
 "Two Columns" = "Twee kolommen";
-"Recommendation:" = "Aanbeveling:";
-"Show Jack's Apps" = "Toon Jack's Apps";
+"Promotion:" = "App-promotie:";
+"Show More Apps" = "Toon Meer Apps";
 "Screen Test" = "Scherm test";
 "Version History:" = "Versiegeschiedenis:";
 "Join:" = "Meedoen:";

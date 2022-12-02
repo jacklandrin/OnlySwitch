@@ -26,7 +26,7 @@ struct GeneralView: View, EmailProvider {
                     Text("Appearance:".localized())
                         .frame(height: Layout.generalSettingItemHeight)
                     
-                    Text("Recommendation:".localized())
+                    Text("Promotion:".localized())
                         .frame(height:Layout.generalSettingItemHeight)
                     
                     Text("Menu Bar Icon:".localized())
@@ -78,7 +78,7 @@ struct GeneralView: View, EmailProvider {
                     }.frame(height:Layout.generalSettingItemHeight)
                     
                     //Recommendation
-                    Toggle(isOn: $generalVM.showAds, label: {Text("Show Jack's Apps".localized())})
+                    Toggle(isOn: $generalVM.showAds, label: {Text("Show More Apps".localized())})
                         .frame(height: Layout.generalSettingItemHeight)
                     
                     //menubar icons

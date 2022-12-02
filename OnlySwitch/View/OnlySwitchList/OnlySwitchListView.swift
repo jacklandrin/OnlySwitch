@@ -250,28 +250,23 @@ struct OnlySwitchListView: View {
                 .frame(height: 45)
             HStack(spacing:5) {
                 
-                Text("More App, QRCobot".localized())
-                    .font(.system(size: 14))
+                Text("More Apps".localized())
+                    .font(.system(size: "More Apps".localized().count > 8 ? 300 : 11))
                     .fontWeight(.bold)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.01)
                     .padding(10)
                 Spacer()
-                Link(destination: URL(string: "https://apps.apple.com/us/app/wallcard/id1601311095")!, label: {
-                    Image("WallCard")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 45)
-                        .cornerRadius(10)
-                        .help(Text("Download WallCard".localized()))
-                })
-                
-                Link(destination: URL(string: "https://apps.apple.com/us/app/id1590006394")!, label: {
-                    Image("QRCobot")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 45)
-                        .cornerRadius(10)
-                        .help(Text("Download QRCobot".localized()))
-                })
+                ForEach(Ads) { ad in
+                    Link(destination: URL(string: ad.link)!, label: {
+                        Image(ad.imageName)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 45)
+                            .cornerRadius(10)
+                            .help(Text(ad.hint.localized()))
+                    })
+                }
             }.frame(height: 45)
             
         }.padding(.horizontal, 15)

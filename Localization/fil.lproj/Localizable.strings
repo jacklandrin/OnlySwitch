@@ -24,7 +24,7 @@
 "Launch at login" = "Ilunsad at login";
 "Clear Cache" = "I - clear ang cache";
 "Quit" = "huminto";
-"More App, QRCobot" = "Maraming App, QRCobot";
+"More Apps" = "Maraming App";
 "Download QRCobot" = "Download QRCobot";
 "Download WallCard" = "Download WallCard";
 "Radio" = "Radyo";
@@ -101,8 +101,8 @@
 "Appearance:" = "Hitsura:";
 "Single Column" = "Iisang Hanay";
 "Two Columns" = "Dalawang Hanay";
-"Recommendation:" = "Rekomendasyon:";
-"Show Jack's Apps" = "Ipakita ang Apps ni Jack";
+"Promotion:" = "Promosyon:";
+"Show More Apps" = "Magpakita ng Higit pang Mga App";
 "Screen Test" = "Screen Test";
 "Version History:" = "Kasaysayan ng Bersyon:";
 "Join:" = "Sumali:";
