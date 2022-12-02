@@ -17,6 +17,7 @@ struct Layout{
     static let singleSwitchHeight:CGFloat = 38.0
     static let generalSettingItemHeight:CGFloat = 30.0
     static let generalSettingSpacing:CGFloat = 7.0
+    static let communitySize:CGFloat = 30.0
 }
 
 
