@@ -13,7 +13,7 @@
 brew install only-switch
 ```
 ## Manually Download
-[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_2.3.8/OnlySwitch.dmg)
+[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_2.3.9/OnlySwitch.dmg)
 
 ## Communities
 Telegram group: https://t.me/OnlySwitchforMac
@@ -62,7 +62,7 @@ Everyone can contribute macOS Shortcuts for OnlySwitch now. Please read [How to 
 | Spotify           | finished | Apple Music              | finished          |
 | Screen Test       | finished | Hide Menu Bar Icons      | partly finished   |
 | FKey              | finished | Back Noises              | finished          |
-| Dim Screen        | finished |                          |                   |
+| Dim Screen        | finished | Eject Discs              | finished          |
 
 Since Version 1.3, switches can be added to or removed from the list.
 
@@ -75,15 +75,17 @@ Since Version 1.3, switches can be added to or removed from the list.
 | Is dark mode        | finished          |
 | Set dark mode       | finished          |
 
-## Supported Languages
+## Supported Languages 🇺🇳
 English, Simplified Chinese, German, Croatian, Turkish, Polish, Filipino, Dutch, Italian, Russian, Spanish, Japanese, Somali, Korean
 
 ## Welcome to pull requests for these
 
 * support other languages
-* fix bug: radio player crash
+* fix bugs
 
 If you have other good ideas 💡, feel free to send an E-mail to me.
+
+🚀The future plan is to make OnlySwitch become a toolkit-sharing platform. OnlySwitch will allow developers to distribute javascript code to create more features. @AruSeito and I are implementing this plan. If you are also interested in it, feel free to join us.
 
 ## Donate
 If you like it, help support this app by giving me a cup of tea for me to keep coding.
@@ -101,7 +103,6 @@ Now, the Hide notch switch supports dynamic wallpaper, just the processing takes
 </p>
 
 ## About AirPods Switch 
-
 I use `classOfDevice`(2360344) to check if a Bluetooth device is Airpods Pro, but I'm not sure whether other AirPods modules are also 2360344, since I only have two AirPods Pros. If you are using AirPods 1~3, please tell me what the `classOfDevice` is. Or I can detect the count of battery value to check if AirPods (when the count is 3, it's AirPods), like **AirPods Battery Monitor For MAC OS**.
 
 ## About Radio Player
