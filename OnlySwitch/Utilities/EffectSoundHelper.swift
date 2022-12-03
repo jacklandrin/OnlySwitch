@@ -38,6 +38,10 @@ class EffectSoundHelper:ObservableObject {
             self.player.play()
         }
     }
+    
+    func stopCurrentSound() {
+        self.player.stop()
+    }
 }
 
 enum EffectSound:String {

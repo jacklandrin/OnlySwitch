@@ -20,7 +20,7 @@ enum OpenWindows: CurrentScreen {
                 controller.showWindow(self)
                 NSApp.activate(ignoringOtherApps: true)
             } else {
-                let hostingController = NSHostingController(rootView:SettingView().environment(\.managedObjectContext, persistenceController.container.viewContext))
+                let hostingController = NSHostingController(rootView:SettingsView().environment(\.managedObjectContext, persistenceController.container.viewContext))
                 let settingWindow = HostWindow(contentViewController: hostingController)
                 settingWindow.setContentSize(NSSize(width: Layout.settingWindowWidth, height: Layout.settingWindowHeight))
                 let xPos = getScreenWithMouse()!.frame.width / 2 - Layout.settingWindowWidth / 2

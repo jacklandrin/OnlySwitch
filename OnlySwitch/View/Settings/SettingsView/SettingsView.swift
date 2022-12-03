@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct SettingView: View {
-    @StateObject var settingVM = SettingVM.shared
+struct SettingsView: View {
+    @StateObject var settingVM = SettingsVM.shared
     @ObservedObject var langManager = LanguageManager.sharedManager
     
     
@@ -61,7 +61,7 @@ struct SettingView: View {
 #if DEBUG
 struct SettingView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingView()
+        SettingsView()
     }
 }
 #endif

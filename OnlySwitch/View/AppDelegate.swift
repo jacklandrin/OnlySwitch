@@ -17,7 +17,7 @@ struct OnlySwitchApp: App {
     @State var preferences = PreferencesObserver.shared.preferences
     var body: some Scene {
         WindowGroup("SettingsWindow"){
-            SettingView()
+            SettingsView()
                 .frame(width: Layout.settingWindowWidth, height: Layout.settingWindowHeight)
                 .task {
                     CustomizeVM.shared.allSwitches.forEach{ item in

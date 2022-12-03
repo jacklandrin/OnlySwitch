@@ -117,7 +117,7 @@
 		0451766C27C284D600006BA0 /* iTunesBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0451766A27C284D600006BA0 /* iTunesBridge.swift */; };
 		0451766E27C28BA300006BA0 /* AppleMusicSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0451766D27C28BA300006BA0 /* AppleMusicSwitch.swift */; };
 		0457C25D2760046A00B25BFA /* BluetoothSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0457C25C2760046A00B25BFA /* BluetoothSwitch.swift */; };
-		04581DB02764CBCF008ADF30 /* SettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04581DAF2764CBCF008ADF30 /* SettingVM.swift */; };
+		04581DB02764CBCF008ADF30 /* SettingsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04581DAF2764CBCF008ADF30 /* SettingsVM.swift */; };
 		04581DB6276506B9008ADF30 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = 04581DB5276506B9008ADF30 /* AlertToast */; };
 		04581DBB27651EF1008ADF30 /* RollingText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04581DBA27651EF1008ADF30 /* RollingText.swift */; };
 		04581DBD27653C35008ADF30 /* AirPodsSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04581DBC27653C35008ADF30 /* AirPodsSettingView.swift */; };
@@ -176,7 +176,7 @@
 		0493378C2762654600AE779A /* LayoutDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493378B2762654600AE779A /* LayoutDefine.swift */; };
 		0493378E2762665A00AE779A /* RadioStationSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493378D2762665A00AE779A /* RadioStationSwitch.swift */; };
 		0493379027626FD200AE779A /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0493378F27626FD200AE779A /* NetworkExtension.framework */; };
-		049337922762BA3200AE779A /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337912762BA3200AE779A /* SettingView.swift */; };
+		049337922762BA3200AE779A /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337912762BA3200AE779A /* SettingsView.swift */; };
 		049337942762BD1B00AE779A /* OpenWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337932762BD1B00AE779A /* OpenWindow.swift */; };
 		049337972762C07600AE779A /* RadioSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337962762C07600AE779A /* RadioSettingView.swift */; };
 		049337992762C0B300AE779A /* RadioSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337982762C0B300AE779A /* RadioSettingVM.swift */; };
@@ -430,7 +430,7 @@
 		0451766A27C284D600006BA0 /* iTunesBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iTunesBridge.swift; sourceTree = "<group>"; };
 		0451766D27C28BA300006BA0 /* AppleMusicSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleMusicSwitch.swift; sourceTree = "<group>"; };
 		0457C25C2760046A00B25BFA /* BluetoothSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothSwitch.swift; sourceTree = "<group>"; };
-		04581DAF2764CBCF008ADF30 /* SettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingVM.swift; sourceTree = "<group>"; };
+		04581DAF2764CBCF008ADF30 /* SettingsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVM.swift; sourceTree = "<group>"; };
 		04581DBA27651EF1008ADF30 /* RollingText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RollingText.swift; sourceTree = "<group>"; };
 		04581DBC27653C35008ADF30 /* AirPodsSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPodsSettingView.swift; sourceTree = "<group>"; };
 		04581DBE27653C4A008ADF30 /* AirPodsSettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPodsSettingVM.swift; sourceTree = "<group>"; };
@@ -486,7 +486,7 @@
 		0493378B2762654600AE779A /* LayoutDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutDefine.swift; sourceTree = "<group>"; };
 		0493378D2762665A00AE779A /* RadioStationSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioStationSwitch.swift; sourceTree = "<group>"; };
 		0493378F27626FD200AE779A /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
-		049337912762BA3200AE779A /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
+		049337912762BA3200AE779A /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		049337932762BD1B00AE779A /* OpenWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWindow.swift; sourceTree = "<group>"; };
 		049337962762C07600AE779A /* RadioSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioSettingView.swift; sourceTree = "<group>"; };
 		049337982762C0B300AE779A /* RadioSettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioSettingVM.swift; sourceTree = "<group>"; };
@@ -786,7 +786,7 @@
 				04BF976D27908E2800E7C0E2 /* SwitchItem */,
 				04BF977927908FB900E7C0E2 /* SoundWave */,
 				0444D6012839995D00327D0B /* PureColorView */,
-				049337952762C05200AE779A /* Setting */,
+				049337952762C05200AE779A /* Settings */,
 				04DC6C5A28A2D02000888BF9 /* Update */,
 				04447B7527550F6900CD2900 /* VisualEffectView.swift */,
 				0434B4D02876325B00F06AB9 /* HostWindowFinder.swift */,
@@ -1043,10 +1043,10 @@
 			path = AudioSpectrum;
 			sourceTree = "<group>";
 		};
-		049337952762C05200AE779A /* Setting */ = {
+		049337952762C05200AE779A /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				04BF977127908EBC00E7C0E2 /* SettingView */,
+				04BF977127908EBC00E7C0E2 /* SettingsView */,
 				04BF977627908F1100E7C0E2 /* General */,
 				04BF977227908ECE00E7C0E2 /* Customize */,
 				04BF977827908F5400E7C0E2 /* Shortcuts */,
@@ -1059,7 +1059,7 @@
 				04BC8ED428513CC8009E605F /* HideMenubarIcons */,
 				04BF977527908F0000E7C0E2 /* About */,
 			);
-			path = Setting;
+			path = Settings;
 			sourceTree = "<group>";
 		};
 		04A23B27275D607200B454C8 /* Header */ = {
@@ -1148,13 +1148,13 @@
 			path = ShortcutsItem;
 			sourceTree = "<group>";
 		};
-		04BF977127908EBC00E7C0E2 /* SettingView */ = {
+		04BF977127908EBC00E7C0E2 /* SettingsView */ = {
 			isa = PBXGroup;
 			children = (
-				049337912762BA3200AE779A /* SettingView.swift */,
-				04581DAF2764CBCF008ADF30 /* SettingVM.swift */,
+				049337912762BA3200AE779A /* SettingsView.swift */,
+				04581DAF2764CBCF008ADF30 /* SettingsVM.swift */,
 			);
-			path = SettingView;
+			path = SettingsView;
 			sourceTree = "<group>";
 		};
 		04BF977227908ECE00E7C0E2 /* Customize */ = {
@@ -1790,7 +1790,7 @@
 				04B25451283BEB8400D253E2 /* SwitchBarModel.swift in Sources */,
 				04581DBD27653C35008ADF30 /* AirPodsSettingView.swift in Sources */,
 				04BEF6DE2939875F009DB981 /* AdsModel.swift in Sources */,
-				049337922762BA3200AE779A /* SettingView.swift in Sources */,
+				049337922762BA3200AE779A /* SettingsView.swift in Sources */,
 				04BC8EDB285146BF009E605F /* HideMenubarIconsSettingVM.swift in Sources */,
 				0493376427625D6F00AE779A /* RadioPlayerItemViewModel.swift in Sources */,
 				04DC6C9028A6CBEB00888BF9 /* IntBool.swift in Sources */,
@@ -1860,7 +1860,7 @@
 				04BC8EC6284FEA52009E605F /* UserDefaultsKeys.swift in Sources */,
 				04AA63D0276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift in Sources */,
 				04E03AF8275E6B4E00EA5FB9 /* AutohideDockSwitch.swift in Sources */,
-				04581DB02764CBCF008ADF30 /* SettingVM.swift in Sources */,
+				04581DB02764CBCF008ADF30 /* SettingsVM.swift in Sources */,
 				04DC6C9428A7B5C900888BF9 /* DimScreenSwitch.swift in Sources */,
 				04E03B06275FEBE200EA5FB9 /* AirPodsBatteryView.swift in Sources */,
 				04EB1CD62781299A00C612AB /* ShortcutsBarVM.swift in Sources */,

@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 
-enum SettingItem:String {
+enum SettingsItem:String {
     case AirPods = "AirPods"
     case Radio = "Radio"
     case PomodoroTimer = "Pomodoro Timer"
@@ -52,13 +52,13 @@ enum SettingItem:String {
 
 }
 
-class SettingVM:ObservableObject {
+class SettingsVM:ObservableObject {
     
-    static let shared = SettingVM()
+    static let shared = SettingsVM()
     
     var window:NSWindow?
     
-    @Published var settingItems:[SettingItem] = [
+    @Published var settingItems:[SettingsItem] = [
                                                  .General,
                                                  .Customize,
                                                  .Shortcuts,
@@ -71,6 +71,6 @@ class SettingVM:ObservableObject {
                                                  .HideMenubarIcons,
                                                  .About]
     
-    @Published var selection:SettingItem? = .General
+    @Published var selection:SettingsItem? = .General
 
 }

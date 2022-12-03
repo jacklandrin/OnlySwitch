@@ -73,6 +73,7 @@ class JLAVAudioPlayer: NSObject ,AVPlayerItemMetadataOutputPushDelegate, AudioPl
         
         self.playerItem = AVPlayerItem(asset: asset)
         self.playerItem?.audioTimePitchAlgorithm = .spectral
+        self.playerItem?.allowedAudioSpatializationFormats = .monoStereoAndMultichannel
         self.audioPlayer = AVPlayer(playerItem: playerItem)
         self.audioPlayer?.play()
         self.audioPlayer?.volume = Preferences.shared.volume

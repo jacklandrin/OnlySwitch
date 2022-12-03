@@ -118,6 +118,7 @@ class JLASAudioPlayer: NSObject, AVPlayerItemMetadataOutputPushDelegate, AudioPl
     func setAVPlayer(url:URL, itemType:PlayerType)  {
         let playerItem = AVPlayerItem(url: url)
         playerItem.audioTimePitchAlgorithm = .spectral
+        playerItem.allowedAudioSpatializationFormats = .monoStereoAndMultichannel
         self.avplayer = AVPlayer(playerItem: playerItem)
         let metadataOutput = AVPlayerItemMetadataOutput(identifiers: nil)
         metadataOutput.setDelegate(self, queue: .main)
