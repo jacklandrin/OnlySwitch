@@ -19,6 +19,7 @@ class BackNoisesTrackManager:ObservableObject {
         case HarborWave = "Harbor Wave"
         case CrowdUrban = "Crowd Urban"
         case Meditation = "Meditation"
+        case Fireplace = "Fireplace"
     }
     
     static let shared = BackNoisesTrackManager()
@@ -50,7 +51,8 @@ class BackNoisesTrackManager:ObservableObject {
         .MotorBoat,
         .HarborWave,
         .CrowdUrban,
-        .Meditation
+        .Meditation,
+        .Fireplace
     ]
     
     init() {
@@ -63,7 +65,11 @@ class BackNoisesTrackManager:ObservableObject {
             return
         }
         if let item = PlayerManager.shared.player.currentPlayerItem, item.isPlaying {
-            PlayerManager.shared.player.stop()
+            if item.type == .BackNoises {
+                PlayerManager.shared.player.stop()
+            } else {
+                item.isPlaying = false
+            }
         }
         
         let isPlaying = currentBackNoisesItem.isPlaying
@@ -80,6 +86,7 @@ class BackNoisesTrackManager:ObservableObject {
         currentBackNoisesItem.isPlaying = isPlaying
         
         NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.backNoises)
+        NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.radioStation)
     }
     
     func changeTrack(action:ChangeTrackAction) {

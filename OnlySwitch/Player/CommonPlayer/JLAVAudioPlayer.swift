@@ -13,6 +13,7 @@ import MediaPlayer
 class JLAVAudioPlayer: NSObject ,AVPlayerItemMetadataOutputPushDelegate, AudioPlayer {
     
     var audioPlayer: AVPlayer?
+    var avaudioPlayer:AVAudioPlayer?
     var playerItem: AVPlayerItem?
     weak var currentPlayerItem: CommonPlayerItem?
     var analyzer = RealtimeAnalyzer(fftSize: bufferSize)
@@ -31,6 +32,7 @@ class JLAVAudioPlayer: NSObject ,AVPlayerItemMetadataOutputPushDelegate, AudioPl
                 }
             
             self.audioPlayer?.volume = newValue
+            self.avaudioPlayer?.volume = newValue
         })
         
         NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: self.audioPlayer?.currentItem, queue: .main) { [weak self] _ in
@@ -72,16 +74,26 @@ class JLAVAudioPlayer: NSObject ,AVPlayerItemMetadataOutputPushDelegate, AudioPl
         let asset = AVAsset(url: url)
         
         self.playerItem = AVPlayerItem(asset: asset)
-        self.playerItem?.audioTimePitchAlgorithm = .spectral
-        self.playerItem?.allowedAudioSpatializationFormats = .monoStereoAndMultichannel
-        self.audioPlayer = AVPlayer(playerItem: playerItem)
-        self.audioPlayer?.play()
-        self.audioPlayer?.volume = Preferences.shared.volume
-        self.bufferring = true
+        if currentPlayerItem?.type == .BackNoises {
+            if let avaudioPlayer = try? AVAudioPlayer(contentsOf: url) {
+                self.avaudioPlayer = avaudioPlayer
+                avaudioPlayer.numberOfLoops = -1
+                avaudioPlayer.play()
+                avaudioPlayer.volume = Preferences.shared.volume
+            }
+        } else {
+            self.playerItem?.audioTimePitchAlgorithm = .spectral
+            self.playerItem?.allowedAudioSpatializationFormats = .monoStereoAndMultichannel
+            self.audioPlayer = AVPlayer(playerItem: playerItem)
+            self.audioPlayer?.play()
+            self.audioPlayer?.volume = Preferences.shared.volume
+            self.bufferring = true
+            
+            let metadataOutput = AVPlayerItemMetadataOutput(identifiers: nil)
+            metadataOutput.setDelegate(self, queue: .main)
+            self.playerItem?.add(metadataOutput)
+        }
         
-        let metadataOutput = AVPlayerItemMetadataOutput(identifiers: nil)
-        metadataOutput.setDelegate(self, queue: .main)
-        self.playerItem?.add(metadataOutput)
         self.setupNowPlaying()
     }
     
@@ -98,11 +110,13 @@ class JLAVAudioPlayer: NSObject ,AVPlayerItemMetadataOutputPushDelegate, AudioPl
     
     func stop(){
         self.audioPlayer?.stop()
+        self.avaudioPlayer?.stop()
         pauseCommandCenter()
     }
     
     func pause() {
         self.audioPlayer?.pause()
+        self.avaudioPlayer?.pause()
         pauseCommandCenter()
     }
 }

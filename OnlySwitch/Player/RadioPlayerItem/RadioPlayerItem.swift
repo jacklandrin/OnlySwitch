@@ -16,10 +16,7 @@ struct RadioPlayerItem {
             if isPlaying &&
                 !newValue.isEmpty &&
                 Preferences.shared.allNotificationChangingStation {
-                let _ = try? displayNotificationCMD(title: "Now Playing".localized(),
-                                               content: newValue,
-                                               subtitle: "")
-                    .runAppleScript()
+                nowPlayingNotify(content: newValue, subtitle: "")
             }
         }
     }
@@ -33,10 +30,7 @@ struct RadioPlayerItem {
                 !newValue.isEmpty &&
                 !title.isEmpty &&
                 Preferences.shared.allNotificationTrack {
-                let _ = try? displayNotificationCMD(title: "Now Playing".localized(),
-                                               content: title,
-                                               subtitle: newValue)
-                    .runAppleScript()
+                nowPlayingNotify(content: title, subtitle: newValue)
             }
         }
     }
@@ -49,5 +43,14 @@ struct RadioPlayerItem {
         self.title = radio.title!
         self.streamUrl = radio.url!
         self.streamInfo = ""
+    }
+    
+    func nowPlayingNotify(content:String, subtitle:String) {
+        DispatchQueue.global().async {
+            let _ = try? displayNotificationCMD(title: "Now Playing".localized(),
+                                           content: content,
+                                           subtitle: subtitle)
+                .runAppleScript()
+        }
     }
 }

@@ -153,7 +153,7 @@ OnlySwitch offers some Shortcuts actions since Version 1.8. For example, you can
 * [AudioStreamer](https://github.com/syedhali/AudioStreamer) modified for live streaming
 * [AudioSpectrum](https://github.com/potato04/AudioSpectrum) modified for AppKit
 * [Alamofire](https://github.com/Alamofire/Alamofire)
-* Sound Source: [mixkit](https://mixkit.co)
+* Sound Source: [mixkit](https://mixkit.co) and [pixabay](https://pixabay.com)
 * [KeyboardShortcuts](https://github.com/sindresorhus/KeyboardShortcuts)
 * Apple Music & Spotify Switch refer to [SpotMenu](https://github.com/kmikiy/SpotMenu)
 * The idea of hiding menu bar icons from [Hidden](https://github.com/dwarvesf/hidden)

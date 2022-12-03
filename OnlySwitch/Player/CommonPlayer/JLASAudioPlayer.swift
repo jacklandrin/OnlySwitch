@@ -27,6 +27,7 @@ class JLASAudioPlayer: NSObject, AVPlayerItemMetadataOutputPushDelegate, AudioPl
     var bufferring:Bool = false
     
     var avplayer: AVPlayer = AVPlayer()
+    var avaudioPlayer:AVAudioPlayer?
     public internal(set) var isAppActive = false
     
     override init() {
@@ -57,6 +58,7 @@ class JLASAudioPlayer: NSObject, AVPlayerItemMetadataOutputPushDelegate, AudioPl
             
             self.audioPlayer.volume = newValue
             self.avplayer.volume = newValue
+            self.avaudioPlayer?.volume = newValue
         })
         
         NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: self.avplayer.currentItem, queue: .main) { [weak self] _ in
@@ -93,16 +95,24 @@ class JLASAudioPlayer: NSObject, AVPlayerItemMetadataOutputPushDelegate, AudioPl
                 
         self.currentPlayerItem = item
         
-        
-        setAVPlayer(url: url, itemType: item.type)
-        audioPlayer.url = url
-        if avplayerMute(url: url.absoluteString, itemType: item.type) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
-                self?.audioPlayer.play()
+        if currentPlayerItem?.type == .BackNoises {
+            if let avaudioPlayer = try? AVAudioPlayer(contentsOf: url) { //AVPlayer quality is low for sound effect, so change to AVAudioPlayer
+                self.avaudioPlayer = avaudioPlayer
+                avaudioPlayer.numberOfLoops = -1
+                avaudioPlayer.play()
+                avaudioPlayer.volume = Preferences.shared.volume
             }
+        } else {
+            setAVPlayer(url: url, itemType: item.type)
+            audioPlayer.url = url
+            if avplayerMute(url: url.absoluteString, itemType: item.type) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
+                    self?.audioPlayer.play()
+                }
+            }
+            
+            self.bufferring = true
         }
-        
-        self.bufferring = true
        
         self.setupNowPlaying()
     } 
@@ -146,12 +156,14 @@ class JLASAudioPlayer: NSObject, AVPlayerItemMetadataOutputPushDelegate, AudioPl
     func stop() {
         audioPlayer.stop()
         avplayer.stop()
+        avaudioPlayer?.stop()
         pauseCommandCenter()
     }
     
     func pause() {
         audioPlayer.pause()
         avplayer.pause()
+        avaudioPlayer?.pause()
         pauseCommandCenter()
     }
     

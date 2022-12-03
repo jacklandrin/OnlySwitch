@@ -10,13 +10,20 @@ import Foundation
 
 class PlayerManager {
     static let shared = PlayerManager()
-    var player:AudioPlayer = JLASAudioPlayer()
+    var player:AudioPlayer!
     
     var soundWaveEffectDisplay:Bool{
         Preferences.shared.soundWaveEffectDisplay
     }
     
     init() {
+        
+        if soundWaveEffectDisplay {
+            self.player = JLASAudioPlayer()
+        } else {
+            self.player = JLAVAudioPlayer()
+        }
+        
         if Preferences.shared.radioEnable {
             self.player.setupRemoteCommandCenter()
         }
