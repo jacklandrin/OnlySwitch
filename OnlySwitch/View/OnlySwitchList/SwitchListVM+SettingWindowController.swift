@@ -79,7 +79,7 @@ extension SwitchListVM: SettingWindowController {
                                                queue: .main,
                                                using: { _ in
             self.settingsWindow?
-                .firstResponder?
+                .contentViewController?
                 .tryToPerform(
                     #selector(
                         NSSplitViewController
