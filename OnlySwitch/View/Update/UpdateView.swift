@@ -42,6 +42,7 @@ struct UpdateView: View {
                         .font(.system(size: 15))
                         .fontWeight(.bold)
                         .frame(width: 120, height: 40)
+                        .foregroundColor(.white)
                         .background(
                             RoundedRectangle(cornerRadius: 10)
                                 .foregroundColor(Color(nsColor: .darkGray))
@@ -57,6 +58,7 @@ struct UpdateView: View {
                         .font(.system(size: 15))
                         .fontWeight(.bold)
                         .frame(width: 120, height: 40)
+                        .foregroundColor(.white)
                         .background(
                             RoundedRectangle(cornerRadius: 10)
                                 .foregroundColor(Color(nsColor: AppColor.themeBlue))

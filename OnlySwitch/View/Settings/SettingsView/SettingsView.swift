@@ -24,16 +24,26 @@ struct SettingsView: View {
                             .lineLimit(2)
                     }
                 }
-                
-            }.listStyle(.sidebar)
-            HostingWindowFinder{ window in
-                if let window = window {
-                    self.settingVM.window = window
-                    NotificationCenter.default.post(name: .settingsWindowOpened, object: window)
+                if #available(macOS 13.0, *) {
+                    
+                } else {
+                    HostingWindowFinder{ window in
+                        if let window = window {
+                            NotificationCenter.default.post(name: .settingsWindowOpened, object: window)
+                        }
+                    }.frame(width: 0, height: 0)
+                        .padding(0)
                 }
-                settingVM.selection = .General
-            }.frame(width: 0, height: 0)
-                .padding(0)
+            }.listStyle(.sidebar)
+            if #available(macOS 13.0, *) {
+                HostingWindowFinder{ window in
+                    if let window = window {
+                        NotificationCenter.default.post(name: .settingsWindowOpened, object: window)
+                    }
+                    settingVM.selection = .General
+                }.frame(width: 0, height: 0)
+                    .padding(0)
+            }
         }.navigationTitle("Settings".localized())
             .toolbar {
                 ToolbarItem(placement: .navigation) {
@@ -47,14 +57,9 @@ struct SettingsView: View {
     }
     
     private func toggleSidebar() {
-        settingVM
-            .window?
-            .firstResponder?
-            .tryToPerform(
-                #selector(
-                    NSSplitViewController
-                        .toggleSidebar(_:)),
-                with:nil)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            NotificationCenter.default.post(name: .toggleSplitSettingsWindow, object: nil)
+        }
     }
 }
 

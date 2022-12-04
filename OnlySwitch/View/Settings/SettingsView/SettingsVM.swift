@@ -56,8 +56,6 @@ class SettingsVM:ObservableObject {
     
     static let shared = SettingsVM()
     
-    var window:NSWindow?
-    
     @Published var settingItems:[SettingsItem] = [
                                                  .General,
                                                  .Customize,

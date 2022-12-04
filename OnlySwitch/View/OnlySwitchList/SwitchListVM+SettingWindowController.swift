@@ -73,6 +73,19 @@ extension SwitchListVM: SettingWindowController {
             self.settingsWindowPresented = false
             NSApp.activate(ignoringOtherApps: false)
         })
+        
+        NotificationCenter.default.addObserver(forName: .toggleSplitSettingsWindow,
+                                               object: nil,
+                                               queue: .main,
+                                               using: { _ in
+            self.settingsWindow?
+                .firstResponder?
+                .tryToPerform(
+                    #selector(
+                        NSSplitViewController
+                            .toggleSidebar(_:)),
+                    with:nil)
+        })
     }
     
     func showSettingsWindow() {
