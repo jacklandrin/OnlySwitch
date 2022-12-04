@@ -53,7 +53,7 @@ struct ShortcutsView: View {
                     Text("Shortcuts Gallery".localized())
                     Spacer()
                     Button(action: {
-                        shortcutsVM.loadShortcutsList()
+                        shortcutsVM.shouldLoadShortcutsList()
                         shortcutsVM.loadData()
                     }, label: {
                         Image(systemName: "arrow.clockwise")
@@ -66,7 +66,7 @@ struct ShortcutsView: View {
             Spacer()
         }.navigationTitle(Text("Shortcuts".localized()))
         .onAppear{
-            shortcutsVM.loadShortcutsList()
+            shortcutsVM.shouldLoadShortcutsList()
             shortcutsVM.loadData()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                 shortcutsVM.checkIfInstalled()

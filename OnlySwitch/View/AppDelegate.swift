@@ -62,6 +62,7 @@ struct OnlySwitchApp: App {
                     }
                 })
             }
+            SidebarCommands()
             CommandGroup(after: .appSettings) {
                 Button(action: {
                     appDelegate.checkUpdate()
@@ -144,7 +145,7 @@ class AppDelegate:NSObject, NSApplicationDelegate {
                 if !self.checkUpdatePresenter.isTheNewestVersion {
                     OpenWindows.Update(self.checkUpdatePresenter).open()
                 }
-                
+
             case let .failure(error):
                 print(error.localizedDescription)
             }

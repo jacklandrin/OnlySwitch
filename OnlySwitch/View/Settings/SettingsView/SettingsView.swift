@@ -11,7 +11,6 @@ struct SettingsView: View {
     @StateObject var settingVM = SettingsVM.shared
     @ObservedObject var langManager = LanguageManager.sharedManager
     
-    
     var body: some View {
         NavigationView {
             List(selection:$settingVM.selection) {

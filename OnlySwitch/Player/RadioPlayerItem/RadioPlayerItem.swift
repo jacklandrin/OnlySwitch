@@ -46,11 +46,19 @@ struct RadioPlayerItem {
     }
     
     func nowPlayingNotify(content:String, subtitle:String) {
-        DispatchQueue.global().async {
+        if #available(macOS 13.0, *) {
+            DispatchQueue.global().async {
+                let _ = try? displayNotificationCMD(title: "Now Playing".localized(),
+                                               content: content,
+                                               subtitle: subtitle)
+                    .runAppleScript()
+            }
+        } else {
             let _ = try? displayNotificationCMD(title: "Now Playing".localized(),
                                            content: content,
                                            subtitle: subtitle)
                 .runAppleScript()
         }
+        
     }
 }
