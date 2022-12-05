@@ -35,6 +35,15 @@
         "revision" : "e8171b3e38a2816f579f58f3dac1522aa39efe41",
         "version" : "4.2.0"
       }
+    },
+    {
+      "identity" : "swiftui-webview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/globulus/swiftui-webview",
+      "state" : {
+        "revision" : "f9be55089c020268760d626abbadd643a2b1ca4a",
+        "version" : "1.0.8"
+      }
     }
   ],
   "version" : 2

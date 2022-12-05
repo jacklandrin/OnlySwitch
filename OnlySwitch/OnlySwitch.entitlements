@@ -6,6 +6,8 @@
 	<false/>
 	<key>com.apple.security.automation.apple-events</key>
 	<true/>
+	<key>com.apple.security.cs.debugger</key>
+	<true/>
 	<key>com.apple.security.device.bluetooth</key>
 	<true/>
 	<key>com.apple.security.network.client</key>

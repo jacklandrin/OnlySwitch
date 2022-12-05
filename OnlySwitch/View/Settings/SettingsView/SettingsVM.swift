@@ -20,6 +20,7 @@ enum SettingsItem:String {
     case BackNoises = "Back Noises"
     case KeepAwake = "Keep Awake"
     case DimScreen = "Dim Screen"
+    case Dev = "Dev"
     case About = "About"
 
     @ViewBuilder
@@ -45,6 +46,8 @@ enum SettingsItem:String {
             KeepAwakeSettingView()
         case .DimScreen:
             DimScreenSettingView()
+        case .Dev:
+            DevView()
         case .About:
             AboutView()
         }
@@ -67,6 +70,7 @@ class SettingsVM:ObservableObject {
                                                  .AirPods,
                                                  .PomodoroTimer,
                                                  .HideMenubarIcons,
+                                                 .Dev,
                                                  .About]
     
     @Published var selection:SettingsItem? = .General

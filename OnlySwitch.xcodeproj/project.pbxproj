@@ -126,6 +126,9 @@
 		04581DC327677ADC008ADF30 /* KeepAwakeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04581DC227677ADC008ADF30 /* KeepAwakeSwitch.swift */; };
 		046331D32795DACB00C5F894 /* ShortcutsMarket.json in Resources */ = {isa = PBXBuildFile; fileRef = 046331D22795DACB00C5F894 /* ShortcutsMarket.json */; };
 		046331D52795E1BC00C5F894 /* ColorDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046331D42795E1BC00C5F894 /* ColorDefine.swift */; };
+		046C0BF9293D3DDB0073F727 /* DevView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046C0BF8293D3DDB0073F727 /* DevView.swift */; };
+		046C0BFD293D3EC70073F727 /* DevViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046C0BFC293D3EC70073F727 /* DevViewModel.swift */; };
+		046C0C00293E7C040073F727 /* SwiftUIWebView in Frameworks */ = {isa = PBXBuildFile; productRef = 046C0BFF293E7C040073F727 /* SwiftUIWebView */; };
 		046FF3C6279A2C0B00506953 /* DockRecentSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046FF3C5279A2C0B00506953 /* DockRecentSwitch.swift */; };
 		047140B327788364005B160B /* mixkit-alert-bells-echo-765.wav in Resources */ = {isa = PBXBuildFile; fileRef = 047140B127788364005B160B /* mixkit-alert-bells-echo-765.wav */; };
 		047140B427788364005B160B /* mixkit-bell-notification-933.wav in Resources */ = {isa = PBXBuildFile; fileRef = 047140B227788364005B160B /* mixkit-bell-notification-933.wav */; };
@@ -439,6 +442,8 @@
 		04581DC227677ADC008ADF30 /* KeepAwakeSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeepAwakeSwitch.swift; sourceTree = "<group>"; };
 		046331D22795DACB00C5F894 /* ShortcutsMarket.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ShortcutsMarket.json; sourceTree = "<group>"; };
 		046331D42795E1BC00C5F894 /* ColorDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorDefine.swift; sourceTree = "<group>"; };
+		046C0BF8293D3DDB0073F727 /* DevView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevView.swift; sourceTree = "<group>"; };
+		046C0BFC293D3EC70073F727 /* DevViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevViewModel.swift; sourceTree = "<group>"; };
 		046FF3C5279A2C0B00506953 /* DockRecentSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockRecentSwitch.swift; sourceTree = "<group>"; };
 		047140B127788364005B160B /* mixkit-alert-bells-echo-765.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "mixkit-alert-bells-echo-765.wav"; sourceTree = "<group>"; };
 		047140B227788364005B160B /* mixkit-bell-notification-933.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "mixkit-bell-notification-933.wav"; sourceTree = "<group>"; };
@@ -632,6 +637,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				046C0C00293E7C040073F727 /* SwiftUIWebView in Frameworks */,
 				04DC6C9828A7CA6A00888BF9 /* CoreDisplay.framework in Frameworks */,
 				0430887E275D707C00877E51 /* LaunchAtLogin in Frameworks */,
 				04BF976B27908D5400E7C0E2 /* KeyboardShortcuts in Frameworks */,
@@ -967,6 +973,15 @@
 			path = ShortcutsMarket;
 			sourceTree = "<group>";
 		};
+		046C0BF7293D3DB20073F727 /* Dev */ = {
+			isa = PBXGroup;
+			children = (
+				046C0BF8293D3DDB0073F727 /* DevView.swift */,
+				046C0BFC293D3EC70073F727 /* DevViewModel.swift */,
+			);
+			path = Dev;
+			sourceTree = "<group>";
+		};
 		0493372627625A1E00AE779A /* Player */ = {
 			isa = PBXGroup;
 			children = (
@@ -1059,6 +1074,7 @@
 				04BF977427908EF000E7C0E2 /* AirPods */,
 				04BF977727908F3500E7C0E2 /* PomodoroTimer */,
 				04BC8ED428513CC8009E605F /* HideMenubarIcons */,
+				046C0BF7293D3DB20073F727 /* Dev */,
 				04BF977527908F0000E7C0E2 /* About */,
 			);
 			path = Settings;
@@ -1479,6 +1495,7 @@
 				04581DB5276506B9008ADF30 /* AlertToast */,
 				04A6B54A27715F90003B2647 /* Alamofire */,
 				04BF976A27908D5400E7C0E2 /* KeyboardShortcuts */,
+				046C0BFF293E7C040073F727 /* SwiftUIWebView */,
 			);
 			productName = OnlySwitch;
 			productReference = 04447B582754F08000CD2900 /* OnlySwitch.app */;
@@ -1550,6 +1567,7 @@
 				04581DB4276506B9008ADF30 /* XCRemoteSwiftPackageReference "AlertToast" */,
 				04A6B54927715F90003B2647 /* XCRemoteSwiftPackageReference "Alamofire" */,
 				04BF976927908D5400E7C0E2 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
+				046C0BFE293E7C040073F727 /* XCRemoteSwiftPackageReference "swiftui-webview" */,
 			);
 			productRefGroup = 04447B592754F08000CD2900 /* Products */;
 			projectDirPath = "";
@@ -1737,6 +1755,7 @@
 				0451766E27C28BA300006BA0 /* AppleMusicSwitch.swift in Sources */,
 				040C6EAC276B7D9F00291DEB /* CustomizeView.swift in Sources */,
 				04E03AFE275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift in Sources */,
+				046C0BFD293D3EC70073F727 /* DevViewModel.swift in Sources */,
 				04447B722754FE3800CD2900 /* SwitchListVM.swift in Sources */,
 				04DC6C7B28A5424D00888BF9 /* BackNoisesPlayerItem.swift in Sources */,
 				04DC6CA228A7D59B00888BF9 /* DimScreenSettingVM.swift in Sources */,
@@ -1874,6 +1893,7 @@
 				0434B4D12876325B00F06AB9 /* HostWindowFinder.swift in Sources */,
 				04581DC12765522A008ADF30 /* AboutView.swift in Sources */,
 				0427365627C1ADA60068108F /* SpotifySwitch.swift in Sources */,
+				046C0BF9293D3DDB0073F727 /* DevView.swift in Sources */,
 				0427364827C1A5430068108F /* SpotifyScripting.swift in Sources */,
 				04938D12276948DE00713F1D /* WallpaperManager.swift in Sources */,
 				04A6F9452788EF4A00E3300F /* CursorModifier.swift in Sources */,
@@ -1984,7 +2004,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 97;
+				CURRENT_PROJECT_VERSION = 98;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2010,7 +2030,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 97;
+				CURRENT_PROJECT_VERSION = 98;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2159,7 +2179,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 97;
+				CURRENT_PROJECT_VERSION = 98;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
@@ -2213,7 +2233,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 97;
+				CURRENT_PROJECT_VERSION = 98;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
@@ -2263,7 +2283,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 97;
+				CURRENT_PROJECT_VERSION = 98;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2296,7 +2316,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 97;
+				CURRENT_PROJECT_VERSION = 98;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2380,6 +2400,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		046C0BFE293E7C040073F727 /* XCRemoteSwiftPackageReference "swiftui-webview" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/globulus/swiftui-webview";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		04A6B54927715F90003B2647 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
@@ -2413,6 +2441,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 04581DB4276506B9008ADF30 /* XCRemoteSwiftPackageReference "AlertToast" */;
 			productName = AlertToast;
+		};
+		046C0BFF293E7C040073F727 /* SwiftUIWebView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 046C0BFE293E7C040073F727 /* XCRemoteSwiftPackageReference "swiftui-webview" */;
+			productName = SwiftUIWebView;
 		};
 		04A6B54A27715F90003B2647 /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
