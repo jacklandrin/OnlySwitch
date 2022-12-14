@@ -26,7 +26,7 @@ class DarkModeSwitch:SwitchProvider {
         }
     }
     
-    func operationSwitch(isOn: Bool) async throws {
+    func operateSwitch(isOn: Bool) async throws {
         do {
             if isOn {
                 _ = try DarkModeCMD.on.runAppleScript()
@@ -39,7 +39,7 @@ class DarkModeSwitch:SwitchProvider {
         
     }
     
-    func isVisable() -> Bool {
+    func isVisible() -> Bool {
         return true
     }
     

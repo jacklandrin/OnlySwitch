@@ -24,7 +24,7 @@ class DockRecentSwitch:SwitchProvider {
         return ""
     }
     
-    func operationSwitch(isOn: Bool) async throws {
+    func operateSwitch(isOn: Bool) async throws {
         do {
             if isOn {
                 _ = try ShowDockRecentCMD.on.runAppleScript(isShellCMD: true)
@@ -37,7 +37,7 @@ class DockRecentSwitch:SwitchProvider {
         
     }
     
-    func isVisable() -> Bool {
+    func isVisible() -> Bool {
         return true
     }
     

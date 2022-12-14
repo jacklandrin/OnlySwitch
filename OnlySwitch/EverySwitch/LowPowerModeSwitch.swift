@@ -23,7 +23,7 @@ class LowPowerModeSwitch:SwitchProvider {
         return "require password"
     }
     
-    func operationSwitch(isOn: Bool) async throws {
+    func operateSwitch(isOn: Bool) async throws {
         do {
             if isOn {
                 _ = try LowpowerModeCMD.on.runAppleScript(isShellCMD: true, with: true)
@@ -36,7 +36,7 @@ class LowPowerModeSwitch:SwitchProvider {
         
     }
     
-    func isVisable() -> Bool {
+    func isVisible() -> Bool {
         return true
     }
     

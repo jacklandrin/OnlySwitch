@@ -76,7 +76,7 @@ class StatusBarController {
         if Preferences.shared.menubarCollaspable {
             setMarkButton()
             Task {
-                try? await HideMenubarIconsSwitch.shared.operationSwitch(isOn: isMenubarCollapse)
+                try? await HideMenubarIconsSwitch.shared.operateSwitch(isOn: isMenubarCollapse)
             }
 
         }
@@ -197,7 +197,7 @@ class StatusBarController {
             if enable {
                 strongSelf.setMarkButton()
                 Task {
-                    try? await HideMenubarIconsSwitch.shared.operationSwitch(isOn: false)
+                    try? await HideMenubarIconsSwitch.shared.operateSwitch(isOn: false)
                 }
                 
             } else {

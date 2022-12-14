@@ -40,7 +40,7 @@ class HideMenubarIconsSwitch:SwitchProvider {
         return ""
     }
     
-    func operationSwitch(isOn: Bool) async throws {
+    func operateSwitch(isOn: Bool) async throws {
         if isOn {
             guard let isButtonPositionValid = isButtonPositionValid, isButtonPositionValid() else {
                 throw SwitchError.OperationFailed
@@ -51,7 +51,7 @@ class HideMenubarIconsSwitch:SwitchProvider {
         autoCollapseIfNeeded()
     }
     
-    func isVisable() -> Bool {
+    func isVisible() -> Bool {
         return Preferences.shared.menubarCollaspable
     }
     

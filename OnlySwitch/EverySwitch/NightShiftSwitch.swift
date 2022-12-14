@@ -11,7 +11,7 @@ class NightShiftSwitch:SwitchProvider {
     weak var delegate: SwitchDelegate?
     var type: SwitchType = .nightShift
     
-    func isVisable() -> Bool {
+    func isVisible() -> Bool {
         return NightShiftTool.supportsNightShift
     }
     
@@ -24,7 +24,7 @@ class NightShiftSwitch:SwitchProvider {
         return NightShiftTool.isNightShiftEnabled
     }
     
-    func operationSwitch(isOn: Bool) async throws {
+    func operateSwitch(isOn: Bool) async throws {
         if isOn {
             NightShiftTool.enable()
             NightShiftTool.strength = 1

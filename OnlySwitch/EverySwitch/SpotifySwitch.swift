@@ -34,7 +34,7 @@ class SpotifySwitch: SwitchProvider, MusicPlayerDelegate {
         return ""
     }
     
-    func operationSwitch(isOn: Bool) async throws {
+    func operateSwitch(isOn: Bool) async throws {
         guard let player = player else {
             throw SwitchError.OperationFailed
         }
@@ -49,7 +49,7 @@ class SpotifySwitch: SwitchProvider, MusicPlayerDelegate {
         }
     }
     
-    func isVisable() -> Bool {
+    func isVisible() -> Bool {
         //for Spotify installation after Only Switch launched
         if player == nil {
             player = SpotifyPlayer()

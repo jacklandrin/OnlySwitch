@@ -43,14 +43,14 @@ class AirPodsSwitch:SwitchProvider {
         return blManager.getAirPodsBattery(device: currentDevice)
     }
     
-    func isVisable() -> Bool {
+    func isVisible() -> Bool {
         setCurrentDevice()
         guard blManager.centralManager.state == .poweredOn else {return false}
         guard let currentDevice = currentDevice, currentDevice.isPaired() else {return false}
         return true
     }
     
-    func operationSwitch(isOn: Bool) async throws {
+    func operateSwitch(isOn: Bool) async throws {
         guard let currentDevice = currentDevice else {throw SwitchError.OperationFailed}
         
         if isOn {

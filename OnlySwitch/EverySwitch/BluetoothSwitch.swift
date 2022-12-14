@@ -19,11 +19,11 @@ class BluetoothSwitch:SwitchProvider {
         return blManager.centralManager.state == .poweredOn
     }
     
-    func isVisable() -> Bool {
+    func isVisible() -> Bool {
         return true
     }
     
-    func operationSwitch(isOn: Bool) async throws {
+    func operateSwitch(isOn: Bool) async throws {
         blManager.setBluetooth(isOn: isOn)
     }
 }

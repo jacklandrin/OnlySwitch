@@ -26,11 +26,11 @@ class AutohideDockSwitch:SwitchProvider {
     }
     
     
-    func isVisable() -> Bool {
+    func isVisible() -> Bool {
         return true
     }
     
-    func operationSwitch(isOn: Bool) async throws {
+    func operateSwitch(isOn: Bool) async throws {
         do {
             if isOn {
                 _ = try AutohideDockCMD.on.runAppleScript()

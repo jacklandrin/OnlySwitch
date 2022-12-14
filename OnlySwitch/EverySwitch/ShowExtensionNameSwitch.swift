@@ -26,7 +26,7 @@ class ShowExtensionNameSwitch:SwitchProvider {
         return ""
     }
     
-    func operationSwitch(isOn: Bool) async throws {
+    func operateSwitch(isOn: Bool) async throws {
         do {
             if isOn {
                 _ = try ShowExtensionNameCMD.on.runAppleScript(isShellCMD: true)
@@ -39,7 +39,7 @@ class ShowExtensionNameSwitch:SwitchProvider {
         
     }
     
-    func isVisable() -> Bool {
+    func isVisible() -> Bool {
         return true
     }
 

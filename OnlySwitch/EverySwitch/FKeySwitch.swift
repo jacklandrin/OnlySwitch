@@ -23,7 +23,7 @@ class FKeySwitch:SwitchProvider {
         return "Macbook Keyboard"
     }
     
-    func operationSwitch(isOn: Bool) async throws {
+    func operateSwitch(isOn: Bool) async throws {
         if isOn {
             try FKeyManager.setCurrentFKeyMode(.function)
         } else {
@@ -31,7 +31,7 @@ class FKeySwitch:SwitchProvider {
         }
     }
     
-    func isVisable() -> Bool {
+    func isVisible() -> Bool {
         do {
             let connect = try IOService.getServiceConnect(handle: FKeyManager.getIOHandle(),
                                                           type: UInt32(kIOHIDParamConnectType))

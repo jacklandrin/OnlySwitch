@@ -27,7 +27,7 @@ class MuteMicSwitch:SwitchProvider {
         return ""
     }
     
-    func operationSwitch(isOn: Bool) async throws {
+    func operateSwitch(isOn: Bool) async throws {
         do {
             if isOn {
                 let cmd = VolumeCMD.setInput + "0"
@@ -44,7 +44,7 @@ class MuteMicSwitch:SwitchProvider {
         
     }
     
-    func isVisable() -> Bool {
+    func isVisible() -> Bool {
         return true
     }
     

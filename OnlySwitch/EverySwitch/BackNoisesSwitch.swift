@@ -31,14 +31,14 @@ class BackNoisesSwitch:SwitchProvider {
         backNoisesTrackManager.currentBackNoisesItem.title
     }
     
-    func operationSwitch(isOn: Bool) async throws {
+    func operateSwitch(isOn: Bool) async throws {
         DispatchQueue.main.async {
             self.backNoisesTrackManager.currentBackNoisesItem.isPlaying = isOn
             self.autoStopNoisesIfNeeded()
         }
     }
     
-    func isVisable() -> Bool {
+    func isVisible() -> Bool {
         return Preferences.shared.radioEnable
     }
 

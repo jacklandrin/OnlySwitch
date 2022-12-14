@@ -28,7 +28,7 @@ class SmallLaunchpadIconSwitch:SwitchProvider {
         return ""
     }
     
-    func operationSwitch(isOn: Bool) async throws {
+    func operateSwitch(isOn: Bool) async throws {
         do {
             if isOn {
                 _ = try SmallLaunchpadCMD.on.runAppleScript(isShellCMD: true)
@@ -41,7 +41,7 @@ class SmallLaunchpadIconSwitch:SwitchProvider {
         
     }
     
-    func isVisable() -> Bool {
+    func isVisible() -> Bool {
         return true
     }
     

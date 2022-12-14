@@ -37,7 +37,7 @@ class TopNotchSwitch:SwitchProvider, CurrentScreen {
     }
     
     
-    func operationSwitch(isOn: Bool) async throws {
+    func operateSwitch(isOn: Bool) async throws {
         var success = false
         if isOn {
             success = hiddenNotch()
@@ -49,7 +49,7 @@ class TopNotchSwitch:SwitchProvider, CurrentScreen {
         }
     }
     
-    func isVisable() -> Bool {
+    func isVisible() -> Bool {
         return self.isNotchScreen
     }
     

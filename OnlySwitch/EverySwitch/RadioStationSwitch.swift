@@ -51,7 +51,7 @@ class RadioStationSwitch:SwitchProvider {
 //        PlayerManager.shared.player.stop()
     }
     
-    func operationSwitch(isOn: Bool) async throws {
+    func operateSwitch(isOn: Bool) async throws {
         guard Preferences.shared.radioEnable else {return}
         if isOn {
             DispatchQueue.main.async {
@@ -74,7 +74,7 @@ class RadioStationSwitch:SwitchProvider {
         return playerItem.title
     }
     
-    func isVisable() -> Bool {
+    func isVisible() -> Bool {
         return Preferences.shared.radioEnable
     }
     

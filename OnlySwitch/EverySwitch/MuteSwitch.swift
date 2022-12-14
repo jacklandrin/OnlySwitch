@@ -46,7 +46,7 @@ class MuteSwitch:SwitchProvider {
 //        print("mute deinit")
     }
     
-    func operationSwitch(isOn: Bool) async throws {
+    func operateSwitch(isOn: Bool) async throws {
         try muteSwitchOperator.operationSwitch(isOn: isOn)
     }
     
@@ -55,7 +55,7 @@ class MuteSwitch:SwitchProvider {
         
     }
     
-    func isVisable() -> Bool {
+    func isVisible() -> Bool {
         return true
     }
     

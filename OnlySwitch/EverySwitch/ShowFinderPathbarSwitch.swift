@@ -23,7 +23,7 @@ class ShowFinderPathbarSwitch:SwitchProvider {
         return ""
     }
     
-    func operationSwitch(isOn: Bool) async throws {
+    func operateSwitch(isOn: Bool) async throws {
         do {
             if isOn {
                 _ = try ShowPathBarCMD.on.runAppleScript(isShellCMD: true)
@@ -35,7 +35,7 @@ class ShowFinderPathbarSwitch:SwitchProvider {
         }
     }
     
-    func isVisable() -> Bool {
+    func isVisible() -> Bool {
         return true
     }
     

@@ -18,7 +18,7 @@ class EmptyPasteboardSwitch:SwitchProvider {
         return ""
     }
     
-    func operationSwitch(isOn: Bool) async throws {
+    func operateSwitch(isOn: Bool) async throws {
         if isOn {
             let pasteboard = NSPasteboard.general
             pasteboard.declareTypes([.string], owner: nil)
@@ -26,7 +26,7 @@ class EmptyPasteboardSwitch:SwitchProvider {
         }
     }
     
-    func isVisable() -> Bool {
+    func isVisible() -> Bool {
         return true
     }
     

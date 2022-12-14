@@ -20,13 +20,13 @@ class EjectDiscsSWitch: SwitchProvider {
         return ""
     }
     
-    func operationSwitch(isOn: Bool) async throws {
+    func operateSwitch(isOn: Bool) async throws {
         if isOn {
             _ = try ejectDiscs.runAppleScript()
         }
     }
     
-    func isVisable() -> Bool {
+    func isVisible() -> Bool {
         return true
     }
     

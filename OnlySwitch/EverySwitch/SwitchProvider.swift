@@ -15,8 +15,8 @@ protocol SwitchProvider:AnyObject {
     var delegate:SwitchDelegate? {get set}
     func currentStatus() -> Bool
     func currentInfo() -> String
-    func operationSwitch(isOn:Bool) async throws
-    func isVisable() -> Bool
+    func operateSwitch(isOn:Bool) async throws
+    func isVisible() -> Bool
 }
 
 

@@ -27,7 +27,7 @@ class ScreenTestSwitch:SwitchProvider, CurrentScreen {
         return ""
     }
     
-    func operationSwitch(isOn: Bool) async throws {
+    func operateSwitch(isOn: Bool) async throws {
         DispatchQueue.main.async {
             if isOn {
                 self.view = NSHostingView(rootView: PureColorView())
@@ -39,7 +39,7 @@ class ScreenTestSwitch:SwitchProvider, CurrentScreen {
         }
     }
     
-    func isVisable() -> Bool {
+    func isVisible() -> Bool {
         return true
     }
     

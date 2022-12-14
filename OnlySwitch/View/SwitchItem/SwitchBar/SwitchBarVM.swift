@@ -76,7 +76,7 @@ class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
     }
     
     func refreshStatus() {
-        model.isHidden = !switchOperator.isVisable()
+        model.isHidden = !switchOperator.isVisible()
         if self.switchType == .xcodeCache {
             if self.info == "" || self.info != "Calculating..." {
                 self.model.info = "Calculating..."
@@ -105,7 +105,7 @@ class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
         model.processing = true
         Task {
             do {
-                _ = try await switchOperator.operationSwitch(isOn: isOn)
+                _ = try await switchOperator.operateSwitch(isOn: isOn)
                 DispatchQueue.main.async { [self] in
                     self.model.isOn = isOn
                     self.model.processing = false

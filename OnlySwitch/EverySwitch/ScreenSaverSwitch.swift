@@ -11,7 +11,7 @@ class ScreenSaverSwitch:SwitchProvider {
     weak var delegate: SwitchDelegate?
     var type: SwitchType = .screenSaver
     var getScreenSaverIntervalResult:String = "300"
-    func operationSwitch(isOn: Bool) async throws {
+    func operateSwitch(isOn: Bool) async throws {
         do {
             if isOn {
                 var interval = UserDefaults.standard.integer(forKey: UserDefaults.Key.ScreenSaverInterval)
@@ -41,7 +41,7 @@ class ScreenSaverSwitch:SwitchProvider {
         
     }
     
-    func isVisable() -> Bool {
+    func isVisible() -> Bool {
         return true
     }
     

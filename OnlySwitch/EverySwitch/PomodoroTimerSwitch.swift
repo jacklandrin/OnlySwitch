@@ -93,7 +93,7 @@ class PomodoroTimerSwitch: SwitchProvider {
         }
     }
     
-    func operationSwitch(isOn: Bool) async throws {
+    func operateSwitch(isOn: Bool) async throws {
         if isOn {
             self.cycleIndex = 0
             self.startTimer()
@@ -102,7 +102,7 @@ class PomodoroTimerSwitch: SwitchProvider {
         }
     }
     
-    func isVisable() -> Bool {
+    func isVisible() -> Bool {
         return true
     }
     

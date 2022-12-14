@@ -61,7 +61,7 @@ class XcodeCacheSwitch:SwitchProvider {
     }
 
     
-    func isVisable() -> Bool {
+    func isVisible() -> Bool {
         let home = manager.homeDirectoryForCurrentUser
         let xcodeURL = home.appendingPathComponent(xcodepath)
         let path = xcodeURL.absoluteString.replacingOccurrences(of: "file://", with: "")
@@ -69,7 +69,7 @@ class XcodeCacheSwitch:SwitchProvider {
         return exist
     }
     
-    func operationSwitch(isOn: Bool) async throws {
+    func operateSwitch(isOn: Bool) async throws {
         let home = manager.homeDirectoryForCurrentUser
         let url = home.appendingPathComponent(derivedData)
         do {

@@ -74,7 +74,7 @@ class PureColorVM:ObservableObject {
     
     func exitScreenTestMode() {
         Task {
-            try? await ScreenTestSwitch.shared.operationSwitch(isOn: false)
+            try? await ScreenTestSwitch.shared.operateSwitch(isOn: false)
         }
     }
     

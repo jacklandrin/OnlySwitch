@@ -133,7 +133,7 @@ class KeepAwakeSwitch:SwitchProvider {
         return preventedSleep
     }
     
-    func operationSwitch(isOn: Bool) async throws {
+    func operateSwitch(isOn: Bool) async throws {
         if isOn {
             try switchOn()
         } else {
@@ -163,7 +163,7 @@ class KeepAwakeSwitch:SwitchProvider {
         }
     }
     
-    func isVisable() -> Bool {
+    func isVisible() -> Bool {
         return true
     }
 }
