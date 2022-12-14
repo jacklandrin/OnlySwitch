@@ -601,6 +601,7 @@
 		04F118C527AED8EE005DA861 /* AboutVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutVM.swift; sourceTree = "<group>"; };
 		04F118C727B1A51D005DA861 /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = fil.lproj/Localizable.strings; sourceTree = "<group>"; };
 		04F118C827B1C33D005DA861 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
+		04F96737294A33370088112A /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		04FB3E5C288D489500F3B5E1 /* SettingWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingWindowController.swift; sourceTree = "<group>"; };
 		04FB3E5F288D49E100F3B5E1 /* SwitchListVM+SettingWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwitchListVM+SettingWindowController.swift"; sourceTree = "<group>"; };
 		04FB3E63288D4BB500F3B5E1 /* SwitchListVM+SettingWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwitchListVM+SettingWindowController.swift"; sourceTree = "<group>"; };
@@ -1560,6 +1561,7 @@
 				ja,
 				so,
 				ko,
+				fr,
 			);
 			mainGroup = 04447B4F2754F08000CD2900;
 			packageReferences = (
@@ -1983,6 +1985,7 @@
 				29107C0828111D3A00E88A86 /* ja */,
 				1081EF1A287F28C5005849B5 /* so */,
 				9F3B2B04292FD1F000086461 /* ko */,
+				04F96737294A33370088112A /* fr */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -2004,7 +2007,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 98;
+				CURRENT_PROJECT_VERSION = 100;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2030,7 +2033,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 98;
+				CURRENT_PROJECT_VERSION = 100;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2179,7 +2182,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 98;
+				CURRENT_PROJECT_VERSION = 100;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
@@ -2233,7 +2236,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 98;
+				CURRENT_PROJECT_VERSION = 100;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
@@ -2283,7 +2286,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 98;
+				CURRENT_PROJECT_VERSION = 100;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2316,7 +2319,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 98;
+				CURRENT_PROJECT_VERSION = 100;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
