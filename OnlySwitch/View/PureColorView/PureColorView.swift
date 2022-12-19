@@ -51,6 +51,10 @@ struct PureColorView: View {
                         }
                     }
                 }
+                vm.forbiddenKeyboard()
+            }
+            .onDisappear{
+                vm.recoverKeyboard()
             }
             .ignoresSafeArea()
     }

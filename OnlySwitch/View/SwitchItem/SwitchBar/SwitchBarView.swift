@@ -57,7 +57,7 @@ struct SwitchBarView: View {
                             .foregroundColor(.accentColor)
                             .frame(height:26)
                         Text(buttonTitle(category:switchOption.category).localized())
-                            .font(.system(size: buttonTitle(category:switchOption.category).localized().count > 6 ? 400 : 14))
+                            .font(.system(size: buttonTitle(category:switchOption.category).localized().count > 6 ? 300 : 12))
                             .lineLimit(1)
                             .minimumScaleFactor(0.02)
                             .foregroundColor(.white)

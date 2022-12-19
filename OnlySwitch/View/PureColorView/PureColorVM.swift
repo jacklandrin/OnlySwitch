@@ -6,7 +6,12 @@
 //
 
 import SwiftUI
+import CoreGraphics
+
 class PureColorVM:ObservableObject {
+    
+    private var runLoopSource:CFRunLoopSource?
+    
     private var isLeftArrowPressed = false
     {
         didSet {
@@ -43,6 +48,8 @@ class PureColorVM:ObservableObject {
     private var colorIndex:Int = 0
     @Published var currentColor: Color = .black
     @Published var tipAlpha = 1.0
+    
+    
     var isHovering:Bool = false
     {
         didSet {
@@ -75,6 +82,38 @@ class PureColorVM:ObservableObject {
     func exitScreenTestMode() {
         Task {
             try? await ScreenTestSwitch.shared.operateSwitch(isOn: false)
+        }
+    }
+    
+    
+    func forbiddenKeyboard() {
+        let eventMask =
+            (1 << CGEventType.keyDown.rawValue) |
+            (1 << CGEventType.keyUp.rawValue) |
+            (1 << 14) //power button
+        
+        let eventTap = CGEvent.tapCreate(
+            tap: .cghidEventTap,
+            place: .headInsertEventTap,
+            options: .defaultTap,
+            eventsOfInterest: CGEventMask(eventMask),
+            callback: {(eventTapProxy, eventType, event, mutablePointer) -> Unmanaged<CGEvent>? in event
+                return nil
+            },
+            userInfo: nil)
+
+        runLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, eventTap, CFIndex(0))
+        if let runLoopSource = runLoopSource {
+            CFRunLoopAddSource(CFRunLoopGetCurrent(), runLoopSource, .commonModes)
+            if let eventTap {
+                CGEvent.tapEnable(tap: eventTap, enable: true)
+            }
+        }
+    }
+    
+    func recoverKeyboard() {
+        if let runLoopSource = runLoopSource {
+            CFRunLoopRemoveSource(CFRunLoopGetCurrent(), runLoopSource, .commonModes)
         }
     }
     
