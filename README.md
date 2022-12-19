@@ -13,7 +13,7 @@
 brew install only-switch
 ```
 ## Manually Download
-[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_2.3.9/OnlySwitch.dmg)
+[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_2.3.10/OnlySwitch.dmg)
 
 ## Communities
 Telegram group: https://t.me/OnlySwitchforMac
@@ -76,7 +76,7 @@ Since Version 1.3, switches can be added to or removed from the list.
 | Set dark mode       | finished          |
 
 ## Supported Languages 🇺🇳
-English, Simplified Chinese, German, Croatian, Turkish, Polish, Filipino, Dutch, Italian, Russian, Spanish, Japanese, Somali, Korean
+English, Simplified Chinese, German, Croatian, Turkish, Polish, Filipino, Dutch, Italian, Russian, Spanish, Japanese, Somali, Korean, French
 
 ## Welcome to pull requests for these
 
@@ -118,6 +118,8 @@ In Version 2.3, Only Switch brings a new feature, Screen Test. It provides a pur
 This feature is new in version 2.3.2. To be honest, Hidden and Dozer are both good apps for this function. Many users install OnlySwitch and them simultaneously, but this also squeezes the menu bar, which is already lacking in space. Therefore, the feature integrates into OnlySwitch.
 ![](https://www.jacklandrin.com/wp-content/uploads/2022/06/mark_icon_guide.png)
 When the switch is on, items on the left of the split(arrow-pointing) icon are hidden. Hold ⌘ (command) and drag the icon to configure the hidden section. If you want to use it no longer, you can disable it in preferences, the split icon will disappear. You also can set the interval of autohide for it here. If your date on the menu bar is truncated when it's on, you can set this: System Preferences -> Dock & Menu Bar -> Clock -> Show date -> always.
+
+Since version 2.3.10, this switch can be controlled via right-click icons.
 
 ## About Shortcuts
 **Shortcuts** is a powerful iOS app that can help people make fantastic automation functions. It comes to macOS in Monterey as well. Many users are eager OnlySwitch to have more customizable features, and one good news is that the app supports Shortcuts display since Version 1.7. More menubar space, therefore, is saved. 
@@ -186,6 +188,8 @@ Rosel for Filipino translation
 @abdorizak for Somali translation
 
 @iosdevted for Korean translation
+
+Ange Lefrère for French translation
 
 ## License
 MIT
