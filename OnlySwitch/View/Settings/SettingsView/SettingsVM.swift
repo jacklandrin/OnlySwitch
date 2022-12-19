@@ -70,7 +70,7 @@ class SettingsVM:ObservableObject {
                                                  .AirPods,
                                                  .PomodoroTimer,
                                                  .HideMenubarIcons,
-                                                 .Dev,
+//                                                 .Dev,
                                                  .About]
     
     @Published var selection:SettingsItem? = .General
