@@ -61,6 +61,7 @@
 		043E5D7A2758212A00ADC004 /* SwitchType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D792758212A00ADC004 /* SwitchType.swift */; };
 		043F5AE92784B8CC001DFDF0 /* IsDarkMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043F5AE82784B8CC001DFDF0 /* IsDarkMode.swift */; };
 		043F5AEB2784BE34001DFDF0 /* SetDarkMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043F5AEA2784BE34001DFDF0 /* SetDarkMode.swift */; };
+		0441A9BE2950EC1500EC4AC4 /* NSEvent++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0441A9BD2950EC1500EC4AC4 /* NSEvent++.swift */; };
 		0443A6B627599AAC00A3BCFD /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0443A6B527599AAC00A3BCFD /* README.md */; };
 		0443A6B82759A99700A3BCFD /* ScreenSaverSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0443A6B72759A99700A3BCFD /* ScreenSaverSwitch.swift */; };
 		04447B5C2754F08000CD2900 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B5B2754F08000CD2900 /* AppDelegate.swift */; };
@@ -404,6 +405,7 @@
 		043E5D792758212A00ADC004 /* SwitchType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchType.swift; sourceTree = "<group>"; };
 		043F5AE82784B8CC001DFDF0 /* IsDarkMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsDarkMode.swift; sourceTree = "<group>"; };
 		043F5AEA2784BE34001DFDF0 /* SetDarkMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetDarkMode.swift; sourceTree = "<group>"; };
+		0441A9BD2950EC1500EC4AC4 /* NSEvent++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSEvent++.swift"; sourceTree = "<group>"; };
 		0443A6B527599AAC00A3BCFD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0443A6B72759A99700A3BCFD /* ScreenSaverSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenSaverSwitch.swift; sourceTree = "<group>"; };
 		04447B582754F08000CD2900 /* OnlySwitch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnlySwitch.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1107,6 +1109,7 @@
 				04DC6C8F28A6CBEB00888BF9 /* IntBool.swift */,
 				04DC6C9128A6D5EA00888BF9 /* Date+Today.swift */,
 				04DC6CA328A7D73A00888BF9 /* Float++.swift */,
+				0441A9BD2950EC1500EC4AC4 /* NSEvent++.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -1783,6 +1786,7 @@
 				04938D0A2769143300713F1D /* GeneralView.swift in Sources */,
 				0493378A2762651D00AE779A /* SoundWaveVM.swift in Sources */,
 				04938D082768CBA100713F1D /* LanguageManager.swift in Sources */,
+				0441A9BE2950EC1500EC4AC4 /* NSEvent++.swift in Sources */,
 				043E5D7327581C2E00ADC004 /* SwitchBarView.swift in Sources */,
 				0427B25B275D786400AD783A /* SystemInfo.swift in Sources */,
 				0493375527625A1E00AE779A /* Reader+Converter.swift in Sources */,
@@ -2007,7 +2011,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 100;
+				CURRENT_PROJECT_VERSION = 101;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2033,7 +2037,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 100;
+				CURRENT_PROJECT_VERSION = 101;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2182,7 +2186,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 100;
+				CURRENT_PROJECT_VERSION = 101;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
@@ -2236,7 +2240,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 100;
+				CURRENT_PROJECT_VERSION = 101;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
@@ -2286,7 +2290,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 100;
+				CURRENT_PROJECT_VERSION = 101;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2319,7 +2323,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 100;
+				CURRENT_PROJECT_VERSION = 101;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;

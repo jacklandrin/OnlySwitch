@@ -78,21 +78,38 @@ class StatusBarController {
             Task {
                 try? await HideMenubarIconsSwitch.shared.operateSwitch(isOn: isMenubarCollapse)
             }
-
         }
         
         observeNotifications()
     }
     
-    @objc func togglePopover(sender:AnyObject) {
-        if hasOtherPopover {
-            return
-        }
-        if(popover.isShown) {
-            hidePopover(sender)
-            
+    @objc private func togglePopover(sender:AnyObject) {
+        if let event = NSApp.currentEvent, event.isRightClicked {
+            guard Preferences.shared.menubarCollaspable else {return}
+            Task {
+                if markItem?.length == MarkItemLength.collapse {
+                    try? await HideMenubarIconsSwitch.shared.operateSwitch(isOn: false)
+                }
+            }
         } else {
-            showPopover(sender)
+            if hasOtherPopover {
+                return
+            }
+            if(popover.isShown) {
+                hidePopover(sender)
+                
+            } else {
+                showPopover(sender)
+            }
+        }
+    }
+    
+    @objc private func showMenuBarIcons(sender:AnyObject) {
+        guard let event = NSApp.currentEvent, event.isRightClicked else {return}
+        Task {
+            if markItem?.length == MarkItemLength.normal {
+                try? await HideMenubarIconsSwitch.shared.operateSwitch(isOn: true)
+            }
         }
     }
     
@@ -108,7 +125,7 @@ class StatusBarController {
             mainItemButton.image = NSImage(named: image)
             mainItemButton.image?.size = NSSize(width: 18, height: 18)
             mainItemButton.image?.isTemplate = true
-
+            mainItemButton.sendAction(on: [.leftMouseDown, .rightMouseDown])
             mainItemButton.action = #selector(togglePopover(sender:))
             mainItemButton.target = self
         }
@@ -120,6 +137,9 @@ class StatusBarController {
             markItemButton.image = NSImage(named: "mark_icon")
             markItemButton.image?.size = NSSize(width: 22, height: 18)
             markItemButton.image?.isTemplate = true
+            markItemButton.sendAction(on: [.leftMouseDown, .rightMouseDown])
+            markItemButton.action = #selector(showMenuBarIcons(sender:))
+            markItemButton.target = self
         }
     }
     
