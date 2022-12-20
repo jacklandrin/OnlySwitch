@@ -161,6 +161,7 @@ OnlySwitch offers some Shortcuts actions since Version 1.8. For example, you can
 * Apple Music & Spotify Switch refer to [SpotMenu](https://github.com/kmikiy/SpotMenu)
 * The idea of hiding menu bar icons from [Hidden](https://github.com/dwarvesf/hidden)
 * FKey refer to [Fluor](https://github.com/Pyroh/Fluor)
+* Hide Windows refer to [Later](https://github.com/alyssaxuu/later)
 
 ## Contributors
 
@@ -190,7 +191,7 @@ Rosel for Filipino translation
 
 @iosdevted for Korean translation
 
-Ange Lefrère for French translation
+@BtKent and Ange Lefrère for French translation
 
 ## License
 MIT
