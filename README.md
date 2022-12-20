@@ -187,5 +187,7 @@ Rosel for Filipino translation
 
 @iosdevted for Korean translation
 
+@BtKent for French translation
+
 ## License
 MIT
