@@ -73,6 +73,8 @@ extension SwitchType {
             return DimScreenSwitch()
         case .ejectDiscs:
             return EjectDiscsSWitch()
+        case .hideWindows:
+            return HideWindowsSwitch()
         }
     }
     
@@ -227,6 +229,10 @@ extension SwitchType {
                                  offImage: NSImage(systemSymbolName: "eject.circle"),
                                  controlType: .Button,
                                  category: .tool)
+        case .hideWindows:
+            return SwitchBarInfo(title: "Hide Windows",
+                                 onImage: NSImage(systemSymbolName: "macwindow"),
+                                 offImage: NSImage(systemSymbolName: "macwindow"))
         }
     }
 

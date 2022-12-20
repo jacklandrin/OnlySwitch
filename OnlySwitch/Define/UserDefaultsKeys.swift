@@ -52,6 +52,9 @@ extension UserDefaults {
         //Dim Screen
         static let autoDimScreenTime = "autoDimScreenTimeKey"
         static let dimScreenPercent = "dimScreenPercentKey"
+        //Hide Windows
+        static let windowsHidden = "windowsHiddenKey"
+        static let hiddenWindowsInfo = "hiddenWindowsInfoKey"
         //others
         static let newestVersion = "newestVersionKey"
         static let systemLangPriority = "systemLangPriority"

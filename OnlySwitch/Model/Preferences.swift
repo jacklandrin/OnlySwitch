@@ -197,5 +197,10 @@ struct Preferences {
         }
     }
     
+    //Hide Windows
+    @UserDefaultValue(key: UserDefaults.Key.windowsHidden, defaultValue: false)
+    var windowsHidden:Bool
     
+    @UserDefaultValue(key: UserDefaults.Key.hiddenWindowsInfo, defaultValue: nil)
+    var hiddenWindowsInfo:Data?
 }

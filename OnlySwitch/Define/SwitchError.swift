@@ -9,4 +9,5 @@ import Foundation
 enum SwitchError:Error {
     case OperationFailed
     case ScriptFailed
+    case RestoreWindowsFailed
 }

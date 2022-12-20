@@ -92,8 +92,14 @@ class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
         self.model.processing = true
         DispatchQueue.global().async {
             let _isOn = self.switchOperator.currentStatus()
-            let _info = self.switchOperator.currentInfo()
+            var _info = ""
+            if self.switchType != .airPods {
+                _info = self.switchOperator.currentInfo()
+            }
             DispatchQueue.main.async {
+                if self.switchType == .airPods {
+                    _info = self.switchOperator.currentInfo()
+                }
                 self.model.processing = false
                 self.model.isOn = _isOn
                 self.model.info = _info
