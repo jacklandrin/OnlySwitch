@@ -21,6 +21,7 @@ class HideWindowsSwitch:SwitchProvider {
         return ""
     }
     
+    @MainActor
     func operateSwitch(isOn: Bool) async throws {
         if isOn {
             try saveSessionGlobal()
@@ -36,7 +37,7 @@ class HideWindowsSwitch:SwitchProvider {
     private func saveSessionGlobal() throws {
         guard !Preferences.shared.windowsHidden else {return}
         var apps = [AppsSession]()
-        
+        NSApp.setActivationPolicy(.regular)
         var runningApps = NSWorkspace.shared.runningApplications
         if let frontmostApp = NSWorkspace.shared.frontmostApplication {
             runningApps.append(frontmostApp)
