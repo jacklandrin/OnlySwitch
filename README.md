@@ -45,24 +45,25 @@ Everyone can contribute macOS Shortcuts for OnlySwitch now. Please read [How to 
 
 ## Switch list
 
-| Switch            | status   | Switch                   | status            |
-|:------------------|----------|:-------------------------|:------------------|
-| Hide desktop      | finished | Hide notch               | exist some issues |
-| Dark mode         | finished | Low power mode           | require password  |
-| Screen Saver      | finished | Show Finder Path Bar     | finished          |
-| Night Shift       | finished | Mute mic                 | finished          |
-| Autohide Dock     | finished | Small launchpad icon     | finished          |
-| Airpods           | finished | Pomodoro timer           | finished          |
-| Bluetooth         | finished | Show extension name      | finished          |
-| Xcode cache       | finished | Show user library folder | finished          |
-| Autohide Menu Bar | finished | Mute                     | finished          |
-| Show hidden files | finished | Empty pasteboard         | finished          |
-| Radio Station     | finished | Empty trash              | finished          |
-| Keep awake        | finished | Show Recent Apps on Dock | finished          |
-| Spotify           | finished | Apple Music              | finished          |
-| Screen Test       | finished | Hide Menu Bar Icons      | partly finished   |
-| FKey              | finished | Back Noises              | finished          |
-| Dim Screen        | finished | Eject Discs              | finished          |
+| Switch            | status          | Switch                   | status            |
+|:------------------|-----------------|:-------------------------|:------------------|
+| Hide desktop      | finished        | Hide notch               | exist some issues |
+| Dark mode         | finished        | Low power mode           | require password  |
+| Screen Saver      | finished        | Show Finder Path Bar     | finished          |
+| Night Shift       | finished        | Mute mic                 | finished          |
+| Autohide Dock     | finished        | Small launchpad icon     | finished          |
+| Airpods           | finished        | Pomodoro timer           | finished          |
+| Bluetooth         | finished        | Show extension name      | finished          |
+| Xcode cache       | finished        | Show user library folder | finished          |
+| Autohide Menu Bar | finished        | Mute                     | finished          |
+| Show hidden files | finished        | Empty pasteboard         | finished          |
+| Radio Station     | finished        | Empty trash              | finished          |
+| Keep awake        | finished        | Show Recent Apps on Dock | finished          |
+| Spotify           | finished        | Apple Music              | finished          |
+| Screen Test       | finished        | Hide Menu Bar Icons      | partly finished   |
+| FKey              | finished        | Back Noises              | finished          |
+| Dim Screen        | finished        | Eject Discs              | finished          |
+| Hide Windows      | partly finished |                          |                   |
 
 Since Version 1.3, switches can be added to or removed from the list.
 
