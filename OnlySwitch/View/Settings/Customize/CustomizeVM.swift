@@ -78,7 +78,7 @@ class CustomizeItem:ObservableObject {
     func doSwitch() {
         let switchOperator = type.getNewSwitchInstance()
         let controlType = type.barInfo().controlType
-        if controlType == .Switch {
+        if controlType == .Switch || controlType == .Player {
             let status = switchOperator.currentStatus()
             Task {
                 do {
