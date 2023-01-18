@@ -85,6 +85,12 @@ class CustomizeItem:ObservableObject {
                     _ = try await switchOperator.operateSwitch(isOn: !status)
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: .changeSettings, object: nil)
+                        if controlType == .Switch {
+                            _ = try? displayNotificationCMD(title: self.type.barInfo().title.localized(),
+                                                            content: "",
+                                                            subtitle: status ? "Turn off".localized() : "Turn on".localized())
+                            .runAppleScript()
+                        }
                     }
                 } catch {
                     
@@ -96,6 +102,10 @@ class CustomizeItem:ObservableObject {
                     _ = try await switchOperator.operateSwitch(isOn: true)
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: .changeSettings, object: nil)
+                        _ = try? displayNotificationCMD(title: self.type.barInfo().title.localized(),
+                                                        content: "",
+                                                        subtitle: "Running".localized())
+                        .runAppleScript()
                     }
                 } catch {
                     
