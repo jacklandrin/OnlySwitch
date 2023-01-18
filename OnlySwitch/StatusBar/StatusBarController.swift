@@ -54,7 +54,8 @@ class StatusBarController {
     init(_ popover:NSPopover) {
         self.popover = popover
         
-        
+        self.popover.behavior = .semitransient
+        self.popover.animates = false
         mainItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         setMainItemButton(image: currentMenubarIcon)
         
