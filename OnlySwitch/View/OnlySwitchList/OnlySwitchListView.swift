@@ -216,6 +216,29 @@ struct OnlySwitchListView: View {
                 }
             }
             
+            if switchVM.toolItemList.count > 0 {
+                HStack {
+                    Rectangle().frame(height: 1)
+                        .foregroundColor(.gray)
+                    Text("TOOLS".localized())
+                    Rectangle().frame(height: 1)
+                        .foregroundColor(.gray)
+                }.frame(height:30)
+                    .opacity(0.7)
+                    .shadow(radius: 1)
+                
+                LazyVGrid(columns: columns, spacing: 0) {
+                    ForEach(switchVM.toolItemList.indices, id:\.self) { index in
+                        HStack {
+                            if let item = switchVM.toolItemList[index] {
+                                SwitchBarView().environmentObject(item)
+                                    .frame(height:Layout.singleSwitchHeight)
+                            }
+                        }
+                    }
+                }
+            }
+            
             if switchVM.shortcutsList.count > 0 {
                 HStack {
                     Rectangle().frame(height: 1)
@@ -337,6 +360,7 @@ struct OnlySwitchListView: View {
             totalHeight += categoryHeight(count: switchVM.audioItemList.count)
             totalHeight += categoryHeight(count: switchVM.cleanupItemList.count)
             totalHeight += categoryHeight(count: switchVM.shortcutsList.count)
+            totalHeight += categoryHeight(count: switchVM.toolItemList.count)
             totalHeight -= 30.0
         }
         

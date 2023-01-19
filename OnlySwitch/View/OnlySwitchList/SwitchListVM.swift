@@ -39,6 +39,10 @@ class SwitchListVM: ObservableObject, CurrentScreen {
         return model.cleanupItemList
     }
     
+    var toolItemList:[SwitchBarVM] {
+        return model.toolItemList
+    }
+    
     var sortMode:Bool {
         return model.sortMode
     }
@@ -108,6 +112,7 @@ class SwitchListVM: ObservableObject, CurrentScreen {
         self.model.uncategoryItemList = self.switchList.filter{ $0.category == .none && !$0.isHidden }
         self.model.audioItemList = self.switchList.filter{ $0.category == .audio && !$0.isHidden }
         self.model.cleanupItemList = self.switchList.filter{ $0.category == .cleanup && !$0.isHidden }
+        self.model.toolItemList = self.switchList.filter{ $0.category == .tool && !$0.isHidden }
         
         print("refresh")
     }
