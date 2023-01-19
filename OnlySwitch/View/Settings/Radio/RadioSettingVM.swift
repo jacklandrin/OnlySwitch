@@ -226,6 +226,7 @@ class RadioSettingVM:ObservableObject {
         let newStationID = UUID()
         let newStation = RadioPlayerItemViewModel(isPlaying: false, title: title, streamUrl: streamUrl, streamInfo: "", id: newStationID)
         self.endEditing()
+        newStation.isEditing = true
         newStation.isEditing = title == ""
         self.model.radioList.append(newStation)
         self.model.selectRow = newStationID
@@ -297,6 +298,7 @@ extension RadioSettingVM {
                             if item.url.isValidURL && !RadioStations.existence(url: item.url) {
                                 self.addStation(title: item.name,
                                                 streamUrl: item.url)
+                                
                             }
                         }
                         self.model.successInfo = "Success"
