@@ -141,3 +141,6 @@
 "Turn on" = "Upaliti";
 "Running" = "Pokreni";
 "TOOLS" = "ALATI";
+"Import" = "Uvoz";
+"Export" = "Izvoz";
+"Success" = "Uspjeh";

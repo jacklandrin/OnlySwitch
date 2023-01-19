@@ -142,3 +142,6 @@
 "Turn on" = "Allumer";
 "Running" = "en cours";
 "TOOLS" = "OUTILS";
+"Import" = "Importer";
+"Export" = "Exporter";
+"Success" = "Succès";

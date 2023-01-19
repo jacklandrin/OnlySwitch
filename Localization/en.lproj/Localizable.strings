@@ -143,3 +143,9 @@
 "Turn on" = "Turn on";
 "Running" = "Running";
 "TOOLS" = "TOOLS";
+"Import" = "Import";
+"Export" = "Export";
+"The radio stations can be imported and exported as a Json file. The keys are \"name\" and \"url\"." = "The radio stations can be imported and exported as a Json file. The keys are \"name\" and \"url\".";
+"Success" = "Success";
+
+

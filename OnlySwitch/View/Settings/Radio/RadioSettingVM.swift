@@ -7,10 +7,11 @@
 
 import CoreData
 import Combine
+import AppKit
 
 class RadioSettingVM:ObservableObject {
     
-    @Published private var model = RadioSettingModel()
+    @Published fileprivate var model = RadioSettingModel()
     private var preferencesPublisher = PreferencesObserver.shared
     @Published private var preferences = PreferencesObserver.shared.preferences
     private var cancellables = Set<AnyCancellable>()
@@ -34,7 +35,7 @@ class RadioSettingVM:ObservableObject {
             for radio in radioList where radio.id != selectRow {
                 radio.isEditing = false
             }
-
+            
             model.currentTitle = RadioStationSwitch.shared.playerItem.title
         }
     }
@@ -48,6 +49,19 @@ class RadioSettingVM:ObservableObject {
         }
     }
     
+    var showSuccessToast:Bool {
+        get {
+            model.showSuccessToast
+        }
+        set {
+            model.showSuccessToast = newValue
+        }
+    }
+    
+    var successInfo:String {
+        model.successInfo
+    }
+    
     var errorInfo:String {
         model.errorInfo
     }
@@ -57,7 +71,7 @@ class RadioSettingVM:ObservableObject {
     }
     
     var sliderVolume: Float = 1.0
-        
+    
     var soundWaveEffectDisplay:Bool {
         get {
             preferences.soundWaveEffectDisplay
@@ -110,16 +124,25 @@ class RadioSettingVM:ObservableObject {
         }
     }
     
+    var isTipPopover:Bool {
+        get {
+            model.isTipPopover
+        }
+        set {
+            model.isTipPopover = newValue
+        }
+    }
+    
     private var managedObjectContext:NSManagedObjectContext?
     
     init() {
         self.managedObjectContext = PersistenceController.shared.container.viewContext
         RadioStations.fetchResult.forEach{ station in
             let radioItem = RadioPlayerItemViewModel(isPlaying: false,
-                                            title: station.title!,
-                                            streamUrl: station.url!,
-                                            streamInfo: "",
-                                            id: station.id!)
+                                                     title: station.title!,
+                                                     streamUrl: station.url!,
+                                                     streamInfo: "",
+                                                     id: station.id!)
             self.model.radioList.append(radioItem)
         }
         
@@ -162,10 +185,14 @@ class RadioSettingVM:ObservableObject {
         }
     }
     
-    func deleteStation() {
+    private func startEditing() {
         for radio in radioList {
             radio.isEditing = false
         }
+    }
+    
+    func deleteStation() {
+        self.endEditing()
         guard radioList.count > 1 else {
             self.model.showErrorToast = true
             self.model.errorInfo = "At least one radio station"
@@ -194,14 +221,12 @@ class RadioSettingVM:ObservableObject {
         
     }
     
-    func addStation() {
-        for radio in radioList {
-            radio.isEditing = false
-        }
+    func addStation(title:String = "", streamUrl:String = "") {
+        self.startEditing()
         let newStationID = UUID()
-        let newStation = RadioPlayerItemViewModel(isPlaying: false, title: "", streamUrl: "", streamInfo: "", id: newStationID)
+        let newStation = RadioPlayerItemViewModel(isPlaying: false, title: title, streamUrl: streamUrl, streamInfo: "", id: newStationID)
         self.endEditing()
-        newStation.isEditing = true
+        newStation.isEditing = title == ""
         self.model.radioList.append(newStation)
         self.model.selectRow = newStationID
     }
@@ -228,4 +253,79 @@ class RadioSettingVM:ObservableObject {
     }
     
     
+}
+
+extension RadioSettingVM {
+    func exportList() {
+        let list = self.model.radioList.map{RadioItem(name: $0.title, url: $0.url?.absoluteString ?? "")}
+        guard !list.isEmpty else {return}
+        do {
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = .prettyPrinted
+            if let listJsonStr = try String(data: encoder.encode(list), encoding: .utf8) {
+                let newListJsonStr = listJsonStr.replacingOccurrences(of: "\\", with: "")
+                let savePanel = buildSavePanel()
+                savePanel.begin{ (result: NSApplication.ModalResponse) -> Void in
+                    if result == NSApplication.ModalResponse.OK {
+                        if let panelURL = savePanel.url {
+                            try? newListJsonStr.write(to: panelURL, atomically: true, encoding: .utf8)
+                            self.model.successInfo = "Success"
+                            self.model.showSuccessToast = true
+                        }
+                    }
+                    
+                }
+            }
+            
+        } catch {
+            self.model.errorInfo = error.localizedDescription
+            self.model.showErrorToast = true
+        }
+        
+    }
+    
+    func importList() {
+        let openPanel = buildOpenPanel()
+        openPanel.begin{ (result:NSApplication.ModalResponse) -> Void in
+            if result == NSApplication.ModalResponse.OK {
+                if let openURL = openPanel.url {
+                    do {
+                        let jsonData = try Data(contentsOf: openURL)
+                        let importRadioList = try JSONDecoder().decode([RadioItem].self, from: jsonData)
+                        print("name: \(String(describing: importRadioList.first?.name))  url: \(String(describing: importRadioList.first?.url))")
+                        for item in importRadioList {
+                            if item.url.isValidURL && !RadioStations.existence(url: item.url) {
+                                self.addStation(title: item.name,
+                                                streamUrl: item.url)
+                            }
+                        }
+                        self.model.successInfo = "Success"
+                        self.model.showSuccessToast = true
+                    } catch {
+                        self.model.errorInfo = error.localizedDescription
+                        self.model.showErrorToast = true
+                    }
+                    
+                }
+            }
+        }
+    }
+    
+    private func buildOpenPanel() -> NSOpenPanel {
+        let openPanel = NSOpenPanel()
+        openPanel.showsResizeIndicator = true
+        openPanel.showsHiddenFiles = false
+        openPanel.allowsMultipleSelection = false
+        openPanel.canChooseDirectories = false
+        openPanel.allowedContentTypes = [.json]
+        return openPanel
+    }
+    
+    private func buildSavePanel() -> NSSavePanel {
+        let savePanel = NSSavePanel()
+        savePanel.title = "Save Radio List"
+        savePanel.nameFieldStringValue = "radio_list"
+        savePanel.allowedContentTypes = [.json]
+        return savePanel
+    }
 }

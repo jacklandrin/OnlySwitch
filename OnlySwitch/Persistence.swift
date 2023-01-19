@@ -95,5 +95,29 @@ extension RadioStations {
         }
         return [RadioStations]()
     }
+    
+    static func existence(url:String) -> Bool {
+        let predicate = NSPredicate(
+            format: "%K = %@", "url" , "\(url)"
+        )
+        
+        let request:NSFetchRequest<RadioStations> = RadioStations.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \RadioStations.timestamp, ascending: true)]
+        request.predicate = predicate
+        
+        do{
+            let fetchResults = try PersistenceController
+                .shared
+                .container
+                .viewContext
+                .fetch(request)
+            if fetchResults.count > 0 {
+                return true
+            }
+        } catch {
+            
+        }
+        return false
+    }
 }
 

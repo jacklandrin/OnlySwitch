@@ -18,13 +18,14 @@ struct RadioSettingView: View {
         VStack {
             HStack(alignment: .top) {
                 VStack(alignment:.leading) {
+                    
                     Toggle("Sound Wave Effect".localized(), isOn: $radioSettingVM.soundWaveEffectDisplay)
                     
                     HStack {
                         Text("Allow Notification:".localized())
                         Toggle("Changing Station".localized(), isOn: $radioSettingVM.allowNotificationChangingStation)
                         Toggle("Soundtrack".localized(), isOn: $radioSettingVM.allowNotificationTrack)
-                    }
+                    }.frame(height:30)
                 }
                 
                 Spacer()
@@ -35,7 +36,32 @@ struct RadioSettingView: View {
                         Slider(value: $radioSettingVM.sliderValue)
                             .frame(width: 150, height: 10)
                     }
-                    
+                    HStack {
+                        Button(action: {
+                            radioSettingVM.isTipPopover = true
+                        }){
+                            Image(systemName: "questionmark.circle")
+                        }.popover(isPresented: $radioSettingVM.isTipPopover,
+                                  arrowEdge: .bottom) {
+                            Text("The radio stations can be imported and exported as a Json file. The keys are \"name\" and \"url\".".localized())
+                                .frame(width: 130)
+                                .padding()
+                        }
+                            .buttonStyle(PlainButtonStyle())
+                        
+                        Button(action: {
+                            radioSettingVM.importList()
+                        }, label: {
+                            Text("Import".localized())
+                        })
+                        
+                        Button(action: {
+                            radioSettingVM.exportList()
+                        }, label: {
+                            Text("Export".localized())
+                        })
+                        
+                    }.frame(height:30)
                     
                 } .padding(.trailing, 10)
                 
@@ -115,6 +141,11 @@ struct RadioSettingView: View {
                 AlertToast(displayMode: .alert,
                            type: .error(.red),
                            title: radioSettingVM.errorInfo.localized())
+            }
+            .toast(isPresenting: $radioSettingVM.showSuccessToast) {
+                AlertToast(displayMode: .alert,
+                           type: .complete(.green),
+                           title: radioSettingVM.successInfo.localized())
             }
     }
 }
