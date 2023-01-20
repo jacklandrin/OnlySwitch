@@ -145,5 +145,5 @@
 "TOOLS" = "工具";
 "Import" = "导入";
 "Export" = "导出";
-"The radio stations can be imported and exported as a Json file. The keys are \"name\" and \"url\"." = "电台可以导入\导出为一个Json文件。Key的名字为”name“和”url“。";
+"The radio stations can be imported and exported as a Json file. The keys are \"name\" and \"url\"." = "电台可以导入\/导出为一个Json文件。Key的名字为”name“和”url“。";
 "Success" = "成功";
