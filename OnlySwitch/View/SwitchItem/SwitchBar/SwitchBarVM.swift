@@ -7,6 +7,9 @@
 
 import SwiftUI
 class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
+    
+    let refreshSwitchQueue = DispatchQueue(label: "jacklandrin.onlyswitch.refreshswitch",attributes: .concurrent)
+    
     var barName: String
     {
         switchType.barInfo().title
@@ -67,6 +70,7 @@ class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
         }
     }
     
+    
     @Published private var model = SwitchBarModel()
     @Published private(set) var switchOperator:SwitchProvider
     
@@ -90,7 +94,7 @@ class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
     
     func refreshAsync() {
         self.model.processing = true
-        DispatchQueue.global().async {
+        refreshSwitchQueue.async {
             let _isOn = self.switchOperator.currentStatus()
             var _info = ""
             if self.switchType != .airPods {
