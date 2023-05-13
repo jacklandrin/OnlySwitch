@@ -22,7 +22,6 @@ struct OnlySwitchListView: View {
         GridItem(.fixed(Layout.popoverWidth - 40))
     ]
     
-    
     var body: some View {
         ZStack {
             VStack {
@@ -162,10 +161,9 @@ struct OnlySwitchListView: View {
                 LazyVGrid(columns: columns, spacing: 0) {
                     ForEach(switchVM.uncategoryItemList.indices, id:\.self) { index in
                         HStack {
-                            if let item = switchVM.uncategoryItemList[index] {
-                                SwitchBarView().environmentObject(item)
+                            let item = switchVM.uncategoryItemList[index]
+                            SwitchBarView().environmentObject(item)
                                     .frame(height:Layout.singleSwitchHeight)
-                            }
                         }
                     }
                 }
@@ -185,10 +183,9 @@ struct OnlySwitchListView: View {
                 LazyVGrid(columns: columns, spacing: 0) {
                     ForEach(switchVM.audioItemList.indices, id:\.self) { index in
                         HStack {
-                            if let item = switchVM.audioItemList[index] {
-                                SwitchBarView().environmentObject(item)
+                            let item = switchVM.audioItemList[index]
+                            SwitchBarView().environmentObject(item)
                                     .frame(height:Layout.singleSwitchHeight)
-                            }
                         }
                     }
                 }
@@ -207,10 +204,9 @@ struct OnlySwitchListView: View {
                 LazyVGrid(columns: columns, spacing: 0) {
                     ForEach(switchVM.cleanupItemList.indices, id:\.self) { index in
                         HStack {
-                            if let item = switchVM.cleanupItemList[index] {
-                                SwitchBarView().environmentObject(item)
+                            let item = switchVM.cleanupItemList[index]
+                            SwitchBarView().environmentObject(item)
                                     .frame(height:Layout.singleSwitchHeight)
-                            }
                         }
                     }
                 }
@@ -230,10 +226,9 @@ struct OnlySwitchListView: View {
                 LazyVGrid(columns: columns, spacing: 0) {
                     ForEach(switchVM.toolItemList.indices, id:\.self) { index in
                         HStack {
-                            if let item = switchVM.toolItemList[index] {
-                                SwitchBarView().environmentObject(item)
+                            let item = switchVM.toolItemList[index]
+                            SwitchBarView().environmentObject(item)
                                     .frame(height:Layout.singleSwitchHeight)
-                            }
                         }
                     }
                 }
@@ -253,11 +248,9 @@ struct OnlySwitchListView: View {
                 LazyVGrid(columns: columns, spacing: 0) {
                     ForEach(switchVM.shortcutsList.indices, id:\.self) { index in
                         HStack {
-                            
-                            if let item = switchVM.shortcutsList[index] {
-                                ShortcutsBarView().environmentObject(item)
+                            let item = switchVM.shortcutsList[index]
+                            ShortcutsBarView().environmentObject(item)
                                     .frame(height:Layout.singleSwitchHeight)
-                            }
                         }
                     }
                 }
@@ -339,6 +332,7 @@ struct OnlySwitchListView: View {
             
             
             Spacer()
+
             Button(action: {
                 switchVM.showSettingsWindow()
             }, label: {
@@ -347,6 +341,7 @@ struct OnlySwitchListView: View {
             }).buttonStyle(.plain)
                 .padding(10)
                 .help(Text("Settings".localized()))
+        
         }
     }
     

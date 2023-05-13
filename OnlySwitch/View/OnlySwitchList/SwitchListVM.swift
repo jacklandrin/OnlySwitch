@@ -59,6 +59,7 @@ class SwitchListVM: ObservableObject, CurrentScreen {
         return Preferences.shared.showAds
     }
     
+    var isSettingViewShowing = false
     
     init() {
         refreshMaxHeight()
@@ -151,5 +152,5 @@ class SwitchListVM: ObservableObject, CurrentScreen {
         UserDefaults.standard.synchronize()
     }
     
-    
 }
+

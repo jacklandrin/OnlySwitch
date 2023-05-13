@@ -59,6 +59,7 @@
 		043E5D7327581C2E00ADC004 /* SwitchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D7227581C2E00ADC004 /* SwitchBarView.swift */; };
 		043E5D752758208D00ADC004 /* SwitchBarVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D742758208D00ADC004 /* SwitchBarVM.swift */; };
 		043E5D7A2758212A00ADC004 /* SwitchType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D792758212A00ADC004 /* SwitchType.swift */; };
+		043F0CE52A0FA39100590606 /* WindowContentSizeModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043F0CE42A0FA39100590606 /* WindowContentSizeModifier.swift */; };
 		043F5AE92784B8CC001DFDF0 /* IsDarkMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043F5AE82784B8CC001DFDF0 /* IsDarkMode.swift */; };
 		043F5AEB2784BE34001DFDF0 /* SetDarkMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043F5AEA2784BE34001DFDF0 /* SetDarkMode.swift */; };
 		0441A9BE2950EC1500EC4AC4 /* NSEvent++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0441A9BD2950EC1500EC4AC4 /* NSEvent++.swift */; };
@@ -404,6 +405,7 @@
 		043E5D7227581C2E00ADC004 /* SwitchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchBarView.swift; sourceTree = "<group>"; };
 		043E5D742758208D00ADC004 /* SwitchBarVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchBarVM.swift; sourceTree = "<group>"; };
 		043E5D792758212A00ADC004 /* SwitchType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchType.swift; sourceTree = "<group>"; };
+		043F0CE42A0FA39100590606 /* WindowContentSizeModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowContentSizeModifier.swift; sourceTree = "<group>"; };
 		043F5AE82784B8CC001DFDF0 /* IsDarkMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsDarkMode.swift; sourceTree = "<group>"; };
 		043F5AEA2784BE34001DFDF0 /* SetDarkMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetDarkMode.swift; sourceTree = "<group>"; };
 		0441A9BD2950EC1500EC4AC4 /* NSEvent++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSEvent++.swift"; sourceTree = "<group>"; };
@@ -836,6 +838,7 @@
 			children = (
 				043E5D652757C84900ADC004 /* HiddenModifier.swift */,
 				04A6F9442788EF4A00E3300F /* CursorModifier.swift */,
+				043F0CE42A0FA39100590606 /* WindowContentSizeModifier.swift */,
 			);
 			path = Modifier;
 			sourceTree = "<group>";
@@ -1909,6 +1912,7 @@
 				04A6F9452788EF4A00E3300F /* CursorModifier.swift in Sources */,
 				0493375127625A1E00AE779A /* Parser.swift in Sources */,
 				04447B702754F21A00CD2900 /* StatusBarController.swift in Sources */,
+				043F0CE52A0FA39100590606 /* WindowContentSizeModifier.swift in Sources */,
 				0427364B27C1A55B0068108F /* SBProtocols.swift in Sources */,
 				0493374A27625A1E00AE779A /* Streamer+DownloadableDelegate.swift in Sources */,
 				0493376027625AAC00AE779A /* RealtimeAnalyzer.swift in Sources */,
