@@ -15,8 +15,9 @@ struct OnlySwitchApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @ObservedObject var preferencesvm = PreferencesObserver.shared
     @State var preferences = PreferencesObserver.shared.preferences
+    
     var body: some Scene {
-        WindowGroup("SettingsWindow"){
+        WindowGroup("SettingsWindow") {
             SettingsView()
                 .frame(width: Layout.settingWindowWidth, height: Layout.settingWindowHeight)
                 .task {
@@ -32,8 +33,18 @@ struct OnlySwitchApp: App {
                         }
                     }
                 }
-            
+                .onDisappear {
+                    if #available(macOS 13.3, *) {
+                        print("settings window closing")
+                        NSApp.activate(ignoringOtherApps: true)
+                        NSApp.windows.first!.makeKeyAndOrderFront(self)
+                        NSApp.setActivationPolicy(.accessory)
+                        NotificationCenter.default.post(name: .settingsWindowClosed, object: nil)
+                        appDelegate.switchVM.isSettingViewShowing = false
+                    }
+                }
         }
+        .windowKeepContentSize()
         .handlesExternalEvents(matching: Set(arrayLiteral: "*"))
         .commands{
             CommandMenu("Switches Availability") {
@@ -123,17 +134,6 @@ class AppDelegate:NSObject, NSApplicationDelegate {
     func applicationWillTerminate(_ notification: Notification) {
         
     }
-    
-//    func applicationDidUpdate(_ notification: Notification) {
-//        if let event = NSApp.currentEvent {
-//            if event.type == .appKitDefined,
-//               let window = NSApp.mainWindow{
-//                if window.delegate == nil {
-//                    window.close()
-//                }
-//            }
-//        }
-//    }
     
     func checkUpdate() {
         checkUpdatePresenter.checkUpdate { result in

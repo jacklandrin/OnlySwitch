@@ -101,8 +101,16 @@ extension SwitchListVM: SettingWindowController {
             }
         } else {
             if let url = URL(string: "onlyswitch://SettingsWindow") {
-                NSWorkspace.shared.open(url)
-                print("new setting window appears")
+                if #available(macOS 13.3, *) {
+                    if !isSettingViewShowing {
+                        NSWorkspace.shared.open(url)
+                        isSettingViewShowing = true
+                        print("new setting window appears")
+                    }
+                } else {
+                    NSWorkspace.shared.open(url)
+                    print("new setting window appears")
+                }
             }
         }
         self.settingsWindowPresented = true
