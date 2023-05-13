@@ -10,8 +10,8 @@ import SwiftUI
 struct SettingsView: View {
     @StateObject var settingVM = SettingsVM.shared
     @ObservedObject var langManager = LanguageManager.sharedManager
-    
-    var body: some View {
+
+    var naviagtionView: some View {
         NavigationView {
             List(selection:$settingVM.selection) {
                 ForEach(settingVM.settingItems, id:\.self ) { item in
@@ -47,7 +47,7 @@ struct SettingsView: View {
             .toolbar {
                 ToolbarItem(placement: .navigation) {
                     Button(action: {
-                        toggleSidebar()
+                        settingVM.toggleSliderbar()
                     }, label: {
                         Image(systemName: "sidebar.leading")
                     })
@@ -55,11 +55,33 @@ struct SettingsView: View {
             }
     }
     
-    private func toggleSidebar() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            NotificationCenter.default.post(name: .toggleSplitSettingsWindow, object: nil)
+    @available(macOS 13.3, *)
+    func naviagtionSplitView() -> some View {
+        NavigationSplitView(sidebar: {
+            List(selection:$settingVM.selection) {
+                ForEach(settingVM.settingItems, id:\.self ) { item in
+                    NavigationLink{
+                        item.page
+                    } label:{
+                        Text(item.rawValue.localized())
+                            .frame(minWidth: 190, alignment:.leading)
+                            .lineLimit(2)
+                    }
+                }
+            }.listStyle(.sidebar)
+        }, detail: {
+            GeneralView()
+        })
+    }
+    
+    var body: some View {
+        if #available(macOS 13.3, *) {
+            naviagtionSplitView()
+        } else {
+            naviagtionView
         }
     }
+    
 }
 
 #if DEBUG

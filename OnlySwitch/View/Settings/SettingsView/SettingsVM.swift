@@ -55,7 +55,8 @@ enum SettingsItem:String {
 
 }
 
-class SettingsVM:ObservableObject {
+
+class SettingsVM: ObservableObject {
     
     static let shared = SettingsVM()
     
@@ -75,4 +76,11 @@ class SettingsVM:ObservableObject {
     
     @Published var selection:SettingsItem? = .General
 
+    func toggleSliderbar() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            NotificationCenter.default.post(name: .toggleSplitSettingsWindow, object: nil)
+        }
+    }
 }
+
+
