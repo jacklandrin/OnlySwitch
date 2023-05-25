@@ -61,6 +61,7 @@ struct KeepAwakeSettingView: View {
                 
             }
         }
+        .navigationTitle("Keep Awake".localized())
     }
 }
 

@@ -30,6 +30,7 @@ struct DimScreenSettingView: View {
                 }.frame(width:150, height: 30)
             }
         }
+        .navigationTitle("Dim Screen".localized())
     }
 }
 
