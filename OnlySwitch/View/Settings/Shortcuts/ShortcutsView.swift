@@ -64,7 +64,7 @@ struct ShortcutsView: View {
             }
             
             Spacer()
-        }.navigationTitle(Text("Shortcuts".localized()))
+        }
         .onAppear{
             shortcutsVM.shouldLoadShortcutsList()
             shortcutsVM.loadData()

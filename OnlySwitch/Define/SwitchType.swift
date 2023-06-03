@@ -53,7 +53,7 @@ enum SwitchType:UInt64, CaseIterable {
 
 let switchTypeCount = SwitchType.allCases.count
 
-enum ControlType{
+enum ControlType: String, Codable{
     case Switch
     case Button
     case Player

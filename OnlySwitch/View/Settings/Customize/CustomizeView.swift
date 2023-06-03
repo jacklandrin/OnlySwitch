@@ -69,12 +69,11 @@ struct CustomizeView: View {
                         }.padding(.leading)
                     }
                 }
-               
+                
             }
             Divider()
                 .padding(.bottom,10)
         }
-        .navigationTitle(Text("Customize".localized()))
         .toast(isPresenting: $customizeVM.showErrorToast) {
             AlertToast(displayMode: .alert,
                        type: .error(.red),

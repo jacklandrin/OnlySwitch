@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-
+import ComposableArchitecture
 
 enum SettingsItem:String {
     case AirPods = "AirPods"
@@ -20,39 +20,8 @@ enum SettingsItem:String {
     case BackNoises = "Back Noises"
     case KeepAwake = "Keep Awake"
     case DimScreen = "Dim Screen"
-    case Dev = "Dev"
+    case Evolution = "Evolution"
     case About = "About"
-
-    @ViewBuilder
-    var page: some View {
-        switch self {
-        case .AirPods:
-            AirPodsSettingView()
-        case .Radio:
-            RadioSettingView()
-        case .PomodoroTimer:
-            PomodoroTimerSettingView()
-        case .Shortcuts:
-            ShortcutsView()
-        case .General:
-            GeneralView()
-        case .Customize:
-            CustomizeView()
-        case .HideMenubarIcons:
-            HideMenubarIconsSettingView()
-        case .BackNoises:
-            BackNoisesSettingView()
-        case .KeepAwake:
-            KeepAwakeSettingView()
-        case .DimScreen:
-            DimScreenSettingView()
-        case .Dev:
-            DevView()
-        case .About:
-            AboutView()
-        }
-    }
-
 }
 
 
@@ -60,22 +29,48 @@ class SettingsVM: ObservableObject {
     
     static let shared = SettingsVM()
     
-    @Published var settingItems:[SettingsItem] = [
-                                                 .General,
-                                                 .Customize,
-                                                 .Shortcuts,
-                                                 .KeepAwake,
-                                                 .DimScreen,
-                                                 .Radio,
-                                                 .BackNoises,
-                                                 .AirPods,
-                                                 .PomodoroTimer,
-                                                 .HideMenubarIcons,
-//                                                 .Dev,
-                                                 .About]
+    @Published var settingItems:[SettingsItem]
     
     @Published var selection:SettingsItem? = .General
 
+    let evolutionStore = Store(
+        initialState: EvolutionReducer.State(),
+        reducer: EvolutionReducer()
+            .dependency(\.evolutionListService, .previewValue)
+            ._printChanges()
+        )
+
+    init() {
+        if #available(macOS 13.3, *) {
+            settingItems = [
+                .General,
+                .Customize,
+                .Shortcuts,
+                .Evolution,
+                .KeepAwake,
+                .DimScreen,
+                .Radio,
+                .BackNoises,
+                .AirPods,
+                .PomodoroTimer,
+                .HideMenubarIcons,
+                .About]
+        } else {
+            settingItems = [
+                .General,
+                .Customize,
+                .Shortcuts,
+                .KeepAwake,
+                .DimScreen,
+                .Radio,
+                .BackNoises,
+                .AirPods,
+                .PomodoroTimer,
+                .HideMenubarIcons,
+                .About]
+        }
+    }
+    
     func toggleSliderbar() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             NotificationCenter.default.post(name: .toggleSplitSettingsWindow, object: nil)

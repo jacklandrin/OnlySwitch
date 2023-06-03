@@ -108,8 +108,7 @@ struct PomodoroTimerSettingView: View {
                 }.disabled(!effectSoundHelper.canPlayEffectSound)
                 
             }.frame(maxWidth:230)
-        }.navigationTitle(Text("Pomodoro Timer".localized()))
-        
+        } 
     }
     
     func cycleCountText(count:Int) -> String {

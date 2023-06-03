@@ -60,7 +60,6 @@ struct BackNoisesSettingView: View {
             }.padding(.horizontal)
                 .padding(.bottom)
         }
-        .navigationTitle("Back Noises".localized())
     }
 }
 

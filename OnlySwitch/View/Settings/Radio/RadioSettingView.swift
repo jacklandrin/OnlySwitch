@@ -136,17 +136,17 @@ struct RadioSettingView: View {
                 })
                     .contentShape(Rectangle())
             }.padding(10)
-        }.navigationTitle(Text("Radio".localized()))
-            .toast(isPresenting: $radioSettingVM.showErrorToast) {
-                AlertToast(displayMode: .alert,
-                           type: .error(.red),
-                           title: radioSettingVM.errorInfo.localized())
-            }
-            .toast(isPresenting: $radioSettingVM.showSuccessToast) {
-                AlertToast(displayMode: .alert,
-                           type: .complete(.green),
-                           title: radioSettingVM.successInfo.localized())
-            }
+        }
+        .toast(isPresenting: $radioSettingVM.showErrorToast) {
+            AlertToast(displayMode: .alert,
+                       type: .error(.red),
+                       title: radioSettingVM.errorInfo.localized())
+        }
+        .toast(isPresenting: $radioSettingVM.showSuccessToast) {
+            AlertToast(displayMode: .alert,
+                       type: .complete(.green),
+                       title: radioSettingVM.successInfo.localized())
+        }
     }
 }
 

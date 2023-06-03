@@ -36,8 +36,7 @@ struct OnlySwitchApp: App {
                 .onDisappear {
                     if #available(macOS 13.3, *) {
                         print("settings window closing")
-                        NSApp.activate(ignoringOtherApps: true)
-                        NSApp.windows.first!.makeKeyAndOrderFront(self)
+                        NSApp.activate(ignoringOtherApps: false)
                         NSApp.setActivationPolicy(.accessory)
                         NotificationCenter.default.post(name: .settingsWindowClosed, object: nil)
                         appDelegate.switchVM.isSettingViewShowing = false
@@ -128,7 +127,7 @@ class AppDelegate:NSObject, NSApplicationDelegate {
         RadioStationSwitch.shared.setDefaultRadioStations()
         Bundle.setLanguage(lang: LanguageManager.sharedManager.currentLang)
         
-        checkUpdate()
+//        checkUpdate()
     }
     
     func applicationWillTerminate(_ notification: Notification) {

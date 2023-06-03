@@ -63,6 +63,5 @@ extension UserDefaults {
         static let MicVolume = "MicVolumeKey"
         static let ScreenSaverInterval = "ScreenSaverIntervalKey"
         static let AppLanguage = "app_lang"
-        
     }
 }

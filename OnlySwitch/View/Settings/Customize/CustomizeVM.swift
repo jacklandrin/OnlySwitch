@@ -35,11 +35,6 @@ class CustomizeItem:ObservableObject {
     {
         didSet {
             if toggle {
-//                if SwitchManager.shared.shownSwitchCount > 19 {
-//                    error("The maximum number of switch is 20")
-//                    toggle = false
-//                    return
-//                }
                 if type == .radioStation {
                     SwitchManager.shared.register(aswitch: RadioStationSwitch.shared)
                 } else {
