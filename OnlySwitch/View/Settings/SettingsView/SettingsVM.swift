@@ -9,18 +9,18 @@ import Foundation
 import SwiftUI
 import ComposableArchitecture
 
-enum SettingsItem:String {
-    case AirPods = "AirPods"
-    case Radio = "Radio"
-    case PomodoroTimer = "Pomodoro Timer"
+enum SettingsItem: String, CaseIterable {
     case General = "General"
     case Customize = "Customize"
     case Shortcuts = "Shortcuts"
+    case Evolution = "Evolution"
+    case AirPods = "AirPods"
+    case Radio = "Radio"
+    case PomodoroTimer = "Pomodoro Timer"
     case HideMenubarIcons = "Hide Menu Bar Icons"
     case BackNoises = "Back Noises"
     case KeepAwake = "Keep Awake"
     case DimScreen = "Dim Screen"
-    case Evolution = "Evolution"
     case About = "About"
 }
 
@@ -41,34 +41,7 @@ class SettingsVM: ObservableObject {
         )
 
     init() {
-        if #available(macOS 13.3, *) {
-            settingItems = [
-                .General,
-                .Customize,
-                .Shortcuts,
-                .Evolution,
-                .KeepAwake,
-                .DimScreen,
-                .Radio,
-                .BackNoises,
-                .AirPods,
-                .PomodoroTimer,
-                .HideMenubarIcons,
-                .About]
-        } else {
-            settingItems = [
-                .General,
-                .Customize,
-                .Shortcuts,
-                .KeepAwake,
-                .DimScreen,
-                .Radio,
-                .BackNoises,
-                .AirPods,
-                .PomodoroTimer,
-                .HideMenubarIcons,
-                .About]
-        }
+        settingItems = SettingsItem.allCases
     }
     
     func toggleSliderbar() {

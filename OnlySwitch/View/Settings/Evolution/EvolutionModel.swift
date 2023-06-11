@@ -15,12 +15,14 @@ struct EvolutionItem: Equatable, Identifiable {
     var onCommand: EvolutionCommand?
     var offCommand: EvolutionCommand?
     var singleCommand: EvolutionCommand?
+    var statusCommand: EvolutionCommand?
 }
 
 struct EvolutionCommand: Equatable {
     var executeType: CommandExecuteType = .shell
     var commandType: CommandType
     var commandString: String = ""
+    var debugStatus: CommandDebugStatus = .unknow
 }
 
 enum CommandExecuteType: String, Equatable, Codable {
@@ -53,6 +55,7 @@ enum CommandDebugStatus {
 
 enum EvolutionError: Error, Equatable {
     case noCommand
+    case wrongCommand
 }
 
 

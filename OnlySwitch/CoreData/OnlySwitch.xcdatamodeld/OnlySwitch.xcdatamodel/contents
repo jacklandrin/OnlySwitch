@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21754" systemVersion="22E252" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21754" systemVersion="22F66" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
     <entity name="EvolutionCommandEntity" representedClassName="EvolutionCommandEntity" syncable="YES" codeGenerationType="class">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="itemType" optional="YES" attributeType="String"/>
         <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="singleCommand" optional="YES" attributeType="String"/>
+        <attribute name="singleCommandType" optional="YES" attributeType="String"/>
         <attribute name="statusCommand" optional="YES" attributeType="String"/>
         <attribute name="statusCommandType" optional="YES" attributeType="String"/>
+        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="turnOffCommand" optional="YES" attributeType="String"/>
         <attribute name="turnOffCommandType" optional="YES" attributeType="String"/>
         <attribute name="turnOnCommand" optional="YES" attributeType="String"/>

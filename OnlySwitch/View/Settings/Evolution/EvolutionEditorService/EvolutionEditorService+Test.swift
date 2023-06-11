@@ -11,6 +11,7 @@ import XCTestDynamicOverlay
 
 extension EvolutionEditorService: TestDependencyKey {
     static let testValue = Self(
-        executeCommand: unimplemented("\(Self.self).executeCommand")
+        executeCommand: unimplemented("\(Self.self).executeCommand"),
+        saveCommand: unimplemented("\(Self.self).saveCommand")
     )
 }

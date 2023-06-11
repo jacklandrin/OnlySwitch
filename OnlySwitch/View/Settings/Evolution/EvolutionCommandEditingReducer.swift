@@ -11,7 +11,6 @@ import ComposableArchitecture
 struct EvolutionCommandEditingReducer: ReducerProtocol {
     struct State: Equatable {
         var command: EvolutionCommand
-        var debugStatus: CommandDebugStatus = .unknow
 
         init(type: CommandType) {
             self.command = EvolutionCommand(commandType: type)
@@ -53,11 +52,11 @@ struct EvolutionCommandEditingReducer: ReducerProtocol {
                     }
 
                 case .testCommand(.success(_)):
-                    state.debugStatus = .success
+                    state.command.debugStatus = .success
                     return .none
 
                 case .testCommand(.failure(_)):
-                    state.debugStatus = .failed
+                    state.command.debugStatus = .failed
                     return .none
             }
         }

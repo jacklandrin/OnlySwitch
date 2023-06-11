@@ -59,12 +59,12 @@ struct EvolutionCommandEditingView: View {
 
                     Spacer().frame(width: 10)
 
-                    if viewStore.debugStatus == .failed {
+                    if viewStore.command.debugStatus == .failed {
                         Image(systemName: "xmark.circle.fill")
                             .resizable()
                             .frame(width: 22, height: 22)
                             .foregroundColor(Color.red)
-                    } else if viewStore.debugStatus == .success {
+                    } else if viewStore.command.debugStatus == .success {
                         Image(systemName: "checkmark.circle.fill")
                             .resizable()
                             .frame(width: 22, height: 22)

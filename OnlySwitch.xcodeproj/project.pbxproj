@@ -40,6 +40,8 @@
 		0427365627C1ADA60068108F /* SpotifySwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0427365527C1ADA60068108F /* SpotifySwitch.swift */; };
 		0427B25B275D786400AD783A /* SystemInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0427B25A275D786400AD783A /* SystemInfo.swift */; };
 		0430887E275D707C00877E51 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 0430887D275D707C00877E51 /* LaunchAtLogin */; };
+		043488A92A364E73006C877D /* EvolutionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043488A82A364E73006C877D /* EvolutionRowView.swift */; };
+		043488AB2A364EBF006C877D /* EvolutionRowReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043488AA2A364EBF006C877D /* EvolutionRowReducer.swift */; };
 		0434B4C0287388ED00F06AB9 /* GitHubRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0434B4BF287388ED00F06AB9 /* GitHubRepositoryProtocol.swift */; };
 		0434B4C1287388ED00F06AB9 /* GitHubRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0434B4BF287388ED00F06AB9 /* GitHubRepositoryProtocol.swift */; };
 		0434B4C728738EEA00F06AB9 /* GitHubMockRespository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0434B4C628738EEA00F06AB9 /* GitHubMockRespository.swift */; };
@@ -165,7 +167,6 @@
 		047C1E742A22B12E0061235D /* EvolutionEditorService+Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E722A22B12E0061235D /* EvolutionEditorService+Test.swift */; };
 		047C1E762A24D1870061235D /* EvolutionCommandEditingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E752A24D1870061235D /* EvolutionCommandEditingView.swift */; };
 		047C1E782A24D2590061235D /* EvolutionCommandEditingReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E772A24D2590061235D /* EvolutionCommandEditingReducer.swift */; };
-		047C1E792A24D2590061235D /* EvolutionCommandEditingReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E772A24D2590061235D /* EvolutionCommandEditingReducer.swift */; };
 		047F3A34285DE600004FFCDF /* EffectSoundHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140B527788486005B160B /* EffectSoundHelper.swift */; };
 		047F3A37285DE67A004FFCDF /* SwitchListApperanceDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047F3A36285DE67A004FFCDF /* SwitchListApperanceDefine.swift */; };
 		047F3A38285DE67A004FFCDF /* SwitchListApperanceDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047F3A36285DE67A004FFCDF /* SwitchListApperanceDefine.swift */; };
@@ -291,6 +292,9 @@
 		04E03B00275F93B900EA5FB9 /* AirPodsSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AFF275F93B900EA5FB9 /* AirPodsSwitch.swift */; };
 		04E03B04275FD98500EA5FB9 /* battery-airpods-monterey.sh in Resources */ = {isa = PBXBuildFile; fileRef = 04E03B03275FD98500EA5FB9 /* battery-airpods-monterey.sh */; };
 		04E03B06275FEBE200EA5FB9 /* AirPodsBatteryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03B05275FEBE200EA5FB9 /* AirPodsBatteryView.swift */; };
+		04E238642A2C835600CDD1FA /* RadioStations+Fetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E238632A2C835600CDD1FA /* RadioStations+Fetch.swift */; };
+		04E238662A2C83C900CDD1FA /* EvolutionCommandEntity+Fetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E238652A2C83C900CDD1FA /* EvolutionCommandEntity+Fetch.swift */; };
+		04E238682A2C872200CDD1FA /* EvolutionAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E238672A2C872200CDD1FA /* EvolutionAdapter.swift */; };
 		04E2ACF9278267DE00BC5DF3 /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 042661402780C147005DF2B9 /* Intents.framework */; platformFilter = maccatalyst; };
 		04E2ACFC278267DE00BC5DF3 /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E2ACFB278267DE00BC5DF3 /* IntentHandler.swift */; };
 		04E2AD00278267DE00BC5DF3 /* IntentsExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 04E2ACF8278267DE00BC5DF3 /* IntentsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -415,6 +419,8 @@
 		0427365127C1AADB0068108F /* MusicPlaybackState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlaybackState.swift; sourceTree = "<group>"; };
 		0427365527C1ADA60068108F /* SpotifySwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifySwitch.swift; sourceTree = "<group>"; };
 		0427B25A275D786400AD783A /* SystemInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemInfo.swift; sourceTree = "<group>"; };
+		043488A82A364E73006C877D /* EvolutionRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionRowView.swift; sourceTree = "<group>"; };
+		043488AA2A364EBF006C877D /* EvolutionRowReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionRowReducer.swift; sourceTree = "<group>"; };
 		0434B4BD2873882100F06AB9 /* Releases_mock.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Releases_mock.json; sourceTree = "<group>"; };
 		0434B4BF287388ED00F06AB9 /* GitHubRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubRepositoryProtocol.swift; sourceTree = "<group>"; };
 		0434B4C328738E7400F06AB9 /* Latest_release_mock.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Latest_release_mock.json; sourceTree = "<group>"; };
@@ -620,6 +626,9 @@
 		04E03AFF275F93B900EA5FB9 /* AirPodsSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPodsSwitch.swift; sourceTree = "<group>"; };
 		04E03B03275FD98500EA5FB9 /* battery-airpods-monterey.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "battery-airpods-monterey.sh"; sourceTree = "<group>"; };
 		04E03B05275FEBE200EA5FB9 /* AirPodsBatteryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPodsBatteryView.swift; sourceTree = "<group>"; };
+		04E238632A2C835600CDD1FA /* RadioStations+Fetch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RadioStations+Fetch.swift"; sourceTree = "<group>"; };
+		04E238652A2C83C900CDD1FA /* EvolutionCommandEntity+Fetch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EvolutionCommandEntity+Fetch.swift"; sourceTree = "<group>"; };
+		04E238672A2C872200CDD1FA /* EvolutionAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionAdapter.swift; sourceTree = "<group>"; };
 		04E2ACF8278267DE00BC5DF3 /* IntentsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = IntentsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		04E2ACFB278267DE00BC5DF3 /* IntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentHandler.swift; sourceTree = "<group>"; };
 		04E2ACFD278267DE00BC5DF3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -937,9 +946,8 @@
 		04447B5A2754F08000CD2900 /* OnlySwitch */ = {
 			isa = PBXGroup;
 			children = (
-				0493379A2763C09000AE779A /* OnlySwitch.xcdatamodeld */,
+				04E238612A2C831F00CDD1FA /* CoreData */,
 				040CD2BD27579CEA002E0CC6 /* Info.plist */,
-				0493379D2763C0E800AE779A /* Persistence.swift */,
 				04A23B27275D607200B454C8 /* Header */,
 				043E5D672757C85500ADC004 /* View */,
 				043E5D682757C86400ADC004 /* ViewModel */,
@@ -1034,11 +1042,14 @@
 			isa = PBXGroup;
 			children = (
 				047C1E5D2A2262640061235D /* EvolutionModel.swift */,
+				04E238672A2C872200CDD1FA /* EvolutionAdapter.swift */,
 				047C1E642A2297490061235D /* Evolution+Dependencies.swift */,
 				047C1E6C2A22AF5B0061235D /* EvolutionEditorService */,
 				047C1E632A2297010061235D /* EvolutionListService */,
 				047C1E4B2A2251280061235D /* EvolutionView.swift */,
 				047C1E502A22525F0061235D /* EvolutionReducer.swift */,
+				043488A82A364E73006C877D /* EvolutionRowView.swift */,
+				043488AA2A364EBF006C877D /* EvolutionRowReducer.swift */,
 				047C1E582A2255A00061235D /* EvolutionEditorView.swift */,
 				047C1E5A2A2255BF0061235D /* EvolutionEditorReducer.swift */,
 				047C1E752A24D1870061235D /* EvolutionCommandEditingView.swift */,
@@ -1445,6 +1456,17 @@
 			path = Resource;
 			sourceTree = "<group>";
 		};
+		04E238612A2C831F00CDD1FA /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				0493379A2763C09000AE779A /* OnlySwitch.xcdatamodeld */,
+				0493379D2763C0E800AE779A /* Persistence.swift */,
+				04E238632A2C835600CDD1FA /* RadioStations+Fetch.swift */,
+				04E238652A2C83C900CDD1FA /* EvolutionCommandEntity+Fetch.swift */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
 		04E2ACFA278267DE00BC5DF3 /* IntentsExtension */ = {
 			isa = PBXGroup;
 			children = (
@@ -1812,7 +1834,6 @@
 				04FB3E5B2888B52B00F3B5E1 /* SwitchType++.swift in Sources */,
 				0434B4C728738EEA00F06AB9 /* GitHubMockRespository.swift in Sources */,
 				047C1E622A22960D0061235D /* EvolutionListService.swift in Sources */,
-				047C1E792A24D2590061235D /* EvolutionCommandEditingReducer.swift in Sources */,
 				0444D5DD283854E900327D0B /* MuteSwitch.swift in Sources */,
 				0444D5CB28367A1B00327D0B /* HiddenDesktopSwitch.swift in Sources */,
 				04FB3E6F288D548900F3B5E1 /* BarProvider.swift in Sources */,
@@ -1846,6 +1867,7 @@
 				04FB3E60288D49E100F3B5E1 /* SwitchListVM+SettingWindowController.swift in Sources */,
 				041D726728353BC20083092D /* SwitchType++.swift in Sources */,
 				049337942762BD1B00AE779A /* OpenWindow.swift in Sources */,
+				043488A92A364E73006C877D /* EvolutionRowView.swift in Sources */,
 				0424348B275642D20044D0AD /* DarkModeSwitch.swift in Sources */,
 				0493374F27625A1E00AE779A /* Parser+Packets.swift in Sources */,
 				04447B5E2754F08000CD2900 /* OnlySwitchListView.swift in Sources */,
@@ -1854,6 +1876,7 @@
 				0451766E27C28BA300006BA0 /* AppleMusicSwitch.swift in Sources */,
 				047C1E5B2A2255BF0061235D /* EvolutionEditorReducer.swift in Sources */,
 				040C6EAC276B7D9F00291DEB /* CustomizeView.swift in Sources */,
+				04E238662A2C83C900CDD1FA /* EvolutionCommandEntity+Fetch.swift in Sources */,
 				04E03AFE275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift in Sources */,
 				046C0BFD293D3EC70073F727 /* DevViewModel.swift in Sources */,
 				04447B722754FE3800CD2900 /* SwitchListVM.swift in Sources */,
@@ -1861,6 +1884,7 @@
 				04DC6CA228A7D59B00888BF9 /* DimScreenSettingVM.swift in Sources */,
 				0493375227625A1E00AE779A /* Reader.swift in Sources */,
 				04581DC327677ADC008ADF30 /* KeepAwakeSwitch.swift in Sources */,
+				04E238642A2C835600CDD1FA /* RadioStations+Fetch.swift in Sources */,
 				04933788276264D400AE779A /* BluredSoundWave.swift in Sources */,
 				049337972762C07600AE779A /* RadioSettingView.swift in Sources */,
 				04447B742755015A00CD2900 /* ShellCommandDefine.swift in Sources */,
@@ -1960,6 +1984,7 @@
 				04E2AD1E2783B63600BC5DF3 /* CurrentScreen.swift in Sources */,
 				043E5D7A2758212A00ADC004 /* SwitchType.swift in Sources */,
 				04E03B00275F93B900EA5FB9 /* AirPodsSwitch.swift in Sources */,
+				043488AB2A364EBF006C877D /* EvolutionRowReducer.swift in Sources */,
 				04DC6C7D28A5624600888BF9 /* BackNoisesSwitch.swift in Sources */,
 				043E5D6F2758116800ADC004 /* NSSound_SystemVolumeExtension.swift in Sources */,
 				04D68B0D2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift in Sources */,
@@ -2017,6 +2042,7 @@
 				0427364B27C1A55B0068108F /* SBProtocols.swift in Sources */,
 				0493374A27625A1E00AE779A /* Streamer+DownloadableDelegate.swift in Sources */,
 				0493376027625AAC00AE779A /* RealtimeAnalyzer.swift in Sources */,
+				04E238682A2C872200CDD1FA /* EvolutionAdapter.swift in Sources */,
 				0444D5FB2839827A00327D0B /* PureColorView.swift in Sources */,
 				047140B8277884EE005B160B /* UserDefaultValue.swift in Sources */,
 				04933766276262EB00AE779A /* SoundWaveView.swift in Sources */,

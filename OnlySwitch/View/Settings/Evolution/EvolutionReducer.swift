@@ -10,13 +10,31 @@ import ComposableArchitecture
 import Foundation
 
 struct EvolutionReducer: ReducerProtocol {
+    enum DestinationState: Equatable {
+        case editor(EvolutionEditorReducer.State)
+
+        enum Tag: Int {
+            case editor
+        }
+
+        var tag: Tag {
+            switch self {
+                case .editor:
+                    return .editor
+            }
+        }
+    }
+
+    enum DestionationAction: Equatable {
+        case gotoEditor(EvolutionEditorReducer.Action)
+    }
+
     struct State: Equatable {
-        var evolutionList: IdentifiedArrayOf<EvolutionItem> = []
+        var evolutionList: IdentifiedArrayOf<EvolutionRowReducer.State> = []
         var selectID: UUID?
-        var editorViewActive = false
-        var editorState = EvolutionEditorReducer.State()
+        var editorState: EvolutionEditorReducer.State?
         var showError = false
-        var testNumber = 0
+        var destination: DestinationState?
     }
     
     enum Action: Equatable {
@@ -25,14 +43,13 @@ struct EvolutionReducer: ReducerProtocol {
         case select(UUID)
         case toggleItem(UUID)
         case remove
-        case editorView(Bool)
-        case editorState(EvolutionEditorReducer.Action)
-        case editorItem(EvolutionItem?)
+        case setNavigation(tag: DestinationState.Tag?, state: EvolutionEditorReducer.State? = nil)
+        case editor(id: UUID, action: EvolutionRowReducer.Action)
+        case editorAction(EvolutionEditorReducer.Action)
         case errorControl(Bool)
     }
 
     @Dependency(\.evolutionListService) var evolutionListService
-    @Dependency(\.mainQueue) var mainQueue
 
     var body: some ReducerProtocolOf<Self> {
         Reduce { state, action in
@@ -47,7 +64,11 @@ struct EvolutionReducer: ReducerProtocol {
                     }
 
                 case let .loadList(.success(list)):
-                    state.evolutionList = IdentifiedArray(uniqueElements: list)
+                    state.evolutionList = IdentifiedArray(
+                        uniqueElements: list.compactMap {
+                            EvolutionRowReducer.State(evolution: $0)
+                        }
+                    )
                     return .none
 
                 case .loadList(.failure(_)):
@@ -59,7 +80,7 @@ struct EvolutionReducer: ReducerProtocol {
                     return .none
 
                 case let .toggleItem(id):
-                    state.evolutionList[id: id]?.active.toggle()
+                    state.evolutionList[id: id]?.evolution.active.toggle()
                     return .none
 
                 case .remove:
@@ -68,38 +89,43 @@ struct EvolutionReducer: ReducerProtocol {
                     }
                     return .none
 
-                case let .editorView(active):
-                    state.editorViewActive = active
-                    return .none
-
-                case let .editorState(action: .delegate(action)):
-                    switch action {
-                        case .goback:
-                            state.editorViewActive = false
-                    }
-                    return .none
-
-                case .editorState:
-                    return .none
-
-                case let .editorItem(item):
-                    if let item {
-                        state.editorState = EvolutionEditorReducer.State(evolution: item)
+                case let .setNavigation(tag: .editor, state: editorState):
+                    if let editorState {
+                        state.destination = .editor(editorState)
                     } else {
                         state.editorState = EvolutionEditorReducer.State()
+                        state.destination = .editor(state.editorState ?? .init())
                     }
 
+                    return .none
+
+                case .setNavigation(tag: .none, state: _):
+                    state.destination = nil
+                    return .none
+
+                case let .editorAction(.delegate(action)):
+                    switch action {
+                        case .goback:
+                            state.destination = nil
+                    }
+                    return .none
+
+                case .editorAction:
                     return .none
 
                 case let .errorControl(show):
                     state.showError = show
                     return .none
+
+                case .editor:
+                    return .none
             }
         }
-        
-        Scope(state: \.editorState, action: /Action.editorState) {
+        .ifLet(\.editorState, action: /Action.editorAction) {
             EvolutionEditorReducer()
         }
-
+        .forEach(\.evolutionList, action: /Action.editor(id:action:)) {
+            EvolutionRowReducer()
+        }
     }
 }
