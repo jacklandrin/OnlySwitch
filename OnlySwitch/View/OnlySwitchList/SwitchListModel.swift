@@ -22,6 +22,8 @@ struct SwitchListModel {
     var cleanupItemList = Array<SwitchBarVM>() //for two columns
     
     var toolItemList = Array<SwitchBarVM>() //for two columns
-    
+
+    var evolutionItemList = Array<EvolutionBarVM>()
+
     var sortMode = false
 }

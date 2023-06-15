@@ -33,7 +33,6 @@ struct EvolutionEditorReducer: ReducerProtocol {
             ]
             self.buttonCommandStates = [
                 EvolutionCommandEditingReducer.State(type: .single, command: self.evolution.singleCommand),
-                EvolutionCommandEditingReducer.State(type: .status, command: self.evolution.statusCommand)
             ]
             if self.evolution.controlType == .Switch {
                 self.commandStates = switchCommandStates
@@ -98,7 +97,6 @@ struct EvolutionEditorReducer: ReducerProtocol {
                     switch state.evolution.controlType {
                         case .Button:
                             state.evolution.singleCommand = state.commandStates.first{ $0.command.commandType == .single }?.command
-                            state.evolution.statusCommand = state.commandStates.first{ $0.command.commandType == .status}?.command
 
                         case .Switch:
                             state.evolution.onCommand = state.commandStates.first{ $0.command.commandType == .on }?.command

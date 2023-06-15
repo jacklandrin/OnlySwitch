@@ -8,7 +8,7 @@
 import ComposableArchitecture
 import SwiftUI
 
-@available(macOS 13.3, *)
+@available(macOS 13.0, *)
 struct EvolutionRowView: View {
 
     let store: StoreOf<EvolutionRowReducer>
@@ -55,8 +55,8 @@ struct EvolutionRowView: View {
                 ) {
                     Text("Edit")
                 }
-
             }
+            .padding(2)
         }
     }
 }

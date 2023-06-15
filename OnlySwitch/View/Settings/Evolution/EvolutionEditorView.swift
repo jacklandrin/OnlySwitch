@@ -9,7 +9,7 @@ import AlertToast
 import ComposableArchitecture
 import SwiftUI
 
-@available(macOS 13.3, *)
+@available(macOS 13.0, *)
 struct EvolutionEditorView: View {
 
     let store: StoreOf<EvolutionEditorReducer>
@@ -55,16 +55,17 @@ struct EvolutionEditorView: View {
 
                 HStack {
                     Spacer()
+                    Text("Can be saved after passing all tests".localized())
                     Button(action: {
                         viewStore.send(.save)
                     }) {
-                        Text("Save")
+                        Text("Save".localized())
                     }
                 }
 
             }
             .padding(10)
-            .navigationTitle("Evolution Editor")
+            .navigationTitle("Evolution Editor".localized())
             .onAppear{
 
             }

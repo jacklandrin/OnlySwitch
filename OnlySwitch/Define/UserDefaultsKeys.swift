@@ -13,6 +13,8 @@ extension UserDefaults {
         static let menubarIcon = "menubarIconKey"
         static let appearanceColumnCount = "appearanceColumnCountKey"
         static let showAds = "showAdsKey"
+        //Evolution
+        static let evolutionIDs = "evolutionIDsKey"
         //PomodoroTimer
         static let WorkDuration = "WorkDurationKey"
         static let RestDuration = "RestDurationKey"

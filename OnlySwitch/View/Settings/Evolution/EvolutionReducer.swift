@@ -40,7 +40,7 @@ struct EvolutionReducer: ReducerProtocol {
     enum Action: Equatable {
         case refresh
         case loadList(TaskResult<[EvolutionItem]>)
-        case select(UUID)
+        case select(UUID?)
         case toggleItem(UUID)
         case remove
         case setNavigation(tag: DestinationState.Tag?, state: EvolutionEditorReducer.State? = nil)
@@ -69,6 +69,7 @@ struct EvolutionReducer: ReducerProtocol {
                             EvolutionRowReducer.State(evolution: $0)
                         }
                     )
+                    NotificationCenter.default.post(name: .changeSettings, object: nil)
                     return .none
 
                 case .loadList(.failure(_)):

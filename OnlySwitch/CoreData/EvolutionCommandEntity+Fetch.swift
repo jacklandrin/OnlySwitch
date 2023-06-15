@@ -46,7 +46,8 @@ extension EvolutionCommandEntity {
             .shared
             .container
             .viewContext
-        let entity = EvolutionCommandEntity(context: context)
+
+        let entity = try EvolutionCommandEntity.fetchRequest(by: item.id) ?? EvolutionCommandEntity(context: context)
 
         if item.controlType == .Button {
             guard
@@ -82,6 +83,18 @@ extension EvolutionCommandEntity {
 
             entity.turnOffCommand = offCommand
             entity.turnOffCommandType = offCommandTypeStr
+
+            guard
+                let statusCommand = item.statusCommand?.commandString,
+                !statusCommand.isEmpty,
+                let statusCommandTypeStr = item.statusCommand?.executeType.rawValue,
+                let trueCondition = item.statusCommand?.trueCondition else {
+                context.reset()
+                throw EvolutionError.wrongCommand
+            }
+            entity.statusCommand = statusCommand
+            entity.statusCommandType = statusCommandTypeStr
+            entity.trueCondition = trueCondition
         }
 
         entity.name = item.name
@@ -89,17 +102,7 @@ extension EvolutionCommandEntity {
         entity.timestamp = Date()
         entity.id = item.id
 
-        guard
-            let statusCommand = item.statusCommand?.commandString,
-            !statusCommand.isEmpty,
-            let statusCommandTypeStr = item.statusCommand?.executeType.rawValue,
-            let trueCondition = item.statusCommand?.trueCondition else {
-            context.reset()
-            throw EvolutionError.wrongCommand
-        }
-        entity.statusCommand = statusCommand
-        entity.statusCommandType = statusCommandTypeStr
-        entity.trueCondition = trueCondition
+
         try context.save()
     }
 

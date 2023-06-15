@@ -12,12 +12,17 @@ struct EvolutionBarView: View {
     @EnvironmentObject var evolutionBarVM: EvolutionBarVM
 
     var body: some View {
-        Image(systemName: evolutionBarVM.controlType == .Switch ? "lightswitch.on.square.fill" : "button.programmable.square.fill")
+        Image(systemName: evolutionBarVM.controlType == .Switch
+              ? "lightswitch.on.square"
+              : "button.programmable.square.fill")
             .renderingMode(.template)
             .resizable()
             .scaledToFit()
             .frame(width: 25, height: 25)
             .padding(.trailing, 8)
+
+        Text(evolutionBarVM.barName)
+            .frame(alignment: .leading)
 
         Spacer()
 

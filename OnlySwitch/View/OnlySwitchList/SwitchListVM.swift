@@ -18,6 +18,10 @@ class SwitchListVM: ObservableObject, CurrentScreen {
     var shortcutsList:[ShortcutsBarVM] {
         return model.shortcutsList
     }
+
+    var evolutionList:[EvolutionBarVM] {
+        return model.evolutionItemList
+    }
     
     var maxHeight:CGFloat {
         return model.maxHeight
@@ -74,11 +78,16 @@ class SwitchListVM: ObservableObject, CurrentScreen {
         self.refreshMaxHeight()
         self.model.switchList = SwitchManager.shared.barVMList()
         self.model.shortcutsList = SwitchManager.shared.shortcutsBarVMList()
+        self.model.evolutionItemList = SwitchManager.shared.activeEvolutionList()
     }
     
     private func refreshSwitchStatus() {
         for option in switchList {
             option.refreshStatus()
+        }
+
+        for option in evolutionList {
+            option.refreshAsync()
         }
     }
     
@@ -94,15 +103,17 @@ class SwitchListVM: ObservableObject, CurrentScreen {
         self.model.sortMode = false
         self.refreshList()
         self.refreshSwitchStatus()
-        self.model.allItemList = self.switchList.filter{!$0.isHidden} + self.shortcutsList
+        self.model.allItemList = self.switchList.filter{!$0.isHidden} + self.shortcutsList + self.evolutionList
         //for sorting
         let orderDic = UserDefaults.standard.dictionary(forKey: UserDefaults.Key.orderWeight) as? [String:Int] ?? [String:Int]()
         for item in allItemList {
             let type:String
             if item is SwitchBarVM {
                 type = "switch-"
-            } else {
+            } else if item is ShortcutsBarVM {
                 type = "shortcuts-"
+            } else {
+                type = "evolution-"
             }
             let key = type + item.barName
             let weight = orderDic[key] ?? 10000
@@ -142,8 +153,10 @@ class SwitchListVM: ObservableObject, CurrentScreen {
             let type:String
             if item is SwitchBarVM {
                 type = "switch-"
-            } else {
+            } else if item is ShortcutsBarVM {
                 type = "shortcuts-"
+            } else {
+                type = "evolution-"
             }
             let key = type + item.barName
             orderDic[key] = index

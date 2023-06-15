@@ -29,6 +29,7 @@ class EvolutionBarVM: BarProvider, ObservableObject {
     }
 
     func refreshAsync() {
+        guard evolutionItem.controlType == .Switch else { return }
         self.processing = true
         refreshSwitchQueue.async {
             guard let command = self.evolutionItem.statusCommand else { return }
@@ -42,18 +43,22 @@ class EvolutionBarVM: BarProvider, ObservableObject {
 
     func doSwitch(isOn: Bool) {
         processing = true
-        if isOn {
-            if evolutionItem.controlType == .Button {
-                guard let command = evolutionItem.singleCommand else { return }
-                _ = try? command.commandString.runAppleScript(isShellCMD: command.executeType == .shell)
+        Task { @MainActor in
+            if isOn {
+                if evolutionItem.controlType == .Button {
+                    guard let command = evolutionItem.singleCommand else { return }
+                    _ = try? command.commandString.runAppleScript(isShellCMD: command.executeType == .shell)
+                } else {
+                    guard let command = evolutionItem.onCommand else { return }
+                    _ = try? command.commandString.runAppleScript(isShellCMD: command.executeType == .shell)
+                    self.isOn = true
+                }
             } else {
-                guard let command = evolutionItem.onCommand else { return }
+                guard let command = evolutionItem.offCommand else { return }
                 _ = try? command.commandString.runAppleScript(isShellCMD: command.executeType == .shell)
+                self.isOn = false
             }
-        } else {
-            guard let command = evolutionItem.offCommand else { return }
-            _ = try? command.commandString.runAppleScript(isShellCMD: command.executeType == .shell)
+            processing = false
         }
-        processing = false
     }
 }

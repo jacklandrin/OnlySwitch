@@ -9,7 +9,7 @@ import AlertToast
 import ComposableArchitecture
 import SwiftUI
 
-@available(macOS 13.3, *)
+@available(macOS 13.0, *)
 struct EvolutionView: View {
 
     let store: StoreOf<EvolutionReducer>
@@ -55,6 +55,9 @@ struct EvolutionView: View {
 
                             Spacer()
                         }
+                    }
+                    .onTapGesture {
+                        viewStore.send(.select(nil))
                     }
                     .padding(.top, 10)
 

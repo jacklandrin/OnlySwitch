@@ -37,6 +37,12 @@ struct EvolutionRowReducer: ReducerProtocol {
             self.evolution = evolution
             self.editorState = .init(evolution: evolution)
             self.id = evolution.id
+            if let evolutionIDs = UserDefaults.standard.array(forKey: UserDefaults.Key.evolutionIDs) as? [String] {
+                let idString = id.uuidString
+                self.evolution.active = evolutionIDs.contains(idString)
+            } else {
+                UserDefaults.standard.setValue([String](), forKey: UserDefaults.Key.evolutionIDs)
+            }
         }
     }
 
@@ -51,6 +57,22 @@ struct EvolutionRowReducer: ReducerProtocol {
             switch action {
                 case .toggle:
                     state.evolution.active.toggle()
+                    guard let evolutionIDs = UserDefaults.standard.array(forKey: UserDefaults.Key.evolutionIDs) as? [String] else {
+                        UserDefaults.standard.setValue([String](), forKey: UserDefaults.Key.evolutionIDs)
+                        return .none
+                    }
+                    let idString = state.id.uuidString
+                    var newEvolutionIDs = evolutionIDs
+                    if state.evolution.active {
+                        newEvolutionIDs.append(idString)
+                    } else {
+                        if let index = evolutionIDs.firstIndex(of: idString) {
+                            newEvolutionIDs.remove(at: index)
+                        }
+                    }
+                    UserDefaults.standard.setValue(newEvolutionIDs, forKey: UserDefaults.Key.evolutionIDs)
+                    UserDefaults.standard.synchronize()
+                    NotificationCenter.default.post(name: .changeSettings, object: nil)
                     return .none
 
                 case let .setNavigation(tag: .editor, state: editorState):

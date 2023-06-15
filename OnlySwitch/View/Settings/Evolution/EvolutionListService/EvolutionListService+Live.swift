@@ -23,6 +23,16 @@ extension EvolutionListService: DependencyKey {
         },
         removeItem: { id in
             try EvolutionCommandEntity.removeItem(by: id)
+            guard let evolutionIDs = UserDefaults.standard.array(forKey: UserDefaults.Key.evolutionIDs) as? [String] else {
+                UserDefaults.standard.setValue([String](), forKey: UserDefaults.Key.evolutionIDs)
+                return
+            }
+            let idString = id.uuidString
+            var newEvolutionIDs = evolutionIDs
+
+            if let index = evolutionIDs.firstIndex(of: idString) {
+                newEvolutionIDs.remove(at: index)
+            }
         }
     )
 }

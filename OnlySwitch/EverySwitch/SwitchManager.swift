@@ -94,4 +94,25 @@ class SwitchManager {
             return 16383
         }
     }
+
+    func activeEvolutionList() -> [EvolutionBarVM] {
+        guard let evolutionIDs = UserDefaults.standard.array(forKey: UserDefaults.Key.evolutionIDs) as? [String] else {
+            UserDefaults.standard.setValue([String](), forKey: UserDefaults.Key.evolutionIDs)
+            return []
+        }
+
+        let bars:[EvolutionBarVM?] = evolutionIDs.map {
+            guard
+                let id = UUID(uuidString: $0),
+                let entity = try? EvolutionCommandEntity.fetchRequest(by: id),
+                let item = EvolutionAdapter.toEvolutionItem(entity)
+            else {
+                return nil
+            }
+
+            return EvolutionBarVM(evolutionItem: item)
+        }
+
+        return bars.compactMap{$0}
+    }
 }
