@@ -32,7 +32,7 @@ struct EvolutionView: View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             NavigationStack {
                 VStack {
-                    ScrollView {
+                    ScrollView(.vertical) {
                         if viewStore.evolutionList.isEmpty {
                             Text("You can DIY switches or buttons here.")
                             Button("Refresh") {
@@ -85,8 +85,8 @@ struct EvolutionView: View {
 
                         Spacer()
                     }
+                    .padding(.leading, 20)
                 }
-                .padding(.leading, 20)
                 .padding(.bottom, 10)
 
             }
