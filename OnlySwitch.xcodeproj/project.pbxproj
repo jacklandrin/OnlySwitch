@@ -42,6 +42,8 @@
 		0430887E275D707C00877E51 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 0430887D275D707C00877E51 /* LaunchAtLogin */; };
 		043488A92A364E73006C877D /* EvolutionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043488A82A364E73006C877D /* EvolutionRowView.swift */; };
 		043488AB2A364EBF006C877D /* EvolutionRowReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043488AA2A364EBF006C877D /* EvolutionRowReducer.swift */; };
+		043488AE2A3B472E006C877D /* EvolutionBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043488AD2A3B472E006C877D /* EvolutionBarView.swift */; };
+		043488B02A3B4B7A006C877D /* EvolutionBarVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043488AF2A3B4B7A006C877D /* EvolutionBarVM.swift */; };
 		0434B4C0287388ED00F06AB9 /* GitHubRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0434B4BF287388ED00F06AB9 /* GitHubRepositoryProtocol.swift */; };
 		0434B4C1287388ED00F06AB9 /* GitHubRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0434B4BF287388ED00F06AB9 /* GitHubRepositoryProtocol.swift */; };
 		0434B4C728738EEA00F06AB9 /* GitHubMockRespository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0434B4C628738EEA00F06AB9 /* GitHubMockRespository.swift */; };
@@ -421,6 +423,8 @@
 		0427B25A275D786400AD783A /* SystemInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemInfo.swift; sourceTree = "<group>"; };
 		043488A82A364E73006C877D /* EvolutionRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionRowView.swift; sourceTree = "<group>"; };
 		043488AA2A364EBF006C877D /* EvolutionRowReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionRowReducer.swift; sourceTree = "<group>"; };
+		043488AD2A3B472E006C877D /* EvolutionBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionBarView.swift; sourceTree = "<group>"; };
+		043488AF2A3B4B7A006C877D /* EvolutionBarVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionBarVM.swift; sourceTree = "<group>"; };
 		0434B4BD2873882100F06AB9 /* Releases_mock.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Releases_mock.json; sourceTree = "<group>"; };
 		0434B4BF287388ED00F06AB9 /* GitHubRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubRepositoryProtocol.swift; sourceTree = "<group>"; };
 		0434B4C328738E7400F06AB9 /* Latest_release_mock.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Latest_release_mock.json; sourceTree = "<group>"; };
@@ -833,6 +837,15 @@
 			path = MusicAppPlayer;
 			sourceTree = "<group>";
 		};
+		043488AC2A3B463E006C877D /* EvolutionItems */ = {
+			isa = PBXGroup;
+			children = (
+				043488AD2A3B472E006C877D /* EvolutionBarView.swift */,
+				043488AF2A3B4B7A006C877D /* EvolutionBarVM.swift */,
+			);
+			path = EvolutionItems;
+			sourceTree = "<group>";
+		};
 		0434B4C228738DAB00F06AB9 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
@@ -1235,6 +1248,7 @@
 			children = (
 				04BF976E27908E5100E7C0E2 /* SwitchBar */,
 				04BF976F27908E7300E7C0E2 /* ShortcutsItem */,
+				043488AC2A3B463E006C877D /* EvolutionItems */,
 				04A6F9422788807800E3300F /* BarProvider.swift */,
 			);
 			path = SwitchItem;
@@ -1863,6 +1877,7 @@
 				040CD2BC2756D497002E0CC6 /* CGImage++.swift in Sources */,
 				04DC6CA428A7D73A00888BF9 /* Float++.swift in Sources */,
 				04581DBF27653C4A008ADF30 /* AirPodsSettingVM.swift in Sources */,
+				043488AE2A3B472E006C877D /* EvolutionBarView.swift in Sources */,
 				0493375627625A1E00AE779A /* Downloading.swift in Sources */,
 				04FB3E60288D49E100F3B5E1 /* SwitchListVM+SettingWindowController.swift in Sources */,
 				041D726728353BC20083092D /* SwitchType++.swift in Sources */,
@@ -1916,6 +1931,7 @@
 				0493375327625A1E00AE779A /* Reading.swift in Sources */,
 				0493375427625A1E00AE779A /* ReaderError.swift in Sources */,
 				04BF97682790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift in Sources */,
+				043488B02A3B4B7A006C877D /* EvolutionBarVM.swift in Sources */,
 				0493375927625A1E00AE779A /* DownloadingState.swift in Sources */,
 				047C1E592A2255A00061235D /* EvolutionEditorView.swift in Sources */,
 				041D726328353B380083092D /* NSImage+SymbolName.swift in Sources */,

@@ -23,6 +23,7 @@ struct EvolutionCommand: Equatable {
     var commandType: CommandType
     var commandString: String = ""
     var debugStatus: CommandDebugStatus = .unknow
+    var trueCondition: String?
 }
 
 enum CommandExecuteType: String, Equatable, Codable {

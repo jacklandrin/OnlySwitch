@@ -9,6 +9,7 @@
         <attribute name="statusCommand" optional="YES" attributeType="String"/>
         <attribute name="statusCommandType" optional="YES" attributeType="String"/>
         <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="trueCondition" optional="YES" attributeType="String"/>
         <attribute name="turnOffCommand" optional="YES" attributeType="String"/>
         <attribute name="turnOffCommandType" optional="YES" attributeType="String"/>
         <attribute name="turnOnCommand" optional="YES" attributeType="String"/>

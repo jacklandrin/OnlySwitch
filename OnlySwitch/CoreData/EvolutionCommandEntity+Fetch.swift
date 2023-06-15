@@ -92,12 +92,14 @@ extension EvolutionCommandEntity {
         guard
             let statusCommand = item.statusCommand?.commandString,
             !statusCommand.isEmpty,
-            let statusCommandTypeStr = item.statusCommand?.executeType.rawValue else {
+            let statusCommandTypeStr = item.statusCommand?.executeType.rawValue,
+            let trueCondition = item.statusCommand?.trueCondition else {
             context.reset()
             throw EvolutionError.wrongCommand
         }
         entity.statusCommand = statusCommand
         entity.statusCommandType = statusCommandTypeStr
+        entity.trueCondition = trueCondition
         try context.save()
     }
 

@@ -78,6 +78,10 @@ struct EvolutionAdapter {
             )
         }
 
+        if let trueCondition = entity.trueCondition {
+            item.statusCommand?.trueCondition = trueCondition
+        }
+
         return item
     }
 }

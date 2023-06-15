@@ -12,7 +12,7 @@ struct EvolutionCommandEditingReducer: ReducerProtocol {
     struct State: Equatable, Identifiable {
         var id = UUID()
         var command: EvolutionCommand
-
+        var statusCommandResult = ""
         init(type: CommandType, command: EvolutionCommand?) {
             if let command {
                 self.command = command
@@ -20,11 +20,11 @@ struct EvolutionCommandEditingReducer: ReducerProtocol {
                 self.command = EvolutionCommand(commandType: type)
             }
         }
-
     }
 
     enum Action: Equatable {
         case editCommand(String)
+        case editTrueCondition(String)
         case returnCommandString
         case changeExecuteType(CommandExecuteType)
         case shouldTest
@@ -39,6 +39,10 @@ struct EvolutionCommandEditingReducer: ReducerProtocol {
             switch action {
                 case let .editCommand(command):
                     state.command.commandString = command
+                    return .none
+
+                case let .editTrueCondition(condition):
+                    state.command.trueCondition = condition
                     return .none
 
                 case .returnCommandString:
@@ -58,8 +62,9 @@ struct EvolutionCommandEditingReducer: ReducerProtocol {
                         )
                     }
 
-                case .testCommand(.success(_)):
+                case let .testCommand(.success(result)):
                     state.command.debugStatus = .success
+                    state.statusCommandResult = result
                     return .send(.delegate(state.command))
 
                 case .testCommand(.failure(_)):

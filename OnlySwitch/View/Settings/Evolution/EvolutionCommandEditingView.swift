@@ -73,6 +73,13 @@ struct EvolutionCommandEditingView: View {
                     Spacer()
                 }
 
+                if viewStore.command.commandType == .status {
+                    Text("Output:\(viewStore.statusCommandResult)")
+                    TextField("True Condition".localized(), text: viewStore.binding(
+                        get: { $0.command.trueCondition ?? "" },
+                        send: { .editTrueCondition($0) }
+                    ))
+                }
             }
             
         }
