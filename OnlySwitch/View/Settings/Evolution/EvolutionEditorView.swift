@@ -15,7 +15,7 @@ struct EvolutionEditorView: View {
     let store: StoreOf<EvolutionEditorReducer>
 
     var body: some View {
-        WithViewStore(self.store, observe: { $0 }) { viewStore in
+        WithViewStore(store, observe: { $0 }) { viewStore in
             VStack {
                 HStack {
                     Text("Name:")
@@ -39,20 +39,18 @@ struct EvolutionEditorView: View {
                 }
                 .pickerStyle(.segmented)
 
-                ScrollView {
-                    if viewStore.evolution.controlType == .Switch {
-                        switchEditorView
-                    } else if viewStore.evolution.controlType == .Button {
-                        buttonEditorView
-                    }
-
-                    EvolutionCommandEditingView(
-                        store: Store(
-                            initialState: viewStore.statusCommandState,
-                            reducer: EvolutionCommandEditingReducer()
-                                ._printChanges()
+                ScrollView(.vertical) {
+                    VStack {
+                        ForEachStore(
+                            store.scope(
+                                state: \.commandStates,
+                                action: EvolutionEditorReducer.Action.commandAction(id:action:)
+                            ),
+                            content: { item in
+                                EvolutionCommandEditingView(store: item)
+                            }
                         )
-                    )
+                    }
                 }
 
                 HStack {
@@ -85,46 +83,43 @@ struct EvolutionEditorView: View {
         }
     }
 
-    @ViewBuilder
-    var switchEditorView: some View {
-        WithViewStore(self.store, observe: { $0 }) { viewStore in
-            VStack() {
-                EvolutionCommandEditingView(
-                    store: Store(
-                        initialState: viewStore.onCommandState,
-                        reducer: EvolutionCommandEditingReducer()
-                            ._printChanges()
-                    )
-                )
-
-                Spacer().frame(height: 20)
-
-                EvolutionCommandEditingView(
-                    store: Store(
-                        initialState: viewStore.offCommandState,
-                        reducer: EvolutionCommandEditingReducer()
-                            ._printChanges()
-                    )
-                )
-            }
-        }
-    }
-
-    @ViewBuilder
-    var buttonEditorView: some View {
-        WithViewStore(self.store, observe: { $0 }) { viewStore in
-            VStack {
-                EvolutionCommandEditingView(
-                    store: Store(
-                        initialState: viewStore.singleCommandState,
-                        reducer: EvolutionCommandEditingReducer()
-                            ._printChanges()
-                    )
-                )
-                Spacer()
-            }
-        }
-    }
+//    @ViewBuilder
+//    var switchEditorView: some View {
+//        WithViewStore(self.store, observe: { $0 }) { viewStore in
+//            VStack() {
+//                EvolutionCommandEditingView(
+//                    store: store.scope(
+//                        state: \.onCommandState,
+//                        action: EvolutionEditorReducer.Action.commandAction
+//                    )
+//                )
+//
+//                Spacer().frame(height: 20)
+//
+//                EvolutionCommandEditingView(
+//                    store: store.scope(
+//                        state: \.offCommandState,
+//                        action: EvolutionEditorReducer.Action.commandAction
+//                    )
+//                )
+//            }
+//        }
+//    }
+//
+//    @ViewBuilder
+//    var buttonEditorView: some View {
+//        WithViewStore(self.store, observe: { $0 }) { viewStore in
+//            VStack {
+//                EvolutionCommandEditingView(
+//                    store: store.scope(
+//                        state: \.singleCommandState,
+//                        action: EvolutionEditorReducer.Action.commandAction
+//                    )
+//                )
+//                Spacer()
+//            }
+//        }
+//    }
 }
 
 @available(macOS 13.3, *)

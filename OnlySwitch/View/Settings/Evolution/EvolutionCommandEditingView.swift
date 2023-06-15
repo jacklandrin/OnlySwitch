@@ -84,7 +84,7 @@ struct EvolutionCommandEditingView_Previews: PreviewProvider {
     static var previews: some View {
         EvolutionCommandEditingView(
             store: Store(
-                initialState: EvolutionCommandEditingReducer.State(type: .on),
+                initialState: EvolutionCommandEditingReducer.State(type: .on, command: nil),
                 reducer: EvolutionCommandEditingReducer()
             )
         )

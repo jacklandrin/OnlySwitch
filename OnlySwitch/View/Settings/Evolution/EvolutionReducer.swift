@@ -84,10 +84,12 @@ struct EvolutionReducer: ReducerProtocol {
                     return .none
 
                 case .remove:
-                    if let selectID = state.selectID {
-                        state.evolutionList.remove(id: selectID)
+                    return .run { [state = state] send in
+                        if let selectID = state.selectID {
+                            try await evolutionListService.removeItem(selectID)
+                            await send(.refresh)
+                        }
                     }
-                    return .none
 
                 case let .setNavigation(tag: .editor, state: editorState):
                     if let editorState {
@@ -108,7 +110,7 @@ struct EvolutionReducer: ReducerProtocol {
                         case .goback:
                             state.destination = nil
                     }
-                    return .none
+                    return .send(.refresh)
 
                 case .editorAction:
                     return .none

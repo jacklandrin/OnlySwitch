@@ -87,6 +87,7 @@ extension EvolutionCommandEntity {
         entity.name = item.name
         entity.itemType = item.controlType.rawValue
         entity.timestamp = Date()
+        entity.id = item.id
 
         guard
             let statusCommand = item.statusCommand?.commandString,
@@ -98,5 +99,18 @@ extension EvolutionCommandEntity {
         entity.statusCommand = statusCommand
         entity.statusCommandType = statusCommandTypeStr
         try context.save()
+    }
+
+    static func removeItem(by id: UUID) throws {
+        let context = PersistenceController
+            .shared
+            .container
+            .viewContext
+
+        guard let entity = try fetchRequest(by: id) else {
+            throw EvolutionError.deleteFailed
+        }
+
+        context.delete(entity)
     }
 }

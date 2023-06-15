@@ -36,7 +36,7 @@ class SettingsVM: ObservableObject {
     let evolutionStore = Store(
         initialState: EvolutionReducer.State(),
         reducer: EvolutionReducer()
-            .dependency(\.evolutionListService, .previewValue)
+            .dependency(\.evolutionListService, .liveValue)
             ._printChanges()
         )
 

@@ -56,6 +56,7 @@ enum CommandDebugStatus {
 enum EvolutionError: Error, Equatable {
     case noCommand
     case wrongCommand
+    case deleteFailed
 }
 
 

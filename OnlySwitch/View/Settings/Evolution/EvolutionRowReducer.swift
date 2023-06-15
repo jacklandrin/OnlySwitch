@@ -28,7 +28,7 @@ struct EvolutionRowReducer: ReducerProtocol {
     }
 
     struct State: Equatable, Identifiable {
-        let id = UUID()
+        let id: UUID
         var evolution: EvolutionItem
         var editorState: EvolutionEditorReducer.State
         var destination: DestinationState?
@@ -36,6 +36,7 @@ struct EvolutionRowReducer: ReducerProtocol {
         init(evolution: EvolutionItem) {
             self.evolution = evolution
             self.editorState = .init(evolution: evolution)
+            self.id = evolution.id
         }
     }
 

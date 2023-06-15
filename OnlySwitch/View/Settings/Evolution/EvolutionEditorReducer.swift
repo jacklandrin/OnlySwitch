@@ -13,10 +13,10 @@ struct EvolutionEditorReducer: ReducerProtocol {
     struct State: Equatable, Identifiable {
         var id: UUID
         var evolution: EvolutionItem
-        var onCommandState = EvolutionCommandEditingReducer.State(type: .on)
-        var offCommandState = EvolutionCommandEditingReducer.State(type: .off)
-        var singleCommandState = EvolutionCommandEditingReducer.State(type: .single)
-        var statusCommandState = EvolutionCommandEditingReducer.State(type: .status)
+        var commandStates: IdentifiedArrayOf<EvolutionCommandEditingReducer.State>
+        var switchCommandStates:IdentifiedArrayOf<EvolutionCommandEditingReducer.State>
+        var buttonCommandStates:IdentifiedArrayOf<EvolutionCommandEditingReducer.State>
+
         var showError = false
 
         init(evolution: EvolutionItem? = nil) {
@@ -26,20 +26,19 @@ struct EvolutionEditorReducer: ReducerProtocol {
                 self.evolution = EvolutionItem()
             }
             self.id = self.evolution.id
-            if let onCommand = evolution?.onCommand {
-                self.onCommandState.command = onCommand
-            }
-
-            if let offCommand = evolution?.offCommand {
-                self.offCommandState.command = offCommand
-            }
-
-            if let singleCommand = evolution?.singleCommand {
-                self.singleCommandState.command = singleCommand
-            }
-
-            if let statusCommand = evolution?.statusCommand {
-                self.statusCommandState.command = statusCommand
+            self.switchCommandStates = [
+                EvolutionCommandEditingReducer.State(type: .on, command: self.evolution.onCommand),
+                EvolutionCommandEditingReducer.State(type: .off, command: self.evolution.offCommand),
+                EvolutionCommandEditingReducer.State(type: .status, command: self.evolution.statusCommand)
+            ]
+            self.buttonCommandStates = [
+                EvolutionCommandEditingReducer.State(type: .single, command: self.evolution.singleCommand),
+                EvolutionCommandEditingReducer.State(type: .status, command: self.evolution.statusCommand)
+            ]
+            if self.evolution.controlType == .Switch {
+                self.commandStates = switchCommandStates
+            } else {
+                self.commandStates = buttonCommandStates
             }
         }
     }
@@ -61,7 +60,7 @@ struct EvolutionEditorReducer: ReducerProtocol {
         case finishSave(TaskResult<Void>)
         case errorControl(Bool)
         case delegate(Delegate)
-        case commandAction(EvolutionCommandEditingReducer.Action)
+        case commandAction(id: UUID, action: EvolutionCommandEditingReducer.Action)
         enum Delegate: Equatable {
             case goback
         }
@@ -83,26 +82,48 @@ struct EvolutionEditorReducer: ReducerProtocol {
                     
                 case let .changeType(type):
                     state.evolution.controlType = type
+                    switch type {
+                        case .Switch:
+                            state.commandStates = state.switchCommandStates
+
+                        case .Button:
+                            state.commandStates = state.buttonCommandStates
+
+                        default:
+                            break
+                    }
                     return .none
 
                 case .save:
-//                    return .task { [item = state.evolution] in
-//                        return await .finishSave(
-//                            TaskResult {
-//                                return try await evolutionEditorService.saveCommand(item)
-//                            }
-//                        )
-//                    }
-                    return .send(.delegate(.goback))
+                    switch state.evolution.controlType {
+                        case .Button:
+                            state.evolution.singleCommand = state.commandStates.first{ $0.command.commandType == .single }?.command
+                            state.evolution.statusCommand = state.commandStates.first{ $0.command.commandType == .status}?.command
+
+                        case .Switch:
+                            state.evolution.onCommand = state.commandStates.first{ $0.command.commandType == .on }?.command
+                            state.evolution.offCommand = state.commandStates.first{ $0.command.commandType == .off }?.command
+                            state.evolution.statusCommand = state.commandStates.first{ $0.command.commandType == .status }?.command
+
+                        default:
+                            break
+                    }
+                    return .task { [item = state.evolution] in
+                        return await .finishSave(
+                            TaskResult {
+                                return try await evolutionEditorService.saveCommand(item)
+                            }
+                        )
+                    }
 
                 case .finishSave(.success):
-                    return .run { send in
-                        await send(.delegate(.goback))
+                    return .run { @MainActor send in
+                        send(.delegate(.goback))
                     }
 
                 case .finishSave(.failure(_)):
-                    return .run { send in
-                        await send(.errorControl(true))
+                    return .run { @MainActor send in
+                        send(.errorControl(true))
                     }
 
                 case let .errorControl(show):
@@ -112,9 +133,28 @@ struct EvolutionEditorReducer: ReducerProtocol {
                 case .delegate:
                     return .none
 
+                case let .commandAction(id:_ , action: .delegate(command)):
+                    switch command.commandType {
+                        case .on:
+                            state.evolution.onCommand = command
+
+                        case .off:
+                            state.evolution.onCommand = command
+
+                        case .single:
+                            state.evolution.singleCommand = command
+
+                        case .status:
+                            state.evolution.statusCommand = command
+                    }
+                    return .none
+
                 case .commandAction:
                     return .none
             }
+        }
+        .forEach(\.commandStates, action: /Action.commandAction) {
+            EvolutionCommandEditingReducer()
         }
     }
 }

@@ -9,12 +9,18 @@ import Foundation
 import ComposableArchitecture
 
 struct EvolutionCommandEditingReducer: ReducerProtocol {
-    struct State: Equatable {
+    struct State: Equatable, Identifiable {
+        var id = UUID()
         var command: EvolutionCommand
 
-        init(type: CommandType) {
-            self.command = EvolutionCommand(commandType: type)
+        init(type: CommandType, command: EvolutionCommand?) {
+            if let command {
+                self.command = command
+            } else {
+                self.command = EvolutionCommand(commandType: type)
+            }
         }
+
     }
 
     enum Action: Equatable {
@@ -23,6 +29,7 @@ struct EvolutionCommandEditingReducer: ReducerProtocol {
         case changeExecuteType(CommandExecuteType)
         case shouldTest
         case testCommand(TaskResult<String>)
+        case delegate(EvolutionCommand)
     }
 
     @Dependency(\.evolutionEditorService) var evolutionEditorService
@@ -53,10 +60,13 @@ struct EvolutionCommandEditingReducer: ReducerProtocol {
 
                 case .testCommand(.success(_)):
                     state.command.debugStatus = .success
-                    return .none
+                    return .send(.delegate(state.command))
 
                 case .testCommand(.failure(_)):
                     state.command.debugStatus = .failed
+                    return .none
+
+                case .delegate:
                     return .none
             }
         }
