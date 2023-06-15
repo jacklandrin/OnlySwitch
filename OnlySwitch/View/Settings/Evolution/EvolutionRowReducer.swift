@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import KeyboardShortcuts
 
 struct EvolutionRowReducer: ReducerProtocol {
     enum DestinationState: Equatable {
@@ -32,11 +33,14 @@ struct EvolutionRowReducer: ReducerProtocol {
         var evolution: EvolutionItem
         var editorState: EvolutionEditorReducer.State
         var destination: DestinationState?
+        var keyboardShortcutName: KeyboardShortcuts.Name
 
         init(evolution: EvolutionItem) {
             self.evolution = evolution
             self.editorState = .init(evolution: evolution)
             self.id = evolution.id
+            self.keyboardShortcutName = KeyboardShortcuts.Name(id.uuidString)
+
             if let evolutionIDs = UserDefaults.standard.array(forKey: UserDefaults.Key.evolutionIDs) as? [String] {
                 let idString = id.uuidString
                 self.evolution.active = evolutionIDs.contains(idString)

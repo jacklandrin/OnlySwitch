@@ -7,12 +7,14 @@
 
 import ComposableArchitecture
 import SwiftUI
+import KeyboardShortcuts
 
 @available(macOS 13.0, *)
 struct EvolutionRowView: View {
 
     let store: StoreOf<EvolutionRowReducer>
     @ObservedObject var viewStore: ViewStore<ViewState, EvolutionRowReducer.Action>
+    @ObservedObject var langManager = LanguageManager.sharedManager
 
     struct ViewState: Equatable {
         let destinationTag: EvolutionRowReducer.DestinationState.Tag?
@@ -55,6 +57,9 @@ struct EvolutionRowView: View {
                 ) {
                     Text("Edit".localized())
                 }
+                KeyboardShortcuts.Recorder(for: viewStore.keyboardShortcutName)
+                    .environment(\.locale, .init(identifier: langManager.currentLang))
+                    .padding(.leading, 10)
             }
             .padding(2)
         }

@@ -16,6 +16,32 @@ struct EvolutionItem: Equatable, Identifiable {
     var offCommand: EvolutionCommand?
     var singleCommand: EvolutionCommand?
     var statusCommand: EvolutionCommand?
+
+    func doSwitch() {
+        if controlType == .Button {
+            guard let singleCommand else { return }
+            _ = try? singleCommand.commandString.runAppleScript(isShellCMD: singleCommand.executeType == .shell)
+        } else {
+            guard
+                let statusCommand,
+                let trueCondition = statusCommand.trueCondition,
+                let statusResult = try? statusCommand.commandString.runAppleScript(isShellCMD: statusCommand.executeType == .shell)
+            else {
+                return
+            }
+
+            let isOn = trueCondition == statusResult
+
+            if isOn {
+                guard let onCommand else { return }
+                _ = try? onCommand.commandString.runAppleScript(isShellCMD: onCommand.executeType == .shell)
+            } else {
+                guard let offCommand else { return }
+                _ = try? offCommand.commandString.runAppleScript(isShellCMD: offCommand.executeType == .shell)
+            }
+
+        }
+    }
 }
 
 struct EvolutionCommand: Equatable {

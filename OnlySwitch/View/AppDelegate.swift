@@ -32,6 +32,14 @@ struct OnlySwitchApp: App {
                             item.doShortcuts()
                         }
                     }
+
+                    guard let entities = try? EvolutionCommandEntity.fetchResult() else { return }
+                    EvolutionAdapter.evolutionItems(entities).forEach{ item in
+                        KeyboardShortcuts.onKeyDown(for: KeyboardShortcuts.Name(rawValue: item.id.uuidString)!) {
+                            item.doSwitch()
+                        }
+                    }
+
                 }
                 .onDisappear {
                     if #available(macOS 13.3, *) {
