@@ -13,7 +13,7 @@
 brew install only-switch
 ```
 ## Manually Download
-[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_2.3.12/OnlySwitch.dmg)
+[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_2.4/OnlySwitch.dmg)
 
 ## Communities
 Telegram group: https://t.me/OnlySwitchforMac
@@ -86,7 +86,7 @@ English, Simplified Chinese, German, Croatian, Turkish, Polish, Filipino, Dutch,
 
 If you have other good ideas 💡, feel free to send an E-mail to me.
 
-🚀The future plan is to make OnlySwitch become a toolkit-sharing platform. OnlySwitch will allow developers to distribute javascript code to create more features. @AruSeito and I are implementing this plan. If you are also interested in it, feel free to join us.
+🚀The future plan is to make OnlySwitch become a toolkit-sharing platform. OnlySwitch will allow developers to distribute shell, apple script and javascript code to create more features. @AruSeito and I are implementing this plan. If you are also interested in it, feel free to join us.
 
 ## Donate
 If you like it, help support this app by giving me a cup of tea for me to keep coding.
@@ -102,6 +102,9 @@ Now, the Hide notch switch supports dynamic wallpaper, just the processing takes
 <p align="center">
 <img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2021/12/hidenotch.png" width="60%" align="center" />
 </p>
+
+## Evolution
+Evolution has come following version 2.4, users can freely DIY the switches and buttons that they want. Currently, evolution supports Shell and Apple Script. They also can be invoked by hotkeys. Next, evolution will be able to be distributed by users.
 
 ## AirPods Switch 
 I use `classOfDevice`(2360344) to check if a Bluetooth device is Airpods Pro, but I'm not sure whether other AirPods modules are also 2360344, since I only have two AirPods Pros. If you are using AirPods 1~3, please tell me what the `classOfDevice` is. Or I can detect the count of battery value to check if AirPods (when the count is 3, it's AirPods), like **AirPods Battery Monitor For MAC OS**.
@@ -165,36 +168,26 @@ OnlySwitch offers some Shortcuts actions since Version 1.8. For example, you can
 * The idea of hiding menu bar icons from [Hidden](https://github.com/dwarvesf/hidden)
 * FKey refer to [Fluor](https://github.com/Pyroh/Fluor)
 * Hide Windows refer to [Later](https://github.com/alyssaxuu/later)
+* [The composable architecture](https://github.com/pointfreeco/swift-composable-architecture)
 
 ## Contributors
 
-@C0d3Br3aker for German translation
+**Translation:**
 
-@milotype for Croatian translation
-
-@berkbatuhans for Turkish translation
+| Language | Contributor              | Language | Contributor    |
+|----------|--------------------------|:---------|:---------------|
+| German   | @C0d3Br3aker             | Italian  | @bellaposa     |
+| Croatian | @milotype                | Russian  | @kirillyakopov |
+| Turkish  | @berkbatuhans            | Spanish  | @kant          |
+| Polish   | @kpacholak               | Japanese | @ShogoKoyama   |
+| Dutch    | Alex                     | Somali   | @abdorizak     |
+| Filipino | Rosel                    | Korean   | @iosdevted     |
+| French   | @BtKent and Ange Lefrère |          |                |
 
 @wrngwrld for volume slider of the radio player
 
-@kpacholak for Polish translation
+@kant for syntax issue 
 
-Alex for Dutch translation
-
-Rosel for Filipino translation
-
-@bellaposa for Italian translation
-
-@kirillyakopov for Russian translation
-
-@kant for syntax issue and Spanish translation
-
-@ShogoKoyama for Japanese translation
-
-@abdorizak for Somali translation
-
-@iosdevted for Korean translation
-
-@BtKent and Ange Lefrère for French translation
 
 ## License
 MIT
