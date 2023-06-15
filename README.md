@@ -106,6 +106,8 @@ Now, the Hide notch switch supports dynamic wallpaper, just the processing takes
 ## Evolution
 Evolution has come following version 2.4, users can freely DIY the switches and buttons that they want. Currently, evolution supports Shell and Apple Script. They also can be invoked by hotkeys. Next, evolution will be able to be distributed by users.
 
+Evolution settings page is implemented with TCA.
+
 ## AirPods Switch 
 I use `classOfDevice`(2360344) to check if a Bluetooth device is Airpods Pro, but I'm not sure whether other AirPods modules are also 2360344, since I only have two AirPods Pros. If you are using AirPods 1~3, please tell me what the `classOfDevice` is. Or I can detect the count of battery value to check if AirPods (when the count is 3, it's AirPods), like **AirPods Battery Monitor For MAC OS**.
 
