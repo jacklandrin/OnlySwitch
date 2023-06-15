@@ -34,8 +34,8 @@ struct EvolutionView: View {
                 VStack {
                     ScrollView(.vertical) {
                         if viewStore.evolutionList.isEmpty {
-                            Text("You can DIY switches or buttons here.")
-                            Button("Refresh") {
+                            Text("You can DIY switches or buttons here.".localized())
+                            Button("Refresh".localized()) {
                                 viewStore.send(.refresh)
                             }
                         } else {
@@ -101,7 +101,7 @@ struct EvolutionView: View {
                 AlertToast(
                     displayMode: .alert,
                     type: .error(.red),
-                    title: "load evolution list failed"
+                    title: "Load Evolution list failed".localized()
                 )
             }
             )
@@ -131,7 +131,7 @@ struct EvolutionView: View {
     }
 }
 
-@available(macOS 13.3, *)
+@available(macOS 13.0, *)
 struct EvolutionView_Previews: PreviewProvider {
     static var previews: some View {
         EvolutionView(

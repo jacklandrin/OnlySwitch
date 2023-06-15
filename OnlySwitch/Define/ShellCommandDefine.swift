@@ -187,8 +187,6 @@ func fileExistAtPath(_ path:String) -> Bool {
     return exists && isDirectory.boolValue
 }
 
-
-
 let getAirpodsBatteryShell = "battery-airpods-monterey"
 
 func notificationCMD(content:String, title:String) -> String {

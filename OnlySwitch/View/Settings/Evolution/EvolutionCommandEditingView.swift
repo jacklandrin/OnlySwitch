@@ -55,7 +55,7 @@ struct EvolutionCommandEditingView: View {
                         Image(systemName: "play.fill")
                     }
                     .frame(width: 26, height: 26)
-                    .help(Text("Debug"))
+                    .help(Text("Debug".localized()))
 
                     Spacer().frame(width: 10)
 
@@ -74,7 +74,11 @@ struct EvolutionCommandEditingView: View {
                 }
 
                 if viewStore.command.commandType == .status {
-                    Text("Output:\(viewStore.statusCommandResult)")
+                    HStack {
+                        Text("Output:")
+                        Text(viewStore.statusCommandResult)
+                            .foregroundColor(.green)
+                    }
                     TextField("True Condition".localized(), text: viewStore.binding(
                         get: { $0.command.trueCondition ?? "" },
                         send: { .editTrueCondition($0) }

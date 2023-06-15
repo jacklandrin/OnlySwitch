@@ -36,16 +36,16 @@ enum CommandType: String, Codable {
     var typeTitle: String {
         switch self {
             case .on:
-                return "Turn On"
+                return "Turn on".localized()
 
             case .off:
-                return "Turn Off"
+                return "Turn off".localized()
 
             case .single:
-                return "Button"
+                return "Button".localized()
 
             case .status:
-                return "Check Status"
+                return "Check status".localized()
         }
     }
 }

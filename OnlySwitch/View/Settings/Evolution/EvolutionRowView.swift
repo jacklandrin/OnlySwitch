@@ -53,7 +53,7 @@ struct EvolutionRowView: View {
                         send: { EvolutionRowReducer.Action.setNavigation(tag:$0, state: viewStore.editorState) }
                     )
                 ) {
-                    Text("Edit")
+                    Text("Edit".localized())
                 }
             }
             .padding(2)

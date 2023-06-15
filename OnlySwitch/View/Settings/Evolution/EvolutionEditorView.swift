@@ -18,7 +18,7 @@ struct EvolutionEditorView: View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             VStack {
                 HStack {
-                    Text("Name:")
+                    Text("Name:".localized())
                     TextField("",
                               text: viewStore.binding(
                                 get: { $0.evolution.name },
@@ -34,8 +34,8 @@ struct EvolutionEditorView: View {
                         send: { .changeType($0) }
                        )
                 ) {
-                    Text("Switch").tag(ControlType.Switch)
-                    Text("Button").tag(ControlType.Button)
+                    Text("Switch".localized()).tag(ControlType.Switch)
+                    Text("Button".localized()).tag(ControlType.Button)
                 }
                 .pickerStyle(.segmented)
 
@@ -77,7 +77,7 @@ struct EvolutionEditorView: View {
                 AlertToast(
                     displayMode: .alert,
                     type: .error(.red),
-                    title: "Save commands failed."
+                    title: "Save commands failed.".localized()
                 )
             }
             )

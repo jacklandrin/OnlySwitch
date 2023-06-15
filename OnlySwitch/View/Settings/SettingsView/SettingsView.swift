@@ -101,7 +101,7 @@ struct SettingsView: View {
         case .DimScreen:
             DimScreenSettingView()
         case .Evolution:
-            if #available(macOS 13.3, *) {
+            if #available(macOS 13.0, *) {
                 EvolutionView(store: settingVM.evolutionStore)
             } else {
                 EmptyView()
