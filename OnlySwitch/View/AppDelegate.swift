@@ -135,7 +135,7 @@ class AppDelegate:NSObject, NSApplicationDelegate {
         RadioStationSwitch.shared.setDefaultRadioStations()
         Bundle.setLanguage(lang: LanguageManager.sharedManager.currentLang)
         
-//        checkUpdate()
+        checkUpdate()
     }
     
     func applicationWillTerminate(_ notification: Notification) {
