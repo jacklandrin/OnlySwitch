@@ -147,5 +147,17 @@
 "Export" = "Export";
 "The radio stations can be imported and exported as a Json file. The keys are \"name\" and \"url\"." = "The radio stations can be imported and exported as a Json file. The keys are \"name\" and \"url\".";
 "Success" = "Success";
-
-
+"Save commands failed." = "Save commands failed.";
+"Can be saved after passing all tests" = "Can be saved after passing all tests";
+"Save" = "Save";
+"Evolution Editor" = "Evolution Editor";
+"You can DIY switches or buttons here." = "You can DIY switches or buttons here.";
+"Refresh" = "Refresh";
+"Load Evolution list failed" = "Load Evolution list failed";
+"Edit" = "Edit";
+"Button" = "Button";
+"Check status" = "Check status";
+"Switch" = "Switch";
+"Name:" = "Name:";
+"True Condition" = "True Condition";
+"Debug" = "Debug";

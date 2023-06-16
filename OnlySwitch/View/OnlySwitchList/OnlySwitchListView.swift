@@ -90,60 +90,64 @@ struct OnlySwitchListView: View {
                     } else if let item = switchVM.allItemList[index] as? ShortcutsBarVM {
                         ShortcutsBarView().environmentObject(item)
                             .frame(height:Layout.singleSwitchHeight)
+                    } else if let item = switchVM.allItemList[index] as? EvolutionBarVM {
+                        EvolutionBarView().environmentObject(item)
+                            .frame(height:Layout.singleSwitchHeight)
                     }
-                }.padding(.horizontal, 15)
-                    .background(Color.accentColor
-                        .shadow(color: Color(nsColor: .darkGray), radius: 1, x: 0, y: 1)
-                        .opacity(0.15)
-                        .isHidden(!itemHighlight(index: index)))
-                    .scaleEffect(itemScaleEffect(index: index))
-                    .onHover{ isHovering in
-                        if isHovering {
-                            withAnimation(.easeOut) {
-                                self.hoverIndex = index
-                            }
+                }
+                .padding(.horizontal, 15)
+                .background(Color.accentColor
+                    .shadow(color: Color(nsColor: .darkGray), radius: 1, x: 0, y: 1)
+                    .opacity(0.15)
+                    .isHidden(!itemHighlight(index: index)))
+                .scaleEffect(itemScaleEffect(index: index))
+                .onHover{ isHovering in
+                    if isHovering {
+                        withAnimation(.easeOut) {
+                            self.hoverIndex = index
                         }
                     }
-                    .offset(y: itemOffsetY(index: index))
-                    .gesture(
-                        DragGesture()
-                            .onChanged{ gesture in
-                                guard switchVM.sortMode else {return}
-                                
-                                movingIndex = index
-                                let locationY = gesture.location.y
-                                if self.distanceY == 0 && locationY != 0 {
-                                    NSCursor.closedHand.set()
-                                    print("set closeHand")
-                                }
-                                
-                                withAnimation{
-                                    self.distanceY = locationY
-                                }
-                                
-                                if abs(self.distanceY) > 10 {
-                                    let newIndex = movingIndex + Int(self.distanceY + 28 * (distanceY / abs(distanceY))) / Int(Layout.singleSwitchHeight)
-                                    print("new index:\(newIndex), moving index:\(movingIndex), distance:\(self.distanceY)")
-                                }
+                }
+                .offset(y: itemOffsetY(index: index))
+                .gesture(
+                    DragGesture()
+                        .onChanged{ gesture in
+                            guard switchVM.sortMode else {return}
+
+                            movingIndex = index
+                            let locationY = gesture.location.y
+                            if self.distanceY == 0 && locationY != 0 {
+                                NSCursor.closedHand.set()
+                                print("set closeHand")
                             }
-                            .onEnded{ gesture in
-                                NSCursor.closedHand.pop()
-                                if abs(self.distanceY) > 10 {
-                                    let indexOffset = Int(self.distanceY + 28 * (distanceY / abs(distanceY))) / Int(Layout.singleSwitchHeight)
-                                    
-                                    var newIndex = index + indexOffset
-                                    if newIndex < 0 {
-                                        newIndex = 0
-                                    } else if newIndex > switchVM.allItemList.count {
-                                        newIndex = switchVM.allItemList.count
-                                    }
-                                    move(from: IndexSet(integer: index), to: newIndex )
-                                    switchVM.saveOrder()
-                                }
-                                self.distanceY = 0
-                                movingIndex = -1
+
+                            withAnimation{
+                                self.distanceY = locationY
                             }
-                    )
+
+                            if abs(self.distanceY) > 10 {
+                                let newIndex = movingIndex + Int(self.distanceY + 28 * (distanceY / abs(distanceY))) / Int(Layout.singleSwitchHeight)
+                                print("new index:\(newIndex), moving index:\(movingIndex), distance:\(self.distanceY)")
+                            }
+                        }
+                        .onEnded{ gesture in
+                            NSCursor.closedHand.pop()
+                            if abs(self.distanceY) > 10 {
+                                let indexOffset = Int(self.distanceY + 28 * (distanceY / abs(distanceY))) / Int(Layout.singleSwitchHeight)
+
+                                var newIndex = index + indexOffset
+                                if newIndex < 0 {
+                                    newIndex = 0
+                                } else if newIndex > switchVM.allItemList.count {
+                                    newIndex = switchVM.allItemList.count
+                                }
+                                move(from: IndexSet(integer: index), to: newIndex )
+                                switchVM.saveOrder()
+                            }
+                            self.distanceY = 0
+                            movingIndex = -1
+                        }
+                )
                 
             }
         }
@@ -347,7 +351,7 @@ struct OnlySwitchListView: View {
     
     
     var scrollViewHeight : CGFloat {
-        let switchCount = visableSwitchCount + switchVM.shortcutsList.count
+        let switchCount = visableSwitchCount + switchVM.shortcutsList.count + switchVM.evolutionList.count
         var totalHeight = CGFloat((switchCount)) * Layout.singleSwitchHeight
         //two columns
         if switchVM.currentAppearance == SwitchListAppearance.dual.rawValue {

@@ -32,12 +32,19 @@ struct OnlySwitchApp: App {
                             item.doShortcuts()
                         }
                     }
+
+                    guard let entities = try? EvolutionCommandEntity.fetchResult() else { return }
+                    let evolutionItems = EvolutionAdapter.evolutionItems(entities)
+                    evolutionItems.forEach{ item in
+                        KeyboardShortcuts.onKeyDown(for: KeyboardShortcuts.Name(rawValue: item.id.uuidString)!) {
+                            item.doSwitch()
+                        }
+                    }
                 }
                 .onDisappear {
                     if #available(macOS 13.3, *) {
                         print("settings window closing")
-                        NSApp.activate(ignoringOtherApps: true)
-                        NSApp.windows.first!.makeKeyAndOrderFront(self)
+                        NSApp.activate(ignoringOtherApps: false)
                         NSApp.setActivationPolicy(.accessory)
                         NotificationCenter.default.post(name: .settingsWindowClosed, object: nil)
                         appDelegate.switchVM.isSettingViewShowing = false

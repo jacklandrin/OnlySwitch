@@ -13,6 +13,8 @@ extension UserDefaults {
         static let menubarIcon = "menubarIconKey"
         static let appearanceColumnCount = "appearanceColumnCountKey"
         static let showAds = "showAdsKey"
+        //Evolution
+        static let evolutionIDs = "evolutionIDsKey"
         //PomodoroTimer
         static let WorkDuration = "WorkDurationKey"
         static let RestDuration = "RestDurationKey"
@@ -63,6 +65,5 @@ extension UserDefaults {
         static let MicVolume = "MicVolumeKey"
         static let ScreenSaverInterval = "ScreenSaverIntervalKey"
         static let AppLanguage = "app_lang"
-        
     }
 }

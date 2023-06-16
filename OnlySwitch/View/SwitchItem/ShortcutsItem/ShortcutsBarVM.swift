@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ShortcutsBarVM:BarProvider,ObservableObject {
+class ShortcutsBarVM: BarProvider, ObservableObject {
     
     @Published private var model = ShortcutsBarModel()
     

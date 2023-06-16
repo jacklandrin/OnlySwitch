@@ -89,9 +89,9 @@ extension SwitchListVM: SettingWindowController {
     }
     
     func showSettingsWindow() {
+        NSApp.setActivationPolicy(.regular)
+        NSApp.activate(ignoringOtherApps: true)
         if let window = self.settingsWindow {
-            NSApp.setActivationPolicy(.regular)
-            NSApp.activate(ignoringOtherApps: true)
             window.makeKeyAndOrderFront(self)
             if #available(macOS 13.0, *) {
                 var windowFrame = window.frame

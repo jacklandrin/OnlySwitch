@@ -20,11 +20,6 @@ struct HideMenubarIconsSettingView: View {
             Divider()
             Spacer()
             Group {
-//                Toggle(isOn: $vm.isEnable, label: {
-//                    Text("Switch enable".localized())
-//                        .padding(.leading, 5)
-//                }).frame(height:30)
-        
                 HStack {
                     Text("Automatically hide icons after:".localized())
                     Menu(vm.converTimeDescription(duration: vm.automaticallyHideTime)) {
@@ -38,7 +33,7 @@ struct HideMenubarIconsSettingView: View {
                 
             }.padding(.horizontal)
            
-        }.navigationTitle(Text("Hide Menu Bar Icons".localized()))
+        }
     }
 }
 

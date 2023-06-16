@@ -16,7 +16,8 @@ struct SettingsView: View {
             List(selection:$settingVM.selection) {
                 ForEach(settingVM.settingItems, id:\.self ) { item in
                     NavigationLink{
-                        item.page
+                        page(item: item)
+                            .navigationTitle(item.rawValue.localized())
                     } label:{
                         Text(item.rawValue.localized())
                             .frame(minWidth: 190, alignment:.leading)
@@ -61,19 +62,55 @@ struct SettingsView: View {
             List(selection:$settingVM.selection) {
                 ForEach(settingVM.settingItems, id:\.self ) { item in
                     NavigationLink{
-                        item.page
+                        page(item: item)
+                            .navigationTitle(item.rawValue.localized())
                     } label:{
                         Text(item.rawValue.localized())
                             .frame(minWidth: 190, alignment:.leading)
                             .lineLimit(2)
                     }
                 }
-            }.listStyle(.sidebar)
+            }
+            .listStyle(.sidebar)
         }, detail: {
             GeneralView()
         })
     }
-    
+
+    @ViewBuilder
+    func page(item: SettingsItem) -> some View {
+        switch item {
+        case .AirPods:
+            AirPodsSettingView()
+        case .Radio:
+            RadioSettingView()
+        case .PomodoroTimer:
+            PomodoroTimerSettingView()
+        case .Shortcuts:
+            ShortcutsView()
+        case .General:
+            GeneralView()
+        case .Customize:
+            CustomizeView()
+        case .HideMenubarIcons:
+            HideMenubarIconsSettingView()
+        case .BackNoises:
+            BackNoisesSettingView()
+        case .KeepAwake:
+            KeepAwakeSettingView()
+        case .DimScreen:
+            DimScreenSettingView()
+        case .Evolution:
+            if #available(macOS 13.0, *) {
+                EvolutionView(store: settingVM.evolutionStore)
+            } else {
+                EmptyView()
+            }
+        case .About:
+            AboutView()
+        }
+    }
+
     var body: some View {
         if #available(macOS 13.3, *) {
             naviagtionSplitView()

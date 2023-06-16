@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ShortcutsBarView: View {
-    @EnvironmentObject var shortcutsBarVM:ShortcutsBarVM
+    @EnvironmentObject var shortcutsBarVM: ShortcutsBarVM
     var body: some View {
         HStack {
             Image("shortcuts_icon")
@@ -54,6 +54,7 @@ struct ShortcutsBarView: View {
 struct ShortCutBarView_Previews: PreviewProvider {
     static var previews: some View {
         ShortcutsBarView()
+            .environmentObject(ShortcutsBarVM(name: "test"))
     }
 }
 #endif
