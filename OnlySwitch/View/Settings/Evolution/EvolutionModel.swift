@@ -18,29 +18,44 @@ struct EvolutionItem: Equatable, Identifiable {
     var statusCommand: EvolutionCommand?
 
     func doSwitch() {
-        if controlType == .Button {
-            guard let singleCommand else { return }
-            _ = try? singleCommand.commandString.runAppleScript(isShellCMD: singleCommand.executeType == .shell)
-        } else {
-            guard
-                let statusCommand,
-                let trueCondition = statusCommand.trueCondition,
-                let statusResult = try? statusCommand.commandString.runAppleScript(isShellCMD: statusCommand.executeType == .shell)
-            else {
-                return
-            }
-
-            let isOn = trueCondition == statusResult
-
-            if isOn {
-                guard let onCommand else { return }
-                _ = try? onCommand.commandString.runAppleScript(isShellCMD: onCommand.executeType == .shell)
+        Task {
+            if controlType == .Button {
+                guard let singleCommand else { return }
+                _ = try? singleCommand.commandString.runAppleScript(isShellCMD: singleCommand.executeType == .shell)
+                _ = try? displayNotificationCMD(
+                    title: name,
+                    content: "",
+                    subtitle: "Running".localized()
+                )
+                .runAppleScript()
             } else {
-                guard let offCommand else { return }
-                _ = try? offCommand.commandString.runAppleScript(isShellCMD: offCommand.executeType == .shell)
-            }
+                guard
+                    let statusCommand,
+                    let trueCondition = statusCommand.trueCondition,
+                    let statusResult = try? statusCommand.commandString.runAppleScript(isShellCMD: statusCommand.executeType == .shell)
+                else {
+                    return
+                }
 
+                let isOn = trueCondition == statusResult
+                let shouldTurnOn = !isOn
+                if shouldTurnOn {
+                    guard let onCommand else { return }
+                    _ = try? onCommand.commandString.runAppleScript(isShellCMD: onCommand.executeType == .shell)
+                } else {
+                    guard let offCommand else { return }
+                    _ = try? offCommand.commandString.runAppleScript(isShellCMD: offCommand.executeType == .shell)
+                }
+                _ = try? displayNotificationCMD(
+                    title: name,
+                    content: "",
+                    subtitle: shouldTurnOn ? "Turn off".localized() : "Turn on".localized()
+                )
+                .runAppleScript()
+            }
         }
+
+        NotificationCenter.default.post(name: .changeSettings, object: nil)
     }
 }
 
