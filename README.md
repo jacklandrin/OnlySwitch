@@ -107,6 +107,7 @@ Now, the Hide notch switch supports dynamic wallpaper, just the processing takes
 Evolution has come following version 2.4, you can freely DIY the switches and buttons that you want. Currently, evolution supports **Shell** and **Apple Script**. They also can be invoked by hotkeys. Next, evolution will be able to be distributed by users as a shortcut utility platform.
 
 Evolution settings page is implemented with TCA.
+PS: Evolution feature needs macOS 13.0 and above.
 
 ![](http://www.jacklandrin.com/wp-content/uploads/2023/06/evolution.png)
 
