@@ -105,7 +105,7 @@ struct EvolutionView: View {
                 )
             }
             )
-            .task  {
+            .task {
                 await viewStore.send(.refresh).finish()
             }
         }

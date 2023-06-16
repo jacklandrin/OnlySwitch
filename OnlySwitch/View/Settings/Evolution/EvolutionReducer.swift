@@ -120,6 +120,9 @@ struct EvolutionReducer: ReducerProtocol {
                     state.showError = show
                     return .none
 
+                case .editor(id: _, action: .delegate(.refresh)):
+                    return .send(.refresh)
+
                 case .editor:
                     return .none
             }

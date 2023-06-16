@@ -54,6 +54,10 @@ struct EvolutionRowReducer: ReducerProtocol {
         case toggle
         case setNavigation(tag: DestinationState.Tag?, state: EvolutionEditorReducer.State? = nil)
         case editorAction(EvolutionEditorReducer.Action)
+        case delegate(Delegate)
+        enum Delegate: Equatable {
+            case refresh
+        }
     }
 
     var body: some ReducerProtocolOf<Self> {
@@ -89,18 +93,20 @@ struct EvolutionRowReducer: ReducerProtocol {
 
                 case .setNavigation(tag: .none, state: _):
                     state.destination = nil
-                    return .none
+                    return .send(.delegate(.refresh))
 
                 case let .editorAction(.delegate(action)):
                     switch action {
                         case .goback:
                             state.destination = nil
                     }
-                    return .none
+                    return .send(.delegate(.refresh))
 
                 case .editorAction:
                     return .none
 
+                case .delegate:
+                    return .none
             }
         }
 
