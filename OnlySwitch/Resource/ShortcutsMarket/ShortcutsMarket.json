@@ -53,5 +53,11 @@
         "link": "https://www.icloud.com/shortcuts/5b25691b84ff4be490294c697b85d271",
         "author": "nomadjimbob",
         "description": "Flushes the local DNS Cache (El Capitan or higher)"
+    },
+    {
+        "name": "Do Not Disturb",
+        "link": "https://www.icloud.com/shortcuts/f953b3e501924c2d8528dc740785244b",
+        "author": "jacklandrin",
+        "description": "Toggle Do Not Disturb for focus mode"
     }
 ]
