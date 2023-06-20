@@ -196,7 +196,36 @@ struct Preferences {
             NotificationCenter.default.post(name: .changeDimScreenSetting, object: nil)
         }
     }
-    
+
+    // MARK: - Night Shift
+    @UserDefaultValue(key: UserDefaults.Key.nightShiftStrength, defaultValue: 0.5)
+    var nightShiftStrength: Float {
+        didSet {
+            NotificationCenter.default.post(name: .changeNightShiftSetting, object: nil)
+        }
+    }
+
+    @UserDefaultValue(key: UserDefaults.Key.nightShiftStartDate, defaultValue: 0.0)
+    var nightShiftStartDate: Double {
+        didSet {
+            NotificationCenter.default.post(name: .changeNightShiftSetting, object: nil)
+        }
+    }
+
+    @UserDefaultValue(key: UserDefaults.Key.nightShiftEndDate, defaultValue: 0.0)
+    var nightShiftEndDate: Double {
+        didSet {
+            NotificationCenter.default.post(name: .changeNightShiftSetting, object: nil)
+        }
+    }
+
+    @UserDefaultValue(key: UserDefaults.Key.isNightShiftScheduleOn, defaultValue: false)
+    var isNightShiftScheduleOn: Bool {
+        didSet {
+            NotificationCenter.default.post(name: .changeNightShiftSetting, object: nil)
+        }
+    }
+
     //Hide Windows
     @UserDefaultValue(key: UserDefaults.Key.windowsHidden, defaultValue: false)
     var windowsHidden:Bool

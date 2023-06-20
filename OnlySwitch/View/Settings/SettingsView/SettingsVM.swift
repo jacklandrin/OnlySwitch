@@ -21,6 +21,7 @@ enum SettingsItem: String, CaseIterable {
     case BackNoises = "Back Noises"
     case KeepAwake = "Keep Awake"
     case DimScreen = "Dim Screen"
+    case NightShift = "Night Shift"
     case About = "About"
 }
 

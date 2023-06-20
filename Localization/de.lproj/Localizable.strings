@@ -148,3 +148,4 @@
 "Export" = "Exportieren";
 "The radio stations can be imported and exported as a Json file. The keys are \"name\" and \"url\"." = "Die Radiosender können als Json-Datei importiert und exportiert werden. Die Schlüssel sind \"name\" und \"url\".";
 "Success" = "Erfolg";
+"Night Shift Strength" = "Night Shift Stärke";

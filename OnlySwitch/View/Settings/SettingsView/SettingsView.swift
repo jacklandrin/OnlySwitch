@@ -80,34 +80,48 @@ struct SettingsView: View {
     @ViewBuilder
     func page(item: SettingsItem) -> some View {
         switch item {
-        case .AirPods:
-            AirPodsSettingView()
-        case .Radio:
-            RadioSettingView()
-        case .PomodoroTimer:
-            PomodoroTimerSettingView()
-        case .Shortcuts:
-            ShortcutsView()
-        case .General:
-            GeneralView()
-        case .Customize:
-            CustomizeView()
-        case .HideMenubarIcons:
-            HideMenubarIconsSettingView()
-        case .BackNoises:
-            BackNoisesSettingView()
-        case .KeepAwake:
-            KeepAwakeSettingView()
-        case .DimScreen:
-            DimScreenSettingView()
-        case .Evolution:
-            if #available(macOS 13.0, *) {
-                EvolutionView(store: settingVM.evolutionStore)
-            } else {
-                EmptyView()
-            }
-        case .About:
-            AboutView()
+            case .AirPods:
+                AirPodsSettingView()
+
+            case .Radio:
+                RadioSettingView()
+
+            case .PomodoroTimer:
+                PomodoroTimerSettingView()
+
+            case .Shortcuts:
+                ShortcutsView()
+
+            case .General:
+                GeneralView()
+
+            case .Customize:
+                CustomizeView()
+
+            case .HideMenubarIcons:
+                HideMenubarIconsSettingView()
+
+            case .BackNoises:
+                BackNoisesSettingView()
+
+            case .KeepAwake:
+                KeepAwakeSettingView()
+
+            case .DimScreen:
+                DimScreenSettingView()
+
+            case .Evolution:
+                if #available(macOS 13.0, *) {
+                    EvolutionView(store: settingVM.evolutionStore)
+                } else {
+                    EmptyView()
+                }
+
+            case .NightShift:
+                NightShiftSettingsView()
+
+            case .About:
+                AboutView()
         }
     }
 
