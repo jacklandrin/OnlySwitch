@@ -83,47 +83,9 @@ struct EvolutionEditorView: View {
             )
         }
     }
-
-//    @ViewBuilder
-//    var switchEditorView: some View {
-//        WithViewStore(self.store, observe: { $0 }) { viewStore in
-//            VStack() {
-//                EvolutionCommandEditingView(
-//                    store: store.scope(
-//                        state: \.onCommandState,
-//                        action: EvolutionEditorReducer.Action.commandAction
-//                    )
-//                )
-//
-//                Spacer().frame(height: 20)
-//
-//                EvolutionCommandEditingView(
-//                    store: store.scope(
-//                        state: \.offCommandState,
-//                        action: EvolutionEditorReducer.Action.commandAction
-//                    )
-//                )
-//            }
-//        }
-//    }
-//
-//    @ViewBuilder
-//    var buttonEditorView: some View {
-//        WithViewStore(self.store, observe: { $0 }) { viewStore in
-//            VStack {
-//                EvolutionCommandEditingView(
-//                    store: store.scope(
-//                        state: \.singleCommandState,
-//                        action: EvolutionEditorReducer.Action.commandAction
-//                    )
-//                )
-//                Spacer()
-//            }
-//        }
-//    }
 }
 
-@available(macOS 13.3, *)
+@available(macOS 13.0, *)
 struct EvolutionEditorView_Previews: PreviewProvider {
     static var previews: some View {
         EvolutionEditorView(store: Store(initialState: EvolutionEditorReducer.State(), reducer: EvolutionEditorReducer()))
