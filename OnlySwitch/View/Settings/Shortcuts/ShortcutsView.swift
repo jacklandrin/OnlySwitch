@@ -25,7 +25,7 @@ struct ShortcutsView: View {
                 Text("To add or remove any shortcuts on list".localized())
                     .padding(10)
                 Divider()
-                    .frame(width: 360)
+                    .frame(width: 380)
                 if shortcutsVM.shortcutsList.count == 0 {
                     Spacer()
                     Text("There's not any Shortcuts.".localized())
@@ -45,7 +45,7 @@ struct ShortcutsView: View {
                                 Spacer().frame(width:30)
                             }
                         }
-                    }.frame(width: 380)
+                    }.frame(width: 400)
                 }
             }
             VStack(spacing:0) {
@@ -58,8 +58,9 @@ struct ShortcutsView: View {
                     }, label: {
                         Image(systemName: "arrow.clockwise")
                     }).help("refresh".localized())
-                }.frame(width:300,height: 60)
-                    .padding(.trailing, 10)
+                }
+                .frame(width:300,height: 60)
+                .padding(.trailing, 10)
                 shortcutsMarket
             }
             
@@ -120,8 +121,9 @@ struct ShortcutsView: View {
                             Text("@\(shortcutsVM.sharedShortcutsList[index].author)")
                                 .foregroundColor(.white)
                                 .font(.system(size: 10))
-                        }.padding(.trailing, 10)
-                            .padding(.bottom, 5)
+                        }
+                        .padding(.trailing, 10)
+                        .padding(.bottom, 5)
                     }.frame(width: 140, height: 100)
                         .background(LinearGradient(gradient: Gradient(colors:[Color(AppColor.themePink), Color(AppColor.themeBlue)]), startPoint: .topLeading, endPoint: .bottomTrailing))
                         .help(shortcutsVM.sharedShortcutsList[index].description)
@@ -133,8 +135,9 @@ struct ShortcutsView: View {
                         }
                     }
                 
-            }.frame(width:300)
-                .padding(.trailing, 10)
+            }
+            .frame(width:300)
+            .padding(.trailing, 10)
             Spacer()
         }
     }
