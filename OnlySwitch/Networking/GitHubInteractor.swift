@@ -47,9 +47,11 @@ struct GitHubInteractor {
             if let assert = release.assets.first {
                 count += assert.download_count
             }
-            let releaseInfo = "\(release.name):\r\n\(release.body)"
-            updateInfoList.append(releaseInfo)
-            updateInfo += "\(releaseInfo)\r\n---------------------------------\r\n"
+            if !release.prerelease {
+                let releaseInfo = "\(release.name):\r\n\(release.body)"
+                updateInfoList.append(releaseInfo)
+                updateInfo += "\(releaseInfo)\r\n---------------------------------\r\n"
+            }
         }
         self.downloadCount = count
         self.updateHistoryInfo = updateInfo
