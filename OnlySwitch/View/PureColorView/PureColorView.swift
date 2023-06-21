@@ -33,6 +33,17 @@ struct PureColorView: View {
                     .padding(20)
                 }
                 Spacer()
+                Text("Keyboard Locked ↓".localized())
+                    .fontWeight(.bold)
+                    .font(.system(size: 30))
+                    .foregroundColor(vm.currentColor == .white ? .black : .white)
+                    .opacity(vm.tipAlpha)
+                    .onHover(perform: { hover in
+                        withAnimation {
+                            vm.isHovering = hover
+                        }
+                    })
+                    .padding(.bottom, 30)
             }
             ColorChangeGuide().environmentObject(vm)
                 .frame(width: 700, height: 700)
