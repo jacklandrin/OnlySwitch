@@ -4,6 +4,12 @@
         "name": "Toggle Scroll Direction",
         "link": "https://www.icloud.com/shortcuts/8d65c606d1924f098b22774de6dc08f8",
         "author": "jacklandrin",
+        "description": "Toggle scroll direction of trackpad and mouse wheel(only Monteray)"
+    },
+    {
+        "name": "Invert Scroll Direction (Ventura)",
+        "link": "https://www.icloud.com/shortcuts/442d43e5ec5a4c6bb87f4d5d7151416a",
+        "author": "jacklandrin",
         "description": "Toggle scroll direction of trackpad and mouse wheel"
     },
     {
