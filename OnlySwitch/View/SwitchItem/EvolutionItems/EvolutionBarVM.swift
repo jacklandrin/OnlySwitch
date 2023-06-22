@@ -17,6 +17,10 @@ class EvolutionBarVM: BarProvider, ObservableObject {
         evolutionItem.controlType
     }
 
+    var iconName: String? {
+        evolutionItem.iconName
+    }
+
     @Published var weight: Int = 0
     @Published var processing = false
     @Published var isOn = false

@@ -9,12 +9,11 @@ import SwiftUI
 import AlertToast
 import KeyboardShortcuts
 
-let columns = [
+struct ShortcutsView: View {
+    let columns = [
         GridItem(.flexible()),
         GridItem(.flexible())
     ]
-
-struct ShortcutsView: View {
     @StateObject var shortcutsVM = ShortcutsSettingVM()
     @ObservedObject var langManager = LanguageManager.sharedManager
 

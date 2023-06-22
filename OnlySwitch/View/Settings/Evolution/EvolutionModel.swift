@@ -11,6 +11,7 @@ struct EvolutionItem: Equatable, Identifiable {
     var id = UUID()
     var name = ""
     var active = false
+    var iconName: String?
     var controlType: ControlType = .Switch
     var onCommand: EvolutionCommand?
     var offCommand: EvolutionCommand?

@@ -82,6 +82,10 @@ struct EvolutionAdapter {
             item.statusCommand?.trueCondition = trueCondition
         }
 
+        if let iconName = entity.iconName {
+            item.iconName = iconName
+        }
+        
         return item
     }
 }
