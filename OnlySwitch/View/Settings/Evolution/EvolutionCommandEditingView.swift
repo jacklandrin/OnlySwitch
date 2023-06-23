@@ -75,7 +75,7 @@ struct EvolutionCommandEditingView: View {
 
                 if viewStore.command.commandType == .status {
                     HStack {
-                        Text("Output:")
+                        Text("Output:".localized())
                         Text(viewStore.statusCommandResult)
                             .foregroundColor(.green)
                     }
