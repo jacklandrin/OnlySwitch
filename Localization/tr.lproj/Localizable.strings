@@ -148,3 +148,4 @@
 "Export" = "Dışa Aktar";
 "The radio stations can be imported and exported as a Json file. The keys are \"name\" and \"url\"." = "Radyo istasyonları bir Json dosyası olarak içe ve dışa aktarılabilir. Anahtarlar \"isim\" ve \"url\" şeklindedir.";
 "Success" = "Başarılı";
+"Night Shift Strength" = "Night Shift Kuvvet";

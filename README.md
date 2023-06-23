@@ -13,7 +13,7 @@
 brew install only-switch
 ```
 ## Manually Download
-[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_2.4/OnlySwitch.dmg)
+[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_2.4.1/OnlySwitch.dmg)
 
 ## Communities
 Telegram group: https://t.me/OnlySwitchforMac
@@ -88,6 +88,8 @@ If you have other good ideas 💡, feel free to send an E-mail to me.
 
 🚀The future plan is to make OnlySwitch become a toolkit-sharing platform. OnlySwitch will allow developers to distribute shell, apple script and javascript code to create more features. @AruSeito and I are implementing this plan. If you are also interested in it, feel free to join us.
 
+Otherwise, OnlySwitch plans to support the interactive widget on Sonoma.
+
 ## Donate
 If you like it, help support this app by giving me a cup of tea for me to keep coding.
 <p align="center">
@@ -110,6 +112,17 @@ Evolution settings page is implemented with TCA.
 PS: Evolution feature needs macOS 13.0 and above.
 
 ![](http://www.jacklandrin.com/wp-content/uploads/2023/06/evolution.png)
+
+### How to create an evolution?
+So far, Evolution offers two types, with Switch and Button. 
+1. Button is very simple, when Run button is pressed, the script you added will be executed.
+2. Regarding Switch, there are four fields you can edit.
+* Check status: When OnlySwitch list appeared or some settings are changed, the switch status will be checked whether on or off. At this moment, the script of check status will be executed. You can press the debug button to output the result of this script.
+* True condition: You can input a true condition to define what is on or off for the switch status. If the true condition matches the output result, the status will be on, and vice versa.
+* Turn on: the script can change the status to on.
+* Turn off: the script can change the status to off.
+
+The debug button can verify if your scripts are valid. Before you save evolution, all scripts must pass the test.
 
 ## AirPods Switch 
 I use `classOfDevice`(2360344) to check if a Bluetooth device is Airpods Pro, but I'm not sure whether other AirPods modules are also 2360344, since I only have two AirPods Pros. If you are using AirPods 1~3, please tell me what the `classOfDevice` is. Or I can detect the count of battery value to check if AirPods (when the count is 3, it's AirPods), like **AirPods Battery Monitor For MAC OS**.

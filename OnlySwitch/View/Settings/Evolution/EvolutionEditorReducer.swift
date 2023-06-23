@@ -18,6 +18,7 @@ struct EvolutionEditorReducer: ReducerProtocol {
         var buttonCommandStates:IdentifiedArrayOf<EvolutionCommandEditingReducer.State>
 
         var showError = false
+        var showIconNamesPopover = false
 
         init(evolution: EvolutionItem? = nil) {
             if let evolution {
@@ -54,6 +55,8 @@ struct EvolutionEditorReducer: ReducerProtocol {
 
         case toggleItem
         case changeName(String)
+        case toggleIconNamesPopover(Bool)
+        case selectIcon(String)
         case changeType(ControlType)
         case save
         case finishSave(TaskResult<Void>)
@@ -78,7 +81,15 @@ struct EvolutionEditorReducer: ReducerProtocol {
                 case let .changeName(name):
                     state.evolution.name = name
                     return .none
-                    
+
+                case let .toggleIconNamesPopover(shouldShow):
+                    state.showIconNamesPopover = shouldShow
+                    return .none
+
+                case let .selectIcon(name):
+                    state.evolution.iconName = name
+                    return .none
+
                 case let .changeType(type):
                     state.evolution.controlType = type
                     switch type {

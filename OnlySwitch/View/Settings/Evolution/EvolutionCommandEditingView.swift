@@ -75,7 +75,7 @@ struct EvolutionCommandEditingView: View {
 
                 if viewStore.command.commandType == .status {
                     HStack {
-                        Text("Output:")
+                        Text("Output:".localized())
                         Text(viewStore.statusCommandResult)
                             .foregroundColor(.green)
                     }
@@ -90,7 +90,7 @@ struct EvolutionCommandEditingView: View {
     }
 }
 
-@available(macOS 13.3, *)
+@available(macOS 13.0, *)
 struct EvolutionCommandEditingView_Previews: PreviewProvider {
     static var previews: some View {
         EvolutionCommandEditingView(

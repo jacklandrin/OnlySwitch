@@ -28,5 +28,6 @@ extension Notification.Name {
     static let changeAutoStopNoiseTime = Notification.Name(rawValue: "changeAutoStopNoiseTime")
     static let changeKeepAwakeSetting = Notification.Name(rawValue: "changeKeepAwakeSetting")
     static let changeDimScreenSetting = Notification.Name(rawValue: "changeDimScreenSetting")
+    static let changeNightShiftSetting = Notification.Name(rawValue: "changeNightShiftSetting")
     static let toggleSplitSettingsWindow = Notification.Name(rawValue: "toggleSplitSettingsWindow")
 }

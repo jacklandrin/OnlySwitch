@@ -68,6 +68,8 @@
 		043F5AEB2784BE34001DFDF0 /* SetDarkMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043F5AEA2784BE34001DFDF0 /* SetDarkMode.swift */; };
 		0441A9BE2950EC1500EC4AC4 /* NSEvent++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0441A9BD2950EC1500EC4AC4 /* NSEvent++.swift */; };
 		0441A9C0295211F300EC4AC4 /* HideWindowsSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0441A9BF295211F300EC4AC4 /* HideWindowsSwitch.swift */; };
+		0442C53D2A40E8B200BC47B3 /* NightShiftSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0442C53C2A40E8B200BC47B3 /* NightShiftSettingsView.swift */; };
+		0442C53F2A40EAAE00BC47B3 /* NightShiftSettingsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0442C53E2A40EAAE00BC47B3 /* NightShiftSettingsVM.swift */; };
 		0443A6B627599AAC00A3BCFD /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0443A6B527599AAC00A3BCFD /* README.md */; };
 		0443A6B82759A99700A3BCFD /* ScreenSaverSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0443A6B72759A99700A3BCFD /* ScreenSaverSwitch.swift */; };
 		04447B5C2754F08000CD2900 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B5B2754F08000CD2900 /* AppDelegate.swift */; };
@@ -133,8 +135,6 @@
 		04581DC327677ADC008ADF30 /* KeepAwakeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04581DC227677ADC008ADF30 /* KeepAwakeSwitch.swift */; };
 		046331D32795DACB00C5F894 /* ShortcutsMarket.json in Resources */ = {isa = PBXBuildFile; fileRef = 046331D22795DACB00C5F894 /* ShortcutsMarket.json */; };
 		046331D52795E1BC00C5F894 /* ColorDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046331D42795E1BC00C5F894 /* ColorDefine.swift */; };
-		046C0BF9293D3DDB0073F727 /* DevView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046C0BF8293D3DDB0073F727 /* DevView.swift */; };
-		046C0BFD293D3EC70073F727 /* DevViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046C0BFC293D3EC70073F727 /* DevViewModel.swift */; };
 		046C0C00293E7C040073F727 /* SwiftUIWebView in Frameworks */ = {isa = PBXBuildFile; productRef = 046C0BFF293E7C040073F727 /* SwiftUIWebView */; };
 		046FF3C6279A2C0B00506953 /* DockRecentSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046FF3C5279A2C0B00506953 /* DockRecentSwitch.swift */; };
 		047140B327788364005B160B /* mixkit-alert-bells-echo-765.wav in Resources */ = {isa = PBXBuildFile; fileRef = 047140B127788364005B160B /* mixkit-alert-bells-echo-765.wav */; };
@@ -444,6 +444,8 @@
 		043F5AEA2784BE34001DFDF0 /* SetDarkMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetDarkMode.swift; sourceTree = "<group>"; };
 		0441A9BD2950EC1500EC4AC4 /* NSEvent++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSEvent++.swift"; sourceTree = "<group>"; };
 		0441A9BF295211F300EC4AC4 /* HideWindowsSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HideWindowsSwitch.swift; sourceTree = "<group>"; };
+		0442C53C2A40E8B200BC47B3 /* NightShiftSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightShiftSettingsView.swift; sourceTree = "<group>"; };
+		0442C53E2A40EAAE00BC47B3 /* NightShiftSettingsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightShiftSettingsVM.swift; sourceTree = "<group>"; };
 		0443A6B527599AAC00A3BCFD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0443A6B72759A99700A3BCFD /* ScreenSaverSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenSaverSwitch.swift; sourceTree = "<group>"; };
 		04447B582754F08000CD2900 /* OnlySwitch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnlySwitch.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -482,8 +484,6 @@
 		04581DC227677ADC008ADF30 /* KeepAwakeSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeepAwakeSwitch.swift; sourceTree = "<group>"; };
 		046331D22795DACB00C5F894 /* ShortcutsMarket.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ShortcutsMarket.json; sourceTree = "<group>"; };
 		046331D42795E1BC00C5F894 /* ColorDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorDefine.swift; sourceTree = "<group>"; };
-		046C0BF8293D3DDB0073F727 /* DevView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevView.swift; sourceTree = "<group>"; };
-		046C0BFC293D3EC70073F727 /* DevViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevViewModel.swift; sourceTree = "<group>"; };
 		046FF3C5279A2C0B00506953 /* DockRecentSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockRecentSwitch.swift; sourceTree = "<group>"; };
 		047140B127788364005B160B /* mixkit-alert-bells-echo-765.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "mixkit-alert-bells-echo-765.wav"; sourceTree = "<group>"; };
 		047140B227788364005B160B /* mixkit-bell-notification-933.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "mixkit-bell-notification-933.wav"; sourceTree = "<group>"; };
@@ -932,6 +932,15 @@
 			path = StatusBar;
 			sourceTree = "<group>";
 		};
+		0442C53B2A40E88800BC47B3 /* NightShift */ = {
+			isa = PBXGroup;
+			children = (
+				0442C53C2A40E8B200BC47B3 /* NightShiftSettingsView.swift */,
+				0442C53E2A40EAAE00BC47B3 /* NightShiftSettingsVM.swift */,
+			);
+			path = NightShift;
+			sourceTree = "<group>";
+		};
 		04447B4F2754F08000CD2900 = {
 			isa = PBXGroup;
 			children = (
@@ -1040,15 +1049,6 @@
 				046331D22795DACB00C5F894 /* ShortcutsMarket.json */,
 			);
 			path = ShortcutsMarket;
-			sourceTree = "<group>";
-		};
-		046C0BF7293D3DB20073F727 /* Dev */ = {
-			isa = PBXGroup;
-			children = (
-				046C0BF8293D3DDB0073F727 /* DevView.swift */,
-				046C0BFC293D3EC70073F727 /* DevViewModel.swift */,
-			);
-			path = Dev;
 			sourceTree = "<group>";
 		};
 		047C1E482A2250EF0061235D /* Evolution */ = {
@@ -1184,7 +1184,7 @@
 				04BF977427908EF000E7C0E2 /* AirPods */,
 				04BF977727908F3500E7C0E2 /* PomodoroTimer */,
 				04BC8ED428513CC8009E605F /* HideMenubarIcons */,
-				046C0BF7293D3DB20073F727 /* Dev */,
+				0442C53B2A40E88800BC47B3 /* NightShift */,
 				04BF977527908F0000E7C0E2 /* About */,
 			);
 			path = Settings;
@@ -1875,6 +1875,7 @@
 				04DC6C8228A5A8C300888BF9 /* BackNoisesSettingView.swift in Sources */,
 				04EB1CD22780F4F700C612AB /* ShortcutsView.swift in Sources */,
 				040CD2BC2756D497002E0CC6 /* CGImage++.swift in Sources */,
+				0442C53D2A40E8B200BC47B3 /* NightShiftSettingsView.swift in Sources */,
 				04DC6CA428A7D73A00888BF9 /* Float++.swift in Sources */,
 				04581DBF27653C4A008ADF30 /* AirPodsSettingVM.swift in Sources */,
 				043488AE2A3B472E006C877D /* EvolutionBarView.swift in Sources */,
@@ -1893,7 +1894,6 @@
 				040C6EAC276B7D9F00291DEB /* CustomizeView.swift in Sources */,
 				04E238662A2C83C900CDD1FA /* EvolutionCommandEntity+Fetch.swift in Sources */,
 				04E03AFE275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift in Sources */,
-				046C0BFD293D3EC70073F727 /* DevViewModel.swift in Sources */,
 				04447B722754FE3800CD2900 /* SwitchListVM.swift in Sources */,
 				04DC6C7B28A5424D00888BF9 /* BackNoisesPlayerItem.swift in Sources */,
 				04DC6CA228A7D59B00888BF9 /* DimScreenSettingVM.swift in Sources */,
@@ -2048,11 +2048,11 @@
 				0434B4D12876325B00F06AB9 /* HostWindowFinder.swift in Sources */,
 				04581DC12765522A008ADF30 /* AboutView.swift in Sources */,
 				0427365627C1ADA60068108F /* SpotifySwitch.swift in Sources */,
-				046C0BF9293D3DDB0073F727 /* DevView.swift in Sources */,
 				0427364827C1A5430068108F /* SpotifyScripting.swift in Sources */,
 				04938D12276948DE00713F1D /* WallpaperManager.swift in Sources */,
 				04A6F9452788EF4A00E3300F /* CursorModifier.swift in Sources */,
 				0493375127625A1E00AE779A /* Parser.swift in Sources */,
+				0442C53F2A40EAAE00BC47B3 /* NightShiftSettingsVM.swift in Sources */,
 				04447B702754F21A00CD2900 /* StatusBarController.swift in Sources */,
 				043F0CE52A0FA39100590606 /* WindowContentSizeModifier.swift in Sources */,
 				0427364B27C1A55B0068108F /* SBProtocols.swift in Sources */,
@@ -2163,7 +2163,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 113;
+				CURRENT_PROJECT_VERSION = 116;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2189,7 +2189,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 113;
+				CURRENT_PROJECT_VERSION = 116;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2338,7 +2338,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 113;
+				CURRENT_PROJECT_VERSION = 116;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
@@ -2363,7 +2363,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.4;
+				MARKETING_VERSION = 2.4.1;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2392,7 +2392,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 113;
+				CURRENT_PROJECT_VERSION = 116;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
@@ -2417,7 +2417,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.4;
+				MARKETING_VERSION = 2.4.1;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2442,7 +2442,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 113;
+				CURRENT_PROJECT_VERSION = 116;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2456,7 +2456,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.4;
+				MARKETING_VERSION = 2.4.1;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.IntentsExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2475,7 +2475,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 113;
+				CURRENT_PROJECT_VERSION = 116;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2489,7 +2489,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.4;
+				MARKETING_VERSION = 2.4.1;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.IntentsExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

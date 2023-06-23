@@ -245,9 +245,10 @@ struct OnlySwitchListView: View {
                     Text("ACTIONS".localized())
                     Rectangle().frame(height: 1)
                         .foregroundColor(.gray)
-                }.frame(height:30)
-                    .opacity(0.7)
-                    .shadow(radius: 1)
+                }
+                .frame(height:30)
+                .opacity(0.7)
+                .shadow(radius: 1)
                 
                 LazyVGrid(columns: columns, spacing: 0) {
                     ForEach(switchVM.shortcutsList.indices, id:\.self) { index in
@@ -255,6 +256,31 @@ struct OnlySwitchListView: View {
                             let item = switchVM.shortcutsList[index]
                             ShortcutsBarView().environmentObject(item)
                                     .frame(height:Layout.singleSwitchHeight)
+                        }
+                    }
+                }
+            }
+
+            if switchVM.evolutionList.count > 0 {
+                HStack {
+                    Rectangle()
+                        .frame(height: 1)
+                        .foregroundColor(.gray)
+                    Text("EVOLUTION")
+                    Rectangle()
+                        .frame(height: 1)
+                }
+                .frame(height:30)
+                .opacity(0.7)
+                .shadow(radius: 1)
+
+                LazyVGrid(columns: columns, spacing: 0) {
+                    ForEach(switchVM.evolutionList.indices, id:\.self) { index in
+                        HStack {
+                            let item = switchVM.evolutionList[index]
+                            EvolutionBarView()
+                                .environmentObject(item)
+                                .frame(height:Layout.singleSwitchHeight)
                         }
                     }
                 }
@@ -360,6 +386,7 @@ struct OnlySwitchListView: View {
             totalHeight += categoryHeight(count: switchVM.cleanupItemList.count)
             totalHeight += categoryHeight(count: switchVM.shortcutsList.count)
             totalHeight += categoryHeight(count: switchVM.toolItemList.count)
+            totalHeight += categoryHeight(count: switchVM.evolutionList.count)
             totalHeight -= 30.0
         }
         

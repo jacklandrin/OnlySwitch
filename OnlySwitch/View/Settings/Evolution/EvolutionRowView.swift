@@ -66,7 +66,7 @@ struct EvolutionRowView: View {
     }
 }
 
-@available(macOS 13.3, *)
+@available(macOS 13.0, *)
 struct EvolutionRowView_Previews: PreviewProvider {
     static var previews: some View {
         EvolutionRowView(

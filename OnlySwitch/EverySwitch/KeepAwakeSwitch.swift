@@ -33,7 +33,7 @@ class KeepAwakeSwitch:SwitchProvider {
     private var startDate:Double = Preferences
         .shared
         .autoStopKeepAwakeStartDate
-    private var endData:Double = Preferences
+    private var endDate:Double = Preferences
         .shared
         .autoStopKeepAwakeEndDate
     
@@ -76,7 +76,7 @@ class KeepAwakeSwitch:SwitchProvider {
             strongSelf.startDate = Preferences
                 .shared
                 .autoStopKeepAwakeStartDate
-            strongSelf.endData = Preferences
+            strongSelf.endDate = Preferences
                 .shared
                 .autoStopKeepAwakeEndDate
         }
@@ -106,7 +106,7 @@ class KeepAwakeSwitch:SwitchProvider {
     private func scheduleTask() {
         timerCounter = 0
         let startTimeToday = Date().date(at: 0, minutes: 0).timeIntervalSince1970 + startDate
-        var endTimeToday = Date().date(at: 0, minutes: 0).timeIntervalSince1970 + endData
+        var endTimeToday = Date().date(at: 0, minutes: 0).timeIntervalSince1970 + endDate
         if endTimeToday <= startTimeToday {
             endTimeToday += 24 * 60 * 60 //tomorrow time
         }

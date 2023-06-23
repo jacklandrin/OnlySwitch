@@ -54,6 +54,11 @@ extension UserDefaults {
         //Dim Screen
         static let autoDimScreenTime = "autoDimScreenTimeKey"
         static let dimScreenPercent = "dimScreenPercentKey"
+        //Night Shift
+        static let nightShiftStrength = "nightShiftStrengthKey"
+        static let nightShiftStartDate = "nightShiftStartDateKey"
+        static let nightShiftEndDate = "nightShiftEndDateKey"
+        static let isNightShiftScheduleOn = "isNightShiftScheduleOnKey"
         //Hide Windows
         static let windowsHidden = "windowsHiddenKey"
         static let hiddenWindowsInfo = "hiddenWindowsInfoKey"

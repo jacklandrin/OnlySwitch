@@ -9,14 +9,15 @@ import CoreData
 import Foundation
 
 extension EvolutionCommandEntity {
-    static var defaultFetchRequest:NSFetchRequest<EvolutionCommandEntity> {
+
+    @MainActor static var defaultFetchRequest:NSFetchRequest<EvolutionCommandEntity> {
         let request:NSFetchRequest<EvolutionCommandEntity> = EvolutionCommandEntity.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(keyPath: \EvolutionCommandEntity.timestamp, ascending: true)]
         print("fetched the evolution command")
         return request
     }
 
-    static func fetchResult() throws -> [EvolutionCommandEntity] {
+    @MainActor static func fetchResult() throws -> [EvolutionCommandEntity] {
         try PersistenceController
             .shared
             .container
@@ -95,6 +96,10 @@ extension EvolutionCommandEntity {
             entity.statusCommand = statusCommand
             entity.statusCommandType = statusCommandTypeStr
             entity.trueCondition = trueCondition
+        }
+
+        if let iconName = item.iconName {
+            entity.iconName = iconName
         }
 
         entity.name = item.name
