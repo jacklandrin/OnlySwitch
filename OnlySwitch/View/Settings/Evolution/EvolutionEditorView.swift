@@ -32,7 +32,7 @@ struct EvolutionEditorView: View {
                               )
                     )
                     Spacer()
-                    Text("Icon:")
+                    Text("Icon:".localized())
                     Image(
                         systemName: viewStore.evolution.iconName ??
                         (
