@@ -153,6 +153,8 @@ Since Version 2.0, keyboard shortcuts can be set for Shortcuts.
 
 OnlySwitch offers some Shortcuts actions since Version 1.8. For example, you can config your dark mode switch. (**Set Appearance** action by Shortcuts can also set dark mode, but the appearance status cannot be detected. So, OnlySwitch provides a set dark mode action)
 
+S-GPT is already in Shortcuts gallery. Easily ask any questions to chatGPT via Shortcuts. Please install both S-GPT and S-GPT Encoder and provide your chatGPT API Key to access it. [Learn more here](https://www.macstories.net/ios/s-gpt-1-0-2-brings-date-and-time-awareness-integration-with-macos-services-menu-passthrough-mode-better-homepod-support-and-more/)
+
 <p align="center">
 <img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2022/01/shortcutsdarkmode.png" width="60%" align="center" />
 </p>
