@@ -65,5 +65,23 @@
         "link": "https://www.icloud.com/shortcuts/f953b3e501924c2d8528dc740785244b",
         "author": "jacklandrin",
         "description": "Toggle Do Not Disturb for focus mode"
+    },
+    {
+        "name": "Upcoming Events",
+        "link": "https://www.icloud.com/shortcuts/cd83a95e061c413ba8f94676bc595e84",
+        "author": "macstories",
+        "description": "View your next five calendar events in a list."
+    },
+    {
+        "name": "S-GPT",
+        "link": "https://www.icloud.com/shortcuts/448738a9ae9b4a5b9a647cb29ea3cfc6",
+        "author": "Federico Viticci",
+        "description": "S-GPT is a shortcut to have conversations with OpenAI’s ChatGPT assistant on your iPhone, iPad, and Mac. The shortcut supports both text conversations as well as voice interactions when used inside Siri. S-GPT comes with native system integrations on Apple platforms including the ability to process text from your clipboard, summarize text found in photos, export conversations to Files and Finder, and even create playlists in the Music app. The shortcut requires an OpenAI API token and a helper shortcut called S-GPT Encoder that needs to be downloaded separately."
+    },
+    {
+        "name": "S-GPT Encoder",
+        "link": "https://www.icloud.com/shortcuts/280fb63a6475413ba1236fc22b576258",
+        "author": "Federico Viticci",
+        "description": "This is a helper shortcut for S-GPT that needs to be downloaded and installed separately. Without this shortcut, S-GPT won’t work."
     }
 ]
