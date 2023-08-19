@@ -26,7 +26,7 @@ struct EvolutionRowView: View {
 
     init(store: StoreOf<EvolutionRowReducer>) {
         self.store = store
-        self.viewStore = ViewStore(store.scope(state: ViewState.init(state:)))
+        self.viewStore = ViewStore(store, observe: ViewState.init)
     }
 
     var body: some View {

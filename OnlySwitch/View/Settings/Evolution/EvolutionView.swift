@@ -25,7 +25,7 @@ struct EvolutionView: View {
 
     init(store: StoreOf<EvolutionReducer>) {
         self.store = store
-        self.viewStore = ViewStore(store.scope(state: ViewState.init(state:)))
+        self.viewStore = ViewStore(store, observe: ViewState.init)
     }
 
     var body: some View {
