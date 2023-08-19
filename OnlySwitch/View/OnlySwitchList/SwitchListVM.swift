@@ -147,8 +147,7 @@ class SwitchListVM: ObservableObject, CurrentScreen {
     /// save the result of sorting
     func saveOrder() {
         var orderDic = [String:Int]()
-        for index in self.allItemList.indices {
-            let item = allItemList[index]
+        for (index, item) in allItemList.enumerated() {
             item.weight = index
             let type:String
             if item is SwitchBarVM {
