@@ -212,3 +212,6 @@ S-GPT is already in Shortcuts gallery. Easily ask any questions to chatGPT via S
 
 ## License
 MIT
+
+## Star History
+[![Star History Chart](https://api.star-history.com/svg?repos=jacklandrin/OnlySwitch&type=Date)](https://star-history.com/#jacklandrin/OnlySwitch&Date)
