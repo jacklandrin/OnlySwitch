@@ -10,4 +10,5 @@ import Foundation
 struct EvolutionEditorService {
     var executeCommand: @Sendable (EvolutionCommand?) throws -> String
     var saveCommand: @Sendable (EvolutionItem) async throws -> Void
+    var saveIcon: @Sendable (UUID, String) async throws -> Void
 }

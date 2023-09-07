@@ -8,6 +8,10 @@
 import ComposableArchitecture
 import Foundation
 
+enum EditorError: Error {
+    case noName
+}
+
 struct EvolutionEditorReducer: ReducerProtocol {
 
     struct State: Equatable, Identifiable {
@@ -60,6 +64,7 @@ struct EvolutionEditorReducer: ReducerProtocol {
         case changeType(ControlType)
         case save
         case finishSave(TaskResult<Void>)
+        case finishSaveIcon(TaskResult<Void>)
         case errorControl(Bool)
         case delegate(Delegate)
         case commandAction(id: UUID, action: EvolutionCommandEditingReducer.Action)
@@ -88,7 +93,20 @@ struct EvolutionEditorReducer: ReducerProtocol {
 
                 case let .selectIcon(name):
                     state.evolution.iconName = name
-                    return .none
+
+                    return .run { [state = state] send in
+                        guard let iconName = state.evolution.iconName else {
+                            return await send(.finishSaveIcon(.failure(EditorError.noName)))
+                        }
+
+                        return await send(
+                            .finishSaveIcon(
+                                TaskResult {
+                                    try await evolutionEditorService.saveIcon(state.evolution.id, iconName)
+                                }
+                            )
+                        )
+                    }
 
                 case let .changeType(type):
                     state.evolution.controlType = type
@@ -131,6 +149,16 @@ struct EvolutionEditorReducer: ReducerProtocol {
                     }
 
                 case .finishSave(.failure(_)):
+                    return .run { @MainActor send in
+                        send(.errorControl(true))
+                    }
+
+                case .finishSaveIcon(.success):
+                    return .run { @MainActor send in
+                        NotificationCenter.default.post(name: .changeSettings, object: nil)
+                    }
+
+                case .finishSaveIcon(.failure(_)):
                     return .run { @MainActor send in
                         send(.errorControl(true))
                     }
