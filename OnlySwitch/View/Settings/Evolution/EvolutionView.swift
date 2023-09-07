@@ -46,10 +46,7 @@ struct EvolutionView: View {
                                         action: EvolutionReducer.Action.editor(id: action:)
                                     )
                                 ) { itemStore in
-                                    evolutionItemView(
-                                        viewStore: viewStore,
-                                        itemStore: itemStore
-                                    )
+                                    evolutionItemView(viewStore: viewStore, itemStore: itemStore)
                                 }
                             }
 
@@ -116,7 +113,7 @@ struct EvolutionView: View {
         viewStore: ViewStore<EvolutionReducer.State, EvolutionReducer.Action>,
         itemStore: StoreOf<EvolutionRowReducer>
     ) -> some View {
-        WithViewStore(itemStore) { itemViewStore in
+        WithViewStore(itemStore, observe:{ $0 }) { itemViewStore in
             EvolutionRowView(store: itemStore)
             .background(
                 viewStore.selectID == itemViewStore.id
@@ -136,10 +133,10 @@ struct EvolutionView_Previews: PreviewProvider {
     static var previews: some View {
         EvolutionView(
             store: Store(
-                initialState: EvolutionReducer.State(),
-                reducer: EvolutionReducer()
-                            .dependency(\.evolutionListService, .previewValue)
-            )
+                initialState: EvolutionReducer.State()) {
+                    EvolutionReducer()
+                        .dependency(\.evolutionListService, .previewValue)
+                }
         )
     }
 }

@@ -8,10 +8,6 @@
 import CoreData
 import Foundation
 
-enum CoreDataError: Error {
-    case noneEntity
-}
-
 extension EvolutionCommandEntity {
 
     @MainActor static var defaultFetchRequest:NSFetchRequest<EvolutionCommandEntity> {
@@ -113,7 +109,7 @@ extension EvolutionCommandEntity {
     static func updateIcon(name: String, by id: UUID) throws {
         let entity = try EvolutionCommandEntity.fetchRequest(by: id)
         guard let entity else {
-            throw CoreDataError.noneEntity
+            throw EvolutionError.noneEntity
         }
         entity.iconName = name
         try context.save()
@@ -125,6 +121,7 @@ extension EvolutionCommandEntity {
         }
 
         context.delete(entity)
+        try context.save()
     }
 
     static var context: NSManagedObjectContext {

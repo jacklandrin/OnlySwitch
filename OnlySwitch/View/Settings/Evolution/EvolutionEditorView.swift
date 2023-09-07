@@ -220,6 +220,10 @@ extension EvolutionEditorView {
 @available(macOS 13.0, *)
 struct EvolutionEditorView_Previews: PreviewProvider {
     static var previews: some View {
-        EvolutionEditorView(store: Store(initialState: EvolutionEditorReducer.State(), reducer: EvolutionEditorReducer()))
+        EvolutionEditorView(
+            store: Store(initialState: EvolutionEditorReducer.State()) {
+                EvolutionEditorReducer()
+            }
+        )
     }
 }

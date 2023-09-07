@@ -34,12 +34,12 @@ class SettingsVM: ObservableObject {
     
     @Published var selection:SettingsItem? = .General
 
-    let evolutionStore = Store(
-        initialState: EvolutionReducer.State(),
-        reducer: EvolutionReducer()
-            .dependency(\.evolutionListService, .liveValue)
-            ._printChanges()
-        )
+    var evolutionStore = Store(
+        initialState: EvolutionReducer.State()) {
+            EvolutionReducer()
+        } withDependencies: {
+            $0.evolutionListService = .liveValue
+        }
 
     init() {
         settingItems = SettingsItem.allCases

@@ -12,7 +12,7 @@ enum EditorError: Error {
     case noName
 }
 
-struct EvolutionEditorReducer: ReducerProtocol {
+struct EvolutionEditorReducer: Reducer {
 
     struct State: Equatable, Identifiable {
         var id: UUID
@@ -68,6 +68,7 @@ struct EvolutionEditorReducer: ReducerProtocol {
         case errorControl(Bool)
         case delegate(Delegate)
         case commandAction(id: UUID, action: EvolutionCommandEditingReducer.Action)
+        case none
         enum Delegate: Equatable {
             case goback
         }
@@ -75,7 +76,7 @@ struct EvolutionEditorReducer: ReducerProtocol {
 
     @Dependency(\.evolutionEditorService) var evolutionEditorService
 
-    var body: some ReducerProtocolOf<Self> {
+    var body: some ReducerOf<Self> {
 
         Reduce { state, action in
             switch action {
@@ -96,7 +97,7 @@ struct EvolutionEditorReducer: ReducerProtocol {
 
                     return .run { [state = state] send in
                         guard let iconName = state.evolution.iconName else {
-                            return await send(.finishSaveIcon(.failure(EditorError.noName)))
+                            return await send(.none)
                         }
 
                         return await send(
@@ -135,11 +136,13 @@ struct EvolutionEditorReducer: ReducerProtocol {
                         default:
                             break
                     }
-                    return .task { [item = state.evolution] in
-                        return await .finishSave(
-                            TaskResult {
-                                return try await evolutionEditorService.saveCommand(item)
-                            }
+                    return .run { [item = state.evolution] send in
+                        return await send(
+                            .finishSave(
+                                TaskResult {
+                                    return try await evolutionEditorService.saveCommand(item)
+                                }
+                            )
                         )
                     }
 
@@ -159,9 +162,7 @@ struct EvolutionEditorReducer: ReducerProtocol {
                     }
 
                 case .finishSaveIcon(.failure(_)):
-                    return .run { @MainActor send in
-                        send(.errorControl(true))
-                    }
+                    return .none
 
                 case let .errorControl(show):
                     state.showError = show
@@ -187,6 +188,9 @@ struct EvolutionEditorReducer: ReducerProtocol {
                     return .none
 
                 case .commandAction:
+                    return .none
+
+                case .none:
                     return .none
             }
         }
