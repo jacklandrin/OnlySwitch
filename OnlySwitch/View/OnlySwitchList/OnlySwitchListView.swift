@@ -295,16 +295,8 @@ struct OnlySwitchListView: View {
                 .foregroundColor(colorScheme == .dark ? Color(nsColor: NSColor.darkGray) : .white)
                 .frame(height: 45)
             HStack(spacing:5) {
-                
-                Text("More Apps".localized())
-                    .font(.system(size: "More Apps".localized().count > 8 ? 300 : 11))
-                    .fontWeight(.bold)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.01)
-                    .padding(10)
-                Spacer()
                 ForEach(Ads) { ad in
-                    Link(destination: URL(string: ad.link)!, label: {
+                    Link(destination: URL(string: ad.link)!) {
                         Image(ad.imageName)
                             .resizable()
                             .scaledToFit()
@@ -313,10 +305,10 @@ struct OnlySwitchListView: View {
                             .help(Text(ad.hint.localized()))
                             .overlay(
                                 RoundedRectangle(cornerRadius: 12)
-                                .stroke(.gray, lineWidth: 1)
-                                .opacity(0.5)
-                                )
-                    })
+                                    .stroke(.gray, lineWidth: 1)
+                                    .opacity(0.5)
+                            )
+                    }
                 }
             }.frame(height: 45)
             

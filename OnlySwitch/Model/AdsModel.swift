@@ -15,16 +15,29 @@ struct AdsModel:Identifiable{
 }
 
 let Ads:[AdsModel] = [
-    AdsModel(imageName: "QRCobot",
-             link: "https://apps.apple.com/us/app/id1590006394",
-             hint: "Download QRCobot"),
-    AdsModel(imageName: "WallCard",
-             link: "https://apps.apple.com/us/app/wallcard/id1601311095",
-             hint: "Download WallCard"),
-    AdsModel(imageName: "illa",
-             link: "https://github.com/illacloud/illa-builder",
-             hint: "illa Builder"),
-    AdsModel(imageName: "CalendarX",
-             link: "https://github.com/ZzzM/CalendarX",
-             hint: "CalendarX")
+    AdsModel(
+        imageName: "QRCobot",
+        link: "https://apps.apple.com/us/app/id1590006394",
+        hint: "Download QRCobot"
+    ),
+    AdsModel(
+        imageName: "WallCard",
+        link: "https://apps.apple.com/us/app/wallcard/id1601311095",
+        hint: "Download WallCard"
+    ),
+    AdsModel(
+        imageName: "illa",
+        link: "https://github.com/illacloud/illa-builder",
+        hint: "illa Builder"
+    ),
+    AdsModel(
+        imageName: "CalendarX",
+        link: "https://github.com/ZzzM/CalendarX",
+        hint: "CalendarX"
+    ),
+    AdsModel(
+        imageName: "hdwh",
+        link: "https://hdwh.de/",
+        hint: "hdwh"
+    )
 ]
