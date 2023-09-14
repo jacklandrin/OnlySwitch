@@ -125,17 +125,18 @@ struct EvolutionEditorView: View {
             .onAppear{
 
             }
-            .toast(isPresenting: viewStore.binding(
-                get: { $0.showError },
-                send: { .errorControl($0) }
-            ),
-                   alert: {
-                AlertToast(
-                    displayMode: .alert,
-                    type: .error(.red),
-                    title: "Save commands failed.".localized()
-                )
-            }
+            .toast(
+                isPresenting: viewStore.binding(
+                    get: { $0.showError },
+                    send: { .errorControl($0) }
+                ),
+                alert: {
+                    AlertToast(
+                        displayMode: .alert,
+                        type: .error(.red),
+                        title: "Save commands failed.".localized()
+                    )
+                }
             )
         }
     }
