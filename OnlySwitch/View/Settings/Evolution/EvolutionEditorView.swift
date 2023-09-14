@@ -213,7 +213,8 @@ extension EvolutionEditorView {
         "antenna.radiowaves.left.and.right.circle",
         "externaldrive.connected.to.line.below",
         "wifi.circle",
-        "gamecontroller"
+        "gamecontroller",
+        "squares.leading.rectangle"
     ]
 }
 
