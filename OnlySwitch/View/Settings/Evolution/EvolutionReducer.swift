@@ -9,7 +9,7 @@ import Combine
 import ComposableArchitecture
 import Foundation
 
-struct EvolutionReducer: ReducerProtocol {
+struct EvolutionReducer: Reducer {
     enum DestinationState: Equatable {
         case editor(EvolutionEditorReducer.State)
 
@@ -51,15 +51,17 @@ struct EvolutionReducer: ReducerProtocol {
 
     @Dependency(\.evolutionListService) var evolutionListService
 
-    var body: some ReducerProtocolOf<Self> {
+    var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
                 case .refresh:
-                    return .task {
-                        return await .loadList(
-                            TaskResult {
-                                try await evolutionListService.loadEvolutionList()
-                            }
+                    return .run { send in
+                        return await send(
+                            .loadList(
+                                TaskResult {
+                                    try await evolutionListService.loadEvolutionList()
+                                }
+                            )
                         )
                     }
 

@@ -13,7 +13,7 @@
 brew install only-switch
 ```
 ## Manually Download
-[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_2.4.1/OnlySwitch.dmg)
+[**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/download/release_2.4.2/OnlySwitch.dmg)
 
 ## Communities
 Telegram group: https://t.me/OnlySwitchforMac
@@ -212,3 +212,6 @@ S-GPT is already in Shortcuts gallery. Easily ask any questions to chatGPT via S
 
 ## License
 MIT
+
+## Star History
+[![Star History Chart](https://api.star-history.com/svg?repos=jacklandrin/OnlySwitch&type=Date)](https://star-history.com/#jacklandrin/OnlySwitch&Date)

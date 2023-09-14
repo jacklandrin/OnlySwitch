@@ -8,7 +8,7 @@
 import ComposableArchitecture
 import KeyboardShortcuts
 
-struct EvolutionRowReducer: ReducerProtocol {
+struct EvolutionRowReducer: Reducer {
     enum DestinationState: Equatable {
         case editor(EvolutionEditorReducer.State)
 
@@ -60,7 +60,7 @@ struct EvolutionRowReducer: ReducerProtocol {
         }
     }
 
-    var body: some ReducerProtocolOf<Self> {
+    var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
                 case .toggle:

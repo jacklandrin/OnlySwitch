@@ -43,11 +43,6 @@ extension EvolutionCommandEntity {
     }
 
     static func addItem(item: EvolutionItem) throws {
-        let context = PersistenceController
-            .shared
-            .container
-            .viewContext
-
         let entity = try EvolutionCommandEntity.fetchRequest(by: item.id) ?? EvolutionCommandEntity(context: context)
 
         if item.controlType == .Button {
@@ -111,16 +106,25 @@ extension EvolutionCommandEntity {
         try context.save()
     }
 
-    static func removeItem(by id: UUID) throws {
-        let context = PersistenceController
-            .shared
-            .container
-            .viewContext
+    static func updateIcon(name: String, by id: UUID) throws {
+        let entity = try EvolutionCommandEntity.fetchRequest(by: id)
+        guard let entity else {
+            throw EvolutionError.noneEntity
+        }
+        entity.iconName = name
+        try context.save()
+    }
 
+    static func removeItem(by id: UUID) throws {
         guard let entity = try fetchRequest(by: id) else {
             throw EvolutionError.deleteFailed
         }
 
         context.delete(entity)
+        try context.save()
+    }
+
+    static var context: NSManagedObjectContext {
+        PersistenceController.shared.container.viewContext
     }
 }

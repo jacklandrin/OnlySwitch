@@ -8,7 +8,11 @@
 import ComposableArchitecture
 import Foundation
 
-struct EvolutionEditorReducer: ReducerProtocol {
+enum EditorError: Error {
+    case noName
+}
+
+struct EvolutionEditorReducer: Reducer {
 
     struct State: Equatable, Identifiable {
         var id: UUID
@@ -60,9 +64,11 @@ struct EvolutionEditorReducer: ReducerProtocol {
         case changeType(ControlType)
         case save
         case finishSave(TaskResult<Void>)
+        case finishSaveIcon(TaskResult<Void>)
         case errorControl(Bool)
         case delegate(Delegate)
         case commandAction(id: UUID, action: EvolutionCommandEditingReducer.Action)
+        case none
         enum Delegate: Equatable {
             case goback
         }
@@ -70,7 +76,7 @@ struct EvolutionEditorReducer: ReducerProtocol {
 
     @Dependency(\.evolutionEditorService) var evolutionEditorService
 
-    var body: some ReducerProtocolOf<Self> {
+    var body: some ReducerOf<Self> {
 
         Reduce { state, action in
             switch action {
@@ -88,7 +94,20 @@ struct EvolutionEditorReducer: ReducerProtocol {
 
                 case let .selectIcon(name):
                     state.evolution.iconName = name
-                    return .none
+
+                    return .run { [state = state] send in
+                        guard let iconName = state.evolution.iconName else {
+                            return await send(.none)
+                        }
+
+                        return await send(
+                            .finishSaveIcon(
+                                TaskResult {
+                                    try await evolutionEditorService.saveIcon(state.evolution.id, iconName)
+                                }
+                            )
+                        )
+                    }
 
                 case let .changeType(type):
                     state.evolution.controlType = type
@@ -117,11 +136,13 @@ struct EvolutionEditorReducer: ReducerProtocol {
                         default:
                             break
                     }
-                    return .task { [item = state.evolution] in
-                        return await .finishSave(
-                            TaskResult {
-                                return try await evolutionEditorService.saveCommand(item)
-                            }
+                    return .run { [item = state.evolution] send in
+                        return await send(
+                            .finishSave(
+                                TaskResult {
+                                    return try await evolutionEditorService.saveCommand(item)
+                                }
+                            )
                         )
                     }
 
@@ -134,6 +155,14 @@ struct EvolutionEditorReducer: ReducerProtocol {
                     return .run { @MainActor send in
                         send(.errorControl(true))
                     }
+
+                case .finishSaveIcon(.success):
+                    return .run { @MainActor send in
+                        NotificationCenter.default.post(name: .changeSettings, object: nil)
+                    }
+
+                case .finishSaveIcon(.failure(_)):
+                    return .none
 
                 case let .errorControl(show):
                     state.showError = show
@@ -159,6 +188,9 @@ struct EvolutionEditorReducer: ReducerProtocol {
                     return .none
 
                 case .commandAction:
+                    return .none
+
+                case .none:
                     return .none
             }
         }

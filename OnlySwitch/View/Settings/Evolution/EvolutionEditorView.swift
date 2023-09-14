@@ -213,13 +213,18 @@ extension EvolutionEditorView {
         "antenna.radiowaves.left.and.right.circle",
         "externaldrive.connected.to.line.below",
         "wifi.circle",
-        "gamecontroller"
+        "gamecontroller",
+        "squares.leading.rectangle"
     ]
 }
 
 @available(macOS 13.0, *)
 struct EvolutionEditorView_Previews: PreviewProvider {
     static var previews: some View {
-        EvolutionEditorView(store: Store(initialState: EvolutionEditorReducer.State(), reducer: EvolutionEditorReducer()))
+        EvolutionEditorView(
+            store: Store(initialState: EvolutionEditorReducer.State()) {
+                EvolutionEditorReducer()
+            }
+        )
     }
 }

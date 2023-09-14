@@ -15,6 +15,9 @@ extension EvolutionEditorService: DependencyKey {
         },
         saveCommand: { item in
             try EvolutionCommandEntity.addItem(item: item)
+        },
+        saveIcon: { id, icon in
+            try EvolutionCommandEntity.updateIcon(name: icon, by: id)
         }
     )
 }

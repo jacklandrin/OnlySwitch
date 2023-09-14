@@ -8,7 +8,7 @@
 import Foundation
 import ComposableArchitecture
 
-struct EvolutionCommandEditingReducer: ReducerProtocol {
+struct EvolutionCommandEditingReducer: Reducer {
     struct State: Equatable, Identifiable {
         var id = UUID()
         var command: EvolutionCommand
@@ -34,7 +34,7 @@ struct EvolutionCommandEditingReducer: ReducerProtocol {
 
     @Dependency(\.evolutionEditorService) var evolutionEditorService
 
-    var body: some ReducerProtocolOf<Self> {
+    var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
                 case let .editCommand(command):
@@ -54,11 +54,13 @@ struct EvolutionCommandEditingReducer: ReducerProtocol {
                     return .none
 
                 case .shouldTest:
-                    return .task { [command = state.command] in
-                        return await .testCommand(
-                            TaskResult { @MainActor in
-                                try evolutionEditorService.executeCommand(command)
-                            }
+                    return .run { [command = state.command] send in
+                        return await send(
+                            .testCommand(
+                                TaskResult { @MainActor in
+                                    try evolutionEditorService.executeCommand(command)
+                                }
+                            )
                         )
                     }
 
