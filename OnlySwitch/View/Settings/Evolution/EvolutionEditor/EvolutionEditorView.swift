@@ -215,7 +215,8 @@ extension EvolutionEditorView {
         "externaldrive.connected.to.line.below",
         "wifi.circle",
         "gamecontroller",
-        "squares.leading.rectangle"
+        "squares.leading.rectangle",
+        "arrow.clockwise.circle"
     ]
 }
 

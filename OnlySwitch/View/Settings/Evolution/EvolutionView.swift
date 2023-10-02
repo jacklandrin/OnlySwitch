@@ -31,64 +31,78 @@ struct EvolutionView: View {
     var body: some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             NavigationStack {
-                VStack {
-                    ScrollView(.vertical) {
-                        if viewStore.evolutionList.isEmpty {
-                            Text("You can DIY switches or buttons here.".localized())
-                            Button("Refresh".localized()) {
-                                viewStore.send(.refresh)
-                            }
-                        } else {
-                            LazyVStack {
-                                ForEachStore(
-                                    store.scope(
-                                        state: \.evolutionList,
-                                        action: EvolutionReducer.Action.editor(id: action:)
-                                    )
-                                ) { itemStore in
-                                    evolutionItemView(viewStore: viewStore, itemStore: itemStore)
+                HStack {
+                    VStack {
+                        HStack {
+                            Text("To add or remove any Evolutions on list")
+                            Spacer()
+                        }
+                        Divider()
+                            .frame(width: 400)
+                        ScrollView(.vertical) {
+                            if viewStore.evolutionList.isEmpty {
+                                Text("You can DIY switches or buttons here.".localized())
+                                Button("Refresh".localized()) {
+                                    viewStore.send(.refresh)
                                 }
+                            } else {
+                                LazyVStack {
+                                    ForEachStore(
+                                        store.scope(
+                                            state: \.evolutionList,
+                                            action: EvolutionReducer.Action.editor(id: action:)
+                                        )
+                                    ) { itemStore in
+                                        evolutionItemView(viewStore: viewStore, itemStore: itemStore)
+                                    }
+                                }
+
+                                Spacer()
+                            }
+                        }
+                        .onTapGesture {
+                            viewStore.send(.select(nil))
+                        }
+                        .padding(.top, 10)
+
+                        HStack {
+                            NavigationLink(
+                                destination:
+                                    IfLetStore(
+                                        store.scope(
+                                            state: \.editorState,
+                                            action: EvolutionReducer.Action.editorAction)
+                                    ) { editorStore in
+                                        EvolutionEditorView(store: editorStore)
+                                    },
+                                tag: EvolutionReducer.DestinationState.Tag.editor,
+                                selection: viewStore.binding(
+                                    get: { _ in self.viewStore.destinationTag },
+                                    send: { EvolutionReducer.Action.setNavigation(tag:$0) }
+                                )
+                            ) {
+                                Text("+")
+                            }
+
+                            Button(action: {
+                                viewStore.send(.remove)
+                            }) {
+                                Text("-")
                             }
 
                             Spacer()
                         }
                     }
-                    .onTapGesture {
-                        viewStore.send(.select(nil))
-                    }
-                    .padding(.top, 10)
+                    .padding(.bottom, 10)
 
-                    HStack {
-                        NavigationLink(
-                            destination:
-                                IfLetStore(
-                                    store.scope(
-                                        state: \.editorState,
-                                        action: EvolutionReducer.Action.editorAction)
-                                ) { editorStore in
-                                    EvolutionEditorView(store: editorStore)
-                                },
-                            tag: EvolutionReducer.DestinationState.Tag.editor,
-                            selection: viewStore.binding(
-                                get: { _ in self.viewStore.destinationTag },
-                                send: { EvolutionReducer.Action.setNavigation(tag:$0) }
-                            )
-                        ) {
-                            Text("+")
-                        }
-
-                        Button(action: {
-                            viewStore.send(.remove)
-                        }) {
-                            Text("-")
-                        }
-
-                        Spacer()
-                    }
-                    .padding(.leading, 20)
+                    EvolutionGalleryView(
+                        store: store.scope(
+                            state: \.galleryState,
+                            action: EvolutionReducer.Action.galleryAction
+                        )
+                    )
                 }
-                .padding(.bottom, 10)
-
+                .padding(.top, 10)
             }
             .toast(isPresenting: viewStore.binding(
                 get: { $0.showError },
@@ -123,7 +137,6 @@ struct EvolutionView: View {
             .onTapGesture {
                 viewStore.send(.select(itemViewStore.id))
             }
-            .padding(.horizontal, 20)
         }
     }
 }

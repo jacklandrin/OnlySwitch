@@ -1,0 +1,35 @@
+[
+    {
+        "id": "06CE3D9D-354B-4315-9EB2-FDB81720307E",
+        "name": "Stage Manager",
+        "icon_name": "squares.leading.rectangle",
+        "type": "Switch",
+        "description": "Toggle Stage Manager",
+        "author": "jacklandrin",
+        "on_command": {
+            "type": "shell",
+            "command": "defaults write com.apple.WindowManager GloballyEnabled -bool true"
+        },
+        "off_command": {
+            "type": "shell",
+            "command": "defaults write com.apple.WindowManager GloballyEnabled -bool false"
+        },
+        "check_command": {
+            "type": "shell",
+            "command": "defaults read com.apple.windowManager GloballyEnabled",
+            "true_condition": "1"
+        }
+    },
+    {
+        "id": "55B6E9FD-1FFE-4779-B0BE-D7BAF5EC5D2B",
+        "name": "Update Software",
+        "icon_name": "arrow.clockwise.circle",
+        "type": "Button",
+        "description": "Check and update software installed via AppStore",
+        "author": "jacklandrin",
+        "single_command": {
+            "type": "shell",
+            "command": "softwareupdate -i -a"
+        }
+    }
+]

@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0406EDC42ACB3EE80015F4D0 /* EvolutionMarket.json in Resources */ = {isa = PBXBuildFile; fileRef = 0406EDC32ACB3EE80015F4D0 /* EvolutionMarket.json */; };
+		0406EDC62ACB56CE0015F4D0 /* EvolutionGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406EDC52ACB56CE0015F4D0 /* EvolutionGalleryView.swift */; };
+		0406EDC82ACB56F00015F4D0 /* EvolutionGalleryReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406EDC72ACB56F00015F4D0 /* EvolutionGalleryReducer.swift */; };
+		0406EDCA2ACB57EA0015F4D0 /* EvolutionGalleryItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406EDC92ACB57EA0015F4D0 /* EvolutionGalleryItemView.swift */; };
+		0406EDCC2ACB5DCF0015F4D0 /* EvolutionGalleryItemReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406EDCB2ACB5DCF0015F4D0 /* EvolutionGalleryItemReducer.swift */; };
+		0406EDD12ACB65C50015F4D0 /* EvolutionGalleryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406EDD02ACB65C50015F4D0 /* EvolutionGalleryService.swift */; };
+		0406EDD32ACB664D0015F4D0 /* EvolutionGalleryService+Live.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406EDD22ACB664D0015F4D0 /* EvolutionGalleryService+Live.swift */; };
 		040C6EAA276B7D4500291DEB /* CustomizeVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040C6EA9276B7D4500291DEB /* CustomizeVM.swift */; };
 		040C6EAC276B7D9F00291DEB /* CustomizeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040C6EAB276B7D9F00291DEB /* CustomizeView.swift */; };
 		040CD2BC2756D497002E0CC6 /* CGImage++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040CD2BB2756D497002E0CC6 /* CGImage++.swift */; };
@@ -125,6 +132,10 @@
 		0451766B27C284D600006BA0 /* iTunesScripting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0451766727C284D600006BA0 /* iTunesScripting.swift */; };
 		0451766C27C284D600006BA0 /* iTunesBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0451766A27C284D600006BA0 /* iTunesBridge.swift */; };
 		0451766E27C28BA300006BA0 /* AppleMusicSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0451766D27C28BA300006BA0 /* AppleMusicSwitch.swift */; };
+		0456C9272ACB67CB00DB7898 /* EvolutionGalleryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456C9262ACB67CB00DB7898 /* EvolutionGalleryItem.swift */; };
+		0456C9292ACB67F900DB7898 /* EvolutionGalleryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456C9282ACB67F900DB7898 /* EvolutionGalleryModel.swift */; };
+		0456C92B2ACB69C400DB7898 /* EvolutionGalleryAdaptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456C92A2ACB69C400DB7898 /* EvolutionGalleryAdaptor.swift */; };
+		0456C92D2ACB700000DB7898 /* EvolutionGalleryService+Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456C92C2ACB700000DB7898 /* EvolutionGalleryService+Test.swift */; };
 		0457C25D2760046A00B25BFA /* BluetoothSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0457C25C2760046A00B25BFA /* BluetoothSwitch.swift */; };
 		04581DB02764CBCF008ADF30 /* SettingsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04581DAF2764CBCF008ADF30 /* SettingsVM.swift */; };
 		04581DB6276506B9008ADF30 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = 04581DB5276506B9008ADF30 /* AlertToast */; };
@@ -392,6 +403,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0406EDC32ACB3EE80015F4D0 /* EvolutionMarket.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = EvolutionMarket.json; sourceTree = "<group>"; };
+		0406EDC52ACB56CE0015F4D0 /* EvolutionGalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionGalleryView.swift; sourceTree = "<group>"; };
+		0406EDC72ACB56F00015F4D0 /* EvolutionGalleryReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionGalleryReducer.swift; sourceTree = "<group>"; };
+		0406EDC92ACB57EA0015F4D0 /* EvolutionGalleryItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionGalleryItemView.swift; sourceTree = "<group>"; };
+		0406EDCB2ACB5DCF0015F4D0 /* EvolutionGalleryItemReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionGalleryItemReducer.swift; sourceTree = "<group>"; };
+		0406EDD02ACB65C50015F4D0 /* EvolutionGalleryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionGalleryService.swift; sourceTree = "<group>"; };
+		0406EDD22ACB664D0015F4D0 /* EvolutionGalleryService+Live.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EvolutionGalleryService+Live.swift"; sourceTree = "<group>"; };
 		040C6EA9276B7D4500291DEB /* CustomizeVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomizeVM.swift; sourceTree = "<group>"; };
 		040C6EAB276B7D9F00291DEB /* CustomizeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomizeView.swift; sourceTree = "<group>"; };
 		040CD2BB2756D497002E0CC6 /* CGImage++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGImage++.swift"; sourceTree = "<group>"; };
@@ -475,6 +493,10 @@
 		0451766927C284D600006BA0 /* iTunes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iTunes.h; sourceTree = "<group>"; };
 		0451766A27C284D600006BA0 /* iTunesBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iTunesBridge.swift; sourceTree = "<group>"; };
 		0451766D27C28BA300006BA0 /* AppleMusicSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleMusicSwitch.swift; sourceTree = "<group>"; };
+		0456C9262ACB67CB00DB7898 /* EvolutionGalleryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionGalleryItem.swift; sourceTree = "<group>"; };
+		0456C9282ACB67F900DB7898 /* EvolutionGalleryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionGalleryModel.swift; sourceTree = "<group>"; };
+		0456C92A2ACB69C400DB7898 /* EvolutionGalleryAdaptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionGalleryAdaptor.swift; sourceTree = "<group>"; };
+		0456C92C2ACB700000DB7898 /* EvolutionGalleryService+Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EvolutionGalleryService+Test.swift"; sourceTree = "<group>"; };
 		0457C25C2760046A00B25BFA /* BluetoothSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothSwitch.swift; sourceTree = "<group>"; };
 		04581DAF2764CBCF008ADF30 /* SettingsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVM.swift; sourceTree = "<group>"; };
 		04581DBA27651EF1008ADF30 /* RollingText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RollingText.swift; sourceTree = "<group>"; };
@@ -720,6 +742,51 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0406EDC22ACB3EBE0015F4D0 /* Evolution */ = {
+			isa = PBXGroup;
+			children = (
+				0406EDC32ACB3EE80015F4D0 /* EvolutionMarket.json */,
+			);
+			path = Evolution;
+			sourceTree = "<group>";
+		};
+		0406EDCD2ACB62FC0015F4D0 /* EvolutionGallery */ = {
+			isa = PBXGroup;
+			children = (
+				0406EDCF2ACB65AB0015F4D0 /* EvolutionGalleryService */,
+				0406EDC52ACB56CE0015F4D0 /* EvolutionGalleryView.swift */,
+				0406EDC72ACB56F00015F4D0 /* EvolutionGalleryReducer.swift */,
+				0406EDC92ACB57EA0015F4D0 /* EvolutionGalleryItemView.swift */,
+				0406EDCB2ACB5DCF0015F4D0 /* EvolutionGalleryItemReducer.swift */,
+				0456C9262ACB67CB00DB7898 /* EvolutionGalleryItem.swift */,
+				0456C9282ACB67F900DB7898 /* EvolutionGalleryModel.swift */,
+				0456C92A2ACB69C400DB7898 /* EvolutionGalleryAdaptor.swift */,
+			);
+			path = EvolutionGallery;
+			sourceTree = "<group>";
+		};
+		0406EDCE2ACB63130015F4D0 /* EvolutionEditor */ = {
+			isa = PBXGroup;
+			children = (
+				047C1E6C2A22AF5B0061235D /* EvolutionEditorService */,
+				047C1E582A2255A00061235D /* EvolutionEditorView.swift */,
+				047C1E5A2A2255BF0061235D /* EvolutionEditorReducer.swift */,
+				047C1E752A24D1870061235D /* EvolutionCommandEditingView.swift */,
+				047C1E772A24D2590061235D /* EvolutionCommandEditingReducer.swift */,
+			);
+			path = EvolutionEditor;
+			sourceTree = "<group>";
+		};
+		0406EDCF2ACB65AB0015F4D0 /* EvolutionGalleryService */ = {
+			isa = PBXGroup;
+			children = (
+				0406EDD02ACB65C50015F4D0 /* EvolutionGalleryService.swift */,
+				0406EDD22ACB664D0015F4D0 /* EvolutionGalleryService+Live.swift */,
+				0456C92C2ACB700000DB7898 /* EvolutionGalleryService+Test.swift */,
+			);
+			path = EvolutionGalleryService;
+			sourceTree = "<group>";
+		};
 		041D725528353A160083092D /* OnlySwitchTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -1054,19 +1121,16 @@
 		047C1E482A2250EF0061235D /* Evolution */ = {
 			isa = PBXGroup;
 			children = (
+				0406EDCE2ACB63130015F4D0 /* EvolutionEditor */,
+				0406EDCD2ACB62FC0015F4D0 /* EvolutionGallery */,
 				047C1E5D2A2262640061235D /* EvolutionModel.swift */,
 				04E238672A2C872200CDD1FA /* EvolutionAdapter.swift */,
 				047C1E642A2297490061235D /* Evolution+Dependencies.swift */,
-				047C1E6C2A22AF5B0061235D /* EvolutionEditorService */,
 				047C1E632A2297010061235D /* EvolutionListService */,
 				047C1E4B2A2251280061235D /* EvolutionView.swift */,
 				047C1E502A22525F0061235D /* EvolutionReducer.swift */,
 				043488A82A364E73006C877D /* EvolutionRowView.swift */,
 				043488AA2A364EBF006C877D /* EvolutionRowReducer.swift */,
-				047C1E582A2255A00061235D /* EvolutionEditorView.swift */,
-				047C1E5A2A2255BF0061235D /* EvolutionEditorReducer.swift */,
-				047C1E752A24D1870061235D /* EvolutionCommandEditingView.swift */,
-				047C1E772A24D2590061235D /* EvolutionCommandEditingReducer.swift */,
 			);
 			path = Evolution;
 			sourceTree = "<group>";
@@ -1459,6 +1523,7 @@
 		04E03B02275FD92D00EA5FB9 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				0406EDC22ACB3EBE0015F4D0 /* Evolution */,
 				04DC6C6228A5409F00888BF9 /* BackgroundNoises */,
 				046331D12795DA4C00C5F894 /* ShortcutsMarket */,
 				047140B127788364005B160B /* mixkit-alert-bells-echo-765.wav */,
@@ -1725,6 +1790,7 @@
 				04938D002768CAEB00713F1D /* Localizable.strings in Resources */,
 				04DC6C7628A5413500888BF9 /* Soft Rain.mp3 in Resources */,
 				0443A6B627599AAC00A3BCFD /* README.md in Resources */,
+				0406EDC42ACB3EE80015F4D0 /* EvolutionMarket.json in Resources */,
 				04447B632754F08100CD2900 /* Preview Assets.xcassets in Resources */,
 				04DC6C6F28A5413500888BF9 /* Motor Boat.mp3 in Resources */,
 				04DC6C7228A5413500888BF9 /* Brownian.mp3 in Resources */,
@@ -1885,6 +1951,7 @@
 				049337942762BD1B00AE779A /* OpenWindow.swift in Sources */,
 				043488A92A364E73006C877D /* EvolutionRowView.swift in Sources */,
 				0424348B275642D20044D0AD /* DarkModeSwitch.swift in Sources */,
+				0406EDD32ACB664D0015F4D0 /* EvolutionGalleryService+Live.swift in Sources */,
 				0493374F27625A1E00AE779A /* Parser+Packets.swift in Sources */,
 				04447B5E2754F08000CD2900 /* OnlySwitchListView.swift in Sources */,
 				04E89D5E289B054C00667710 /* IOService.swift in Sources */,
@@ -1912,6 +1979,8 @@
 				0493374827625A1E00AE779A /* StreamingDelegate.swift in Sources */,
 				0457C25D2760046A00B25BFA /* BluetoothSwitch.swift in Sources */,
 				04A2FFFA275636FA00CE56A0 /* String++.swift in Sources */,
+				0456C9272ACB67CB00DB7898 /* EvolutionGalleryItem.swift in Sources */,
+				0406EDC62ACB56CE0015F4D0 /* EvolutionGalleryView.swift in Sources */,
 				047C1E512A22525F0061235D /* EvolutionReducer.swift in Sources */,
 				04F118C627AED8EE005DA861 /* AboutVM.swift in Sources */,
 				043E5D752758208D00ADC004 /* SwitchBarVM.swift in Sources */,
@@ -1935,6 +2004,7 @@
 				0493375927625A1E00AE779A /* DownloadingState.swift in Sources */,
 				047C1E592A2255A00061235D /* EvolutionEditorView.swift in Sources */,
 				041D726328353B380083092D /* NSImage+SymbolName.swift in Sources */,
+				0406EDC82ACB56F00015F4D0 /* EvolutionGalleryReducer.swift in Sources */,
 				04DC6C7F28A5675600888BF9 /* BackNoisiesTrackManager.swift in Sources */,
 				043E5D6A2757D68800ADC004 /* MuteSwitch.swift in Sources */,
 				0493378C2762654600AE779A /* LayoutDefine.swift in Sources */,
@@ -1969,6 +2039,7 @@
 				046FF3C6279A2C0B00506953 /* DockRecentSwitch.swift in Sources */,
 				04FC160A283D8A9800D4A4AC /* GitHubInteractor.swift in Sources */,
 				0427364927C1A5430068108F /* SpotifyBridge.swift in Sources */,
+				0406EDD12ACB65C50015F4D0 /* EvolutionGalleryService.swift in Sources */,
 				0424348D275643560044D0AD /* TopNotchSwitch.swift in Sources */,
 				040E972B27611C9C003D9D42 /* URL++.swift in Sources */,
 				0451766B27C284D600006BA0 /* iTunesScripting.swift in Sources */,
@@ -1981,6 +2052,7 @@
 				0493374E27625A1E00AE779A /* ParserError.swift in Sources */,
 				04447B5C2754F08000CD2900 /* AppDelegate.swift in Sources */,
 				047140C22778D2A1005B160B /* SmallLaunchpadIconSwitch.swift in Sources */,
+				0406EDCA2ACB57EA0015F4D0 /* EvolutionGalleryItemView.swift in Sources */,
 				047C1E5E2A2262640061235D /* EvolutionModel.swift in Sources */,
 				040C6EAA276B7D4500291DEB /* CustomizeVM.swift in Sources */,
 				049337212761286400AE779A /* CleanProgressView.swift in Sources */,
@@ -1989,6 +2061,7 @@
 				0493374927625A1E00AE779A /* Streaming.swift in Sources */,
 				0434B4CF2876031C00F06AB9 /* RadioPlayerItem.swift in Sources */,
 				0444D6032839997B00327D0B /* PureColorVM.swift in Sources */,
+				0456C9292ACB67F900DB7898 /* EvolutionGalleryModel.swift in Sources */,
 				0451765C27C27AFC00006BA0 /* MusicPlayer.swift in Sources */,
 				0493375027625A1E00AE779A /* Parsing.swift in Sources */,
 				04447B7627550F6900CD2900 /* VisualEffectView.swift in Sources */,
@@ -2026,6 +2099,7 @@
 				04EB1CD02780F36F00C612AB /* ShortcutsSettingVM.swift in Sources */,
 				047C1E782A24D2590061235D /* EvolutionCommandEditingReducer.swift in Sources */,
 				0493374727625A1E00AE779A /* PlayerManager.swift in Sources */,
+				0406EDCC2ACB5DCF0015F4D0 /* EvolutionGalleryItemReducer.swift in Sources */,
 				04BC8EC3284FE9B5009E605F /* Preferences.swift in Sources */,
 				0493372527615EA400AE779A /* HiddenFilesSwitch.swift in Sources */,
 				04DC6C8E28A6888A00888BF9 /* KeepAwakeSettingVM.swift in Sources */,
@@ -2072,6 +2146,7 @@
 				047140BC2778935B005B160B /* TimerCountDownView.swift in Sources */,
 				0493379E2763C0E800AE779A /* Persistence.swift in Sources */,
 				0434B4C82873A83D00F06AB9 /* RequestError.swift in Sources */,
+				0456C92B2ACB69C400DB7898 /* EvolutionGalleryAdaptor.swift in Sources */,
 				0493375A27625A1E00AE779A /* DownloadingDelegate.swift in Sources */,
 				0451766527C283BC00006BA0 /* AppleMusicPlayer.swift in Sources */,
 				0427364E27C1A5CD0068108F /* SpotifyPlayer.swift in Sources */,
@@ -2082,6 +2157,7 @@
 				0443A6B82759A99700A3BCFD /* ScreenSaverSwitch.swift in Sources */,
 				04938D062768CB2000713F1D /* LocalizedString++.swift in Sources */,
 				047C1E6E2A22AF840061235D /* EvolutionEditorService.swift in Sources */,
+				0456C92D2ACB700000DB7898 /* EvolutionGalleryService+Test.swift in Sources */,
 				0493379C2763C09000AE779A /* OnlySwitch.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2170,7 +2246,7 @@
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Only Switch requests Bluetooth usage to switch Airpods connection";
 				INFOPLIST_OUTPUT_FORMAT = binary;
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.4.2;
+				MARKETING_VERSION = 2.4.3;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitchTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -2196,7 +2272,7 @@
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Only Switch requests Bluetooth usage to switch Airpods connection";
 				INFOPLIST_OUTPUT_FORMAT = binary;
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.4.2;
+				MARKETING_VERSION = 2.4.3;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitchTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -2363,7 +2439,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.4.2;
+				MARKETING_VERSION = 2.4.3;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2417,7 +2493,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.4.2;
+				MARKETING_VERSION = 2.4.3;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2456,7 +2532,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.4.2;
+				MARKETING_VERSION = 2.4.3;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.IntentsExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2489,7 +2565,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.4.2;
+				MARKETING_VERSION = 2.4.3;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.IntentsExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

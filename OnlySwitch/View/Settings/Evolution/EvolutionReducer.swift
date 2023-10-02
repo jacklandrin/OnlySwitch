@@ -35,6 +35,7 @@ struct EvolutionReducer: Reducer {
         var editorState: EvolutionEditorReducer.State?
         var showError = false
         var destination: DestinationState?
+        var galleryState = EvolutionGalleryReducer.State()
     }
     
     enum Action: Equatable {
@@ -47,6 +48,7 @@ struct EvolutionReducer: Reducer {
         case editor(id: UUID, action: EvolutionRowReducer.Action)
         case editorAction(EvolutionEditorReducer.Action)
         case errorControl(Bool)
+        case galleryAction(EvolutionGalleryReducer.Action)
     }
 
     @Dependency(\.evolutionListService) var evolutionListService
@@ -91,6 +93,7 @@ struct EvolutionReducer: Reducer {
                         if let selectID = state.selectID {
                             try await evolutionListService.removeItem(selectID)
                             await send(.refresh)
+                            await send(.galleryAction(.refresh))
                         }
                     }
 
@@ -127,6 +130,12 @@ struct EvolutionReducer: Reducer {
 
                 case .editor:
                     return .none
+
+                case .galleryAction(.delegate(.installed)):
+                    return .send(.refresh)
+
+                case .galleryAction:
+                    return .none
             }
         }
         .ifLet(\.editorState, action: /Action.editorAction) {
@@ -134,6 +143,11 @@ struct EvolutionReducer: Reducer {
         }
         .forEach(\.evolutionList, action: /Action.editor(id:action:)) {
             EvolutionRowReducer()
+        }
+
+        Scope(state: \.galleryState, action: /Action.galleryAction) {
+            EvolutionGalleryReducer()
+                ._printChanges()
         }
     }
 }

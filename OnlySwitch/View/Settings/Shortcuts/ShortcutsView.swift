@@ -10,7 +10,7 @@ import AlertToast
 import KeyboardShortcuts
 
 struct ShortcutsView: View {
-    let columns = [
+    private let columns = [
         GridItem(.flexible()),
         GridItem(.flexible())
     ]
