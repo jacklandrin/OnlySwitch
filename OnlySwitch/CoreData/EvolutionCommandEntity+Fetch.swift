@@ -12,7 +12,7 @@ extension EvolutionCommandEntity {
 
     @MainActor static var defaultFetchRequest:NSFetchRequest<EvolutionCommandEntity> {
         let request:NSFetchRequest<EvolutionCommandEntity> = EvolutionCommandEntity.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \EvolutionCommandEntity.timestamp, ascending: true)]
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \EvolutionCommandEntity.timestamp, ascending: false)]
         print("fetched the evolution command")
         return request
     }
@@ -56,6 +56,18 @@ extension EvolutionCommandEntity {
                 }
             entity.singleCommand = singleCommand
             entity.singleCommandType = singleCommandTypeStr
+
+            entity.turnOnCommand = ""
+            entity.turnOnCommandType = CommandExecuteType.shell.rawValue
+
+            entity.turnOffCommand = ""
+            entity.turnOffCommandType = CommandExecuteType.shell.rawValue
+
+            entity.statusCommand = ""
+            entity.statusCommandType = CommandExecuteType.shell.rawValue
+
+            entity.trueCondition = ""
+
         } else {
             guard
                 let onCommand = item.onCommand?.commandString,
@@ -91,6 +103,9 @@ extension EvolutionCommandEntity {
             entity.statusCommand = statusCommand
             entity.statusCommandType = statusCommandTypeStr
             entity.trueCondition = trueCondition
+
+            entity.singleCommand = ""
+            entity.singleCommandType = CommandExecuteType.shell.rawValue
         }
 
         if let iconName = item.iconName {
