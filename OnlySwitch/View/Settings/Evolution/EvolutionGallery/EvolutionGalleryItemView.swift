@@ -55,7 +55,7 @@ struct EvolutionGalleryItemView: View {
                     .font(.headline)
                     .foregroundColor(.white)
                     .fixedSize(horizontal: false, vertical: true)
-
+                    .padding(.horizontal, 5)
                 Spacer()
                 HStack {
                     Spacer()

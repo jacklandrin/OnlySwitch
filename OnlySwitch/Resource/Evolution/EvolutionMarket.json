@@ -31,5 +31,47 @@
             "type": "shell",
             "command": "softwareupdate -i -a"
         }
+    },
+    {
+        "id": "8F79DFE3-FA57-47B0-934B-600E4EEBB61B",
+        "name": "Hide Desktop Widget",
+        "icon_name": "slider.horizontal.2.square.on.square",
+        "type": "Switch",
+        "description": "Hide Widget on Desktop, unless \"show Desktop\"(Sonoma or higher)",
+        "author": "jacklandrin",
+        "on_command": {
+            "type": "shell",
+            "command": "defaults write com.apple.WindowManager StandardHideWidgets -bool true"
+        },
+        "off_command": {
+            "type": "shell",
+            "command": "defaults write com.apple.WindowManager StandardHideWidgets -bool false"
+        },
+        "check_command": {
+            "type": "shell",
+            "command": "defaults read com.apple.WindowManager StandardHideWidgets",
+            "true_condition": "1"
+        }
+    },
+    {
+        "id": "604FACEE-3C4E-4113-99EB-D000FA4DD2A5",
+        "name": "Hide Desktop Icons",
+        "icon_name": "desktopcomputer",
+        "type": "Switch",
+        "description": "Hide Icons on Desktop, unless \"show Desktop\"(Sonoma or higher)",
+        "author": "jacklandrin",
+        "on_command": {
+            "type": "shell",
+            "command": "defaults write com.apple.WindowManager StandardHideDesktopIcons -bool true"
+        },
+        "off_command": {
+            "type": "shell",
+            "command": "defaults write com.apple.WindowManager StandardHideDesktopIcons -bool false"
+        },
+        "check_command": {
+            "type": "shell",
+            "command": "defaults read com.apple.WindowManager StandardHideDesktopIcons",
+            "true_condition": "1"
+        }
     }
 ]

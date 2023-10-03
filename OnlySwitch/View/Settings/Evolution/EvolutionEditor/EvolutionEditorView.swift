@@ -216,7 +216,8 @@ extension EvolutionEditorView {
         "wifi.circle",
         "gamecontroller",
         "squares.leading.rectangle",
-        "arrow.clockwise.circle"
+        "arrow.clockwise.circle",
+        "desktopcomputer"
     ]
 }
 
