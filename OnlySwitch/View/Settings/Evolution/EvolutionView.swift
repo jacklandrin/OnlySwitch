@@ -102,7 +102,7 @@ struct EvolutionView: View {
                         )
                     )
                 }
-                .padding(.top, 10)
+                .padding([.top, .leading], 10)
             }
             .toast(isPresenting: viewStore.binding(
                 get: { $0.showError },

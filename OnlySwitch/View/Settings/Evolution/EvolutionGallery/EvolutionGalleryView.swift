@@ -24,6 +24,7 @@ struct EvolutionGalleryView: View {
                     Text("Evolution Gallery".localized())
                     Spacer()
                 }
+
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 10) {
                         ForEachStore(
@@ -38,6 +39,7 @@ struct EvolutionGalleryView: View {
                     Spacer()
                 }
             }
+            .frame(width: 300)
             .padding(.horizontal, 10)
             .task {
                 viewStore.send(.refresh)
