@@ -139,8 +139,8 @@
 "Hide Windows" = "Hide Windows";
 "Disable" = "Disable";
 "Enable" = "Enable";
-"Turn off" = "Turn off";
-"Turn on" = "Turn on";
+"Turn off1" = "Turn off";
+"Turn on1" = "Turn on";
 "Running" = "Running";
 "TOOLS" = "TOOLS";
 "Import" = "Import";
@@ -164,3 +164,7 @@
 "Night Shift Strength" = "Night Shift Strength";
 "Icon:" = "Icon:";
 "Output:" = "Output:";
+"To add or remove any Evolutions on list" = "To add or remove any Evolutions on list";
+"Evolution Gallery" = "Evolution Gallery";
+"Turn off" = "Turn off";
+"Turn on" = "Turn on";

@@ -34,7 +34,7 @@ struct EvolutionView: View {
                 HStack {
                     VStack {
                         HStack {
-                            Text("To add or remove any Evolutions on list")
+                            Text("To add or remove any Evolutions on list".localized())
                             Spacer()
                         }
                         Divider()

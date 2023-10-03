@@ -83,7 +83,7 @@ class CustomizeItem:ObservableObject {
                         if controlType == .Switch {
                             _ = try? displayNotificationCMD(title: self.type.barInfo().title.localized(),
                                                             content: "",
-                                                            subtitle: status ? "Turn off".localized() : "Turn on".localized())
+                                                            subtitle: status ? "Turn off1".localized() : "Turn on1".localized())
                             .runAppleScript()
                         }
                     }
