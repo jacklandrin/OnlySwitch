@@ -4,7 +4,7 @@
         "name": "Stage Manager",
         "icon_name": "squares.leading.rectangle",
         "type": "Switch",
-        "description": "Toggle Stage Manager",
+        "description": "Toggle Stage Manager(Ventura or higher)",
         "author": "jacklandrin",
         "on_command": {
             "type": "shell",
@@ -72,6 +72,27 @@
             "type": "shell",
             "command": "defaults read com.apple.WindowManager StandardHideDesktopIcons",
             "true_condition": "1"
+        }
+    },
+    {
+        "id": "0AD2A1A8-E0BA-4F6A-9E28-2E2B06143C8D",
+        "name": "Clamshell",
+        "icon_name": "lightbulb.circle",
+        "type": "Switch",
+        "description": "Prevent sleeping when lid is closed(required password or add your password \"xxxx\" after on and off commands)",
+        "author": "jacklandrin",
+        "on_command": {
+            "type": "applescript",
+            "command": "do shell script \"sudo pmset -a disablesleep 1\" with prompt \"OnlySwitch\" with administrator privileges"
+        },
+        "off_command": {
+            "type": "applescript",
+            "command": "do shell script \"sudo pmset -a disablesleep 0\" with prompt \"OnlySwitch\" with administrator privileges"
+        },
+        "check_command": {
+            "type": "shell",
+            "command": "[[ $(pmset -g | grep SleepDisabled) =~ 1 ]] && echo true || echo false",
+            "true_condition": "true"
         }
     }
 ]
