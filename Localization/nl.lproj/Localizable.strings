@@ -159,7 +159,7 @@
 "Check status" = "Controleer de status";
 "Switch" = "schakelaars";
 "Name:" = "Naam:";
-"True Condition" = "Ware toestand";
+"True Condition" = "Ware toestand(de uitgang wanneer ingeschakeld)";
 "Debug" = "Debuggen";
 "Icon:" = "Icoon:";
 "Output:" = "Output:";

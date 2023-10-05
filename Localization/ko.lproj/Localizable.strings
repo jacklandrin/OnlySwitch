@@ -162,7 +162,7 @@
 "Check status" = "상태 확인";
 "Switch" = "스위치";
 "Name:" = "이름:";
-"True Condition" = "True Condition";
+"True Condition" = "True Condition(켰을 때 출력)";
 "Debug" = "디버그";
 "Icon:" = "상:";
 "Output:" = "출력:";

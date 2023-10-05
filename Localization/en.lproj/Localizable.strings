@@ -159,7 +159,7 @@
 "Check status" = "Check status";
 "Switch" = "Switch";
 "Name:" = "Name:";
-"True Condition" = "True Condition";
+"True Condition" = "True Condition(the output when turn on)";
 "Debug" = "Debug";
 "Night Shift Strength" = "Night Shift Strength";
 "Icon:" = "Icon:";

@@ -158,7 +158,7 @@
 "Check status" = "Vérifier l'état";
 "Switch" = "Changer";
 "Name:" = "Nom:";
-"True Condition" = "Véritable état";
+"True Condition" = "Véritable état(la sortie à la mise sous tension)";
 "Debug" = "Déboguer";
 "Icon:" = "Icône:";
 "Output:" = "Imprimer:";

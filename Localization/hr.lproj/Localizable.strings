@@ -157,7 +157,7 @@
 "Check status" = "Provjeri status";
 "Switch" = "Prekidač";
 "Name:" = "Ime:";
-"True Condition" = "Istinski uvjet";
+"True Condition" = "Istinski uvjet(izlaz kada se uključi)";
 "Debug" = "Debug";
 "Icon:" = "Ikona:";
 "Output:" = "Izlaz:";

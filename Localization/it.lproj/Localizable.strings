@@ -159,7 +159,7 @@
 "Check status" = "Controllare lo stato";
 "Switch" = "Interruttore";
 "Name:" = "Nome:";
-"True Condition" = "Vera condizione";
+"True Condition" = "Vera condizione(l'uscita quando si accende)";
 "Debug" = "Debug";
 "Icon:" = "Icona:";
 "Output:" = "Output:";

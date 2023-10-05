@@ -160,7 +160,7 @@
 "Check status" = "Status überprüfen";
 "Switch" = "Switch";
 "Name:" = "Name:";
-"True Condition" = "Wahrer Zustand";
+"True Condition" = "Wahrer Zustand(Die Ausgabe beim Einschalten)";
 "Debug" = "Debuggen";
 "Night Shift Strength" = "Night Shift Stärke";
 "Icon:" = "Icon:";

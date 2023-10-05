@@ -160,7 +160,7 @@
 "Check status" = "Sprawdź status";
 "Switch" = "Przełącznik";
 "Name:" = "Nazwa:";
-"True Condition" = "Prawdziwy stan";
+"True Condition" = "Prawdziwy stan(wyjście po włączeniu)";
 "Debug" = "Debuguj";
 "Icon:" = "Ikona:";
 "Output:" = "Wynik:";

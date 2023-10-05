@@ -159,7 +159,7 @@
 "Check status" = "检查状态";
 "Switch" = "开关";
 "Name:" = "名称:";
-"True Condition" = "开启条件";
+"True Condition" = "开启条件(开启条件下的输出结果)";
 "Debug" = "调试";
 "Night Shift Strength" = "夜览强度";
 "Icon:" = "图标:";

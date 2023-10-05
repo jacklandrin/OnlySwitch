@@ -158,7 +158,7 @@ Creado por Jacklandrin el día 14/12/2021.
 "Check status" = "Comprobar estado";
 "Switch" = "Interruptor";
 "Name:" = "Nombre:";
-"True Condition" = "Verdadera condición";
+"True Condition" = "Verdadera condición(La salida cuando se enciende)";
 "Debug" = "Depurar";
 "Icon:" = "Icono:";
 "Output:" = "Output:";

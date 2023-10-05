@@ -161,7 +161,7 @@
 "Check status" = "Durumu kontrol et";
 "Switch" = "Anahtar";
 "Name:" = "İsim:";
-"True Condition" = "Gerçek Durum";
+"True Condition" = "Gerçek Durum(açıldığında çıkış)";
 "Debug" = "Hata ayıklayın";
 "Icon:" = "Simge:";
 "Output:" = "Çıktı:";

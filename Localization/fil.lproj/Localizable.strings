@@ -160,7 +160,7 @@
 "Check status" = "Suriin ang katayuan";
 "Switch" = "Switch";
 "Name:" = "Pangalan:";
-"True Condition" = "Tunay na Kondisyon";
+"True Condition" = "Tunay na Kondisyon(ang output kapag naka-on)";
 "Debug" = "I-debug";
 "Icon:" = "Icon:";
 "Output:" = "Output:";

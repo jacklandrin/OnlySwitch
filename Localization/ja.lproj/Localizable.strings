@@ -162,7 +162,7 @@
 "Check status" = "ステータスを確認する";
 "Switch" = "スイッチ";
 "Name:" = "名前:";
-"True Condition" = "本当の状態";
+"True Condition" = "本当の状態(オン時の出力)";
 "Debug" = "デバッグ";
 "Icon:" = "アイコン:";
 "Output:" = "出力:";
