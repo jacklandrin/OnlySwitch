@@ -79,7 +79,7 @@
         "name": "Clamshell",
         "icon_name": "lightbulb.circle",
         "type": "Switch",
-        "description": "Prevent sleeping when lid is closed(required password or add your password \"xxxx\" after on and off commands)",
+        "description": "Prevent sleeping when lid is closed. Required password or add *password \"xxxx\"* after on and off commands (use your mac password to replace xxxx and keep quotation mark)",
         "author": "jacklandrin",
         "on_command": {
             "type": "applescript",
