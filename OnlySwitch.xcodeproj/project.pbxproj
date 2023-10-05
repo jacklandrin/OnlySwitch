@@ -252,6 +252,7 @@
 		04B25457283C0F8800D253E2 /* ShortcutsBarModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B25456283C0F8800D253E2 /* ShortcutsBarModel.swift */; };
 		04B25459283C12A800D253E2 /* GeneralModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B25458283C12A800D253E2 /* GeneralModel.swift */; };
 		04B856352784B1B60061B56C /* GetWallpaperURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B856342784B1B60061B56C /* GetWallpaperURL.swift */; };
+		04B90C642ACF36290039B312 /* EvolutionGalleryContributing.md in Resources */ = {isa = PBXBuildFile; fileRef = 04B90C632ACF36290039B312 /* EvolutionGalleryContributing.md */; };
 		04BC8EC3284FE9B5009E605F /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8EC2284FE9B5009E605F /* Preferences.swift */; };
 		04BC8EC4284FE9B5009E605F /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8EC2284FE9B5009E605F /* Preferences.swift */; };
 		04BC8EC6284FEA52009E605F /* UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8EC5284FEA52009E605F /* UserDefaultsKeys.swift */; };
@@ -604,6 +605,7 @@
 		04B25456283C0F8800D253E2 /* ShortcutsBarModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsBarModel.swift; sourceTree = "<group>"; };
 		04B25458283C12A800D253E2 /* GeneralModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralModel.swift; sourceTree = "<group>"; };
 		04B856342784B1B60061B56C /* GetWallpaperURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetWallpaperURL.swift; sourceTree = "<group>"; };
+		04B90C632ACF36290039B312 /* EvolutionGalleryContributing.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = EvolutionGalleryContributing.md; sourceTree = "<group>"; };
 		04BC8EC2284FE9B5009E605F /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		04BC8EC5284FEA52009E605F /* UserDefaultsKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsKeys.swift; sourceTree = "<group>"; };
 		04BC8EC8284FF30A009E605F /* NotificationNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNames.swift; sourceTree = "<group>"; };
@@ -1014,6 +1016,7 @@
 				04F118C927B1CC87005DA861 /* Localization */,
 				0443A6B527599AAC00A3BCFD /* README.md */,
 				04E8BE392797241F00FF12B7 /* ShortcutsGalleryContributing.md */,
+				04B90C632ACF36290039B312 /* EvolutionGalleryContributing.md */,
 				04447B5A2754F08000CD2900 /* OnlySwitch */,
 				04E2ACFA278267DE00BC5DF3 /* IntentsExtension */,
 				041D725528353A160083092D /* OnlySwitchTests */,
@@ -1807,6 +1810,7 @@
 				04DC6C7128A5413500888BF9 /* Meditation.mp3 in Resources */,
 				04DC6C7528A5413500888BF9 /* Harbor Wave.mp3 in Resources */,
 				04DC6C7028A5413500888BF9 /* Forest Walking.mp3 in Resources */,
+				04B90C642ACF36290039B312 /* EvolutionGalleryContributing.md in Resources */,
 				047140B327788364005B160B /* mixkit-alert-bells-echo-765.wav in Resources */,
 				047140B427788364005B160B /* mixkit-bell-notification-933.wav in Resources */,
 				04447B602754F08100CD2900 /* Assets.xcassets in Resources */,

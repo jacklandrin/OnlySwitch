@@ -1,12 +1,12 @@
-# How to contribute for Shortcuts Gallery
+# How to contribute to Shortcuts Gallery
 
-Since version 2.1.1, OnlySwitch supports contributing for Shortcuts Gallery. Everyone can share macOS shortcuts on OnlySwitch.
+Since version 2.1.1, OnlySwitch supports contributing to Shortcuts Gallery. Everyone can share macOS shortcuts on OnlySwitch.
 
 ## Note
 Before contributing, please make sure these:
 * The Shortcut can normally run for everyone.
 * The Shortcut should better be in English.
-* The Shortcut actions don't dependent on other Apps, except OnlySwitch.
+* The Shortcut actions aren't dependent on other Apps, except OnlySwitch.
 
 The unqualified contributions will be rejected.
 
@@ -27,11 +27,11 @@ The shared Shortcuts are stored in a [JSON file](OnlySwitch/Resource/ShortcutsMa
 
 ## Contributing
 
-New Shortcuts can be contribute by **pull request**. If contributor isn't a Github user, OnlySwitch also accepts contribution from email.
+New Shortcuts can be contributed by **pull request**. If the contributor isn't a Github user, OnlySwitch also accepts contributions from email.
 
 ### Pull Request on Github
 
-1. Check if the Shortcuts eligible.
+1. Check if the Shortcuts is eligible.
 2. Fork the repo
 3. Checkout a new branch
 4. Add the new Shortcuts information on `ShortcutsMarket.json` following the rule.

@@ -37,7 +37,7 @@ Since Version 2.3.6, the Switches Availability (including Player and Hide Menu B
 
 ## Shortcuts Gallery
 
-Everyone can contribute macOS Shortcuts for OnlySwitch now. Please read [How to contribute for Shortcuts Gallery](ShortcutsGalleryContributing.md). The shared Shortcuts will be displayed here:
+Everyone can contribute macOS Shortcuts for OnlySwitch now. Please read [How to contribute to Shortcuts Gallery](ShortcutsGalleryContributing.md). The shared Shortcuts will be displayed here:
 
 <p align="center">
 <img alt="Sits in the status bar" src="https://www.jacklandrin.com/wp-content/uploads/2022/01/shortcutsgallery.png" width="60%" align="center" />
@@ -113,7 +113,12 @@ PS: Evolution feature needs macOS 13.0 and above.
 
 ![](http://www.jacklandrin.com/wp-content/uploads/2023/06/evolution.png)
 
-![](http://www.jacklandrin.com/wp-content/uploads/2023/09/evolution2.jpg)
+Everyone can contribute macOS Shortcuts for OnlySwitch now. Please read [How to contribute to Evolution Gallery](EvolutionGalleryContributing.md). The shared Evolutions will be displayed here:
+
+<p align="center">
+<img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2023/10/evolution_gallery.png" width="60%" align="center" />
+</p>
+
 
 ### How to create an evolution?
 So far, Evolution offers two types, with Switch and Button. 
