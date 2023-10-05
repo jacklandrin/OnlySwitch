@@ -113,7 +113,7 @@ PS: Evolution feature needs macOS 13.0 and above.
 
 ![](http://www.jacklandrin.com/wp-content/uploads/2023/06/evolution.png)
 
-Everyone can contribute macOS Shortcuts for OnlySwitch now. Please read [How to contribute to Evolution Gallery](EvolutionGalleryContributing.md). The shared Evolutions will be displayed here:
+Everyone can contribute Evolution for OnlySwitch since version 2.4.3. Please read [How to contribute to Evolution Gallery](EvolutionGalleryContributing.md). The shared Evolutions will be displayed here:
 
 <p align="center">
 <img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2023/10/evolution_gallery.png" width="60%" align="center" />
