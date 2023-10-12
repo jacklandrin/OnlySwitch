@@ -21,6 +21,11 @@ struct HideDesktopCMD:SwitchCMD {
 
 struct DarkModeCMD:SwitchCMD {
     static var status: String = "defaults read -g AppleInterfaceStyle"
+    static var status_applescript = """
+                                    tell application "System Events"
+                                        tell appearance preferences to get dark mode
+                                    end tell
+                                    """
     static var on: String = """
                             tell application "System Events"
                                 tell appearance preferences
@@ -28,6 +33,7 @@ struct DarkModeCMD:SwitchCMD {
                                 end tell
                             end tell
                             """
+    
     static var off: String = """
                                tell application "System Events"
                                    tell appearance preferences

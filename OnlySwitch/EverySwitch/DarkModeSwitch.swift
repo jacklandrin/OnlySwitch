@@ -12,17 +12,26 @@ class DarkModeSwitch:SwitchProvider {
     var type: SwitchType = .darkMode
     
     func currentStatus() -> Bool {
-        do {
-            let result = try DarkModeCMD.status.runAppleScript(isShellCMD: true)
-           
-            if result == "Dark" {
-                return true
-            } else {
+        if #available(macOS 14.0, *) {
+            do {
+                let result = try DarkModeCMD.status_applescript.runAppleScript()
+                return result == "true" ? true : false
+            } catch {
                 return false
             }
-            
-        } catch {
-            return false
+        } else {
+            do {
+                let result = try DarkModeCMD.status.runAppleScript(isShellCMD: true)
+
+                if result == "Dark" {
+                    return true
+                } else {
+                    return false
+                }
+
+            } catch {
+                return false
+            }
         }
     }
     
