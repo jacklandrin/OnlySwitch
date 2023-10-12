@@ -23,6 +23,12 @@ struct EvolutionGalleryView: View {
                 HStack {
                     Text("Evolution Gallery".localized())
                     Spacer()
+                    Button(action: {
+                        viewStore.send(.refresh)
+                    }) {
+                        Image(systemName: "arrow.clockwise")
+                    }
+                    .help("refresh".localized())
                 }
 
                 ScrollView {

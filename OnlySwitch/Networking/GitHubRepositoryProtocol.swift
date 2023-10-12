@@ -18,7 +18,7 @@ protocol GitHubRepositoryProtocol {
     func requestReleases(complete:@escaping (Result<Void, Error>) -> Void)
     func downloadDMG(complete:@escaping (Result<String, Error>) -> Void)
     func requestShortcutsJson(complete:@escaping (Result<[ShortcutOnMarket], Error>) -> Void)
-    
+    func requestEvolutionJson() async throws -> [EvolutionGalleryModel]
 }
 
 extension GitHubRepositoryProtocol {
@@ -38,4 +38,18 @@ extension GitHubRepositoryProtocol {
         return components.url
     }
 
+    func decode<T: Decodable>(data: Data?, type: T.Type) throws -> T {
+        guard
+            let data,
+            !data.isEmpty
+        else {
+            throw RequestError.analyseModelFailed
+        }
+
+        do {
+            return try JSONDecoder().decode(type, from: data)
+        } catch {
+            throw RequestError.analyseModelFailed
+        }
+    }
 }

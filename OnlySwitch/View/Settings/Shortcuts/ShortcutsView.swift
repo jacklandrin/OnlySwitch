@@ -54,9 +54,10 @@ struct ShortcutsView: View {
                     Button(action: {
                         shortcutsVM.shouldLoadShortcutsList()
                         shortcutsVM.loadData()
-                    }, label: {
+                    }) {
                         Image(systemName: "arrow.clockwise")
-                    }).help("refresh".localized())
+                    }
+                    .help("refresh".localized())
                 }
                 .frame(width:300,height: 60)
                 .padding(.trailing, 10)

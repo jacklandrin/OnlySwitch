@@ -38,7 +38,6 @@ struct EvolutionView: View {
                             Spacer()
                         }
                         Divider()
-                            .frame(width: 400)
                         ScrollView(.vertical) {
                             if viewStore.evolutionList.isEmpty {
                                 Text("You can DIY switches or buttons here.".localized())
@@ -93,6 +92,7 @@ struct EvolutionView: View {
                             Spacer()
                         }
                     }
+                    .frame(width: 420)
                     .padding(.bottom, 10)
 
                     EvolutionGalleryView(

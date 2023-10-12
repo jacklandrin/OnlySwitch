@@ -27,4 +27,5 @@ enum EndPointKinds:String {
     case latestRelease = "repos/jacklandrin/OnlySwitch/releases/latest"
     case releases = "repos/jacklandrin/OnlySwitch/releases"
     case shortcutsJson = "jacklandrin/OnlySwitch/main/OnlySwitch/Resource/ShortcutsMarket/ShortcutsMarket.json"
+    case evolutionJson = "jacklandrin/OnlySwitch/main/OnlySwitch/Resource/Evolution/EvolutionMarket.json"
 }

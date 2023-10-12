@@ -110,5 +110,16 @@ class GitHubPresenter: ObservableObject, GitHubRepositoryProtocol{
         }
     }
     
-    
+    func requestEvolutionJson() async throws -> [EvolutionGalleryModel] {
+        guard let url = makeRequestURL(host: .userContent, path: .evolutionJson) else {
+            throw RequestError.invalidURL
+        }
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.allHTTPHeaderFields = ["Accept": "application/json"]
+        request.timeoutInterval = 60
+        let (data, _) = try await URLSession.shared.data(for: request)
+        let result = try decode(data: data, type: [EvolutionGalleryModel].self)
+        return result
+    }
 }

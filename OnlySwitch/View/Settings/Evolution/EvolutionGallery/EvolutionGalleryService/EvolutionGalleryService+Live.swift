@@ -11,13 +11,18 @@ import Dependencies
 extension EvolutionGalleryService: DependencyKey {
     static var liveValue = Self(
         fetchGalleryList: {
-            guard let url = Bundle.main.url(forResource: "EvolutionMarket", withExtension: "json") else {
-                print("json file not found")
-                return []
+            do {
+                let evolutionGalleryModels = try await GitHubPresenter.shared.requestEvolutionJson()
+                return EvolutionGalleryAdaptor.convertToGallery(from: evolutionGalleryModels)
+            } catch {
+                guard let url = Bundle.main.url(forResource: "EvolutionMarket", withExtension: "json") else {
+                    print("json file not found")
+                    return []
+                }
+                let data = try Data(contentsOf: url)
+                let evolutionGalleryModels = try JSONDecoder().decode([EvolutionGalleryModel].self, from: data)
+                return EvolutionGalleryAdaptor.convertToGallery(from: evolutionGalleryModels)
             }
-            let data = try Data(contentsOf: url)
-            let evolutionGalleryModels = try JSONDecoder().decode([EvolutionGalleryModel].self, from: data)
-            return EvolutionGalleryAdaptor.convertToGallery(from: evolutionGalleryModels)
         },
         checkInstallation: { id in
             do {
