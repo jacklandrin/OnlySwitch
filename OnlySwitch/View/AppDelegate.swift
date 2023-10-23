@@ -134,7 +134,7 @@ class AppDelegate:NSObject, NSApplicationDelegate {
         blManager = BluetoothDevicesManager.shared
         RadioStationSwitch.shared.setDefaultRadioStations()
         Bundle.setLanguage(lang: LanguageManager.sharedManager.currentLang)
-        
+//        Updater.start()
         checkUpdate()
     }
     
@@ -143,20 +143,22 @@ class AppDelegate:NSObject, NSApplicationDelegate {
     }
     
     func checkUpdate() {
-        checkUpdatePresenter.checkUpdate { result in
-            switch result {
-            case .success:
-                let newestVersion = self.checkUpdatePresenter.latestVersion
-                UserDefaults.standard.set(newestVersion, forKey: UserDefaults.Key.newestVersion)
-                UserDefaults.standard.synchronize()
-                if !self.checkUpdatePresenter.isTheNewestVersion {
-                    OpenWindows.Update(self.checkUpdatePresenter).open()
-                }
+//        checkUpdatePresenter.checkUpdate { result in
+//            switch result {
+//            case .success:
+//                let newestVersion = self.checkUpdatePresenter.latestVersion
+//                UserDefaults.standard.set(newestVersion, forKey: UserDefaults.Key.newestVersion)
+//                UserDefaults.standard.synchronize()
+//                if !self.checkUpdatePresenter.isTheNewestVersion {
+//                    OpenWindows.Update(self.checkUpdatePresenter).open()
+//                }
+//
+//            case let .failure(error):
+//                print(error.localizedDescription)
+//            }
+//        }
 
-            case let .failure(error):
-                print(error.localizedDescription)
-            }
-        }
+        Updater.checkForUpdates()
     }
     
 }

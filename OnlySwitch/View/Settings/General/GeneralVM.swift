@@ -135,22 +135,23 @@ class GeneralVM:ObservableObject {
     }
     
     func checkUpdate() {
-        self.model.showProgress = true
-        checkUpdatePresenter.checkUpdate(complete: { result in
-            switch result {
-            case .success:
-                self.model.newestVersion = self.checkUpdatePresenter.latestVersion
-                UserDefaults.standard.set(self.newestVersion,
-                                          forKey: UserDefaults.Key.newestVersion)
-                UserDefaults.standard.synchronize()
-                if !self.checkUpdatePresenter.isTheNewestVersion {
-                    OpenWindows.Update(self.checkUpdatePresenter).open()
-                }
-            case let .failure(error):
-                print(error.localizedDescription)
-            }
-            self.model.showProgress = false
-        })
+//        self.model.showProgress = true
+//        checkUpdatePresenter.checkUpdate(complete: { result in
+//            switch result {
+//            case .success:
+//                self.model.newestVersion = self.checkUpdatePresenter.latestVersion
+//                UserDefaults.standard.set(self.newestVersion,
+//                                          forKey: UserDefaults.Key.newestVersion)
+//                UserDefaults.standard.synchronize()
+//                if !self.checkUpdatePresenter.isTheNewestVersion {
+//                    OpenWindows.Update(self.checkUpdatePresenter).open()
+//                }
+//            case let .failure(error):
+//                print(error.localizedDescription)
+//            }
+//            self.model.showProgress = false
+//        })
+        Updater.checkForUpdates()
     }
 }
 

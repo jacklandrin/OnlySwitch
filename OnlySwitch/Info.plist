@@ -11,8 +11,6 @@
 			</array>
 		</dict>
 	</array>
-	<key>LSUIElement</key>
-	<false/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -25,5 +23,11 @@
 		<string>IsDarkModeIntent</string>
 		<string>SetDarkModeIntent</string>
 	</array>
+	<key>SUEnableAutomaticChecks</key>
+	<false/>
+	<key>SUFeedURL</key>
+	<string>http://jacklandrin.github.io/appcast.xml</string>
+	<key>SUPublicEDKey</key>
+	<string>uE3wX03AQ7gIqY2q7AjcY+dfLIrsNNim5/ZeK/15Cic=</string>
 </dict>
 </plist>

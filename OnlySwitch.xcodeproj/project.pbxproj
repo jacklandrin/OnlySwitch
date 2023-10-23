@@ -20,6 +20,8 @@
 		040E97272760FF3E003D9D42 /* MetadataExtractorError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040E97262760FF3E003D9D42 /* MetadataExtractorError.swift */; };
 		040E972B27611C9C003D9D42 /* URL++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040E972A27611C9C003D9D42 /* URL++.swift */; };
 		040E972D27611DEA003D9D42 /* XcodeCacheSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040E972C27611DEA003D9D42 /* XcodeCacheSwitch.swift */; };
+		041B17892AD841EE0032919B /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 041B17882AD841EE0032919B /* Sparkle */; };
+		041B178B2AD842470032919B /* Updater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041B178A2AD842470032919B /* Updater.swift */; };
 		041D725728353A160083092D /* OnlySwitchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041D725628353A160083092D /* OnlySwitchTests.swift */; };
 		041D725D28353A3F0083092D /* DarkModeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0424348A275642D20044D0AD /* DarkModeSwitch.swift */; };
 		041D725E28353A4D0083092D /* SwitchType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D792758212A00ADC004 /* SwitchType.swift */; };
@@ -418,6 +420,7 @@
 		040E97262760FF3E003D9D42 /* MetadataExtractorError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetadataExtractorError.swift; sourceTree = "<group>"; };
 		040E972A27611C9C003D9D42 /* URL++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL++.swift"; sourceTree = "<group>"; };
 		040E972C27611DEA003D9D42 /* XcodeCacheSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodeCacheSwitch.swift; sourceTree = "<group>"; };
+		041B178A2AD842470032919B /* Updater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Updater.swift; sourceTree = "<group>"; };
 		041D725428353A150083092D /* OnlySwitchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnlySwitchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		041D725628353A160083092D /* OnlySwitchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlySwitchTests.swift; sourceTree = "<group>"; };
 		041D726228353B380083092D /* NSImage+SymbolName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSImage+SymbolName.swift"; sourceTree = "<group>"; };
@@ -728,6 +731,7 @@
 				04A23B23275D5FC500B454C8 /* CoreBrightness.framework in Frameworks */,
 				04DC6C9C28A7CA7300888BF9 /* DisplayServices.framework in Frameworks */,
 				04A6B54B27715F90003B2647 /* Alamofire in Frameworks */,
+				041B17892AD841EE0032919B /* Sparkle in Frameworks */,
 				04581DB6276506B9008ADF30 /* AlertToast in Frameworks */,
 				043E5D6D2757DADB00ADC004 /* AVFoundation.framework in Frameworks */,
 			);
@@ -1519,6 +1523,7 @@
 				04B25452283BEF3800D253E2 /* SupportedLanguage.swift */,
 				04E89D5D289B054C00667710 /* IOService.swift */,
 				04DC6C9528A7B6C800888BF9 /* DisplayManager.swift */,
+				041B178A2AD842470032919B /* Updater.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -1689,6 +1694,7 @@
 				04BF976A27908D5400E7C0E2 /* KeyboardShortcuts */,
 				046C0BFF293E7C040073F727 /* SwiftUIWebView */,
 				047C1E4E2A22523B0061235D /* ComposableArchitecture */,
+				041B17882AD841EE0032919B /* Sparkle */,
 			);
 			productName = OnlySwitch;
 			productReference = 04447B582754F08000CD2900 /* OnlySwitch.app */;
@@ -1763,6 +1769,7 @@
 				04BF976927908D5400E7C0E2 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
 				046C0BFE293E7C040073F727 /* XCRemoteSwiftPackageReference "swiftui-webview" */,
 				047C1E4D2A22523B0061235D /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+				041B17872AD841EE0032919B /* XCRemoteSwiftPackageReference "Sparkle" */,
 			);
 			productRefGroup = 04447B592754F08000CD2900 /* Products */;
 			projectDirPath = "";
@@ -2149,6 +2156,7 @@
 				04938D12276948DE00713F1D /* WallpaperManager.swift in Sources */,
 				04A6F9452788EF4A00E3300F /* CursorModifier.swift in Sources */,
 				0493375127625A1E00AE779A /* Parser.swift in Sources */,
+				041B178B2AD842470032919B /* Updater.swift in Sources */,
 				0442C53F2A40EAAE00BC47B3 /* NightShiftSettingsVM.swift in Sources */,
 				04447B702754F21A00CD2900 /* StatusBarController.swift in Sources */,
 				043F0CE52A0FA39100590606 /* WindowContentSizeModifier.swift in Sources */,
@@ -2262,7 +2270,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 122;
+				CURRENT_PROJECT_VERSION = 124;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2288,7 +2296,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 122;
+				CURRENT_PROJECT_VERSION = 124;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2437,7 +2445,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 122;
+				CURRENT_PROJECT_VERSION = 124;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
@@ -2453,9 +2461,10 @@
 				INFOPLIST_FILE = OnlySwitch/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Only Switch";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_LSUIElement = NO;
 				INFOPLIST_KEY_NSAppleEventsUsageDescription = "Only Switch requests Apple Event usage to switch dark mode";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Only Switch requests Bluetooth usage to switch Airpods connection";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2021-2022 Jacklandrin";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2021-2023 Jacklandrin";
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2491,7 +2500,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 122;
+				CURRENT_PROJECT_VERSION = 124;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
@@ -2507,9 +2516,10 @@
 				INFOPLIST_FILE = OnlySwitch/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Only Switch";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_LSUIElement = NO;
 				INFOPLIST_KEY_NSAppleEventsUsageDescription = "Only Switch requests Apple Event usage to switch dark mode";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Only Switch requests Bluetooth usage to switch Airpods connection";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2021-2022 Jacklandrin";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2021-2023 Jacklandrin";
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2541,7 +2551,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 122;
+				CURRENT_PROJECT_VERSION = 124;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2574,7 +2584,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 122;
+				CURRENT_PROJECT_VERSION = 124;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2642,6 +2652,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		041B17872AD841EE0032919B /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = exactVersion;
+				version = 2.5.1;
+			};
+		};
 		0430887C275D707C00877E51 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sindresorhus/LaunchAtLogin";
@@ -2693,6 +2711,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		041B17882AD841EE0032919B /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 041B17872AD841EE0032919B /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
 		0430887D275D707C00877E51 /* LaunchAtLogin */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 0430887C275D707C00877E51 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */;
