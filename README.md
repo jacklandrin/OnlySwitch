@@ -197,6 +197,7 @@ S-GPT is already in Shortcuts gallery. Easily ask any questions to chatGPT via S
 * FKey refer to [Fluor](https://github.com/Pyroh/Fluor)
 * Hide Windows refer to [Later](https://github.com/alyssaxuu/later)
 * [The composable architecture](https://github.com/pointfreeco/swift-composable-architecture)
+* [Sparkle](https://github.com/sparkle-project/Sparkle)
 
 ## Contributors
 
