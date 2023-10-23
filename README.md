@@ -120,7 +120,7 @@ Everyone can contribute Evolution for OnlySwitch since version 2.4.3. Please rea
 </p>
 
 
-### How to create an evolution?
+### How to create an Evolution?
 So far, Evolution offers two types, with Switch and Button. 
 1. Button is very simple, when Run button is pressed, the script you added will be executed.
 2. Regarding Switch, there are four fields you can edit.
