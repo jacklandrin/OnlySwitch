@@ -84,7 +84,7 @@ class StatusBarController {
         observeNotifications()
     }
     
-    @objc private func togglePopover(sender:AnyObject) {
+    @objc private func togglePopover(sender:AnyObject?) {
         if let event = NSApp.currentEvent, event.isRightClicked {
             guard Preferences.shared.menubarCollaspable else {return}
             Task {
@@ -229,7 +229,7 @@ class StatusBarController {
         })
     }
     
-    func showPopover(_ sender: AnyObject) {
+    func showPopover(_ sender: AnyObject?) {
         if let statusBarButton = mainItem.button {
             popover.show(relativeTo: statusBarButton.bounds,
                          of: statusBarButton,

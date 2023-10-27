@@ -15,7 +15,7 @@ struct AboutView: View {
                 Image("only_switch")
                     .resizable()
                     .scaledToFit().frame(width: 100, height: 100)
-                Spacer().frame(height:50)
+                Spacer().frame(height:44)
                 HStack(alignment:.bottom) {
                     Text("Only Switch")
                         .fontWeight(.bold)
@@ -30,7 +30,7 @@ struct AboutView: View {
                 HStack {
                     Text("Copyright @ 2021-2023 ")
                         .font(.system(size: 15))
-                    Link(destination: URL(string: "https://www.jacklandrin.com")!, label: {
+                    Link(destination: URL(string: "https://jacklandrin.github.io")!, label: {
                         Text("Jacklandrin")
                             .font(.system(size: 15))
                     })
@@ -43,6 +43,16 @@ struct AboutView: View {
                         Text("%@ downloads".localizeWithFormat(arguments: formatDownloadCount))
                     }
                 }
+
+
+                Link(destination:
+                    URL(string: "https://github.com/sponsors/jacklandrin")!
+                , label: {
+                    Text("Donation".localized())
+                })
+                .buttonStyle(.bordered)
+                .padding(3)
+
                 HStack {
                     Text("Join:".localized())
                         .font(.system(size: 15))
