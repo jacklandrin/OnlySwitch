@@ -12,6 +12,7 @@ extension Notification.Name {
     static let changePTDuration = Notification.Name(rawValue:"ChangePTDurationNotification")
     static let showPopover = Notification.Name("showPopover")
     static let hidePopover = Notification.Name("hidePopover")
+    static let togglePopover = Notification.Name("togglePopover")
     static let shouldHidePopover = Notification.Name("shouldHidePopover")
     static let changeMenuBarIcon = Notification.Name("changeMenuBarIcon")
     static let changePopoverAppearance = Notification.Name("changePopoverAppearanceNotificationName")

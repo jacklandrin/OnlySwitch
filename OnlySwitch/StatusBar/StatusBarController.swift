@@ -153,7 +153,15 @@ class StatusBarController {
             let newImageName = notify.object as! String
             strongSelf.setMainItemButton(image: newImageName)
         })
-        
+
+        NotificationCenter.default.addObserver(forName: .togglePopover,
+                                               object: nil,
+                                               queue: .main,
+                                               using: { [weak self] notify in
+            guard let self else {return}
+            self.togglePopover(sender: nil)
+        })
+
         NotificationCenter.default.addObserver(forName: .shouldHidePopover,
                                                object: nil,
                                                queue: .main,

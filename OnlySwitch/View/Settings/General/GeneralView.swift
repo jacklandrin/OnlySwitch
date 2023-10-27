@@ -8,6 +8,7 @@
 import SwiftUI
 import LaunchAtLogin
 import AlertToast
+import KeyboardShortcuts
 
 struct GeneralView: View, EmailProvider {
     @ObservedObject var langManager = LanguageManager.sharedManager
@@ -32,6 +33,9 @@ struct GeneralView: View, EmailProvider {
                     Text("Menu Bar Icon:".localized())
                         .frame(height:Layout.generalSettingItemHeight)
                     
+                    Text("Show List:".localized())
+                        .frame(height:Layout.generalSettingItemHeight)
+
                     Text("Updates:".localized())
                         .frame(height:Layout.generalSettingItemHeight)
                     
@@ -115,6 +119,10 @@ struct GeneralView: View, EmailProvider {
                         }
                         .frame(height:Layout.generalSettingItemHeight)
                     
+                    //show list
+                    KeyboardShortcuts.Recorder(for: generalVM.invokePopoverName)
+                        .frame(height:Layout.generalSettingItemHeight)
+
                     //check update
                     HStack {
                         Button("Check For Update...".localized()) {
@@ -134,10 +142,9 @@ struct GeneralView: View, EmailProvider {
                         ProgressView()
                             .progressViewStyle(.circular)
                             .controlSize(.small)
-//                            .scaleEffect(0.6)
                             .isHidden(!generalVM.showProgress,remove: true)
                     }.frame(height:Layout.generalSettingItemHeight)
-                    
+
                     
                     //clear cache
                     VStack(alignment:.leading,spacing: 15) {
@@ -166,6 +173,7 @@ struct GeneralView: View, EmailProvider {
                 }
             }
         }
+        .frame(width: 400)
         .onAppear{
             generalVM.cacheSize = WallpaperManager.shared.cacheSize()
         }

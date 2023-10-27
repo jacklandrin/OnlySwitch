@@ -13,6 +13,7 @@ import KeyboardShortcuts
 struct OnlySwitchApp: App {
     let persistenceController = PersistenceController.shared
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    @StateObject var appState = AppState()
     @ObservedObject var preferencesvm = PreferencesObserver.shared
     @State var preferences = PreferencesObserver.shared.preferences
     
@@ -20,27 +21,6 @@ struct OnlySwitchApp: App {
         WindowGroup("SettingsWindow") {
             SettingsView()
                 .frame(width: Layout.settingWindowWidth, height: Layout.settingWindowHeight)
-                .task {
-                    CustomizeVM.shared.allSwitches.forEach{ item in
-                        KeyboardShortcuts.onKeyDown(for: item.keyboardShortcutName) {
-                            item.doSwitch()
-                        }
-                    }
-                    
-                    ShortcutsSettingVM.shared.shortcutsList.forEach{ item in
-                        KeyboardShortcuts.onKeyDown(for: item.keyboardShortcutName) {
-                            item.doShortcuts()
-                        }
-                    }
-
-                    guard let entities = try? EvolutionCommandEntity.fetchResult() else { return }
-                    let evolutionItems = EvolutionAdapter.evolutionItems(entities)
-                    evolutionItems.forEach{ item in
-                        KeyboardShortcuts.onKeyDown(for: KeyboardShortcuts.Name(rawValue: item.id.uuidString)!) {
-                            item.doSwitch()
-                        }
-                    }
-                }
                 .onDisappear {
                     if #available(macOS 13.3, *) {
                         print("settings window closing")
@@ -132,6 +112,7 @@ class AppDelegate:NSObject, NSApplicationDelegate {
         blManager = BluetoothDevicesManager.shared
         RadioStationSwitch.shared.setDefaultRadioStations()
         Bundle.setLanguage(lang: LanguageManager.sharedManager.currentLang)
+
         checkUpdate()
     }
     
@@ -157,5 +138,34 @@ class AppDelegate:NSObject, NSApplicationDelegate {
             }
         }
     }
-    
+}
+
+@MainActor
+final class AppState: ObservableObject {
+    init() {
+        KeyboardShortcuts.onKeyDown(for: .invokePopoverShortcutsName) {
+            NotificationCenter.default.post(name: .togglePopover, object: nil)
+        }
+
+        CustomizeVM.shared.allSwitches.forEach{ item in
+            KeyboardShortcuts.onKeyDown(for: item.keyboardShortcutName) {
+                item.doSwitch()
+            }
+        }
+
+        ShortcutsSettingVM.shared.shortcutsList.forEach{ item in
+            KeyboardShortcuts.onKeyDown(for: item.keyboardShortcutName) {
+                item.doShortcuts()
+            }
+        }
+
+        if let entities = try? EvolutionCommandEntity.fetchResult() {
+            let evolutionItems = EvolutionAdapter.evolutionItems(entities)
+            evolutionItems.forEach{ item in
+                KeyboardShortcuts.onKeyDown(for: KeyboardShortcuts.Name(rawValue: item.id.uuidString)!) {
+                    item.doSwitch()
+                }
+            }
+        }
+    }
 }
