@@ -115,7 +115,6 @@ extension SwitchListVM: SettingWindowController {
         }
         self.settingsWindowPresented = true
         NotificationCenter.default.post(name: .shouldHidePopover, object: nil)
-
     }
     
     class Coordinator:NSObject, NSWindowDelegate {

@@ -21,7 +21,9 @@ struct SwitchBarView: View {
             .padding(.trailing, 8)
             
             Text(switchOption.title.localized())
+                .font(.system(size: 14))
                 .frame(alignment: .leading)
+            
             if switchOption.switchType == .airPods {
                 AirPodsBatteryView(batteryValues: convertBattery(info: switchOption.info))
                     .offset(x:60)

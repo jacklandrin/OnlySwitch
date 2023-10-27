@@ -71,43 +71,6 @@ class CustomizeItem:ObservableObject {
     }
     
     func doSwitch() {
-        let switchOperator = type.getNewSwitchInstance()
-        let controlType = type.barInfo().controlType
-        if controlType == .Switch || controlType == .Player {
-            let status = switchOperator.currentStatus()
-            Task {
-                do {
-                    _ = try await switchOperator.operateSwitch(isOn: !status)
-                    DispatchQueue.main.async {
-                        NotificationCenter.default.post(name: .changeSettings, object: nil)
-                        if controlType == .Switch {
-                            _ = try? displayNotificationCMD(title: self.type.barInfo().title.localized(),
-                                                            content: "",
-                                                            subtitle: status ? "Turn off1".localized() : "Turn on1".localized())
-                            .runAppleScript()
-                        }
-                    }
-                } catch {
-                    
-                }
-            }
-        } else if controlType == .Button {
-            Task {
-                do {
-                    _ = try await switchOperator.operateSwitch(isOn: true)
-                    DispatchQueue.main.async {
-                        NotificationCenter.default.post(name: .changeSettings, object: nil)
-                        _ = try? displayNotificationCMD(title: self.type.barInfo().title.localized(),
-                                                        content: "",
-                                                        subtitle: "Running".localized())
-                        .runAppleScript()
-                    }
-                } catch {
-                    
-                }
-                
-            }
-        }
-        
+        type.doSwitch()
     }
 }

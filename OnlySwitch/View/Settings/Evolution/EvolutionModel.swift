@@ -19,7 +19,7 @@ struct EvolutionItem: Equatable, Identifiable {
     var statusCommand: EvolutionCommand?
 
     func doSwitch() {
-        Task {
+        Task { @MainActor in
             if controlType == .Button {
                 guard let singleCommand else { return }
                 _ = try? singleCommand.commandString.runAppleScript(isShellCMD: singleCommand.executeType == .shell)
@@ -54,9 +54,8 @@ struct EvolutionItem: Equatable, Identifiable {
                 )
                 .runAppleScript()
             }
+            NotificationCenter.default.post(name: .changeSettings, object: nil)
         }
-
-        NotificationCenter.default.post(name: .changeSettings, object: nil)
     }
 }
 

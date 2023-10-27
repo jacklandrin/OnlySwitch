@@ -25,6 +25,7 @@ struct EvolutionBarView: View {
         .padding(.trailing, 8)
 
         Text(evolutionBarVM.barName)
+            .font(.system(size: 14))
             .frame(alignment: .leading)
 
         Spacer()

@@ -26,4 +26,6 @@ struct SwitchListModel {
     var evolutionItemList = Array<EvolutionBarVM>()
 
     var sortMode = false
+
+    var isFocusable = false
 }

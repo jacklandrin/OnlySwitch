@@ -64,7 +64,16 @@ class SwitchListVM: ObservableObject, CurrentScreen {
     }
     
     var isSettingViewShowing = false
-    
+
+    var isFocusable: Bool {
+        get {
+            model.isFocusable
+        }
+        set {
+            model.isFocusable = newValue
+        }
+    }
+
     init() {
         refreshMaxHeight()
         receiveSettingWindowOperation()

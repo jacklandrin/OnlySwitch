@@ -65,4 +65,8 @@ class EvolutionBarVM: BarProvider, ObservableObject {
             processing = false
         }
     }
+
+    func doSwitch() {
+        evolutionItem.doSwitch()
+    }
 }

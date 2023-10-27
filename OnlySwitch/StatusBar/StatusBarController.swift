@@ -98,7 +98,7 @@ class StatusBarController {
             }
             if(popover.isShown) {
                 hidePopover(sender)
-                
+
             } else {
                 showPopover(sender)
             }
@@ -113,7 +113,7 @@ class StatusBarController {
             }
         }
     }
-    
+
     private var isMarkItemValidPosition:Bool {
         guard let mainItemX = self.mainItem.button?.getOrigin?.x,
               let markItemX = self.markItem?.button?.getOrigin?.x

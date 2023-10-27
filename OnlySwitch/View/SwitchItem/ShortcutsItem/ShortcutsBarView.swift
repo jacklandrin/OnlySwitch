@@ -19,6 +19,7 @@ struct ShortcutsBarView: View {
                 .padding(.trailing, 8)
             
             Text(shortcutsBarVM.barName)
+                .font(.system(size: 14))
                 .frame(alignment: .leading)
             
             Spacer()

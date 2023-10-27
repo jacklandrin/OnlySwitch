@@ -8,6 +8,11 @@
 import SwiftUI
 import LaunchAtLogin
 
+enum Focusable: Hashable {
+  case none
+  case row(index: Int)
+}
+
 struct OnlySwitchListView: View {
     @EnvironmentObject var switchVM:SwitchListVM
     @Environment(\.colorScheme) private var colorScheme
@@ -16,7 +21,8 @@ struct OnlySwitchListView: View {
     @State private var hoverIndex = -1
     @ObservedObject private var playerItem = RadioStationSwitch.shared.playerItem
     @ObservedObject private var languageManager = LanguageManager.sharedManager
-    
+    @FocusState var focusedBar: Focusable?
+
     let columns = [
         GridItem(.fixed(Layout.popoverWidth - 40)),
         GridItem(.fixed(Layout.popoverWidth - 40))
@@ -57,7 +63,7 @@ struct OnlySwitchListView: View {
                 Spacer().frame(height:SwitchListAppearance(rawValue: switchVM.currentAppearance) == .dual ? 20 : 0)
             }
         }
-        .onReceive(NotificationCenter.default.publisher(for: .showPopover, object: nil)) { _ in
+        .onReceive(NotificationCenter.default.publisher(for: .showPopover, object: nil)) { notify in
             switchVM.refreshData()
         }
         .onReceive(NotificationCenter.default.publisher(for: .changeSettings, object: nil)) { _ in
@@ -77,34 +83,57 @@ struct OnlySwitchListView: View {
     var singleSwitchList: some View {
         VStack(spacing:0) {
             ForEach(switchVM.allItemList.indices, id:\.self) { index in
-                HStack {
-                    Image(systemName: "line.3.horizontal")
-                        .font(.system(size: 20))
-                        .frame(width: 30, height: 30)
-                        .shadow(color: .gray, radius: 2, x: 0, y: 1)
-                        .isHidden(isMoverHidden(index: index), remove: true)
-                    
-                    if let item = switchVM.allItemList[index] as? SwitchBarVM {
-                        SwitchBarView().environmentObject(item)
-                            .frame(height:Layout.singleSwitchHeight)
-                    } else if let item = switchVM.allItemList[index] as? ShortcutsBarVM {
-                        ShortcutsBarView().environmentObject(item)
-                            .frame(height:Layout.singleSwitchHeight)
-                    } else if let item = switchVM.allItemList[index] as? EvolutionBarVM {
-                        EvolutionBarView().environmentObject(item)
-                            .frame(height:Layout.singleSwitchHeight)
+                VStack {
+                    HStack {
+                        Image(systemName: "line.3.horizontal")
+                            .font(.system(size: 20))
+                            .frame(width: 30, height: 30)
+                            .shadow(color: .gray, radius: 2, x: 0, y: 1)
+                            .isHidden(isMoverHidden(index: index), remove: true)
+
+                        if let item = switchVM.allItemList[index] as? SwitchBarVM {
+                            SwitchBarView().environmentObject(item)
+                                .frame(height:Layout.singleSwitchHeight)
+                        } else if let item = switchVM.allItemList[index] as? ShortcutsBarVM {
+                            ShortcutsBarView().environmentObject(item)
+                                .frame(height:Layout.singleSwitchHeight)
+                        } else if let item = switchVM.allItemList[index] as? EvolutionBarVM {
+                            EvolutionBarView().environmentObject(item)
+                                .frame(height:Layout.singleSwitchHeight)
+                        }
                     }
+                    .padding(.horizontal, 15)
+                    .padding(.top, 8)
+
+                    Divider()
+                        .opacity(0.25)
+                        .frame(height: 1)
                 }
-                .padding(.horizontal, 15)
-                .background(Color.accentColor
+                .background(
+                    Color.accentColor
                     .shadow(color: Color(nsColor: .darkGray), radius: 1, x: 0, y: 1)
                     .opacity(0.15)
-                    .isHidden(!itemHighlight(index: index)))
+                    .isHidden(!itemHighlight(index: index))
+                )
                 .scaleEffect(itemScaleEffect(index: index))
+                .focusReturnable(focusable: true, binding: $focusedBar, equals: .row(index: index)) {
+                    if let item = switchVM.allItemList[index] as? SwitchBarVM {
+                        item.switchType.doSwitch()
+                    } else if let item = switchVM.allItemList[index] as? ShortcutsBarVM {
+                        item.runShortCut()
+                    } else if let item = switchVM.allItemList[index] as? EvolutionBarVM {
+                        item.doSwitch()
+                    }
+                }
+                .animation(.easeOut, value: focusedBar)
                 .onHover{ isHovering in
                     if isHovering {
                         withAnimation(.easeOut) {
-                            self.hoverIndex = index
+                            if #available(macOS 14.0, *) {
+                                self.focusedBar = .row(index: index)
+                            } else {
+                                self.hoverIndex = index
+                            }
                         }
                     }
                 }
@@ -148,7 +177,6 @@ struct OnlySwitchListView: View {
                             movingIndex = -1
                         }
                 )
-                
             }
         }
         .padding(.horizontal, 0)
@@ -370,7 +398,7 @@ struct OnlySwitchListView: View {
     
     var scrollViewHeight : CGFloat {
         let switchCount = visableSwitchCount + switchVM.shortcutsList.count + switchVM.evolutionList.count
-        var totalHeight = CGFloat((switchCount)) * Layout.singleSwitchHeight
+        var totalHeight = CGFloat((switchCount)) * (Layout.singleSwitchHeight + 17)
         //two columns
         if switchVM.currentAppearance == SwitchListAppearance.dual.rawValue {
             totalHeight = categoryHeight(count: switchVM.uncategoryItemList.count)
@@ -387,7 +415,7 @@ struct OnlySwitchListView: View {
         return height
     }
     
-    func categoryHeight(count:Int) -> CGFloat {
+    func categoryHeight(count: Int) -> CGFloat {
         var height = 0.0
         if count > 0 {
             height += 30.0
@@ -462,7 +490,16 @@ struct OnlySwitchListView: View {
         if switchVM.sortMode {
             return index == movingIndex ? 1.008 : 1.0
         } else {
-            return index == self.hoverIndex ? 1.008 : 1.0
+            if #available(macOS 14.0, *) {
+                if focusedBar == .row(index: index) {
+                    return 1.008
+                } else {
+                    return 1.0
+                }
+            } else {
+                return index == hoverIndex ? 1.008 : 1.0
+            }
+
         }
     }
     
@@ -470,7 +507,11 @@ struct OnlySwitchListView: View {
         if switchVM.sortMode {
             return index == movingIndex ? true : false
         } else {
-            return index == self.hoverIndex
+            if #available(macOS 14.0, *) {
+                return focusedBar == .row(index: index)
+            } else {
+                return index == hoverIndex
+            }
         }
     }
 }
