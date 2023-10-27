@@ -20,6 +20,8 @@
 		040E97272760FF3E003D9D42 /* MetadataExtractorError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040E97262760FF3E003D9D42 /* MetadataExtractorError.swift */; };
 		040E972B27611C9C003D9D42 /* URL++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040E972A27611C9C003D9D42 /* URL++.swift */; };
 		040E972D27611DEA003D9D42 /* XcodeCacheSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040E972C27611DEA003D9D42 /* XcodeCacheSwitch.swift */; };
+		041927662AEBFE350041185B /* TrueToneSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041927652AEBFE350041185B /* TrueToneSwitch.swift */; };
+		041927682AEBFFA60041185B /* CBTrueToneClient++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041927672AEBFFA60041185B /* CBTrueToneClient++.swift */; };
 		041B17892AD841EE0032919B /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 041B17882AD841EE0032919B /* Sparkle */; };
 		041B178B2AD842470032919B /* Updater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041B178A2AD842470032919B /* Updater.swift */; };
 		041D725728353A160083092D /* OnlySwitchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041D725628353A160083092D /* OnlySwitchTests.swift */; };
@@ -420,6 +422,9 @@
 		040E97262760FF3E003D9D42 /* MetadataExtractorError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetadataExtractorError.swift; sourceTree = "<group>"; };
 		040E972A27611C9C003D9D42 /* URL++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL++.swift"; sourceTree = "<group>"; };
 		040E972C27611DEA003D9D42 /* XcodeCacheSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodeCacheSwitch.swift; sourceTree = "<group>"; };
+		041927652AEBFE350041185B /* TrueToneSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrueToneSwitch.swift; sourceTree = "<group>"; };
+		041927672AEBFFA60041185B /* CBTrueToneClient++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CBTrueToneClient++.swift"; sourceTree = "<group>"; };
+		041927692AEC019C0041185B /* CBTrueToneClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CBTrueToneClient.h; sourceTree = "<group>"; };
 		041B178A2AD842470032919B /* Updater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Updater.swift; sourceTree = "<group>"; };
 		041D725428353A150083092D /* OnlySwitchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnlySwitchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		041D725628353A160083092D /* OnlySwitchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlySwitchTests.swift; sourceTree = "<group>"; };
@@ -844,6 +849,7 @@
 				04DC6C9328A7B5C900888BF9 /* DimScreenSwitch.swift */,
 				04BEF6DB293025D0009DB981 /* EjectDiscsSwitch.swift */,
 				0441A9BF295211F300EC4AC4 /* HideWindowsSwitch.swift */,
+				041927652AEBFE350041185B /* TrueToneSwitch.swift */,
 			);
 			path = EverySwitch;
 			sourceTree = "<group>";
@@ -1266,6 +1272,7 @@
 			children = (
 				04A23B2C275D641900B454C8 /* OnlySwitch-Bridging-Header.h */,
 				04A23B2D275D69F700B454C8 /* CBBlueLightClient.h */,
+				041927692AEC019C0041185B /* CBTrueToneClient.h */,
 			);
 			path = Header;
 			sourceTree = "<group>";
@@ -1524,6 +1531,7 @@
 				04E89D5D289B054C00667710 /* IOService.swift */,
 				04DC6C9528A7B6C800888BF9 /* DisplayManager.swift */,
 				041B178A2AD842470032919B /* Updater.swift */,
+				041927672AEBFFA60041185B /* CBTrueToneClient++.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -2100,6 +2108,7 @@
 				047C1E612A22960D0061235D /* EvolutionListService.swift in Sources */,
 				04DC6C5C28A2D04B00888BF9 /* UpdateView.swift in Sources */,
 				04BC8ECF285008C1009E605F /* RadioSettingModel.swift in Sources */,
+				041927682AEBFFA60041185B /* CBTrueToneClient++.swift in Sources */,
 				04E2AD1E2783B63600BC5DF3 /* CurrentScreen.swift in Sources */,
 				043E5D7A2758212A00ADC004 /* SwitchType.swift in Sources */,
 				04E03B00275F93B900EA5FB9 /* AirPodsSwitch.swift in Sources */,
@@ -2118,6 +2127,7 @@
 				0493372327615A4900AE779A /* AutohideMenuBarSwitch.swift in Sources */,
 				0444D5FD2839873100327D0B /* ScreenTestSwitch.swift in Sources */,
 				04BC8EDD28515CE0009E605F /* NSView++.swift in Sources */,
+				041927662AEBFE350041185B /* TrueToneSwitch.swift in Sources */,
 				047140BA2778890A005B160B /* PomodoroTimerSwitch.swift in Sources */,
 				04243487275641DB0044D0AD /* SwitchProvider.swift in Sources */,
 				047C1E682A2297DC0061235D /* EvolutionListService+Live.swift in Sources */,
