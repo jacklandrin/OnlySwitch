@@ -45,6 +45,8 @@ Everyone can contribute macOS Shortcuts for OnlySwitch now. Please read [How to 
 
 ## Switch list
 
+#### Native Switches:
+
 | Switch            | status          | Switch                   | status            |
 |:------------------|-----------------|:-------------------------|:------------------|
 | Hide desktop      | finished        | Hide notch               | exist some issues |
@@ -66,6 +68,28 @@ Everyone can contribute macOS Shortcuts for OnlySwitch now. Please read [How to 
 | Hide Windows      | partly finished |                          |                   |
 
 Since Version 1.3, switches can be added to or removed from the list.
+
+#### Shortcuts Gallery:
+
+| Shortcuts                        | Remark                                          | Shortcuts                        | Remark  |
+|----------------------------------|-------------------------------------------------|----------------------------------|:--------|
+| Toggle Scroll Direction          | Monteray                                        | Invert Scroll Direction(Ventura) | Ventura |
+| DarkMode Switch                  |                                                 | Network Details                  |         |
+| Split-Screen Apps                |                                                 | Passwords                        |         |
+| Google Translate                 |                                                 | IP Address Information           |         |
+| Autohide menu bar in full screen | Monteray                                        | Flush DNS Cache                  |         |
+| Do Not Disturb                   | Monteray or higher                              | Upcoming Events                  |         |
+| S-GPT                            | works with S-GPT Encoder, needs OpenAI API key  | S-GPT Encoder                    |         |
+
+#### Evolution Gallery:
+
+| Evolution           | Remark | Evolution          | Remark                  |
+|---------------------|--------|--------------------|:------------------------|
+| Stage Manager       |        | Update Software    | installed via App Store |
+| Hide desktop Widget | Sonoma | Hide Desktop Icons | Sonoma                  |
+| Clamshell           |        |                    |                         |
+
+
 
 ## Shortcuts Actions
 
@@ -198,6 +222,7 @@ S-GPT is already in Shortcuts gallery. Easily ask any questions to chatGPT via S
 * Hide Windows refer to [Later](https://github.com/alyssaxuu/later)
 * [The composable architecture](https://github.com/pointfreeco/swift-composable-architecture)
 * [Sparkle](https://github.com/sparkle-project/Sparkle)
+* True Tone refer to [Shifty](https://github.com/thompsonate/Shifty)
 
 ## Contributors
 
