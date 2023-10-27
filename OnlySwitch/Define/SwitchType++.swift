@@ -237,8 +237,8 @@ extension SwitchType {
                                      offImage: NSImage(systemSymbolName: "macwindow"))
             case .trueTone:
                 return SwitchBarInfo(title: "True Tone",
-                                     onImage: NSImage(systemSymbolName: "circle.dotted.circle.fill"),
-                                     offImage: NSImage(systemSymbolName: "circle.dotted.circle"))
+                                     onImage: NSImage(named: "truetone"),
+                                     offImage: NSImage(named: "truetone"))
 
         }
     }

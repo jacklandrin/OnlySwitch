@@ -23,6 +23,8 @@
 		<string>IsDarkModeIntent</string>
 		<string>SetDarkModeIntent</string>
 	</array>
+	<key>NSUserNotificationsUsageDescription</key>
+	<string>Only Switch requests Notifications usage to show radio status</string>
 	<key>SUEnableAutomaticChecks</key>
 	<false/>
 	<key>SUFeedURL</key>
