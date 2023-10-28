@@ -13,7 +13,7 @@ import KeyboardShortcuts
 struct OnlySwitchApp: App {
     let persistenceController = PersistenceController.shared
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    @StateObject var appState = AppState()
+    @ObservedObject var appState = AppState()
     @ObservedObject var preferencesvm = PreferencesObserver.shared
     @State var preferences = PreferencesObserver.shared.preferences
     
