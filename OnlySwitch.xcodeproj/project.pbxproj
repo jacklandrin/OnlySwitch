@@ -189,6 +189,9 @@
 		047F3A34285DE600004FFCDF /* EffectSoundHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140B527788486005B160B /* EffectSoundHelper.swift */; };
 		047F3A37285DE67A004FFCDF /* SwitchListApperanceDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047F3A36285DE67A004FFCDF /* SwitchListApperanceDefine.swift */; };
 		047F3A38285DE67A004FFCDF /* SwitchListApperanceDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047F3A36285DE67A004FFCDF /* SwitchListApperanceDefine.swift */; };
+		048D10922AED293800ACB181 /* TopStickerSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048D10912AED293800ACB181 /* TopStickerSwitch.swift */; };
+		048D10972AED4A9E00ACB181 /* StickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048D10962AED4A9E00ACB181 /* StickerView.swift */; };
+		048D10992AED92EA00ACB181 /* StickerReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048D10982AED92EA00ACB181 /* StickerReducer.swift */; };
 		049337212761286400AE779A /* CleanProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337202761286400AE779A /* CleanProgressView.swift */; };
 		0493372327615A4900AE779A /* AutohideMenuBarSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493372227615A4900AE779A /* AutohideMenuBarSwitch.swift */; };
 		0493372527615EA400AE779A /* HiddenFilesSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493372427615EA400AE779A /* HiddenFilesSwitch.swift */; };
@@ -544,6 +547,9 @@
 		047C1E752A24D1870061235D /* EvolutionCommandEditingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionCommandEditingView.swift; sourceTree = "<group>"; };
 		047C1E772A24D2590061235D /* EvolutionCommandEditingReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionCommandEditingReducer.swift; sourceTree = "<group>"; };
 		047F3A36285DE67A004FFCDF /* SwitchListApperanceDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchListApperanceDefine.swift; sourceTree = "<group>"; };
+		048D10912AED293800ACB181 /* TopStickerSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopStickerSwitch.swift; sourceTree = "<group>"; };
+		048D10962AED4A9E00ACB181 /* StickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerView.swift; sourceTree = "<group>"; };
+		048D10982AED92EA00ACB181 /* StickerReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerReducer.swift; sourceTree = "<group>"; };
 		049337202761286400AE779A /* CleanProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanProgressView.swift; sourceTree = "<group>"; };
 		0493372227615A4900AE779A /* AutohideMenuBarSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutohideMenuBarSwitch.swift; sourceTree = "<group>"; };
 		0493372427615EA400AE779A /* HiddenFilesSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HiddenFilesSwitch.swift; sourceTree = "<group>"; };
@@ -854,6 +860,7 @@
 				04BEF6DB293025D0009DB981 /* EjectDiscsSwitch.swift */,
 				0441A9BF295211F300EC4AC4 /* HideWindowsSwitch.swift */,
 				041927652AEBFE350041185B /* TrueToneSwitch.swift */,
+				048D10912AED293800ACB181 /* TopStickerSwitch.swift */,
 			);
 			path = EverySwitch;
 			sourceTree = "<group>";
@@ -945,6 +952,7 @@
 				04BF976C27908E0100E7C0E2 /* OnlySwitchList */,
 				04BF976D27908E2800E7C0E2 /* SwitchItem */,
 				04BF977927908FB900E7C0E2 /* SoundWave */,
+				048D10932AED420900ACB181 /* StickerView */,
 				0444D6012839995D00327D0B /* PureColorView */,
 				049337952762C05200AE779A /* Settings */,
 				04DC6C5A28A2D02000888BF9 /* Update */,
@@ -1172,6 +1180,15 @@
 				047C1E722A22B12E0061235D /* EvolutionEditorService+Test.swift */,
 			);
 			path = EvolutionEditorService;
+			sourceTree = "<group>";
+		};
+		048D10932AED420900ACB181 /* StickerView */ = {
+			isa = PBXGroup;
+			children = (
+				048D10962AED4A9E00ACB181 /* StickerView.swift */,
+				048D10982AED92EA00ACB181 /* StickerReducer.swift */,
+			);
+			path = StickerView;
 			sourceTree = "<group>";
 		};
 		0493372627625A1E00AE779A /* Player */ = {
@@ -2087,6 +2104,7 @@
 				0406EDD12ACB65C50015F4D0 /* EvolutionGalleryService.swift in Sources */,
 				0424348D275643560044D0AD /* TopNotchSwitch.swift in Sources */,
 				040E972B27611C9C003D9D42 /* URL++.swift in Sources */,
+				048D10992AED92EA00ACB181 /* StickerReducer.swift in Sources */,
 				0451766B27C284D600006BA0 /* iTunesScripting.swift in Sources */,
 				04A6F93F2788747600E3300F /* MuteMicSwitch.swift in Sources */,
 				04A6B5502771F338003B2647 /* GitHubPresenter.swift in Sources */,
@@ -2105,6 +2123,7 @@
 				04B25457283C0F8800D253E2 /* ShortcutsBarModel.swift in Sources */,
 				0493374927625A1E00AE779A /* Streaming.swift in Sources */,
 				0434B4CF2876031C00F06AB9 /* RadioPlayerItem.swift in Sources */,
+				048D10972AED4A9E00ACB181 /* StickerView.swift in Sources */,
 				0444D6032839997B00327D0B /* PureColorVM.swift in Sources */,
 				0456C9292ACB67F900DB7898 /* EvolutionGalleryModel.swift in Sources */,
 				0451765C27C27AFC00006BA0 /* MusicPlayer.swift in Sources */,
@@ -2168,6 +2187,7 @@
 				0427365227C1AADB0068108F /* MusicPlaybackState.swift in Sources */,
 				0434B4D12876325B00F06AB9 /* HostWindowFinder.swift in Sources */,
 				04581DC12765522A008ADF30 /* AboutView.swift in Sources */,
+				048D10922AED293800ACB181 /* TopStickerSwitch.swift in Sources */,
 				0427365627C1ADA60068108F /* SpotifySwitch.swift in Sources */,
 				0427364827C1A5430068108F /* SpotifyScripting.swift in Sources */,
 				04938D12276948DE00713F1D /* WallpaperManager.swift in Sources */,

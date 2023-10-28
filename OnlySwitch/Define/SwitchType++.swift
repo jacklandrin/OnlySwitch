@@ -77,6 +77,8 @@ extension SwitchType {
                 return HideWindowsSwitch()
             case .trueTone:
                 return TrueToneSwitch()
+            case .topSticker:
+                return TopStickerSwitch.shared
         }
     }
 
@@ -239,6 +241,10 @@ extension SwitchType {
                 return SwitchBarInfo(title: "True Tone",
                                      onImage: NSImage(named: "truetone"),
                                      offImage: NSImage(named: "truetone"))
+            case .topSticker:
+                return SwitchBarInfo(title: "Top Sticker",
+                                     onImage: NSImage(named: "sticker"),
+                                     offImage: NSImage(named: "sticker"))
 
         }
     }

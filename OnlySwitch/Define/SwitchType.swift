@@ -50,6 +50,7 @@ enum SwitchType:UInt64, CaseIterable {
     case ejectDiscs = 2_147_483_648 // 1 << 31
     case hideWindows = 4_294_967_296 // 1 << 32
     case trueTone = 8_589_934_592 // 1 << 33
+    case topSticker = 17_179_869_184 // 1 << 34
 }
 
 let switchTypeCount = SwitchType.allCases.count

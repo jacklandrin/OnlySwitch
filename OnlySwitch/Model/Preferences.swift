@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 struct Preferences {
     static var shared = Preferences()
@@ -232,4 +233,8 @@ struct Preferences {
     
     @UserDefaultValue(key: UserDefaults.Key.hiddenWindowsInfo, defaultValue: nil)
     var hiddenWindowsInfo:Data?
+
+    //Sticker
+    @UserDefaultValue(key: UserDefaults.Key.stickerContent, defaultValue: [""])
+    var stickerContent: [String]
 }

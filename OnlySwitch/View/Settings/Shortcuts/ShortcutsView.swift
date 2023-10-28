@@ -19,7 +19,7 @@ struct ShortcutsView: View {
 
     var body: some View {
         HStack(spacing:0) {
-            
+
             VStack(alignment:.leading) {
                 Text("To add or remove any shortcuts on list".localized())
                     .padding(10)
@@ -37,10 +37,10 @@ struct ShortcutsView: View {
                                 Text(shortcutsVM.shortcutsList[index].name)
                                     .frame(width: 170, alignment: .leading)
                                     .padding(.trailing, 10)
-                                
+
                                 KeyboardShortcuts.Recorder(for: shortcutsVM.shortcutsList[index].keyboardShortcutName)
                                     .environment(\.locale, .init(identifier: langManager.currentLang))//Localizable doesn't work
-                                
+
                                 Spacer().frame(width:30)
                             }
                         }
@@ -63,7 +63,7 @@ struct ShortcutsView: View {
                 .padding(.trailing, 10)
                 shortcutsMarket
             }
-            
+
             Spacer()
         }
         .onAppear{
@@ -79,7 +79,7 @@ struct ShortcutsView: View {
                        title: shortcutsVM.errorInfo.localized())
         }
     }
-    
+
     var shortcutsMarket:some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 20) {
@@ -91,7 +91,7 @@ struct ShortcutsView: View {
                                 .scaledToFit()
                                 .foregroundColor(.white)
                                 .frame(width: 20, height: 20)
-                                
+
                             Spacer()
                             Button(action: {
                                 NSWorkspace.shared.open(URL(string: shortcutsVM.sharedShortcutsList[index].link)!)
@@ -109,9 +109,9 @@ struct ShortcutsView: View {
                         }
                         .padding(.horizontal, 10)
                         .padding(.top, 10)
-                        
+
                         Spacer(minLength: 10)
-                        
+
                         Text(shortcutsVM.sharedShortcutsList[index].name)
                             .foregroundColor(.white)
                             .fixedSize(horizontal: false, vertical: true)
@@ -125,16 +125,27 @@ struct ShortcutsView: View {
                         .padding(.trailing, 10)
                         .padding(.bottom, 5)
                     }.frame(width: 140, height: 100)
-                        .background(LinearGradient(gradient: Gradient(colors:[Color(AppColor.themePink), Color(AppColor.themeBlue)]), startPoint: .topLeading, endPoint: .bottomTrailing))
+                        .background(
+                            LinearGradient(
+                                gradient: Gradient(
+                                    colors:[
+                                        Color(.themePink),
+                                        Color(.themeBlue)
+                                    ]
+                                ),
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
                         .help(shortcutsVM.sharedShortcutsList[index].description)
-                    .cornerRadius(10)
+                        .cornerRadius(10)
                         .onTapGesture {
                             if shortcutsVM.sharedShortcutsList[index].hasInstalled {
                                 _ = try? ShorcutsCMD.showShortcut(name: shortcutsVM.sharedShortcutsList[index].name).runAppleScript(isShellCMD: true)
                             }
                         }
-                    }
-                
+                }
+
             }
             .frame(width:300)
             .padding(.trailing, 10)

@@ -71,9 +71,9 @@ struct EvolutionGalleryItemView: View {
                 LinearGradient(
                     gradient: Gradient(
                         stops: [
-                            Gradient.Stop(color: Color(AppColor.themePurple), location: 0.1),
-                            Gradient.Stop(color: Color(AppColor.themePink), location: 0.4),
-                            Gradient.Stop(color: Color(AppColor.themeGreen), location: 0.7)
+                            Gradient.Stop(color: Color(.themePurple), location: 0.1),
+                            Gradient.Stop(color: Color(.themePink), location: 0.4),
+                            Gradient.Stop(color: Color(.themeGreen), location: 0.7)
                         ]
                     ),
                     startPoint: .topTrailing,

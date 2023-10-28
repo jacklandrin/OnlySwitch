@@ -61,7 +61,7 @@ struct UpdateView: View {
                         .foregroundColor(.white)
                         .background(
                             RoundedRectangle(cornerRadius: 10)
-                                .foregroundColor(Color(nsColor: AppColor.themeBlue))
+                                .foregroundColor(Color(nsColor: .themeBlue))
                         )
                 })
                 .buttonStyle(.plain)
