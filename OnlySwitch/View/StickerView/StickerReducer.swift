@@ -12,6 +12,7 @@ struct StickerReducer: Reducer {
     struct State: Equatable {
         var stickerContent = ""
         var isColorSelectorPresented = false
+        var isHovering = false
         var stickerColor: StickerColor = .yellow
     }
 
@@ -21,6 +22,8 @@ struct StickerReducer: Reducer {
         case saveContent
         case showColorSelector
         case changeColor(StickerColor)
+        case closeSticker
+        case hover(Bool)
     }
 
     @Dependency(\.stickerService) var stickerService
@@ -50,6 +53,16 @@ struct StickerReducer: Reducer {
                     state.stickerColor = color
                     state.isColorSelectorPresented = false
                     stickerService.saveSticker(state.stickerContent, state.stickerColor)
+                    return .none
+
+                case .closeSticker:
+                    return .run { @MainActor send in
+                        try? await TopStickerSwitch.shared.operateSwitch(isOn: false)
+                        NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.topSticker)
+                    }
+
+                case .hover(let isHovering):
+                    state.isHovering = isHovering
                     return .none
             }
         }

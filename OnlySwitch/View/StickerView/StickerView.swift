@@ -19,25 +19,44 @@ struct StickerView: View {
             ZStack {
                 VStack (spacing: 0) {
                     HStack {
-                        Spacer()
-                        Button(action: {
-                            viewStore.send(.showColorSelector, animation: .easeInOut)
-                        }) {
-                            Image(systemName: "ellipsis")
-                                    .fontWeight(.bold)
-                                    .foregroundStyle(Color(nsColor: viewStore.stickerColor.stroke))
-                                    .frame(width: 20, height: 20)
-                                    .contentShape(Rectangle())
+                        if viewStore.isHovering {
+                            Button(action: {
+                                viewStore.send(.closeSticker)
+                            }) {
+                                Image(systemName: "xmark")
+                                        .foregroundStyle(Color(nsColor: viewStore.stickerColor.stroke))
+                                        .frame(width: 20, height: 20)
+                                        .contentShape(Rectangle())
+                            }
+                            .buttonStyle(.plain)
+                            .padding(.trailing, 5)
+                            .transition(.opacity)
                         }
-                        .buttonStyle(.plain)
-                        .padding(.trailing, 5)
+
+                        Spacer()
+                            .frame(height: 20)
+
+                        if viewStore.isHovering {
+                            Button(action: {
+                                viewStore.send(.showColorSelector, animation: .easeInOut)
+                            }) {
+                                Image(systemName: "ellipsis")
+                                        .fontWeight(.bold)
+                                        .foregroundStyle(Color(nsColor: viewStore.stickerColor.stroke))
+                                        .frame(width: 20, height: 20)
+                                        .contentShape(Rectangle())
+                            }
+                            .buttonStyle(.plain)
+                            .padding(.trailing, 5)
+                            .transition(.opacity)
+                        }
                     }
                     .background(
-                        Color(nsColor: viewStore.stickerColor.bar)
+                        Rectangle()
+                            .foregroundStyle(Color(nsColor: viewStore.stickerColor.bar))
                             .frame(height: 20)
                     )
                     .shadow(color: Color(.sRGBLinear, white: 0, opacity: 0.2), radius: 3)
-
 
                     TextEditor(
                         text: viewStore.binding(
@@ -81,6 +100,9 @@ struct StickerView: View {
                     .shadow(color: Color(.sRGBLinear, white: 0, opacity: 0.2), radius: 1)
                     .transition(.move(edge: .top))
                 }
+            }
+            .onHover { isHovering in
+                viewStore.send(.hover(isHovering), animation: .easeInOut)
             }
             .task {
                 viewStore.send(.loadContent)
