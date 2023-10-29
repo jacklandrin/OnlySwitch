@@ -66,6 +66,7 @@ Everyone can contribute macOS Shortcuts for OnlySwitch now. Please read [How to 
 | FKey              | finished        | Back Noises              | finished          |
 | Dim Screen        | finished        | Eject Discs              | finished          |
 | Hide Windows      | partly finished | True Tone                | finished          |
+| Top Sticker       | partly finished |                          |                   |
 
 Since Version 1.3, switches can be added to or removed from the list.
 
