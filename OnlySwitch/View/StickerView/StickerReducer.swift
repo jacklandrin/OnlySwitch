@@ -11,21 +11,27 @@ import ComposableArchitecture
 struct StickerReducer: Reducer {
     struct State: Equatable {
         var stickerContent = ""
+        var isColorSelectorPresented = false
+        var stickerColor: StickerColor = .yellow
     }
 
     enum Action: Equatable {
         case loadContent
         case editContent(String)
         case saveContent
+        case showColorSelector
+        case changeColor(StickerColor)
     }
+
+    @Dependency(\.stickerService) var stickerService
 
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
                 case .loadContent:
-                    if let content = Preferences.shared.stickerContent.first {
-                        state.stickerContent = content
-                    }
+                    let sticker = stickerService.loadSticker()
+                    state.stickerContent = sticker.content
+                    state.stickerColor = sticker.color
                     return .none
                     
                 case .editContent(let content):
@@ -33,8 +39,17 @@ struct StickerReducer: Reducer {
                     return .none
                     
                 case .saveContent:
-                    let contentArray = [state.stickerContent]
-                    Preferences.shared.stickerContent = contentArray
+                    stickerService.saveSticker(state.stickerContent, state.stickerColor)
+                    return .none
+
+                case .showColorSelector:
+                    state.isColorSelectorPresented = true
+                    return .none
+
+                case .changeColor(let color):
+                    state.stickerColor = color
+                    state.isColorSelectorPresented = false
+                    stickerService.saveSticker(state.stickerContent, state.stickerColor)
                     return .none
             }
         }

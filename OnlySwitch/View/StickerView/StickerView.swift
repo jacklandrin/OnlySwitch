@@ -16,23 +16,72 @@ struct StickerView: View {
 
     var body: some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
-            VStack (spacing: 0) {
-                Color.yellow
-                    .frame(height: 20)
-                TextEditor(
-                    text: viewStore.binding(
-                        get: { $0.stickerContent },
-                        send: { .editContent($0) }
+            ZStack {
+                VStack (spacing: 0) {
+                    HStack {
+                        Spacer()
+                        Button(action: {
+                            viewStore.send(.showColorSelector, animation: .easeInOut)
+                        }) {
+                            Image(systemName: "ellipsis")
+                                    .fontWeight(.bold)
+                                    .foregroundStyle(Color(nsColor: viewStore.stickerColor.stroke))
+                                    .frame(width: 20, height: 20)
+                                    .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .padding(.trailing, 5)
+                    }
+                    .background(
+                        Color(nsColor: viewStore.stickerColor.bar)
+                            .frame(height: 20)
                     )
-                )
-                .font(.system(size: 15))
-                .frame(minWidth: 180, minHeight: 180)
-                .scrollContentBackground(.hidden)
-                .foregroundStyle(.black)
-                .background(.clear)
-                .padding(.top, 4)
+                    .shadow(color: Color(.sRGBLinear, white: 0, opacity: 0.2), radius: 3)
+
+
+                    TextEditor(
+                        text: viewStore.binding(
+                            get: { $0.stickerContent },
+                            send: { .editContent($0) }
+                        )
+                    )
+                    .font(.system(size: 15))
+                    .frame(minWidth: 180, minHeight: 180)
+                    .scrollContentBackground(.hidden)
+                    .foregroundStyle(.black)
+                    .background(.clear)
+                    .padding(.top, 5)
+                }
+                .background(Color(nsColor: viewStore.stickerColor.content))
+
+                if viewStore.isColorSelectorPresented {
+                    VStack {
+                        HStack {
+                            Spacer()
+                            ForEach(StickerColor.allCases, id:\.self) { color in
+                                Button(action: {
+                                    viewStore.send(.changeColor(color), animation: .easeOut)
+                                }) {
+                                    Circle()
+                                        .strokeBorder(Color(nsColor: color.stroke).opacity(0.5), lineWidth: 1)
+                                        .background(Circle().foregroundColor(Color(nsColor: color.bar)))
+                                }
+                                .buttonStyle(.plain)
+                                .frame(width: 16, height: 16)
+                                .padding(.top, 4)
+                            }
+                            Spacer()
+                        }
+                        .background(
+                            Color.white
+                                .frame(height: 24)
+                        )
+                        Spacer()
+                    }
+                    .shadow(color: Color(.sRGBLinear, white: 0, opacity: 0.2), radius: 1)
+                    .transition(.move(edge: .top))
+                }
             }
-            .background(Color(nsColor: .stickerYellow))
             .task {
                 viewStore.send(.loadContent)
             }

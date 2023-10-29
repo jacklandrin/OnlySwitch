@@ -63,7 +63,7 @@ extension UserDefaults {
         static let windowsHidden = "windowsHiddenKey"
         static let hiddenWindowsInfo = "hiddenWindowsInfoKey"
         //Sticker
-        static let stickerContent = "stickerContentKey"
+        static let sticker = "stickerKey"
         //others
         static let newestVersion = "newestVersionKey"
         static let systemLangPriority = "systemLangPriority"

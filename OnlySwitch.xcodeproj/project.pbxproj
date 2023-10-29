@@ -38,6 +38,11 @@
 		041D72692835865C0083092D /* SwitchError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041D72682835865B0083092D /* SwitchError.swift */; };
 		041D726A2835865C0083092D /* SwitchError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041D72682835865B0083092D /* SwitchError.swift */; };
 		041D726B2835865C0083092D /* SwitchError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041D72682835865B0083092D /* SwitchError.swift */; };
+		041F9BE22AEEFD18000B27C7 /* StickerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041F9BE12AEEFD18000B27C7 /* StickerModel.swift */; };
+		041F9BE62AEEFDC6000B27C7 /* StickerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041F9BE52AEEFDC6000B27C7 /* StickerService.swift */; };
+		041F9BE82AEEFE53000B27C7 /* StickerService+Live.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041F9BE72AEEFE53000B27C7 /* StickerService+Live.swift */; };
+		041F9BEA2AEEFE71000B27C7 /* StickerService+Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041F9BE92AEEFE71000B27C7 /* StickerService+Test.swift */; };
+		041F9BEC2AEF01AC000B27C7 /* Sticker+Dependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041F9BEB2AEF01AC000B27C7 /* Sticker+Dependencies.swift */; };
 		04243487275641DB0044D0AD /* SwitchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04243486275641DB0044D0AD /* SwitchProvider.swift */; };
 		04243489275642370044D0AD /* HiddenDesktopSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04243488275642370044D0AD /* HiddenDesktopSwitch.swift */; };
 		0424348B275642D20044D0AD /* DarkModeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0424348A275642D20044D0AD /* DarkModeSwitch.swift */; };
@@ -438,6 +443,11 @@
 		041D726228353B380083092D /* NSImage+SymbolName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSImage+SymbolName.swift"; sourceTree = "<group>"; };
 		041D726628353BC20083092D /* SwitchType++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwitchType++.swift"; sourceTree = "<group>"; };
 		041D72682835865B0083092D /* SwitchError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchError.swift; sourceTree = "<group>"; };
+		041F9BE12AEEFD18000B27C7 /* StickerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerModel.swift; sourceTree = "<group>"; };
+		041F9BE52AEEFDC6000B27C7 /* StickerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerService.swift; sourceTree = "<group>"; };
+		041F9BE72AEEFE53000B27C7 /* StickerService+Live.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StickerService+Live.swift"; sourceTree = "<group>"; };
+		041F9BE92AEEFE71000B27C7 /* StickerService+Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StickerService+Test.swift"; sourceTree = "<group>"; };
+		041F9BEB2AEF01AC000B27C7 /* Sticker+Dependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sticker+Dependencies.swift"; sourceTree = "<group>"; };
 		04243486275641DB0044D0AD /* SwitchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchProvider.swift; sourceTree = "<group>"; };
 		04243488275642370044D0AD /* HiddenDesktopSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HiddenDesktopSwitch.swift; sourceTree = "<group>"; };
 		0424348A275642D20044D0AD /* DarkModeSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkModeSwitch.swift; sourceTree = "<group>"; };
@@ -821,6 +831,16 @@
 			path = OnlySwitchTests;
 			sourceTree = "<group>";
 		};
+		041F9BE42AEEFDAB000B27C7 /* StickerService */ = {
+			isa = PBXGroup;
+			children = (
+				041F9BE52AEEFDC6000B27C7 /* StickerService.swift */,
+				041F9BE72AEEFE53000B27C7 /* StickerService+Live.swift */,
+				041F9BE92AEEFE71000B27C7 /* StickerService+Test.swift */,
+			);
+			path = StickerService;
+			sourceTree = "<group>";
+		};
 		04243485275641890044D0AD /* EverySwitch */ = {
 			isa = PBXGroup;
 			children = (
@@ -1185,8 +1205,11 @@
 		048D10932AED420900ACB181 /* StickerView */ = {
 			isa = PBXGroup;
 			children = (
+				041F9BE42AEEFDAB000B27C7 /* StickerService */,
 				048D10962AED4A9E00ACB181 /* StickerView.swift */,
 				048D10982AED92EA00ACB181 /* StickerReducer.swift */,
+				041F9BE12AEEFD18000B27C7 /* StickerModel.swift */,
+				041F9BEB2AEF01AC000B27C7 /* Sticker+Dependencies.swift */,
 			);
 			path = StickerView;
 			sourceTree = "<group>";
@@ -2054,6 +2077,7 @@
 				04938D082768CBA100713F1D /* LanguageManager.swift in Sources */,
 				0441A9BE2950EC1500EC4AC4 /* NSEvent++.swift in Sources */,
 				043E5D7327581C2E00ADC004 /* SwitchBarView.swift in Sources */,
+				041F9BEC2AEF01AC000B27C7 /* Sticker+Dependencies.swift in Sources */,
 				0427B25B275D786400AD783A /* SystemInfo.swift in Sources */,
 				0493375527625A1E00AE779A /* Reader+Converter.swift in Sources */,
 				04DC6C5E28A2E2B700888BF9 /* UpdateVM.swift in Sources */,
@@ -2067,6 +2091,7 @@
 				041D726328353B380083092D /* NSImage+SymbolName.swift in Sources */,
 				0406EDC82ACB56F00015F4D0 /* EvolutionGalleryReducer.swift in Sources */,
 				04DC6C7F28A5675600888BF9 /* BackNoisiesTrackManager.swift in Sources */,
+				041F9BE62AEEFDC6000B27C7 /* StickerService.swift in Sources */,
 				043E5D6A2757D68800ADC004 /* MuteSwitch.swift in Sources */,
 				0493378C2762654600AE779A /* LayoutDefine.swift in Sources */,
 				0419276B2AEC124B0041185B /* KeyboardShortcutsDefine.swift in Sources */,
@@ -2081,6 +2106,7 @@
 				04AA63CE276BC94000ED5DEA /* EmptyTrashSwitch.swift in Sources */,
 				0493378E2762665A00AE779A /* RadioStationSwitch.swift in Sources */,
 				04EB1CD42781280900C612AB /* ShortcutsBarView.swift in Sources */,
+				041F9BE82AEEFE53000B27C7 /* StickerService+Live.swift in Sources */,
 				04243489275642370044D0AD /* HiddenDesktopSwitch.swift in Sources */,
 				0493374627625A1E00AE779A /* JLAVAudioPlayer.swift in Sources */,
 				047C1E732A22B12E0061235D /* EvolutionEditorService+Test.swift in Sources */,
@@ -2166,6 +2192,7 @@
 				047C1E782A24D2590061235D /* EvolutionCommandEditingReducer.swift in Sources */,
 				0493374727625A1E00AE779A /* PlayerManager.swift in Sources */,
 				0406EDCC2ACB5DCF0015F4D0 /* EvolutionGalleryItemReducer.swift in Sources */,
+				041F9BE22AEEFD18000B27C7 /* StickerModel.swift in Sources */,
 				04BC8EC3284FE9B5009E605F /* Preferences.swift in Sources */,
 				0493372527615EA400AE779A /* HiddenFilesSwitch.swift in Sources */,
 				04DC6C8E28A6888A00888BF9 /* KeepAwakeSettingVM.swift in Sources */,
@@ -2174,6 +2201,7 @@
 				04B25455283C06C700D253E2 /* SwitchListModel.swift in Sources */,
 				047C1E6A2A2298AB0061235D /* EvolutionListService+Test.swift in Sources */,
 				04E2AD0D2783624A00BC5DF3 /* Intents.intentdefinition in Sources */,
+				041F9BEA2AEEFE71000B27C7 /* StickerService+Test.swift in Sources */,
 				04BC8EC6284FEA52009E605F /* UserDefaultsKeys.swift in Sources */,
 				04AA63D0276BCE1C00ED5DEA /* EmptyPasteboardSwitch.swift in Sources */,
 				04E03AF8275E6B4E00EA5FB9 /* AutohideDockSwitch.swift in Sources */,

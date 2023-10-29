@@ -235,6 +235,6 @@ struct Preferences {
     var hiddenWindowsInfo:Data?
 
     //Sticker
-    @UserDefaultValue(key: UserDefaults.Key.stickerContent, defaultValue: [""])
-    var stickerContent: [String]
+    @UserDefaultValue(key: UserDefaults.Key.sticker, defaultValue: nil)
+    var stickerData:Data?
 }
