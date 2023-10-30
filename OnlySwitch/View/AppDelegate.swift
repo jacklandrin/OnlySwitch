@@ -13,7 +13,6 @@ import KeyboardShortcuts
 struct OnlySwitchApp: App {
     let persistenceController = PersistenceController.shared
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    @ObservedObject var appState = AppState()
     @ObservedObject var preferencesvm = PreferencesObserver.shared
     @State var preferences = PreferencesObserver.shared.preferences
     
@@ -113,6 +112,7 @@ class AppDelegate:NSObject, NSApplicationDelegate {
         RadioStationSwitch.shared.setDefaultRadioStations()
         Bundle.setLanguage(lang: LanguageManager.sharedManager.currentLang)
 
+        registerShortcut()
         checkUpdate()
     }
     
@@ -138,11 +138,9 @@ class AppDelegate:NSObject, NSApplicationDelegate {
             }
         }
     }
-}
 
-@MainActor
-final class AppState: ObservableObject {
-    init() {
+    @MainActor
+    private func registerShortcut() {
         KeyboardShortcuts.onKeyDown(for: .invokePopoverShortcutsName) {
             NotificationCenter.default.post(name: .togglePopover, object: nil)
         }
