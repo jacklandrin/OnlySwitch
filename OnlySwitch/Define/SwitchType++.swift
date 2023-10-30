@@ -244,7 +244,8 @@ extension SwitchType {
             case .topSticker:
                 return SwitchBarInfo(title: "Top Sticker",
                                      onImage: NSImage(named: "sticker"),
-                                     offImage: NSImage(named: "sticker"))
+                                     offImage: NSImage(named: "sticker"),
+                                     category: .tool)
 
         }
     }
