@@ -37,16 +37,28 @@ struct StickerView: View {
                             .frame(height: 20)
 
                         if viewStore.isHovering {
-                            Button(action: {
-                                viewStore.send(.showColorSelector, animation: .easeInOut)
-                            }) {
-                                Image(systemName: "ellipsis")
-                                        .fontWeight(.bold)
-                                        .foregroundStyle(Color(nsColor: viewStore.stickerColor.stroke))
-                                        .frame(width: 20, height: 20)
-                                        .contentShape(Rectangle())
+                            HStack {
+                                Button(action: {
+                                    viewStore.send(.toggleTranslucent, animation: .easeInOut)
+                                }) {
+                                    Image(viewStore.canTranslucent ? "fill" : "translucent")
+                                            .foregroundStyle(Color(nsColor: viewStore.stickerColor.stroke))
+                                            .frame(width: 20, height: 20)
+                                            .contentShape(Rectangle())
+                                }
+                                .buttonStyle(.plain)
+
+                                Button(action: {
+                                    viewStore.send(.showColorSelector, animation: .easeInOut)
+                                }) {
+                                    Image(systemName: "ellipsis")
+                                            .fontWeight(.bold)
+                                            .foregroundStyle(Color(nsColor: viewStore.stickerColor.stroke))
+                                            .frame(width: 20, height: 20)
+                                            .contentShape(Rectangle())
+                                }
+                                .buttonStyle(.plain)
                             }
-                            .buttonStyle(.plain)
                             .padding(.trailing, 5)
                             .transition(.opacity)
                         }
@@ -101,6 +113,7 @@ struct StickerView: View {
                     .transition(.move(edge: .top))
                 }
             }
+            .opacity(isOpacity(canTranslucent: viewStore.canTranslucent, isHovering: viewStore.isHovering) ? 0.6 : 1.0)
             .onHover { isHovering in
                 viewStore.send(.hover(isHovering), animation: .easeInOut)
             }
@@ -118,6 +131,10 @@ struct StickerView: View {
                 }
             }
         }
+    }
+
+    private func isOpacity(canTranslucent: Bool, isHovering: Bool) -> Bool {
+        canTranslucent && !isHovering
     }
 }
 

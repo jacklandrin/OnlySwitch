@@ -14,6 +14,7 @@ struct StickerReducer: Reducer {
         var isColorSelectorPresented = false
         var isHovering = false
         var stickerColor: StickerColor = .yellow
+        var canTranslucent: Bool = false
     }
 
     enum Action: Equatable {
@@ -24,6 +25,7 @@ struct StickerReducer: Reducer {
         case changeColor(StickerColor)
         case closeSticker
         case hover(Bool)
+        case toggleTranslucent
     }
 
     @Dependency(\.stickerService) var stickerService
@@ -35,6 +37,7 @@ struct StickerReducer: Reducer {
                     let sticker = stickerService.loadSticker()
                     state.stickerContent = sticker.content
                     state.stickerColor = sticker.color
+                    state.canTranslucent = sticker.translucent
                     return .none
                     
                 case .editContent(let content):
@@ -42,7 +45,7 @@ struct StickerReducer: Reducer {
                     return .none
                     
                 case .saveContent:
-                    stickerService.saveSticker(state.stickerContent, state.stickerColor)
+                    stickerService.saveSticker(state.stickerContent, state.stickerColor, state.canTranslucent)
                     return .none
 
                 case .showColorSelector:
@@ -52,7 +55,7 @@ struct StickerReducer: Reducer {
                 case .changeColor(let color):
                     state.stickerColor = color
                     state.isColorSelectorPresented = false
-                    stickerService.saveSticker(state.stickerContent, state.stickerColor)
+                    stickerService.saveSticker(state.stickerContent, state.stickerColor, state.canTranslucent)
                     return .none
 
                 case .closeSticker:
@@ -63,6 +66,10 @@ struct StickerReducer: Reducer {
 
                 case .hover(let isHovering):
                     state.isHovering = isHovering
+                    return .none
+
+                case .toggleTranslucent:
+                    state.canTranslucent.toggle()
                     return .none
             }
         }

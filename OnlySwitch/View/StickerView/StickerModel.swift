@@ -10,9 +10,11 @@ import Foundation
 struct StickerModel: Codable {
     let content: String
     let color: String
+    let trancelucent: Bool?
 
     enum CodingKeys:String, CodingKey {
         case content
         case color
+        case trancelucent
     }
 }
