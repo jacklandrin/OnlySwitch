@@ -97,7 +97,7 @@ class PureColorVM:ObservableObject {
             place: .headInsertEventTap,
             options: .defaultTap,
             eventsOfInterest: CGEventMask(eventMask),
-            callback: {(eventTapProxy, eventType, event, mutablePointer) -> Unmanaged<CGEvent>? in event
+            callback: {(eventTapProxy, eventType, event, mutablePointer) -> Unmanaged<CGEvent>? in
                 return nil
             },
             userInfo: nil)
@@ -116,5 +116,4 @@ class PureColorVM:ObservableObject {
             CFRunLoopRemoveSource(CFRunLoopGetCurrent(), runLoopSource, .commonModes)
         }
     }
-    
 }
