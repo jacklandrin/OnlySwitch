@@ -58,7 +58,6 @@ class NightShiftSwitch:SwitchProvider {
     }
 
     private func switchOff() {
-        NightShiftTool.strength = 0
         NightShiftTool.disable()
     }
 
