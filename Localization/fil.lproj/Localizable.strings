@@ -103,7 +103,7 @@
 "Two Columns" = "Dalawang Hanay";
 "Promotion:" = "Promosyon:";
 "Show More Apps" = "Magpakita ng Higit pang Mga App";
-"Screen Test" = "Screen Test";
+"Screen Test" = "Screen Test & Paglilinis";
 "Version History:" = "Kasaysayan ng Bersyon:";
 "Join:" = "Sumali:";
 "Press left or right arrow button to change background color" = "Pindutin ang kaliwa o kanang arrow na pindutan upang baguhin ang kulay ng background";
@@ -172,3 +172,4 @@
 "Donation" = "Donasyon";
 "Show List:" = "Ipakita ang listahan ng switch:";
 "Top Sticker" = "Top Sticker";
+"Keyboard Locked ↓" = "Naka-lock ang Keyboard ↓";

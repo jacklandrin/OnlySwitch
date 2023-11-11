@@ -103,7 +103,7 @@
 "Two Columns" = "Dwie kolumny";
 "Promotion:" = "Rekomendacje:";
 "Show More Apps" = "Pokaż więcej aplikacji";
-"Screen Test" = "Test monitora";
+"Screen Test" = "Test monitora & czyszczenie";
 "Version History:" = "Historia wersji:";
 "Join:" = "Przystąp:";
 "Press left or right arrow button to change background color" = "Naciśnij przycisk ze strzałką w lewo lub w prawo, aby zmienić kolor tła";
@@ -172,3 +172,4 @@
 "Donation" = "Darowizna";
 "Show List:" = "Pokaż listę przełączników:";
 "Top Sticker" = "Top Sticker";
+"Keyboard Locked ↓" = "Klawiatura zablokowana ↓";

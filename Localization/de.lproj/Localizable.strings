@@ -102,7 +102,7 @@
 "Two Columns" = "Zwei Spalten";
 "Promotion:" = "App-Werbung:";
 "Show More Apps" = "Mehr Apps anzeigen";
-"Screen Test" = "Bildschirmtest";
+"Screen Test" = "Bildschirmtest & Reinigen";
 "Version History:" = "Versionsgeschichte:";
 "Join:" = "Beitreten:";
 "Press left or right arrow button to change background color" = "Drücken Sie die linke oder rechte Taste, um die Hintergrundfarbe zu ändern";
@@ -173,3 +173,4 @@
 "Donation" = "Spende";
 "Show List:" = "Switchliste anzeigen:";
 "Top Sticker" = "Haftnotiz";
+"Keyboard Locked ↓" = "Tastatur gesperrt ↓";

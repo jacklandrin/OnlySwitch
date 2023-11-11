@@ -47,26 +47,26 @@ Everyone can contribute macOS Shortcuts for OnlySwitch now. Please read [How to 
 
 #### Native Switches:
 
-| Switch            | status          | Switch                   | status            |
-|:------------------|-----------------|:-------------------------|:------------------|
-| Hide desktop      | finished        | Hide notch               | exist some issues |
-| Dark mode         | finished        | Low power mode           | require password  |
-| Screen Saver      | finished        | Show Finder Path Bar     | finished          |
-| Night Shift       | finished        | Mute mic                 | finished          |
-| Autohide Dock     | finished        | Small launchpad icon     | finished          |
-| Airpods           | finished        | Pomodoro timer           | finished          |
-| Bluetooth         | finished        | Show extension name      | finished          |
-| Xcode cache       | finished        | Show user library folder | finished          |
-| Autohide Menu Bar | finished        | Mute                     | finished          |
-| Show hidden files | finished        | Empty pasteboard         | finished          |
-| Radio Station     | finished        | Empty trash              | finished          |
-| Keep awake        | finished        | Show Recent Apps on Dock | finished          |
-| Spotify           | finished        | Apple Music              | finished          |
-| Screen Test       | finished        | Hide Menu Bar Icons      | partly finished   |
-| FKey              | finished        | Back Noises              | finished          |
-| Dim Screen        | finished        | Eject Discs              | finished          |
-| Hide Windows      | partly finished | True Tone                | finished          |
-| Top Sticker       | partly finished |                          |                   |
+| Switch              | status          | Switch                   | status            |
+|:--------------------|-----------------|:-------------------------|:------------------|
+| Hide desktop        | finished        | Hide notch               | exist some issues |
+| Dark mode           | finished        | Low power mode           | require password  |
+| Screen Saver        | finished        | Show Finder Path Bar     | finished          |
+| Night Shift         | finished        | Mute mic                 | finished          |
+| Autohide Dock       | finished        | Small launchpad icon     | finished          |
+| Airpods             | finished        | Pomodoro timer           | finished          |
+| Bluetooth           | finished        | Show extension name      | finished          |
+| Xcode cache         | finished        | Show user library folder | finished          |
+| Autohide Menu Bar   | finished        | Mute                     | finished          |
+| Show hidden files   | finished        | Empty pasteboard         | finished          |
+| Radio Station       | finished        | Empty trash              | finished          |
+| Keep awake          | finished        | Show Recent Apps on Dock | finished          |
+| Spotify             | finished        | Apple Music              | finished          |
+| Screen Test & Clean | finished        | Hide Menu Bar Icons      | partly finished   |
+| FKey                | finished        | Back Noises              | finished          |
+| Dim Screen          | finished        | Eject Discs              | finished          |
+| Hide Windows        | partly finished | True Tone                | finished          |
+| Top Sticker         | partly finished |                          |                   |
 
 Since Version 1.3, switches can be added to or removed from the list.
 
@@ -165,8 +165,8 @@ Since Version 2.3.11, the radio list can be exported and imported.
 ## Low Power Mode
 Low Power Mode uses Terminal commands that require root access, so the app will ask you to enter the password on every toggle.
 
-## Screen Test
-In Version 2.3, Only Switch brings a new feature, Screen Test. It provides a pure color view in full-screen mode, you can check dead pixels via it. Press the left and right arrow keys, the color will change from black, white, red, green, and blue. This function also can be used for screen cleaning, as you can see the stains on the screen.
+## Screen Test & Clean
+In Version 2.3, Only Switch brings a new feature, Screen Test. It provides a pure color view in full-screen mode, you can check dead pixels via it. Press the left and right arrow keys, the color will change from black, white, red, green, and blue. This functionality also can be used for screen cleaning, as you can see the stains on the screen.
 
 ## Hide Menu Bar Icons
 This feature is new in version 2.3.2. To be honest, Hidden and Dozer are both good apps for this function. Many users install OnlySwitch and them simultaneously, but this also squeezes the menu bar, which is already lacking in space. Therefore, the feature integrates into OnlySwitch.

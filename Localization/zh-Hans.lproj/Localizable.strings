@@ -102,7 +102,7 @@
 "Two Columns" = "双列";
 "Promotion:" = "推荐:";
 "Show More Apps" = "展示更多应用";
-"Screen Test" = "屏幕检测";
+"Screen Test" = "屏幕检测与清洁";
 "Update History:" = "版本更新记录:";
 "Join:" = "加入:";
 "Press left or right arrow button to change background color" = "按下左右方向按钮来切换背景颜色";
@@ -172,3 +172,4 @@
 "Donation" = "捐助支持";
 "Show List:" = "显示开关列表:";
 "Top Sticker" = "置顶便签";
+"Keyboard Locked ↓" = "键盘已被锁定 ↓";

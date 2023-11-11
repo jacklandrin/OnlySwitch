@@ -103,7 +103,7 @@
 "Two Columns" = "İki Sütun";
 "Promotion:" = "Tanıtım:";
 "Show More Apps" = "Daha Fazla Uygulama Göster";
-"Screen Test" = "Monitör Testi";
+"Screen Test" = "Monitör Testi & Temizlik";
 "Version History:" = "Sürüm Geçmişi:";
 "Join:" = "Katıl:";
 "Press left or right arrow button to change background color" = "Arka plan rengini değiştirmek için sol veya sağ ok tuşuna basın";
@@ -173,3 +173,4 @@
 "Donation" = "Bağış";
 "Show List:" = "Anahtar listesini göster:";
 "Top Sticker" = "Top Sticker";
+"Keyboard Locked ↓" = "Klavye Kilitli ↓";

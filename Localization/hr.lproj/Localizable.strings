@@ -100,7 +100,7 @@
 "Two Columns" = "Dva stupca";
 "Promotion:" = "Preporuka:";
 "Show More Apps" = "Prikaži više aplikacija";
-"Screen Test" = "Test ekrana";
+"Screen Test" = "Test ekrana & čišćenje";
 "Version History:" = "Povijest verzija:";
 "Join:" = "Pridruži:";
 "Press left or right arrow button to change background color" = "Za mijenjanje boje pozadine pritisni gumb sa strelicom lijevo ili desno";
@@ -169,3 +169,4 @@
 "Donation" = "Donacija";
 "Show List:" = "Prikaži popis prekidača:";
 "Top Sticker" = "Top Sticker";
+"Keyboard Locked ↓" = "Tipkovnica zaključana ↓";

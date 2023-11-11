@@ -103,7 +103,7 @@
 "Two Columns" = "2列表示";
 "Promotion:" = "推薦:";
 "Show More Apps" = "もっとアプリを表示";
-"Screen Test" = "スクリーンテスト";
+"Screen Test" = "スクリーンのテストと清掃";
 "Version History:" = "バージョン履歴:";
 "Join:" = "加入:";
 "Press left or right arrow button to change background color" = "左矢印ボタンまたは右矢印ボタンを押して、背景色を変更します";
@@ -174,3 +174,4 @@
 "Donation" = "寄付";
 "Show List:" = "スイッチリストを表示:";
 "Top Sticker" = "上端付箋";
+"Keyboard Locked ↓" = "キーボードがロックされています ↓";

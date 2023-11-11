@@ -101,7 +101,7 @@
 "Two Columns" = "Deux colonnes";
 "Promotion:" = "Promotion :";
 "Show More Apps" = "Afficher plus d'applications";
-"Screen Test" = "Test d'écran";
+"Screen Test" = "Test d'écran et nettoyage";
 "Version History:" = "Historique des versions :";
 "Join:" = "Rejoindre :";
 "Press left or right arrow button to change background color" = "Appuyer sur la flèche gauche ou droite pour modifier la couleur de l'arrière-plan.";
@@ -170,3 +170,4 @@
 "Donation" = "Donation";
 "Show List:" = "Afficher la liste des commutateurs:";
 "Top Sticker" = "Note collante";
+"Keyboard Locked ↓" = "Clavier verrouillé ↓";

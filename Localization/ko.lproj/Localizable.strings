@@ -103,7 +103,7 @@
 "Two Columns" = "2열 표시";
 "Promotion:" = "추천:";
 "Show More Apps" = "더 많은 앱 표시";
-"Screen Test" = "스크린 테스트";
+"Screen Test" = "스크린 테스트 & 청소";
 "Version History:" = "버전 히스토리:";
 "Join:" = "가입:";
 "Press left or right arrow button to change background color" = "왼쪽 혹은 오른쪽 화살 버튼을 눌러 배경색을 변경합니다";
@@ -174,3 +174,4 @@
 "Donation" = "기부";
 "Show List:" = "스위치 목록 표시:";
 "Top Sticker" = "스티커 메모";
+"Keyboard Locked ↓" = "키보드 잠김 ↓";

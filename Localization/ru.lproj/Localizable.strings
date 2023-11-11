@@ -102,7 +102,7 @@
 "Two Columns" = "Две колонки";
 "Promotion:" = "Рекомендация:";
 "Show More Apps" = "Показать больше приложений";
-"Screen Test" = "Тест монитора";
+"Screen Test" = "Тест экрана и очистка";
 "Version History:" = "История версий:";
 "Join:" = "Присоединиться:";
 "Press left or right arrow button to change background color" = "Нажмите кнопку со стрелкой влево или вправо, чтобы изменить цвет фона";
@@ -171,3 +171,4 @@
 "Donation" = "Пожертвование";
 "Show List:" = "Показать список переключателей:";
 "Top Sticker" = "Top Sticker";
+"Keyboard Locked ↓" = "Клавиатура заблокирована ↓";
