@@ -15,7 +15,7 @@ protocol EmailProvider {
 extension EmailProvider {
     func sendEmail() {
         let service = NSSharingService(named: NSSharingService.Name.composeEmail)!
-        service.recipients = ["jacklandrin@hotmail.com"]
+        service.recipients = ["jacklandrin@outlook.com"]
         service.subject = "About Only Switch"
 
         service.perform(withItems: [""])
