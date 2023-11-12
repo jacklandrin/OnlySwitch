@@ -111,8 +111,6 @@ English, Simplified Chinese, German, Croatian, Turkish, Polish, Filipino, Dutch,
 
 If you have other good ideas 💡, feel free to send an E-mail to me.
 
-🚀The future plan is to make OnlySwitch become a toolkit-sharing platform. OnlySwitch will allow developers to distribute shell, apple script and javascript code to create more features. @AruSeito and I are implementing this plan. If you are also interested in it, feel free to join us.
-
 ## Donate
 If you like it, help support this app by giving me a cup of tea for me to keep coding.
 <p align="center">
