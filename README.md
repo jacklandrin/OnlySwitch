@@ -91,7 +91,6 @@ Since Version 1.3, switches can be added to or removed from the list.
 | Clamshell           |        |                    |                         |
 
 
-
 ## Shortcuts Actions
 
 | Actions             | status            |
