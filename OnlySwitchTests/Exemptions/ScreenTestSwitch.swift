@@ -6,6 +6,8 @@
 //
 
 import Foundation
+@testable import OnlySwitch
+
 class ScreenTestSwitch:SwitchProvider {
     var type: SwitchType = .screenTest
     
@@ -19,11 +21,11 @@ class ScreenTestSwitch:SwitchProvider {
         return ""
     }
     
-    func operationSwitch(isOn: Bool) async throws {
+    func operateSwitch(isOn: Bool) async throws {
         
     }
     
-    func isVisable() -> Bool {
+    func isVisible() -> Bool {
         return false
     }
     

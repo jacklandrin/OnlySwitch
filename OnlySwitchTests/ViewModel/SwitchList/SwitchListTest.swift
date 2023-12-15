@@ -6,6 +6,7 @@
 //
 
 import XCTest
+@testable import OnlySwitch
 
 class SwitchListTest:XCTestCase {
     var vm:SwitchListVM!

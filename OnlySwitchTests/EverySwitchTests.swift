@@ -8,6 +8,7 @@
 import XCTest
 @testable import IOBluetooth
 @testable import CoreBluetooth
+@testable import OnlySwitch
 
 class EverySwitchTests: XCTestCase {
     func testDarkModeSwitch() throws {
@@ -114,7 +115,7 @@ class EverySwitchTests: XCTestCase {
     private func testSwitch(aSwitch:SwitchProvider, isOn:Bool) throws {
         let exp = expectation(description: "get status")
         Task {
-            try await aSwitch.operationSwitch(isOn:isOn)
+            try await aSwitch.operateSwitch(isOn:isOn)
             DispatchQueue.main.async {
                 let currentStatus = aSwitch.currentStatus()
                 XCTAssertEqual(currentStatus, isOn)

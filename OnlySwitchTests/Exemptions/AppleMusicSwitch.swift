@@ -6,6 +6,8 @@
 //
 
 import Foundation
+@testable import OnlySwitch
+
 class AppleMusicSwitch:SwitchProvider {
     var type: SwitchType = .applemusic
     
@@ -19,11 +21,11 @@ class AppleMusicSwitch:SwitchProvider {
         return ""
     }
     
-    func operationSwitch(isOn: Bool) async throws {
+    func operateSwitch(isOn: Bool) async throws {
         
     }
     
-    func isVisable() -> Bool {
+    func isVisible() -> Bool {
         return false
     }
     

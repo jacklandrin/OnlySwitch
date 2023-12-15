@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@testable import OnlySwitch
 
 class GitHubMockRespository:GitHubRepositoryProtocol {
     
@@ -84,5 +85,8 @@ class GitHubMockRespository:GitHubRepositoryProtocol {
         }
     }
     
-    
+    func requestEvolutionJson() async throws -> [OnlySwitch.EvolutionGalleryModel] {
+        // TODO: Not used. Just to silence Xcode
+        return []
+    }
 }

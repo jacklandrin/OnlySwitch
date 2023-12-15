@@ -6,6 +6,8 @@
 //
 
 import Foundation
+@testable import OnlySwitch
+
 class RadioStationSwitch:SwitchProvider {
     static let shared = RadioStationSwitch()
     var type: SwitchType = .radioStation
@@ -19,11 +21,11 @@ class RadioStationSwitch:SwitchProvider {
         return ""
     }
     
-    func operationSwitch(isOn: Bool) async throws {
+    func operateSwitch(isOn: Bool) async throws {
         
     }
     
-    func isVisable() -> Bool {
+    func isVisible() -> Bool {
         return false
     }
     

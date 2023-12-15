@@ -6,6 +6,7 @@
 //
 
 import AppKit
+@testable import OnlySwitch
 
 extension SwitchListVM:SettingWindowController {
     struct Holder {

@@ -6,7 +6,9 @@
 //
 
 import Foundation
-class SpotifySwitch: SwitchProvider {
+@testable import OnlySwitch
+
+class SpotifySwitch: SwitchProvider {    
     var type: SwitchType = .spotify
     
     var delegate: SwitchDelegate?
@@ -19,11 +21,11 @@ class SpotifySwitch: SwitchProvider {
         return ""
     }
     
-    func operationSwitch(isOn: Bool) async throws {
+    func operateSwitch(isOn: Bool) async throws {
         
     }
     
-    func isVisable() -> Bool {
+    func isVisible() -> Bool {
         return false
     }
     

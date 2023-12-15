@@ -7,6 +7,7 @@
 
 import XCTest
 @testable import Alamofire
+@testable import OnlySwitch
 
 class NetworkingTest:XCTestCase {
     private var presenter:GitHubRepositoryProtocol!
