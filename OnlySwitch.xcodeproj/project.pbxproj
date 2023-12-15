@@ -2223,7 +2223,7 @@
 					"$(inherited)",
 					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
 				);
-				TEST_HOST = "$(BUNDLE_LOADER)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OnlySwitch.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/OnlySwitch";
 			};
 			name = Debug;
 		};
@@ -2249,7 +2249,7 @@
 					"$(inherited)",
 					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
 				);
-				TEST_HOST = "$(BUNDLE_LOADER)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OnlySwitch.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/OnlySwitch";
 			};
 			name = Release;
 		};
