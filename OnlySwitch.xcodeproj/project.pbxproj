@@ -1547,8 +1547,8 @@
 			children = (
 				04DC6C8128A5A8C300888BF9 /* BackNoisesSettingView.swift */,
 				04DC6C8328A5A91300888BF9 /* BackNoisesSettingVM.swift */,
-				353FBF542B2C3058003C4D4F /* BackNoisesSettingReducer.swift */,
 				353FBF562B2C308A003C4D4F /* BackNoisesSettingTCAView.swift */,
+				353FBF542B2C3058003C4D4F /* BackNoisesSettingReducer.swift */,
 			);
 			path = BackNoises;
 			sourceTree = "<group>";
