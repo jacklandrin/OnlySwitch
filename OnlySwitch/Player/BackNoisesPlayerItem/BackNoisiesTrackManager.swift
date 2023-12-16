@@ -8,7 +8,7 @@
 import Foundation
 
 class BackNoisesTrackManager:ObservableObject {
-    enum Tracks:String {
+    enum Tracks:String, Equatable {
         case WhiteNoise = "White Noise"
         case PinkNoise = "Pink Noise"
         case Brownian = "Brownian"
@@ -25,14 +25,23 @@ class BackNoisesTrackManager:ObservableObject {
     static let shared = BackNoisesTrackManager()
     var currentBackNoisesItem = BackNoisesPlayerItemViewModel()
     
-    var currentTrack:Tracks {
+    @Published var currentTrack:Tracks {
+        // Stop using computed property to make 'currentTrack' be able to be published and accessible by $currentTrack.values
+        /*
         get {
             Tracks(rawValue: Preferences.shared.backNoisesTrack) ?? .WhiteNoise
         }
         set {
             Preferences.shared.backNoisesTrack = newValue.rawValue
             setPlayItem(track: newValue)
+        }
+         */
+        willSet {
             objectWillChange.send()
+        }
+        didSet {
+            Preferences.shared.backNoisesTrack = currentTrack.rawValue
+            setPlayItem(track: currentTrack)
         }
     }
     
@@ -56,6 +65,7 @@ class BackNoisesTrackManager:ObservableObject {
     ]
     
     init() {
+        currentTrack = Tracks(rawValue: Preferences.shared.backNoisesTrack) ?? .WhiteNoise
         setPlayItem(track: currentTrack)
     }
 
