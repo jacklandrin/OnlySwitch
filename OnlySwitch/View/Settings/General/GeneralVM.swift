@@ -124,6 +124,7 @@ class GeneralVM:ObservableObject {
     func clearCache() {
         do {
             try WallpaperManager.shared.clearCache()
+            try BackNoisesTrackManager.shared.clearCache()
         } catch {
             if let error = error as? WallpaperManager.WallpaperError,
                error == WallpaperManager.WallpaperError.ExistsIgnoredFile {
@@ -135,7 +136,15 @@ class GeneralVM:ObservableObject {
             model.showErrorToast = true
         }
     }
-    
+
+    func showCacheSize() {
+        let wallpaperCacheSize = WallpaperManager.shared.cacheSize()
+        let backNoisesCacheSize = BackNoisesTrackManager.shared.cacheSize()
+        URL.byteCountFormatter.countStyle = .file
+        guard let byteCount = URL.byteCountFormatter.string(for: wallpaperCacheSize + backNoisesCacheSize) else { return }
+        model.cacheSize = byteCount
+    }
+
     func checkUpdate() {
         self.model.showProgress = true
         checkUpdatePresenter.checkUpdate { result in

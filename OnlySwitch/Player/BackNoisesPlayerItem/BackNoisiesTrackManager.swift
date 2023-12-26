@@ -44,6 +44,8 @@ class BackNoisesTrackManager:ObservableObject {
         trackList.indices.filter { trackList[$0] == currentTrack }.first ?? 0
     }
 
+    private let folderName = "backNoises"
+
     let trackList:[Tracks] = [
         .WhiteNoise,
         .PinkNoise,
@@ -117,11 +119,39 @@ class BackNoisesTrackManager:ObservableObject {
         
     }
 
+    func clearCache() throws {
+        guard let myAppPath = GitHubPresenter.shared.myAppPath else {
+            return
+        }
+
+        let backNoisesFolder = myAppPath.appendingPathComponent(string: folderName)
+        let fileUrls = try FileManager.default.contentsOfDirectory(at: URL(fileURLWithPath: backNoisesFolder), includingPropertiesForKeys: nil, options: .includesDirectoriesPostOrder)
+        for fileUrl in fileUrls {
+            try FileManager.default.removeItem(at: fileUrl)
+        }
+    }
+
+    func cacheSize() -> Int {
+        guard let myAppPath = GitHubPresenter.shared.myAppPath else {
+            return 0
+        }
+
+        let backNoisesFolder = myAppPath.appendingPathComponent(string: folderName)
+        let backNoisesFolderUrl = URL(fileURLWithPath: backNoisesFolder)
+        var size = 0
+        do {
+            size = try backNoisesFolderUrl.directoryTotalAllocatedSize(includingSubfolders: true) ?? 0
+        } catch {
+            size = 0
+        }
+        return size
+    }
+
     private func downloadBackgroundNoises(track: Tracks) async throws -> String {
         var components = URLComponents()
         components.scheme = httpsScheme
         components.host = URLHost.userContent.rawValue
         components.path = "/" + EndPointKinds.backNoises.rawValue + track.fileName()
-        return try await GitHubPresenter.shared.downloadFile(from: components.url!, name: "backNoises/" + track.fileName())
+        return try await GitHubPresenter.shared.downloadFile(from: components.url!, name: folderName + "/" + track.fileName())
     }
 }
