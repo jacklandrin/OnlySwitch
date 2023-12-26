@@ -64,7 +64,7 @@ class BackNoisesTrackManager:ObservableObject {
         setPlayItem(track: currentTrack)
     }
 
-    private func setPlayItem(track:Tracks) {
+    private func setPlayItem(track: Tracks) {
         @Sendable func setTrackURL(trackURL: String) {
             if let item = PlayerManager.shared.player.currentPlayerItem, item.isPlaying {
                 if item.type == .BackNoises {

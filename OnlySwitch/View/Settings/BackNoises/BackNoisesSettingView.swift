@@ -38,8 +38,10 @@ struct BackNoisesSettingView: View {
                                     .padding(.vertical, 1)
                                 Spacer()
                             }
-                        }).buttonStyle(.plain)
-                            .background(backNoisesSettingVM.trackList[index] == backNoisesSettingVM.currentTrack ? Color.accentColor.opacity(0.65) : Color.clear)
+                            .contentShape(Rectangle())
+                        })
+                        .buttonStyle(.plain)
+                        .background(backNoisesSettingVM.trackList[index] == backNoisesSettingVM.currentTrack ? Color.accentColor.opacity(0.65) : Color.clear)
                     }
                 }
             }
