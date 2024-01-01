@@ -28,7 +28,7 @@ struct AboutView: View {
                     .font(.footnote)
                     .foregroundColor(.gray)
                 HStack {
-                    Text("Copyright @ 2021-2023 ")
+                    Text("Copyright @ 2021-2024 ")
                         .font(.system(size: 15))
                     Link(destination: URL(string: "https://jacklandrin.github.io")!, label: {
                         Text("Jacklandrin")
