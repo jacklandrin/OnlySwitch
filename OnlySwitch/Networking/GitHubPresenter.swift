@@ -14,7 +14,8 @@ class GitHubPresenter: ObservableObject, GitHubRepositoryProtocol{
     static let shared = GitHubPresenter()
     
     @Published private var interactor = GitHubInteractor()
-    
+    var session = URLSession.shared
+
     var latestVersion:String {
         return interactor.latestVersion
     }
@@ -121,5 +122,27 @@ class GitHubPresenter: ObservableObject, GitHubRepositoryProtocol{
         let (data, _) = try await URLSession.shared.data(for: request)
         let result = try decode(data: data, type: [EvolutionGalleryModel].self)
         return result
+    }
+
+    func downloadFile(from url: URL, to desination: URL) async throws {
+        let (localURL, _) = try await session.download(from: url)
+        do {
+            let folderUrl = desination.deletingLastPathComponent()
+            if !FileManager.default.fileExists(atPath: folderUrl.path) {
+               try FileManager.default.createDirectory(at: folderUrl, withIntermediateDirectories: true, attributes: nil)
+            }
+            try FileManager.default.moveItem(at: localURL, to: desination)
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+
+    func downloadFile(from url: URL, name: String) async throws -> String {
+        let destination = myAppPath?.appendingPathComponent(string: name)
+        guard let destination else {
+            throw RequestError.invalidURL
+        }
+        try await downloadFile(from: url, to: URL(fileURLWithPath: destination))
+        return destination
     }
 }

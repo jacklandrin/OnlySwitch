@@ -152,7 +152,7 @@ struct GeneralView: View, EmailProvider {
                             Text(generalVM.cacheSize)
                             Button("Clear Cache".localized()) {
                                 generalVM.clearCache()
-                                generalVM.cacheSize = WallpaperManager.shared.cacheSize()
+                                generalVM.showCacheSize()
                             }
                         }
                         Text("Cache for Hide Notch Switch".localized())
@@ -175,7 +175,7 @@ struct GeneralView: View, EmailProvider {
         }
         .frame(width: 400)
         .onAppear{
-            generalVM.cacheSize = WallpaperManager.shared.cacheSize()
+            generalVM.showCacheSize()
         }
         .toast(isPresenting: $generalVM.showErrorToast) {
             AlertToast(displayMode: .alert,

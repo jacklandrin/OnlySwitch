@@ -39,6 +39,4 @@ class LowPowerModeSwitch:SwitchProvider {
     func isVisible() -> Bool {
         return true
     }
-    
-    
 }

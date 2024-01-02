@@ -46,9 +46,9 @@ class WallpaperManager {
         
     }
     
-    func cacheSize() -> String {
+    func cacheSize() -> Int {
         guard let myAppPath = myAppPath else {
-            return ""
+            return 0
         }
         let processedPath = myAppPath.appendingPathComponent(string: "processed")
         let originalPath = myAppPath.appendingPathComponent(string: "original")
@@ -57,15 +57,13 @@ class WallpaperManager {
         
         var processedSize = 0
         var originalSize = 0
-        var size = ""
+        var size = 0
         do {
             processedSize = try processedUrl.directoryTotalAllocatedSize(includingSubfolders: true) ?? 0
             originalSize = try originalUrl.directoryTotalAllocatedSize(includingSubfolders: true) ?? 0
-            URL.byteCountFormatter.countStyle = .file
-            guard let byteCount = URL.byteCountFormatter.string(for: processedSize + originalSize) else { return ""}
-            size = byteCount
+            size = processedSize + originalSize
         } catch {
-            size = ""
+            size = 0
         }
         return size
     }

@@ -1,6 +1,6 @@
 ![](https://badgen.net/github/release/jacklandrin/onlyswitch)![](https://img.shields.io/badge/UI-SwiftUI-green)   ![](https://img.shields.io/badge/Platform-Monterey-purple)  ![](https://img.shields.io/badge/License-MIT-orange)
 <p align="left">
-<img alt="AppIcon" src="http://www.jacklandrin.com/wp-content/uploads/2021/12/only_switch_256.png" width="128px" align="center" />
+<img alt="AppIcon" src="https://github.com/jacklandrin/OnlySwitch/blob/main/OnlySwitch/Assets.xcassets/AppIcon.appiconset/icon_256x256@2x.png?raw=true" width="128px" align="center" />
 </p>
 
 # OnlySwitch

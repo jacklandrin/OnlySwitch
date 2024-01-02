@@ -33,7 +33,14 @@ class BackNoisesSwitch:SwitchProvider {
     
     func operateSwitch(isOn: Bool) async throws {
         DispatchQueue.main.async {
-            self.backNoisesTrackManager.currentBackNoisesItem.isPlaying = isOn
+            if isOn {
+                self.backNoisesTrackManager.currentBackNoisesItem.isPlaying = true
+                if let url = self.backNoisesTrackManager.currentBackNoisesItem.url, !fileExistAtPath(url.absoluteString) {
+                    self.backNoisesTrackManager.currentTrack = self.backNoisesTrackManager.currentBackNoisesItem.track
+                }
+            } else {
+                self.backNoisesTrackManager.currentBackNoisesItem.isPlaying = false
+            }
             self.autoStopNoisesIfNeeded()
         }
     }
