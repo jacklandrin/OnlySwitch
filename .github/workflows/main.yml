@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    name: Build and analyse default scheme using xcodebuild command
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Xcodebuild
+        uses: sersoft-gmbh/xcodebuild-action@v1
+        with:
+          project: OnlySwitch.xcodeproj
+          scheme: OnlySwitch
+          destination: platform=macOS
+          action: build
