@@ -226,15 +226,15 @@ S-GPT is already in Shortcuts gallery. Easily ask any questions to chatGPT via S
 
 **Translation:**
 
-| Language | Contributor              | Language | Contributor    |
-|----------|--------------------------|:---------|:---------------|
-| German   | @C0d3Br3aker             | Italian  | @bellaposa     |
-| Croatian | @milotype                | Russian  | @kirillyakopov |
-| Turkish  | @berkbatuhans            | Spanish  | @kant          |
-| Polish   | @kpacholak               | Japanese | @ShogoKoyama   |
-| Dutch    | Alex                     | Somali   | @abdorizak     |
-| Filipino | Rosel                    | Korean   | @iosdevted     |
-| French   | @BtKent and Ange Lefrère |          |                |
+| Language | Contributor              | Language  | Contributor    |
+|----------|--------------------------|:----------|:---------------|
+| German   | @C0d3Br3aker             | Italian   | @bellaposa     |
+| Croatian | @milotype                | Russian   | @kirillyakopov |
+| Turkish  | @berkbatuhans            | Spanish   | @kant          |
+| Polish   | @kpacholak               | Japanese  | @ShogoKoyama   |
+| Dutch    | Alex                     | Somali    | @abdorizak     |
+| Filipino | Rosel                    | Korean    | @iosdevted     |
+| French   | @BtKent and Ange Lefrère | Ukrainian | @andryua       |
 
 @wrngwrld for volume slider of the radio player
 
