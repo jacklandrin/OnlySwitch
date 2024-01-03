@@ -7,7 +7,7 @@
 */
 "Hide Desktop" = "Сховати іконки з Робочого столу";
 "Dark Mode" = "Темний режим";
-"Hide Notch" = "Сховати Виїмку";
+"Hide Notch" = "Сховати Notch";
 "Mute" = "Вимкнути звук";
 "Screen Saver" = "Екранний ефект";
 "Night Shift" = "Night Shift";
@@ -22,10 +22,10 @@
 "Settings" = "Налаштування";
 "Launch at login" = "Автозапуск після входу";
 "Clear Cache" = "Очистити кеш";
-"Quit" = "Завершити";
+"Quit" = "Вийти";
 "More Apps" = "Більше програм";
-"Download QRCobot" = "Скачати QRCobot";
-"Download WallCard" = "Скачати WallCard";
+"Download QRCobot" = "Завантажити QRCobot";
+"Download WallCard" = "Завантажити WallCard";
 "Radio" = "Радіо";
 "About" = "Про програму";
 "Name" = "Імʼя";
@@ -37,8 +37,8 @@
 "Language:" = "Мова:";
 "Cache:" = "Кеш:";
 "Contact:" = "Контакт:";
-"Quit:" = "Завершити:";
-"Cache for Hide Notch Switch" = "Кеш для приховування перемикача виїмок";
+"Quit:" = "Вийти:";
+"Cache for Hide Notch Switch" = "Кеш для приховування перемикача Notch";
 "Send Email to Jacklandrin" = "Надіслати листа до Jacklandrin";
 "Quit Only Switch" = "Завершити Only Switch";
 "Calculating..." = "Обчислення...";
@@ -55,7 +55,7 @@
 "You’re up to date!" = "Програма оновлена!";
 "The latest version is v%@" = "Остання версія v%@";
 "Update" = "Оновлення";
-"Download" = "Скачати";
+"Download" = "Завантажити";
 "You can update to new version. The latest version is v%@" = "Ви можете оновитися до останньої версії. Остання версія v%@";
 "Cancel" = "Скасувати";
 "Show Extension Name" = "Показати розширення імен фалів";
@@ -71,11 +71,11 @@
 "%d min" = "%d хв";
 "Take a break!" = "Зроби перерву.";
 "Get on with work!" = "Приступайте до роботи!";
-"You've rested for %d min." = "Ви відпочивали %d min.";
-"You've worked for %d min." = "Ви працювали %d min.";
+"You've rested for %d min." = "Ви відпочивали %d хв.";
+"You've worked for %d min." = "Ви працювали %d хв.";
 "Time's up." = "Час вийшов.";
 "The maximum number of switch is 14" = "Максимальна кількість перемикачів - 14";
-"Small Launchpad Icon" = "Маленька іконка панелі запуску";
+"Small Launchpad Icon" = "Маленька іконка Панелі запуску";
 "Low Power Mode" = "Режим економії заряду";
 "Shortcuts" = "Команди";
 "Run" = "Запустити";
@@ -105,8 +105,8 @@
 "Screen Test" = "Перевіка та очищення екрану";
 "Version History:" = "Історія версій:";
 "Join:" = "Приєднатися:";
-"Press left or right arrow button to change background color" = "Натисніть вліво або вправо для зміни кольору фону";
-"Show Finder Path Bar" = "Показати Панель Шляху в Finder";в
+"Press left or right arrow button to change background color" = "Натисніть кнопки вліво або вправо для зміни кольору фону";
+"Show Finder Path Bar" = "Показати Панель Шляху в Finder";
 "Hide Menu Bar Icons" = "Сховати іконки Рядка Меню";
 "seconds" = "секунди";
 "never" = "ніколи";
@@ -139,8 +139,8 @@
 "Hide Windows" = "Сховати вікна";
 "Disable" = "Вимкнути";
 "Enable" = "Увімкнути";
-"Turn off1" = "Вимкніть1";
-"Turn on1" = "Увімкніть!";
+"Turn off1" = "Вимкніть";
+"Turn on1" = "Увімкніть";
 "Running" = "Запущено";
 "TOOLS" = "ІНСТРУМЕНТИ";
 "Import" = "Імпортувати";
@@ -170,6 +170,6 @@
 "Turn on" = "Увімкніть";
 "True Tone" = "True Tone";
 "Donation" = "Пожертва";
-"Show List:" = "Показати список перемикачів:";
+"Show List:" = "Показати Список:";
 "Top Sticker" = "Верхня наліпка";
 "Keyboard Locked ↓" = "Клавіатуру заблоковано ↓";
