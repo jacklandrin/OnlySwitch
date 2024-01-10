@@ -29,25 +29,29 @@ struct SupportedLanguages {
     static let korean = Language(name: "한국어", code: "ko")
     static let french = Language(name: "Français", code: "fr")
     static let ukrainian = Language(name: "Українська", code: "uk")
-    
-    static let langList = [SupportedLanguages.english,
-                           SupportedLanguages.simplifiedChinese,
-                           SupportedLanguages.german,
-                           SupportedLanguages.croatian,
-                           SupportedLanguages.turkish,
-                           SupportedLanguages.polish,
-                           SupportedLanguages.filipino,
-                           SupportedLanguages.dutch,
-                           SupportedLanguages.italian,
-                           SupportedLanguages.russian,
-                           SupportedLanguages.spanish,
-                           SupportedLanguages.japanese,
-                           SupportedLanguages.somali,
-                           SupportedLanguages.korean,
-                           SupportedLanguages.french,
-                           SupportedLanguages.ukrainian]
-    
-    static func getLangName(code:String) -> String {
+    static let slovak = Language(name: "Slovenský", code: "sk")
+
+    static let langList = [
+        SupportedLanguages.english,
+        SupportedLanguages.simplifiedChinese,
+        SupportedLanguages.german,
+        SupportedLanguages.croatian,
+        SupportedLanguages.turkish,
+        SupportedLanguages.polish,
+        SupportedLanguages.filipino,
+        SupportedLanguages.dutch,
+        SupportedLanguages.italian,
+        SupportedLanguages.russian,
+        SupportedLanguages.spanish,
+        SupportedLanguages.japanese,
+        SupportedLanguages.somali,
+        SupportedLanguages.korean,
+        SupportedLanguages.french,
+        SupportedLanguages.ukrainian,
+        SupportedLanguages.slovak
+    ]
+
+    static func getLangName(code: String) -> String {
         let lang = SupportedLanguages.langList.filter{$0.code == code}.first
         return lang?.name ?? "English"
     }

@@ -102,7 +102,7 @@ Since Version 1.3, switches can be added to or removed from the list.
 | Set dark mode       | finished          |
 
 ## Supported Languages 🇺🇳
-English, Simplified Chinese, German, Croatian, Turkish, Polish, Filipino, Dutch, Italian, Russian, Spanish, Japanese, Somali, Korean, French, Ukrainian
+English, Simplified Chinese, German, Croatian, Turkish, Polish, Filipino, Dutch, Italian, Russian, Spanish, Japanese, Somali, Korean, French, Ukrainian, Slovak
 
 ## Welcome to pull requests for these
 
@@ -235,8 +235,9 @@ S-GPT is already in Shortcuts gallery. Easily ask any questions to chatGPT via S
 | Dutch    | Alex                     | Somali    | @abdorizak     |
 | Filipino | Rosel                    | Korean    | @iosdevted     |
 | French   | @BtKent and Ange Lefrère | Ukrainian | @andryua       |
+| Slovak   | @Svec-Tomas              |           |                |
 
-@wrngwrld for volume slider of the radio player
+@wrngwrld for the volume slider of the radio player
 
 @kant for syntax issue 
 
