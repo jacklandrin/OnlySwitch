@@ -82,7 +82,9 @@ struct GeneralView: View, EmailProvider {
                     }.frame(height:Layout.generalSettingItemHeight)
                     
                     //Recommendation
-                    Toggle(isOn: $generalVM.showAds, label: {Text("Show More Apps".localized())})
+                    Toggle(isOn: $generalVM.showAds) {
+                        Text("Show More Apps".localized())
+                    }
                         .frame(height: Layout.generalSettingItemHeight)
                     
                     //menubar icons
@@ -142,8 +144,8 @@ struct GeneralView: View, EmailProvider {
                         ProgressView()
                             .progressViewStyle(.circular)
                             .controlSize(.small)
-                            .isHidden(!generalVM.showProgress,remove: true)
-                    }.frame(height:Layout.generalSettingItemHeight)
+                            .isHidden(!generalVM.showProgress, remove: true)
+                    }.frame(height: Layout.generalSettingItemHeight)
 
                     
                     //clear cache
@@ -173,7 +175,7 @@ struct GeneralView: View, EmailProvider {
                 }
             }
         }
-        .frame(width: 400)
+        .frame(minWidth: 500)
         .onAppear{
             generalVM.showCacheSize()
         }
