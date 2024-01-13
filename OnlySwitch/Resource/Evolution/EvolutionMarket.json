@@ -94,5 +94,26 @@
             "command": "[[ $(pmset -g | grep SleepDisabled) =~ 1 ]] && echo true || echo false",
             "true_condition": "true"
         }
+    },
+    {
+        "id": "6F9EFD58-E317-4692-AE44-7681FFC4B581",
+        "name": "Wifi Switch",
+        "icon_name": "network",
+        "type": "Switch",
+        "description": "Turn on/off Wifi. Precondition: en0 is Wifi",
+        "author": "jacklandrin",
+        "on_command": {
+            "type": "shell",
+            "command": "networksetup -setairportpower en0 on"
+        },
+        "off_command": {
+            "type": "shell",
+            "command": "networksetup -setairportpower en0 off"
+        },
+        "check_command": {
+            "type": "shell",
+            "command": "networksetup -getairportpower en0",
+            "true_condition": "Wi-Fi Power (en0): On"
+        }
     }
 ]

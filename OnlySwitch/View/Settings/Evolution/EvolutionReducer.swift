@@ -147,6 +147,7 @@ struct EvolutionReducer: Reducer {
 
         Scope(state: \.galleryState, action: /Action.galleryAction) {
             EvolutionGalleryReducer()
+                .dependency(\.evolutionGalleryService, .liveValue)
                 ._printChanges()
         }
     }
