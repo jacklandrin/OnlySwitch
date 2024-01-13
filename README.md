@@ -88,7 +88,7 @@ Since Version 1.3, switches can be added to or removed from the list.
 |---------------------|--------|--------------------|:------------------------|
 | Stage Manager       |        | Update Software    | installed via App Store |
 | Hide desktop Widget | Sonoma | Hide Desktop Icons | Sonoma                  |
-| Clamshell           |        |                    |                         |
+| Clamshell           |        | Wifi Switch        |                         |
 
 
 
