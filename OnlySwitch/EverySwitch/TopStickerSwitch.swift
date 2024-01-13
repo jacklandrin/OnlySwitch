@@ -38,6 +38,7 @@ class TopStickerSwitch: SwitchProvider {
                         rootView: StickerView(
                             store: Store(initialState: StickerReducer.State()){
                                 StickerReducer()
+                                    ._printChanges()
                             }
                         )
                     )

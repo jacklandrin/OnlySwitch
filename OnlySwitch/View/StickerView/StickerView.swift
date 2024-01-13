@@ -5,8 +5,9 @@
 //  Created by Jacklandrin on 2023/10/28.
 //
 
-import SwiftUI
 import ComposableArchitecture
+import MarkdownUI
+import SwiftUI
 
 @available(macOS 13.0, *)
 struct StickerView: View {
@@ -18,69 +19,38 @@ struct StickerView: View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             ZStack {
                 VStack (spacing: 0) {
-                    HStack {
-                        if viewStore.isHovering {
-                            Button(action: {
-                                viewStore.send(.closeSticker)
-                            }) {
-                                Image(systemName: "xmark")
-                                        .foregroundStyle(Color(nsColor: viewStore.stickerColor.stroke))
-                                        .frame(width: 20, height: 20)
-                                        .contentShape(Rectangle())
+                    bar
+                    Group{
+                        if viewStore.previewMode {
+                            ScrollView {
+                                Markdown(viewStore.stickerContent)
+                                    .markdownTextStyle() {
+                                        FontFamily(.system())
+                                        FontSize(15)
+                                        FontWeight(.regular)
+                                        ForegroundColor(.black)
+                                        BackgroundColor(.clear)
+                                    }
+                                    .markdownBlockStyle(\.taskListMarker) { configuration in
+                                        Image(systemName: configuration.isCompleted ? "checkmark.circle.fill" : "circle")
+                                        .relativeFrame(minWidth: .em(1.5), alignment: .trailing)
+                                      }
+                                    .padding(2)
                             }
-                            .buttonStyle(.plain)
-                            .padding(.trailing, 5)
-                            .transition(.opacity)
-                        }
-
-                        Spacer()
-                            .frame(height: 20)
-
-                        if viewStore.isHovering {
-                            HStack {
-                                Button(action: {
-                                    viewStore.send(.toggleTranslucent, animation: .easeInOut)
-                                }) {
-                                    Image(viewStore.canTranslucent ? "fill" : "translucent")
-                                            .foregroundStyle(Color(nsColor: viewStore.stickerColor.stroke))
-                                            .frame(width: 20, height: 20)
-                                            .contentShape(Rectangle())
-                                }
-                                .buttonStyle(.plain)
-
-                                Button(action: {
-                                    viewStore.send(.showColorSelector, animation: .easeInOut)
-                                }) {
-                                    Image(systemName: "ellipsis")
-                                            .fontWeight(.bold)
-                                            .foregroundStyle(Color(nsColor: viewStore.stickerColor.stroke))
-                                            .frame(width: 20, height: 20)
-                                            .contentShape(Rectangle())
-                                }
-                                .buttonStyle(.plain)
-                            }
-                            .padding(.trailing, 5)
-                            .transition(.opacity)
+                        } else {
+                            TextEditor(
+                                text: viewStore.binding(
+                                    get: { $0.stickerContent },
+                                    send: { .editContent($0) }
+                                )
+                            )
+                            .font(.system(size: 15))
+                            .frame(minWidth: 200, minHeight: 200)
+                            .scrollContentBackground(.hidden)
+                            .foregroundStyle(.black)
+                            .background(.clear)
                         }
                     }
-                    .background(
-                        Rectangle()
-                            .foregroundStyle(Color(nsColor: viewStore.stickerColor.bar))
-                            .frame(height: 20)
-                    )
-                    .shadow(color: Color(.sRGBLinear, white: 0, opacity: 0.2), radius: 3)
-
-                    TextEditor(
-                        text: viewStore.binding(
-                            get: { $0.stickerContent },
-                            send: { .editContent($0) }
-                        )
-                    )
-                    .font(.system(size: 15))
-                    .frame(minWidth: 180, minHeight: 180)
-                    .scrollContentBackground(.hidden)
-                    .foregroundStyle(.black)
-                    .background(.clear)
                     .padding(.top, 5)
                 }
                 .background(Color(nsColor: viewStore.stickerColor.content))
@@ -135,6 +105,72 @@ struct StickerView: View {
 
     private func isOpacity(canTranslucent: Bool, isHovering: Bool) -> Bool {
         canTranslucent && !isHovering
+    }
+
+    private var bar: some View {
+        WithViewStore(store, observe: { $0 }) { viewStore in
+            HStack {
+                if viewStore.isHovering {
+                    Button(action: {
+                        viewStore.send(.closeSticker)
+                    }) {
+                        Image(systemName: "xmark")
+                                .foregroundStyle(Color(nsColor: viewStore.stickerColor.stroke))
+                                .frame(width: 20, height: 20)
+                                .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.trailing, 5)
+                    .transition(.opacity)
+                }
+
+                Spacer()
+                    .frame(height: 20)
+
+                if viewStore.isHovering {
+                    HStack {
+                        Button(action: {
+                            viewStore.send(.togglePreviewMode, animation: .easeInOut)
+                        }) {
+                            Image(systemName: viewStore.previewMode ? "eye" : "keyboard.badge.eye")
+                                    .foregroundStyle(Color(nsColor: viewStore.stickerColor.stroke))
+                                    .frame(width: 20, height: 20)
+                                    .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+
+                        Button(action: {
+                            viewStore.send(.toggleTranslucent, animation: .easeInOut)
+                        }) {
+                            Image(viewStore.canTranslucent ? "fill" : "translucent")
+                                    .foregroundStyle(Color(nsColor: viewStore.stickerColor.stroke))
+                                    .frame(width: 20, height: 20)
+                                    .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+
+                        Button(action: {
+                            viewStore.send(.showColorSelector, animation: .easeInOut)
+                        }) {
+                            Image(systemName: "ellipsis")
+                                    .fontWeight(.bold)
+                                    .foregroundStyle(Color(nsColor: viewStore.stickerColor.stroke))
+                                    .frame(width: 20, height: 20)
+                                    .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    .padding(.trailing, 5)
+                    .transition(.opacity)
+                }
+            }
+            .background(
+                Rectangle()
+                    .foregroundStyle(Color(nsColor: viewStore.stickerColor.bar))
+                    .frame(height: 20)
+            )
+            .shadow(color: Color(.sRGBLinear, white: 0, opacity: 0.2), radius: 3)
+        }
     }
 }
 

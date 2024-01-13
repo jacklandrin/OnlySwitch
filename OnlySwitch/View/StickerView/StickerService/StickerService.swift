@@ -8,6 +8,17 @@
 import Foundation
 
 struct StickerService {
-    var saveSticker: (_ content: String, _ color: StickerColor, _ translucent: Bool) -> Void
-    var loadSticker: () -> (content: String, color: StickerColor, translucent: Bool)
+    var saveSticker: (
+        _ content: String,
+        _ color: StickerColor,
+        _ translucent: Bool,
+        _ previewMode: Bool
+    ) -> Void
+    
+    var loadSticker: () -> (
+        content: String,
+        color: StickerColor,
+        translucent: Bool,
+        previewMode: Bool
+    )
 }
