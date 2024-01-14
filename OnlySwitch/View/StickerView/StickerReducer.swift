@@ -15,6 +15,7 @@ struct StickerReducer: Reducer {
         var isHovering = false
         var stickerColor: StickerColor = .yellow
         var canTranslucent: Bool = false
+        var previewMode: Bool = false
     }
 
     enum Action: Equatable {
@@ -26,6 +27,7 @@ struct StickerReducer: Reducer {
         case closeSticker
         case hover(Bool)
         case toggleTranslucent
+        case togglePreviewMode
     }
 
     @Dependency(\.stickerService) var stickerService
@@ -38,6 +40,7 @@ struct StickerReducer: Reducer {
                     state.stickerContent = sticker.content
                     state.stickerColor = sticker.color
                     state.canTranslucent = sticker.translucent
+                    state.previewMode = sticker.previewMode
                     return .none
                     
                 case .editContent(let content):
@@ -45,7 +48,12 @@ struct StickerReducer: Reducer {
                     return .none
                     
                 case .saveContent:
-                    stickerService.saveSticker(state.stickerContent, state.stickerColor, state.canTranslucent)
+                    stickerService.saveSticker(
+                        state.stickerContent,
+                        state.stickerColor,
+                        state.canTranslucent,
+                        state.previewMode
+                    )
                     return .none
 
                 case .showColorSelector:
@@ -55,8 +63,7 @@ struct StickerReducer: Reducer {
                 case .changeColor(let color):
                     state.stickerColor = color
                     state.isColorSelectorPresented = false
-                    stickerService.saveSticker(state.stickerContent, state.stickerColor, state.canTranslucent)
-                    return .none
+                    return .send(.saveContent)
 
                 case .closeSticker:
                     return .run { @MainActor send in
@@ -70,7 +77,11 @@ struct StickerReducer: Reducer {
 
                 case .toggleTranslucent:
                     state.canTranslucent.toggle()
-                    return .none
+                    return .send(.saveContent)
+
+                case .togglePreviewMode:
+                    state.previewMode.toggle()
+                    return .send(.saveContent)
             }
         }
     }

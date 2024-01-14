@@ -165,6 +165,7 @@
 		047140BE2778A416005B160B /* PomodoroTimerSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140BD2778A416005B160B /* PomodoroTimerSettingView.swift */; };
 		047140C02778A478005B160B /* PomodoroTimerSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140BF2778A478005B160B /* PomodoroTimerSettingVM.swift */; };
 		047140C22778D2A1005B160B /* SmallLaunchpadIconSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140C12778D2A1005B160B /* SmallLaunchpadIconSwitch.swift */; };
+		047594952B531CB2005FC87C /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = 047594942B531CB2005FC87C /* MarkdownUI */; };
 		047C1E4C2A2251280061235D /* EvolutionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E4B2A2251280061235D /* EvolutionView.swift */; };
 		047C1E4F2A22523B0061235D /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 047C1E4E2A22523B0061235D /* ComposableArchitecture */; };
 		047C1E512A22525F0061235D /* EvolutionReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E502A22525F0061235D /* EvolutionReducer.swift */; };
@@ -713,6 +714,7 @@
 				04DC6C9828A7CA6A00888BF9 /* CoreDisplay.framework in Frameworks */,
 				047C1E4F2A22523B0061235D /* ComposableArchitecture in Frameworks */,
 				0430887E275D707C00877E51 /* LaunchAtLogin in Frameworks */,
+				047594952B531CB2005FC87C /* MarkdownUI in Frameworks */,
 				04BF976B27908D5400E7C0E2 /* KeyboardShortcuts in Frameworks */,
 				0493379027626FD200AE779A /* NetworkExtension.framework in Frameworks */,
 				04A23B23275D5FC500B454C8 /* CoreBrightness.framework in Frameworks */,
@@ -1651,6 +1653,7 @@
 				046C0BFF293E7C040073F727 /* SwiftUIWebView */,
 				047C1E4E2A22523B0061235D /* ComposableArchitecture */,
 				041B17882AD841EE0032919B /* Sparkle */,
+				047594942B531CB2005FC87C /* MarkdownUI */,
 			);
 			productName = OnlySwitch;
 			productReference = 04447B582754F08000CD2900 /* OnlySwitch.app */;
@@ -1728,6 +1731,7 @@
 				046C0BFE293E7C040073F727 /* XCRemoteSwiftPackageReference "swiftui-webview" */,
 				047C1E4D2A22523B0061235D /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
 				041B17872AD841EE0032919B /* XCRemoteSwiftPackageReference "Sparkle" */,
+				047594932B531CB2005FC87C /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
 			);
 			productRefGroup = 04447B592754F08000CD2900 /* Products */;
 			projectDirPath = "";
@@ -2635,6 +2639,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		047594932B531CB2005FC87C /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/gonzalezreal/swift-markdown-ui";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.3.0;
+			};
+		};
 		047C1E4D2A22523B0061235D /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
@@ -2686,6 +2698,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 046C0BFE293E7C040073F727 /* XCRemoteSwiftPackageReference "swiftui-webview" */;
 			productName = SwiftUIWebView;
+		};
+		047594942B531CB2005FC87C /* MarkdownUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 047594932B531CB2005FC87C /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
+			productName = MarkdownUI;
 		};
 		047C1E4E2A22523B0061235D /* ComposableArchitecture */ = {
 			isa = XCSwiftPackageProductDependency;
