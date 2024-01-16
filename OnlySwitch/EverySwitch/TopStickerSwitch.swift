@@ -51,6 +51,8 @@ class TopStickerSwitch: SwitchProvider {
                 }
                 window?.makeKeyAndOrderFront(nil)
                 window?.isMovableByWindowBackground = true
+                window?.setFrameUsingName("StickerWindow")
+                window?.setFrameAutosaveName("StickerWindow")
                 isWindowVisable = true
             } else {
                 window?.close()
