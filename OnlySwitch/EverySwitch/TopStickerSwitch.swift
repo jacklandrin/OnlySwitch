@@ -42,7 +42,7 @@ class TopStickerSwitch: SwitchProvider {
                             }
                         )
                     )
-                    let stickerWindow = Self.createWindow(with: NSRect(x: 0, y: 0, width: 180, height: 210))
+                    let stickerWindow = Self.createWindow(with: .zero)
                     let contenRect = stickerWindow.contentRect(forFrameRect: stickerWindow.frame)
                     view.frame = contenRect
                     stickerWindow.contentView = view
@@ -50,6 +50,7 @@ class TopStickerSwitch: SwitchProvider {
                     window = stickerWindow
                 }
                 window?.makeKeyAndOrderFront(nil)
+                window?.isMovableByWindowBackground = true
                 isWindowVisable = true
             } else {
                 window?.close()
@@ -95,9 +96,5 @@ class StickerWindow: NSWindow, NSWindowDelegate {
 
     func windowShouldClose(_ sender: NSWindow) -> Bool {
         true
-    }
-
-    override func mouseDown(with event: NSEvent) {
-        self.performDrag(with: event)
     }
 }
