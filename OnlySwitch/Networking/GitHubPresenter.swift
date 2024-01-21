@@ -65,7 +65,8 @@ class GitHubPresenter: ObservableObject, GitHubRepositoryProtocol{
             complete(.failure(RequestError.invalidURL))
             return
         }
-        let request = AF.request(url)
+        let request = AF.request(url, parameters: ["per_page": 100])
+
         request.responseDecodable(of:[GitHubRelease].self) { response in
             guard let releases = response.value else {
                 complete(.failure(RequestError.failed))
