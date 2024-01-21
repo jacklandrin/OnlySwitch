@@ -220,7 +220,8 @@ S-GPT is already in Shortcuts gallery. Easily ask any questions to chatGPT via S
 * Hide Windows refer to [Later](https://github.com/alyssaxuu/later)
 * [The composable architecture](https://github.com/pointfreeco/swift-composable-architecture)
 * [Sparkle](https://github.com/sparkle-project/Sparkle)
-* True Tone refer to [Shifty](https://github.com/thompsonate/Shifty)
+* True Tone refers to [Shifty](https://github.com/thompsonate/Shifty)
+* [swift-markdown-ui](https://github.com/gonzalezreal/swift-markdown-ui)
 
 ## Contributors
 
