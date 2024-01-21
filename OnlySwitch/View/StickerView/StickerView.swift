@@ -156,6 +156,7 @@ struct StickerView: View {
                                     .contentShape(Rectangle())
                         }
                         .buttonStyle(.plain)
+                        .help(viewStore.previewMode ? "Edit".localized() : "Preview".localized())
 
                         Button(action: {
                             viewStore.send(.toggleTranslucent, animation: .easeInOut)
@@ -166,6 +167,7 @@ struct StickerView: View {
                                     .contentShape(Rectangle())
                         }
                         .buttonStyle(.plain)
+                        .help("Translucent".localized())
 
                         Button(action: {
                             viewStore.send(.showColorSelector, animation: .easeInOut)
@@ -177,6 +179,7 @@ struct StickerView: View {
                                     .contentShape(Rectangle())
                         }
                         .buttonStyle(.plain)
+                        .help("Color".localized())
                     }
                     .padding(.trailing, 5)
                     .transition(.opacity)
