@@ -30,6 +30,7 @@ struct SupportedLanguages {
     static let french = Language(name: "Français", code: "fr")
     static let ukrainian = Language(name: "Українська", code: "uk")
     static let slovak = Language(name: "Slovenský", code: "sk")
+    static let brazilianPortuguese = Language(name: "Português (Brasil)", code: "pt-BR")
 
     static let langList = [
         SupportedLanguages.english,
@@ -48,7 +49,8 @@ struct SupportedLanguages {
         SupportedLanguages.korean,
         SupportedLanguages.french,
         SupportedLanguages.ukrainian,
-        SupportedLanguages.slovak
+        SupportedLanguages.slovak,
+        SupportedLanguages.brazilianPortuguese
     ]
 
     static func getLangName(code: String) -> String {
