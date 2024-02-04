@@ -26,10 +26,9 @@ struct SwitchToggle: View {
                             view
                                 .foregroundStyle(
                                     toggleColor(isOn: isOn)
-                                        .gradient
                                         .shadow(
                                             .inner(
-                                                radius: 3,
+                                                radius: 2,
                                                 x: 1,
                                                 y: 1
                                             )
@@ -42,10 +41,24 @@ struct SwitchToggle: View {
                     }
                     .frame(height: 30)
                 Circle()
-                    .foregroundColor(.white)
                     .frame(height: 26)
                     .offset(x: isOn ? 12 : -12)
-                    .shadow(radius: 3)
+                    .modify { view in
+                        if #available(macOS 13, *) {
+                            view
+                                .foregroundStyle(
+                                    .white
+                                        .gradient
+                                        .shadow(
+                                            .drop(radius: 3, x: 1, y: 1)
+                                        )
+                                )
+                        } else {
+                            view
+                                .foregroundColor(.white)
+                                .shadow(radius: 3)
+                        }
+                    }
             }
         }
         .buttonStyle(.plain)
