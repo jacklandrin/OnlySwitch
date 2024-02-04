@@ -16,23 +16,44 @@ struct SwitchToggle: View {
     }
     
     var body: some View {
-        Button(action: {
+        Button {
            pressButton(!isOn)
-        }, label: {
+        } label: {
             ZStack {
                 RoundedRectangle(cornerRadius: 15)
-                    .foregroundColor(isOn ? .accentColor : .gray.opacity(0.3))
-                    .frame(height:30)
-                    
+                    .modify { view in
+                        if #available(macOS 13, *) {
+                            view
+                                .foregroundStyle(
+                                    toggleColor(isOn: isOn)
+                                        .gradient
+                                        .shadow(
+                                            .inner(
+                                                radius: 3,
+                                                x: 1,
+                                                y: 1
+                                            )
+                                        )
+                                )
+                        } else {
+                            view
+                                .foregroundColor(toggleColor(isOn: isOn))
+                        }
+                    }
+                    .frame(height: 30)
                 Circle()
                     .foregroundColor(.white)
-                    .frame(height:26)
-                    .offset(x:isOn ? 12 : -12)
+                    .frame(height: 26)
+                    .offset(x: isOn ? 12 : -12)
                     .shadow(radius: 3)
             }
-        }).buttonStyle(.plain)
-            .frame(width: 56, height: 30)
-        
+        }
+        .buttonStyle(.plain)
+        .frame(width: 56, height: 30)
+    }
+
+    private func toggleColor(isOn: Bool) -> Color {
+        isOn ? .accentColor : .gray.opacity(0.3)
     }
 }
 
