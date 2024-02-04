@@ -102,7 +102,7 @@ Since Version 1.3, switches can be added to or removed from the list.
 | Set dark mode       | finished          |
 
 ## Supported Languages 🇺🇳
-English, Simplified Chinese, German, Croatian, Turkish, Polish, Filipino, Dutch, Italian, Russian, Spanish, Japanese, Somali, Korean, French, Ukrainian, Slovak
+English, Simplified Chinese, German, Croatian, Turkish, Polish, Filipino, Dutch, Italian, Russian, Spanish, Japanese, Somali, Korean, French, Ukrainian, Slovak, Portuguese (BR)
 
 ## Welcome to pull requests for these
 
