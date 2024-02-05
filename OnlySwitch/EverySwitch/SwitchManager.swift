@@ -66,9 +66,7 @@ class SwitchManager {
         
         return list
     }
-    
 
-    
     func registerSwitchesShouldShow() {
         let state = getAllSwitchState()
         for index in 0..<switchTypeCount {
