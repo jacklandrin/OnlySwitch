@@ -6,8 +6,10 @@
 //
 
 import AppKit
+import Switches
+import Defines
 
-class HiddenFilesSwitch:SwitchProvider {
+class HiddenFilesSwitch: SwitchProvider {
     weak var delegate: SwitchDelegate?
     var type: SwitchType = .hiddenFiles
     

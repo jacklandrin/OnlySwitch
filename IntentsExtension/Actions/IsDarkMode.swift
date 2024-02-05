@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Switches
 
 @MainActor
 final class IsDarkModeIntentHandler:NSObject, IsDarkModeIntentHandling {

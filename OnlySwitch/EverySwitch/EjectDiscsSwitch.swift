@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Switches
 
 class EjectDiscsSWitch: SwitchProvider {
     var type: SwitchType = .ejectDiscs

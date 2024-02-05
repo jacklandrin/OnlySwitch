@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Switches
 
 struct RadioPlayerItem {
     var isPlaying:Bool = false

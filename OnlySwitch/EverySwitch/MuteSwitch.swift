@@ -7,9 +7,10 @@
 
 import Foundation
 import AppKit
+import Switches
+import Defines
 
-
-class MuteSwitch:SwitchProvider {
+class MuteSwitch: SwitchProvider {
     weak var delegate: SwitchDelegate?
     var type: SwitchType = .mute
     private let muteSwitchOperator:MuteSwitchProtocal = NSMuteSwitchOperator()

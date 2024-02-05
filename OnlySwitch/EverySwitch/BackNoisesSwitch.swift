@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import Switches
 
-class BackNoisesSwitch:SwitchProvider {
+class BackNoisesSwitch: SwitchProvider {
     
     var type: SwitchType = .backNoises
     

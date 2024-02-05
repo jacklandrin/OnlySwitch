@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import Switches
+import Defines
 
-class ShowExtensionNameSwitch:SwitchProvider {
+class ShowExtensionNameSwitch: SwitchProvider {
     var type: SwitchType = .showExtensionName
     weak var delegate: SwitchDelegate?
     

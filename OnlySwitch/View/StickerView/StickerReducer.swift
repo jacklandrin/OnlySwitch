@@ -7,6 +7,7 @@
 
 import Foundation
 import ComposableArchitecture
+import Switches
 
 struct StickerReducer: Reducer {
     struct State: Equatable {

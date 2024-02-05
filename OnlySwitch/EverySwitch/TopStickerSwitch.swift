@@ -9,6 +9,7 @@ import Foundation
 import AppKit
 import SwiftUI
 import ComposableArchitecture
+import Switches
 
 class TopStickerSwitch: SwitchProvider {
 

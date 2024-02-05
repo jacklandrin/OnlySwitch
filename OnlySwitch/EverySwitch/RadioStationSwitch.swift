@@ -7,7 +7,7 @@
 
 import AppKit
 import CoreData
-
+import Switches
 
 let defaultRadioStations = [["title":"Country Radio", "url":"https://live.leanstream.co/CKRYFM"],
                             ["title":"Dance UK", "url":"http://uk2.internet-radio.com:8024/stream"],

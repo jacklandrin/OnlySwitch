@@ -8,9 +8,11 @@
 import CoreData
 import Combine
 import AppKit
+import Extensions
+import Switches
 
-class RadioSettingVM:ObservableObject {
-    
+class RadioSettingVM: ObservableObject {
+
     @Published fileprivate var model = RadioSettingModel()
     private var preferencesPublisher = PreferencesObserver.shared
     @Published private var preferences = PreferencesObserver.shared.preferences

@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import Switches
+import Defines
 
-class SmallLaunchpadIconSwitch:SwitchProvider {
+class SmallLaunchpadIconSwitch: SwitchProvider {
     var type: SwitchType = .smallLaunchpadIcon
     weak var delegate: SwitchDelegate?
     func currentStatus() -> Bool {

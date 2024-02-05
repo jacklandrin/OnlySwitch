@@ -7,6 +7,8 @@
 //
 import AppKit
 import MediaPlayer
+import Switches
+import Extensions
 
 protocol AudioPlayer {
     var currentPlayerItem: CommonPlayerItem? {get set}

@@ -6,8 +6,10 @@
 //
 
 import AppKit
+import Switches
+import Defines
 
-class AutohideDockSwitch:SwitchProvider {
+class AutohideDockSwitch: SwitchProvider {
     weak var delegate: SwitchDelegate?
     var type: SwitchType = .autohideDock
 

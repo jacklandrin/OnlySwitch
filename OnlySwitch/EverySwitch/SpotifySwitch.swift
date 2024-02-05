@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import Switches
+import Defines
 
 class SpotifySwitch: SwitchProvider, MusicPlayerDelegate {
     

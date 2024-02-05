@@ -7,8 +7,9 @@
 
 import AppKit
 import Combine
+import Switches
 
-class NightShiftSwitch:SwitchProvider {
+class NightShiftSwitch: SwitchProvider {
     static let shared = NightShiftSwitch()
     weak var delegate: SwitchDelegate?
     var type: SwitchType = .nightShift

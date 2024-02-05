@@ -6,8 +6,11 @@
 //
 
 import Foundation
+import Switches
+import Defines
+import Extensions
 
-class HideMenubarIconsSwitch:SwitchProvider {
+class HideMenubarIconsSwitch: SwitchProvider {
     static let shared = HideMenubarIconsSwitch()
     var type: SwitchType = .hideMenubarIcons
     

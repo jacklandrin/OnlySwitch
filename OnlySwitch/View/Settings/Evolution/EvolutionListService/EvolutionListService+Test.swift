@@ -8,6 +8,7 @@
 import Dependencies
 import Foundation
 import XCTestDynamicOverlay
+import ComposableArchitecture
 
 extension EvolutionListService: TestDependencyKey {
     static let testValue = Self(

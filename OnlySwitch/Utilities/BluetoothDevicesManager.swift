@@ -8,6 +8,7 @@
 import Foundation
 import IOBluetooth
 import CoreBluetooth
+import Switches
 
 enum AirPodsBattery:String {
     case left = "BatteryPercentLeft"

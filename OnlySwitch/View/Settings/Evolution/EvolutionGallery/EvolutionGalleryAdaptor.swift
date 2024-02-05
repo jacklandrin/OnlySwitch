@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Switches
 
 struct EvolutionGalleryAdaptor {
     static func convertToGalleryItem(from model: EvolutionGalleryModel) -> EvolutionGalleryItem {

@@ -7,9 +7,10 @@
 
 import Foundation
 import CoreData
+import Extensions
+import Switches
 
 class RadioPlayerItemViewModel:CommonPlayerItem, ObservableObject, Identifiable  {
-
     
     @Published var model:RadioPlayerItem!
     var isPlaying:Bool

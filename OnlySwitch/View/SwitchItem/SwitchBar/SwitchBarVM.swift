@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import Switches
+
 class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
     
     let refreshSwitchQueue = DispatchQueue(label: "jacklandrin.onlyswitch.refreshswitch",attributes: .concurrent)

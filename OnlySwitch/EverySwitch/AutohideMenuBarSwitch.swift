@@ -6,8 +6,10 @@
 //
 
 import AppKit
+import Switches
+import Defines
 
-class AutohideMenuBarSwitch:SwitchProvider {
+class AutohideMenuBarSwitch: SwitchProvider {
     weak var delegate: SwitchDelegate?
     var type: SwitchType = .autohideMenuBar
     

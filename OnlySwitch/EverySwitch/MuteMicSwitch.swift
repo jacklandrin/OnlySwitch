@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import Switches
+import Defines
 
-class MuteMicSwitch:SwitchProvider {
+class MuteMicSwitch: SwitchProvider {
     var type: SwitchType = .muteMicrophone
     weak var delegate: SwitchDelegate?
     func currentStatus() -> Bool {

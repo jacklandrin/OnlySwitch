@@ -6,8 +6,10 @@
 //
 
 import AppKit
+import Switches
+import Defines
 
-class ScreenSaverSwitch:SwitchProvider {
+class ScreenSaverSwitch: SwitchProvider {
     weak var delegate: SwitchDelegate?
     var type: SwitchType = .screenSaver
     var getScreenSaverIntervalResult:String = "300"

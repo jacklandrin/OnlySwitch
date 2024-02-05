@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import Switches
+import Defines
 
-class ShowUserLibrarySwitch:SwitchProvider {
+class ShowUserLibrarySwitch: SwitchProvider {
     var type: SwitchType = .showUserLibrary
     weak var delegate: SwitchDelegate?
     private let manager = FileManager.default

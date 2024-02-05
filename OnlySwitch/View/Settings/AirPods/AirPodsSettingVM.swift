@@ -7,6 +7,7 @@
 
 import Foundation
 import IOBluetooth
+import Switches
 
 class AirPodsItem:Identifiable {
     var name:String

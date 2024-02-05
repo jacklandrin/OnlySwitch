@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Switches
 
 class EvolutionBarVM: BarProvider, ObservableObject {
 

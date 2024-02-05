@@ -8,8 +8,10 @@
 import Cocoa
 import UniformTypeIdentifiers
 import AVFoundation
+import Switches
+import Defines
 
-class TopNotchSwitch:SwitchProvider, CurrentScreen {
+class TopNotchSwitch: SwitchProvider, CurrentScreen {
     weak var delegate: SwitchDelegate?
     var type: SwitchType = .topNotch
     // MARK: - private properties

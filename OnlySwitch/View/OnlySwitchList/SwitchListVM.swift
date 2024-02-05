@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Switches
 
 class SwitchListVM: ObservableObject, CurrentScreen {
     

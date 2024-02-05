@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import Switches
 
-class FKeySwitch:SwitchProvider {
+class FKeySwitch: SwitchProvider {
     
     static let shared = FKeySwitch()
     var type: SwitchType = .fkey

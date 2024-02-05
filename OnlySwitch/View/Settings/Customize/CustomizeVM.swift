@@ -7,6 +7,7 @@
 
 import Foundation
 import KeyboardShortcuts
+import Switches
 
 class CustomizeVM:ObservableObject {
     static let shared  = CustomizeVM()

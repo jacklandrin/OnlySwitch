@@ -6,8 +6,10 @@
 //
 
 import AppKit
+import Switches
+import Defines
 
-class DarkModeSwitch:SwitchProvider {
+class DarkModeSwitch: SwitchProvider {
     weak var delegate: SwitchDelegate?
     var type: SwitchType = .darkMode
     

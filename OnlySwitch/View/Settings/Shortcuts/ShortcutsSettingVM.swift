@@ -8,8 +8,9 @@
 import Foundation
 import KeyboardShortcuts
 import Alamofire
+import Switches
 
-class ShortcutsItem:ObservableObject {
+class ShortcutsItem: ObservableObject {
     let error:(_ info:String) -> Void
     @Published var name:String
     @Published var toggle:Bool

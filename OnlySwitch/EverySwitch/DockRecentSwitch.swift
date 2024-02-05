@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import Switches
+import Defines
 
-class DockRecentSwitch:SwitchProvider {
+class DockRecentSwitch: SwitchProvider {
     var type: SwitchType = .dockRecent
     weak var delegate: SwitchDelegate?
     func currentStatus() -> Bool {

@@ -7,6 +7,8 @@
 
 import Foundation
 import AppKit
+import Switches
+import Defines
 
 class HideWindowsSwitch:SwitchProvider {
     var type: SwitchType = .hideWindows

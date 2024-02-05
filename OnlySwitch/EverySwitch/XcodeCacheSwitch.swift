@@ -7,6 +7,7 @@
 
 import Foundation
 import AppKit
+import Switches
 
 class XcodeCacheSwitch:SwitchProvider {
     weak var delegate: SwitchDelegate?

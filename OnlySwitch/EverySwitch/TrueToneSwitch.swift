@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Switches
 
 class TrueToneSwitch: SwitchProvider {
     var type: SwitchType = .trueTone

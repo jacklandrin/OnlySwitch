@@ -8,9 +8,10 @@
 import Foundation
 import AppKit
 import SwiftUI
+import Switches
 
-class ScreenTestSwitch:SwitchProvider, CurrentScreen {
-    
+class ScreenTestSwitch: SwitchProvider, CurrentScreen {
+
     static let shared = ScreenTestSwitch()
     
     var type: SwitchType = .screenTest

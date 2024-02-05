@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import Switches
+import Defines
 
-class AppleMusicSwitch:SwitchProvider, MusicPlayerDelegate {
+class AppleMusicSwitch: SwitchProvider, MusicPlayerDelegate {
     
     static let shared = AppleMusicSwitch()
     

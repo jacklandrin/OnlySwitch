@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Switches
 
 class PomodoroTimerSwitch: SwitchProvider {
     static let shared = PomodoroTimerSwitch()

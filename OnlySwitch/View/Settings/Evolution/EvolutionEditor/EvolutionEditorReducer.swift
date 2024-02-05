@@ -7,6 +7,7 @@
 
 import ComposableArchitecture
 import Foundation
+import Switches
 
 enum EditorError: Error {
     case noName

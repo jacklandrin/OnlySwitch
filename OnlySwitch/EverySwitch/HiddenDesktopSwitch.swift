@@ -6,8 +6,10 @@
 //
 
 import AppKit
+import Defines
+import Switches
 
-class HiddenDesktopSwitch:SwitchProvider {
+class HiddenDesktopSwitch: SwitchProvider {
     weak var delegate: SwitchDelegate?
     
     var type: SwitchType = .hiddeDesktop

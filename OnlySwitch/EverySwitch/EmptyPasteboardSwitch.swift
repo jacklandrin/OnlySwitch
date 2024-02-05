@@ -7,6 +7,8 @@
 
 import Foundation
 import AppKit
+import Switches
+
 class EmptyPasteboardSwitch:SwitchProvider {
     var type: SwitchType = .emptyPasteboard
     weak var delegate: SwitchDelegate?

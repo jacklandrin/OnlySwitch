@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import Switches
+import Defines
 
-class ShowFinderPathbarSwitch:SwitchProvider {
+class ShowFinderPathbarSwitch: SwitchProvider {
     var type: SwitchType = .showFinderPathbar
     weak var delegate: SwitchDelegate?
     func currentStatus() -> Bool {

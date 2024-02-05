@@ -9,8 +9,10 @@ import AppKit
 import IOKit
 import IOKit.pwr_mgt
 import Combine
+import Switches
+import Defines
 
-class KeepAwakeSwitch:SwitchProvider {
+class KeepAwakeSwitch: SwitchProvider {
     static let shared = KeepAwakeSwitch()
     var type: SwitchType = .keepAwake
     weak var delegate: SwitchDelegate?

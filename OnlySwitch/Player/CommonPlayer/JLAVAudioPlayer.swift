@@ -9,6 +9,7 @@
 import AVFoundation
 import AVKit
 import MediaPlayer
+import Switches
 
 class JLAVAudioPlayer: NSObject ,AVPlayerItemMetadataOutputPushDelegate, AudioPlayer {
     

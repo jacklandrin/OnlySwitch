@@ -7,8 +7,10 @@
 
 import AppKit
 import IOBluetooth
+import Switches
+import Defines
 
-class AirPodsSwitch:SwitchProvider {
+class AirPodsSwitch: SwitchProvider {
     weak var delegate: SwitchDelegate?
     var type: SwitchType = .airPods
     

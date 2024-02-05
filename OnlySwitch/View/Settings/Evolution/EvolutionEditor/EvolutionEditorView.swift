@@ -8,6 +8,7 @@
 import AlertToast
 import ComposableArchitecture
 import SwiftUI
+import Switches
 
 @available(macOS 13.0, *)
 struct EvolutionEditorView: View {

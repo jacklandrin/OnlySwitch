@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import Switches
+import Defines
 
-class LowPowerModeSwitch:SwitchProvider {
+class LowPowerModeSwitch: SwitchProvider {
     var type: SwitchType = .lowpowerMode
     weak var delegate: SwitchDelegate?
     func currentStatus() -> Bool {

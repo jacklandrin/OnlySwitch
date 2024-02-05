@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Switches
 
 struct EvolutionItem: Equatable, Identifiable {
     var id = UUID()

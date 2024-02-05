@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Switches
 
 struct Preferences {
     static var shared = Preferences()

@@ -8,6 +8,8 @@
 import Foundation
 import AppKit
 import LaunchAtLogin
+import Switches
+import Defines
 
 class SwitchManager {
     static let shared = SwitchManager()
@@ -18,18 +20,18 @@ class SwitchManager {
         shownSwitchMap.count
     }
     
-    func register(aswitch:SwitchProvider) {
+    func register(aswitch: SwitchProvider) {
         shownSwitchMap[aswitch.type] = aswitch
         NotificationCenter.default.post(name: .changeSettings, object: nil)
     }
     
-    func unregister(for type:SwitchType) {
+    func unregister(for type: SwitchType) {
         shownSwitchMap.removeValue(forKey: type)
         shownSwitchMap[type]? = nil
         NotificationCenter.default.post(name: .changeSettings, object: nil)
     }
     
-    func getSwitch(of type:SwitchType) -> SwitchProvider? {
+    func getSwitch(of type: SwitchType) -> SwitchProvider? {
         return shownSwitchMap[type] ?? nil
     }
     

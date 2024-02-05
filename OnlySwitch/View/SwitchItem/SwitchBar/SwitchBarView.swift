@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Switches
 
 struct SwitchBarView: View {
     @EnvironmentObject var switchOption:SwitchBarVM

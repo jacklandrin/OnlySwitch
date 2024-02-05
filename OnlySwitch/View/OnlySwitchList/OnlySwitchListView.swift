@@ -7,6 +7,7 @@
 
 import SwiftUI
 import LaunchAtLogin
+import Switches
 
 enum Focusable: Hashable {
   case none
