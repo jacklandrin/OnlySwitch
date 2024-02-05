@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-struct SmallWidget: View {
+public struct SmallWidget: View {
     @Environment(\.colorScheme) private var colorScheme
-    
-    var body: some View {
-        Link(destination: URL(string: "onlyswitch://performswitch")!, label: {
+    public init() {}
+    public var body: some View {
+        Link(destination: URL(string: "onlyswitch://performswitch")!) {
             VStack {
                 HStack {
                     Spacer()
@@ -31,6 +31,6 @@ struct SmallWidget: View {
                     Spacer()
                 }
             }
-        })
+        }
     }
 }

@@ -58,7 +58,7 @@
 		0427365627C1ADA60068108F /* SpotifySwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0427365527C1ADA60068108F /* SpotifySwitch.swift */; };
 		0427B25B275D786400AD783A /* SystemInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0427B25A275D786400AD783A /* SystemInfo.swift */; };
 		0430887E275D707C00877E51 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 0430887D275D707C00877E51 /* LaunchAtLogin */; };
-		043316D82B7158060078B867 /* SmallWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043316D72B7158060078B867 /* SmallWidget.swift */; };
+		043316DB2B71656E0078B867 /* OnlyWidgetCore in Frameworks */ = {isa = PBXBuildFile; productRef = 043316DA2B71656E0078B867 /* OnlyWidgetCore */; };
 		043488A92A364E73006C877D /* EvolutionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043488A82A364E73006C877D /* EvolutionRowView.swift */; };
 		043488AB2A364EBF006C877D /* EvolutionRowReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043488AA2A364EBF006C877D /* EvolutionRowReducer.swift */; };
 		043488AE2A3B472E006C877D /* EvolutionBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043488AD2A3B472E006C877D /* EvolutionBarView.swift */; };
@@ -462,7 +462,7 @@
 		0427365127C1AADB0068108F /* MusicPlaybackState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlaybackState.swift; sourceTree = "<group>"; };
 		0427365527C1ADA60068108F /* SpotifySwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifySwitch.swift; sourceTree = "<group>"; };
 		0427B25A275D786400AD783A /* SystemInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemInfo.swift; sourceTree = "<group>"; };
-		043316D72B7158060078B867 /* SmallWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallWidget.swift; sourceTree = "<group>"; };
+		043316D92B7164AB0078B867 /* OnlyWidgetCore */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = OnlyWidgetCore; sourceTree = "<group>"; };
 		043488A82A364E73006C877D /* EvolutionRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionRowView.swift; sourceTree = "<group>"; };
 		043488AA2A364EBF006C877D /* EvolutionRowReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionRowReducer.swift; sourceTree = "<group>"; };
 		043488AD2A3B472E006C877D /* EvolutionBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionBarView.swift; sourceTree = "<group>"; };
@@ -757,6 +757,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				043316DB2B71656E0078B867 /* OnlyWidgetCore in Frameworks */,
 				04CB8A002B703AF3006B8620 /* SwiftUI.framework in Frameworks */,
 				04CB89FE2B703AF3006B8620 /* WidgetKit.framework in Frameworks */,
 			);
@@ -1485,12 +1486,12 @@
 		04CB8A012B703AF4006B8620 /* OnlyWidget */ = {
 			isa = PBXGroup;
 			children = (
+				043316D92B7164AB0078B867 /* OnlyWidgetCore */,
 				04CB8A022B703AF4006B8620 /* OnlyWidgetBundle.swift */,
 				04CB8A042B703AF4006B8620 /* OnlyWidget.swift */,
 				04CB8A062B703AF5006B8620 /* Assets.xcassets */,
 				04CB8A082B703AF5006B8620 /* Info.plist */,
 				04CB8A092B703AF5006B8620 /* OnlyWidget.entitlements */,
-				043316D72B7158060078B867 /* SmallWidget.swift */,
 			);
 			path = OnlyWidget;
 			sourceTree = "<group>";
@@ -1727,6 +1728,9 @@
 			dependencies = (
 			);
 			name = OnlyWidgetExtension;
+			packageProductDependencies = (
+				043316DA2B71656E0078B867 /* OnlyWidgetCore */,
+			);
 			productName = OnlyWidgetExtension;
 			productReference = 04CB89FC2B703AF3006B8620 /* OnlyWidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
@@ -2238,7 +2242,6 @@
 			files = (
 				04CB8A032B703AF4006B8620 /* OnlyWidgetBundle.swift in Sources */,
 				04CB8A052B703AF4006B8620 /* OnlyWidget.swift in Sources */,
-				043316D82B7158060078B867 /* SmallWidget.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2874,6 +2877,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0430887C275D707C00877E51 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */;
 			productName = LaunchAtLogin;
+		};
+		043316DA2B71656E0078B867 /* OnlyWidgetCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OnlyWidgetCore;
 		};
 		0444D5D12836D87E00327D0B /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;

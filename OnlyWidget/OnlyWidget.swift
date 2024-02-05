@@ -5,6 +5,7 @@
 //  Created by Jacklandrin on 2024/2/4.
 //
 
+import OnlyWidgetCore
 import WidgetKit
 import SwiftUI
 
@@ -53,7 +54,6 @@ struct OnlyWidget: Widget {
             if #available(macOS 14.0, *) {
                 OnlyWidgetEntryView(entry: entry)
                     .containerBackground(.fill.tertiary, for: .widget)
-//                    .background(Color.blue)
             } else {
                 OnlyWidgetEntryView(entry: entry)
                     .padding()
