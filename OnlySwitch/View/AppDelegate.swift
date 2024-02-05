@@ -17,6 +17,24 @@ struct OnlySwitchApp: App {
     @State var preferences = PreferencesObserver.shared.preferences
     
     var body: some Scene {
+        WindowGroup("performswitch") {
+            EmptyView()
+                .frame(width: 0, height: 0)
+                .onAppear {
+                    if appDelegate.switchVM.isSettingViewShowing == true {
+                        NSApp.setActivationPolicy(.accessory)
+                    }
+                }
+                .onOpenURL{ url in
+                    if url.absoluteString.contains("performswitch") {
+                        let darkmodeSwitch = CustomizeVM.shared.allSwitches.first{ $0.type == .darkMode }
+                        darkmodeSwitch?.doSwitch()
+                    }
+                }
+        }
+        .windowKeepContentSize()
+        .handlesExternalEvents(matching: Set(arrayLiteral: "performswitch"))
+
         WindowGroup("SettingsWindow") {
             SettingsView()
                 .frame(width: Layout.settingWindowWidth, height: Layout.settingWindowHeight)
@@ -31,7 +49,7 @@ struct OnlySwitchApp: App {
                 }
         }
         .windowKeepContentSize()
-        .handlesExternalEvents(matching: Set(arrayLiteral: "*"))
+        .handlesExternalEvents(matching: Set(arrayLiteral: "SettingsWindow"))
         .commands{
             CommandMenu("Switches Availability") {
                 Button(action: {
@@ -120,6 +138,21 @@ class AppDelegate:NSObject, NSApplicationDelegate {
         
     }
     
+//    func application(_ application: NSApplication, open urls: [URL]) {
+//        guard let url = urls.first, url.scheme == "onlyswitch" else { return }
+//        print(url)
+//        if let window = NSApplication.shared.windows.first {
+//            window.orderOut(nil)
+//            NSApplication.shared.setActivationPolicy(.accessory)
+//            NSWindow.allowsAutomaticWindowTabbing = false
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//                window.close()
+//            }
+//        }
+//        let darkmodeSwitch = CustomizeVM.shared.allSwitches.first{ $0.type == .darkMode }
+//        darkmodeSwitch?.doSwitch()
+//    }
+
     func checkUpdate() {
         checkUpdatePresenter.checkUpdate { result in
             switch result {

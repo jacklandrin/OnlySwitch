@@ -106,6 +106,9 @@ extension SwitchListVM: SettingWindowController {
                         NSWorkspace.shared.open(url)
                         isSettingViewShowing = true
                         print("new setting window appears")
+                        if let window = NSApplication.shared.windows.first {
+                            window.makeKeyAndOrderFront(self)
+                        }
                     }
                 } else {
                     NSWorkspace.shared.open(url)

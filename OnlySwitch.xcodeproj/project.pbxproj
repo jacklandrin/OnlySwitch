@@ -58,6 +58,7 @@
 		0427365627C1ADA60068108F /* SpotifySwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0427365527C1ADA60068108F /* SpotifySwitch.swift */; };
 		0427B25B275D786400AD783A /* SystemInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0427B25A275D786400AD783A /* SystemInfo.swift */; };
 		0430887E275D707C00877E51 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 0430887D275D707C00877E51 /* LaunchAtLogin */; };
+		043316D82B7158060078B867 /* SmallWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043316D72B7158060078B867 /* SmallWidget.swift */; };
 		043488A92A364E73006C877D /* EvolutionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043488A82A364E73006C877D /* EvolutionRowView.swift */; };
 		043488AB2A364EBF006C877D /* EvolutionRowReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043488AA2A364EBF006C877D /* EvolutionRowReducer.swift */; };
 		043488AE2A3B472E006C877D /* EvolutionBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043488AD2A3B472E006C877D /* EvolutionBarView.swift */; };
@@ -282,6 +283,12 @@
 		04BF97682790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BF97672790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift */; };
 		04BF976B27908D5400E7C0E2 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 04BF976A27908D5400E7C0E2 /* KeyboardShortcuts */; };
 		04CB89F72B6FFA65006B8620 /* ViewModify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CB89F62B6FFA65006B8620 /* ViewModify.swift */; };
+		04CB89FE2B703AF3006B8620 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04CB89FD2B703AF3006B8620 /* WidgetKit.framework */; };
+		04CB8A002B703AF3006B8620 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04CB89FF2B703AF3006B8620 /* SwiftUI.framework */; };
+		04CB8A032B703AF4006B8620 /* OnlyWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CB8A022B703AF4006B8620 /* OnlyWidgetBundle.swift */; };
+		04CB8A052B703AF4006B8620 /* OnlyWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CB8A042B703AF4006B8620 /* OnlyWidget.swift */; };
+		04CB8A072B703AF5006B8620 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04CB8A062B703AF5006B8620 /* Assets.xcassets */; };
+		04CB8A0C2B703AF5006B8620 /* OnlyWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 04CB89FC2B703AF3006B8620 /* OnlyWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		04D68B0D2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D68B0C2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift */; };
 		04DC6C5C28A2D04B00888BF9 /* UpdateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C5B28A2D04B00888BF9 /* UpdateView.swift */; };
 		04DC6C5E28A2E2B700888BF9 /* UpdateVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C5D28A2E2B700888BF9 /* UpdateVM.swift */; };
@@ -376,6 +383,13 @@
 			remoteGlobalIDString = 04447B572754F08000CD2900;
 			remoteInfo = OnlySwitch;
 		};
+		04CB8A0A2B703AF5006B8620 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 04447B502754F08000CD2900 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 04CB89FB2B703AF3006B8620;
+			remoteInfo = OnlyWidgetExtension;
+		};
 		04E2ACFE278267DE00BC5DF3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 04447B502754F08000CD2900 /* Project object */;
@@ -392,6 +406,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				04CB8A0C2B703AF5006B8620 /* OnlyWidgetExtension.appex in Embed App Extensions */,
 				04E2AD00278267DE00BC5DF3 /* IntentsExtension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
@@ -447,6 +462,7 @@
 		0427365127C1AADB0068108F /* MusicPlaybackState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlaybackState.swift; sourceTree = "<group>"; };
 		0427365527C1ADA60068108F /* SpotifySwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifySwitch.swift; sourceTree = "<group>"; };
 		0427B25A275D786400AD783A /* SystemInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemInfo.swift; sourceTree = "<group>"; };
+		043316D72B7158060078B867 /* SmallWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallWidget.swift; sourceTree = "<group>"; };
 		043488A82A364E73006C877D /* EvolutionRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionRowView.swift; sourceTree = "<group>"; };
 		043488AA2A364EBF006C877D /* EvolutionRowReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionRowReducer.swift; sourceTree = "<group>"; };
 		043488AD2A3B472E006C877D /* EvolutionBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionBarView.swift; sourceTree = "<group>"; };
@@ -626,6 +642,14 @@
 		04BEF6DD2939875F009DB981 /* AdsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdsModel.swift; sourceTree = "<group>"; };
 		04BF97672790897A00E7C0E2 /* ShowFinderPathbarSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowFinderPathbarSwitch.swift; sourceTree = "<group>"; };
 		04CB89F62B6FFA65006B8620 /* ViewModify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModify.swift; sourceTree = "<group>"; };
+		04CB89FC2B703AF3006B8620 /* OnlyWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = OnlyWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		04CB89FD2B703AF3006B8620 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		04CB89FF2B703AF3006B8620 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		04CB8A022B703AF4006B8620 /* OnlyWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyWidgetBundle.swift; sourceTree = "<group>"; };
+		04CB8A042B703AF4006B8620 /* OnlyWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyWidget.swift; sourceTree = "<group>"; };
+		04CB8A062B703AF5006B8620 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		04CB8A082B703AF5006B8620 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		04CB8A092B703AF5006B8620 /* OnlyWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OnlyWidget.entitlements; sourceTree = "<group>"; };
 		04D68B0C2770E9DF00BF2E90 /* ShowUserLibrarySwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowUserLibrarySwitch.swift; sourceTree = "<group>"; };
 		04DC6C5B28A2D04B00888BF9 /* UpdateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateView.swift; sourceTree = "<group>"; };
 		04DC6C5D28A2E2B700888BF9 /* UpdateVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateVM.swift; sourceTree = "<group>"; };
@@ -726,6 +750,15 @@
 				041B17892AD841EE0032919B /* Sparkle in Frameworks */,
 				04581DB6276506B9008ADF30 /* AlertToast in Frameworks */,
 				043E5D6D2757DADB00ADC004 /* AVFoundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		04CB89F92B703AF3006B8620 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				04CB8A002B703AF3006B8620 /* SwiftUI.framework in Frameworks */,
+				04CB89FE2B703AF3006B8620 /* WidgetKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -955,6 +988,8 @@
 				04A23B22275D5FC500B454C8 /* CoreBrightness.framework */,
 				043E5D6C2757DADB00ADC004 /* AVFoundation.framework */,
 				042661402780C147005DF2B9 /* Intents.framework */,
+				04CB89FD2B703AF3006B8620 /* WidgetKit.framework */,
+				04CB89FF2B703AF3006B8620 /* SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1019,6 +1054,7 @@
 				04447B5A2754F08000CD2900 /* OnlySwitch */,
 				04E2ACFA278267DE00BC5DF3 /* IntentsExtension */,
 				041D725528353A160083092D /* OnlySwitchTests */,
+				04CB8A012B703AF4006B8620 /* OnlyWidget */,
 				04447B592754F08000CD2900 /* Products */,
 				043E5D6B2757DADB00ADC004 /* Frameworks */,
 			);
@@ -1030,6 +1066,7 @@
 				04447B582754F08000CD2900 /* OnlySwitch.app */,
 				04E2ACF8278267DE00BC5DF3 /* IntentsExtension.appex */,
 				041D725428353A150083092D /* OnlySwitchTests.xctest */,
+				04CB89FC2B703AF3006B8620 /* OnlyWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1445,6 +1482,19 @@
 			path = SoundWave;
 			sourceTree = "<group>";
 		};
+		04CB8A012B703AF4006B8620 /* OnlyWidget */ = {
+			isa = PBXGroup;
+			children = (
+				04CB8A022B703AF4006B8620 /* OnlyWidgetBundle.swift */,
+				04CB8A042B703AF4006B8620 /* OnlyWidget.swift */,
+				04CB8A062B703AF5006B8620 /* Assets.xcassets */,
+				04CB8A082B703AF5006B8620 /* Info.plist */,
+				04CB8A092B703AF5006B8620 /* OnlyWidget.entitlements */,
+				043316D72B7158060078B867 /* SmallWidget.swift */,
+			);
+			path = OnlyWidget;
+			sourceTree = "<group>";
+		};
 		04DC6C5A28A2D02000888BF9 /* Update */ = {
 			isa = PBXGroup;
 			children = (
@@ -1647,6 +1697,7 @@
 			);
 			dependencies = (
 				04E2ACFF278267DE00BC5DF3 /* PBXTargetDependency */,
+				04CB8A0B2B703AF5006B8620 /* PBXTargetDependency */,
 			);
 			name = OnlySwitch;
 			packageProductDependencies = (
@@ -1662,6 +1713,23 @@
 			productName = OnlySwitch;
 			productReference = 04447B582754F08000CD2900 /* OnlySwitch.app */;
 			productType = "com.apple.product-type.application";
+		};
+		04CB89FB2B703AF3006B8620 /* OnlyWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 04CB8A0F2B703AF6006B8620 /* Build configuration list for PBXNativeTarget "OnlyWidgetExtension" */;
+			buildPhases = (
+				04CB89F82B703AF3006B8620 /* Sources */,
+				04CB89F92B703AF3006B8620 /* Frameworks */,
+				04CB89FA2B703AF3006B8620 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OnlyWidgetExtension;
+			productName = OnlyWidgetExtension;
+			productReference = 04CB89FC2B703AF3006B8620 /* OnlyWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 		04E2ACF7278267DE00BC5DF3 /* IntentsExtension */ = {
 			isa = PBXNativeTarget;
@@ -1687,7 +1755,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1340;
+				LastSwiftUpdateCheck = 1520;
 				LastUpgradeCheck = 1320;
 				TargetAttributes = {
 					041D725328353A150083092D = {
@@ -1696,6 +1764,9 @@
 					};
 					04447B572754F08000CD2900 = {
 						CreatedOnToolsVersion = 13.1;
+					};
+					04CB89FB2B703AF3006B8620 = {
+						CreatedOnToolsVersion = 15.2;
 					};
 					04E2ACF7278267DE00BC5DF3 = {
 						CreatedOnToolsVersion = 13.2;
@@ -1745,6 +1816,7 @@
 				04447B572754F08000CD2900 /* OnlySwitch */,
 				04E2ACF7278267DE00BC5DF3 /* IntentsExtension */,
 				041D725328353A150083092D /* OnlySwitchTests */,
+				04CB89FB2B703AF3006B8620 /* OnlyWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -1778,6 +1850,14 @@
 				047140B427788364005B160B /* mixkit-bell-notification-933.wav in Resources */,
 				04447B602754F08100CD2900 /* Assets.xcassets in Resources */,
 				046331D32795DACB00C5F894 /* ShortcutsMarket.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		04CB89FA2B703AF3006B8620 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				04CB8A072B703AF5006B8620 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2152,6 +2232,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		04CB89F82B703AF3006B8620 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				04CB8A032B703AF4006B8620 /* OnlyWidgetBundle.swift in Sources */,
+				04CB8A052B703AF4006B8620 /* OnlyWidget.swift in Sources */,
+				043316D82B7158060078B867 /* SmallWidget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		04E2ACF4278267DE00BC5DF3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2181,6 +2271,11 @@
 			isa = PBXTargetDependency;
 			target = 04447B572754F08000CD2900 /* OnlySwitch */;
 			targetProxy = 041D725828353A160083092D /* PBXContainerItemProxy */;
+		};
+		04CB8A0B2B703AF5006B8620 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 04CB89FB2B703AF3006B8620 /* OnlyWidgetExtension */;
+			targetProxy = 04CB8A0A2B703AF5006B8620 /* PBXContainerItemProxy */;
 		};
 		04E2ACFF278267DE00BC5DF3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2233,14 +2328,14 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 162;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Only Switch requests Bluetooth usage to switch Airpods connection";
 				INFOPLIST_OUTPUT_FORMAT = binary;
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.4.9;
+				MARKETING_VERSION = 2.5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitchTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -2259,14 +2354,14 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 162;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Only Switch requests Bluetooth usage to switch Airpods connection";
 				INFOPLIST_OUTPUT_FORMAT = binary;
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.4.9;
+				MARKETING_VERSION = 2.5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitchTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -2408,7 +2503,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 162;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
@@ -2434,7 +2529,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.4.9;
+				MARKETING_VERSION = 2.5.0;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2463,7 +2558,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 162;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
@@ -2489,7 +2584,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.4.9;
+				MARKETING_VERSION = 2.5.0;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2507,6 +2602,85 @@
 			};
 			name = Release;
 		};
+		04CB8A0D2B703AF6006B8620 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = OnlyWidget/OnlyWidget.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 3;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OnlyWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = OnlyWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MARKETING_VERSION = 2.5.0;
+				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = OnlySwitchWidgets;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		04CB8A0E2B703AF6006B8620 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = OnlyWidget/OnlyWidget.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 3;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OnlyWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = OnlyWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MARKETING_VERSION = 2.5.0;
+				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = OnlySwitchWidgets;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		04E2AD01278267DE00BC5DF3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2514,7 +2688,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 162;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2528,7 +2702,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.4.9;
+				MARKETING_VERSION = 2.5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.IntentsExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2547,7 +2721,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 162;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2561,7 +2735,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.4.9;
+				MARKETING_VERSION = 2.5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.IntentsExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2599,6 +2773,15 @@
 			buildConfigurations = (
 				04447B6D2754F08100CD2900 /* Debug */,
 				04447B6E2754F08100CD2900 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		04CB8A0F2B703AF6006B8620 /* Build configuration list for PBXNativeTarget "OnlyWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				04CB8A0D2B703AF6006B8620 /* Debug */,
+				04CB8A0E2B703AF6006B8620 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

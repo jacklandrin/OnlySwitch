@@ -5,6 +5,10 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>jacklandrin.OnlySwitch</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>onlyswitch</string>
@@ -31,7 +35,5 @@
 	<string>http://jacklandrin.github.io/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>uE3wX03AQ7gIqY2q7AjcY+dfLIrsNNim5/ZeK/15Cic=</string>
-	<key>NSAppleEventsUsageDescription</key>
-	<string>Only Switch needs to control System Events</string>
 </dict>
 </plist>
