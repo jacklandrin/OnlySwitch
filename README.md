@@ -102,7 +102,7 @@ Since Version 1.3, switches can be added to or removed from the list.
 | Set dark mode       | finished          |
 
 ## Supported Languages 🇺🇳
-English, Simplified Chinese, German, Croatian, Turkish, Polish, Filipino, Dutch, Italian, Russian, Spanish, Japanese, Somali, Korean, French, Ukrainian, Slovak
+English, Simplified Chinese, German, Croatian, Turkish, Polish, Filipino, Dutch, Italian, Russian, Spanish, Japanese, Somali, Korean, French, Ukrainian, Slovak, Portuguese (BR)
 
 ## Welcome to pull requests for these
 
@@ -227,16 +227,16 @@ S-GPT is already in Shortcuts gallery. Easily ask any questions to chatGPT via S
 
 **Translation:**
 
-| Language | Contributor              | Language  | Contributor    |
-|----------|--------------------------|:----------|:---------------|
-| German   | @C0d3Br3aker             | Italian   | @bellaposa     |
-| Croatian | @milotype                | Russian   | @kirillyakopov |
-| Turkish  | @berkbatuhans            | Spanish   | @kant          |
-| Polish   | @kpacholak               | Japanese  | @ShogoKoyama   |
-| Dutch    | Alex                     | Somali    | @abdorizak     |
-| Filipino | Rosel                    | Korean    | @iosdevted     |
-| French   | @BtKent and Ange Lefrère | Ukrainian | @andryua       |
-| Slovak   | @Svec-Tomas              |           |                |
+| Language | Contributor              | Language        | Contributor    |
+|----------|--------------------------|:----------------|:---------------|
+| German   | @C0d3Br3aker             | Italian         | @bellaposa     |
+| Croatian | @milotype                | Russian         | @kirillyakopov |
+| Turkish  | @berkbatuhans            | Spanish         | @kant          |
+| Polish   | @kpacholak               | Japanese        | @ShogoKoyama   |
+| Dutch    | Alex                     | Somali          | @abdorizak     |
+| Filipino | Rosel                    | Korean          | @iosdevted     |
+| French   | @BtKent and Ange Lefrère | Ukrainian       | @andryua       |
+| Slovak   | @Svec-Tomas              | Portuguese (BR) | @EvertonCa     |
 
 @wrngwrld for the volume slider of the radio player
 
