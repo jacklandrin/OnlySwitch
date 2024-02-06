@@ -25,6 +25,7 @@
 		<string>GetWallpaperImageIntent</string>
 		<string>GetWallpaperUrlIntent</string>
 		<string>IsDarkModeIntent</string>
+		<string>SelectSwitchIntent</string>
 		<string>SetDarkModeIntent</string>
 	</array>
 	<key>NSUserNotificationsUsageDescription</key>
