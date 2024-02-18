@@ -6,6 +6,8 @@
 //
 
 import Cocoa
+import AppKit
+
 public extension NSImage {
     var jpgData: Data? {
         guard let tiffRepresentation = tiffRepresentation, let bitmapImage = NSBitmapImageRep(data: tiffRepresentation) else { return nil }
@@ -23,7 +25,6 @@ public extension NSImage {
     
     
 }
-
 
 public extension NSImage {
 

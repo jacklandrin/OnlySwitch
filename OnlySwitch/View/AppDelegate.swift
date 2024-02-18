@@ -8,6 +8,8 @@
 import SwiftUI
 import Cocoa
 import KeyboardShortcuts
+import Defines
+import Switches
 
 @main
 struct OnlySwitchApp: App {
@@ -26,10 +28,28 @@ struct OnlySwitchApp: App {
                     }
                 }
                 .onOpenURL{ url in
-                    if url.absoluteString.contains("performswitch") {
-                        let darkmodeSwitch = CustomizeVM.shared.allSwitches.first{ $0.type == .darkMode }
-                        darkmodeSwitch?.doSwitch()
+                    guard url.absoluteString.contains("performswitch"),
+                          let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+                          let queryItems = components.queryItems,
+                          let typeStr = queryItems.first(where: {$0.name == "type"})?.value,
+                          let unitType =  UnitType(rawValue: typeStr),
+                          let id = queryItems.first(where: {$0.name == "id"})?.value
+                    else {
+                        return
                     }
+
+                    if unitType == .buildIn {
+                        guard 
+                            let intID = UInt64(id),
+                            let type = SwitchType(rawValue: intID)
+                        else {
+                            return
+                        }
+                        let theSwitch = CustomizeVM.shared.allSwitches.first{ $0.type == type }
+                        theSwitch?.doSwitch()
+                    }
+
+                    NSApp.setActivationPolicy(.accessory)
                 }
         }
         .windowKeepContentSize()

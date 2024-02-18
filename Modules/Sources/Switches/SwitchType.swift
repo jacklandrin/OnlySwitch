@@ -29,7 +29,7 @@ public struct SwitchBarInfo {
     }
 }
 
-public enum SwitchType:UInt64, CaseIterable {
+public enum SwitchType: UInt64, CaseIterable, Sendable {
     case hiddeDesktop = 1 //1 << 0
     case darkMode = 2 // 1 << 1
     case topNotch = 4 // 1 << 2

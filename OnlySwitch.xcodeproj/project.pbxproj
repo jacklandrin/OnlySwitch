@@ -51,14 +51,16 @@
 		0434B4CD2874E5D300F06AB9 /* Latest_release_mock.json in Resources */ = {isa = PBXBuildFile; fileRef = 0434B4C328738E7400F06AB9 /* Latest_release_mock.json */; };
 		0434B4CF2876031C00F06AB9 /* RadioPlayerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0434B4CE2876031C00F06AB9 /* RadioPlayerItem.swift */; };
 		0434B4D12876325B00F06AB9 /* HostWindowFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0434B4D02876325B00F06AB9 /* HostWindowFinder.swift */; };
+		043AFC8A2B82AC8400657688 /* OnlyWidgetBuildIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043AFC892B82AC8400657688 /* OnlyWidgetBuildIn.swift */; };
+		043AFC8B2B82ACAC00657688 /* SelectBuildInSwitchesIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043AFC872B82AC7A00657688 /* SelectBuildInSwitchesIntent.swift */; };
+		043AFC8C2B82ACAE00657688 /* BuildInSwitchEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043AFC882B82AC7A00657688 /* BuildInSwitchEntity.swift */; };
+		043AFC8E2B82ACF100657688 /* SmallWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043AFC8D2B82ACF100657688 /* SmallWidget.swift */; };
 		043E5D662757C84900ADC004 /* HiddenModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D652757C84900ADC004 /* HiddenModifier.swift */; };
 		043E5D6D2757DADB00ADC004 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 043E5D6C2757DADB00ADC004 /* AVFoundation.framework */; };
 		043E5D712758176B00ADC004 /* SwitchToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D702758176B00ADC004 /* SwitchToggle.swift */; };
 		043E5D7327581C2E00ADC004 /* SwitchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D7227581C2E00ADC004 /* SwitchBarView.swift */; };
 		043E5D752758208D00ADC004 /* SwitchBarVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D742758208D00ADC004 /* SwitchBarVM.swift */; };
 		043F0CE52A0FA39100590606 /* WindowContentSizeModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043F0CE42A0FA39100590606 /* WindowContentSizeModifier.swift */; };
-		043F5AE92784B8CC001DFDF0 /* IsDarkMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043F5AE82784B8CC001DFDF0 /* IsDarkMode.swift */; };
-		043F5AEB2784BE34001DFDF0 /* SetDarkMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043F5AEA2784BE34001DFDF0 /* SetDarkMode.swift */; };
 		0442C53D2A40E8B200BC47B3 /* NightShiftSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0442C53C2A40E8B200BC47B3 /* NightShiftSettingsView.swift */; };
 		0442C53F2A40EAAE00BC47B3 /* NightShiftSettingsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0442C53E2A40EAAE00BC47B3 /* NightShiftSettingsVM.swift */; };
 		0443A6B627599AAC00A3BCFD /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0443A6B527599AAC00A3BCFD /* README.md */; };
@@ -85,8 +87,6 @@
 		0444D5FB2839827A00327D0B /* PureColorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0444D5FA2839827A00327D0B /* PureColorView.swift */; };
 		0444D6032839997B00327D0B /* PureColorVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0444D6022839997B00327D0B /* PureColorVM.swift */; };
 		0444D6052839A05100327D0B /* ColorChangeGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0444D6042839A05100327D0B /* ColorChangeGuide.swift */; };
-		0447E32C2B71707D00D07B9A /* OnlyWidgetCore in Frameworks */ = {isa = PBXBuildFile; productRef = 0447E32B2B71707D00D07B9A /* OnlyWidgetCore */; };
-		0447E32E2B71730000D07B9A /* Switches in Frameworks */ = {isa = PBXBuildFile; productRef = 0447E32D2B71730000D07B9A /* Switches */; };
 		0447E3522B71746E00D07B9A /* MuteMicSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3452B71746D00D07B9A /* MuteMicSwitch.swift */; };
 		0447E3532B71746E00D07B9A /* MuteMicSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3452B71746D00D07B9A /* MuteMicSwitch.swift */; };
 		0447E3542B71746E00D07B9A /* AirPodsSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E33F2B71746C00D07B9A /* AirPodsSwitch.swift */; };
@@ -185,6 +185,8 @@
 		047140BE2778A416005B160B /* PomodoroTimerSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140BD2778A416005B160B /* PomodoroTimerSettingView.swift */; };
 		047140C02778A478005B160B /* PomodoroTimerSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140BF2778A478005B160B /* PomodoroTimerSettingVM.swift */; };
 		047594952B531CB2005FC87C /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = 047594942B531CB2005FC87C /* MarkdownUI */; };
+		047887342B82AF360064B9F5 /* Switches in Frameworks */ = {isa = PBXBuildFile; productRef = 047887332B82AF360064B9F5 /* Switches */; };
+		047887362B82AF3A0064B9F5 /* Defines in Frameworks */ = {isa = PBXBuildFile; productRef = 047887352B82AF3A0064B9F5 /* Defines */; };
 		047C1E4C2A2251280061235D /* EvolutionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E4B2A2251280061235D /* EvolutionView.swift */; };
 		047C1E4F2A22523B0061235D /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 047C1E4E2A22523B0061235D /* ComposableArchitecture */; };
 		047C1E512A22525F0061235D /* EvolutionReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E502A22525F0061235D /* EvolutionReducer.swift */; };
@@ -270,7 +272,6 @@
 		04B25455283C06C700D253E2 /* SwitchListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B25454283C06C700D253E2 /* SwitchListModel.swift */; };
 		04B25457283C0F8800D253E2 /* ShortcutsBarModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B25456283C0F8800D253E2 /* ShortcutsBarModel.swift */; };
 		04B25459283C12A800D253E2 /* GeneralModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B25458283C12A800D253E2 /* GeneralModel.swift */; };
-		04B856352784B1B60061B56C /* GetWallpaperURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B856342784B1B60061B56C /* GetWallpaperURL.swift */; };
 		04B90C642ACF36290039B312 /* EvolutionGalleryContributing.md in Resources */ = {isa = PBXBuildFile; fileRef = 04B90C632ACF36290039B312 /* EvolutionGalleryContributing.md */; };
 		04BC8EC3284FE9B5009E605F /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8EC2284FE9B5009E605F /* Preferences.swift */; };
 		04BC8EC4284FE9B5009E605F /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8EC2284FE9B5009E605F /* Preferences.swift */; };
@@ -283,7 +284,6 @@
 		04CB89FE2B703AF3006B8620 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04CB89FD2B703AF3006B8620 /* WidgetKit.framework */; };
 		04CB8A002B703AF3006B8620 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04CB89FF2B703AF3006B8620 /* SwiftUI.framework */; };
 		04CB8A032B703AF4006B8620 /* OnlyWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CB8A022B703AF4006B8620 /* OnlyWidgetBundle.swift */; };
-		04CB8A052B703AF4006B8620 /* OnlyWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CB8A042B703AF4006B8620 /* OnlyWidget.swift */; };
 		04CB8A072B703AF5006B8620 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04CB8A062B703AF5006B8620 /* Assets.xcassets */; };
 		04CB8A0C2B703AF5006B8620 /* OnlyWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 04CB89FC2B703AF3006B8620 /* OnlyWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		04DC6C5C28A2D04B00888BF9 /* UpdateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C5B28A2D04B00888BF9 /* UpdateView.swift */; };
@@ -307,18 +307,7 @@
 		04E238642A2C835600CDD1FA /* RadioStations+Fetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E238632A2C835600CDD1FA /* RadioStations+Fetch.swift */; };
 		04E238662A2C83C900CDD1FA /* EvolutionCommandEntity+Fetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E238652A2C83C900CDD1FA /* EvolutionCommandEntity+Fetch.swift */; };
 		04E238682A2C872200CDD1FA /* EvolutionAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E238672A2C872200CDD1FA /* EvolutionAdapter.swift */; };
-		04E2ACF9278267DE00BC5DF3 /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 042661402780C147005DF2B9 /* Intents.framework */; platformFilter = maccatalyst; };
-		04E2ACFC278267DE00BC5DF3 /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E2ACFB278267DE00BC5DF3 /* IntentHandler.swift */; };
-		04E2AD00278267DE00BC5DF3 /* IntentsExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 04E2ACF8278267DE00BC5DF3 /* IntentsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		04E2AD0D2783624A00BC5DF3 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 04E2AD102783624A00BC5DF3 /* Intents.intentdefinition */; };
-		04E2AD0E2783624A00BC5DF3 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 04E2AD102783624A00BC5DF3 /* Intents.intentdefinition */; };
-		04E2AD142783A31300BC5DF3 /* GetWallpaperImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E2AD132783A31300BC5DF3 /* GetWallpaperImage.swift */; };
-		04E2AD152783A37300BC5DF3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04447B5F2754F08100CD2900 /* Assets.xcassets */; };
-		04E2AD172783A4E000BC5DF3 /* NSImage++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E2AD162783A4E000BC5DF3 /* NSImage++.swift */; };
-		04E2AD1A2783A50000BC5DF3 /* Data++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E2AD192783A50000BC5DF3 /* Data++.swift */; };
-		04E2AD1C2783A54000BC5DF3 /* URL++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E2AD1B2783A54000BC5DF3 /* URL++.swift */; };
 		04E2AD1E2783B63600BC5DF3 /* CurrentScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E2AD1D2783B63600BC5DF3 /* CurrentScreen.swift */; };
-		04E2AD1F2783B6C400BC5DF3 /* CurrentScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E2AD1D2783B63600BC5DF3 /* CurrentScreen.swift */; };
 		04E517052846C048009826AB /* PomodoroTimerSettingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E517042846C048009826AB /* PomodoroTimerSettingModel.swift */; };
 		04E89D5E289B054C00667710 /* IOService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E89D5D289B054C00667710 /* IOService.swift */; };
 		04E89D5F289B054C00667710 /* IOService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E89D5D289B054C00667710 /* IOService.swift */; };
@@ -330,7 +319,6 @@
 		04EB1CD62781299A00C612AB /* ShortcutsBarVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CD52781299A00C612AB /* ShortcutsBarVM.swift */; };
 		04F118C427AED8BC005DA861 /* GitHubReleaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F118C327AED8BC005DA861 /* GitHubReleaseModel.swift */; };
 		04F118C627AED8EE005DA861 /* AboutVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F118C527AED8EE005DA861 /* AboutVM.swift */; };
-		04FB3E582888B4C100F3B5E1 /* UserDefaultValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140B7277884EE005B160B /* UserDefaultValue.swift */; };
 		04FB3E5D288D489500F3B5E1 /* SettingWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FB3E5C288D489500F3B5E1 /* SettingWindowController.swift */; };
 		04FB3E5E288D499100F3B5E1 /* SettingWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FB3E5C288D489500F3B5E1 /* SettingWindowController.swift */; };
 		04FB3E60288D49E100F3B5E1 /* SwitchListVM+SettingWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FB3E5F288D49E100F3B5E1 /* SwitchListVM+SettingWindowController.swift */; };
@@ -366,13 +354,6 @@
 			remoteGlobalIDString = 04CB89FB2B703AF3006B8620;
 			remoteInfo = OnlyWidgetExtension;
 		};
-		04E2ACFE278267DE00BC5DF3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 04447B502754F08000CD2900 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 04E2ACF7278267DE00BC5DF3;
-			remoteInfo = IntentsExtension;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -383,7 +364,6 @@
 			dstSubfolderSpec = 13;
 			files = (
 				04CB8A0C2B703AF5006B8620 /* OnlyWidgetExtension.appex in Embed App Extensions */,
-				04E2AD00278267DE00BC5DF3 /* IntentsExtension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -424,7 +404,6 @@
 		0427364F27C1A9F80068108F /* MusicPlayerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlayerDelegate.swift; sourceTree = "<group>"; };
 		0427365127C1AADB0068108F /* MusicPlaybackState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlaybackState.swift; sourceTree = "<group>"; };
 		0427B25A275D786400AD783A /* SystemInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemInfo.swift; sourceTree = "<group>"; };
-		043316D92B7164AB0078B867 /* OnlyWidgetCore */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = OnlyWidgetCore; sourceTree = "<group>"; };
 		043316DC2B7168170078B867 /* Modules */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Modules; sourceTree = "<group>"; };
 		043488A82A364E73006C877D /* EvolutionRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionRowView.swift; sourceTree = "<group>"; };
 		043488AA2A364EBF006C877D /* EvolutionRowReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionRowReducer.swift; sourceTree = "<group>"; };
@@ -435,14 +414,16 @@
 		0434B4C328738E7400F06AB9 /* Latest_release_mock.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Latest_release_mock.json; sourceTree = "<group>"; };
 		0434B4CE2876031C00F06AB9 /* RadioPlayerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioPlayerItem.swift; sourceTree = "<group>"; };
 		0434B4D02876325B00F06AB9 /* HostWindowFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostWindowFinder.swift; sourceTree = "<group>"; };
+		043AFC872B82AC7A00657688 /* SelectBuildInSwitchesIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectBuildInSwitchesIntent.swift; sourceTree = "<group>"; };
+		043AFC882B82AC7A00657688 /* BuildInSwitchEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildInSwitchEntity.swift; sourceTree = "<group>"; };
+		043AFC892B82AC8400657688 /* OnlyWidgetBuildIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyWidgetBuildIn.swift; sourceTree = "<group>"; };
+		043AFC8D2B82ACF100657688 /* SmallWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallWidget.swift; sourceTree = "<group>"; };
 		043E5D652757C84900ADC004 /* HiddenModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HiddenModifier.swift; sourceTree = "<group>"; };
 		043E5D6C2757DADB00ADC004 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		043E5D702758176B00ADC004 /* SwitchToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchToggle.swift; sourceTree = "<group>"; };
 		043E5D7227581C2E00ADC004 /* SwitchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchBarView.swift; sourceTree = "<group>"; };
 		043E5D742758208D00ADC004 /* SwitchBarVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchBarVM.swift; sourceTree = "<group>"; };
 		043F0CE42A0FA39100590606 /* WindowContentSizeModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowContentSizeModifier.swift; sourceTree = "<group>"; };
-		043F5AE82784B8CC001DFDF0 /* IsDarkMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsDarkMode.swift; sourceTree = "<group>"; };
-		043F5AEA2784BE34001DFDF0 /* SetDarkMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetDarkMode.swift; sourceTree = "<group>"; };
 		0442C53C2A40E8B200BC47B3 /* NightShiftSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightShiftSettingsView.swift; sourceTree = "<group>"; };
 		0442C53E2A40EAAE00BC47B3 /* NightShiftSettingsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightShiftSettingsVM.swift; sourceTree = "<group>"; };
 		0443A6B527599AAC00A3BCFD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -601,7 +582,6 @@
 		04B25454283C06C700D253E2 /* SwitchListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchListModel.swift; sourceTree = "<group>"; };
 		04B25456283C0F8800D253E2 /* ShortcutsBarModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsBarModel.swift; sourceTree = "<group>"; };
 		04B25458283C12A800D253E2 /* GeneralModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralModel.swift; sourceTree = "<group>"; };
-		04B856342784B1B60061B56C /* GetWallpaperURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetWallpaperURL.swift; sourceTree = "<group>"; };
 		04B90C632ACF36290039B312 /* EvolutionGalleryContributing.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = EvolutionGalleryContributing.md; sourceTree = "<group>"; };
 		04BC8EC2284FE9B5009E605F /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		04BC8ECE285008C1009E605F /* RadioSettingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioSettingModel.swift; sourceTree = "<group>"; };
@@ -613,7 +593,6 @@
 		04CB89FD2B703AF3006B8620 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		04CB89FF2B703AF3006B8620 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		04CB8A022B703AF4006B8620 /* OnlyWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyWidgetBundle.swift; sourceTree = "<group>"; };
-		04CB8A042B703AF4006B8620 /* OnlyWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyWidget.swift; sourceTree = "<group>"; };
 		04CB8A062B703AF5006B8620 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		04CB8A082B703AF5006B8620 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04CB8A092B703AF5006B8620 /* OnlyWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OnlyWidget.entitlements; sourceTree = "<group>"; };
@@ -638,15 +617,6 @@
 		04E238632A2C835600CDD1FA /* RadioStations+Fetch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RadioStations+Fetch.swift"; sourceTree = "<group>"; };
 		04E238652A2C83C900CDD1FA /* EvolutionCommandEntity+Fetch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EvolutionCommandEntity+Fetch.swift"; sourceTree = "<group>"; };
 		04E238672A2C872200CDD1FA /* EvolutionAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionAdapter.swift; sourceTree = "<group>"; };
-		04E2ACF8278267DE00BC5DF3 /* IntentsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = IntentsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		04E2ACFB278267DE00BC5DF3 /* IntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentHandler.swift; sourceTree = "<group>"; };
-		04E2ACFD278267DE00BC5DF3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		04E2AD0C27827EAD00BC5DF3 /* IntentsExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = IntentsExtension.entitlements; sourceTree = "<group>"; };
-		04E2AD0F2783624A00BC5DF3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; name = Base; path = Base.lproj/Intents.intentdefinition; sourceTree = "<group>"; };
-		04E2AD132783A31300BC5DF3 /* GetWallpaperImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetWallpaperImage.swift; sourceTree = "<group>"; };
-		04E2AD162783A4E000BC5DF3 /* NSImage++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSImage++.swift"; sourceTree = "<group>"; };
-		04E2AD192783A50000BC5DF3 /* Data++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data++.swift"; sourceTree = "<group>"; };
-		04E2AD1B2783A54000BC5DF3 /* URL++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL++.swift"; sourceTree = "<group>"; };
 		04E2AD1D2783B63600BC5DF3 /* CurrentScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentScreen.swift; sourceTree = "<group>"; };
 		04E517042846C048009826AB /* PomodoroTimerSettingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimerSettingModel.swift; sourceTree = "<group>"; };
 		04E89D5D289B054C00667710 /* IOService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOService.swift; sourceTree = "<group>"; };
@@ -668,7 +638,6 @@
 		04FC160F283F92B200D4A4AC /* GitHubEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubEndpoint.swift; sourceTree = "<group>"; };
 		04FC1612283FDE1D00D4A4AC /* ShortcutsSettingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsSettingModel.swift; sourceTree = "<group>"; };
 		04FC161528402E5000D4A4AC /* ShortcutOnMarket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutOnMarket.swift; sourceTree = "<group>"; };
-		1081EF19287F28C5005849B5 /* so */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = so; path = so.lproj/Intents.strings; sourceTree = "<group>"; };
 		1081EF1A287F28C5005849B5 /* so */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = so; path = so.lproj/Localizable.strings; sourceTree = "<group>"; };
 		29107C0828111D3A00E88A86 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		40109DE42B6B18E0005D4802 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -715,18 +684,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0447E32C2B71707D00D07B9A /* OnlyWidgetCore in Frameworks */,
 				04CB8A002B703AF3006B8620 /* SwiftUI.framework in Frameworks */,
+				047887362B82AF3A0064B9F5 /* Defines in Frameworks */,
+				047887342B82AF360064B9F5 /* Switches in Frameworks */,
 				04CB89FE2B703AF3006B8620 /* WidgetKit.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		04E2ACF5278267DE00BC5DF3 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0447E32E2B71730000D07B9A /* Switches in Frameworks */,
-				04E2ACF9278267DE00BC5DF3 /* Intents.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -912,6 +873,23 @@
 			path = EvolutionItems;
 			sourceTree = "<group>";
 		};
+		043AFC862B82AC7A00657688 /* Intents */ = {
+			isa = PBXGroup;
+			children = (
+				043AFC872B82AC7A00657688 /* SelectBuildInSwitchesIntent.swift */,
+				043AFC882B82AC7A00657688 /* BuildInSwitchEntity.swift */,
+			);
+			path = Intents;
+			sourceTree = "<group>";
+		};
+		043AFC8F2B82AD9E00657688 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				043AFC8D2B82ACF100657688 /* SmallWidget.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		043E5D672757C85500ADC004 /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -1007,7 +985,6 @@
 				04E8BE392797241F00FF12B7 /* ShortcutsGalleryContributing.md */,
 				04B90C632ACF36290039B312 /* EvolutionGalleryContributing.md */,
 				04447B5A2754F08000CD2900 /* OnlySwitch */,
-				04E2ACFA278267DE00BC5DF3 /* IntentsExtension */,
 				041D725528353A160083092D /* OnlySwitchTests */,
 				04CB8A012B703AF4006B8620 /* OnlyWidget */,
 				04447B592754F08000CD2900 /* Products */,
@@ -1019,7 +996,6 @@
 			isa = PBXGroup;
 			children = (
 				04447B582754F08000CD2900 /* OnlySwitch.app */,
-				04E2ACF8278267DE00BC5DF3 /* IntentsExtension.appex */,
 				041D725428353A150083092D /* OnlySwitchTests.xctest */,
 				04CB89FC2B703AF3006B8620 /* OnlyWidgetExtension.appex */,
 			);
@@ -1109,6 +1085,15 @@
 				046331D22795DACB00C5F894 /* ShortcutsMarket.json */,
 			);
 			path = ShortcutsMarket;
+			sourceTree = "<group>";
+		};
+		047887372B82BE5C0064B9F5 /* BuildIn */ = {
+			isa = PBXGroup;
+			children = (
+				043AFC892B82AC8400657688 /* OnlyWidgetBuildIn.swift */,
+				043AFC862B82AC7A00657688 /* Intents */,
+			);
+			path = BuildIn;
 			sourceTree = "<group>";
 		};
 		047C1E482A2250EF0061235D /* Evolution */ = {
@@ -1417,9 +1402,9 @@
 		04CB8A012B703AF4006B8620 /* OnlyWidget */ = {
 			isa = PBXGroup;
 			children = (
-				043316D92B7164AB0078B867 /* OnlyWidgetCore */,
+				047887372B82BE5C0064B9F5 /* BuildIn */,
+				043AFC8F2B82AD9E00657688 /* Views */,
 				04CB8A022B703AF4006B8620 /* OnlyWidgetBundle.swift */,
-				04CB8A042B703AF4006B8620 /* OnlyWidget.swift */,
 				04CB8A062B703AF5006B8620 /* Assets.xcassets */,
 				04CB8A082B703AF5006B8620 /* Info.plist */,
 				04CB8A092B703AF5006B8620 /* OnlyWidget.entitlements */,
@@ -1526,40 +1511,6 @@
 			path = CoreData;
 			sourceTree = "<group>";
 		};
-		04E2ACFA278267DE00BC5DF3 /* IntentsExtension */ = {
-			isa = PBXGroup;
-			children = (
-				04E2AD182783A4E900BC5DF3 /* Extension */,
-				04E2AD0C27827EAD00BC5DF3 /* IntentsExtension.entitlements */,
-				04E2AD0627826AC900BC5DF3 /* Actions */,
-				04E2ACFB278267DE00BC5DF3 /* IntentHandler.swift */,
-				04E2ACFD278267DE00BC5DF3 /* Info.plist */,
-				04E2AD102783624A00BC5DF3 /* Intents.intentdefinition */,
-			);
-			path = IntentsExtension;
-			sourceTree = "<group>";
-		};
-		04E2AD0627826AC900BC5DF3 /* Actions */ = {
-			isa = PBXGroup;
-			children = (
-				04E2AD132783A31300BC5DF3 /* GetWallpaperImage.swift */,
-				04B856342784B1B60061B56C /* GetWallpaperURL.swift */,
-				043F5AE82784B8CC001DFDF0 /* IsDarkMode.swift */,
-				043F5AEA2784BE34001DFDF0 /* SetDarkMode.swift */,
-			);
-			path = Actions;
-			sourceTree = "<group>";
-		};
-		04E2AD182783A4E900BC5DF3 /* Extension */ = {
-			isa = PBXGroup;
-			children = (
-				04E2AD162783A4E000BC5DF3 /* NSImage++.swift */,
-				04E2AD192783A50000BC5DF3 /* Data++.swift */,
-				04E2AD1B2783A54000BC5DF3 /* URL++.swift */,
-			);
-			path = Extension;
-			sourceTree = "<group>";
-		};
 		04F118C227AED897005DA861 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -1628,7 +1579,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				04E2ACFF278267DE00BC5DF3 /* PBXTargetDependency */,
 				04CB8A0B2B703AF5006B8620 /* PBXTargetDependency */,
 			);
 			name = OnlySwitch;
@@ -1662,30 +1612,11 @@
 			);
 			name = OnlyWidgetExtension;
 			packageProductDependencies = (
-				0447E32B2B71707D00D07B9A /* OnlyWidgetCore */,
+				047887332B82AF360064B9F5 /* Switches */,
+				047887352B82AF3A0064B9F5 /* Defines */,
 			);
 			productName = OnlyWidgetExtension;
 			productReference = 04CB89FC2B703AF3006B8620 /* OnlyWidgetExtension.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
-		04E2ACF7278267DE00BC5DF3 /* IntentsExtension */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 04E2AD03278267DE00BC5DF3 /* Build configuration list for PBXNativeTarget "IntentsExtension" */;
-			buildPhases = (
-				04E2ACF4278267DE00BC5DF3 /* Sources */,
-				04E2ACF5278267DE00BC5DF3 /* Frameworks */,
-				04E2ACF6278267DE00BC5DF3 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = IntentsExtension;
-			packageProductDependencies = (
-				0447E32D2B71730000D07B9A /* Switches */,
-			);
-			productName = IntentsExtension;
-			productReference = 04E2ACF8278267DE00BC5DF3 /* IntentsExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
@@ -1707,9 +1638,6 @@
 					};
 					04CB89FB2B703AF3006B8620 = {
 						CreatedOnToolsVersion = 15.2;
-					};
-					04E2ACF7278267DE00BC5DF3 = {
-						CreatedOnToolsVersion = 13.2;
 					};
 				};
 			};
@@ -1754,7 +1682,6 @@
 			projectRoot = "";
 			targets = (
 				04447B572754F08000CD2900 /* OnlySwitch */,
-				04E2ACF7278267DE00BC5DF3 /* IntentsExtension */,
 				041D725328353A150083092D /* OnlySwitchTests */,
 				04CB89FB2B703AF3006B8620 /* OnlyWidgetExtension */,
 			);
@@ -1798,14 +1725,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				04CB8A072B703AF5006B8620 /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		04E2ACF6278267DE00BC5DF3 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				04E2AD152783A37300BC5DF3 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2092,7 +2011,6 @@
 				04A6F9432788807800E3300F /* BarProvider.swift in Sources */,
 				04B25455283C06C700D253E2 /* SwitchListModel.swift in Sources */,
 				047C1E6A2A2298AB0061235D /* EvolutionListService+Test.swift in Sources */,
-				04E2AD0D2783624A00BC5DF3 /* Intents.intentdefinition in Sources */,
 				0447E3872B71746E00D07B9A /* HiddenDesktopSwitch.swift in Sources */,
 				041F9BEA2AEEFE71000B27C7 /* StickerService+Test.swift in Sources */,
 				04581DB02764CBCF008ADF30 /* SettingsVM.swift in Sources */,
@@ -2153,26 +2071,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				043AFC8E2B82ACF100657688 /* SmallWidget.swift in Sources */,
+				043AFC8C2B82ACAE00657688 /* BuildInSwitchEntity.swift in Sources */,
 				04CB8A032B703AF4006B8620 /* OnlyWidgetBundle.swift in Sources */,
-				04CB8A052B703AF4006B8620 /* OnlyWidget.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		04E2ACF4278267DE00BC5DF3 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				04E2AD142783A31300BC5DF3 /* GetWallpaperImage.swift in Sources */,
-				04E2AD1F2783B6C400BC5DF3 /* CurrentScreen.swift in Sources */,
-				04E2AD0E2783624A00BC5DF3 /* Intents.intentdefinition in Sources */,
-				04E2ACFC278267DE00BC5DF3 /* IntentHandler.swift in Sources */,
-				043F5AE92784B8CC001DFDF0 /* IsDarkMode.swift in Sources */,
-				04E2AD172783A4E000BC5DF3 /* NSImage++.swift in Sources */,
-				04E2AD1C2783A54000BC5DF3 /* URL++.swift in Sources */,
-				04E2AD1A2783A50000BC5DF3 /* Data++.swift in Sources */,
-				04B856352784B1B60061B56C /* GetWallpaperURL.swift in Sources */,
-				04FB3E582888B4C100F3B5E1 /* UserDefaultValue.swift in Sources */,
-				043F5AEB2784BE34001DFDF0 /* SetDarkMode.swift in Sources */,
+				043AFC8A2B82AC8400657688 /* OnlyWidgetBuildIn.swift in Sources */,
+				043AFC8B2B82ACAC00657688 /* SelectBuildInSwitchesIntent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2188,11 +2091,6 @@
 			isa = PBXTargetDependency;
 			target = 04CB89FB2B703AF3006B8620 /* OnlyWidgetExtension */;
 			targetProxy = 04CB8A0A2B703AF5006B8620 /* PBXContainerItemProxy */;
-		};
-		04E2ACFF278267DE00BC5DF3 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 04E2ACF7278267DE00BC5DF3 /* IntentsExtension */;
-			targetProxy = 04E2ACFE278267DE00BC5DF3 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -2222,16 +2120,6 @@
 			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
-		04E2AD102783624A00BC5DF3 /* Intents.intentdefinition */ = {
-			isa = PBXVariantGroup;
-			children = (
-				04E2AD0F2783624A00BC5DF3 /* Base */,
-				1081EF19287F28C5005849B5 /* so */,
-				40109DE32B6B18E0005D4802 /* pt-BR */,
-			);
-			name = Intents.intentdefinition;
-			sourceTree = "<group>";
-		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -2239,8 +2127,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 171;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2265,8 +2153,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 171;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2415,10 +2303,9 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 171;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
+				DEVELOPMENT_TEAM = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2445,7 +2332,7 @@
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = jacklandrin.onlyswitch.profile;
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = jacklandrin.onlyswitch.profile;
 				SKIP_INSTALL = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -2470,10 +2357,9 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 171;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
+				DEVELOPMENT_TEAM = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2500,7 +2386,7 @@
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = jacklandrin.onlyswitch.profile;
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = jacklandrin.onlyswitch.profile;
 				SKIP_INSTALL = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -2525,7 +2411,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 171;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2533,7 +2419,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = OnlyWidget/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = OnlyWidget;
+				INFOPLIST_KEY_CFBundleDisplayName = "Only Widget";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2545,7 +2431,7 @@
 				MARKETING_VERSION = 2.5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = OnlySwitchWidgets;
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = OnlySwitchWidgets;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
@@ -2565,7 +2451,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 171;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2573,7 +2459,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = OnlyWidget/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = OnlyWidget;
+				INFOPLIST_KEY_CFBundleDisplayName = "Only Widget";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2585,76 +2471,10 @@
 				MARKETING_VERSION = 2.5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = OnlySwitchWidgets;
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = OnlySwitchWidgets;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-			};
-			name = Release;
-		};
-		04E2AD01278267DE00BC5DF3 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = IntentsExtension/IntentsExtension.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 4;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
-				ENABLE_HARDENED_RUNTIME = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = IntentsExtension/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = IntentsExtension;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@executable_path/../../../../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.5.0;
-				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.IntentsExtension;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = jacklandrin.OnlySwitch.IntentsExtension.profile;
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "OnlySwitch/Header/OnlySwitch-Bridging-Header.h";
-				SWIFT_VERSION = 5.0;
-			};
-			name = Debug;
-		};
-		04E2AD02278267DE00BC5DF3 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = IntentsExtension/IntentsExtension.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 4;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
-				ENABLE_HARDENED_RUNTIME = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = IntentsExtension/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = IntentsExtension;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@executable_path/../../../../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.5.0;
-				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.IntentsExtension;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = jacklandrin.OnlySwitch.IntentsExtension.profile;
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "OnlySwitch/Header/OnlySwitch-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -2694,15 +2514,6 @@
 			buildConfigurations = (
 				04CB8A0D2B703AF6006B8620 /* Debug */,
 				04CB8A0E2B703AF6006B8620 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		04E2AD03278267DE00BC5DF3 /* Build configuration list for PBXNativeTarget "IntentsExtension" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				04E2AD01278267DE00BC5DF3 /* Debug */,
-				04E2AD02278267DE00BC5DF3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2796,14 +2607,6 @@
 			package = 04A6B54927715F90003B2647 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
 		};
-		0447E32B2B71707D00D07B9A /* OnlyWidgetCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = OnlyWidgetCore;
-		};
-		0447E32D2B71730000D07B9A /* Switches */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Switches;
-		};
 		0447E3982B7174AD00D07B9A /* Switches */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Switches;
@@ -2822,6 +2625,14 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 047594932B531CB2005FC87C /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
 			productName = MarkdownUI;
+		};
+		047887332B82AF360064B9F5 /* Switches */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Switches;
+		};
+		047887352B82AF3A0064B9F5 /* Defines */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Defines;
 		};
 		047C1E4E2A22523B0061235D /* ComposableArchitecture */ = {
 			isa = XCSwiftPackageProductDependency;

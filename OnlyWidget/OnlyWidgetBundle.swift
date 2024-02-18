@@ -5,12 +5,12 @@
 //  Created by Jacklandrin on 2024/2/4.
 //
 
-import WidgetKit
 import SwiftUI
+import WidgetKit
 
 @main
 struct OnlyWidgetBundle: WidgetBundle {
     var body: some Widget {
-        OnlyWidget()
+        OnlyWidgetBuildIn()
     }
 }

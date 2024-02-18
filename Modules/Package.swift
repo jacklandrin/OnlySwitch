@@ -21,10 +21,6 @@ let package = Package(
             targets: ["Switches"]
         )
     ],
-    dependencies: [
-        // Dependencies declare other packages that this package depends on.
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", exact: "1.5.5")
-        ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
