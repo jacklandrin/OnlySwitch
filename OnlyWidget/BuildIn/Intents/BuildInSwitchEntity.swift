@@ -19,7 +19,12 @@ struct BuildInSwitchEntity: AppEntity {
     }
 
     static var allSwitches: [BuildInSwitchEntity] {
-        SwitchType.allCases.map { BuildInSwitchEntity(id: String($0.rawValue), type: $0) }
+        let switches = SwitchType.allCases.filter{ !exceptionSwitches.contains($0) }
+        return switches.map { BuildInSwitchEntity(id: String($0.rawValue), type: $0) }
+    }
+
+    private static var exceptionSwitches: [SwitchType] {
+        [.topNotch, .airPods, .applemusic, .spotify, .screenTest]
     }
 }
 
