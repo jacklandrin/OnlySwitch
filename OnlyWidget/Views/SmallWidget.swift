@@ -6,6 +6,7 @@
 //
 
 import Defines
+import Extensions
 import SwiftUI
 
 struct SmallWidget: View {
@@ -35,7 +36,7 @@ struct SmallWidget: View {
                 .padding()
                 Spacer()
                 HStack(alignment: .bottom) {
-                    Text(title)
+                    Text(title.localized())
                         .font(.system(size: 16))
                         .fontWeight(.bold)
                         .lineLimit(2)

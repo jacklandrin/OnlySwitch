@@ -1,0 +1,39 @@
+/* 
+  Localizable.strings
+  OnlySwitch
+
+  Created by Jacklandrin on 2021/12/14.
+  
+*/
+"Hide Desktop" = "Спрятать иконки рабочего стола";
+"Dark Mode" = "Тёмная тема";
+"Hide Notch" = "Спрятать вырез";
+"Mute" = "Выключить звук";
+"Screen Saver" = "Заставка";
+"Night Shift" = "Night Shift";
+"Autohide Dock" = "Автоматически скрывать Док";
+"AirPods" = "AirPods";
+"Bluetooth" = "Bluetooth";
+"Xcode Derived Data" = "Данные Xcode";
+"Autohide Menu Bar" = "Автоматически скрывать строку меню";
+"Show Hidden Files" = "Показывать скрытые файлы";
+"Radio Player" = "Плеер радио";
+"Keep Awake" = "Не засыпать";
+"Empty Trash" = "Очистить корзину";
+"Empty Pasteboard" = "Очистить буфер обмена";
+"Show User Library" = "Показать папку пользователя";
+"Show Extension Name" = "Показать имя расширения";
+"Pomodoro Timer" = "Pomodoro Таймер";
+"Small Launchpad Icon" = "Маленькие иконки Лаунчпада";
+"Low Power Mode" = "Режим энергосбережения";
+"Mute Mic" = "Выключить микрофон";
+"Recent Apps in Dock" = "Недавно открытые приложения в Доке";
+"Screen Test" = "Тест экрана и очистка";
+"Show Finder Path Bar" = "Показать панель поиска";
+"Hide Menu Bar Icons" = "Скрыть значки строки меню";
+"Back Noises" = "фоновый шум";
+"Dim Screen" = "Тусклый экран";
+"Eject Discs" = "Извлечь диски";
+"Hide Windows" = "Скрыть окна";
+"True Tone" = "True Tone";
+"Top Sticker" = "Top Sticker";

@@ -8,11 +8,12 @@
 import SwiftUI
 
 public extension Bundle {
+    private static let languageUserDefaults = UserDefaults(suiteName: "group.onlyswitch.shared")!
     private static var bundle: Bundle!
     private static var supportLangs = ["en", "zh", "de", "hr", "tr","pl", "fil", "nl", "it", "ru", "es","ja", "so","kr","fr","uk","sk","pt-BR"]
-    public static func localizedBundle() -> Bundle! {
+    static func localizedBundle() -> Bundle! {
         if bundle == nil {
-            let appLang = UserDefaults.standard.string(forKey: UserDefaults.Key.AppLanguage) ?? "en"
+            let appLang = languageUserDefaults.string(forKey: UserDefaults.Key.AppLanguage) ?? "en"
             let path = Bundle.main.path(forResource: appLang, ofType: "lproj")
             if let path = path {
                 bundle = Bundle(path: path)
@@ -27,7 +28,7 @@ public extension Bundle {
     }
 
     static func setLanguage(lang: String) {
-        UserDefaults.standard.set(lang, forKey: UserDefaults.Key.AppLanguage)
+        languageUserDefaults.set(lang, forKey: UserDefaults.Key.AppLanguage)
         let path = Bundle.main.path(forResource: lang, ofType: "lproj")
         if let path = path {
             bundle = Bundle(path: path)
@@ -38,7 +39,7 @@ public extension Bundle {
     }
     
     static func currentLanguage() -> String {
-        guard let lang = UserDefaults.standard.string(forKey: UserDefaults.Key.AppLanguage) else {
+        guard let lang = languageUserDefaults.string(forKey: UserDefaults.Key.AppLanguage) else {
             return systemLanguage()
         }
         return lang

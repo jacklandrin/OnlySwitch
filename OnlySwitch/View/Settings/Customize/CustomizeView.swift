@@ -9,6 +9,7 @@ import SwiftUI
 import AlertToast
 import KeyboardShortcuts
 import Switches
+import Utilities
 
 struct CustomizeView: View {
     @ObservedObject var customizeVM = CustomizeVM.shared

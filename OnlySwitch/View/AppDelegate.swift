@@ -10,6 +10,7 @@ import Cocoa
 import KeyboardShortcuts
 import Defines
 import Switches
+import Utilities
 
 @main
 struct OnlySwitchApp: App {
@@ -157,21 +158,6 @@ class AppDelegate:NSObject, NSApplicationDelegate {
     func applicationWillTerminate(_ notification: Notification) {
         
     }
-    
-//    func application(_ application: NSApplication, open urls: [URL]) {
-//        guard let url = urls.first, url.scheme == "onlyswitch" else { return }
-//        print(url)
-//        if let window = NSApplication.shared.windows.first {
-//            window.orderOut(nil)
-//            NSApplication.shared.setActivationPolicy(.accessory)
-//            NSWindow.allowsAutomaticWindowTabbing = false
-//            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-//                window.close()
-//            }
-//        }
-//        let darkmodeSwitch = CustomizeVM.shared.allSwitches.first{ $0.type == .darkMode }
-//        darkmodeSwitch?.doSwitch()
-//    }
 
     func checkUpdate() {
         checkUpdatePresenter.checkUpdate { result in

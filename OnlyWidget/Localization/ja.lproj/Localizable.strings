@@ -1,0 +1,40 @@
+/* 
+  Localizable.strings
+  OnlySwitch
+
+  Created by Jacklandrin on 2021/12/14.
+ Translated into Japanese by Shogo Koyama on 2022/4/21
+  
+*/
+"Hide Desktop" = "デスクトップアイコンを隠す";
+"Dark Mode" = "ダークモード";
+"Hide Notch" = "ノッチを隠す";
+"Mute" = "ミュート";
+"Screen Saver" = "スクリーンセーバー";
+"Night Shift" = "Night Shift";
+"Autohide Dock" = "Dockを自動的に隠す";
+"AirPods" = "AirPods";
+"Bluetooth" = "Bluetooth";
+"Xcode Derived Data" = "XcodeのDerived Dataをクリア";
+"Autohide Menu Bar" = "メニューバーを自動的に隠す";
+"Show Hidden Files" = "隠しファイルを表示";
+"Radio Player" = "ラジオプレーヤー";
+"Keep Awake" = "ロック・スリープの防止";
+"Empty Trash" = "ゴミ箱を空にする";
+"Empty Pasteboard" = "クリップボードを空にする";
+"Show User Library" = "ユーザーのライブラリフォルダを表示する";
+"Show Extension Name" = "拡張子を表示";
+"Pomodoro Timer" = "ポモドーロタイマー";
+"Small Launchpad Icon" = "小さいLaunchpadアイコン";
+"Low Power Mode" = "省電力モード";
+"Mute Mic" = "マイクミュート";
+"Recent Apps in Dock" = "Dockに最近使用したAppの表示";
+"Screen Test" = "スクリーンのテストと清掃";
+"Show Finder Path Bar" = "ファインダーパスバーを表示";
+"Hide Menu Bar Icons" = "メニューバーのアイコンを非表示にする";
+"Back Noises" = "バックグラウンド ノイズ";
+"Dim Screen" = "薄暗い画面";
+"Eject Discs" = "ディスクの取り出し";
+"Hide Windows" = "ウィンドウを隠す";
+"True Tone" = "True Tone";
+"Top Sticker" = "上端付箋";

@@ -7,9 +7,11 @@
 
 import SwiftUI
 import WidgetKit
+import Utilities
 
 @main
 struct OnlyWidgetBundle: WidgetBundle {
+    @ObservedObject private var languageManager = LanguageManager.sharedManager
     var body: some Widget {
         OnlyWidgetBuildIn()
     }

@@ -7,6 +7,7 @@
 
 import AppIntents
 import Switches
+import Extensions
 
 struct BuildInSwitchEntity: AppEntity {
     var id: String
@@ -15,7 +16,7 @@ struct BuildInSwitchEntity: AppEntity {
     static var defaultQuery = BuildInSwitchQuery()
 
     var displayRepresentation: DisplayRepresentation {
-        DisplayRepresentation(title: "\(type.barInfo().title)")
+        DisplayRepresentation(title: "\(type.barInfo().title.localized())")
     }
 
     static var allSwitches: [BuildInSwitchEntity] {

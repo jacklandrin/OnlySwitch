@@ -1,0 +1,40 @@
+/* 
+  Localizable.strings
+  OnlySwitch
+
+  Created by Jacklandrin on 2021/12/14.
+  Translated into Croatian translation by Milo Ivir <mail@milotype.de> on 2022/01/09.
+  
+*/
+"Hide Desktop" = "Sakrij ikone radne površine";
+"Dark Mode" = "Tamni modus";
+"Hide Notch" = "Sakrij polje kamere";
+"Mute" = "Isključi zvuk";
+"Screen Saver" = "Zaštita ekrana";
+"Night Shift" = "Noćni rad";
+"Autohide Dock" = "Automatski sakrij traku programa";
+"AirPods" = "Bežične slušalice";
+"Bluetooth" = "Bluetooth";
+"Xcode Derived Data" = "Xcode izvedeni podaci";
+"Autohide Menu Bar" = "Automatski sakrij traku izbornika";
+"Show Hidden Files" = "Prikaži skrivene datoteke";
+"Radio Player" = "Radio player";
+"Keep Awake" = "Zadrži budno stanje";
+"Empty Trash" = "Isprazni smeće";
+"Empty Pasteboard" = "Isprazni međuspremnik";
+"Show User Library" = "Prikaži korisničku mapu Medijateka";
+"Pomodoro Timer" = "Pomodoro timer";
+"Small Launchpad Icon" = "Mala Launchpad ikona";
+"Low Power Mode" = "Modus slabe baterije";
+"Recent Apps in Dock" = "Prikaži nedavno korištene programe u traci programa";
+"Mute Mic" = "Isključi mikrofon";
+"Screen Test" = "Test ekrana & čišćenje";
+"Show Finder Path Bar" = "Prikaži traku staza Findera";
+"Hide Menu Bar Icons" = "Sakrij ikone trake izbornika";
+"Back Noises" = "Pozadinski šumovi";
+"Dim Screen" = "Zatamnjeni zaslon";
+"Eject Discs" = "Izbaci diskove";
+"Hide Windows" = "Sakrij Prozore";
+"True Tone" = "True Tone";
+"Top Sticker" = "Top Sticker";
+

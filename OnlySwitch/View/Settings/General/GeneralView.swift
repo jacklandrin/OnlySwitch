@@ -10,6 +10,7 @@ import SwiftUI
 import LaunchAtLogin
 import AlertToast
 import KeyboardShortcuts
+import Utilities
 
 struct GeneralView: View, EmailProvider {
     @ObservedObject var langManager = LanguageManager.sharedManager

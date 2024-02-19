@@ -1,0 +1,38 @@
+/*
+  Localizable.strings
+  OnlySwitch
+  Created by Jacklandrin on 2021/12/14.
+*/
+
+"Hide Desktop" = "Masquer les icônes du bureau";
+"Dark Mode" = "Mode sombre";
+"Hide Notch" = "Cacher l'encoche";
+"Mute" = "Muet";
+"Screen Saver" = "Économiseur d'écran";
+"Night Shift" = "Night Shift";
+"Autohide Dock" = "Masquer le Dock";
+"AirPods" = "AirPods";
+"Bluetooth" = "Bluetooth";
+"Xcode Derived Data" = "Données dérivées de Xcode";
+"Autohide Menu Bar" = "Masquer la barre des menus";
+"Show Hidden Files" = "Afficher les fichiers cachés";
+"Radio Player" = "Lecteur radio";
+"Keep Awake" = "Désactiver l'économiseur d'écran";
+"Empty Trash" = "Vider la corbeille";
+"Empty Pasteboard" = "Vider le presse-papiers";
+"Show User Library" = "Afficher le dossier de la bibliothèque utilisateur";
+"Show Extension Name" = "Afficher les extensions";
+"Pomodoro Timer" = "Minuterie Pomodoro";
+"Small Launchpad Icon" = "Launchpad en petites icônes";
+"Low Power Mode" = "Mode économie d'énergie";
+"Mute Mic" = "Couper le micro";
+"Recent Apps in Dock" = "Afficher les applications récentes dans le Dock";
+"Screen Test" = "Test d'écran et nettoyage";
+"Show Finder Path Bar" = "Afficher la barre de chemin d'accès du Finder";
+"Hide Menu Bar Icons" = "Masquer les icônes de la barre des menus";
+"Back Noises" = "Bruits de fond";
+"Dim Screen" = "Ajuster la luminosité de l'écran";
+"Eject Discs" = "Éjecter les disques";
+"Hide Windows" = "Masquer les fenêtres";
+"True Tone" = "True Tone";
+"Top Sticker" = "Note collante";

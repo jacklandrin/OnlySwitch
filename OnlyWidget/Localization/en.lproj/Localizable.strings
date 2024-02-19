@@ -1,0 +1,44 @@
+/* 
+  Localizable.strings
+  OnlySwitch
+
+  Created by Jacklandrin on 2021/12/14.
+  
+*/
+"Hide Desktop" = "Hide Desktop Icons";
+"Dark Mode" = "Dark Mode";
+"Hide Notch" = "Hide Notch";
+"Mute" = "Mute";
+"Screen Saver" = "Screen Saver";
+"Night Shift" = "Night Shift";
+"Autohide Dock" = "Autohide Dock";
+"AirPods" = "AirPods";
+"Bluetooth" = "Bluetooth";
+"Xcode Derived Data" = "Xcode Derived Data";
+"Autohide Menu Bar" = "Autohide Menu Bar";
+"Show Hidden Files" = "Show Hidden Files";
+"Radio Player" = "Radio Player";
+"Keep Awake" = "Keep Awake";
+"Empty Trash" = "Empty Trash";
+"Empty Pasteboard" = "Empty Clipboard";
+"Show User Library" = "Show User Library Folder";
+"Show Extension Name" = "Show Extension Name";
+"Pomodoro Timer" = "Pomodoro Timer";
+"Small Launchpad Icon" = "Small Launchpad Icon";
+"Low Power Mode" = "Low Power Mode";
+"Mute Mic" = "Mute Mic";
+"Recent Apps in Dock" = "Show Recent Apps in Dock";
+"Screen Test" = "Screen Test & Clean";
+"Show Finder Path Bar" = "Show Finder Path Bar";
+"Hide Menu Bar Icons" = "Hide Menu Bar Icons";
+"Back Noises" = "Back Noises";
+"Dim Screen" = "Dim Screen";
+"Eject Discs" = "Eject Discs";
+"Hide Windows" = "Hide Windows";
+"True Tone" = "True Tone";
+"Top Sticker" = "Top Sticker";
+"Only Widget - BuildIn" = "Only Widget - BuildIn";
+"Widgets can control the build-in switches" = "Widgets can control the build-in switches";
+"Select Build-In Switches" = "Select Build-In Switches";
+"Select the switches you want to display in the widget." = "Select the switches you want to display in the widget.";
+"Switch" = "Switch";

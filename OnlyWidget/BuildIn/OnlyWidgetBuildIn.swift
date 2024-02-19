@@ -54,8 +54,8 @@ struct OnlyWidgetBuildIn: Widget {
                 .containerBackground(.fill.quaternary, for: .widget)
         }
         .supportedFamilies([.systemSmall])
-        .configurationDisplayName("Only Widget - BuildIn")
-        .description("Widget can control the build-in switches")
+        .configurationDisplayName("Only Widget - BuildIn".localized())
+        .description("Widgets can control the build-in switches".localized())
         .contentMarginsDisabled()
     }
 }

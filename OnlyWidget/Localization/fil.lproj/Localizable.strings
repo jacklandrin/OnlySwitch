@@ -1,0 +1,40 @@
+/* 
+  Localizable.strings
+  OnlySwitch
+
+  Created by Jacklandrin on 2021/12/14.
+  
+*/
+
+"Hide Desktop" = "Itago ang Desktop";
+"Dark Mode" = "Dark mode";
+"Hide Notch" = "Itago ang notch";
+"Mute" = "I-mute";
+"Screen Saver" = "screensaver";
+"Night Shift" = "Panggabi";
+"Autohide Dock" = "I- autohide and dock";
+"AirPods" = "AirPods";
+"Bluetooth" = "Bluetooth";
+"Xcode Derived Data" = "Data na nagmula sa Xcode";
+"Autohide Menu Bar" = "I- autohide and menu bar";
+"Show Hidden Files" = "Ipakit and nakatanggong document";
+"Radio Player" = "Radio-Player";
+"Keep Awake" = "Manatiling giving";
+"Empty Trash" = "alisin ang basura";
+"Empty Pasteboard" = "alisin ang pasteboard";
+"Show User Library" = "Ipakita ang library ng gumagamit";
+"Show Extension Name" = "Ipakita ang pangalan ng extension";
+"Pomodoro Timer" = "Timer ng pomodoro";
+"Small Launchpad Icon" = "maliit na icon ng launchpad";
+"Low Power Mode" = "mababang mode";
+"Mute Mic" = "i-mute ang mikropono";
+"Recent Apps in Dock" = " kamakailang mga app sa dock";
+"Screen Test" = "Screen Test & Paglilinis";
+"Show Finder Path Bar" = "Ipakita ang Finder Pathbar";
+"Hide Menu Bar Icons" = "Itago ang Menu Bar Icons";
+"Back Noises" = "Mga ingay sa background";
+"Dim Screen" = "Dim Screen";
+"Eject Discs" = "I-eject ang mga Disk";
+"Hide Windows" = "Itago ang mga bintana";
+"True Tone" = "True Tone";
+"Top Sticker" = "Top Sticker";

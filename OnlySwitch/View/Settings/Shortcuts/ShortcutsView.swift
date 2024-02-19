@@ -9,6 +9,7 @@ import SwiftUI
 import AlertToast
 import KeyboardShortcuts
 import Switches
+import Utilities
 
 struct ShortcutsView: View {
     private let columns = [

@@ -1,0 +1,39 @@
+/*
+  Localizable.strings
+  OnlySwitch
+
+  Created by Jacklandrin on 2021/12/14.
+  
+*/
+"Hide Desktop" = "Сховати іконки з Робочого столу";
+"Dark Mode" = "Темний режим";
+"Hide Notch" = "Сховати Notch";
+"Mute" = "Вимкнути звук";
+"Screen Saver" = "Екранний ефект";
+"Night Shift" = "Night Shift";
+"Autohide Dock" = "Автоматично ховати Dock";
+"AirPods" = "AirPods";
+"Bluetooth" = "Bluetooth";
+"Xcode Derived Data" = "Похідні дані Xcode";
+"Autohide Menu Bar" = "Автоматично ховати Рядок Меню";
+"Show Hidden Files" = "Показати приховані файли";
+"Radio Player" = "Радіо Програвач";
+"Keep Awake" = "Не засинати";
+"Empty Trash" = "Очистити Смітник";
+"Empty Pasteboard" = "Очистити буфер обміну";
+"Show User Library" = "Показати користувацьку папку Бібліотека";
+"Show Extension Name" = "Показати розширення імен фалів";
+"Pomodoro Timer" = "Таймер Pomodoro";
+"Small Launchpad Icon" = "Маленька іконка Панелі запуску";
+"Low Power Mode" = "Режим економії заряду";
+"Mute Mic" = "Вимкнути мікрофон";
+"Recent Apps in Dock" = "Показувати останні програми в Dock";
+"Screen Test" = "Перевіка та очищення екрану";
+"Show Finder Path Bar" = "Показати Панель Шляху в Finder";
+"Hide Menu Bar Icons" = "Сховати іконки Рядка Меню";
+"Back Noises" = "Фоновий шум";
+"Dim Screen" = "Тьмяний екран";
+"Eject Discs" = "Витягнути диски";
+"Hide Windows" = "Сховати вікна";
+"True Tone" = "True Tone";
+"Top Sticker" = "Верхня наліпка";

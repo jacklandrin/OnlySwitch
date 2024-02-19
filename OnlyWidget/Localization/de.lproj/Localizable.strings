@@ -1,0 +1,39 @@
+/* 
+  Localizable.strings
+  OnlySwitch
+
+  Created by Jacklandrin on 2021/12/14.
+  
+*/
+"Hide Desktop" = "Desktop ausblenden";
+"Dark Mode" = "Dunkelmodus";
+"Hide Notch" = "Notch ausblenden";
+"Mute" = "Stumm";
+"Screen Saver" = "Bildschirmschoner";
+"Night Shift" = "Night Shift";
+"Autohide Dock" = "Dock automatisch ausblenden";
+"AirPods" = "AirPods";
+"Bluetooth" = "Bluetooth";
+"Xcode Derived Data" = "Xcode Derived Data";
+"Autohide Menu Bar" = "Menüleiste automatisch ausblenden";
+"Show Hidden Files" = "Versteckte Dateien zeigen";
+"Radio Player" = "Radio-Player";
+"Keep Awake" = "Wach bleiben";
+"Empty Trash" = "Papierkorb Leeren";
+"Empty Pasteboard" = "Zwischenablage Leeren";
+"Show User Library" = "Ordner Benutzer-Library anzeigen";
+"Show Extension Name" = "Dateierweiterung anzeigen";
+"Pomodoro Timer" = "Pomodoro-Technik";
+"Small Launchpad Icon" = "Kleines Launchpad-Icon";
+"Low Power Mode" = "Stromsparmodus";
+"Mute Mic" = "Mikrofon stumm schalten";
+"Recent Apps in Dock" = "Zuletzt verwendete Apps im Dock anzeigen";
+"Screen Test" = "Bildschirmtest & Reinigen";
+"Show Finder Path Bar" = "Finder-pfadleiste einblenden";
+"Hide Menu Bar Icons" = "Menüleistensymbole ausblenden";
+"Back Noises" = "Hintergeräusche";
+"Dim Screen" = "Bildschirm verdunkeln";
+"Eject Discs" = "Datenträger auswerfen";
+"Hide Windows" = "Fenster ausblenden";
+"True Tone" = "True Tone";
+"Top Sticker" = "Haftnotiz";

@@ -8,6 +8,7 @@
 import Defines
 import SwiftUI
 import Switches
+import Utilities
 
 struct SwitchBarView: View {
     @EnvironmentObject var switchOption:SwitchBarVM

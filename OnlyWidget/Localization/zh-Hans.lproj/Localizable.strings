@@ -1,0 +1,44 @@
+/* 
+  Localizable.strings
+  OnlySwitch
+
+  Created by Jacklandrin on 2021/12/14.
+  
+*/
+"Hide Desktop" = "隐藏桌面图标";
+"Dark Mode" = "深色模式";
+"Hide Notch" = "藏刘海儿";
+"Mute" = "静音";
+"Screen Saver" = "屏幕保护";
+"Night Shift" = "夜览";
+"Autohide Dock" = "自动隐藏程序坞";
+"AirPods" = "AirPods";
+"Bluetooth" = "蓝牙";
+"Xcode Derived Data" = "Xcode Derived Data";
+"Autohide Menu Bar" = "自动隐藏菜单栏";
+"Show Hidden Files" = "显示隐藏文件";
+"Radio Player" = "电台";
+"Keep Awake" = "防止锁屏";
+"Empty Trash" = "清空废纸篓";
+"Empty Pasteboard" = "清空剪贴板";
+"Show User Library" = "显示用户库文件夹";
+"Show Extension Name" = "显示扩展名";
+"Pomodoro Timer" = "番茄时钟";
+"Small Launchpad Icon" = "小启动台图标";
+"Low Power Mode" = "低电量模式";
+"Mute Mic" = "静音麦克风";
+"Recent Apps in Dock" = "在程序坞显示最近应用";
+"Screen Test" = "屏幕检测与清洁";
+"Show Finder Path Bar" = "显示访达路径栏";
+"Hide Menu Bar Icons" = "隐藏菜单栏图标";
+"Back Noises" = "背景噪音";
+"Dim Screen" = "暗屏";
+"Eject Discs" = "推出磁盘映像";
+"Hide Windows" = "隐藏窗口";
+"True Tone" = "原彩模式";
+"Top Sticker" = "置顶便签";
+"Only Widget - BuildIn" = "Only Widget - 内置开关";
+"Widgets can control the build-in switches" = "小组件可以操控内置开关";
+"Select Build-In Switches" = "请选择内置开关";
+"Select the switches you want to display in the widget." = "选择您想展示的开关";
+"Switch" = "开关";

@@ -8,6 +8,7 @@
 import AppIntents
 import Switches
 import WidgetKit
+import Extensions
 
 struct SelectBuildInSwitchesIntent: WidgetConfigurationIntent {
     static var title: LocalizedStringResource = "Select Build-In Switches"

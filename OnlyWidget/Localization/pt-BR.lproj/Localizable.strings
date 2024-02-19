@@ -1,0 +1,39 @@
+/* 
+  Localizable.strings
+  OnlySwitch
+
+  Created by Jacklandrin on 2021/12/14.
+  
+*/
+"Hide Desktop" = "Esconder Icones da Mesa";
+"Dark Mode" = "Modo Escuro";
+"Hide Notch" = "Esconder Entalhe";
+"Mute" = "Mudo";
+"Screen Saver" = "Protetor de Tela";
+"Night Shift" = "Night Shift";
+"Autohide Dock" = "Esconder Dock Automaticamente";
+"AirPods" = "AirPods";
+"Bluetooth" = "Bluetooth";
+"Xcode Derived Data" = "Dados Derivados do Xcode";
+"Autohide Menu Bar" = "Esconder Barra de Menu Automaticamente";
+"Show Hidden Files" = "Mostrar Arquivos Ocultos";
+"Radio Player" = "Reprodutor de Rádio";
+"Keep Awake" = "Manter Acordado";
+"Empty Trash" = "Limpar Lixeira";
+"Empty Pasteboard" = "Limpar Clipboard";
+"Show User Library" = "Mostar Biblioteca do Usuário";
+"Show Extension Name" = "Mostrar Nome da Extensão";
+"Pomodoro Timer" = "Cronômetro Pomodoro";
+"Small Launchpad Icon" = "Icone Launchpad Pequeno";
+"Low Power Mode" = "Modo Baixa Energia";
+"Mute Mic" = "Mutar Microfone";
+"Recent Apps in Dock" = "Aplicativos Recentes na Dock";
+"Screen Test" = "Teste e Limpeza de Tela";
+"Show Finder Path Bar" = "Mostrar Barra de Endereços do Finder";
+"Hide Menu Bar Icons" = "Esconder Icone da Barra de Menu";
+"Back Noises" = "Ruidos de Voltar";
+"Dim Screen" = "Escurecer Tela";
+"Eject Discs" = "Ejetar Discos";
+"Hide Windows" = "Esconder Janelas";
+"True Tone" = "True Tone";
+"Top Sticker" = "Adesivo do Topo";

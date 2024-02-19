@@ -19,11 +19,13 @@ let package = Package(
         .library(
             name: "Switches",
             targets: ["Switches"]
+        ),
+        .library(
+            name: "Utilities",
+            targets: ["Utilities"]
         )
     ],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
         .target(
             name: "Extensions",
             dependencies: [
@@ -39,6 +41,13 @@ let package = Package(
             ],
             resources: [
                 .process("Resources")
+            ]
+        ),
+        .target(
+            name: "Utilities",
+            dependencies: [
+                "Extensions",
+                "Defines"
             ]
         )
     ]
