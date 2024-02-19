@@ -5,6 +5,7 @@
 //  Created by Jacklandrin on 2023/6/15.
 //
 
+import Defines
 import SwiftUI
 
 struct EvolutionBarView: View {
@@ -21,7 +22,7 @@ struct EvolutionBarView: View {
         .renderingMode(.template)
         .resizable()
         .scaledToFit()
-        .frame(width: 25, height: 25)
+        .frame(width: Layout.iconSize, height: Layout.iconSize)
         .padding(.trailing, 8)
 
         Text(evolutionBarVM.barName)

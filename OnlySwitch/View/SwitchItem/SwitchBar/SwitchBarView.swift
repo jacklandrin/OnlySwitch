@@ -5,6 +5,7 @@
 //  Created by Jacklandrin on 2021/12/1.
 //
 
+import Defines
 import SwiftUI
 import Switches
 
@@ -18,7 +19,7 @@ struct SwitchBarView: View {
             .renderingMode(.template)
             .resizable()
             .scaledToFit()
-            .frame(width: 25, height: 25)
+            .frame(width: Layout.iconSize, height: Layout.iconSize)
             .padding(.trailing, 8)
             
             Text(switchOption.title.localized())
@@ -27,7 +28,7 @@ struct SwitchBarView: View {
             
             if switchOption.switchType == .airPods {
                 AirPodsBatteryView(batteryValues: convertBattery(info: switchOption.info))
-                    .offset(x:60)
+                    .offset(x: 60)
             } else if switchOption.switchType == .pomodoroTimer {
                 TimerCountDownView(ptswitch: switchOption.switchOperator as! PomodoroTimerSwitch)
             }

@@ -5,6 +5,7 @@
 //  Created by Jacklandrin on 2022/1/2.
 //
 
+import Defines
 import SwiftUI
 
 struct ShortcutsBarView: View {
@@ -15,7 +16,7 @@ struct ShortcutsBarView: View {
                 .renderingMode(.template)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 25, height: 25)
+                .frame(width: Layout.iconSize, height: Layout.iconSize)
                 .padding(.trailing, 8)
             
             Text(shortcutsBarVM.barName)

@@ -246,7 +246,6 @@
 		04933766276262EB00AE779A /* SoundWaveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04933765276262EB00AE779A /* SoundWaveView.swift */; };
 		04933788276264D400AE779A /* BluredSoundWave.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04933787276264D400AE779A /* BluredSoundWave.swift */; };
 		0493378A2762651D00AE779A /* SoundWaveVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337892762651D00AE779A /* SoundWaveVM.swift */; };
-		0493378C2762654600AE779A /* LayoutDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493378B2762654600AE779A /* LayoutDefine.swift */; };
 		0493379027626FD200AE779A /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0493378F27626FD200AE779A /* NetworkExtension.framework */; };
 		049337922762BA3200AE779A /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337912762BA3200AE779A /* SettingsView.swift */; };
 		049337942762BD1B00AE779A /* OpenWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337932762BD1B00AE779A /* OpenWindow.swift */; };
@@ -552,7 +551,6 @@
 		04933765276262EB00AE779A /* SoundWaveView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundWaveView.swift; sourceTree = "<group>"; };
 		04933787276264D400AE779A /* BluredSoundWave.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BluredSoundWave.swift; sourceTree = "<group>"; };
 		049337892762651D00AE779A /* SoundWaveVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundWaveVM.swift; sourceTree = "<group>"; };
-		0493378B2762654600AE779A /* LayoutDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutDefine.swift; sourceTree = "<group>"; };
 		0493378F27626FD200AE779A /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
 		049337912762BA3200AE779A /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		049337932762BD1B00AE779A /* OpenWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWindow.swift; sourceTree = "<group>"; };
@@ -947,7 +945,6 @@
 		043E5D77275820DD00ADC004 /* Define */ = {
 			isa = PBXGroup;
 			children = (
-				0493378B2762654600AE779A /* LayoutDefine.swift */,
 				049337932762BD1B00AE779A /* OpenWindow.swift */,
 				047140B7277884EE005B160B /* UserDefaultValue.swift */,
 				046331D42795E1BC00C5F894 /* ColorDefine.swift */,
@@ -1923,7 +1920,6 @@
 				04DC6C7F28A5675600888BF9 /* BackNoisiesTrackManager.swift in Sources */,
 				0447E38D2B71746E00D07B9A /* ScreenTestSwitch.swift in Sources */,
 				041F9BE62AEEFDC6000B27C7 /* StickerService.swift in Sources */,
-				0493378C2762654600AE779A /* LayoutDefine.swift in Sources */,
 				0419276B2AEC124B0041185B /* KeyboardShortcutsDefine.swift in Sources */,
 				04BC8ED928513D3A009E605F /* HideMenubarIconsSettingView.swift in Sources */,
 				049337992762C0B300AE779A /* RadioSettingVM.swift in Sources */,

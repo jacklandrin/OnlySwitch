@@ -6,6 +6,7 @@
 //  Copyright © 2020 jack. All rights reserved.
 //
 
+import Defines
 import SwiftUI
 
 let leftColors = [NSColor(red: 232/255, green: 86/255, blue: 171/255, alpha: 0.7).cgColor,

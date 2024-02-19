@@ -6,7 +6,7 @@
 //
 
 import AppKit
-
+import Defines
 
 struct OtherPopover {
     static let name = NSNotification.Name("otherPopover")

@@ -5,6 +5,7 @@
 //  Created by Jacklandrin on 2021/12/11.
 //
 
+import Defines
 import SwiftUI
 
 struct AboutView: View {

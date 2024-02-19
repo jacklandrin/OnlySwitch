@@ -22,8 +22,6 @@ public extension NSImage {
             return false
         }
     }
-    
-    
 }
 
 public extension NSImage {

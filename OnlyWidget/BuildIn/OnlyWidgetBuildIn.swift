@@ -35,7 +35,8 @@ struct OnlyWidgetEntryView : View {
     var body: some View {
         SmallWidget(
             id: entry.id,
-            title: entry.buildInSwitchType.barInfo().title
+            title: entry.buildInSwitchType.barInfo().title,
+            image: entry.buildInSwitchType.barInfo().onImage
         )
     }
 }
@@ -50,7 +51,7 @@ struct OnlyWidgetBuildIn: Widget {
             provider: OnlyWidgetBuildInProvider()
         ) { entry in
             OnlyWidgetEntryView(entry: entry)
-                .containerBackground(.fill.tertiary, for: .widget)
+                .containerBackground(.fill.quaternary, for: .widget)
         }
         .supportedFamilies([.systemSmall])
         .configurationDisplayName("Only Widget - BuildIn")

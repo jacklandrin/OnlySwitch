@@ -5,6 +5,7 @@
 //  Created by Jacklandrin on 2021/12/9.
 //
 
+import Defines
 import SwiftUI
 import AppKit
 

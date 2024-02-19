@@ -24,27 +24,34 @@ struct SmallWidget: View {
         Link(destination: URL(string: "onlyswitch://performswitch?type=\(unitType.rawValue)&id=\(id)")!) {
             VStack {
                 HStack {
+                    Image(nsImage: image ?? NSImage(named: "logo")!)
+                        .resizable()
+                        .frame(width: Layout.iconSize, height: Layout.iconSize)
                     Spacer()
                     Text("Only Switch")
                         .font(.none)
                         .opacity(0.8)
                 }
-                Spacer()
-                Image(nsImage: image ?? NSImage(named: "logo")!)
-                    .resizable()
-                    .frame(width: 80, height: 80)
-                    .foregroundColor(.accentColor)
+                .padding()
                 Spacer()
                 HStack(alignment: .bottom) {
                     Text(title)
                         .font(.system(size: 16))
                         .fontWeight(.bold)
                         .lineLimit(2)
-                        .minimumScaleFactor(0.5)
+                        .frame(height: 40, alignment: .bottom)
                     Spacer()
                 }
+                .padding()
             }
+            .background(
+                AngularGradient(
+                    gradient: Gradient(colors: [.red, .yellow, .green, .blue, .purple, .red]),
+                    center: .center
+                )
+                .opacity(0.2)
+            )
         }
-        .padding()
+
     }
 }

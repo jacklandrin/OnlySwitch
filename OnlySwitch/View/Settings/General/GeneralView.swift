@@ -5,6 +5,7 @@
 //  Created by Jacklandrin on 2021/12/14.
 //
 
+import Defines
 import SwiftUI
 import LaunchAtLogin
 import AlertToast

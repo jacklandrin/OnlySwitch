@@ -5,6 +5,7 @@
 //  Created by Jacklandrin on 2021/11/29.
 //
 
+import Defines
 import SwiftUI
 import LaunchAtLogin
 import Switches

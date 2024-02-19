@@ -36,6 +36,9 @@ let package = Package(
             name: "Switches",
             dependencies: [
                 "Extensions"
+            ],
+            resources: [
+                .process("Resources")
             ]
         )
     ]
