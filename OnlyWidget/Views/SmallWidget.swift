@@ -27,7 +27,8 @@ struct SmallWidget: View {
                 HStack {
                     Image(nsImage: image ?? NSImage(named: "logo")!)
                         .resizable()
-                        .frame(width: Layout.iconSize, height: Layout.iconSize)
+                        .aspectRatio(contentMode: .fit)
+                        .frame(height: Layout.iconSize)
                     Spacer()
                     Text("Only Switch")
                         .font(.none)
