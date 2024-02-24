@@ -15,14 +15,14 @@ struct SmallWidget: View {
     var id: String
     var title: String
     var image: NSImage?
-    init(type: UnitType = .buildIn, id: String, title: String, image: NSImage? = nil) {
+    init(type: UnitType = .builtIn, id: String, title: String, image: NSImage? = nil) {
         self.unitType = type
         self.id = id
         self.title = title
         self.image = image
     }
     var body: some View {
-        Link(destination: URL(string: "onlyswitch://performswitch?type=\(unitType.rawValue)&id=\(id)")!) {
+        Link(destination: URL(string: "onlyswitch://run?type=\(unitType.rawValue)&id=\(id)")!) {
             VStack {
                 HStack {
                     Image(nsImage: image ?? NSImage(named: "logo")!)

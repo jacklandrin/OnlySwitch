@@ -37,8 +37,8 @@
 "Hide Windows" = "隐藏窗口";
 "True Tone" = "原彩模式";
 "Top Sticker" = "置顶便签";
-"Only Widget - BuildIn" = "Only Widget - 内置开关";
-"Widgets can control the build-in switches" = "小组件可以操控内置开关";
-"Select Build-In Switches" = "请选择内置开关";
+"Only Widget - BuiltIn" = "Only Widget - 内置开关";
+"Widgets can control the built-in switches" = "小组件可以操控内置开关";
+"Select Built-In Switches" = "请选择内置开关";
 "Select the switches you want to display in the widget." = "选择您想展示的开关";
 "Switch" = "开关";

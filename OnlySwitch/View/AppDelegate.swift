@@ -20,7 +20,7 @@ struct OnlySwitchApp: App {
     @State var preferences = PreferencesObserver.shared.preferences
     
     var body: some Scene {
-        WindowGroup("performswitch") {
+        WindowGroup("run") {
             EmptyView()
                 .frame(width: 0, height: 0)
                 .onAppear {
@@ -29,7 +29,7 @@ struct OnlySwitchApp: App {
                     }
                 }
                 .onOpenURL{ url in
-                    guard url.absoluteString.contains("performswitch"),
+                    guard url.absoluteString.contains("run"),
                           let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
                           let queryItems = components.queryItems,
                           let typeStr = queryItems.first(where: {$0.name == "type"})?.value,
@@ -39,7 +39,7 @@ struct OnlySwitchApp: App {
                         return
                     }
 
-                    if unitType == .buildIn {
+                    if unitType == .builtIn {
                         guard 
                             let intID = UInt64(id),
                             let type = SwitchType(rawValue: intID)
@@ -54,7 +54,7 @@ struct OnlySwitchApp: App {
                 }
         }
         .windowKeepContentSize()
-        .handlesExternalEvents(matching: Set(arrayLiteral: "performswitch"))
+        .handlesExternalEvents(matching: Set(arrayLiteral: "run"))
 
         WindowGroup("SettingsWindow") {
             SettingsView()

@@ -12,7 +12,7 @@ import Extensions
 struct BuildInSwitchEntity: AppEntity {
     var id: String
     var type: SwitchType
-    static var typeDisplayRepresentation: TypeDisplayRepresentation = "Build-In Switch"
+    static var typeDisplayRepresentation: TypeDisplayRepresentation = "Built-In Switch"
     static var defaultQuery = BuildInSwitchQuery()
 
     var displayRepresentation: DisplayRepresentation {

@@ -38,7 +38,7 @@ Creado por Jacklandrin el día 14/12/2021.
 "True Tone" = "True Tone";
 "Top Sticker" = "Nota adhesiva";
 "Switch" = "Interruptor";
-"Only Widget - BuildIn" = "Only Widget - Incorporado";
-"Widgets can control the build-in switches" = "Los widgets pueden controlar los interruptores integrados";
-"Select Build-In Switches" = "Seleccionar interruptores incorporados";
+"Only Widget - BuiltIn" = "Only Widget - Incorporado";
+"Widgets can control the built-in switches" = "Los widgets pueden controlar los interruptores integrados";
+"Select Built-In Switches" = "Seleccionar interruptores incorporados";
 "Select the switches you want to display in the widget." = "Seleccione los interruptores que desea mostrar en el widget.";

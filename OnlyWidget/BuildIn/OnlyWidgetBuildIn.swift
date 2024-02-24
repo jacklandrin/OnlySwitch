@@ -42,7 +42,7 @@ struct OnlyWidgetEntryView : View {
 }
 
 struct OnlyWidgetBuildIn: Widget {
-    let kind: String = "OnlyWidget-BuildIn"
+    let kind: String = "OnlyWidget-BuiltIn"
 
     var body: some WidgetConfiguration {
         AppIntentConfiguration(
@@ -54,8 +54,8 @@ struct OnlyWidgetBuildIn: Widget {
                 .containerBackground(.fill.quaternary, for: .widget)
         }
         .supportedFamilies([.systemSmall])
-        .configurationDisplayName("Only Widget - BuildIn".localized())
-        .description("Widgets can control the build-in switches".localized())
+        .configurationDisplayName("Only Widget - BuiltIn".localized())
+        .description("Widgets can control the built-in switches".localized())
         .contentMarginsDisabled()
     }
 }

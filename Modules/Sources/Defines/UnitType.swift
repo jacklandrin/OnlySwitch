@@ -8,7 +8,7 @@
 import Foundation
 
 public enum UnitType: String {
-    case buildIn
+    case builtIn
     case shortcuts
     case evolution
 }
