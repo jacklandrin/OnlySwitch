@@ -1,10 +1,10 @@
-/* 
+/*
   Localizable.strings
   OnlySwitch
 
   Created by Jacklandrin on 2021/12/14.
  Translated into Japanese by Shogo Koyama on 2022/4/21
-  
+
 */
 "Hide Desktop" = "デスクトップアイコンを隠す";
 "Dark Mode" = "ダークモード";
@@ -38,3 +38,8 @@
 "Hide Windows" = "ウィンドウを隠す";
 "True Tone" = "True Tone";
 "Top Sticker" = "上端付箋";
+"Switch" = "スイッチ";
+"Only Widget - BuildIn" = "Only Widget - ビルトイン";
+"Widgets can control the build-in switches" = "ウィジェットはビルトインスイッチを制御できます";
+"Select Build-In Switches" = "ビルトインスイッチを選択";
+"Select the switches you want to display in the widget." = "ウィジェットに表示するスイッチを選択します。";

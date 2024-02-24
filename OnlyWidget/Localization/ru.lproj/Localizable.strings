@@ -37,3 +37,8 @@
 "Hide Windows" = "Скрыть окна";
 "True Tone" = "True Tone";
 "Top Sticker" = "Top Sticker";
+"Switch" = "Выключатель";
+"Only Widget - BuildIn" = "Only Widget - встроенный";
+"Widgets can control the build-in switches" = "Виджеты могут управлять встроенными переключателями";
+"Select Build-In Switches" = "Выберите встроенные переключатели";
+"Select the switches you want to display in the widget." = "Выберите переключатели, которые вы хотите отображать в виджете.";

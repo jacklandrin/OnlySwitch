@@ -1,9 +1,9 @@
-/* 
+/*
   Localizable.strings
   OnlySwitch
 
   Created by Jacklandrin on 2021/12/14.
-  
+
 */
 "Hide Desktop" = "Desktop ausblenden";
 "Dark Mode" = "Dunkelmodus";
@@ -37,3 +37,8 @@
 "Hide Windows" = "Fenster ausblenden";
 "True Tone" = "True Tone";
 "Top Sticker" = "Haftnotiz";
+"Switch" = "Switch";
+"Only Widget - BuildIn" = "Only Widget - BuildIn";
+"Widgets can control the build-in switches" = "Widgets können die integrierten Schalter steuern";
+"Select Build-In Switches" = "Integrierte Schalter auswählen";
+"Select the switches you want to display in the widget." = "Wählen Sie die Schalter aus, die im Widget angezeigt werden sollen.";

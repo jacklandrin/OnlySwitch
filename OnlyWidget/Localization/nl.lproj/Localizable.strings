@@ -1,9 +1,9 @@
-/* 
+/*
   Localizable.strings
   OnlySwitch
 
   Created by Jacklandrin on 2021/12/14.
-  
+
 */
 "Hide Desktop" = "Desktop verbergen";
 "Dark Mode" = "Donkere modus";
@@ -37,3 +37,8 @@
 "Hide Windows" = "Vensters verbergen";
 "True Tone" = "True Tone";
 "Top Sticker" = "Kleverige notitie";
+"Switch" = "schakelaars";
+"Only Widget - BuildIn" = "Only Widget - Ingebouwd";
+"Widgets can control the build-in switches" = "Widgets kunnen de ingebouwde schakelaars bedienen";
+"Select Build-In Switches" = "Selecteer ingebouwde schakelaars";
+"Select the switches you want to display in the widget." = "Selecteer de schakelaars die je in de widget wilt weergeven.";

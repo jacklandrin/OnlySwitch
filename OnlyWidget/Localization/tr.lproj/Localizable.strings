@@ -1,10 +1,10 @@
-/* 
+/*
   Localizable.strings
   OnlySwitch
 
   Created by Jacklandrin on 2021/12/14.
   Translated into Turkish translation by Berk Batuhan ŞAKAR on 2022/01/14 and by Kadir Erman on 2023/05/17.
-  
+
 */
 "Hide Desktop" = "Masaüstü Simgelerini Gizle";
 "Dark Mode" = "Karanlık Mod";
@@ -38,3 +38,8 @@
 "Hide Windows" = "Pencereleri Gizle";
 "True Tone" = "True Tone";
 "Top Sticker" = "Top Sticker";
+"Switch" = "Anahtar";
+"Only Widget - BuildIn" = "Only Widget - Dahili";
+"Widgets can control the build-in switches" = "Widget'lar dahili anahtarları kontrol edebilir";
+"Select Build-In Switches" = "Dahili Anahtarları Seç";
+"Select the switches you want to display in the widget." = "Widget'ta göstermek istediğiniz anahtarları seçin.";

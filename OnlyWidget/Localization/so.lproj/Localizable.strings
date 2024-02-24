@@ -1,4 +1,4 @@
-/* 
+/*
   Localizable.strings
   OnlySwitch
 
@@ -37,3 +37,8 @@
 "Hide Windows" = "Qari daaqadaha";
 "True Tone" = "True Tone";
 "Top Sticker" = "Top Sticker";
+"Switch" = "Switch";
+"Only Widget - BuildIn" = "Only Widget - BuildIn";
+"Widgets can control the build-in switches" = "Widgets waxay ka baaraan karaan build-in switches";
+"Select Build-In Switches" = "Xulo Build-In Switches";
+"Select the switches you want to display in the widget." = "Xulo switches-ka aad rabto inay muujiyaan widget-ka.";
