@@ -7,7 +7,7 @@
 
 import AppKit
 public extension NSImage {
-    public convenience init(systemSymbolName:String) {
+    convenience init(systemSymbolName:String) {
         self.init(systemSymbolName: systemSymbolName, accessibilityDescription:nil)!
     }
 }

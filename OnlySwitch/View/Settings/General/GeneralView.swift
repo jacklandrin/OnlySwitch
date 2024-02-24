@@ -11,6 +11,7 @@ import LaunchAtLogin
 import AlertToast
 import KeyboardShortcuts
 import Utilities
+import WidgetKit
 
 struct GeneralView: View, EmailProvider {
     @ObservedObject var langManager = LanguageManager.sharedManager
@@ -64,6 +65,7 @@ struct GeneralView: View, EmailProvider {
                             ForEach(generalVM.supportedLanguages, id:\.self) { lang in
                                 Button(lang.name) {
                                     langManager.setCertainLang(lang.code)
+                                    WidgetCenter.shared.reloadAllTimelines()
                                 }
                             }
                         }
