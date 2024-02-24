@@ -21,26 +21,28 @@ Telegram group: https://t.me/OnlySwitchforMac
 Discord: https://discord.gg/UzSNpYdPZj
 
 ## What's the OnlySwitch?
-OnlySwitch provides a series of toggle switches to simplify your routine work, such as Hidden desktop icons, dark mode, and hide notch of the new Macbook Pro. The switches show on your status bar, you can control them effortlessly. Switch and Shortcuts items can be customized (remove/add or sort) to show on the list.
+OnlySwitch provides a series of toggle switches to simplify your routine work, such as Hidden desktop icons, dark mode, and hide notch of the new Macbook Pro. The switches show on your status bar, you can control them effortlessly. Switch and Shortcuts items can be customized (remove/add or sort) to show on the list. These functionalities even can be put on your desktop as Widgets.
 
 Since Version 1.7, **Shortcuts** can be imported into OnlySwitch.
 
 Since Version 2.0, supports **keyboard shortcuts**. You can control your all switches and Shortcuts with the keyboard.
 
 <p align="center">
-<img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2023/10/onlySwitch_2.4.5.png" width="60%" align="center" />
+<img alt="Sits in the status bar" src="https://github.com/jacklandrin/OnlySwitch/assets/3782279/3e52125c-f1cd-4c03-8089-b34ae014605f" width="60%" align="center" />
 </p>
 
 Since Version 2.3.6, the Switches Availability (including Player and Hide Menu Bar Icons) is moved to System's menu bar.
 
-![](http://www.jacklandrin.com/wp-content/uploads/2022/08/Screenshot-2022-08-16-at-10.11.35.png)
+![](https://github.com/jacklandrin/OnlySwitch/assets/3782279/11c89e33-2007-4913-b320-47c188538b68)
+
+Since Version 2.5.0, OnlySwitch has started to support Apple Widgets.
 
 ## Shortcuts Gallery
 
 Everyone can contribute macOS Shortcuts for OnlySwitch now. Please read [How to contribute to Shortcuts Gallery](ShortcutsGalleryContributing.md). The shared Shortcuts will be displayed here:
 
 <p align="center">
-<img alt="Sits in the status bar" src="https://www.jacklandrin.com/wp-content/uploads/2022/01/shortcutsgallery.png" width="60%" align="center" />
+<img alt="Sits in the status bar" src="https://github.com/jacklandrin/OnlySwitch/assets/3782279/a9d90eed-c540-4183-9332-396dce0f72d4" width="70%" align="center" />
 </p>
 
 ## Switch list
@@ -114,7 +116,7 @@ If you have other good ideas 💡, feel free to send an E-mail to me.
 ## Donate
 If you like it, help support this app by giving me a cup of tea for me to keep coding.
 <p align="center">
-<img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2021/12/donation.jpeg" width="20%" align="medium" title="Made by QRCobot"/>
+<img alt="Sits in the status bar" src="https://github.com/jacklandrin/OnlySwitch/assets/3782279/797086a7-ad89-4ff1-81a7-d844bd67c0e3" width="20%" align="medium" title="Made by QRCobot"/>
 </p>
 
 
@@ -123,8 +125,14 @@ If you like it, help support this app by giving me a cup of tea for me to keep c
 The Hide notch switch only shows on the built-in display of M1 Pro/Max Macbook Pro. The switch just controls the current desktop, not all work desktops.
 Now, the Hide notch switch supports dynamic wallpaper, just the processing takes a much longer time.
 <p align="center">
-<img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2021/12/hidenotch.png" width="60%" align="center" />
+<img alt="Sits in the status bar" src="https://github.com/jacklandrin/OnlySwitch/assets/3782279/efddd8d3-edfe-4497-bea0-5051d27625ca" width="60%" align="center" />
 </p>
+
+## Only Widget
+
+Only Switch supports Apple Widgets since version 2.5.0. The Widgets can be edited to any built-in switches and buttons. Clicking them will trigger the reflection of relevant switches and buttons. You can put Only Widgets anywhere, desktop or notification center.
+
+<img width="370" alt="Only Widget" src="https://github.com/jacklandrin/OnlySwitch/assets/3782279/0c1be202-9e5f-41dd-b62d-52d5a7147139">
 
 ## Evolution🔥
 Evolution has come following version 2.4, you can freely DIY the switches and buttons that you want. Currently, evolution supports **Shell** and **Apple Script**. They also can be invoked by hotkeys. Next, evolution will be able to be distributed by users as a shortcut utility platform.
@@ -132,12 +140,12 @@ Evolution has come following version 2.4, you can freely DIY the switches and bu
 Evolution settings page is implemented with TCA.
 PS: Evolution feature needs macOS 13.0 and above.
 
-![](http://www.jacklandrin.com/wp-content/uploads/2023/06/evolution.png)
+![](https://github.com/jacklandrin/OnlySwitch/assets/3782279/69131917-bfe0-4c54-8b38-d4aeb26f749a)
 
 Everyone can contribute Evolution for OnlySwitch since version 2.4.3. Please read [How to contribute to Evolution Gallery](EvolutionGalleryContributing.md). The shared Evolutions will be displayed here:
 
 <p align="center">
-<img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2023/10/evolution_gallery.png" width="60%" align="center" />
+<img alt="Sits in the status bar" src="https://github.com/jacklandrin/OnlySwitch/assets/3782279/f3299ae0-0222-49a3-864a-80c6601bac6a" width="70%" align="center" />
 </p>
 
 
@@ -168,25 +176,10 @@ In Version 2.3, Only Switch brings a new feature, Screen Test. It provides a pur
 
 ## Hide Menu Bar Icons
 This feature is new in version 2.3.2. To be honest, Hidden and Dozer are both good apps for this function. Many users install OnlySwitch and them simultaneously, but this also squeezes the menu bar, which is already lacking in space. Therefore, the feature integrates into OnlySwitch.
-![](https://www.jacklandrin.com/wp-content/uploads/2022/06/mark_icon_guide.png)
+![](https://github.com/jacklandrin/OnlySwitch/assets/3782279/fdda284e-929f-400e-aba5-9c628f065de6)
 When the switch is on, items on the left of the split(arrow-pointing) icon are hidden. Hold ⌘ (command) and drag the icon to configure the hidden section. If you want to use it no longer, you can disable it in preferences, the split icon will disappear. You also can set the interval of autohide for it here. If your date on the menu bar is truncated when it's on, you can set this: System Preferences -> Dock & Menu Bar -> Clock -> Show date -> always.
 
 Since version 2.3.10, this switch can be controlled via right-click icons.
-
-## About Shortcuts
-**Shortcuts** is a powerful iOS app that can help people make fantastic automation functions. It comes to macOS in Monterey as well. Many users are eager OnlySwitch to have more customizable features, and one good news is that the app supports Shortcuts display since Version 1.7. More menubar space, therefore, is saved. 
-In the next versions, OnlySwitch will also provide more Shortcuts actions to improve user experience.
-
-Since Version 2.0, keyboard shortcuts can be set for Shortcuts.
-
-OnlySwitch offers some Shortcuts actions since Version 1.8. For example, you can config your dark mode switch. (**Set Appearance** action by Shortcuts can also set dark mode, but the appearance status cannot be detected. So, OnlySwitch provides a set dark mode action)
-
-S-GPT is already in Shortcuts gallery. Easily ask any questions to chatGPT via Shortcuts. Please install both S-GPT and S-GPT Encoder and provide your chatGPT API Key to access it. [Learn more here](https://www.macstories.net/ios/s-gpt-1-0-2-brings-date-and-time-awareness-integration-with-macos-services-menu-passthrough-mode-better-homepod-support-and-more/)
-
-<p align="center">
-<img alt="Sits in the status bar" src="http://www.jacklandrin.com/wp-content/uploads/2022/01/shortcutsdarkmode.png" width="60%" align="center" />
-</p>
-
 
 ## They talk about it
 
