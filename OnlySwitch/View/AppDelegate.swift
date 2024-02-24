@@ -29,6 +29,12 @@ struct OnlySwitchApp: App {
                     }
                 }
                 .onOpenURL{ url in
+                    defer {
+                        if let window = NSApplication.shared.windows.first(where: { $0.title == "run"}) {
+                            window.close()
+                            NSApplication.shared.setActivationPolicy(.accessory)
+                        }
+                    }
                     guard url.absoluteString.contains("run"),
                           let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
                           let queryItems = components.queryItems,
@@ -49,8 +55,6 @@ struct OnlySwitchApp: App {
                         let theSwitch = CustomizeVM.shared.allSwitches.first{ $0.type == type }
                         theSwitch?.doSwitch()
                     }
-
-                    NSApp.setActivationPolicy(.accessory)
                 }
         }
         .windowKeepContentSize()
@@ -128,14 +132,7 @@ class AppDelegate:NSObject, NSApplicationDelegate {
     
     func applicationDidFinishLaunching(_ notification: Notification) {
         //for issue #11
-        if let window = NSApplication.shared.windows.first {
-            window.orderOut(nil)
-            NSApplication.shared.setActivationPolicy(.accessory)
-            NSWindow.allowsAutomaticWindowTabbing = false
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                window.close()
-            }
-        }
+        closeWindow()
         let contentView = OnlySwitchListView()
             .environmentObject(switchVM)
         let apperearance = SwitchListAppearance(rawValue: currentAppearance)
@@ -154,7 +151,7 @@ class AppDelegate:NSObject, NSApplicationDelegate {
         registerShortcut()
         checkUpdate()
     }
-    
+
     func applicationWillTerminate(_ notification: Notification) {
         
     }
@@ -202,6 +199,17 @@ class AppDelegate:NSObject, NSApplicationDelegate {
                 KeyboardShortcuts.onKeyDown(for: KeyboardShortcuts.Name(rawValue: item.id.uuidString)!) {
                     item.doSwitch()
                 }
+            }
+        }
+    }
+
+    private func closeWindow() {
+        for window in NSApplication.shared.windows {
+            window.orderOut(nil)
+            NSApplication.shared.setActivationPolicy(.accessory)
+            NSWindow.allowsAutomaticWindowTabbing = false
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                window.close()
             }
         }
     }
