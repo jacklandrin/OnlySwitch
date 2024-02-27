@@ -35,7 +35,7 @@ Since Version 2.3.6, the Switches Availability (including Player and Hide Menu B
 
 ![](https://github.com/jacklandrin/OnlySwitch/assets/3782279/11c89e33-2007-4913-b320-47c188538b68)
 
-Since Version 2.5.0, OnlySwitch has started to support Apple Widgets.
+Since Version 2.5.0, OnlySwitch has started to support **Apple Widgets** (Sonoma and above).
 
 ## Shortcuts Gallery
 
@@ -195,6 +195,7 @@ Since version 2.3.10, this switch can be controlled via right-click icons.
 | [korben](https://korben.info/controler-macos-onlyswitch.html)                                                                   | [macg](https://www.macg.co/logiciels/2023/03/onlyswitch-ajoute-une-pelletee-de-raccourcis-pratiques-votre-barre-des-menus-135357)          | [korben.info](https://korben.info/controler-macos-onlyswitch.html)                                                               | [AlternativeTo](https://alternativeto.net/software/only-switch)                                                        |
 | [macsoft.jp](https://macsoft.jp/onlyswitch/)                                                                                    | [macgeneration](https://www.macg.co/logiciels/2023/03/onlyswitch-ajoute-une-pelletee-de-raccourcis-pratiques-votre-barre-des-menus-135357) | [hdwh.de](https://hdwh.de/onlyswitch-vereinfacht-eure-routinearbeit-mit-praktischen-schaltern/)                                  | [MacKed](https://macked.app/onlyswitch.html)                                                                           |
 | [Mac Torrents](https://www.tntmactorrent.net/onlyswitch-for-mac-free-download/)                                                 | [PCtipp](https://www.pctipp.ch/praxis/mac/mac-tipp-onlyswitch-2-2892320.html)                                                              | [lifehacker](https://lifehacker.com/tech/change-hidden-mac-settings-with-onlyswitch)                                             | [PHAPLUAT](https://kynguyenso.plo.vn/su-dung-onlyswitch-de-tuy-chinh-tat-ca-cai-dat-may-mac-nhanh-hon-post776151.html) |
+| [Techgedöns](https://tchgdns.de/onlyswitch-menueleisten-multitool-bekommt-widgets-fuer-den-mac-desktop/)                        |                                                                                                                                            |                                                                                                                                  |                                                                                                                        |
 
 
 ## Reference
