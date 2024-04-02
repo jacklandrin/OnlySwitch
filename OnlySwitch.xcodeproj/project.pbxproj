@@ -216,6 +216,9 @@
 		047F3A34285DE600004FFCDF /* EffectSoundHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140B527788486005B160B /* EffectSoundHelper.swift */; };
 		047F3A37285DE67A004FFCDF /* SwitchListApperanceDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047F3A36285DE67A004FFCDF /* SwitchListApperanceDefine.swift */; };
 		047F3A38285DE67A004FFCDF /* SwitchListApperanceDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047F3A36285DE67A004FFCDF /* SwitchListApperanceDefine.swift */; };
+		04819CD22BBC884A00645A0C /* BrightnessControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 04819CCF2BBC884900645A0C /* BrightnessControl.m */; };
+		04819CD32BBC884A00645A0C /* KeyboardManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 04819CD12BBC884A00645A0C /* KeyboardManager.m */; };
+		04819CD52BBC8A6700645A0C /* KeyLightSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04819CD42BBC8A6700645A0C /* KeyLightSwitch.swift */; };
 		048D10972AED4A9E00ACB181 /* StickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048D10962AED4A9E00ACB181 /* StickerView.swift */; };
 		048D10992AED92EA00ACB181 /* StickerReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048D10982AED92EA00ACB181 /* StickerReducer.swift */; };
 		049337212761286400AE779A /* CleanProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337202761286400AE779A /* CleanProgressView.swift */; };
@@ -538,6 +541,12 @@
 		047C1E752A24D1870061235D /* EvolutionCommandEditingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionCommandEditingView.swift; sourceTree = "<group>"; };
 		047C1E772A24D2590061235D /* EvolutionCommandEditingReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionCommandEditingReducer.swift; sourceTree = "<group>"; };
 		047F3A36285DE67A004FFCDF /* SwitchListApperanceDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchListApperanceDefine.swift; sourceTree = "<group>"; };
+		04819CCD2BBC884900645A0C /* KeyboardBrightnessClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyboardBrightnessClient.h; sourceTree = "<group>"; };
+		04819CCE2BBC884900645A0C /* BrightnessControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrightnessControl.h; sourceTree = "<group>"; };
+		04819CCF2BBC884900645A0C /* BrightnessControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrightnessControl.m; sourceTree = "<group>"; };
+		04819CD02BBC884900645A0C /* KeyboardManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyboardManager.h; sourceTree = "<group>"; };
+		04819CD12BBC884A00645A0C /* KeyboardManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyboardManager.m; sourceTree = "<group>"; };
+		04819CD42BBC8A6700645A0C /* KeyLightSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyLightSwitch.swift; sourceTree = "<group>"; };
 		048D10962AED4A9E00ACB181 /* StickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerView.swift; sourceTree = "<group>"; };
 		048D10982AED92EA00ACB181 /* StickerReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerReducer.swift; sourceTree = "<group>"; };
 		049337202761286400AE779A /* CleanProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanProgressView.swift; sourceTree = "<group>"; };
@@ -817,6 +826,7 @@
 				0447E34B2B71746D00D07B9A /* TrueToneSwitch.swift */,
 				0447E34D2B71746D00D07B9A /* XcodeCacheSwitch.swift */,
 				04938D0F27692B6900713F1D /* SwitchManager.swift */,
+				04819CD42BBC8A6700645A0C /* KeyLightSwitch.swift */,
 			);
 			path = EverySwitch;
 			sourceTree = "<group>";
@@ -1158,6 +1168,18 @@
 			path = EvolutionEditorService;
 			sourceTree = "<group>";
 		};
+		04819CCC2BBC881E00645A0C /* KeyboardBrightness */ = {
+			isa = PBXGroup;
+			children = (
+				04819CCE2BBC884900645A0C /* BrightnessControl.h */,
+				04819CCF2BBC884900645A0C /* BrightnessControl.m */,
+				04819CCD2BBC884900645A0C /* KeyboardBrightnessClient.h */,
+				04819CD02BBC884900645A0C /* KeyboardManager.h */,
+				04819CD12BBC884A00645A0C /* KeyboardManager.m */,
+			);
+			path = KeyboardBrightness;
+			sourceTree = "<group>";
+		};
 		048D10932AED420900ACB181 /* StickerView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1496,6 +1518,7 @@
 		04E03B01275FD91200EA5FB9 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				04819CCC2BBC881E00645A0C /* KeyboardBrightness */,
 				040E97262760FF3E003D9D42 /* MetadataExtractorError.swift */,
 				04E03AFD275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift */,
 				0427B25A275D786400AD783A /* SystemInfo.swift */,
@@ -1895,6 +1918,7 @@
 				0493374F27625A1E00AE779A /* Parser+Packets.swift in Sources */,
 				04447B5E2754F08000CD2900 /* OnlySwitchListView.swift in Sources */,
 				04E89D5E289B054C00667710 /* IOService.swift in Sources */,
+				04819CD32BBC884A00645A0C /* KeyboardManager.m in Sources */,
 				046331D52795E1BC00C5F894 /* ColorDefine.swift in Sources */,
 				0447E3972B71746E00D07B9A /* HideMenubarIconsSwitch.swift in Sources */,
 				047C1E5B2A2255BF0061235D /* EvolutionEditorReducer.swift in Sources */,
@@ -1928,6 +1952,7 @@
 				043E5D752758208D00ADC004 /* SwitchBarVM.swift in Sources */,
 				04DC6CA028A7D52300888BF9 /* DimScreenSettingView.swift in Sources */,
 				04938D1027692B6900713F1D /* SwitchManager.swift in Sources */,
+				04819CD22BBC884A00645A0C /* BrightnessControl.m in Sources */,
 				0493374527625A1E00AE779A /* JLASAudioPlayer.swift in Sources */,
 				0447E36D2B71746E00D07B9A /* NightShiftSwitch.swift in Sources */,
 				04CB89F72B6FFA65006B8620 /* ViewModify.swift in Sources */,
@@ -2039,6 +2064,7 @@
 				04B25455283C06C700D253E2 /* SwitchListModel.swift in Sources */,
 				047C1E6A2A2298AB0061235D /* EvolutionListService+Test.swift in Sources */,
 				0447E3872B71746E00D07B9A /* HiddenDesktopSwitch.swift in Sources */,
+				04819CD52BBC8A6700645A0C /* KeyLightSwitch.swift in Sources */,
 				041F9BEA2AEEFE71000B27C7 /* StickerService+Test.swift in Sources */,
 				04581DB02764CBCF008ADF30 /* SettingsVM.swift in Sources */,
 				04E03B06275FEBE200EA5FB9 /* AirPodsBatteryView.swift in Sources */,

@@ -82,6 +82,8 @@ extension SwitchType {
                 return TrueToneSwitch()
             case .topSticker:
                 return TopStickerSwitch.shared
+            case .keyLight:
+                return KeyLightSwitch.shared
         }
     }
     
