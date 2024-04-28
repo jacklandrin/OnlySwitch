@@ -68,7 +68,7 @@ Everyone can contribute macOS Shortcuts for OnlySwitch now. Please read [How to 
 | FKey                | finished        | Back Noises              | finished          |
 | Dim Screen          | finished        | Eject Discs              | finished          |
 | Hide Windows        | partly finished | True Tone                | finished          |
-| Top Sticker         | partly finished |                          |                   |
+| Top Sticker         | partly finished | Key Light                | finished          |
 
 Since Version 1.3, switches can be added to or removed from the list.
 
@@ -218,6 +218,7 @@ Since version 2.3.10, this switch can be controlled via right-click icons.
 * [Sparkle](https://github.com/sparkle-project/Sparkle)
 * True Tone refers to [Shifty](https://github.com/thompsonate/Shifty)
 * [swift-markdown-ui](https://github.com/gonzalezreal/swift-markdown-ui)
+* Key Light refers to [mac-brightnessctl](https://github.com/rakalex/mac-brightnessctl)
 
 ## Contributors
 
