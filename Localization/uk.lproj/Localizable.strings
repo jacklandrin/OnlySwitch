@@ -3,7 +3,7 @@
   OnlySwitch
 
   Created by Jacklandrin on 2021/12/14.
-  
+
 */
 "Hide Desktop" = "Сховати іконки з Робочого столу";
 "Dark Mode" = "Темний режим";
@@ -176,3 +176,6 @@
 "Preview" = "Попередній перегляд";
 "Translucent" = "Прозорий";
 "Color" = "Колір";
+"Key Light" = "Клавішний світ";
+"Brightness:" = "Яскравість:";
+"Adjust keyboard brightness in low light" = "Налаштуйте яскравість клавіатури в умовах недостатнього освітлення";

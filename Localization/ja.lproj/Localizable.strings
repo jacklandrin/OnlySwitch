@@ -1,10 +1,10 @@
-/* 
+/*
   Localizable.strings
   OnlySwitch
 
   Created by Jacklandrin on 2021/12/14.
  Translated into Japanese by Shogo Koyama on 2022/4/21
-  
+
 */
 "Hide Desktop" = "デスクトップアイコンを隠す";
 "Dark Mode" = "ダークモード";
@@ -178,3 +178,6 @@
 "Preview" = "プレビュー";
 "Translucent" = "透明";
 "Color" = "色";
+"Key Light" = "キーライト";
+"Brightness:" = "明るさ:";
+"Adjust keyboard brightness in low light" = "暗い場所でキーボードの明るさを調整する";

@@ -1,9 +1,9 @@
-/* 
+/*
   Localizable.strings
   OnlySwitch
 
   Created by Jacklandrin on 2021/12/14.
-  
+
 */
 "Hide Desktop" = "Desktop verbergen";
 "Dark Mode" = "Donkere modus";
@@ -175,3 +175,6 @@
 "Preview" = "Preview";
 "Translucent" = "Translucent";
 "Color" = "Kleur";
+"Key Light" = "Toetsenbordverlichting";
+"Brightness:" = "Helderheid:";
+"Adjust keyboard brightness in low light" = "Pas de toetsenbordhelderheid aan bij weinig licht";

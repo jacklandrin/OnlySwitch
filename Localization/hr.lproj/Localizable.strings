@@ -1,10 +1,10 @@
-/* 
+/*
   Localizable.strings
   OnlySwitch
 
   Created by Jacklandrin on 2021/12/14.
   Translated into Croatian translation by Milo Ivir <mail@milotype.de> on 2022/01/09.
-  
+
 */
 "Hide Desktop" = "Sakrij ikone radne površine";
 "Dark Mode" = "Tamni modus";
@@ -174,3 +174,6 @@
 "Translucent" = "Poluprovidno";
 "Color" = "Boja";
 "Mute Mic" = "Isključi mikrofon";
+"Key Light" = "Tipka svjetlo";
+"Brightness:" = "Svjetlina:";
+"Adjust keyboard brightness in low light" = "Prilagodi svjetlinu tipkovnice u slabom svjetlu";

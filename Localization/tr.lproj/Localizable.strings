@@ -1,10 +1,10 @@
-/* 
+/*
   Localizable.strings
   OnlySwitch
 
   Created by Jacklandrin on 2021/12/14.
   Translated into Turkish translation by Berk Batuhan ŞAKAR on 2022/01/14 and by Kadir Erman on 2023/05/17.
-  
+
 */
 "Hide Desktop" = "Masaüstü Simgelerini Gizle";
 "Dark Mode" = "Karanlık Mod";
@@ -177,3 +177,6 @@
 "Preview" = "Önizlemek";
 "Translucent" = "Saydam";
 "Color" = "Renk";
+"Key Light" = "Tuş Işığı";
+"Brightness:" = "Parlaklık:";
+"Adjust keyboard brightness in low light" = "Düşük ışıkta klavye parlaklığını ayarlayın";

@@ -178,3 +178,6 @@
 "Preview" = "미리보기";
 "Translucent" = "투명";
 "Color" = "색상";
+"Key Light" = "키보드 라이트";
+"Brightness:" = "밝기:";
+"Adjust keyboard brightness in low light" = "어두운 환경에서 키보드 밝기 조절";
