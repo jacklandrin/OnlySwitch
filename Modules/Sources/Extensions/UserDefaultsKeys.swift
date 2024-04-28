@@ -64,6 +64,8 @@ public extension UserDefaults {
         public static let hiddenWindowsInfo = "hiddenWindowsInfoKey"
         //Sticker
         public static let sticker = "stickerKey"
+        //KeyLight
+        public static let keyLightBrightness = "keyLightBrightnessKey"
         //others
         public static let newestVersion = "newestVersionKey"
         public static let systemLangPriority = "systemLangPriority"

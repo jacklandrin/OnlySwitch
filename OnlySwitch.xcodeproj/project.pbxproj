@@ -219,6 +219,10 @@
 		04819CD22BBC884A00645A0C /* BrightnessControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 04819CCF2BBC884900645A0C /* BrightnessControl.m */; };
 		04819CD32BBC884A00645A0C /* KeyboardManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 04819CD12BBC884A00645A0C /* KeyboardManager.m */; };
 		04819CD52BBC8A6700645A0C /* KeyLightSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04819CD42BBC8A6700645A0C /* KeyLightSwitch.swift */; };
+		04819CD82BBC957D00645A0C /* KeyLightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04819CD72BBC957D00645A0C /* KeyLightView.swift */; };
+		04819CDA2BDE9BFA00645A0C /* KeyLightFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04819CD92BDE9BFA00645A0C /* KeyLightFeature.swift */; };
+		04819CDD2BDE9C8400645A0C /* KeyLightService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04819CDC2BDE9C8400645A0C /* KeyLightService.swift */; };
+		04819CDF2BDE9E5600645A0C /* KeyLightService+Live.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04819CDE2BDE9E5600645A0C /* KeyLightService+Live.swift */; };
 		048D10972AED4A9E00ACB181 /* StickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048D10962AED4A9E00ACB181 /* StickerView.swift */; };
 		048D10992AED92EA00ACB181 /* StickerReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048D10982AED92EA00ACB181 /* StickerReducer.swift */; };
 		049337212761286400AE779A /* CleanProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337202761286400AE779A /* CleanProgressView.swift */; };
@@ -547,6 +551,10 @@
 		04819CD02BBC884900645A0C /* KeyboardManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyboardManager.h; sourceTree = "<group>"; };
 		04819CD12BBC884A00645A0C /* KeyboardManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyboardManager.m; sourceTree = "<group>"; };
 		04819CD42BBC8A6700645A0C /* KeyLightSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyLightSwitch.swift; sourceTree = "<group>"; };
+		04819CD72BBC957D00645A0C /* KeyLightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyLightView.swift; sourceTree = "<group>"; };
+		04819CD92BDE9BFA00645A0C /* KeyLightFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyLightFeature.swift; sourceTree = "<group>"; };
+		04819CDC2BDE9C8400645A0C /* KeyLightService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyLightService.swift; sourceTree = "<group>"; };
+		04819CDE2BDE9E5600645A0C /* KeyLightService+Live.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyLightService+Live.swift"; sourceTree = "<group>"; };
 		048D10962AED4A9E00ACB181 /* StickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerView.swift; sourceTree = "<group>"; };
 		048D10982AED92EA00ACB181 /* StickerReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerReducer.swift; sourceTree = "<group>"; };
 		049337202761286400AE779A /* CleanProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanProgressView.swift; sourceTree = "<group>"; };
@@ -1180,6 +1188,25 @@
 			path = KeyboardBrightness;
 			sourceTree = "<group>";
 		};
+		04819CD62BBC954C00645A0C /* KeyLight */ = {
+			isa = PBXGroup;
+			children = (
+				04819CDB2BDE9C6000645A0C /* KeyLightService */,
+				04819CD72BBC957D00645A0C /* KeyLightView.swift */,
+				04819CD92BDE9BFA00645A0C /* KeyLightFeature.swift */,
+			);
+			path = KeyLight;
+			sourceTree = "<group>";
+		};
+		04819CDB2BDE9C6000645A0C /* KeyLightService */ = {
+			isa = PBXGroup;
+			children = (
+				04819CDC2BDE9C8400645A0C /* KeyLightService.swift */,
+				04819CDE2BDE9E5600645A0C /* KeyLightService+Live.swift */,
+			);
+			path = KeyLightService;
+			sourceTree = "<group>";
+		};
 		048D10932AED420900ACB181 /* StickerView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1285,6 +1312,7 @@
 				04BF977427908EF000E7C0E2 /* AirPods */,
 				04BF977727908F3500E7C0E2 /* PomodoroTimer */,
 				04BC8ED428513CC8009E605F /* HideMenubarIcons */,
+				04819CD62BBC954C00645A0C /* KeyLight */,
 				0442C53B2A40E88800BC47B3 /* NightShift */,
 				04BF977527908F0000E7C0E2 /* About */,
 			);
@@ -1910,6 +1938,7 @@
 				04581DBF27653C4A008ADF30 /* AirPodsSettingVM.swift in Sources */,
 				043488AE2A3B472E006C877D /* EvolutionBarView.swift in Sources */,
 				0493375627625A1E00AE779A /* Downloading.swift in Sources */,
+				04819CDA2BDE9BFA00645A0C /* KeyLightFeature.swift in Sources */,
 				04FB3E60288D49E100F3B5E1 /* SwitchListVM+SettingWindowController.swift in Sources */,
 				049337942762BD1B00AE779A /* OpenWindow.swift in Sources */,
 				0447E3672B71746E00D07B9A /* DimScreenSwitch.swift in Sources */,
@@ -1949,6 +1978,7 @@
 				0406EDC62ACB56CE0015F4D0 /* EvolutionGalleryView.swift in Sources */,
 				047C1E512A22525F0061235D /* EvolutionReducer.swift in Sources */,
 				04F118C627AED8EE005DA861 /* AboutVM.swift in Sources */,
+				04819CDF2BDE9E5600645A0C /* KeyLightService+Live.swift in Sources */,
 				043E5D752758208D00ADC004 /* SwitchBarVM.swift in Sources */,
 				04DC6CA028A7D52300888BF9 /* DimScreenSettingView.swift in Sources */,
 				04938D1027692B6900713F1D /* SwitchManager.swift in Sources */,
@@ -1967,6 +1997,7 @@
 				0493375527625A1E00AE779A /* Reader+Converter.swift in Sources */,
 				04DC6C5E28A2E2B700888BF9 /* UpdateVM.swift in Sources */,
 				0493374C27625A1E00AE779A /* Streamer.swift in Sources */,
+				04819CD82BBC957D00645A0C /* KeyLightView.swift in Sources */,
 				0493375327625A1E00AE779A /* Reading.swift in Sources */,
 				0493375427625A1E00AE779A /* ReaderError.swift in Sources */,
 				043488B02A3B4B7A006C877D /* EvolutionBarVM.swift in Sources */,
@@ -2076,6 +2107,7 @@
 				0434B4D12876325B00F06AB9 /* HostWindowFinder.swift in Sources */,
 				04581DC12765522A008ADF30 /* AboutView.swift in Sources */,
 				0427364827C1A5430068108F /* SpotifyScripting.swift in Sources */,
+				04819CDD2BDE9C8400645A0C /* KeyLightService.swift in Sources */,
 				0447E3952B71746E00D07B9A /* LowPowerModeSwitch.swift in Sources */,
 				04938D12276948DE00713F1D /* WallpaperManager.swift in Sources */,
 				04A6F9452788EF4A00E3300F /* CursorModifier.swift in Sources */,

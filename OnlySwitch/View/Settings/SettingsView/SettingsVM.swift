@@ -22,16 +22,17 @@ enum SettingsItem: String, CaseIterable {
     case KeepAwake = "Keep Awake"
     case DimScreen = "Dim Screen"
     case NightShift = "Night Shift"
+    case KeyLight = "Key Light"
     case About = "About"
 }
 
 
 class SettingsVM: ObservableObject {
-    
+
     static let shared = SettingsVM()
-    
+
     @Published var settingItems:[SettingsItem]
-    
+
     @Published var selection:SettingsItem? = .General
 
     var evolutionStore = Store(
@@ -40,6 +41,12 @@ class SettingsVM: ObservableObject {
                 ._printChanges()
         } withDependencies: {
             $0.evolutionListService = .liveValue
+        }
+
+    var keyLightStore = Store(
+        initialState: KeyLightFeature.State()) {
+            KeyLightFeature()
+                ._printChanges()
         }
 
     init() {
@@ -51,7 +58,7 @@ class SettingsVM: ObservableObject {
             return
         }
     }
-    
+
     func toggleSliderbar() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             NotificationCenter.default.post(name: .toggleSplitSettingsWindow, object: nil)

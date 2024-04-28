@@ -120,6 +120,9 @@ struct SettingsView: View {
 
             case .NightShift:
                 NightShiftSettingsView()
+                
+            case .KeyLight:
+                KeyLightView(store: settingVM.keyLightStore)
 
             case .About:
                 AboutView()
