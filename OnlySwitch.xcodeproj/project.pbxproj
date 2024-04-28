@@ -223,6 +223,7 @@
 		04819CDA2BDE9BFA00645A0C /* KeyLightFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04819CD92BDE9BFA00645A0C /* KeyLightFeature.swift */; };
 		04819CDD2BDE9C8400645A0C /* KeyLightService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04819CDC2BDE9C8400645A0C /* KeyLightService.swift */; };
 		04819CDF2BDE9E5600645A0C /* KeyLightService+Live.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04819CDE2BDE9E5600645A0C /* KeyLightService+Live.swift */; };
+		04819CE22BDEB63900645A0C /* CustomDump in Frameworks */ = {isa = PBXBuildFile; productRef = 04819CE12BDEB63900645A0C /* CustomDump */; };
 		048D10972AED4A9E00ACB181 /* StickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048D10962AED4A9E00ACB181 /* StickerView.swift */; };
 		048D10992AED92EA00ACB181 /* StickerReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048D10982AED92EA00ACB181 /* StickerReducer.swift */; };
 		049337212761286400AE779A /* CleanProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049337202761286400AE779A /* CleanProgressView.swift */; };
@@ -697,6 +698,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				046C0C00293E7C040073F727 /* SwiftUIWebView in Frameworks */,
+				04819CE22BDEB63900645A0C /* CustomDump in Frameworks */,
 				04DC6C9828A7CA6A00888BF9 /* CoreDisplay.framework in Frameworks */,
 				047C1E4F2A22523B0061235D /* ComposableArchitecture in Frameworks */,
 				0430887E275D707C00877E51 /* LaunchAtLogin in Frameworks */,
@@ -1671,6 +1673,7 @@
 				043316DD2B7168940078B867 /* Extensions */,
 				0447E3982B7174AD00D07B9A /* Switches */,
 				0478874F2B83EC8E0064B9F5 /* Utilities */,
+				04819CE12BDEB63900645A0C /* CustomDump */,
 			);
 			productName = OnlySwitch;
 			productReference = 04447B582754F08000CD2900 /* OnlySwitch.app */;
@@ -1755,6 +1758,7 @@
 				047C1E4D2A22523B0061235D /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
 				041B17872AD841EE0032919B /* XCRemoteSwiftPackageReference "Sparkle" */,
 				047594932B531CB2005FC87C /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
+				04819CE02BDEB63900645A0C /* XCRemoteSwiftPackageReference "swift-custom-dump" */,
 			);
 			productRefGroup = 04447B592754F08000CD2900 /* Products */;
 			projectDirPath = "";
@@ -2238,7 +2242,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 183;
+				CURRENT_PROJECT_VERSION = 184;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2264,7 +2268,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 183;
+				CURRENT_PROJECT_VERSION = 184;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2413,7 +2417,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 183;
+				CURRENT_PROJECT_VERSION = 184;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2467,7 +2471,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 183;
+				CURRENT_PROJECT_VERSION = 184;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2521,7 +2525,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 183;
+				CURRENT_PROJECT_VERSION = 184;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2561,7 +2565,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 183;
+				CURRENT_PROJECT_VERSION = 184;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2676,7 +2680,15 @@
 			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
 			requirement = {
 				kind = exactVersion;
-				version = 1.5.5;
+				version = 1.9.3;
+			};
+		};
+		04819CE02BDEB63900645A0C /* XCRemoteSwiftPackageReference "swift-custom-dump" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-custom-dump";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.0;
 			};
 		};
 		04A6B54927715F90003B2647 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
@@ -2756,6 +2768,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 047C1E4D2A22523B0061235D /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
 			productName = ComposableArchitecture;
+		};
+		04819CE12BDEB63900645A0C /* CustomDump */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04819CE02BDEB63900645A0C /* XCRemoteSwiftPackageReference "swift-custom-dump" */;
+			productName = CustomDump;
 		};
 		04A6B54A27715F90003B2647 /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
