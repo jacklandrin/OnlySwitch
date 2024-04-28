@@ -19,7 +19,6 @@ class MuteSwitch: SwitchProvider {
     private var isSuspendQueue = true
     private var isMute:Bool = false {
         willSet {
-//            print("isMute:\(newValue)")
             if isMute != newValue {
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.mute)
@@ -29,22 +28,27 @@ class MuteSwitch: SwitchProvider {
     }
     
     init() {
-//        print("mute init")
-        NotificationCenter.default.addObserver(forName: .showPopover, object: nil, queue: .main, using: { [weak self] _ in
-            guard let StrongSelf = self else {return}
-            StrongSelf.isSuspendQueue = false
-            StrongSelf.startVolumePoll()
-        })
-        
-        NotificationCenter.default.addObserver(forName: .hidePopover, object: nil, queue: .main, using: {[weak self] _ in
-            guard let StrongSelf = self else {return}
-            StrongSelf.pollingQueue.suspend()
-            StrongSelf.isSuspendQueue = true
-        })
-    }
-    
-    deinit{
-//        print("mute deinit")
+        NotificationCenter.default.addObserver(
+            forName: .showPopover,
+            object: nil,
+            queue: .main,
+            using: { [weak self] _ in
+                guard let self else {return}
+                self.isSuspendQueue = false
+                self.startVolumePoll()
+            }
+        )
+
+        NotificationCenter.default.addObserver(
+            forName: .hidePopover,
+            object: nil,
+            queue: .main,
+            using: { [weak self] _ in
+                guard let self else {return}
+                self.pollingQueue.suspend()
+                self.isSuspendQueue = true
+            }
+        )
     }
     
     func operateSwitch(isOn: Bool) async throws {
@@ -97,7 +101,6 @@ class NSMuteSwitchOperator:MuteSwitchProtocal {
     }
     
     func operationSwitch(isOn: Bool) throws {
-        
         if isOn {
             NSSound.systemVolumeFadeToMute(seconds: 0, blocking: true)
             let isMuted = NSSound.systemVolumeIsMuted
