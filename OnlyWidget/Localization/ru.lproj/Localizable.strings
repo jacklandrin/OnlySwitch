@@ -1,9 +1,9 @@
-/* 
+/*
   Localizable.strings
   OnlySwitch
 
   Created by Jacklandrin on 2021/12/14.
-  
+
 */
 "Hide Desktop" = "Спрятать иконки рабочего стола";
 "Dark Mode" = "Тёмная тема";
@@ -43,3 +43,6 @@
 "Select Built-In Switches" = "Выберите встроенные переключатели";
 "Select the switches you want to display in the widget." = "Выберите переключатели, которые вы хотите отображать в виджете.";
 "Built-In Switch" = "Встроенный переключатель";
+"Select Evolution" = "Выберите Evolution";
+"Select Evolution you want to display in the widget." = "Выберите Evolution, который вы хотите отображать в виджете.";
+"Widgets can control the evolution switches" = "Виджеты могут управлять переключателями Evolution";

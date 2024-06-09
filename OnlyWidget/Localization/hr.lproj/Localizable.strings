@@ -1,10 +1,10 @@
-/* 
+/*
   Localizable.strings
   OnlySwitch
 
   Created by Jacklandrin on 2021/12/14.
   Translated into Croatian translation by Milo Ivir <mail@milotype.de> on 2022/01/09.
-  
+
 */
 "Hide Desktop" = "Sakrij ikone radne površine";
 "Dark Mode" = "Tamni modus";
@@ -43,3 +43,6 @@
 "Select Built-In Switches" = "Odaberite ugrađene prekidače";
 "Select the switches you want to display in the widget." = "Odaberite prekidače koje želite prikazati u widgetu.";
 "Built-In Switch" = "Ugrađeni prekidač";
+"Select Evolution" = "Odaberite Evolution";
+"Select Evolution you want to display in the widget." = "Odaberite Evolution koji želite prikazati u widgetu.";
+"Widgets can control the evolution switches" = "Widgeti mogu kontrolirati prekidače Evolution";

@@ -1,4 +1,4 @@
-/* 
+/*
   Localizable.strings
   OnlySwitch
 
@@ -43,3 +43,6 @@
 "Select Built-In Switches" = "Seleziona Interruttori Incorporati";
 "Select the switches you want to display in the widget." = "Seleziona gli interruttori che desideri visualizzare nel widget.";
 "Built-In Switch" = "Interruttore integrato";
+"Select Evolution" = "Seleziona Evolution";
+"Select Evolution you want to display in the widget." = "Seleziona l'Evolution che desideri visualizzare nel widget.";
+"Widgets can control the evolution switches" = "I widget possono controllare gli interruttori di Evolution";

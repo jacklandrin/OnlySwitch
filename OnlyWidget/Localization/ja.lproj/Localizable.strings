@@ -44,3 +44,6 @@
 "Select Built-In Switches" = "ビルトインスイッチを選択";
 "Select the switches you want to display in the widget." = "ウィジェットに表示するスイッチを選択します。";
 "Built-In Switch" = "ビルトインスイッチ";
+"Select Evolution" = "Evolutionを選択";
+"Select Evolution you want to display in the widget." = "ウィジェットに表示するEvolutionを選択します。";
+"Widgets can control the Evolution switches" = "ウィジェットはEvolutionスイッチを制御できます";

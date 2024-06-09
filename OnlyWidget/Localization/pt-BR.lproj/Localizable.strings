@@ -43,3 +43,6 @@
 "Select Built-In Switches" = "Selecionar Interruptores Integrados";
 "Select the switches you want to display in the widget." = "Selecione os interruptores que deseja exibir no widget.";
 "Built-In Switch" = "Seletor Embutido";
+"Select Evolution" = "Selecionar Evolution";
+"Select Evolution you want to display in the widget." = "Selecione a Evolution que deseja exibir no widget.";
+"Widgets can control the evolution switches" = "Os widgets podem controlar os interruptores de Evolution";

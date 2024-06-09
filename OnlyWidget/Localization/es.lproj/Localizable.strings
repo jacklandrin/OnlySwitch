@@ -43,3 +43,6 @@ Creado por Jacklandrin el día 14/12/2021.
 "Select Built-In Switches" = "Seleccionar interruptores incorporados";
 "Select the switches you want to display in the widget." = "Seleccione los interruptores que desea mostrar en el widget.";
 "Built-In Switch" = "Interruptor incorporado";
+"Select Evolution" = "Seleccionar Evolution";
+"Select Evolution you want to display in the widget." = "Seleccione la Evolution que desea mostrar en el widget.";
+"Widgets can control the evolution switches" = "Los widgets pueden controlar los interruptores de Evolution";

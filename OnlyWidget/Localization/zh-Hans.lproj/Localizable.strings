@@ -43,3 +43,6 @@
 "Select the switches you want to display in the widget." = "选择您想展示的开关";
 "Switch" = "开关";
 "Built-In Switch" = "内置开关";
+"Select Evolution" = "选择Evolution";
+"Select Evolution you want to display in the widget." = "选择您想展示的Evolution";
+"Widgets can control the evolution switches" = "小组件可以操控Evolution";

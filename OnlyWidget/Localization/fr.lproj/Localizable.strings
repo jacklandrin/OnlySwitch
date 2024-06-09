@@ -42,3 +42,6 @@
 "Select Built-In Switches" = "Sélectionner les commutateurs intégrés";
 "Select the switches you want to display in the widget." = "Sélectionnez les commutateurs que vous souhaitez afficher dans le widget.";
 "Built-In Switch" = "Commutateur intégré";
+"Select Evolution" = "Sélectionner l'Evolution";
+"Select Evolution you want to display in the widget." = "Sélectionnez l'Evolution que vous souhaitez afficher dans le widget.";
+"Widgets can control the evolution switches" = "Les widgets peuvent contrôler les commutateurs d'Evolution";

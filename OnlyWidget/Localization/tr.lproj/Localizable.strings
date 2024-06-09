@@ -44,3 +44,6 @@
 "Select Built-In Switches" = "Dahili Anahtarları Seç";
 "Select the switches you want to display in the widget." = "Widget'ta göstermek istediğiniz anahtarları seçin.";
 "Built-In Switch" = "Dahili Anahtar";
+"Select Evolution" = "Evolution Seç";
+"Select Evolution you want to display in the widget." = "Widget'ta göstermek istediğiniz Evolution'ı seçin.";
+"Widgets can control the evolution switches" = "Widget'lar Evolution anahtarlarını kontrol edebilir";
