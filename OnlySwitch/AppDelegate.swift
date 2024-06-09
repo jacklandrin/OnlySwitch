@@ -18,7 +18,8 @@ struct OnlySwitchApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @ObservedObject var preferencesvm = PreferencesObserver.shared
     @State var preferences = PreferencesObserver.shared.preferences
-    
+    @State var settingsItem: SettingsItem? = nil
+
     var body: some Scene {
         WindowGroup("run") {
             EmptyView()
@@ -46,7 +47,7 @@ struct OnlySwitchApp: App {
                     }
 
                     if unitType == .builtIn {
-                        guard 
+                        guard
                             let intID = UInt64(id),
                             let type = SwitchType(rawValue: intID)
                         else {
@@ -54,6 +55,15 @@ struct OnlySwitchApp: App {
                         }
                         let theSwitch = CustomizeVM.shared.allSwitches.first{ $0.type == type }
                         theSwitch?.doSwitch()
+                    } else if unitType == .evolution {
+                        guard
+                            let uuid = UUID(uuidString: id),
+                            let entity = try? EvolutionCommandEntity.fetchRequest(by: uuid)
+                        else {
+                            return
+                        }
+                        let item = EvolutionAdapter.toEvolutionItem(entity)
+                        item?.doSwitch()
                     }
                 }
         }
@@ -61,7 +71,7 @@ struct OnlySwitchApp: App {
         .handlesExternalEvents(matching: Set(arrayLiteral: "run"))
 
         WindowGroup("SettingsWindow") {
-            SettingsView()
+            SettingsView(settingItem: $settingsItem)
                 .frame(width: Layout.settingWindowWidth, height: Layout.settingWindowHeight)
                 .onDisappear {
                     if #available(macOS 13.3, *) {
@@ -72,6 +82,20 @@ struct OnlySwitchApp: App {
                         appDelegate.switchVM.isSettingViewShowing = false
                     }
                 }
+                .onOpenURL{ url in
+                    guard url.absoluteString.contains("destination"),
+                          let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+                          let queryItems = components.queryItems,
+                          let destination = queryItems.first(where: { $0.name == "destination" })?.value
+                    else {
+                        return
+                    }
+                    let itemString = destination.replacingOccurrences(of: "_", with: " ").capitalized
+                    if let item = SettingsItem(rawValue: itemString) {
+                        settingsItem = item
+                    }
+                }
+
         }
         .windowKeepContentSize()
         .handlesExternalEvents(matching: Set(arrayLiteral: "SettingsWindow"))
@@ -111,7 +135,7 @@ struct OnlySwitchApp: App {
                 })
             }
             CommandGroup(replacing: .newItem) {
-                
+
             }
         }
     }
@@ -129,21 +153,21 @@ class AppDelegate:NSObject, NSApplicationDelegate {
             .currentAppearance
     }
     var checkUpdatePresenter = GitHubPresenter.shared
-    
+
     func applicationDidFinishLaunching(_ notification: Notification) {
         //for issue #11
         closeWindow()
         let contentView = OnlySwitchListView()
             .environmentObject(switchVM)
         let apperearance = SwitchListAppearance(rawValue: currentAppearance)
-        
+
         popover.contentSize = NSSize(width: apperearance == .single ? Layout.popoverWidth : Layout.popoverWidth * 2 - 40, height: 300)
         popover.contentViewController = NSHostingController(rootView: contentView)
-        
+
         statusBar = StatusBarController(popover)
-        
+
         SwitchManager.shared.registerSwitchesShouldShow()
-        
+
         blManager = BluetoothDevicesManager.shared
         RadioStationSwitch.shared.setDefaultRadioStations()
         Bundle.setLanguage(lang: LanguageManager.sharedManager.currentLang)
@@ -153,7 +177,7 @@ class AppDelegate:NSObject, NSApplicationDelegate {
     }
 
     func applicationWillTerminate(_ notification: Notification) {
-        
+
     }
 
     func checkUpdate() {

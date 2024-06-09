@@ -10,13 +10,13 @@ import Switches
 import WidgetKit
 import Extensions
 
-struct SelectBuildInSwitchesIntent: WidgetConfigurationIntent {
+struct SelectBuiltInSwitchesIntent: WidgetConfigurationIntent {
     static var title: LocalizedStringResource = "Select Built-In Switches"
     static var description: LocalizedStringResource = "Select the switches you want to display in the widget."
     @Parameter(title: "Built-In Switch")
-    var buildInSwitch: BuildInSwitchEntity
-    init(buildInSwitch: BuildInSwitchEntity) {
-        self.buildInSwitch = buildInSwitch
+    var builtInSwitch: BuiltInSwitchEntity
+    init(builtInSwitch: BuiltInSwitchEntity) {
+        self.builtInSwitch = builtInSwitch
     }
     init() { }
 }

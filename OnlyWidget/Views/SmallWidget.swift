@@ -11,22 +11,30 @@ import SwiftUI
 
 struct SmallWidget: View {
     @Environment(\.colorScheme) private var colorScheme
-    var unitType: UnitType
-    var id: String
-    var title: String
-    var image: NSImage?
-    init(type: UnitType = .builtIn, id: String, title: String, image: NSImage? = nil) {
+    private var unitType: UnitType
+    private var id: String
+    private var title: String
+    private var image: NSImage?
+
+    init(
+        type: UnitType = .builtIn,
+        id: String,
+        title: String,
+        image: NSImage? = nil
+    ) {
         self.unitType = type
         self.id = id
         self.title = title
         self.image = image
     }
+    
     var body: some View {
         Link(destination: URL(string: "onlyswitch://run?type=\(unitType.rawValue)&id=\(id)")!) {
             VStack {
                 HStack {
-                    Image(nsImage: image ?? NSImage(named: "logo")!)
+                    Image(nsImage: image?.resizeMaintainingAspectRatio(withSize: NSSize(width: 50, height: 50))! ?? NSImage(named: "logo")!)
                         .resizable()
+                        .renderingMode(.template)
                         .aspectRatio(contentMode: .fit)
                         .frame(height: Layout.iconSize)
                     Spacer()
@@ -47,11 +55,7 @@ struct SmallWidget: View {
                 .padding()
             }
             .background(
-                AngularGradient(
-                    gradient: Gradient(colors: [.red, .yellow, .green, .blue, .purple, .red]),
-                    center: .center
-                )
-                .opacity(0.2)
+                SpectrumView(unitType: unitType)
             )
         }
 

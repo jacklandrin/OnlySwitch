@@ -6,7 +6,7 @@
 	<false/>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.onlyswitch.shared</string>
+		<string>group.jacklandrin.onlyswitch.shared</string>
 	</array>
 	<key>com.apple.security.automation.apple-events</key>
 	<true/>

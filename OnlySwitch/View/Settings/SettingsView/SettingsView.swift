@@ -12,6 +12,12 @@ struct SettingsView: View {
     @StateObject var settingVM = SettingsVM.shared
     @ObservedObject var langManager = LanguageManager.sharedManager
 
+    init(settingItem: Binding<SettingsItem?> = .constant(nil)) {
+        if let item = settingItem.wrappedValue {
+            settingVM.selection = item
+        }
+    }
+
     var naviagtionView: some View {
         NavigationView {
             List(selection:$settingVM.selection) {
@@ -26,7 +32,7 @@ struct SettingsView: View {
                     }
                 }
                 if #available(macOS 13.0, *) {
-                    
+
                 } else {
                     HostingWindowFinder{ window in
                         if let window = window {
@@ -56,7 +62,7 @@ struct SettingsView: View {
                 }
             }
     }
-    
+
     @available(macOS 13.3, *)
     func naviagtionSplitView() -> some View {
         NavigationSplitView(sidebar: {
@@ -120,7 +126,7 @@ struct SettingsView: View {
 
             case .NightShift:
                 NightShiftSettingsView()
-                
+
             case .KeyLight:
                 KeyLightView(store: settingVM.keyLightStore)
 
@@ -136,7 +142,7 @@ struct SettingsView: View {
             naviagtionView
         }
     }
-    
+
 }
 
 #if DEBUG

@@ -51,9 +51,9 @@
 		0434B4CD2874E5D300F06AB9 /* Latest_release_mock.json in Resources */ = {isa = PBXBuildFile; fileRef = 0434B4C328738E7400F06AB9 /* Latest_release_mock.json */; };
 		0434B4CF2876031C00F06AB9 /* RadioPlayerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0434B4CE2876031C00F06AB9 /* RadioPlayerItem.swift */; };
 		0434B4D12876325B00F06AB9 /* HostWindowFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0434B4D02876325B00F06AB9 /* HostWindowFinder.swift */; };
-		043AFC8A2B82AC8400657688 /* OnlyWidgetBuildIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043AFC892B82AC8400657688 /* OnlyWidgetBuildIn.swift */; };
-		043AFC8B2B82ACAC00657688 /* SelectBuildInSwitchesIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043AFC872B82AC7A00657688 /* SelectBuildInSwitchesIntent.swift */; };
-		043AFC8C2B82ACAE00657688 /* BuildInSwitchEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043AFC882B82AC7A00657688 /* BuildInSwitchEntity.swift */; };
+		043AFC8A2B82AC8400657688 /* OnlyWidgetBuiltIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043AFC892B82AC8400657688 /* OnlyWidgetBuiltIn.swift */; };
+		043AFC8B2B82ACAC00657688 /* SelectBuiltInSwitchesIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043AFC872B82AC7A00657688 /* SelectBuiltInSwitchesIntent.swift */; };
+		043AFC8C2B82ACAE00657688 /* BuiltInSwitchEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043AFC882B82AC7A00657688 /* BuiltInSwitchEntity.swift */; };
 		043AFC8E2B82ACF100657688 /* SmallWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043AFC8D2B82ACF100657688 /* SmallWidget.swift */; };
 		043E5D662757C84900ADC004 /* HiddenModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D652757C84900ADC004 /* HiddenModifier.swift */; };
 		043E5D6D2757DADB00ADC004 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 043E5D6C2757DADB00ADC004 /* AVFoundation.framework */; };
@@ -296,6 +296,16 @@
 		04CB8A072B703AF5006B8620 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04CB8A062B703AF5006B8620 /* Assets.xcassets */; };
 		04CB8A0C2B703AF5006B8620 /* OnlyWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 04CB89FC2B703AF3006B8620 /* OnlyWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		04D3A9B12C15F27800628BAE /* OnlySwitch.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0493379A2763C09000AE779A /* OnlySwitch.xcdatamodeld */; };
+		04D3A9B22C15F2DC00628BAE /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493379D2763C0E800AE779A /* Persistence.swift */; };
+		04D3A9B32C15F2E000628BAE /* EvolutionCommandEntity+Fetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E238652A2C83C900CDD1FA /* EvolutionCommandEntity+Fetch.swift */; };
+		04D3A9B52C15F33400628BAE /* EvolutionCommandEntityLive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3A9B42C15F33400628BAE /* EvolutionCommandEntityLive.swift */; };
+		04D3A9B92C15F8C100628BAE /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3A9B82C15F8C100628BAE /* ErrorView.swift */; };
+		04D3A9BB2C15F8F100628BAE /* SpectrumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3A9BA2C15F8F100628BAE /* SpectrumView.swift */; };
+		04D3A9BD2C15FB8E00628BAE /* EvolutionWidgetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3A9BC2C15FB8E00628BAE /* EvolutionWidgetModel.swift */; };
+		04D3A9BF2C15FBE900628BAE /* OnlyWidgetEvolutionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3A9BE2C15FBE900628BAE /* OnlyWidgetEvolutionProvider.swift */; };
+		04D3A9C22C15FD7300628BAE /* SelectEvolutionIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3A9C12C15FD7300628BAE /* SelectEvolutionIntent.swift */; };
+		04D3A9C42C15FE0300628BAE /* EvolutionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3A9C32C15FE0300628BAE /* EvolutionEntity.swift */; };
+		04D3A9C52C16335F00628BAE /* ViewModify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CB89F62B6FFA65006B8620 /* ViewModify.swift */; };
 		04DC6C5C28A2D04B00888BF9 /* UpdateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C5B28A2D04B00888BF9 /* UpdateView.swift */; };
 		04DC6C5E28A2E2B700888BF9 /* UpdateVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C5D28A2E2B700888BF9 /* UpdateVM.swift */; };
 		04DC6C6028A46ECE00888BF9 /* CommonPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C5F28A46ECE00888BF9 /* CommonPlayer.swift */; };
@@ -424,9 +434,9 @@
 		0434B4C328738E7400F06AB9 /* Latest_release_mock.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Latest_release_mock.json; sourceTree = "<group>"; };
 		0434B4CE2876031C00F06AB9 /* RadioPlayerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioPlayerItem.swift; sourceTree = "<group>"; };
 		0434B4D02876325B00F06AB9 /* HostWindowFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostWindowFinder.swift; sourceTree = "<group>"; };
-		043AFC872B82AC7A00657688 /* SelectBuildInSwitchesIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectBuildInSwitchesIntent.swift; sourceTree = "<group>"; };
-		043AFC882B82AC7A00657688 /* BuildInSwitchEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildInSwitchEntity.swift; sourceTree = "<group>"; };
-		043AFC892B82AC8400657688 /* OnlyWidgetBuildIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyWidgetBuildIn.swift; sourceTree = "<group>"; };
+		043AFC872B82AC7A00657688 /* SelectBuiltInSwitchesIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectBuiltInSwitchesIntent.swift; sourceTree = "<group>"; };
+		043AFC882B82AC7A00657688 /* BuiltInSwitchEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuiltInSwitchEntity.swift; sourceTree = "<group>"; };
+		043AFC892B82AC8400657688 /* OnlyWidgetBuiltIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyWidgetBuiltIn.swift; sourceTree = "<group>"; };
 		043AFC8D2B82ACF100657688 /* SmallWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallWidget.swift; sourceTree = "<group>"; };
 		043E5D652757C84900ADC004 /* HiddenModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HiddenModifier.swift; sourceTree = "<group>"; };
 		043E5D6C2757DADB00ADC004 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -632,6 +642,13 @@
 		04CB8A062B703AF5006B8620 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		04CB8A082B703AF5006B8620 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04CB8A092B703AF5006B8620 /* OnlyWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OnlyWidget.entitlements; sourceTree = "<group>"; };
+		04D3A9B42C15F33400628BAE /* EvolutionCommandEntityLive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionCommandEntityLive.swift; sourceTree = "<group>"; };
+		04D3A9B82C15F8C100628BAE /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
+		04D3A9BA2C15F8F100628BAE /* SpectrumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpectrumView.swift; sourceTree = "<group>"; };
+		04D3A9BC2C15FB8E00628BAE /* EvolutionWidgetModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionWidgetModel.swift; sourceTree = "<group>"; };
+		04D3A9BE2C15FBE900628BAE /* OnlyWidgetEvolutionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyWidgetEvolutionProvider.swift; sourceTree = "<group>"; };
+		04D3A9C12C15FD7300628BAE /* SelectEvolutionIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectEvolutionIntent.swift; sourceTree = "<group>"; };
+		04D3A9C32C15FE0300628BAE /* EvolutionEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionEntity.swift; sourceTree = "<group>"; };
 		04DC6C5B28A2D04B00888BF9 /* UpdateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateView.swift; sourceTree = "<group>"; };
 		04DC6C5D28A2E2B700888BF9 /* UpdateVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateVM.swift; sourceTree = "<group>"; };
 		04DC6C5F28A46ECE00888BF9 /* CommonPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonPlayer.swift; sourceTree = "<group>"; };
@@ -916,8 +933,8 @@
 		043AFC862B82AC7A00657688 /* Intents */ = {
 			isa = PBXGroup;
 			children = (
-				043AFC872B82AC7A00657688 /* SelectBuildInSwitchesIntent.swift */,
-				043AFC882B82AC7A00657688 /* BuildInSwitchEntity.swift */,
+				043AFC872B82AC7A00657688 /* SelectBuiltInSwitchesIntent.swift */,
+				043AFC882B82AC7A00657688 /* BuiltInSwitchEntity.swift */,
 			);
 			path = Intents;
 			sourceTree = "<group>";
@@ -926,6 +943,8 @@
 			isa = PBXGroup;
 			children = (
 				043AFC8D2B82ACF100657688 /* SmallWidget.swift */,
+				04D3A9B82C15F8C100628BAE /* ErrorView.swift */,
+				04D3A9BA2C15F8F100628BAE /* SpectrumView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -933,7 +952,6 @@
 		043E5D672757C85500ADC004 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				04447B5B2754F08000CD2900 /* AppDelegate.swift */,
 				04BF976C27908E0100E7C0E2 /* OnlySwitchList */,
 				04BF976D27908E2800E7C0E2 /* SwitchItem */,
 				04BF977927908FB900E7C0E2 /* SoundWave */,
@@ -1043,6 +1061,7 @@
 		04447B5A2754F08000CD2900 /* OnlySwitch */ = {
 			isa = PBXGroup;
 			children = (
+				04447B5B2754F08000CD2900 /* AppDelegate.swift */,
 				04E238612A2C831F00CDD1FA /* CoreData */,
 				040CD2BD27579CEA002E0CC6 /* Info.plist */,
 				04A23B27275D607200B454C8 /* Header */,
@@ -1125,13 +1144,13 @@
 			path = ShortcutsMarket;
 			sourceTree = "<group>";
 		};
-		047887372B82BE5C0064B9F5 /* BuildIn */ = {
+		047887372B82BE5C0064B9F5 /* BuiltIn */ = {
 			isa = PBXGroup;
 			children = (
-				043AFC892B82AC8400657688 /* OnlyWidgetBuildIn.swift */,
+				043AFC892B82AC8400657688 /* OnlyWidgetBuiltIn.swift */,
 				043AFC862B82AC7A00657688 /* Intents */,
 			);
-			path = BuildIn;
+			path = BuiltIn;
 			sourceTree = "<group>";
 		};
 		0478873A2B83E4DE0064B9F5 /* Localization */ = {
@@ -1480,8 +1499,8 @@
 		04CB8A012B703AF4006B8620 /* OnlyWidget */ = {
 			isa = PBXGroup;
 			children = (
+				04D3A9B72C15F44300628BAE /* Widgets */,
 				0478873A2B83E4DE0064B9F5 /* Localization */,
-				047887372B82BE5C0064B9F5 /* BuildIn */,
 				043AFC8F2B82AD9E00657688 /* Views */,
 				04CB8A022B703AF4006B8620 /* OnlyWidgetBundle.swift */,
 				04CB8A062B703AF5006B8620 /* Assets.xcassets */,
@@ -1489,6 +1508,34 @@
 				04CB8A092B703AF5006B8620 /* OnlyWidget.entitlements */,
 			);
 			path = OnlyWidget;
+			sourceTree = "<group>";
+		};
+		04D3A9B62C15F37900628BAE /* Evolution */ = {
+			isa = PBXGroup;
+			children = (
+				04D3A9C02C15FD4200628BAE /* Intents */,
+				04D3A9BC2C15FB8E00628BAE /* EvolutionWidgetModel.swift */,
+				04D3A9BE2C15FBE900628BAE /* OnlyWidgetEvolutionProvider.swift */,
+			);
+			path = Evolution;
+			sourceTree = "<group>";
+		};
+		04D3A9B72C15F44300628BAE /* Widgets */ = {
+			isa = PBXGroup;
+			children = (
+				04D3A9B62C15F37900628BAE /* Evolution */,
+				047887372B82BE5C0064B9F5 /* BuiltIn */,
+			);
+			path = Widgets;
+			sourceTree = "<group>";
+		};
+		04D3A9C02C15FD4200628BAE /* Intents */ = {
+			isa = PBXGroup;
+			children = (
+				04D3A9C12C15FD7300628BAE /* SelectEvolutionIntent.swift */,
+				04D3A9C32C15FE0300628BAE /* EvolutionEntity.swift */,
+			);
+			path = Intents;
 			sourceTree = "<group>";
 		};
 		04DC6C5A28A2D02000888BF9 /* Update */ = {
@@ -1587,6 +1634,7 @@
 				0493379D2763C0E800AE779A /* Persistence.swift */,
 				04E238632A2C835600CDD1FA /* RadioStations+Fetch.swift */,
 				04E238652A2C83C900CDD1FA /* EvolutionCommandEntity+Fetch.swift */,
+				04D3A9B42C15F33400628BAE /* EvolutionCommandEntityLive.swift */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -2115,6 +2163,7 @@
 				04819CDD2BDE9C8400645A0C /* KeyLightService.swift in Sources */,
 				0447E3952B71746E00D07B9A /* LowPowerModeSwitch.swift in Sources */,
 				04938D12276948DE00713F1D /* WallpaperManager.swift in Sources */,
+				04D3A9B52C15F33400628BAE /* EvolutionCommandEntityLive.swift in Sources */,
 				04A6F9452788EF4A00E3300F /* CursorModifier.swift in Sources */,
 				0493375127625A1E00AE779A /* Parser.swift in Sources */,
 				041B178B2AD842470032919B /* Updater.swift in Sources */,
@@ -2161,12 +2210,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04D3A9BD2C15FB8E00628BAE /* EvolutionWidgetModel.swift in Sources */,
+				04D3A9C22C15FD7300628BAE /* SelectEvolutionIntent.swift in Sources */,
+				04D3A9C52C16335F00628BAE /* ViewModify.swift in Sources */,
 				043AFC8E2B82ACF100657688 /* SmallWidget.swift in Sources */,
-				043AFC8C2B82ACAE00657688 /* BuildInSwitchEntity.swift in Sources */,
+				043AFC8C2B82ACAE00657688 /* BuiltInSwitchEntity.swift in Sources */,
+				04D3A9C42C15FE0300628BAE /* EvolutionEntity.swift in Sources */,
 				04CB8A032B703AF4006B8620 /* OnlyWidgetBundle.swift in Sources */,
-				043AFC8A2B82AC8400657688 /* OnlyWidgetBuildIn.swift in Sources */,
-				043AFC8B2B82ACAC00657688 /* SelectBuildInSwitchesIntent.swift in Sources */,
+				04D3A9B22C15F2DC00628BAE /* Persistence.swift in Sources */,
+				043AFC8A2B82AC8400657688 /* OnlyWidgetBuiltIn.swift in Sources */,
+				043AFC8B2B82ACAC00657688 /* SelectBuiltInSwitchesIntent.swift in Sources */,
 				04D3A9B12C15F27800628BAE /* OnlySwitch.xcdatamodeld in Sources */,
+				04D3A9BB2C15F8F100628BAE /* SpectrumView.swift in Sources */,
+				04D3A9B92C15F8C100628BAE /* ErrorView.swift in Sources */,
+				04D3A9BF2C15FBE900628BAE /* OnlyWidgetEvolutionProvider.swift in Sources */,
+				04D3A9B32C15F2E000628BAE /* EvolutionCommandEntity+Fetch.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2244,7 +2302,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 187;
+				CURRENT_PROJECT_VERSION = 191;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2270,7 +2328,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 187;
+				CURRENT_PROJECT_VERSION = 191;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2419,7 +2477,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 187;
+				CURRENT_PROJECT_VERSION = 191;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2473,7 +2531,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 187;
+				CURRENT_PROJECT_VERSION = 191;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2527,7 +2585,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 187;
+				CURRENT_PROJECT_VERSION = 191;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2567,7 +2625,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 187;
+				CURRENT_PROJECT_VERSION = 191;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
