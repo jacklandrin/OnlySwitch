@@ -132,7 +132,7 @@ Now, the Hide notch switch supports dynamic wallpaper, just the processing takes
 
 Only Switch supports Apple Widgets since version 2.5.0. The Widgets can be edited to any built-in switches and buttons. Clicking them will trigger the reflection of relevant switches and buttons. You can put Only Widgets anywhere, desktop or notification center.
 
-Since version 2.5.1, Only Widget supports Evolution.
+Since version 2.5.2, Only Widget supports Evolution.
 
 **NOTE:** After updating version 2.5.0, you might need to reset your language. If your widgets didn't follow your language settings, please kill Only Widget process, it will update.
 
