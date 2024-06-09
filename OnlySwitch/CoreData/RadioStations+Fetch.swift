@@ -9,14 +9,14 @@ import CoreData
 import Foundation
 
 extension RadioStations {
-    static var defaultFetchRequest:NSFetchRequest<RadioStations> {
-        let request:NSFetchRequest<RadioStations> = RadioStations.fetchRequest()
+    static var defaultFetchRequest: NSFetchRequest<RadioStations> {
+        let request: NSFetchRequest<RadioStations> = RadioStations.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(keyPath: \RadioStations.timestamp, ascending: true)]
         print("fetched the radio stations")
         return request
     }
 
-    static var fetchResult:[RadioStations] {
+    static var fetchResult: [RadioStations] {
         do {
             let fetchResults = try PersistenceController
                 .shared

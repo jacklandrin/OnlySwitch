@@ -17,7 +17,7 @@ class RadioSettingVM: ObservableObject {
     private var preferencesPublisher = PreferencesObserver.shared
     @Published private var preferences = PreferencesObserver.shared.preferences
     private var cancellables = Set<AnyCancellable>()
-    
+
     var radioList:[RadioPlayerItemViewModel] {
         get {
             model.radioList
@@ -26,7 +26,7 @@ class RadioSettingVM: ObservableObject {
             model.radioList = newValue
         }
     }
-    
+
     var selectRow:RadioPlayerItemViewModel.ID? {
         get {
             return model.selectRow
@@ -37,11 +37,11 @@ class RadioSettingVM: ObservableObject {
             for radio in radioList where radio.id != selectRow {
                 radio.isEditing = false
             }
-            
+
             model.currentTitle = RadioStationSwitch.shared.playerItem.title
         }
     }
-    
+
     var showErrorToast:Bool {
         get {
             model.showErrorToast
@@ -50,7 +50,7 @@ class RadioSettingVM: ObservableObject {
             model.showErrorToast = newValue
         }
     }
-    
+
     var showSuccessToast:Bool {
         get {
             model.showSuccessToast
@@ -59,21 +59,21 @@ class RadioSettingVM: ObservableObject {
             model.showSuccessToast = newValue
         }
     }
-    
+
     var successInfo:String {
         model.successInfo
     }
-    
+
     var errorInfo:String {
         model.errorInfo
     }
-    
+
     var currentTitle:String {
         model.currentTitle
     }
-    
+
     var sliderVolume: Float = 1.0
-    
+
     var soundWaveEffectDisplay:Bool {
         get {
             preferences.soundWaveEffectDisplay
@@ -82,7 +82,7 @@ class RadioSettingVM: ObservableObject {
             preferences.soundWaveEffectDisplay = newValue
         }
     }
-    
+
     var sliderValue:Float {
         get {
             preferences.volume
@@ -91,7 +91,7 @@ class RadioSettingVM: ObservableObject {
             preferences.volume = newValue
         }
     }
-    
+
     var allowNotificationChangingStation: Bool {
         get {
             preferences.allNotificationChangingStation
@@ -100,7 +100,7 @@ class RadioSettingVM: ObservableObject {
             preferences.allNotificationChangingStation = newValue
         }
     }
-    
+
     var allowNotificationTrack: Bool {
         get {
             preferences.allNotificationTrack
@@ -109,12 +109,12 @@ class RadioSettingVM: ObservableObject {
             preferences.allNotificationTrack = newValue
         }
     }
-    
+
     var switchEnable:Bool {
         get {
             preferences.radioEnable
         }
-        
+
         set {
             preferences.radioEnable = newValue
             if preferences.radioEnable {
@@ -125,7 +125,7 @@ class RadioSettingVM: ObservableObject {
             }
         }
     }
-    
+
     var isTipPopover:Bool {
         get {
             model.isTipPopover
@@ -134,20 +134,27 @@ class RadioSettingVM: ObservableObject {
             model.isTipPopover = newValue
         }
     }
-    
+
     private var managedObjectContext:NSManagedObjectContext?
-    
+
     init() {
         self.managedObjectContext = PersistenceController.shared.container.viewContext
-        RadioStations.fetchResult.forEach{ station in
-            let radioItem = RadioPlayerItemViewModel(isPlaying: false,
-                                                     title: station.title!,
-                                                     streamUrl: station.url!,
-                                                     streamInfo: "",
-                                                     id: station.id!)
-            self.model.radioList.append(radioItem)
+        let stations = RadioStations.fetchResult
+
+        var uniqueStations = stations.unique { $0.id }
+        let unneededStations = stations.filter { station in
+            !uniqueStations.contains { $0.objectID == station.objectID }
         }
-        
+
+        unneededStations.forEach { station in
+            managedObjectContext?.delete(station)
+        }
+
+        for station in stations {
+            let radio = RadioPlayerItemViewModel(isPlaying: false, title: station.title!, streamUrl: station.url!, streamInfo: "", id: station.id!)
+            radioList.append(radio)
+        }
+
         NotificationCenter.default.addObserver(forName: .illegalRadioInfoNotification,
                                                object: nil,
                                                queue: .main,
@@ -155,14 +162,14 @@ class RadioSettingVM: ObservableObject {
             self.model.errorInfo = notify.object as! String
             self.model.showErrorToast = true
         })
-        
+
         self.model.currentTitle = RadioStationSwitch.shared.playerItem.title
-        
+
         if let newValue = UserDefaults.standard.value(forKey: UserDefaults.Key.volume) as? Float
         {
             sliderVolume = newValue
         }
-        
+
         RadioStationSwitch.shared.playerItem.$model.sink { item in
             guard let item = item else {return}
             if self.radioList.filter({ $0.isEditing == true }).count > 0 {
@@ -171,28 +178,28 @@ class RadioSettingVM: ObservableObject {
             self.model.currentTitle = item.title
             self.model.selectRow = item.id
         }.store(in: &cancellables)
-        
+
         preferencesPublisher.$preferences.sink{ _ in
             self.objectWillChange.send()
         }.store(in: &cancellables)
     }
-    
+
     deinit {
         cancellables.removeAll()
     }
-    
+
     func endEditing() {
         for radio in radioList {
             radio.isEditing = false
         }
     }
-    
+
     private func startEditing() {
         for radio in radioList {
             radio.isEditing = false
         }
     }
-    
+
     func deleteStation() {
         self.endEditing()
         guard radioList.count > 1 else {
@@ -203,7 +210,7 @@ class RadioSettingVM: ObservableObject {
         guard let currentRow = self.model.selectRow else {
             return
         }
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             guard let managedObjectContext = self.managedObjectContext else {
                 fatalError("No Managed Object Context Available")
@@ -220,9 +227,9 @@ class RadioSettingVM: ObservableObject {
             self.model.radioList.remove(at: itemIndices.first!)
             self.model.selectRow = nil
         }
-        
+
     }
-    
+
     func addStation(title:String = "", streamUrl:String = "") {
         self.startEditing()
         let newStationID = UUID()
@@ -233,7 +240,7 @@ class RadioSettingVM: ObservableObject {
         self.model.radioList.append(newStation)
         self.model.selectRow = newStationID
     }
-    
+
     func selectStation() {
         for radio in radioList {
             radio.isEditing = false
@@ -252,10 +259,10 @@ class RadioSettingVM: ObservableObject {
         self.model.currentTitle = RadioStationSwitch.shared.playerItem.title
         RadioStationSwitch.shared.playerItem.isPlaying = isPlaying
         NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.radioStation)
-        
+
     }
-    
-    
+
+
 }
 
 extension RadioSettingVM {
@@ -276,17 +283,17 @@ extension RadioSettingVM {
                             self.model.showSuccessToast = true
                         }
                     }
-                    
+
                 }
             }
-            
+
         } catch {
             self.model.errorInfo = error.localizedDescription
             self.model.showErrorToast = true
         }
-        
+
     }
-    
+
     func importList() {
         let openPanel = buildOpenPanel()
         openPanel.begin{ (result:NSApplication.ModalResponse) -> Void in
@@ -300,7 +307,7 @@ extension RadioSettingVM {
                             if item.url.isValidURL && !RadioStations.existence(url: item.url) {
                                 self.addStation(title: item.name,
                                                 streamUrl: item.url)
-                                
+
                             }
                         }
                         self.model.successInfo = "Success"
@@ -309,12 +316,12 @@ extension RadioSettingVM {
                         self.model.errorInfo = error.localizedDescription
                         self.model.showErrorToast = true
                     }
-                    
+
                 }
             }
         }
     }
-    
+
     private func buildOpenPanel() -> NSOpenPanel {
         let openPanel = NSOpenPanel()
         openPanel.showsResizeIndicator = true
@@ -324,7 +331,7 @@ extension RadioSettingVM {
         openPanel.allowedContentTypes = [.json]
         return openPanel
     }
-    
+
     private func buildSavePanel() -> NSSavePanel {
         let savePanel = NSSavePanel()
         savePanel.title = "Save Radio List"
