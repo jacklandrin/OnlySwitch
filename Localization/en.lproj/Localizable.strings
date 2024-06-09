@@ -113,7 +113,7 @@
 "1 minute" = "1 minute";
 "Switch enable" = "Switch enable";
 "Automatically hide icons after:" = "Automatically hide icons after:";
-"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section." = "When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section.";
+"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section. This feature only works when the arrow-pointing icon is on the left side of App icon" = "When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section. This feature only works when the arrow-pointing icon is on the left side of App icon";
 "Allow Notification:" = "Allow Notification:";
 "Changing Station" = "Changing Station";
 "Soundtrack" = "Soundtrack";

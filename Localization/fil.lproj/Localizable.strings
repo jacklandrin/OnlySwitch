@@ -114,7 +114,7 @@
 "1 minute" = "1 minuto";
 "Switch enable" = "Paganahin ang switch";
 "Automatically hide icons after:" = "Awtomatikong itago ang mga icon pagkatapos ng:";
-"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section." = "Kapag naka-on ang switch, nakatago ang mga item sa kaliwa ng arrow-pointing icon. Pindutin ang ⌘ (command) at i-drag ang icon para i-configure ang nakatagong seksyon.";
+"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section. This feature only works when the arrow-pointing icon is on the left side of App icon" = "Kapag ang switch ay naka-on, ang mga item sa kaliwa ng icon na nakaturo sa arrow ay itinatago. Hwagin ang ⌘ (command) at i-drag ang icon upang i-configure ang nakatagong seksyon. Ang feature na ito ay gumagana lamang kapag ang icon na nakaturo sa arrow ay nasa kaliwa ng icon ng App";
 "Allow Notification:" = "Payagan ang Notification:";
 "Changing Station" = "Pagpapalit ng Istasyoni";
 "Soundtrack" = "Soundtrack";

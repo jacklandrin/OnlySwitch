@@ -113,7 +113,7 @@
 "1 minute" = "1 分钟";
 "Switch enable" = "开关可用";
 "Automatically hide icons after:" = "自动隐藏图标，在之后的:";
-"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section." = "当开关开启时，箭头所指的图标左边的所有图标会被隐藏。长按⌘键（command）并拖拽图标可以设置隐藏的区域";
+"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section. This feature only works when the arrow-pointing icon is on the left side of App icon" = "当开关打开时，箭头指向的图标左侧的项目将被隐藏。按住⌘ (command) 并拖动图标以配置隐藏部分。此功能仅在箭头指向的图标位于应用图标的左侧时才有效";
 "Allow Notification:" = "允许通知:";
 "Changing Station" = "切换电台";
 "Soundtrack" = "音轨";

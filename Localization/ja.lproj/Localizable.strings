@@ -114,7 +114,7 @@
 "1 minute" = "1 分";
 "Switch enable" = "スイッチの有効化";
 "Automatically hide icons after:" = "にアイコンを自動的に非表示にします:";
-"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section." = "スイッチがオンの場合、矢印アイコンの左側の項目は非表示になります。 ⌘（command）を押しながらアイコンをドラッグして、非表示セクションを構成します。";
+"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section. This feature only works when the arrow-pointing icon is on the left side of App icon" = "スイッチがオンの場合、矢印のアイコンの左側のアイテムが非表示になります。 ⌘ (command) キーを押しながらアイコンをドラッグして非表示セクションを設定します。 この機能は、矢印のアイコンがアプリアイコンの左側にある場合にのみ機能します";
 "Allow Notification of Changing Station" = "ステーションを切り替えるときに通知を許可する";
 "Allow Notification of Track" = "トラック通知を許可する";
 "Allow Notification:" = "通知を許可する:";
