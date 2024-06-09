@@ -79,6 +79,7 @@ struct EvolutionGalleryItemView: View {
                     startPoint: .topTrailing,
                     endPoint: .bottomLeading
                 )
+                .blur(radius: 4)
             )
             .help(viewStore.item.description)
             .cornerRadius(10)
