@@ -8,7 +8,7 @@
 import SwiftUI
 
 public extension Bundle {
-    private static let languageUserDefaults = UserDefaults(suiteName: "group.onlyswitch.shared")!
+    private static let languageUserDefaults = UserDefaults(suiteName: "group.jacklandrin.onlyswitch.shared")!
     private static var bundle: Bundle!
     private static var supportLangs = ["en", "zh", "de", "hr", "tr","pl", "fil", "nl", "it", "ru", "es","ja", "so","kr","fr","uk","sk","pt-BR"]
     static func localizedBundle() -> Bundle! {

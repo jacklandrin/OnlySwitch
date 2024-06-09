@@ -45,3 +45,4 @@
 "Select Evolution" = "Sélectionner l'Evolution";
 "Select Evolution you want to display in the widget." = "Sélectionnez l'Evolution que vous souhaitez afficher dans le widget.";
 "Widgets can control the evolution switches" = "Les widgets peuvent contrôler les commutateurs d'Evolution";
+"Please add a new %@ first." = "Veuillez d'abord ajouter un nouveau %@.";

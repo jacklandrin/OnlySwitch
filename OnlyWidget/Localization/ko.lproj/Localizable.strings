@@ -47,3 +47,4 @@
 "Select Evolution" = "Evolution 선택";
 "Select Evolution you want to display in the widget." = "위젯에 표시할 Evolution을 선택하십시오.";
 "Widgets can control the evolution switches" = "위젯은 Evolution 스위치를 제어할 수 있습니다";
+"Please add a new %@ first." = "먼저 새로운 %@을 추가하십시오.";

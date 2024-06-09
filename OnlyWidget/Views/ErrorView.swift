@@ -12,7 +12,7 @@ struct ErrorView: View {
 
     var body: some View {
         Link(destination: URL(string: "onlyswitch://SettingsWindow?destination=\(unitType.destination)")!, label: {
-            Text("Please add a new \(unitType.destination) first.")
+            Text("Please add a new %@ first.".localizeWithFormat(arguments: unitType.destination))
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         })
         .background(

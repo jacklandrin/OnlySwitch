@@ -46,3 +46,4 @@
 "Select Evolution" = "Выберите Evolution";
 "Select Evolution you want to display in the widget." = "Выберите Evolution, который вы хотите отображать в виджете.";
 "Widgets can control the evolution switches" = "Виджеты могут управлять переключателями Evolution";
+"Please add a new %@ first." = "Пожалуйста, сначала добавьте новый %@.";
