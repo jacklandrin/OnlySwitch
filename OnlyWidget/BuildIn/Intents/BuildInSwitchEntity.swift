@@ -29,7 +29,11 @@ struct BuildInSwitchEntity: AppEntity {
     }
 }
 
-struct BuildInSwitchQuery: EntityQuery {
+struct BuildInSwitchQuery: EntityStringQuery {
+    func entities(matching string: String) async throws -> [BuildInSwitchEntity] {
+        BuildInSwitchEntity.allSwitches.filter { $0.type.barInfo().title.range(of: string, options: .caseInsensitive) != nil }
+    }
+
     func entities(for identifiers: [BuildInSwitchEntity.ID]) async throws -> [BuildInSwitchEntity] {
         BuildInSwitchEntity.allSwitches.filter { identifiers.contains($0.id) }
     }
