@@ -14,7 +14,10 @@ struct HideMenubarIconsSettingView: View {
             Image("mark_icon_guide")
                 .resizable()
                 .scaledToFit()
-            Text("When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section. This feature only works when the arrow-pointing icon is on the left side of App icon".localized())
+            Text("When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section. This feature only works when the arrow-pointing icon is on the left side of App icon.".localized())
+                .padding(.horizontal, 5)
+
+            Text("The feature can be triggered when right clicking the arrow-pointing icon, and disabled by right clicking the App icon.".localized())
                 .padding(.horizontal, 5)
                 .padding(.vertical)
             Divider()
@@ -30,9 +33,9 @@ struct HideMenubarIconsSettingView: View {
                         }
                     }.frame(width:150, height: 30)
                 }.padding(.bottom, 20)
-                
+
             }.padding(.horizontal)
-           
+
         }
     }
 }

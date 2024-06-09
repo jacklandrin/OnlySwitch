@@ -113,7 +113,8 @@
 "1 minute" = "1 minuto";
 "Switch enable" = "Seletor ativado";
 "Automatically hide icons after:" = "Esconder icones automaticamente após:";
-"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section. This feature only works when the arrow-pointing icon is on the left side of App icon" = "Quando o seletor está ligado, os itens à esquerda do ícone de seta são escondidos. Segure ⌘ (command) e arraste o ícone para configurar a seção escondida. Esta função só funciona quando o ícone de seta está no lado esquerdo do ícone do aplicativo";
+"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section. This feature only works when the arrow-pointing icon is on the left side of App icon." = "Quando o seletor está ligado, os itens à esquerda do ícone de seta são escondidos. Segure ⌘ (command) e arraste o ícone para configurar a seção escondida. Esta função só funciona quando o ícone de seta está no lado esquerdo do ícone do aplicativo.";
+"The feature can be triggered when right clicking the arrow-pointing icon, and disabled by right clicking the App icon." = "A função pode ser acionada ao clicar com o botão direito no ícone de seta, e desativada ao clicar com o botão direito no ícone do aplicativo.";
 "Allow Notification:" = "Permitir Notificações:";
 "Changing Station" = "Mudando de Estação";
 "Soundtrack" = "Trilha Sonora";

@@ -114,7 +114,8 @@
 "1 minute" = "1 minuta";
 "Switch enable" = "Włącz Switch";
 "Automatically hide icons after:" = "Automatycznie ukryj ikony po:";
-"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section. This feature only works when the arrow-pointing icon is on the left side of App icon" = "Gdy przełącznik jest włączony, elementy po lewej stronie ikony z wskazaniem strzałki są ukryte. Przytrzymaj ⌘ (command) i przeciągnij ikonę, aby skonfigurować ukrytą sekcję. Ta funkcja działa tylko wtedy, gdy ikona z wskazaniem strzałki znajduje się po lewej stronie ikony aplikacji";
+"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section. This feature only works when the arrow-pointing icon is on the left side of App icon." = "Gdy przełącznik jest włączony, elementy po lewej stronie ikony z wskazaniem strzałki są ukryte. Przytrzymaj ⌘ (command) i przeciągnij ikonę, aby skonfigurować ukrytą sekcję. Ta funkcja działa tylko wtedy, gdy ikona z wskazaniem strzałki znajduje się po lewej stronie ikony aplikacji.";
+"The feature can be triggered when right clicking the arrow-pointing icon, and disabled by right clicking the App icon." = "Funkcję można uruchomić, klikając prawym przyciskiem myszy ikonę z wskazaniem strzałki, a wyłączyć, klikając prawym przyciskiem myszy ikonę aplikacji.";
 "Allow Notification:" = "Zezwól na powiadomienie:";
 "Changing Station" = "Zmiana stacji radiowej";
 "Soundtrack" = "Ścieżka dźwiękowa";

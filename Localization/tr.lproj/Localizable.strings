@@ -114,7 +114,8 @@
 "1 minute" = "1 dakika";
 "Switch enable" = "Anahtarı etkinleştir";
 "Automatically hide icons after:" = "Simgeleri otomatik olarak gizle:";
-"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section. This feature only works when the arrow-pointing icon is on the left side of App icon" = "Anahtar açık olduğunda, ok işaretli simgenin solundaki öğeler gizlenir. Gizli bölümü yapılandırmak için ⌘ (command) tuşunu basılı tutun ve simgeyi sürükleyin. Bu özellik, ok işaretli simgenin uygulama simgesinin solunda olduğunda yalnızca çalışır";
+"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section. This feature only works when the arrow-pointing icon is on the left side of App icon." = "Anahtar açık olduğunda, ok işaretli simgenin solundaki öğeler gizlenir. Gizli bölümü yapılandırmak için ⌘ (command) tuşunu basılı tutun ve simgeyi sürükleyin. Bu özellik, ok işaretli simgenin uygulama simgesinin solunda olduğunda yalnızca çalışır.";
+"The feature can be triggered when right clicking the arrow-pointing icon, and disabled by right clicking the App icon." = "Özellik, ok işaretli simgeye sağ tıkladığınızda tetiklenebilir ve uygulama simgesine sağ tıkladığınızda devre dışı bırakılabilir.";
 "Allow Notification:" = "Bildirime İzin Ver:";
 "Changing Station" = "Radyo İstasyonunu Değiştirme";
 "Soundtrack" = "Film müziği";

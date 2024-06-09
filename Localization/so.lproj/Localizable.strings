@@ -113,7 +113,8 @@
 "1 minute" = "1 daqiiqo";
 "Switch enable" = "Badal Awoodid";
 "Automatically hide icons after:" = "Si toos ah u qari astaanta kadib:";
-"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section. This feature only works when the arrow-pointing icon is on the left side of App icon" = "Marka beddelka la daayo, waxyaalaha ku yaal bidixka astaanta ee ayaa la qariyay. Xidh ⌘ (command) iyo gacanta astaanta si aad u bedesho qaybta qarsoon. Tusaale ahaan waxaa loo isticmaali karaa marka astaanta bidixka ay ku yaalaan bidixka App";
+"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section. This feature only works when the arrow-pointing icon is on the left side of App icon." = "Marka beddelka la daayo, waxyaalaha ku yaal bidixka astaanta ee ayaa la qariyay. Xidh ⌘ (command) iyo gacanta astaanta si aad u bedesho qaybta qarsoon. Tusaale ahaan waxaa loo isticmaali karaa marka astaanta bidixka ay ku yaalaan bidixka App.";
+"The feature can be triggered when right clicking the arrow-pointing icon, and disabled by right clicking the App icon." = "Waxaa loo isticmaali karaa marka aad ku duubto astaanta bidixka, iyo la dami marka aad ku duubto App icon.";
 "Allow Notification:" = "Oggolow Ogeysiinta:";
 "Changing Station" = "Beddelida Saldhig";
 "Soundtrack" = "Heesta";

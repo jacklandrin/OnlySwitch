@@ -113,7 +113,8 @@
 "1 minute" = "1 хвилина";
 "Switch enable" = "Ввімкнути перемикач";
 "Automatically hide icons after:" = "Автоматично ховати іконки після:";
-"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section. This feature only works when the arrow-pointing icon is on the left side of App icon" = "Коли перемикач увімкнено, елементи ліворуч від іконки зі стрілкою приховуються. Утримуйте ⌘ (команду) і перетягніть іконку для налаштування прихованої секції. Ця функція працює тільки тоді, коли іконка зі стрілкою знаходиться зліва від іконки програми";
+"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section. This feature only works when the arrow-pointing icon is on the left side of App icon." = "Коли перемикач увімкнено, елементи ліворуч від іконки зі стрілкою приховуються. Утримуйте ⌘ (команду) і перетягніть іконку для налаштування прихованої секції. Ця функція працює тільки тоді, коли іконка зі стрілкою знаходиться зліва від іконки програми.";
+"The feature can be triggered when right clicking the arrow-pointing icon, and disabled by right clicking the App icon." = "Цю функцію можна активувати, натиснувши правою кнопкою миші на іконку зі стрілкою, і вимкнути, натиснувши правою кнопкою миші на іконку програми.";
 "Allow Notification:" = "Дозволити Сповіщення:";
 "Changing Station" = "Змінити Станцію";
 "Soundtrack" = "Саундтрек";

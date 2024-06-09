@@ -112,7 +112,8 @@
 "1 minute" = "1 minute";
 "Switch enable" = "Activer le commutateur";
 "Automatically hide icons after:" = "Masquer automatiquement les icônes après :";
-"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section. This feature only works when the arrow-pointing icon is on the left side of App icon" = "Lorsque le commutateur est activé, les éléments à gauche de l'icône pointant vers la flèche sont masqués. Maintenez la touche ⌘ (commande) enfoncée et faites glisser l'icône pour configurer la section masquée. Cette fonctionnalité ne fonctionne que lorsque l'icône pointant vers la flèche est sur le côté gauche de l'icône de l'application.";
+"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section. This feature only works when the arrow-pointing icon is on the left side of App icon." = "Lorsque le commutateur est activé, les éléments à gauche de l'icône pointant vers la flèche sont masqués. Maintenez la touche ⌘ (commande) enfoncée et faites glisser l'icône pour configurer la section masquée. Cette fonctionnalité ne fonctionne que lorsque l'icône pointant vers la flèche est sur le côté gauche de l'icône de l'application.";
+"The feature can be triggered when right clicking the arrow-pointing icon, and disabled by right clicking the App icon." = "La fonctionnalité peut être déclenchée en cliquant avec le bouton droit de la souris sur l'icône pointant vers la flèche, et désactivée en cliquant avec le bouton droit de la souris sur l'icône de l'application.";
 "Allow Notification:" = "Autoriser la notification :";
 "Changing Station" = "Changement de Station";
 "Soundtrack" = "Morceau";

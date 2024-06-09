@@ -113,7 +113,8 @@
 "1 minute" = "1 minuut";
 "Switch enable" = "Switch inschakelen";
 "Automatically hide icons after:" = "Pictogrammen automatisch verbergen na:";
-"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section. This feature only works when the arrow-pointing icon is on the left side of App icon" = "Wanneer de schakelaar is ingeschakeld, worden items aan de linkerkant van het pijlpictogram verborgen. Houd ⌘ (command) ingedrukt en sleep het pictogram om het verborgen gedeelte te configureren. Deze functie werkt alleen wanneer het pijlpictogram aan de linkerkant van het app-pictogram staat";
+"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section. This feature only works when the arrow-pointing icon is on the left side of App icon." = "Wanneer de schakelaar is ingeschakeld, worden items aan de linkerkant van het pijlpictogram verborgen. Houd ⌘ (command) ingedrukt en sleep het pictogram om het verborgen gedeelte te configureren. Deze functie werkt alleen wanneer het pijlpictogram aan de linkerkant van het app-pictogram staat.";
+"The feature can be triggered when right clicking the arrow-pointing icon, and disabled by right clicking the App icon." = "De functie kan worden geactiveerd door met de rechtermuisknop op het pijlpictogram te klikken en worden uitgeschakeld door met de rechtermuisknop op het app-pictogram te klikken.";
 "Allow Notification:" = "Melding toestaan:";
 "Changing Station" = "Van radiostation wisselen";
 "Soundtrack" = "Soundtrack";

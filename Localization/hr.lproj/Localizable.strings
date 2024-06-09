@@ -111,7 +111,8 @@
 "1 minute" = "1 minuta";
 "Switch enable" = "Switch je uključen";
 "Automatically hide icons after:" = "Automatski sakrij ikone nakon:";
-"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section. This feature only works when the arrow-pointing icon is on the left side of App icon" = "Kada je prekidač uključen, stavke s lijeve strane ikone s usmjerenom strelicom su skrivene. Držite ⌘ (command) i povucite ikonu za konfiguriranje skrivenog odjeljka. Ova značajka radi samo kada je ikona s usmjerenom strelicom na lijevoj strani ikone programa";
+"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section. This feature only works when the arrow-pointing icon is on the left side of App icon." = "Kada je prekidač uključen, stavke s lijeve strane ikone s usmjerenom strelicom su skrivene. Držite ⌘ (command) i povucite ikonu za konfiguriranje skrivenog odjeljka. Ova značajka radi samo kada je ikona s usmjerenom strelicom na lijevoj strani ikone programa.";
+"The feature can be triggered when right clicking the arrow-pointing icon, and disabled by right clicking the App icon." = "Značajka se može pokrenuti desnim klikom na ikonu s usmjerenom strelicom i onemogućiti desnim klikom na ikonu programa.";
 "Allow Notification:" = "Dozvoli obavijest:";
 "Changing Station" = "Mijenjanju radijske stanice";
 "Soundtrack" = "Zvučni zapis";

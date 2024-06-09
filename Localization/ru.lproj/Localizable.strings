@@ -113,7 +113,8 @@
 "1 minute" = "1 минута";
 "Switch enable" = "Включить переключатель";
 "Automatically hide icons after:" = "Автоматически скрывать значки через:";
-"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section. This feature only works when the arrow-pointing icon is on the left side of App icon" = "Когда переключатель включен, элементы слева от иконки со стрелкой скрываются. Удерживайте ⌘ (command) и перетащите иконку, чтобы настроить скрытый раздел. Эта функция работает только тогда, когда иконка со стрелкой находится слева от иконки приложения";
+"When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section. This feature only works when the arrow-pointing icon is on the left side of App icon." = "Когда переключатель включен, элементы слева от иконки со стрелкой скрываются. Удерживайте ⌘ (command) и перетащите иконку, чтобы настроить скрытый раздел. Эта функция работает только тогда, когда иконка со стрелкой находится слева от иконки приложения.";
+"The feature can be triggered when right clicking the arrow-pointing icon, and disabled by right clicking the App icon." = "Функция может быть запущена при щелчке правой кнопкой мыши по иконке со стрелкой и отключена при щелчке правой кнопкой мыши по иконке приложения.";
 "Allow Notification:" = "Разрешить уведомление:";
 "Changing Station" = "Изменение радиостанции";
 "SoundTrack" = "Саундтрек";
