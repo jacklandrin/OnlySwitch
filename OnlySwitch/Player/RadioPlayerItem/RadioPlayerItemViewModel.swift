@@ -129,7 +129,7 @@ class RadioPlayerItemViewModel:CommonPlayerItem, ObservableObject, Identifiable 
             }
             guard streamUrl.isValidURL else {
                 self.model.streamUrl = station.url!
-                NotificationCenter.default.post(name: .illegalRadioInfoNotification, object: "url is invalied")
+                NotificationCenter.default.post(name: .illegalRadioInfoNotification, object: "url is invalid")
                 return
             }
             var hasChanged = false
@@ -162,7 +162,7 @@ class RadioPlayerItemViewModel:CommonPlayerItem, ObservableObject, Identifiable 
             }
             guard streamUrl.isValidURL else {
                 self.model.streamUrl = ""
-                NotificationCenter.default.post(name: .illegalRadioInfoNotification, object: "url is invalied")
+                NotificationCenter.default.post(name: .illegalRadioInfoNotification, object: "url is invalid")
                 return
             }
             guard let managedObjectContext = self.managedObjectContext else {
