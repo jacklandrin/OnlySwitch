@@ -38,7 +38,6 @@ class DisplayManager{
         }
 
         DisplayServicesSetBrightness(builtInDisplayID, level)
-        DisplayServicesBrightnessChanged(builtInDisplayID, Double(level))
     }
     
     func getBrightness() -> Float {

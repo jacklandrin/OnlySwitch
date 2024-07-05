@@ -71,11 +71,7 @@ class DimScreenSwitch: SwitchProvider {
     }
 
     func isVisible() -> Bool {
-        if #available(macOS 15.0, *) {
-            return false
-        } else {
-            return true
-        }
+        return true
     }
 
     private func setTimer() {
