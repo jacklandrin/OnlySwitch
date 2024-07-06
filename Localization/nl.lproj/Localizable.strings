@@ -179,4 +179,5 @@
 "Key Light" = "Toetsenbordverlichting";
 "Brightness:" = "Helderheid:";
 "Adjust keyboard brightness in low light" = "Pas de toetsenbordhelderheid aan bij weinig licht";
-
+"Check Updates" = "Controleer op updates";
+"Check Updates on Launch" = "Controleer bij opstarten op updates";

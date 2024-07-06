@@ -178,4 +178,5 @@
 "Key Light" = "Lumière de touche";
 "Brightness:" = "Luminosité :";
 "Adjust keyboard brightness in low light" = "Ajuster la luminosité du clavier en cas de faible luminosité";
-
+"Check Updates" = "Vérifier les mises à jour";
+"Check Updates on Launch" = "Vérifier les mises à jour au lancement";

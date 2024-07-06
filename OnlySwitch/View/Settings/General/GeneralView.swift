@@ -42,6 +42,9 @@ struct GeneralView: View, EmailProvider {
                     Text("Updates:".localized())
                         .frame(height:Layout.generalSettingItemHeight)
                     
+                    Text("Check Updates".localized())
+                        .frame(height:Layout.generalSettingItemHeight)
+
                     Text("Cache:".localized())
                         .frame(height: 50, alignment: .top)
                         .padding(.top,5)
@@ -150,8 +153,16 @@ struct GeneralView: View, EmailProvider {
                             .controlSize(.small)
                             .isHidden(!generalVM.showProgress, remove: true)
                     }.frame(height: Layout.generalSettingItemHeight)
-
                     
+                    //check update on launch
+                    Toggle(
+                        isOn: $generalVM.checkIfUpdateOnlaunch,
+                        label: {
+                            Text("Check Updates on Launch".localized())
+                        }
+                    )
+                    .frame(height: Layout.generalSettingItemHeight)
+
                     //clear cache
                     VStack(alignment:.leading,spacing: 15) {
                         HStack {

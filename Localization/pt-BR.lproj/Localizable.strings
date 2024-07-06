@@ -180,4 +180,5 @@
 "Key Light" = "Luz do Teclado";
 "Brightness:" = "Brilho:";
 "Adjust keyboard brightness in low light" = "Ajustar brilho do teclado em baixa luz";
-
+"Check Updates" = "Checar Atualizações";
+"Check Updates on Launch" = "Checar Atualizações ao Abrir";

@@ -178,4 +178,5 @@
 "Key Light" = "Tipka svjetlo";
 "Brightness:" = "Svjetlina:";
 "Adjust keyboard brightness in low light" = "Prilagodi svjetlinu tipkovnice u slabom svjetlu";
-
+"Check Updates" = "Provjeri ažuriranja";
+"Check Updates on Launch" = "Provjeri ažuriranja pri pokretanju";

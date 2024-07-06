@@ -180,4 +180,5 @@
 "Key Light" = "Клавішний світ";
 "Brightness:" = "Яскравість:";
 "Adjust keyboard brightness in low light" = "Налаштуйте яскравість клавіатури в умовах недостатнього освітлення";
-
+"Check Updates" = "Перевірка Оновлень";
+"Check Updates on Launch" = "Перевірка Оновлень при Запуску";

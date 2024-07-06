@@ -182,4 +182,5 @@
 "Key Light" = "キーライト";
 "Brightness:" = "明るさ:";
 "Adjust keyboard brightness in low light" = "暗い場所でキーボードの明るさを調整する";
-
+"Check Updates" = "アップデートを確認";
+"Check Updates on Launch" = "起動時にアップデートを確認";

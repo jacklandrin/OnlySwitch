@@ -182,4 +182,5 @@
 "Key Light" = "키보드 라이트";
 "Brightness:" = "밝기:";
 "Adjust keyboard brightness in low light" = "어두운 환경에서 키보드 밝기 조절";
-
+"Check Updates" = "업데이트 확인";
+"Check Updates on Launch" = "시작 시 업데이트 확인";

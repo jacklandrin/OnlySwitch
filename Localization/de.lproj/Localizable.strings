@@ -181,4 +181,5 @@
 "Key Light" = "Tastaturbeleuchtung";
 "Brightness:" = "Helligkeit:";
 "Adjust keyboard brightness in low light" = "Tastaturhelligkeit bei schwachem Licht anpassen";
-
+"Check Updates" = "Updates überprüfen";
+"Check Updates on Launch" = "Updates beim Start überprüfen";

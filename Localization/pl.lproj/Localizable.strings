@@ -180,4 +180,5 @@
 "Key Light" = "Światło klawiatury";
 "Brightness:" = "Jasność:";
 "Adjust keyboard brightness in low light" = "Dostosuj jasność klawiatury w słabym świetle";
-
+"Check Updates" = "Sprawdź aktualizacje";
+"Check Updates on Launch" = "Sprawdź aktualizacje przy uruchamianiu";
