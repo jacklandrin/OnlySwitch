@@ -179,4 +179,5 @@
 "Key Light" = "Клавиатурный свет";
 "Brightness:" = "Яркость:";
 "Adjust keyboard brightness in low light" = "Настройка яркости клавиатуры в темное время суток";
-
+"Check Updates" = "Проверить обновления";
+"Check Updates on Launch" = "Проверять обновления при запуске";

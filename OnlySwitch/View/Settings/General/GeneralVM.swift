@@ -109,6 +109,16 @@ class GeneralVM:ObservableObject {
         model.errorInfo
     }
     
+    var checkIfUpdateOnlaunch: Bool {
+        get {
+            preferences.checkUpdateOnLaunch
+        }
+
+        set {
+            preferences.checkUpdateOnLaunch = newValue
+        }
+    }
+
     private var cancellable = Set<AnyCancellable>()
     
     init() {

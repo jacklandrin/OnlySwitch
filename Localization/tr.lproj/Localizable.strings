@@ -181,4 +181,5 @@
 "Key Light" = "Tuş Işığı";
 "Brightness:" = "Parlaklık:";
 "Adjust keyboard brightness in low light" = "Düşük ışıkta klavye parlaklığını ayarlayın";
-
+"Check Updates" = "Güncellemeleri Kontrol Et";
+"Check Updates on Launch" = "Başlatma sırasında güncellemeleri kontrol et";

@@ -178,4 +178,5 @@ Creado por Jacklandrin el día 14/12/2021.
 "Key Light" = "Luz de teclado";
 "Brightness:" = "Brillo:";
 "Adjust keyboard brightness in low light" = "Ajustar el brillo del teclado en condiciones de poca luz";
-
+"Check Updates" = "Verificar actualizaciones";
+"Check Updates on Launch" = "Verificar actualizaciones al iniciar";

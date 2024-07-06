@@ -242,4 +242,7 @@ struct Preferences {
     // KeyLight
     @UserDefaultValue(key: UserDefaults.Key.keyLightBrightness, defaultValue: 1.0)
     var keyLightBrightness: Float
+
+    @UserDefaultValue(key: UserDefaults.Key.checkUpdateOnLaunch, defaultValue: true)
+    var checkUpdateOnLaunch: Bool
 }

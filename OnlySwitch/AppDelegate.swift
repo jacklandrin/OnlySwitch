@@ -173,7 +173,9 @@ class AppDelegate:NSObject, NSApplicationDelegate {
         Bundle.setLanguage(lang: LanguageManager.sharedManager.currentLang)
 
         registerShortcut()
-        checkUpdate()
+        if PreferencesObserver.shared.preferences.checkUpdateOnLaunch {
+            checkUpdate()
+        }
     }
 
     func applicationWillTerminate(_ notification: Notification) {
