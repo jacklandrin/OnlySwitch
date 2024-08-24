@@ -13,6 +13,12 @@ public extension NSImage {
         guard let tiffRepresentation = tiffRepresentation, let bitmapImage = NSBitmapImageRep(data: tiffRepresentation) else { return nil }
         return bitmapImage.representation(using: .jpeg, properties: [:])
     }
+
+    var pngData: Data? {
+        guard let tiffRepresentation = tiffRepresentation, let bitmapImage = NSBitmapImageRep(data: tiffRepresentation) else { return nil }
+        return bitmapImage.representation(using: .png, properties: [:])
+    }
+
     func jpgWrite(to url: URL, options: Data.WritingOptions = .atomic) -> Bool {
         do {
             try jpgData?.write(to: url, options: options)

@@ -176,6 +176,7 @@
 		04581DC12765522A008ADF30 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04581DC02765522A008ADF30 /* AboutView.swift */; };
 		046331D32795DACB00C5F894 /* ShortcutsMarket.json in Resources */ = {isa = PBXBuildFile; fileRef = 046331D22795DACB00C5F894 /* ShortcutsMarket.json */; };
 		046331D52795E1BC00C5F894 /* ColorDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046331D42795E1BC00C5F894 /* ColorDefine.swift */; };
+		046955D92C7A732300577915 /* OnlyControl in Frameworks */ = {isa = PBXBuildFile; productRef = 046955D82C7A732300577915 /* OnlyControl */; };
 		046C0C00293E7C040073F727 /* SwiftUIWebView in Frameworks */ = {isa = PBXBuildFile; productRef = 046C0BFF293E7C040073F727 /* SwiftUIWebView */; };
 		047140B327788364005B160B /* mixkit-alert-bells-echo-765.wav in Resources */ = {isa = PBXBuildFile; fileRef = 047140B127788364005B160B /* mixkit-alert-bells-echo-765.wav */; };
 		047140B427788364005B160B /* mixkit-bell-notification-933.wav in Resources */ = {isa = PBXBuildFile; fileRef = 047140B227788364005B160B /* mixkit-bell-notification-933.wav */; };
@@ -715,6 +716,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				046955D92C7A732300577915 /* OnlyControl in Frameworks */,
 				046C0C00293E7C040073F727 /* SwiftUIWebView in Frameworks */,
 				04819CE22BDEB63900645A0C /* CustomDump in Frameworks */,
 				04DC6C9828A7CA6A00888BF9 /* CoreDisplay.framework in Frameworks */,
@@ -952,6 +954,7 @@
 		043E5D672757C85500ADC004 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				04A5AA572C39F8A2001070CA /* Dashboard */,
 				04BF976C27908E0100E7C0E2 /* OnlySwitchList */,
 				04BF976D27908E2800E7C0E2 /* SwitchItem */,
 				04BF977927908FB900E7C0E2 /* SoundWave */,
@@ -1351,6 +1354,13 @@
 			path = Header;
 			sourceTree = "<group>";
 		};
+		04A5AA572C39F8A2001070CA /* Dashboard */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Dashboard;
+			sourceTree = "<group>";
+		};
 		04BC8ED428513CC8009E605F /* HideMenubarIcons */ = {
 			isa = PBXGroup;
 			children = (
@@ -1723,6 +1733,7 @@
 				0447E3982B7174AD00D07B9A /* Switches */,
 				0478874F2B83EC8E0064B9F5 /* Utilities */,
 				04819CE12BDEB63900645A0C /* CustomDump */,
+				046955D82C7A732300577915 /* OnlyControl */,
 			);
 			productName = OnlySwitch;
 			productReference = 04447B582754F08000CD2900 /* OnlySwitch.app */;
@@ -2740,7 +2751,7 @@
 			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
 			requirement = {
 				kind = exactVersion;
-				version = 1.9.3;
+				version = 1.13.1;
 			};
 		};
 		04819CE02BDEB63900645A0C /* XCRemoteSwiftPackageReference "swift-custom-dump" */ = {
@@ -2797,6 +2808,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 04581DB4276506B9008ADF30 /* XCRemoteSwiftPackageReference "AlertToast" */;
 			productName = AlertToast;
+		};
+		046955D82C7A732300577915 /* OnlyControl */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OnlyControl;
 		};
 		046C0BFF293E7C040073F727 /* SwiftUIWebView */ = {
 			isa = XCSwiftPackageProductDependency;

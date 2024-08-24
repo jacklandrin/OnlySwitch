@@ -23,7 +23,15 @@ let package = Package(
         .library(
             name: "Utilities",
             targets: ["Utilities"]
+        ),
+        .library(
+            name: "OnlyControl",
+            targets: ["OnlyControl"]
         )
+    ],
+    dependencies: [
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", exact: "1.13.1"),
+        .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.0.0" )
     ],
     targets: [
         .target(
@@ -49,6 +57,16 @@ let package = Package(
                 "Extensions",
                 "Defines"
             ]
-        )
+        ),
+        .target(
+            name: "OnlyControl",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                "Extensions",
+                "Defines",
+                "Switches",
+                "Utilities"
+            ]
+        ),
     ]
 )

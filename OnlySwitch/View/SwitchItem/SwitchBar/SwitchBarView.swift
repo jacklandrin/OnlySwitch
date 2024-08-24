@@ -16,7 +16,8 @@ struct SwitchBarView: View {
     var body: some View {
         HStack {
             Image(nsImage:
-                    barImage(option: switchOption)!.resizeMaintainingAspectRatio(withSize: NSSize(width: 50, height: 50))!)
+                    barImage(option: switchOption)!
+                .resizeMaintainingAspectRatio(withSize: NSSize(width: 50, height: 50))!)
             .renderingMode(.template)
             .resizable()
             .scaledToFit()
