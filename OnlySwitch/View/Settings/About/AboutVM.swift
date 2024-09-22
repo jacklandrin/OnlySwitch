@@ -9,8 +9,8 @@ import Foundation
 import Alamofire
 
 class AboutVM:ObservableObject {
-    @Published var downloadCount:Int = 0
-    @Published var updateHistoryInfo:String = ""
+    @Published var downloadCount: Int = 0
+    @Published var updateHistoryInfo: String = ""
     @Published var updateHistoryList = [String]()
     
     private var presenter = GitHubPresenter()

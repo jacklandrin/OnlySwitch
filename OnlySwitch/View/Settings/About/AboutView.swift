@@ -81,7 +81,7 @@ struct AboutView: View {
                         .isHidden(!aboutVM.updateHistoryInfo.isEmpty, remove: true)
                     ForEach(aboutVM.updateHistoryList,id:\.self) { info in
                         LazyHStack {
-                            Text(info)
+                            Text(LocalizedStringKey(info))
                                 .frame(width: Layout.settingWindowWidth / 2 - 150,alignment: .leading)
                             Spacer()
                         }

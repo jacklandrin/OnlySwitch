@@ -20,7 +20,7 @@ struct SettingsView: View {
 
     var naviagtionView: some View {
         NavigationView {
-            List(selection:$settingVM.selection) {
+            List(selection: $settingVM.selection) {
                 ForEach(settingVM.settingItems, id:\.self ) { item in
                     NavigationLink{
                         page(item: item)
@@ -53,7 +53,7 @@ struct SettingsView: View {
             }
         }.navigationTitle("Settings".localized())
             .toolbar {
-                ToolbarItem(placement: .navigation) {
+                ToolbarItem(placement: .automatic) {
                     Button(action: {
                         settingVM.toggleSliderbar()
                     }, label: {

@@ -31,9 +31,9 @@ class SettingsVM: ObservableObject {
 
     static let shared = SettingsVM()
 
-    @Published var settingItems:[SettingsItem]
+    @Published var settingItems: [SettingsItem]
 
-    @Published var selection:SettingsItem? = .General
+    @Published var selection: SettingsItem? = .General
 
     var evolutionStore = Store(
         initialState: EvolutionReducer.State()) {
