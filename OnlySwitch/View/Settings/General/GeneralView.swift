@@ -85,6 +85,10 @@ struct GeneralView: View, EmailProvider {
                             Button(SwitchListAppearance.dual.rawValue.localized()) {
                                 generalVM.currentAppearance = SwitchListAppearance.dual.rawValue
                             }
+
+                            Button(SwitchListAppearance.onlyControl.rawValue.localized()) {
+                                generalVM.currentAppearance = SwitchListAppearance.onlyControl.rawValue
+                            }
                         }.frame(maxWidth:150)
                     }.frame(height:Layout.generalSettingItemHeight)
                     

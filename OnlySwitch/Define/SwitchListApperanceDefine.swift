@@ -9,4 +9,5 @@ import Foundation
 enum SwitchListAppearance:String {
     case single = "Single Column"
     case dual = "Two Columns"
+    case onlyControl = "Only Control"
 }
