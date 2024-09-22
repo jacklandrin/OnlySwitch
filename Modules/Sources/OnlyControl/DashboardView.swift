@@ -7,33 +7,54 @@
 
 import ComposableArchitecture
 import Defines
+import Reorderable
 import SwiftUI
 
 public struct DashboardView: View {
-    let data = (1...20).map { ControlItemReducer.preview(id: $0) }
+//    @State var items = (1...20).map { ControlItemReducer.preview(id: $0) }
+    let store: StoreOf<DashboardReducer>
     let columns = [
-            GridItem(.adaptive(minimum: 80))
+        GridItem(.adaptive(minimum: 85, maximum: 180), alignment: .leading)
         ]
-    public init() {}
+    @State private var active: ControlItemViewState?
+    @State private var hasChangedLocation = false
+
+    public init(store: StoreOf<DashboardReducer>) {
+        self.store = store
+    }
 
     public var body: some View {
-        ScrollView {
-            LazyVGrid(columns: columns) {
-                ForEach(data, id: \.id) { item in
-                    ControlItemView(store: Store(initialState: item) {
-                        ControlItemReducer()
-                    })
+        WithPerceptionTracking {
+            ScrollView(.vertical) {
+                LazyVGrid(columns: columns, spacing: 10) {
+                    ReorderableForeach(store.items, active: $active) { item in
+                        ControlItemView(viewState: item)
+                            .onTapGesture {
+                                store.send(.didTapItem(item.id))
+                            }
+                    } preview: { item in
+                        ControlItemView(viewState: item)
+                            .frame(width: 100, height: 100)
+                            .scaleEffect(1.1)
+                    } moveAction: { from, to in
+                        store.send(.moveLocation(from, to))
+                    }
                 }
+                .padding()
+                .animation(.default, value: store.items)
             }
-            .padding()
+            .reorderableForEachContainer(active: $active)
+            .frame(width: 800, height: 300)
         }
-        .frame(
-            width: Layout.settingWindowWidth,
-            height: Layout.settingWindowHeight
-        )
+    }
+
+    private var shape: some Shape {
+        RoundedRectangle(cornerRadius: 20)
     }
 }
 
 #Preview {
-    DashboardView()
+    DashboardView(store: .init(initialState: .init()) {
+        DashboardReducer()
+    })
 }

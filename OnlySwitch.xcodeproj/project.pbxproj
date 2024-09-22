@@ -177,6 +177,7 @@
 		046331D32795DACB00C5F894 /* ShortcutsMarket.json in Resources */ = {isa = PBXBuildFile; fileRef = 046331D22795DACB00C5F894 /* ShortcutsMarket.json */; };
 		046331D52795E1BC00C5F894 /* ColorDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046331D42795E1BC00C5F894 /* ColorDefine.swift */; };
 		046955D92C7A732300577915 /* OnlyControl in Frameworks */ = {isa = PBXBuildFile; productRef = 046955D82C7A732300577915 /* OnlyControl */; };
+		046955DB2C7E5E9B00577915 /* OnlyControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046955DA2C7E5E9B00577915 /* OnlyControlView.swift */; };
 		046C0C00293E7C040073F727 /* SwiftUIWebView in Frameworks */ = {isa = PBXBuildFile; productRef = 046C0BFF293E7C040073F727 /* SwiftUIWebView */; };
 		047140B327788364005B160B /* mixkit-alert-bells-echo-765.wav in Resources */ = {isa = PBXBuildFile; fileRef = 047140B127788364005B160B /* mixkit-alert-bells-echo-765.wav */; };
 		047140B427788364005B160B /* mixkit-bell-notification-933.wav in Resources */ = {isa = PBXBuildFile; fileRef = 047140B227788364005B160B /* mixkit-bell-notification-933.wav */; };
@@ -270,6 +271,7 @@
 		04938D0E2769247A00713F1D /* SendEmail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04938D0D2769247A00713F1D /* SendEmail.swift */; };
 		04938D1027692B6900713F1D /* SwitchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04938D0F27692B6900713F1D /* SwitchManager.swift */; };
 		04938D12276948DE00713F1D /* WallpaperManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04938D11276948DE00713F1D /* WallpaperManager.swift */; };
+		04972F8A2C9F449200896D77 /* OnlyControlReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04972F892C9F448C00896D77 /* OnlyControlReducer.swift */; };
 		04A23B23275D5FC500B454C8 /* CoreBrightness.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04A23B22275D5FC500B454C8 /* CoreBrightness.framework */; };
 		04A6B54B27715F90003B2647 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 04A6B54A27715F90003B2647 /* Alamofire */; };
 		04A6B5502771F338003B2647 /* GitHubPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A6B54F2771F338003B2647 /* GitHubPresenter.swift */; };
@@ -517,6 +519,7 @@
 		04581DC02765522A008ADF30 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		046331D22795DACB00C5F894 /* ShortcutsMarket.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ShortcutsMarket.json; sourceTree = "<group>"; };
 		046331D42795E1BC00C5F894 /* ColorDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorDefine.swift; sourceTree = "<group>"; };
+		046955DA2C7E5E9B00577915 /* OnlyControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyControlView.swift; sourceTree = "<group>"; };
 		047140B127788364005B160B /* mixkit-alert-bells-echo-765.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "mixkit-alert-bells-echo-765.wav"; sourceTree = "<group>"; };
 		047140B227788364005B160B /* mixkit-bell-notification-933.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "mixkit-bell-notification-933.wav"; sourceTree = "<group>"; };
 		047140B527788486005B160B /* EffectSoundHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectSoundHelper.swift; sourceTree = "<group>"; };
@@ -615,6 +618,7 @@
 		04938D0D2769247A00713F1D /* SendEmail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendEmail.swift; sourceTree = "<group>"; };
 		04938D0F27692B6900713F1D /* SwitchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchManager.swift; sourceTree = "<group>"; };
 		04938D11276948DE00713F1D /* WallpaperManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WallpaperManager.swift; sourceTree = "<group>"; };
+		04972F892C9F448C00896D77 /* OnlyControlReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyControlReducer.swift; sourceTree = "<group>"; };
 		04A23B22275D5FC500B454C8 /* CoreBrightness.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBrightness.framework; path = ../../../../System/Library/PrivateFrameworks/CoreBrightness.framework; sourceTree = "<group>"; };
 		04A23B2C275D641900B454C8 /* OnlySwitch-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OnlySwitch-Bridging-Header.h"; sourceTree = "<group>"; };
 		04A23B2D275D69F700B454C8 /* CBBlueLightClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CBBlueLightClient.h; sourceTree = "<group>"; };
@@ -954,7 +958,7 @@
 		043E5D672757C85500ADC004 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				04A5AA572C39F8A2001070CA /* Dashboard */,
+				04A5AA572C39F8A2001070CA /* OnlyControl */,
 				04BF976C27908E0100E7C0E2 /* OnlySwitchList */,
 				04BF976D27908E2800E7C0E2 /* SwitchItem */,
 				04BF977927908FB900E7C0E2 /* SoundWave */,
@@ -1354,11 +1358,13 @@
 			path = Header;
 			sourceTree = "<group>";
 		};
-		04A5AA572C39F8A2001070CA /* Dashboard */ = {
+		04A5AA572C39F8A2001070CA /* OnlyControl */ = {
 			isa = PBXGroup;
 			children = (
+				04972F892C9F448C00896D77 /* OnlyControlReducer.swift */,
+				046955DA2C7E5E9B00577915 /* OnlyControlView.swift */,
 			);
-			path = Dashboard;
+			path = OnlyControl;
 			sourceTree = "<group>";
 		};
 		04BC8ED428513CC8009E605F /* HideMenubarIcons */ = {
@@ -2069,6 +2075,7 @@
 				047C1E592A2255A00061235D /* EvolutionEditorView.swift in Sources */,
 				0406EDC82ACB56F00015F4D0 /* EvolutionGalleryReducer.swift in Sources */,
 				04DC6C7F28A5675600888BF9 /* BackNoisiesTrackManager.swift in Sources */,
+				04972F8A2C9F449200896D77 /* OnlyControlReducer.swift in Sources */,
 				0447E38D2B71746E00D07B9A /* ScreenTestSwitch.swift in Sources */,
 				041F9BE62AEEFDC6000B27C7 /* StickerService.swift in Sources */,
 				0419276B2AEC124B0041185B /* KeyboardShortcutsDefine.swift in Sources */,
@@ -2189,6 +2196,7 @@
 				0447E3912B71746E00D07B9A /* HiddenFilesSwitch.swift in Sources */,
 				047140B8277884EE005B160B /* UserDefaultValue.swift in Sources */,
 				04933766276262EB00AE779A /* SoundWaveView.swift in Sources */,
+				046955DB2C7E5E9B00577915 /* OnlyControlView.swift in Sources */,
 				0447E3612B71746E00D07B9A /* ShowExtensionNameSwitch.swift in Sources */,
 				0419276D2AEC3BDB0041185B /* FocusModifier.swift in Sources */,
 				0427365027C1A9F80068108F /* MusicPlayerDelegate.swift in Sources */,

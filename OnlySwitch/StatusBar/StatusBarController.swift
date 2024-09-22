@@ -7,6 +7,9 @@
 
 import AppKit
 import Defines
+import SwiftUI
+import Foundation
+import ComposableArchitecture
 
 struct OtherPopover {
     static let name = NSNotification.Name("otherPopover")
@@ -21,10 +24,11 @@ class StatusBarController {
         static let collapse:CGFloat = 10000
         static let normal:CGFloat = NSStatusItem.squareLength
     }
-    
+
     private var mainItem: NSStatusItem
     private var markItem: NSStatusItem?
     private var popover: NSPopover
+    private var onlyControlStore: StoreOf<OnlyControlReducer> = .init(initialState: .init()) { OnlyControlReducer() }
     private var eventMonitor : EventMonitor?
     @UserDefaultValue(key: UserDefaults.Key.isMenubarCollapse, defaultValue: false)
     private var isMenubarCollapse:Bool
@@ -40,28 +44,57 @@ class StatusBarController {
             }
         }
     }
-    
+
     var currentMenubarIcon:String {
         return Preferences.shared.currentMenubarIcon
     }
-    
+
     var currentAppearance:String {
         return Preferences.shared.currentAppearance
     }
-    
+
+    lazy var dashboardWindow: NSWindow = {
+        let view = NSHostingView(rootView: OnlyControlView(store: onlyControlStore))
+        let window = OnlyControlWindow(
+            contentRect: .zero,
+            styleMask: [.borderless, .fullSizeContentView],
+            backing: .buffered,
+            defer: false,
+            screen: .main
+        )
+        let contentRect = window.contentRect(forFrameRect: window.frame)
+        view.frame = contentRect
+        window.contentView = view
+
+        [window].forEach {
+            $0.isMovable = true
+            $0.collectionBehavior = [.participatesInCycle, .canJoinAllSpaces, .fullScreenPrimary]
+            $0.level = .mainMenu
+            $0.ignoresMouseEvents = false
+            $0.hasShadow = true
+            $0.isReleasedWhenClosed = false
+            $0.backgroundColor = .clear
+            $0.isMovableByWindowBackground = true
+            $0.isOpaque = false
+        }
+
+        window.makeKeyAndOrderFront(nil)
+        window.center()
+        window.setFrameUsingName("OnlyControlWindow")
+        window.setFrameAutosaveName("OnlyControlWindow")
+        return window
+    }()
+
     private var otherPopoverBitwise:Int = 0
-    
-    init(_ popover:NSPopover) {
+
+    init(_ popover: NSPopover) {
         self.popover = popover
-        
-//        self.popover.behavior = .semitransient
-//        self.popover.animates = false
+
         mainItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         setMainItemButton(image: currentMenubarIcon)
-        
-        
+
         eventMonitor = EventMonitor(mask: [.leftMouseDown, .rightMouseDown], handler: mouseEventHandler)
-        
+
         HideMenubarIconsSwitch.shared.isButtonPositionValid = {
             var isValid:Bool!
             if Thread.isMainThread {
@@ -73,17 +106,17 @@ class StatusBarController {
             }
             return isValid
         }
-        
+
         if Preferences.shared.menubarCollaspable {
             setMarkButton()
             Task {
                 try? await HideMenubarIconsSwitch.shared.operateSwitch(isOn: isMenubarCollapse)
             }
         }
-        
+
         observeNotifications()
     }
-    
+
     @objc private func togglePopover(sender:AnyObject?) {
         if let event = NSApp.currentEvent, event.isRightClicked {
             guard Preferences.shared.menubarCollaspable else {return}
@@ -96,15 +129,15 @@ class StatusBarController {
             if hasOtherPopover {
                 return
             }
-            if(popover.isShown) {
-                hidePopover(sender)
 
+            if(dashboardWindow.isVisible) {
+                hidePopover(sender)
             } else {
                 showPopover(sender)
             }
         }
     }
-    
+
     @objc private func showMenuBarIcons(sender:AnyObject) {
         guard let event = NSApp.currentEvent, event.isRightClicked else {return}
         Task {
@@ -120,7 +153,7 @@ class StatusBarController {
         else {return false}
         return mainItemX >= markItemX
     }
-    
+
     private func setMainItemButton(image:String) {
         if let mainItemButton = mainItem.button {
             mainItemButton.image = NSImage(named: image)
@@ -131,7 +164,7 @@ class StatusBarController {
             mainItemButton.target = self
         }
     }
-    
+
     private func setMarkButton() {
         markItem = NSStatusBar.system.statusItem(withLength: MarkItemLength.normal)
         if let markItemButton = markItem?.button {
@@ -143,7 +176,7 @@ class StatusBarController {
             markItemButton.target = self
         }
     }
-    
+
     private func observeNotifications() {
         NotificationCenter.default.addObserver(forName: .changeMenuBarIcon,
                                                object: nil,
@@ -170,9 +203,9 @@ class StatusBarController {
             if let statusBarButton = strongSelf.mainItem.button {
                 strongSelf.hidePopover(statusBarButton)
             }
-            
+
         })
-        
+
         NotificationCenter.default.addObserver(forName: OtherPopover.name,
                                                object: nil,
                                                queue: .main,
@@ -190,12 +223,12 @@ class StatusBarController {
             } else {
                 existOtherPopover = true
             }
-            
+
             if existOtherPopover != strongSelf.hasOtherPopover {
                 strongSelf.hasOtherPopover = existOtherPopover
             }
         })
-        
+
         NotificationCenter.default.addObserver(forName: .changePopoverAppearance,
                                                object: nil,
                                                queue: .main,
@@ -209,7 +242,7 @@ class StatusBarController {
                 strongSelf.popover.contentSize.width = Layout.popoverWidth * 2 - 40
             }
         })
-        
+
         NotificationCenter.default.addObserver(forName: .toggleMenubarCollapse,
                                                object: nil,
                                                queue: .main,
@@ -217,7 +250,7 @@ class StatusBarController {
             guard let strongSelf = self, let isOn = notify.object as? Bool else {return}
             strongSelf.markItem?.length = isOn ? MarkItemLength.collapse : MarkItemLength.normal
         })
-        
+
         NotificationCenter.default.addObserver(forName: .menubarCollapsable,
                                                object: nil,
                                                queue: .main,
@@ -228,7 +261,7 @@ class StatusBarController {
                 Task {
                     try? await HideMenubarIconsSwitch.shared.operateSwitch(isOn: false)
                 }
-                
+
             } else {
                 if let markItem = strongSelf.markItem {
                     NSStatusBar.system.removeStatusItem(markItem)
@@ -236,31 +269,38 @@ class StatusBarController {
             }
         })
     }
-    
+
     func showPopover(_ sender: AnyObject?) {
         if let statusBarButton = mainItem.button {
-            popover.show(relativeTo: statusBarButton.bounds,
-                         of: statusBarButton,
-                         preferredEdge: NSRectEdge.maxY)
-            popover.contentViewController?.view.window?.makeKey()
+//            popover.show(relativeTo: statusBarButton.bounds,
+//                         of: statusBarButton,
+//                         preferredEdge: NSRectEdge.maxY)
+//            popover.contentViewController?.view.window?.makeKey()
+            self.dashboardWindow.makeKeyAndOrderFront(nil)
+            onlyControlStore.send(.showControl)
             NotificationCenter.default.post(name: .showPopover, object: nil)
             eventMonitor?.start()
         }
     }
-        
+
     func hidePopover(_ sender: AnyObject?) {
-        popover.performClose(sender)
+//        popover.performClose(sender)
+        onlyControlStore.send(.hideControl)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.51) {
+            self.dashboardWindow.close()
+        }
         NotificationCenter.default.post(name: .hidePopover, object: nil)
         eventMonitor?.stop()
     }
 
-    func mouseEventHandler(_ event:NSEvent?) {
+    func mouseEventHandler(_ event: NSEvent?) {
         if hasOtherPopover {
             return
         }
-        if popover.isShown {
+
+        if dashboardWindow.isVisible {
             hidePopover(event)
         }
     }
-    
+
 }

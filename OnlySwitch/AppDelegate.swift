@@ -11,6 +11,7 @@ import KeyboardShortcuts
 import Defines
 import Switches
 import Utilities
+import OnlyControl
 
 @main
 struct OnlySwitchApp: App {
@@ -71,31 +72,7 @@ struct OnlySwitchApp: App {
         .handlesExternalEvents(matching: Set(arrayLiteral: "run"))
 
         WindowGroup("SettingsWindow") {
-            SettingsView(settingItem: $settingsItem)
-                .frame(width: Layout.settingWindowWidth, height: Layout.settingWindowHeight)
-                .onDisappear {
-                    if #available(macOS 13.3, *) {
-                        print("settings window closing")
-                        NSApp.activate(ignoringOtherApps: false)
-                        NSApp.setActivationPolicy(.accessory)
-                        NotificationCenter.default.post(name: .settingsWindowClosed, object: nil)
-                        appDelegate.switchVM.isSettingViewShowing = false
-                    }
-                }
-                .onOpenURL{ url in
-                    guard url.absoluteString.contains("destination"),
-                          let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
-                          let queryItems = components.queryItems,
-                          let destination = queryItems.first(where: { $0.name == "destination" })?.value
-                    else {
-                        return
-                    }
-                    let itemString = destination.replacingOccurrences(of: "_", with: " ").capitalized
-                    if let item = SettingsItem(rawValue: itemString) {
-                        settingsItem = item
-                    }
-                }
-
+            settings
         }
         .windowKeepContentSize()
         .handlesExternalEvents(matching: Set(arrayLiteral: "SettingsWindow"))
@@ -138,6 +115,34 @@ struct OnlySwitchApp: App {
 
             }
         }
+    }
+
+    private var settings: some View {
+        SettingsView(settingItem: $settingsItem)
+            .frame(width: Layout.settingWindowWidth, height: Layout.settingWindowHeight)
+            .onDisappear {
+                if #available(macOS 13.3, *) {
+                    print("settings window closing")
+                    NSApp.activate(ignoringOtherApps: false)
+                    NSApp.setActivationPolicy(.accessory)
+                    NotificationCenter.default.post(name: .settingsWindowClosed, object: nil)
+                    appDelegate.switchVM.isSettingViewShowing = false
+                }
+            }
+            .onOpenURL{ url in
+                guard url.absoluteString.contains("destination"),
+                      let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+                      let queryItems = components.queryItems,
+                      let destination = queryItems.first(where: { $0.name == "destination" })?.value
+                else {
+                    return
+                }
+                let itemString = destination.replacingOccurrences(of: "_", with: " ").capitalized
+                if let item = SettingsItem(rawValue: itemString) {
+                    settingsItem = item
+                }
+            }
+
     }
 }
 

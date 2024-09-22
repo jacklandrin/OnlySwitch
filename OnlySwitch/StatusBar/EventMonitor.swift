@@ -22,7 +22,7 @@ class EventMonitor {
     }
     
     func start() {
-        monitor = NSEvent.addGlobalMonitorForEvents(matching: mask,handler:handler) as! NSObject
+        monitor = NSEvent.addGlobalMonitorForEvents(matching: mask, handler: handler) as! NSObject
     }
     
     func stop() {

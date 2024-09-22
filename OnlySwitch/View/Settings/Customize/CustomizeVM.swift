@@ -29,7 +29,7 @@ class CustomizeVM:ObservableObject {
     
 }
 
-class CustomizeItem:ObservableObject {
+class CustomizeItem: ObservableObject {
     let type:SwitchType
     let error:(_ info:String) -> Void
     @Published var toggle:Bool

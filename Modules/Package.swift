@@ -27,6 +27,10 @@ let package = Package(
         .library(
             name: "OnlyControl",
             targets: ["OnlyControl"]
+        ),
+        .library(
+            name: "Reorderable",
+            targets: ["Reorderable"]
         )
     ],
     dependencies: [
@@ -65,8 +69,10 @@ let package = Package(
                 "Extensions",
                 "Defines",
                 "Switches",
-                "Utilities"
+                "Utilities",
+                "Reorderable"
             ]
         ),
+        .target(name: "Reorderable")
     ]
 )
