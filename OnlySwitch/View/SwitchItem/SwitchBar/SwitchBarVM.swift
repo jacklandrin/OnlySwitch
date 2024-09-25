@@ -17,36 +17,36 @@ class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
         switchType.barInfo().title
     }
     
-    var switchType:SwitchType
+    var switchType: SwitchType
     {
         return switchOperator.type
     }
     
-    var title:String {
+    var title: String {
         return switchType.barInfo().title
     }
     
-    var onImage:NSImage? {
+    var onImage: NSImage? {
         return switchType.barInfo().onImage
     }
     
-    var offImage:NSImage? {
+    var offImage: NSImage? {
         return switchType.barInfo().offImage
     }
     
-    var controlType:ControlType {
+    var controlType: ControlType {
         return switchType.barInfo().controlType
     }
     
-    var category:SwitchCategory {
+    var category: SwitchCategory {
         return switchType.barInfo().category
     }
     
-    var isHidden:Bool {
+    var isHidden: Bool {
         return model.isHidden
     }
     
-    var isOn:Bool {
+    var isOn: Bool {
         get {
             return model.isOn
         }
@@ -55,15 +55,15 @@ class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
         }
     }
     
-    var processing:Bool {
+    var processing: Bool {
         return model.processing
     }
     
-    var info:String {
+    var info: String {
         return model.info
     }
 
-    var weight : Int {
+    var weight: Int {
         get {
             return model.weight
         }
@@ -71,8 +71,11 @@ class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
             model.weight = newValue
         }
     }
-    
-    
+
+    var id: String {
+        String(switchType.rawValue)
+    }
+
     @Published private var model = SwitchBarModel()
     @Published private(set) var switchOperator:SwitchProvider
     
@@ -113,7 +116,7 @@ class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
         }
     }
         
-    func doSwitch(isOn:Bool) {
+    func doSwitch(isOn: Bool) {
         model.processing = true
         Task {
             do {

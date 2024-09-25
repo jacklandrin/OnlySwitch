@@ -12,6 +12,7 @@ import Defines
 import Foundation
 
 struct OnlyControlView: View {
+    @Environment(\.colorScheme) private var colorScheme
     let store: StoreOf<OnlyControlReducer>
 
     init(store: StoreOf<OnlyControlReducer>) {
@@ -27,8 +28,8 @@ struct OnlyControlView: View {
                     HStack {
                         Text(Date(), style: .time)
                             .font(.system(size: 60, weight: .bold, design: .rounded))
-                            .foregroundColor(.white)
-                            .padding()
+                            .foregroundColor(colorScheme == .dark ? .white : .black)
+                            .padding(20)
                         Spacer()
                     }
                     Spacer()
@@ -40,13 +41,14 @@ struct OnlyControlView: View {
                             }
                         )
                         .buttonStyle(.plain)
+
                     HStack {
                         Spacer()
                         Button(action: {
                             switchVM.showSettingsWindow()
                         }, label: {
-                            Image(systemName: "gearshape.circle")
-                                .font(.system(size: 17))
+                            Image(systemName: "gear")
+                                .font(.system(size: 18))
                         }).buttonStyle(.plain)
                             .padding(10)
                             .help(Text("Settings".localized()))
@@ -57,7 +59,7 @@ struct OnlyControlView: View {
             .blur(radius: store.blurRadius)
             .opacity(store.opacity)
             .animation(.interactiveSpring(duration: 0.5), value: store.blurRadius)
-            .frame(width: 800, height: 450)
+            .frame(width: 800, height: 500)
             .ignoresSafeArea()
             .padding(10)
             .task {

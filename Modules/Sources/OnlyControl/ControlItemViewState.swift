@@ -8,41 +8,45 @@
 import AppKit
 import Foundation
 import Switches
+import Defines
 
 public struct ControlItemViewState: Equatable, Hashable, Identifiable {
-    public var id: Int
-    var title: String
+    public var id: String
+    public var title: String
+    public var weight: Int
+    public var unitType: UnitType
     var iconData: Data
-    var type: ControlType
+    var controlType: ControlType
     var status: Bool
-    var weight: Int
 
     public init(
-        id: Int = 0,
+        id: String,
         title: String,
         iconData: Data,
-        type: ControlType,
+        controlType: ControlType,
         status: Bool = false,
-        weight: Int = 0
+        weight: Int = 0,
+        unitType: UnitType = .builtIn
     ) {
         self.id = id
         self.title = title
         self.iconData = iconData
-        self.type = type
+        self.controlType = controlType
         self.status = status
         self.weight = weight
+        self.unitType = unitType
     }
 }
 
 public extension ControlItemViewState {
-    static func preview(id: Int = 0) -> Self {
+    static func preview(id: String = "") -> Self {
         .init(
             id: id,
             title: "Long Long Control Item",
             iconData: NSImage(systemSymbolName: "gear")
                 .resizeMaintainingAspectRatio(withSize: NSSize(width: 50, height: 50))!
                 .pngData!,
-            type: .Switch
+            controlType: .Switch
         )
     }
 }

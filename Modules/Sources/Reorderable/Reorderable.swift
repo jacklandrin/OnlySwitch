@@ -18,32 +18,38 @@ public struct ReorderableForeach<Item, Content, Preview>: View where Item: Reord
     private let content: (Item) -> Content
     private let preview: ((Item) -> Preview)?
     private let moveAction: (IndexSet, Int) -> Void
+    private let onEnded: () -> Void
+    @GestureState var tapGesture = false
 
     public init(
         _ items: [Item],
         active: Binding<Item?>,
         @ViewBuilder content: @escaping (Item) -> Content,
         @ViewBuilder preview: @escaping (Item) -> Preview,
-        moveAction: @escaping (IndexSet, Int) -> Void
+        moveAction: @escaping (IndexSet, Int) -> Void,
+        onEnded: @escaping () -> Void
     ) {
         self.items = items
         _active = active
         self.content = content
         self.preview = preview
         self.moveAction = moveAction
+        self.onEnded = onEnded
     }
 
     public init(
         _ items: [Item],
         active: Binding<Item?>,
         @ViewBuilder content: @escaping (Item) -> Content,
-        moveAction: @escaping (IndexSet, Int) -> Void
+        moveAction: @escaping (IndexSet, Int) -> Void,
+        onEnded: @escaping () -> Void
     ) {
         self.items = items
         _active = active
         self.content = content
         self.preview = nil
         self.moveAction = moveAction
+        self.onEnded = onEnded
     }
 
     public var body: some View {
@@ -78,6 +84,8 @@ public struct ReorderableForeach<Item, Content, Preview>: View where Item: Reord
                     withAnimation {
                         moveAction(from, to)
                     }
+                } onEnded: {
+                    onEnded()
                 }
             )
             .animation(.default, value: active)

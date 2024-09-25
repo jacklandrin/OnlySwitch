@@ -16,11 +16,11 @@ class ShortcutsBarVM: BarProvider, ObservableObject {
         return model.name
     }
     
-    var processing:Bool {
+    var processing: Bool {
         return model.processing
     }
     
-    var isHidden:Bool {
+    var isHidden: Bool {
         return model.isHidden
     }
     
@@ -32,7 +32,11 @@ class ShortcutsBarVM: BarProvider, ObservableObject {
             self.model.weight = newValue
         }
     }
-    
+
+    var id: String {
+        return model.name
+    }
+
     init(name:String) {
         self.model.name = name
     }

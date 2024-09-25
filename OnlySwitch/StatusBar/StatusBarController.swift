@@ -68,6 +68,7 @@ class StatusBarController {
         )
         let contentRect = window.contentRect(forFrameRect: window.frame)
         view.frame = contentRect
+
         window.contentView = view
 
         [window].forEach {
@@ -84,8 +85,6 @@ class StatusBarController {
 
         window.makeKeyAndOrderFront(nil)
         window.center()
-        window.setFrameUsingName("OnlyControlWindow")
-        window.setFrameAutosaveName("OnlyControlWindow")
         return window
     }()
 
@@ -292,6 +291,8 @@ class StatusBarController {
         if let statusBarButton = mainItem.button {
             if currentAppearance == .onlyControl {
                 dashboardWindow.makeKeyAndOrderFront(nil)
+                dashboardWindow.setFrameUsingName("OnlyControlWindow")
+                dashboardWindow.setFrameAutosaveName("OnlyControlWindow")
                 onlyControlStore.send(.showControl)
             } else {
                 popover.show(relativeTo: statusBarButton.bounds,

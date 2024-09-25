@@ -16,6 +16,7 @@ struct ReorderableDragRelocateDelegate<Item>: DropDelegate where Item: Reorderab
     @Binding var hasChangedLocation: Bool
 
     var moveAction: (IndexSet, Int) -> Void
+    var onEnded: () -> Void
 
     func dropEntered(info: DropInfo) {
         guard item != active, let current = active else { return }
@@ -34,6 +35,7 @@ struct ReorderableDragRelocateDelegate<Item>: DropDelegate where Item: Reorderab
     func performDrop(info: DropInfo) -> Bool {
         hasChangedLocation = false
         active = nil
+        onEnded()
         return true
     }
 }

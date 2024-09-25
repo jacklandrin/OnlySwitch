@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0406E0222CA09F930007AFC2 /* OnlyControlClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406E0212CA09F8C0007AFC2 /* OnlyControlClient.swift */; };
+		0406E0242CA0BC460007AFC2 /* RefreshNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406E0232CA0BC460007AFC2 /* RefreshNotification.swift */; };
 		0406EDC42ACB3EE80015F4D0 /* EvolutionMarket.json in Resources */ = {isa = PBXBuildFile; fileRef = 0406EDC32ACB3EE80015F4D0 /* EvolutionMarket.json */; };
 		0406EDC62ACB56CE0015F4D0 /* EvolutionGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406EDC52ACB56CE0015F4D0 /* EvolutionGalleryView.swift */; };
 		0406EDC82ACB56F00015F4D0 /* EvolutionGalleryReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406EDC72ACB56F00015F4D0 /* EvolutionGalleryReducer.swift */; };
@@ -394,6 +396,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0406E0212CA09F8C0007AFC2 /* OnlyControlClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyControlClient.swift; sourceTree = "<group>"; };
+		0406E0232CA0BC460007AFC2 /* RefreshNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshNotification.swift; sourceTree = "<group>"; };
 		0406EDC32ACB3EE80015F4D0 /* EvolutionMarket.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = EvolutionMarket.json; sourceTree = "<group>"; };
 		0406EDC52ACB56CE0015F4D0 /* EvolutionGalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionGalleryView.swift; sourceTree = "<group>"; };
 		0406EDC72ACB56F00015F4D0 /* EvolutionGalleryReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionGalleryReducer.swift; sourceTree = "<group>"; };
@@ -1011,6 +1015,7 @@
 		043E5D77275820DD00ADC004 /* Define */ = {
 			isa = PBXGroup;
 			children = (
+				0406E0232CA0BC460007AFC2 /* RefreshNotification.swift */,
 				049337932762BD1B00AE779A /* OpenWindow.swift */,
 				047140B7277884EE005B160B /* UserDefaultValue.swift */,
 				046331D42795E1BC00C5F894 /* ColorDefine.swift */,
@@ -1361,6 +1366,7 @@
 		04A5AA572C39F8A2001070CA /* OnlyControl */ = {
 			isa = PBXGroup;
 			children = (
+				0406E0212CA09F8C0007AFC2 /* OnlyControlClient.swift */,
 				04972F892C9F448C00896D77 /* OnlyControlReducer.swift */,
 				046955DA2C7E5E9B00577915 /* OnlyControlView.swift */,
 			);
@@ -2037,6 +2043,7 @@
 				0493374B27625A1E00AE779A /* StreamingState.swift in Sources */,
 				0447E3772B71746E00D07B9A /* BluetoothSwitch.swift in Sources */,
 				04938D0E2769247A00713F1D /* SendEmail.swift in Sources */,
+				0406E0242CA0BC460007AFC2 /* RefreshNotification.swift in Sources */,
 				0447E3572B71746E00D07B9A /* DarkModeSwitch.swift in Sources */,
 				047C1E712A22AFE20061235D /* EvolutionEditorService+Live.swift in Sources */,
 				0493374D27625A1E00AE779A /* Parser+PropertyListener.swift in Sources */,
@@ -2217,6 +2224,7 @@
 				0427364E27C1A5CD0068108F /* SpotifyPlayer.swift in Sources */,
 				0447E3732B71746E00D07B9A /* SmallLaunchpadIconSwitch.swift in Sources */,
 				0447E3692B71746E00D07B9A /* ScreenSaverSwitch.swift in Sources */,
+				0406E0222CA09F930007AFC2 /* OnlyControlClient.swift in Sources */,
 				043E5D712758176B00ADC004 /* SwitchToggle.swift in Sources */,
 				040E97272760FF3E003D9D42 /* MetadataExtractorError.swift in Sources */,
 				047C1E6E2A22AF840061235D /* EvolutionEditorService.swift in Sources */,

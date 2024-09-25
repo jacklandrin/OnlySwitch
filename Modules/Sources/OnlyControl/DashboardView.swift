@@ -11,11 +11,11 @@ import Reorderable
 import SwiftUI
 
 public struct DashboardView: View {
-//    @State var items = (1...20).map { ControlItemReducer.preview(id: $0) }
     let store: StoreOf<DashboardReducer>
     let columns = [
         GridItem(.adaptive(minimum: 85, maximum: 180), alignment: .leading)
         ]
+
     @State private var active: ControlItemViewState?
     @State private var hasChangedLocation = false
 
@@ -26,7 +26,7 @@ public struct DashboardView: View {
     public var body: some View {
         WithPerceptionTracking {
             ScrollView(.vertical) {
-                LazyVGrid(columns: columns, spacing: 10) {
+                LazyVGrid(columns: columns, spacing: 20) {
                     ReorderableForeach(store.items, active: $active) { item in
                         ControlItemView(viewState: item)
                             .onTapGesture {
@@ -38,13 +38,17 @@ public struct DashboardView: View {
                             .scaleEffect(1.1)
                     } moveAction: { from, to in
                         store.send(.moveLocation(from, to))
+                    } onEnded: {
+                        store.send(.onEndedMove)
                     }
                 }
                 .padding()
                 .animation(.default, value: store.items)
             }
-            .reorderableForEachContainer(active: $active)
-            .frame(width: 800, height: 300)
+            .reorderableForEachContainer(active: $active) {
+                store.send(.onEndedMove)
+            }
+            .frame(width: 760, height: 340)
         }
     }
 

@@ -22,6 +22,10 @@ class EvolutionBarVM: BarProvider, ObservableObject {
         evolutionItem.iconName
     }
 
+    var id: String {
+        evolutionItem.id.uuidString
+    }
+
     @Published var weight: Int = 0
     @Published var processing = false
     @Published var isOn = false
@@ -44,6 +48,15 @@ class EvolutionBarVM: BarProvider, ObservableObject {
                 self.isOn = _isOn ?? false
             }
         }
+    }
+
+    func refresh() async {
+        guard evolutionItem.controlType == .Switch else { return }
+        self.processing = true
+        guard let command = self.evolutionItem.statusCommand else { return }
+        let _isOn = try? command.commandString.runAppleScript(isShellCMD: command.executeType == .shell) == command.trueCondition
+        self.processing = false
+        self.isOn = _isOn ?? false
     }
 
     func doSwitch(isOn: Bool) {

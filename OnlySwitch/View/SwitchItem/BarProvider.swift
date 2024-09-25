@@ -8,7 +8,8 @@
 import Foundation
 
 @objc protocol BarProvider {
-    var barName:String {get}
-    var weight:Int {get set}
+    var id: String { get }
+    var barName: String { get }
+    var weight: Int { get set }
 }
 

@@ -36,13 +36,13 @@ public struct ControlItemView: View {
                         .scaledToFit()
                         .frame(width: 30, height: 30)
                         .foregroundColor(iconColor(isOn: viewState.status))
+                        .padding(.bottom, 6)
 
                     Text(viewState.title)
                         .multilineTextAlignment(.center)
                         .font(.caption)
                         .padding(.horizontal, 4)
                         .foregroundColor(textColor(isOn: viewState.status))
-                    Text(String(viewState.id))
                 }
             }
             .frame(width: 85, height: 85)
@@ -91,11 +91,12 @@ struct ControlItemView_Previews: PreviewProvider {
     static var previews: some View {
         ControlItemView(
             viewState: .init(
+                id: "",
                 title: "Long Long Control Item",
                 iconData: NSImage(systemSymbolName: "gear")
                     .resizeMaintainingAspectRatio(withSize: NSSize(width: 60, height: 60))!
                     .pngData!,
-                type: .Switch
+                controlType: .Switch
             )
         )
         .previewLayout(.sizeThatFits)

@@ -42,6 +42,7 @@ public extension UserDefaults {
         public static let shortcutsDic = "shortcutsDicKey"
         //Sort
         public static let orderWeight = "orderWeightKey"
+        public static let onlyControlOrderWeight = "onlyControlOrderWeightKey"
         //BackNoises
         public static let backNoisesTrack = "backNoisesTrackKey"
         public static let automaticallyStopPlayNoiseTime = "automaticallyStopPlayNoiseTimeKey"
