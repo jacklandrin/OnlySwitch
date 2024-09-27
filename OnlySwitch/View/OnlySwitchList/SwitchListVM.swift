@@ -139,8 +139,8 @@ class SwitchListVM: ObservableObject, CurrentScreen {
         print("refresh")
     }
     
-    func refreshSingleSwitchStatus(type:SwitchType) {
-        if let aSwitch = switchList.filter({$0.switchType == type}).first {
+    func refreshSingleSwitchStatus(type: SwitchType) {
+        if let aSwitch = switchList.first(where: {$0.switchType == type}) {
             aSwitch.refreshStatus()
         }
     }

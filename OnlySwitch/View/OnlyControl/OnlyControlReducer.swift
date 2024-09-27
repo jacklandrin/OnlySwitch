@@ -9,6 +9,7 @@ import ComposableArchitecture
 import OnlyControl
 import AppKit
 import Defines
+import Switches
 
 @Reducer
 struct OnlyControlReducer {
@@ -45,14 +46,21 @@ struct OnlyControlReducer {
         var blurRadius: CGFloat = 20
         var opacity: Double = 0
         var allUnits: [BarProvider] = []
+        var switchList: [SwitchBarVM] = []
+
+        var soundWaveEffectDisplay: Bool {
+            Preferences.shared.soundWaveEffectDisplay
+        }
     }
 
     enum Action {
         case task
         case refreshDashboard
+        case refreshSingleSwitchType(SwitchType)
         case showControl
         case hideControl
-        case updateItems([BarProvider],[ControlItemViewState])
+        case updateItems([BarProvider], [ControlItemViewState], [SwitchBarVM])
+        case updateItem(ControlItemViewState)
         case dashboardAction(DashboardReducer.Action)
     }
 
@@ -63,18 +71,39 @@ struct OnlyControlReducer {
             DashboardReducer()
         }
 
-        Reduce {
-            state,
-            action in
+        Reduce { state, action in
             switch action {
                 case .task:
                     return .merge(
                         .onSwitchListChanged(perform: .refreshDashboard),
-                        refreshDashboard()
+                        refreshDashboard(),
+                        .publisher {
+                            NotificationCenter.default.publisher(for: .refreshSingleSwitchStatus)
+                                .compactMap {
+                                    if let type = $0.object as? SwitchType {
+                                        return .refreshSingleSwitchType(type)
+                                    } else {
+                                        return nil
+                                    }
+                                }
+                        }
                     )
 
                 case .refreshDashboard:
                     return refreshDashboard()
+
+                case .refreshSingleSwitchType(let type):
+                    guard let switchControl = state.switchList.first(where: { $0.switchType == type}) else {
+                        return .none
+                    }
+
+                    return .run { [state, switchControl] send in
+                        let isOn = await switchControl.switchOperator.currentStatusAsync()
+                        if var item = state.dashboard.items.first(where: { $0.id == switchControl.id }) {
+                            item.status = isOn
+                            await send(.updateItem(item))
+                        }
+                    }
 
                 case .showControl:
                     state.blurRadius = 0
@@ -86,10 +115,15 @@ struct OnlyControlReducer {
                     state.opacity = 0
                     return .none
 
-                case let .updateItems(units, items):
+                case let .updateItems(units, items, switches):
                     let items = items.sorted { $0.weight < $1.weight }
-                    state.dashboard.items = items
+                    state.dashboard.items = IdentifiedArray(uniqueElements: items)
                     state.allUnits = units
+                    state.switchList = switches
+                    return .none
+
+                case let .updateItem(item):
+                    state.dashboard.items[id: item.id] = item
                     return .none
 
                 case let .dashboardAction(.delegate(.didTapItem(id))):
@@ -114,6 +148,7 @@ struct OnlyControlReducer {
                     UserDefaults.standard.set(orderDic, forKey: UserDefaults.Key.onlyControlOrderWeight)
                     UserDefaults.standard.synchronize()
                     return .none
+
                 case .dashboardAction:
                     return .none
             }
@@ -132,6 +167,7 @@ struct OnlyControlReducer {
             for evolutionControl in evolutions {
                 await evolutionControl.refresh()
             }
+
             let allUnits: [BarProvider] = switches + shortcuts + evolutions
 
             let orderDic = UserDefaults.standard.dictionary(forKey: UserDefaults.Key.onlyControlOrderWeight) as? [String: Int] ?? [String: Int]()
@@ -205,7 +241,7 @@ struct OnlyControlReducer {
                 }
             }
 
-            await send(.updateItems(allUnits, items))
+            await send(.updateItems(allUnits, items, switches))
         }
     }
 }

@@ -13,7 +13,7 @@ import Switches
 
 public struct ControlItemView: View {
     @Environment(\.colorScheme) private var colorScheme
-
+    @State var isLargeSize = false
     let viewState: ControlItemViewState
 
     public init(viewState: ControlItemViewState) {

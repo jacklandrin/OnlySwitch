@@ -14,6 +14,7 @@ import Foundation
 struct OnlyControlView: View {
     @Environment(\.colorScheme) private var colorScheme
     let store: StoreOf<OnlyControlReducer>
+    @ObservedObject private var playerItem = RadioStationSwitch.shared.playerItem
 
     init(store: StoreOf<OnlyControlReducer>) {
         self.store = store
@@ -24,12 +25,27 @@ struct OnlyControlView: View {
         WithPerceptionTracking {
             ZStack {
                 VisualEffectView(material: .popover, blendingMode: .behindWindow)
-                VStack(spacing: 0) {
-                    HStack {
+
+                VStack {
+                    Spacer()
+                    BluredSoundWave(width: 800, height: 200)
+                        .rotation3DEffect(.degrees(180), axis: (x: 1, y: 0, z: 0))
+                        .opacity(0.9)
+                        .isHidden(!store.soundWaveEffectDisplay || !playerItem.isPlaying, remove: true)
+                }
+
+                VStack(alignment: .leading, spacing: 0) {
+                    Spacer()
+                    HStack(alignment: .bottom) {
                         Text(Date(), style: .time)
                             .font(.system(size: 60, weight: .bold, design: .rounded))
                             .foregroundColor(colorScheme == .dark ? .white : .black)
-                            .padding(20)
+                            .padding(.top, 30)
+                            .padding(.horizontal, 20)
+
+                        TimerCountDownView(ptswitch: PomodoroTimerSwitch.shared, showImage: true)
+                            .font(.system(size: 20, weight: .bold, design: .rounded))
+                            .padding(.bottom, 12)
                         Spacer()
                     }
                     Spacer()
@@ -44,6 +60,28 @@ struct OnlyControlView: View {
 
                     HStack {
                         Spacer()
+                        if playerItem.streamInfo == "" {
+                            HStack {
+                                Text("Only Switch")
+                                    .fontWeight(.bold)
+                                    .padding(10)
+
+                                Text("v\(SystemInfo.majorVersion as! String)")
+                                    .offset(x:-10)
+                            }
+                            .transition(.move(edge: .bottom))
+
+                        } else {
+                            RollingText(text: playerItem.streamInfo,
+                                        leftFade: 16,
+                                        rightFade: 16,
+                                        startDelay: 3)
+                            .frame(height:20)
+                            .padding(10)
+                            .transition(.move(edge: .bottom))
+                        }
+
+                        Spacer()
                         Button(action: {
                             switchVM.showSettingsWindow()
                         }, label: {
@@ -54,6 +92,7 @@ struct OnlyControlView: View {
                             .help(Text("Settings".localized()))
                     }
                 }
+
             }
             .cornerRadius(15)
             .blur(radius: store.blurRadius)

@@ -5,6 +5,7 @@
 //  Created by Jacklandrin on 2024/9/22.
 //
 import ComposableArchitecture
+import Switches
 
 extension Effect {
     static func onSwitchListChanged(perform action: @escaping @autoclosure () -> Action) -> Self {

@@ -12,8 +12,8 @@ import Foundation
 public struct DashboardReducer {
     @ObservableState
     public struct State: Equatable {
-        public var items: [ControlItemViewState] = []
-        public init(items: [ControlItemViewState] = []) {
+        public var items: IdentifiedArrayOf<ControlItemViewState> = []
+        public init(items: IdentifiedArrayOf<ControlItemViewState> = []) {
             self.items = items
         }
     }
@@ -40,18 +40,20 @@ public struct DashboardReducer {
                     return .none
 
                 case .onEndedMove:
-                    state.items = state.items.enumerated().map { index, item in
+                    var array = state.items.elements
+                    let newArray = array.enumerated().map { index, item in
                         var newItem = item
                         newItem.weight = index
                         return newItem
                     }
+                    state.items = IdentifiedArray(uniqueElements: newArray)
                     return .send(.delegate(.orderChanged))
 
                 case let .didTapItem(id):
                     if let item = state.items.first(where: {$0.id == id}), item.controlType != .Button {
                         var newItem = item
                         newItem.status.toggle()
-                        state.items = state.items.map { $0.id == id ? newItem : $0 }
+                        state.items = IdentifiedArray(uniqueElements: state.items.map { $0.id == id ? newItem : $0 })
                     }
 
                     return .send(.delegate(.didTapItem(id)))

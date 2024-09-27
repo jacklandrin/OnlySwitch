@@ -27,7 +27,7 @@ public struct DashboardView: View {
         WithPerceptionTracking {
             ScrollView(.vertical) {
                 LazyVGrid(columns: columns, spacing: 20) {
-                    ReorderableForeach(store.items, active: $active) { item in
+                    ReorderableForeach(store.items.elements, active: $active) { item in
                         ControlItemView(viewState: item)
                             .onTapGesture {
                                 store.send(.didTapItem(item.id))
