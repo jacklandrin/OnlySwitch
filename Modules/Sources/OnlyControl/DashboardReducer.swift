@@ -23,6 +23,7 @@ public struct DashboardReducer {
     public enum Action: Equatable {
         case moveLocation(IndexSet, Int)
         case onEndedMove
+        case onTapItem(String)
         case didTapItem(String)
         case delegate(Delegate)
 
@@ -40,7 +41,7 @@ public struct DashboardReducer {
                     return .none
 
                 case .onEndedMove:
-                    var array = state.items.elements
+                    let array = state.items.elements
                     let newArray = array.enumerated().map { index, item in
                         var newItem = item
                         newItem.weight = index
@@ -49,10 +50,19 @@ public struct DashboardReducer {
                     state.items = IdentifiedArray(uniqueElements: newArray)
                     return .send(.delegate(.orderChanged))
 
+                case let .onTapItem(id):
+                    if let item = state.items.first(where: {$0.id == id}) {
+                        var newItem = item
+                        newItem.opacity = 0.7
+                        state.items = IdentifiedArray(uniqueElements: state.items.map { $0.id == id ? newItem : $0 })
+                    }
+                    return .none
+
                 case let .didTapItem(id):
                     if let item = state.items.first(where: {$0.id == id}), item.controlType != .Button {
                         var newItem = item
                         newItem.status.toggle()
+                        newItem.opacity = 1.0
                         state.items = IdentifiedArray(uniqueElements: state.items.map { $0.id == id ? newItem : $0 })
                     }
 

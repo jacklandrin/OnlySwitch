@@ -18,6 +18,7 @@ public struct ControlItemViewState: Equatable, Hashable, Identifiable {
     public var status: Bool
     var iconData: Data
     var controlType: ControlType
+    var opacity: Double = 1
 
     public init(
         id: String,

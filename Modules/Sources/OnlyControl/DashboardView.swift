@@ -28,11 +28,18 @@ public struct DashboardView: View {
             ScrollView(.vertical) {
                 LazyVGrid(columns: columns, spacing: 20) {
                     ReorderableForeach(store.items.elements, active: $active) { item in
-                        Button {
-                            store.send(.didTapItem(item.id))
-                        } label: {
-                            ControlItemView(viewState: item)
-                        }
+                        ControlItemView(viewState: item)
+                            .onTapGesture {
+                                store.send(.onTapItem(item.id))
+                                print("Tap item \(item.id)")
+                            }
+                            .simultaneousGesture(
+                                TapGesture()
+                                    .onEnded { _ in
+                                        store.send(.didTapItem(item.id))
+                                    }
+                            )
+                            .opacity(item.opacity)
                     } preview: { item in
                         ControlItemView(viewState: item)
                             .frame(width: 100, height: 100)
