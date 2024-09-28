@@ -71,7 +71,7 @@ struct OnlySwitchApp: App {
         .windowKeepContentSize()
         .handlesExternalEvents(matching: Set(arrayLiteral: "run"))
 
-        WindowGroup("SettingsWindow") {
+        WindowGroup("Settings".localized()) {
             settings
         }
         .windowKeepContentSize()

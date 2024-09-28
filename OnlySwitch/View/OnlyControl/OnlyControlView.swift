@@ -34,7 +34,7 @@ struct OnlyControlView: View {
                         .isHidden(!store.soundWaveEffectDisplay || !playerItem.isPlaying, remove: true)
                 }
 
-                VStack(alignment: .leading, spacing: 0) {
+                VStack(spacing: 0) {
                     Spacer()
                     HStack(alignment: .bottom) {
                         Text(Date(), style: .time)
@@ -103,6 +103,9 @@ struct OnlyControlView: View {
             .padding(10)
             .task {
                 store.send(.task)
+            }
+            .onAppear {
+                store.send(.refreshDashboard)
             }
         }
     }
