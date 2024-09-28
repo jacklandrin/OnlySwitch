@@ -20,7 +20,6 @@ struct OnlyControlView: View {
         self.store = store
     }
 
-    @StateObject var switchVM = SwitchListVM()
     var body: some View {
         WithPerceptionTracking {
             ZStack {
@@ -41,7 +40,7 @@ struct OnlyControlView: View {
                             .font(.system(size: 60, weight: .bold, design: .rounded))
                             .foregroundColor(colorScheme == .dark ? .white : .black)
                             .padding(.top, 30)
-                            .padding(.horizontal, 20)
+                            .padding(.horizontal, 30)
 
                         TimerCountDownView(ptswitch: PomodoroTimerSwitch.shared, showImage: true)
                             .font(.system(size: 20, weight: .bold, design: .rounded))
@@ -83,7 +82,7 @@ struct OnlyControlView: View {
 
                         Spacer()
                         Button(action: {
-                            switchVM.showSettingsWindow()
+                            store.send(.openSettings)
                         }, label: {
                             Image(systemName: "gear")
                                 .font(.system(size: 18))
@@ -92,7 +91,6 @@ struct OnlyControlView: View {
                             .help(Text("Settings".localized()))
                     }
                 }
-
             }
             .cornerRadius(15)
             .blur(radius: store.blurRadius)

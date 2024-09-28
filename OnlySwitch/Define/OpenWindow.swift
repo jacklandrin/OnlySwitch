@@ -47,13 +47,13 @@ enum OpenWindows: CurrentScreen {
 }
 
 struct Router {
-    static var settingWindowController:NSWindowController?
-    
-    static func isShown(windowController:NSWindowController?) -> Bool {
+    static var settingWindowController: NSWindowController?
+
+    static func isShown(windowController: NSWindowController?) -> Bool {
         windowController?.window?.isVisible ?? false
     }
     
-    static func closeWindow(controller:NSWindowController?) {
+    static func closeWindow(controller: NSWindowController?) {
         controller?.close()
     }
 }

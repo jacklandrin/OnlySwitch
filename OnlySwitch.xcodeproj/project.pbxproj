@@ -344,9 +344,7 @@
 		04EB1CD62781299A00C612AB /* ShortcutsBarVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CD52781299A00C612AB /* ShortcutsBarVM.swift */; };
 		04F118C427AED8BC005DA861 /* GitHubReleaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F118C327AED8BC005DA861 /* GitHubReleaseModel.swift */; };
 		04F118C627AED8EE005DA861 /* AboutVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F118C527AED8EE005DA861 /* AboutVM.swift */; };
-		04FB3E5D288D489500F3B5E1 /* SettingWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FB3E5C288D489500F3B5E1 /* SettingWindowController.swift */; };
-		04FB3E5E288D499100F3B5E1 /* SettingWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FB3E5C288D489500F3B5E1 /* SettingWindowController.swift */; };
-		04FB3E60288D49E100F3B5E1 /* SwitchListVM+SettingWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FB3E5F288D49E100F3B5E1 /* SwitchListVM+SettingWindowController.swift */; };
+		04FB3E60288D49E100F3B5E1 /* SettingsWindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FB3E5F288D49E100F3B5E1 /* SettingsWindowManager.swift */; };
 		04FB3E65288D4BDF00F3B5E1 /* SwitchListVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B712754FE3800CD2900 /* SwitchListVM.swift */; };
 		04FB3E6E288D547900F3B5E1 /* SwitchBarVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D742758208D00ADC004 /* SwitchBarVM.swift */; };
 		04FB3E6F288D548900F3B5E1 /* BarProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A6F9422788807800E3300F /* BarProvider.swift */; };
@@ -694,8 +692,7 @@
 		04F118C727B1A51D005DA861 /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = fil.lproj/Localizable.strings; sourceTree = "<group>"; };
 		04F118C827B1C33D005DA861 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		04F96737294A33370088112A /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
-		04FB3E5C288D489500F3B5E1 /* SettingWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingWindowController.swift; sourceTree = "<group>"; };
-		04FB3E5F288D49E100F3B5E1 /* SwitchListVM+SettingWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwitchListVM+SettingWindowController.swift"; sourceTree = "<group>"; };
+		04FB3E5F288D49E100F3B5E1 /* SettingsWindowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsWindowManager.swift; sourceTree = "<group>"; };
 		04FC1609283D8A9800D4A4AC /* GitHubInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubInteractor.swift; sourceTree = "<group>"; };
 		04FC160F283F92B200D4A4AC /* GitHubEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubEndpoint.swift; sourceTree = "<group>"; };
 		04FC1612283FDE1D00D4A4AC /* ShortcutsSettingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsSettingModel.swift; sourceTree = "<group>"; };
@@ -1389,8 +1386,7 @@
 				04447B712754FE3800CD2900 /* SwitchListVM.swift */,
 				04B25454283C06C700D253E2 /* SwitchListModel.swift */,
 				04581DBA27651EF1008ADF30 /* RollingText.swift */,
-				04FB3E5C288D489500F3B5E1 /* SettingWindowController.swift */,
-				04FB3E5F288D49E100F3B5E1 /* SwitchListVM+SettingWindowController.swift */,
+				04FB3E5F288D49E100F3B5E1 /* SettingsWindowManager.swift */,
 			);
 			path = OnlySwitchList;
 			sourceTree = "<group>";
@@ -1990,7 +1986,6 @@
 				041D725728353A160083092D /* OnlySwitchTests.swift in Sources */,
 				0447E3822B71746E00D07B9A /* ShowUserLibrarySwitch.swift in Sources */,
 				0447E3842B71746E00D07B9A /* PomodoroTimerSwitch.swift in Sources */,
-				04FB3E5E288D499100F3B5E1 /* SettingWindowController.swift in Sources */,
 				0444D5CF283683D800327D0B /* SystemInfo.swift in Sources */,
 				0447E3602B71746E00D07B9A /* ShowExtensionNameSwitch.swift in Sources */,
 				04FB3E71288D54A500F3B5E1 /* SwitchManager.swift in Sources */,
@@ -2015,7 +2010,7 @@
 				043488AE2A3B472E006C877D /* EvolutionBarView.swift in Sources */,
 				0493375627625A1E00AE779A /* Downloading.swift in Sources */,
 				04819CDA2BDE9BFA00645A0C /* KeyLightFeature.swift in Sources */,
-				04FB3E60288D49E100F3B5E1 /* SwitchListVM+SettingWindowController.swift in Sources */,
+				04FB3E60288D49E100F3B5E1 /* SettingsWindowManager.swift in Sources */,
 				049337942762BD1B00AE779A /* OpenWindow.swift in Sources */,
 				0447E3672B71746E00D07B9A /* DimScreenSwitch.swift in Sources */,
 				043488A92A364E73006C877D /* EvolutionRowView.swift in Sources */,
@@ -2168,7 +2163,6 @@
 				041F9BE22AEEFD18000B27C7 /* StickerModel.swift in Sources */,
 				04BC8EC3284FE9B5009E605F /* Preferences.swift in Sources */,
 				04DC6C8E28A6888A00888BF9 /* KeepAwakeSettingVM.swift in Sources */,
-				04FB3E5D288D489500F3B5E1 /* SettingWindowController.swift in Sources */,
 				04A6F9432788807800E3300F /* BarProvider.swift in Sources */,
 				04B25455283C06C700D253E2 /* SwitchListModel.swift in Sources */,
 				047C1E6A2A2298AB0061235D /* EvolutionListService+Test.swift in Sources */,

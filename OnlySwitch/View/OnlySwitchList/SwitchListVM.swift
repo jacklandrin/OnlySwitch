@@ -9,13 +9,13 @@ import SwiftUI
 import Switches
 
 class SwitchListVM: ObservableObject, CurrentScreen {
-    
+
     @Published private var model = SwitchListModel()
-    
+
     var switchList:[SwitchBarVM] {
         return model.switchList
     }
-    
+
     var shortcutsList:[ShortcutsBarVM] {
         return model.shortcutsList
     }
@@ -23,48 +23,46 @@ class SwitchListVM: ObservableObject, CurrentScreen {
     var evolutionList:[EvolutionBarVM] {
         return model.evolutionItemList
     }
-    
+
     var maxHeight:CGFloat {
         return model.maxHeight
     }
-    
+
     var allItemList: [BarProvider] {
         return model.allItemList
     }
-    
+
     var uncategoryItemList: [SwitchBarVM] {
         return model.uncategoryItemList
     }
-    
+
     var audioItemList:[SwitchBarVM] {
         return model.audioItemList
     }
-    
+
     var cleanupItemList:[SwitchBarVM] {
         return model.cleanupItemList
     }
-    
+
     var toolItemList:[SwitchBarVM] {
         return model.toolItemList
     }
-    
+
     var sortMode:Bool {
         return model.sortMode
     }
-    
+
     var soundWaveEffectDisplay:Bool {
         return Preferences.shared.soundWaveEffectDisplay
     }
-    
+
     var currentAppearance:String {
         return Preferences.shared.currentAppearance
     }
-    
+
     var showAds:Bool {
         return Preferences.shared.showAds
     }
-    
-    var isSettingViewShowing = false
 
     var isFocusable: Bool {
         get {
@@ -77,20 +75,20 @@ class SwitchListVM: ObservableObject, CurrentScreen {
 
     init() {
         refreshMaxHeight()
-        receiveSettingWindowOperation()
+        SettingsWindowManager.shared.receiveSettingWindowOperation()
     }
-    
+
     deinit{
         print("switch list vm deinit")
     }
-    
+
     private func refreshList() {
         self.refreshMaxHeight()
         self.model.switchList = SwitchManager.shared.barVMList()
         self.model.shortcutsList = SwitchManager.shared.shortcutsBarVMList()
         self.model.evolutionItemList = SwitchManager.shared.activeEvolutionList()
     }
-    
+
     private func refreshSwitchStatus() {
         for option in switchList {
             option.refreshStatus()
@@ -100,15 +98,15 @@ class SwitchListVM: ObservableObject, CurrentScreen {
             option.refreshAsync()
         }
     }
-    
+
     func toggleSortMode() {
         self.model.sortMode.toggle()
     }
-    
+
     func moveItem(from source: IndexSet, to destination: Int) {
         self.model.allItemList.move(fromOffsets: source, toOffset: destination)
     }
-    
+
     func refreshData() {
         self.model.sortMode = false
         self.refreshList()
@@ -135,16 +133,16 @@ class SwitchListVM: ObservableObject, CurrentScreen {
         self.model.audioItemList = self.switchList.filter{ $0.category == .audio && !$0.isHidden }
         self.model.cleanupItemList = self.switchList.filter{ $0.category == .cleanup && !$0.isHidden }
         self.model.toolItemList = self.switchList.filter{ $0.category == .tool && !$0.isHidden }
-        
+
         print("refresh")
     }
-    
+
     func refreshSingleSwitchStatus(type: SwitchType) {
         if let aSwitch = switchList.first(where: {$0.switchType == type}) {
             aSwitch.refreshStatus()
         }
     }
-    
+
     /// calculate list max height
     func refreshMaxHeight() {
         guard let screen = getScreenWithMouse() else {return}
@@ -152,8 +150,8 @@ class SwitchListVM: ObservableObject, CurrentScreen {
         self.model.maxHeight = screen.frame.height - menuBarHeight - 20
         print(self.model.maxHeight)
     }
-    
-    
+
+
     /// save the result of sorting
     func saveOrder() {
         var orderDic = [String: Int]()
@@ -173,6 +171,9 @@ class SwitchListVM: ObservableObject, CurrentScreen {
         UserDefaults.standard.set(orderDic, forKey: UserDefaults.Key.orderWeight)
         UserDefaults.standard.synchronize()
     }
-    
+
+    func showSettingsWindow() {
+        SettingsWindowManager.shared.showSettingsWindow()
+    }
 }
 

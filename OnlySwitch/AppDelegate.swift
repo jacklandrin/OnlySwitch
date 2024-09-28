@@ -26,7 +26,7 @@ struct OnlySwitchApp: App {
             EmptyView()
                 .frame(width: 0, height: 0)
                 .onAppear {
-                    if appDelegate.switchVM.isSettingViewShowing == true {
+                    if SettingsWindowManager.shared.isSettingViewShowing == true {
                         NSApp.setActivationPolicy(.accessory)
                     }
                 }
@@ -126,7 +126,6 @@ struct OnlySwitchApp: App {
                     NSApp.activate(ignoringOtherApps: false)
                     NSApp.setActivationPolicy(.accessory)
                     NotificationCenter.default.post(name: .settingsWindowClosed, object: nil)
-                    appDelegate.switchVM.isSettingViewShowing = false
                 }
             }
             .onOpenURL{ url in
@@ -146,7 +145,7 @@ struct OnlySwitchApp: App {
     }
 }
 
-class AppDelegate:NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate {
     var statusBar: StatusBarController?
     var popover = NSPopover()
     let switchVM = SwitchListVM()

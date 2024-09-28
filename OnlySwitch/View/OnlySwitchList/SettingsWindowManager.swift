@@ -9,13 +9,16 @@ import Defines
 import Foundation
 import AppKit
 
-extension SwitchListVM: SettingWindowController {
+class SettingsWindowManager {
+    static var shared = SettingsWindowManager()
+    var isSettingViewShowing = false
+
     private struct Holder {
         static var _settingsWindowPresented = false
         static var _settingsWindow:NSWindow?
         static var _coordinator:Coordinator = Coordinator()
     }
-    
+
     internal var settingsWindowPresented: Bool {
         get {
             return Holder._settingsWindowPresented
@@ -24,7 +27,7 @@ extension SwitchListVM: SettingWindowController {
             Holder._settingsWindowPresented = newValue
         }
     }
-    
+
     internal var settingsWindow: NSWindow? {
         get {
             return Holder._settingsWindow
@@ -34,11 +37,11 @@ extension SwitchListVM: SettingWindowController {
             Holder._settingsWindow = newValue
         }
     }
-    
+
     private var coodinator:Coordinator {
         return Holder._coordinator
     }
-    
+
     func receiveSettingWindowOperation() {
         NotificationCenter.default.addObserver(forName: .settingsWindowOpened,
                                                object: nil,
@@ -48,7 +51,7 @@ extension SwitchListVM: SettingWindowController {
                 if self.settingsWindow == nil {
                     self.settingsWindow = window
                     self.settingsWindow?.makeKeyAndOrderFront(self)
-                    
+
                     if #available(macOS 13.0, *) {
                         var windowFrame = window.frame
                         windowFrame.size.height = Layout.settingWindowHeight
@@ -66,15 +69,16 @@ extension SwitchListVM: SettingWindowController {
                 }
             }
         })
-        
+
         NotificationCenter.default.addObserver(forName: .settingsWindowClosed,
                                                object: nil,
                                                queue: .main,
                                                using: { _ in
             self.settingsWindowPresented = false
+            self.isSettingViewShowing = false
             NSApp.activate(ignoringOtherApps: false)
         })
-        
+
         NotificationCenter.default.addObserver(forName: .toggleSplitSettingsWindow,
                                                object: nil,
                                                queue: .main,
@@ -88,7 +92,7 @@ extension SwitchListVM: SettingWindowController {
                     with:nil)
         })
     }
-    
+
     func showSettingsWindow() {
         NSApp.setActivationPolicy(.regular)
         NSApp.activate(ignoringOtherApps: true)
@@ -120,13 +124,13 @@ extension SwitchListVM: SettingWindowController {
         self.settingsWindowPresented = true
         NotificationCenter.default.post(name: .shouldHidePopover, object: nil)
     }
-    
+
     class Coordinator:NSObject, NSWindowDelegate {
         func windowShouldClose(_ sender: NSWindow) -> Bool {
             onClose()
             return true
         }
-        
+
         func onClose() {
             print("settings window closing")
             NSApp.activate(ignoringOtherApps: true)

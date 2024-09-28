@@ -57,7 +57,7 @@ class StatusBarController {
         Preferences.shared.menubarCollaspable
     }
 
-    lazy var dashboardWindow: NSWindow = {
+    lazy var onlyControlWindow: NSWindow = {
         let view = NSHostingView(rootView: OnlyControlView(store: onlyControlStore))
         let window = OnlyControlWindow(
             contentRect: .zero,
@@ -135,7 +135,7 @@ class StatusBarController {
                 return
             }
 
-            let condition = currentAppearance == .onlyControl ? dashboardWindow.isVisible : popover.isShown
+            let condition = currentAppearance == .onlyControl ? onlyControlWindow.isVisible : popover.isShown
 
             if(condition) {
                 hidePopover(sender)
@@ -290,9 +290,9 @@ class StatusBarController {
     func showPopover(_ sender: AnyObject?) {
         if let statusBarButton = mainItem.button {
             if currentAppearance == .onlyControl {
-                dashboardWindow.makeKeyAndOrderFront(nil)
-                dashboardWindow.setFrameUsingName("OnlyControlWindow")
-                dashboardWindow.setFrameAutosaveName("OnlyControlWindow")
+                onlyControlWindow.makeKeyAndOrderFront(nil)
+                onlyControlWindow.setFrameUsingName("OnlyControlWindow")
+                onlyControlWindow.setFrameAutosaveName("OnlyControlWindow")
                 onlyControlStore.send(.showControl)
             } else {
                 popover.show(relativeTo: statusBarButton.bounds,
@@ -310,7 +310,7 @@ class StatusBarController {
         if currentAppearance == .onlyControl {
             onlyControlStore.send(.hideControl)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.51) {
-                self.dashboardWindow.close()
+                self.onlyControlWindow.close()
             }
         } else {
             popover.performClose(sender)
@@ -325,7 +325,7 @@ class StatusBarController {
             return
         }
 
-        let condition = currentAppearance == .onlyControl ? dashboardWindow.isVisible : popover.isShown
+        let condition = currentAppearance == .onlyControl ? onlyControlWindow.isVisible : popover.isShown
 
         if condition {
             hidePopover(event)

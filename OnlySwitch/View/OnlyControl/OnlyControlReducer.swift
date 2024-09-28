@@ -61,6 +61,7 @@ struct OnlyControlReducer {
         case hideControl
         case updateItems([BarProvider], [ControlItemViewState], [SwitchBarVM])
         case updateItem(ControlItemViewState)
+        case openSettings
         case dashboardAction(DashboardReducer.Action)
     }
 
@@ -137,6 +138,10 @@ struct OnlyControlReducer {
                     } else if let evolutionControl = control as? EvolutionBarVM {
                         evolutionControl.doSwitch()
                     }
+                    return .none
+
+                case .openSettings:
+                    SettingsWindowManager.shared.showSettingsWindow()
                     return .none
 
                 case .dashboardAction(.delegate(.orderChanged)):
