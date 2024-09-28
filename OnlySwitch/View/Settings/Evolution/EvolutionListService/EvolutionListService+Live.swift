@@ -23,7 +23,9 @@ extension EvolutionListService: DependencyKey {
             unneededEntities.forEach { entity in
                 context.delete(entity)
             }
-            try context.save()
+            try await context.perform {
+               try context.save()
+            }
             return EvolutionAdapter.evolutionItems(uniqueEntities)
         },
         removeItem: { id in
