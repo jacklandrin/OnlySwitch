@@ -27,10 +27,12 @@ public protocol SwitchDelegate:AnyObject {
 
 /// for async operations
 public extension SwitchProvider {
+    @MainActor
     func currentStatusAsync() async -> Bool {
         return currentStatus()
     }
-    
+
+    @MainActor
     func currentInfoAsync() async -> String {
         return currentInfo()
     }
