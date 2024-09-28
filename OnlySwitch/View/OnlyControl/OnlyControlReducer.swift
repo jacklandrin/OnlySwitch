@@ -102,6 +102,10 @@ struct OnlyControlReducer {
                         let isOn = await switchControl.switchOperator.currentStatusAsync()
                         if var item = state.dashboard.items.first(where: { $0.id == switchControl.id }) {
                             item.status = isOn
+                            let image = (isOn ? switchControl.onImage : switchControl.offImage) ?? NSImage(named: "shortcuts_icon")!
+                            item.iconData = image
+                                .resizeMaintainingAspectRatio(withSize: NSSize(width: 60, height: 60))!
+                                .pngData!
                             await send(.updateItem(item))
                         }
                     }
@@ -186,7 +190,7 @@ struct OnlyControlReducer {
 
                     let key = "switch-" + switchVM.id
                     let weight = orderDic[key] ?? switchVM.weight
-                    let image = switchVM.onImage ?? NSImage(named: "shortcuts_icon")!
+                    let image = (switchVM.isOn ? switchVM.onImage : switchVM.offImage) ?? NSImage(named: "shortcuts_icon")!
 
                     return ControlItemViewState(
                         id: switchVM.id,

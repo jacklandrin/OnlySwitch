@@ -16,7 +16,7 @@ public struct ControlItemViewState: Equatable, Hashable, Identifiable {
     public var weight: Int
     public var unitType: UnitType
     public var status: Bool
-    var iconData: Data
+    public var iconData: Data
     var controlType: ControlType
     var opacity: Double = 1
 
