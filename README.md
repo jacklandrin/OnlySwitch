@@ -28,7 +28,7 @@ Since Version 1.7, **Shortcuts** can be imported into OnlySwitch.
 Since Version 2.0, supports **keyboard shortcuts**. You can control your all switches and Shortcuts with the keyboard.
 
 <p align="center">
-<img alt="Only Switch" src="https://github.com/user-attachments/assets/40d94175-6487-4c59-b09e-2261ac5b8453" width="60%" align="center" />
+<img alt="Only Switch" src="https://github.com/user-attachments/assets/40d94175-6487-4c59-b09e-2261ac5b8453" width="80%" align="center" />
 </p>
 
 Since Version 2.3.6, the Switches Availability (including Player and Hide Menu Bar Icons) is moved to System's menu bar.
