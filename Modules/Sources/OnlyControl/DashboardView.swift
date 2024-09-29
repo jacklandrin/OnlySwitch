@@ -31,7 +31,6 @@ public struct DashboardView: View {
                         ControlItemView(viewState: item)
                             .onTapGesture {
                                 store.send(.onTapItem(item.id))
-                                print("Tap item \(item.id)")
                             }
                             .simultaneousGesture(
                                 TapGesture()

@@ -28,7 +28,7 @@ Since Version 1.7, **Shortcuts** can be imported into OnlySwitch.
 Since Version 2.0, supports **keyboard shortcuts**. You can control your all switches and Shortcuts with the keyboard.
 
 <p align="center">
-<img alt="Only Switch" src="https://github.com/jacklandrin/OnlySwitch/assets/3782279/15ea4a96-ec4d-440b-831f-2f83a66834b2" width="60%" align="center" />
+<img alt="Only Switch" src="https://github.com/user-attachments/assets/40d94175-6487-4c59-b09e-2261ac5b8453" width="60%" align="center" />
 </p>
 
 Since Version 2.3.6, the Switches Availability (including Player and Hide Menu Bar Icons) is moved to System's menu bar.
@@ -36,6 +36,8 @@ Since Version 2.3.6, the Switches Availability (including Player and Hide Menu B
 ![](https://github.com/jacklandrin/OnlySwitch/assets/3782279/11c89e33-2007-4913-b320-47c188538b68)
 
 Since Version 2.5.0, OnlySwitch has started to support **Apple Widgets** (Sonoma and above).
+
+Since Version 2.5.4, OnlySwitch has Only Control appearance.
 
 ## Shortcuts Gallery
 
@@ -116,7 +118,7 @@ If you have other good ideas 💡, feel free to send an E-mail to me.
 ## Donate
 If you like it, help support this app by giving me a cup of tea for me to keep coding.
 <p align="center">
-<img alt="Sits in the status bar" src="https://github.com/jacklandrin/OnlySwitch/assets/3782279/797086a7-ad89-4ff1-81a7-d844bd67c0e3" width="20%" align="medium" title="Made by QRCobot"/>
+<img alt="Sits in the status bar" src="https://github.com/user-attachments/assets/76347782-e84f-469d-b9bf-2dae89d61979" width="20%" align="medium" title="Made by QRCobot"/>
 </p>
 
 
@@ -197,7 +199,7 @@ Since version 2.3.10, this switch can be controlled via right-click icons.
 | [korben](https://korben.info/controler-macos-onlyswitch.html)                                                                   | [macg](https://www.macg.co/logiciels/2023/03/onlyswitch-ajoute-une-pelletee-de-raccourcis-pratiques-votre-barre-des-menus-135357)          | [korben.info](https://korben.info/controler-macos-onlyswitch.html)                                                               | [AlternativeTo](https://alternativeto.net/software/only-switch)                                                        |
 | [macsoft.jp](https://macsoft.jp/onlyswitch/)                                                                                    | [macgeneration](https://www.macg.co/logiciels/2023/03/onlyswitch-ajoute-une-pelletee-de-raccourcis-pratiques-votre-barre-des-menus-135357) | [hdwh.de](https://hdwh.de/onlyswitch-vereinfacht-eure-routinearbeit-mit-praktischen-schaltern/)                                  | [MacKed](https://macked.app/onlyswitch.html)                                                                           |
 | [Mac Torrents](https://www.tntmactorrent.net/onlyswitch-for-mac-free-download/)                                                 | [PCtipp](https://www.pctipp.ch/praxis/mac/mac-tipp-onlyswitch-2-2892320.html)                                                              | [lifehacker](https://lifehacker.com/tech/change-hidden-mac-settings-with-onlyswitch)                                             | [PHAPLUAT](https://kynguyenso.plo.vn/su-dung-onlyswitch-de-tuy-chinh-tat-ca-cai-dat-may-mac-nhanh-hon-post776151.html) |
-| [Techgedöns](https://tchgdns.de/onlyswitch-menueleisten-multitool-bekommt-widgets-fuer-den-mac-desktop/)                        |                                                                                                                                            |                                                                                                                                  |                                                                                                                        |
+| [Techgedöns](https://tchgdns.de/onlyswitch-menueleisten-multitool-bekommt-widgets-fuer-den-mac-desktop/)                        | [MacVince](https://www.youtube.com/watch?v=ARfBLKzRQY4&t=41s)                                                                              |                                                                                                                                  |                                                                                                                        |
 
 
 ## Reference
