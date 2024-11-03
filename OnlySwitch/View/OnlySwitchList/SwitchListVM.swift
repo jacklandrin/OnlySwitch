@@ -8,6 +8,7 @@
 import SwiftUI
 import Switches
 
+@MainActor
 class SwitchListVM: ObservableObject, CurrentScreen {
 
     @Published private var model = SwitchListModel()

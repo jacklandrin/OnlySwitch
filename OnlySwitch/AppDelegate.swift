@@ -154,6 +154,7 @@ extension NSApplication {
     }
 }
 
+@MainActor
 class AppDelegate: NSObject, NSApplicationDelegate {
     var statusBar: StatusBarController?
     var popover = NSPopover()

@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import Combine
 
+@MainActor
 class HideMenubarIconsSettingVM:ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     private var preferencesPublisher = PreferencesObserver.shared

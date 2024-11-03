@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 class PomodoroTimerSettingVM:ObservableObject {
     @Published private var model = PomodoroTimerSettingModel()
     @Published private var preferences = Preferences.shared

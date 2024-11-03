@@ -26,7 +26,7 @@ enum SettingsItem: String, CaseIterable {
     case About = "About"
 }
 
-
+@MainActor
 class SettingsVM: ObservableObject {
 
     static let shared = SettingsVM()

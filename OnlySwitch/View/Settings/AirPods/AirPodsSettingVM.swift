@@ -9,6 +9,7 @@ import Foundation
 import IOBluetooth
 import Switches
 
+@MainActor
 class AirPodsItem:Identifiable {
     var name:String
     var address:String
@@ -22,6 +23,7 @@ class AirPodsItem:Identifiable {
     }
 }
 
+@MainActor
 class AirPodsSettingVM:ObservableObject {
     @Published var airPodsList:[AirPodsItem] = [AirPodsItem]()
     init() {

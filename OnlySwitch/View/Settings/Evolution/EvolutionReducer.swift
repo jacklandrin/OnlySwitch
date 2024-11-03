@@ -73,7 +73,6 @@ struct EvolutionReducer: Reducer {
                             EvolutionRowReducer.State(evolution: $0)
                         }
                     )
-                    NotificationCenter.default.post(name: .changeSettings, object: nil)
                     return .none
 
                 case .loadList(.failure(_)):

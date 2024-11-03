@@ -14,4 +14,17 @@ extension Effect {
                 .map { _ in action()}
         }
     }
+
+    static func singleItemChanged(perform action: @escaping (SwitchType) -> Action) -> Self {
+        .publisher {
+            NotificationCenter.default.publisher(for: .refreshSingleSwitchStatus)
+                .compactMap {
+                    if let type = $0.object as? SwitchType {
+                        return action(type)
+                    } else {
+                        return nil
+                    }
+                }
+        }
+    }
 }

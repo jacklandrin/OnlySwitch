@@ -8,6 +8,7 @@
 import Foundation
 import Alamofire
 
+@MainActor
 class AboutVM:ObservableObject {
     @Published var downloadCount: Int = 0
     @Published var updateHistoryInfo: String = ""

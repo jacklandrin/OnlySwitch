@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 class PreferencesObserver:ObservableObject {
     static let shared = PreferencesObserver()
     @Published var preferences = Preferences.shared

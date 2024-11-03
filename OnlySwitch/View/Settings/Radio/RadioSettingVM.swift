@@ -11,6 +11,7 @@ import AppKit
 import Extensions
 import Switches
 
+@MainActor
 class RadioSettingVM: ObservableObject {
 
     @Published fileprivate var model = RadioSettingModel()

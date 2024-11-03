@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 class NightShiftSettingsVM: ObservableObject {
 
     private var preferencesPublisher = PreferencesObserver.shared

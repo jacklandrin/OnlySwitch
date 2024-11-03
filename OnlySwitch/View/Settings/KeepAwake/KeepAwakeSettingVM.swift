@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 class KeepAwakeSettingVM: ObservableObject {
     var durationSet = [0, 1, 5, 10, 15, 30, 45, 60]
     private var preferencesPublisher = PreferencesObserver.shared

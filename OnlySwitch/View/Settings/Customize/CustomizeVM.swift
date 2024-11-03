@@ -9,6 +9,7 @@ import Foundation
 import KeyboardShortcuts
 import Switches
 
+@MainActor
 class CustomizeVM:ObservableObject {
     static let shared  = CustomizeVM()
     @Published var allSwitches:[CustomizeItem] = [CustomizeItem]()
@@ -29,6 +30,7 @@ class CustomizeVM:ObservableObject {
     
 }
 
+@MainActor
 class CustomizeItem: ObservableObject {
     let type:SwitchType
     let error:(_ info:String) -> Void

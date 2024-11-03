@@ -9,7 +9,8 @@ import AppKit
 import Combine
 import KeyboardShortcuts
 
-class GeneralVM:ObservableObject {
+@MainActor
+class GeneralVM: ObservableObject {
     
     @Published private var model = GeneralModel()
     @Published var preferences = Preferences.shared

@@ -77,17 +77,7 @@ struct OnlyControlReducer {
                 case .task:
                     return .merge(
                         .onSwitchListChanged(perform: .refreshDashboard),
-                        refreshDashboard(),
-                        .publisher {
-                            NotificationCenter.default.publisher(for: .refreshSingleSwitchStatus)
-                                .compactMap {
-                                    if let type = $0.object as? SwitchType {
-                                        return .refreshSingleSwitchType(type)
-                                    } else {
-                                        return nil
-                                    }
-                                }
-                        }
+                        .singleItemChanged(perform: {.refreshSingleSwitchType($0)})
                     )
 
                 case .refreshDashboard:
