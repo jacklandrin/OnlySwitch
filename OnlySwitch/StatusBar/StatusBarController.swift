@@ -186,108 +186,105 @@ class StatusBarController {
     }
 
     private func observeNotifications() {
-        NotificationCenter.default.addObserver(forName: .changeMenuBarIcon,
-                                               object: nil,
-                                               queue: .main,
-                                               using: {[weak self] notify in
-            guard let self else {return}
+        NotificationCenter.default.addObserver(
+            forName: .changeMenuBarIcon,
+            object: nil,
+            queue: .main
+        ) { [weak self] notify in
+            guard let self else { return }
             let newImageName = notify.object as! String
             self.setMainItemButton(image: newImageName)
-        })
+        }
 
-        NotificationCenter.default.addObserver(forName: .togglePopover,
-                                               object: nil,
-                                               queue: .main,
-                                               using: { [weak self] notify in
+        NotificationCenter.default.addObserver(
+            forName: .togglePopover,
+            object: nil,
+            queue: .main
+        ) { [weak self] notify in
             guard let self else {return}
             self.togglePopover(sender: nil)
-        })
+        }
 
         NotificationCenter.default.addObserver(
             forName: .shouldHidePopover,
             object: nil,
-            queue: .main,
-            using: { [weak self] notify in
-                guard let self else {return}
-                if let statusBarButton = self.mainItem.button {
-                    self.hidePopover(statusBarButton)
-                }
-
+            queue: .main
+        ) { [weak self] notify in
+            guard let self else {return}
+            if let statusBarButton = self.mainItem.button {
+                self.hidePopover(statusBarButton)
             }
-        )
+
+        }
 
         NotificationCenter.default.addObserver(
             forName: OtherPopover.name,
             object: nil,
-            queue: .main,
-            using: { [weak self] notify in
-                guard let self else {return}
-                let hasShown = notify.object as! Bool
-                if hasShown {
-                    self.otherPopoverBitwise = self.otherPopoverBitwise << 1 + 1
-                } else {
-                    self.otherPopoverBitwise = self.otherPopoverBitwise >> 1
-                }
-                var existOtherPopover = false
-                if self.otherPopoverBitwise == 0 {
-                    existOtherPopover = false
-                } else {
-                    existOtherPopover = true
-                }
-
-                if existOtherPopover != self.hasOtherPopover {
-                    self.hasOtherPopover = existOtherPopover
-                }
+            queue: .main
+        ) { [weak self] notify in
+            guard let self else {return}
+            let hasShown = notify.object as! Bool
+            if hasShown {
+                self.otherPopoverBitwise = self.otherPopoverBitwise << 1 + 1
+            } else {
+                self.otherPopoverBitwise = self.otherPopoverBitwise >> 1
             }
-        )
+            var existOtherPopover = false
+            if self.otherPopoverBitwise == 0 {
+                existOtherPopover = false
+            } else {
+                existOtherPopover = true
+            }
+
+            if existOtherPopover != self.hasOtherPopover {
+                self.hasOtherPopover = existOtherPopover
+            }
+        }
 
         NotificationCenter.default.addObserver(
             forName: .changePopoverAppearance,
             object: nil,
-            queue: .main,
-            using: { [weak self] notify in
-                guard let self else {return}
-                hidePopover(nil)
+            queue: .main
+        ) { [weak self] notify in
+            guard let self else {return}
+            hidePopover(nil)
 
-                if currentAppearance == .single {
-                    popover.contentSize.width = Layout.popoverWidth
-                } else if self.currentAppearance == .dual {
-                    popover.contentSize.width = Layout.popoverWidth * 2 - 40
-                } else if self.currentAppearance == .onlyControl {
-                    popover.performClose(nil)
-                }
+            if currentAppearance == .single {
+                popover.contentSize.width = Layout.popoverWidth
+            } else if self.currentAppearance == .dual {
+                popover.contentSize.width = Layout.popoverWidth * 2 - 40
+            } else if self.currentAppearance == .onlyControl {
+                popover.performClose(nil)
             }
-        )
+        }
 
         NotificationCenter.default.addObserver(
             forName: .toggleMenubarCollapse,
             object: nil,
-            queue: .main,
-            using: { [weak self] notify in
-                guard let self, let isOn = notify.object as? Bool else {return}
-                markItem?.length = isOn ? MarkItemLength.collapse : MarkItemLength.normal
-            }
-        )
+            queue: .main
+        ) { [weak self] notify in
+            guard let self, let isOn = notify.object as? Bool else {return}
+            markItem?.length = isOn ? MarkItemLength.collapse : MarkItemLength.normal
+        }
 
         NotificationCenter.default.addObserver(
             forName: .menubarCollapsable,
             object: nil,
-            queue: .main,
-            using: {[weak self] notify in
-                guard let self, let enable = notify.object as? Bool else {return}
-                if enable {
-                    setMarkButton()
-                    Task {
-                        try? await HideMenubarIconsSwitch.shared.operateSwitch(isOn: false)
-                    }
+            queue: .main
+        ) { [weak self] notify in
+            guard let self, let enable = notify.object as? Bool else {return}
+            if enable {
+                setMarkButton()
+                Task {
+                    try? await HideMenubarIconsSwitch.shared.operateSwitch(isOn: false)
+                }
 
-                } else {
-                    if let markItem {
-                        NSStatusBar.system.removeStatusItem(markItem)
-                    }
+            } else {
+                if let markItem {
+                    NSStatusBar.system.removeStatusItem(markItem)
                 }
             }
-        )
+        }
     }
 
     func showPopover(_ sender: AnyObject?) {
