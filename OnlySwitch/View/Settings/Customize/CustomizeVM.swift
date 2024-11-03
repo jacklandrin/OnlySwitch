@@ -27,7 +27,6 @@ class CustomizeVM:ObservableObject {
             }))
         }
     }
-    
 }
 
 @MainActor

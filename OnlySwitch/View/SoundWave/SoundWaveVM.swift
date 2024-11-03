@@ -9,6 +9,7 @@
 import AppKit
 import Combine
 
+@MainActor
 class SoundWaveVM: ObservableObject {
     
     var spectra: [[Float]] {

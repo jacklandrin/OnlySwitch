@@ -8,6 +8,7 @@
 import SwiftUI
 import CoreGraphics
 
+@MainActor
 class PureColorVM:ObservableObject {
     
     private var runLoopSource:CFRunLoopSource?

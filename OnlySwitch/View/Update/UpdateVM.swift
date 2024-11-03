@@ -7,7 +7,8 @@
 
 import AppKit
 
-class UpdateVM:ObservableObject {
+@MainActor
+class UpdateVM: ObservableObject {
     private let checkUpdatePresenter: GitHubPresenter!
     
     init(presenter:GitHubPresenter) {
