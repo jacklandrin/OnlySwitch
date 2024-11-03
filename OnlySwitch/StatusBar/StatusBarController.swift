@@ -85,6 +85,7 @@ class StatusBarController {
 
         window.makeKeyAndOrderFront(nil)
         window.center()
+        window.setIsVisible(false)
         return window
     }()
 
@@ -246,12 +247,14 @@ class StatusBarController {
             queue: .main,
             using: { [weak self] notify in
                 guard let self else {return}
-                self.hidePopover(nil)
+                hidePopover(nil)
 
-                if self.currentAppearance == .single {
-                    self.popover.contentSize.width = Layout.popoverWidth
+                if currentAppearance == .single {
+                    popover.contentSize.width = Layout.popoverWidth
                 } else if self.currentAppearance == .dual {
-                    self.popover.contentSize.width = Layout.popoverWidth * 2 - 40
+                    popover.contentSize.width = Layout.popoverWidth * 2 - 40
+                } else if self.currentAppearance == .onlyControl {
+                    popover.performClose(nil)
                 }
             }
         )
@@ -262,7 +265,7 @@ class StatusBarController {
             queue: .main,
             using: { [weak self] notify in
                 guard let self, let isOn = notify.object as? Bool else {return}
-                self.markItem?.length = isOn ? MarkItemLength.collapse : MarkItemLength.normal
+                markItem?.length = isOn ? MarkItemLength.collapse : MarkItemLength.normal
             }
         )
 
@@ -273,13 +276,13 @@ class StatusBarController {
             using: {[weak self] notify in
                 guard let self, let enable = notify.object as? Bool else {return}
                 if enable {
-                    self.setMarkButton()
+                    setMarkButton()
                     Task {
                         try? await HideMenubarIconsSwitch.shared.operateSwitch(isOn: false)
                     }
 
                 } else {
-                    if let markItem = self.markItem {
+                    if let markItem {
                         NSStatusBar.system.removeStatusItem(markItem)
                     }
                 }

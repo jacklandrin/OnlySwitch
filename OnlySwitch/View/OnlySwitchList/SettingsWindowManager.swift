@@ -43,10 +43,11 @@ class SettingsWindowManager {
     }
 
     func receiveSettingWindowOperation() {
-        NotificationCenter.default.addObserver(forName: .settingsWindowOpened,
-                                               object: nil,
-                                               queue: .main,
-                                               using: { notify in
+        NotificationCenter.default.addObserver(
+            forName: .settingsWindowOpened,
+            object: nil,
+            queue: .main
+        ) { notify in
             if let window = notify.object as? NSWindow {
                 if self.settingsWindow == nil {
                     self.settingsWindow = window
@@ -68,29 +69,27 @@ class SettingsWindowManager {
                     }
                 }
             }
-        })
+        }
 
-        NotificationCenter.default.addObserver(forName: .settingsWindowClosed,
-                                               object: nil,
-                                               queue: .main,
-                                               using: { _ in
+        NotificationCenter.default.addObserver(
+            forName: .settingsWindowClosed,
+            object: nil,
+            queue: .main
+        ) { _ in
             self.settingsWindowPresented = false
             self.isSettingViewShowing = false
             NSApp.activate(ignoringOtherApps: false)
-        })
+        }
 
-        NotificationCenter.default.addObserver(forName: .toggleSplitSettingsWindow,
-                                               object: nil,
-                                               queue: .main,
-                                               using: { _ in
+        NotificationCenter.default.addObserver(
+            forName: .toggleSplitSettingsWindow,
+            object: nil,
+            queue: .main
+        ) { _ in
             self.settingsWindow?
                 .contentViewController?
-                .tryToPerform(
-                    #selector(
-                        NSSplitViewController
-                            .toggleSidebar(_:)),
-                    with:nil)
-        })
+                .tryToPerform(#selector(NSSplitViewController.toggleSidebar(_:)), with:nil)
+        }
     }
 
     func showSettingsWindow() {
@@ -111,9 +110,9 @@ class SettingsWindowManager {
                         NSWorkspace.shared.open(url)
                         isSettingViewShowing = true
                         print("new setting window appears")
-                        if let window = NSApplication.shared.windows.first {
-                            window.makeKeyAndOrderFront(self)
-                        }
+                    }
+                    if let window = NSApp.windows.first {
+                        window.makeKeyAndOrderFront(self)
                     }
                 } else {
                     NSWorkspace.shared.open(url)

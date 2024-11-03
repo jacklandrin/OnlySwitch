@@ -26,15 +26,16 @@ struct OnlySwitchApp: App {
             EmptyView()
                 .frame(width: 0, height: 0)
                 .onAppear {
-                    if !SettingsWindowManager.shared.isSettingViewShowing {
-                        NSApp.setActivationPolicy(.accessory)
-                    }
+                    NSApp.hideDockIcon()
+                }
+                .onDisappear() {
+                    NSApp.hideDockIcon()
                 }
                 .onOpenURL{ url in
                     defer {
                         if let window = NSApplication.shared.windows.first(where: { $0.title == "run"}) {
                             window.close()
-                            NSApp.setActivationPolicy(.accessory)
+                            NSApp.hideDockIcon()
                         }
                     }
                     guard url.absoluteString.contains("run"),
@@ -145,6 +146,14 @@ struct OnlySwitchApp: App {
     }
 }
 
+extension NSApplication {
+    func hideDockIcon() {
+        if !SettingsWindowManager.shared.isSettingViewShowing {
+            setActivationPolicy(.accessory)
+        }
+    }
+}
+
 class AppDelegate: NSObject, NSApplicationDelegate {
     var statusBar: StatusBarController?
     var popover = NSPopover()
@@ -180,9 +189,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if PreferencesObserver.shared.preferences.checkUpdateOnLaunch {
             checkUpdate()
         }
-    }
-
-    func applicationWillFinishLaunching(_ notification: Notification) {
         // Workaround for issue [#147](https://github.com/jacklandrin/OnlySwitch/issues/147)
         NSApp.setActivationPolicy(.accessory)
     }
