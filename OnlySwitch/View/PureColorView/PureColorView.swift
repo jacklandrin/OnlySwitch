@@ -14,7 +14,6 @@ struct PureColorView: View {
         ZStack {
             VStack {
                 HStack{
-                    Spacer()
                     Button(action: {
                         vm.exitScreenTestMode()
                     }, label: {
@@ -31,6 +30,7 @@ struct PureColorView: View {
                         }
                     })
                     .padding(20)
+                    Spacer()
                 }
                 Spacer()
                 Text("Keyboard Locked ↓".localized())
