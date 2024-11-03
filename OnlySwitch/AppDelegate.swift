@@ -26,7 +26,7 @@ struct OnlySwitchApp: App {
             EmptyView()
                 .frame(width: 0, height: 0)
                 .onAppear {
-                    if SettingsWindowManager.shared.isSettingViewShowing == true {
+                    if !SettingsWindowManager.shared.isSettingViewShowing {
                         NSApp.setActivationPolicy(.accessory)
                     }
                 }
@@ -34,7 +34,7 @@ struct OnlySwitchApp: App {
                     defer {
                         if let window = NSApplication.shared.windows.first(where: { $0.title == "run"}) {
                             window.close()
-                            NSApplication.shared.setActivationPolicy(.accessory)
+                            NSApp.setActivationPolicy(.accessory)
                         }
                     }
                     guard url.absoluteString.contains("run"),
@@ -182,8 +182,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    func applicationWillTerminate(_ notification: Notification) {
-
+    func applicationWillFinishLaunching(_ notification: Notification) {
+        // Workaround for issue [#147](https://github.com/jacklandrin/OnlySwitch/issues/147)
+        NSApp.setActivationPolicy(.accessory)
     }
 
     func checkUpdate() {
@@ -236,7 +237,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private func closeWindow() {
         for window in NSApplication.shared.windows {
             window.orderOut(nil)
-            NSApplication.shared.setActivationPolicy(.accessory)
+            NSApp.setActivationPolicy(.accessory)
             NSWindow.allowsAutomaticWindowTabbing = false
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 window.close()
