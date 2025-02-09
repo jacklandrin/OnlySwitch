@@ -29,7 +29,7 @@ struct AboutView: View {
                     .font(.footnote)
                     .foregroundColor(.gray)
                 HStack {
-                    Text("Copyright @ 2021-2024 ")
+                    Text("Copyright @ 2021-2025 ")
                         .font(.system(size: 15))
                     Link(destination: URL(string: "https://jacklandrin.github.io")!, label: {
                         Text("Jacklandrin")
@@ -82,7 +82,7 @@ struct AboutView: View {
                     ForEach(aboutVM.updateHistoryList,id:\.self) { info in
                         LazyHStack {
                             Text(LocalizedStringKey(info))
-                                .frame(width: Layout.settingWindowWidth / 2 - 150,alignment: .leading)
+                                .frame(width: Layout.settingWindowWidth / 2 - 150, alignment: .leading)
                             Spacer()
                         }
                         Divider()
