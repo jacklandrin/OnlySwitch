@@ -19,8 +19,8 @@ class RadioStationSwitch:SwitchProvider {
     weak var delegate: SwitchDelegate?
     private var managedObjectContext:NSManagedObjectContext?
     
-    var playerItem:RadioPlayerItemViewModel = RadioPlayerItemViewModel(isPlaying: false, title: "Country Radio", streamUrl: "http://uk2.internet-radio.com:8024/stream", streamInfo: "", id: UUID())
-    
+    var playerItem: RadioPlayerItemViewModel = RadioPlayerItemViewModel(isPlaying: false, title: "Country Radio", streamUrl: "http://uk2.internet-radio.com:8024/stream", streamInfo: "", id: UUID())
+
     init() {
         self.managedObjectContext = PersistenceController.shared.container.viewContext
         
@@ -53,13 +53,10 @@ class RadioStationSwitch:SwitchProvider {
     
     func operateSwitch(isOn: Bool) async throws {
         guard Preferences.shared.radioEnable else {return}
-        if isOn {
-            DispatchQueue.main.async {
+        Task { @MainActor in
+            if isOn {
                 self.playerItem.isPlaying = true
-            }
-            
-        } else {
-            DispatchQueue.main.async {
+            } else {
                 self.playerItem.isPlaying = false
                 self.playerItem.streamInfo = ""
             }

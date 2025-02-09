@@ -18,6 +18,7 @@ struct OtherPopover {
     }
 }
 
+@MainActor
 class StatusBarController {
 
     struct MarkItemLength {
@@ -68,7 +69,7 @@ class StatusBarController {
         )
         let contentRect = window.contentRect(forFrameRect: window.frame)
         view.frame = contentRect
-
+        view.canDrawSubviewsIntoLayer = true
         window.contentView = view
 
         [window].forEach {
@@ -162,7 +163,7 @@ class StatusBarController {
         return mainItemX >= markItemX
     }
 
-    private func setMainItemButton(image:String) {
+    private func setMainItemButton(image: String) {
         if let mainItemButton = mainItem.button {
             mainItemButton.image = NSImage(named: image)
             mainItemButton.image?.size = NSSize(width: 18, height: 18)
@@ -191,9 +192,11 @@ class StatusBarController {
             object: nil,
             queue: .main
         ) { [weak self] notify in
-            guard let self else { return }
-            let newImageName = notify.object as! String
-            self.setMainItemButton(image: newImageName)
+            Task { @MainActor in
+                guard let self else { return }
+                let newImageName = notify.object as! String
+                self.setMainItemButton(image: newImageName)
+            }
         }
 
         NotificationCenter.default.addObserver(
@@ -201,8 +204,10 @@ class StatusBarController {
             object: nil,
             queue: .main
         ) { [weak self] notify in
-            guard let self else {return}
-            self.togglePopover(sender: nil)
+            Task { @MainActor in
+                guard let self else {return}
+                self.togglePopover(sender: nil)
+            }
         }
 
         NotificationCenter.default.addObserver(
@@ -210,11 +215,12 @@ class StatusBarController {
             object: nil,
             queue: .main
         ) { [weak self] notify in
-            guard let self else {return}
-            if let statusBarButton = self.mainItem.button {
-                self.hidePopover(statusBarButton)
+            Task { @MainActor in
+                guard let self else {return}
+                if let statusBarButton = self.mainItem.button {
+                    self.hidePopover(statusBarButton)
+                }
             }
-
         }
 
         NotificationCenter.default.addObserver(
@@ -222,22 +228,24 @@ class StatusBarController {
             object: nil,
             queue: .main
         ) { [weak self] notify in
-            guard let self else {return}
-            let hasShown = notify.object as! Bool
-            if hasShown {
-                self.otherPopoverBitwise = self.otherPopoverBitwise << 1 + 1
-            } else {
-                self.otherPopoverBitwise = self.otherPopoverBitwise >> 1
-            }
-            var existOtherPopover = false
-            if self.otherPopoverBitwise == 0 {
-                existOtherPopover = false
-            } else {
-                existOtherPopover = true
-            }
+            Task { @MainActor in
+                guard let self else {return}
+                let hasShown = notify.object as! Bool
+                if hasShown {
+                    self.otherPopoverBitwise = self.otherPopoverBitwise << 1 + 1
+                } else {
+                    self.otherPopoverBitwise = self.otherPopoverBitwise >> 1
+                }
+                var existOtherPopover = false
+                if self.otherPopoverBitwise == 0 {
+                    existOtherPopover = false
+                } else {
+                    existOtherPopover = true
+                }
 
-            if existOtherPopover != self.hasOtherPopover {
-                self.hasOtherPopover = existOtherPopover
+                if existOtherPopover != self.hasOtherPopover {
+                    self.hasOtherPopover = existOtherPopover
+                }
             }
         }
 
@@ -246,15 +254,17 @@ class StatusBarController {
             object: nil,
             queue: .main
         ) { [weak self] notify in
-            guard let self else {return}
-            hidePopover(nil)
+            Task { @MainActor in
+                guard let self else {return}
+                self.hidePopover(nil)
 
-            if currentAppearance == .single {
-                popover.contentSize.width = Layout.popoverWidth
-            } else if self.currentAppearance == .dual {
-                popover.contentSize.width = Layout.popoverWidth * 2 - 40
-            } else if self.currentAppearance == .onlyControl {
-                popover.performClose(nil)
+                if self.currentAppearance == .single {
+                    self.popover.contentSize.width = Layout.popoverWidth
+                } else if self.currentAppearance == .dual {
+                    self.popover.contentSize.width = Layout.popoverWidth * 2 - 40
+                } else if self.currentAppearance == .onlyControl {
+                    self.popover.performClose(nil)
+                }
             }
         }
 
@@ -263,8 +273,10 @@ class StatusBarController {
             object: nil,
             queue: .main
         ) { [weak self] notify in
-            guard let self, let isOn = notify.object as? Bool else {return}
-            markItem?.length = isOn ? MarkItemLength.collapse : MarkItemLength.normal
+            Task { @MainActor in
+                guard let self, let isOn = notify.object as? Bool else {return}
+                self.markItem?.length = isOn ? MarkItemLength.collapse : MarkItemLength.normal
+            }
         }
 
         NotificationCenter.default.addObserver(
@@ -272,16 +284,18 @@ class StatusBarController {
             object: nil,
             queue: .main
         ) { [weak self] notify in
-            guard let self, let enable = notify.object as? Bool else {return}
-            if enable {
-                setMarkButton()
-                Task {
-                    try? await HideMenubarIconsSwitch.shared.operateSwitch(isOn: false)
-                }
+            Task { @MainActor in
+                guard let self, let enable = notify.object as? Bool else {return}
+                if enable {
+                    self.setMarkButton()
+                    Task {
+                        try? await HideMenubarIconsSwitch.shared.operateSwitch(isOn: false)
+                    }
 
-            } else {
-                if let markItem {
-                    NSStatusBar.system.removeStatusItem(markItem)
+                } else {
+                    if let markItem = self.markItem {
+                        NSStatusBar.system.removeStatusItem(markItem)
+                    }
                 }
             }
         }

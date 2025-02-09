@@ -54,8 +54,8 @@ struct OnlyControlView: View {
                             Button{} label: {
                                 Color.clear
                             }
+                            .buttonStyle(.plain)
                         )
-                        .buttonStyle(.plain)
 
                     HStack {
                         Spacer()
@@ -115,7 +115,7 @@ struct OnlyControlView: View {
     })
 }
 
-class OnlyControlWindow: NSWindow, NSWindowDelegate {
+final class OnlyControlWindow: NSWindow, NSWindowDelegate {
     override var canBecomeKey: Bool {
         true
     }

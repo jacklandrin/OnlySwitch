@@ -19,7 +19,7 @@ class RadioSettingVM: ObservableObject {
     @Published private var preferences = PreferencesObserver.shared.preferences
     private var cancellables = Set<AnyCancellable>()
 
-    var radioList:[RadioPlayerItemViewModel] {
+    var radioList: [RadioPlayerItemViewModel] {
         get {
             model.radioList
         }
@@ -28,7 +28,7 @@ class RadioSettingVM: ObservableObject {
         }
     }
 
-    var selectRow:RadioPlayerItemViewModel.ID? {
+    var selectRow: RadioPlayerItemViewModel.ID? {
         get {
             return model.selectRow
         }
@@ -43,7 +43,7 @@ class RadioSettingVM: ObservableObject {
         }
     }
 
-    var showErrorToast:Bool {
+    var showErrorToast: Bool {
         get {
             model.showErrorToast
         }
@@ -52,7 +52,7 @@ class RadioSettingVM: ObservableObject {
         }
     }
 
-    var showSuccessToast:Bool {
+    var showSuccessToast: Bool {
         get {
             model.showSuccessToast
         }
@@ -61,21 +61,21 @@ class RadioSettingVM: ObservableObject {
         }
     }
 
-    var successInfo:String {
+    var successInfo: String {
         model.successInfo
     }
 
-    var errorInfo:String {
+    var errorInfo: String {
         model.errorInfo
     }
 
-    var currentTitle:String {
+    var currentTitle: String {
         model.currentTitle
     }
 
     var sliderVolume: Float = 1.0
 
-    var soundWaveEffectDisplay:Bool {
+    var soundWaveEffectDisplay: Bool {
         get {
             preferences.soundWaveEffectDisplay
         }
@@ -84,7 +84,7 @@ class RadioSettingVM: ObservableObject {
         }
     }
 
-    var sliderValue:Float {
+    var sliderValue: Float {
         get {
             preferences.volume
         }
@@ -111,7 +111,7 @@ class RadioSettingVM: ObservableObject {
         }
     }
 
-    var switchEnable:Bool {
+    var switchEnable: Bool {
         get {
             preferences.radioEnable
         }
@@ -136,13 +136,13 @@ class RadioSettingVM: ObservableObject {
         }
     }
 
-    private var managedObjectContext:NSManagedObjectContext?
+    private var managedObjectContext: NSManagedObjectContext?
 
     init() {
         self.managedObjectContext = PersistenceController.shared.container.viewContext
         let stations = RadioStations.fetchResult
 
-        var uniqueStations = stations.unique { $0.id }
+        let uniqueStations = stations.unique { $0.id }
         let unneededStations = stations.filter { station in
             !uniqueStations.contains { $0.objectID == station.objectID }
         }
@@ -152,37 +152,45 @@ class RadioSettingVM: ObservableObject {
         }
 
         for station in stations {
-            let radio = RadioPlayerItemViewModel(isPlaying: false, title: station.title!, streamUrl: station.url!, streamInfo: "", id: station.id!)
+            let radio = RadioPlayerItemViewModel(
+                isPlaying: false,
+                title: station.title!,
+                streamUrl: station.url!,
+                streamInfo: "",
+                id: station.id!
+            )
             radioList.append(radio)
         }
 
         NotificationCenter.default.addObserver(forName: .illegalRadioInfoNotification,
                                                object: nil,
-                                               queue: .main,
-                                               using:{[self] notify in
-            self.model.errorInfo = notify.object as! String
-            self.model.showErrorToast = true
-        })
+                                               queue: .main) { @Sendable [self] notify in
+            Task { @MainActor in
+                self.model.errorInfo = notify.object as! String
+                self.model.showErrorToast = true
+            }
+        }
 
         self.model.currentTitle = RadioStationSwitch.shared.playerItem.title
 
-        if let newValue = UserDefaults.standard.value(forKey: UserDefaults.Key.volume) as? Float
-        {
+        if let newValue = UserDefaults.standard.value(forKey: UserDefaults.Key.volume) as? Float {
             sliderVolume = newValue
         }
 
-        RadioStationSwitch.shared.playerItem.$model.sink { item in
-            guard let item = item else {return}
+        RadioStationSwitch.shared.playerItem.$model.sink { [weak self] item in
+            guard let item, let self else { return }
             if self.radioList.filter({ $0.isEditing == true }).count > 0 {
                 self.endEditing()
             }
             self.model.currentTitle = item.title
             self.model.selectRow = item.id
-        }.store(in: &cancellables)
+        }
+        .store(in: &cancellables)
 
         preferencesPublisher.$preferences.sink{ _ in
             self.objectWillChange.send()
-        }.store(in: &cancellables)
+        }
+        .store(in: &cancellables)
     }
 
     deinit {
@@ -228,18 +236,17 @@ class RadioSettingVM: ObservableObject {
             self.model.radioList.remove(at: itemIndices.first!)
             self.model.selectRow = nil
         }
-
     }
 
-    func addStation(title:String = "", streamUrl:String = "") {
-        self.startEditing()
+    func addStation(title: String = "", streamUrl: String = "") {
+        startEditing()
         let newStationID = UUID()
         let newStation = RadioPlayerItemViewModel(isPlaying: false, title: title, streamUrl: streamUrl, streamInfo: "", id: newStationID)
-        self.endEditing()
+        endEditing()
         newStation.isEditing = true
         newStation.isEditing = title == ""
-        self.model.radioList.append(newStation)
-        self.model.selectRow = newStationID
+        model.radioList.append(newStation)
+        model.selectRow = newStationID
     }
 
     func selectStation() {
@@ -257,13 +264,10 @@ class RadioSettingVM: ObservableObject {
         RadioStationSwitch.shared.playerItem.streamInfo = ""
         RadioStationSwitch.shared.playerItem.id = station.id!
         Preferences.shared.radioStationID = currentRow.uuidString
-        self.model.currentTitle = RadioStationSwitch.shared.playerItem.title
+        model.currentTitle = RadioStationSwitch.shared.playerItem.title
         RadioStationSwitch.shared.playerItem.isPlaying = isPlaying
         NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.radioStation)
-
     }
-
-
 }
 
 extension RadioSettingVM {
@@ -276,7 +280,7 @@ extension RadioSettingVM {
             if let listJsonStr = try String(data: encoder.encode(list), encoding: .utf8) {
                 let newListJsonStr = listJsonStr.replacingOccurrences(of: "\\", with: "")
                 let savePanel = buildSavePanel()
-                savePanel.begin{ (result: NSApplication.ModalResponse) -> Void in
+                savePanel.begin { (result: NSApplication.ModalResponse) -> Void in
                     if result == NSApplication.ModalResponse.OK {
                         if let panelURL = savePanel.url {
                             try? newListJsonStr.write(to: panelURL, atomically: true, encoding: .utf8)
@@ -284,10 +288,8 @@ extension RadioSettingVM {
                             self.model.showSuccessToast = true
                         }
                     }
-
                 }
             }
-
         } catch {
             self.model.errorInfo = error.localizedDescription
             self.model.showErrorToast = true
@@ -297,7 +299,7 @@ extension RadioSettingVM {
 
     func importList() {
         let openPanel = buildOpenPanel()
-        openPanel.begin{ (result:NSApplication.ModalResponse) -> Void in
+        openPanel.begin{ (result: NSApplication.ModalResponse) -> Void in
             if result == NSApplication.ModalResponse.OK {
                 if let openURL = openPanel.url {
                     do {
@@ -306,8 +308,7 @@ extension RadioSettingVM {
                         print("name: \(String(describing: importRadioList.first?.name))  url: \(String(describing: importRadioList.first?.url))")
                         for item in importRadioList {
                             if item.url.isValidURL && !RadioStations.existence(url: item.url) {
-                                self.addStation(title: item.name,
-                                                streamUrl: item.url)
+                                self.addStation(title: item.name, streamUrl: item.url)
 
                             }
                         }
@@ -317,7 +318,6 @@ extension RadioSettingVM {
                         self.model.errorInfo = error.localizedDescription
                         self.model.showErrorToast = true
                     }
-
                 }
             }
         }

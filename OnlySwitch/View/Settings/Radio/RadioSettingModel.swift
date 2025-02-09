@@ -8,7 +8,7 @@
 import Foundation
 
 struct RadioSettingModel {
-    var radioList:[RadioPlayerItemViewModel] = [RadioPlayerItemViewModel]()
+    var radioList: [RadioPlayerItemViewModel] = [RadioPlayerItemViewModel]()
     var selectRow:RadioPlayerItemViewModel.ID?
     var showSuccessToast = false
     var successInfo = ""
