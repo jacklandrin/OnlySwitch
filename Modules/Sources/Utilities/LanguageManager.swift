@@ -10,15 +10,15 @@ import Defines
 import Extensions
 
 public class LanguageManager: ObservableObject {
-    private let languageUserDefaults = UserDefaults(suiteName: "group.onlyswitch.shared")!
+    private let languageUserDefaults = UserDefaults(suiteName: "\(Bundle.appIdentifier)OnlySwitch.shared")
     public static let sharedManager = LanguageManager()
-    public var systemLangPriority:Bool {
+    public var systemLangPriority: Bool {
         get {
-            languageUserDefaults.bool(forKey: UserDefaults.Key.systemLangPriority)
+            languageUserDefaults?.bool(forKey: UserDefaults.Key.systemLangPriority) ?? false
         }
         set {
-            languageUserDefaults.set(newValue, forKey: UserDefaults.Key.systemLangPriority)
-            languageUserDefaults.synchronize()
+            languageUserDefaults?.set(newValue, forKey: UserDefaults.Key.systemLangPriority)
+            languageUserDefaults?.synchronize()
             print("systemLangPriority:\(newValue)")
         }
     }
@@ -32,8 +32,8 @@ public class LanguageManager: ObservableObject {
     }
     
     public init() {
-        let _systemLangPriority = languageUserDefaults.bool(forKey: UserDefaults.Key.systemLangPriority)
-        currentLang = _systemLangPriority ? Bundle.systemLanguage() : Bundle.currentLanguage()
+        let _systemLangPriority = languageUserDefaults?.bool(forKey: UserDefaults.Key.systemLangPriority)
+        currentLang = _systemLangPriority == true ? Bundle.systemLanguage() : Bundle.currentLanguage()
         NotificationCenter.default.addObserver(self, selector: #selector(didBecomeActiveNotification(_:)), name: .showPopover, object: nil)
     }
     

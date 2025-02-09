@@ -36,5 +36,7 @@
 	<string>http://jacklandrin.github.io/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>uE3wX03AQ7gIqY2q7AjcY+dfLIrsNNim5/ZeK/15Cic=</string>
+    <key>AppIdentifierPrefix</key>
+    <string>$(AppIdentifierPrefix)</string>
 </dict>
 </plist>

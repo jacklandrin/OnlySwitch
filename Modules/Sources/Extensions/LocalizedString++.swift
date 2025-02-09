@@ -8,12 +8,19 @@
 import SwiftUI
 
 public extension Bundle {
-    private static let languageUserDefaults = UserDefaults(suiteName: "group.jacklandrin.onlyswitch.shared")!
+    static var appIdentifier: String {
+        guard let appIdentifier = Bundle.main.infoDictionary?["AppIdentifierPrefix"] as? String else {
+            return ""
+        }
+        return appIdentifier
+    }
+
+    private static let languageUserDefaults = UserDefaults(suiteName: "\(appIdentifier)OnlySwitch.shared")
     private static var bundle: Bundle!
     private static var supportLangs = ["en", "zh", "de", "hr", "tr","pl", "fil", "nl", "it", "ru", "es","ja", "so","kr","fr","uk","sk","pt-BR"]
     static func localizedBundle() -> Bundle! {
         if bundle == nil {
-            let appLang = languageUserDefaults.string(forKey: UserDefaults.Key.AppLanguage) ?? "en"
+            let appLang = languageUserDefaults?.string(forKey: UserDefaults.Key.AppLanguage) ?? "en"
             let path = Bundle.main.path(forResource: appLang, ofType: "lproj")
             if let path = path {
                 bundle = Bundle(path: path)
@@ -21,14 +28,14 @@ public extension Bundle {
                 let path = Bundle.main.path(forResource: "en", ofType: "lproj")
                 bundle = Bundle(path: path!)
             }
-            
+
         }
 
         return bundle;
     }
 
     static func setLanguage(lang: String) {
-        languageUserDefaults.set(lang, forKey: UserDefaults.Key.AppLanguage)
+        languageUserDefaults?.set(lang, forKey: UserDefaults.Key.AppLanguage)
         let path = Bundle.main.path(forResource: lang, ofType: "lproj")
         if let path = path {
             bundle = Bundle(path: path)
@@ -37,14 +44,14 @@ public extension Bundle {
             bundle = Bundle(path: path!)
         }
     }
-    
+
     static func currentLanguage() -> String {
-        guard let lang = languageUserDefaults.string(forKey: UserDefaults.Key.AppLanguage) else {
+        guard let lang = languageUserDefaults?.string(forKey: UserDefaults.Key.AppLanguage) else {
             return systemLanguage()
         }
         return lang
     }
-    
+
     static func systemLanguage() -> String {
         guard let sysLang = Locale.current.languageCode else { return "en"}
         if supportLangs.contains(sysLang) {

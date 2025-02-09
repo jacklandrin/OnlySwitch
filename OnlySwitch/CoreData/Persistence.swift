@@ -18,7 +18,7 @@ struct PersistenceController {
         viewContext.automaticallyMergesChangesFromParent = true
         viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
 
-        let storeURL = URL.storeURL(for: "group.jacklandrin.onlyswitch.shared", databaseName: "onlyswitch")
+        let storeURL = URL.storeURL(for: "\(Bundle.appIdentifier)OnlySwitch.shared", databaseName: "onlyswitch")
 
         var defaultURL: URL?
         if let storeDescription = container.persistentStoreDescriptions.first, let url = storeDescription.url {
