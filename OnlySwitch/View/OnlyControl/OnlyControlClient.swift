@@ -9,10 +9,10 @@ import Dependencies
 import DependenciesMacros
 
 @DependencyClient
-struct OnlyControlClient {
-    var fetchSwitchList: () -> [SwitchBarVM] = { [] }
-    var fetchShortcutsList: () -> [ShortcutsBarVM] = { [] }
-    var fetchEvolutionList: () -> [EvolutionBarVM] = { [] }
+struct OnlyControlClient: Sendable {
+    var fetchSwitchList: @Sendable () -> [SwitchBarVM] = { [] }
+    var fetchShortcutsList: @Sendable () -> [ShortcutsBarVM] = { [] }
+    var fetchEvolutionList: @Sendable () -> [EvolutionBarVM] = { [] }
 }
 
 extension OnlyControlClient: DependencyKey {

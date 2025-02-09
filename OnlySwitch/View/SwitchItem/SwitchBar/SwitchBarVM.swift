@@ -12,13 +12,11 @@ class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
     
     let refreshSwitchQueue = DispatchQueue(label: "jacklandrin.onlyswitch.refreshswitch",attributes: .concurrent)
     
-    var barName: String
-    {
+    var barName: String {
         switchType.barInfo().title
     }
     
-    var switchType: SwitchType
-    {
+    var switchType: SwitchType {
         return switchOperator.type
     }
     
@@ -79,7 +77,7 @@ class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
     @Published private var model = SwitchBarModel()
     @Published private(set) var switchOperator:SwitchProvider
     
-    init(switchOperator:SwitchProvider) {
+    init(switchOperator: SwitchProvider) {
         self.switchOperator = switchOperator
         self.switchOperator.delegate = self
     }
@@ -105,7 +103,7 @@ class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
             if self.switchType != .airPods {
                 _info = self.switchOperator.currentInfo()
             }
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 if self.switchType == .airPods {
                     _info = self.switchOperator.currentInfo()
                 }
@@ -118,21 +116,17 @@ class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
         
     func doSwitch(isOn: Bool) {
         model.processing = true
-        Task {
+        Task { @MainActor in
             do {
                 _ = try await switchOperator.operateSwitch(isOn: isOn)
-                DispatchQueue.main.async { [self] in
-                    self.model.isOn = isOn
-                    self.model.processing = false
-                    if info != "" {
-                        let _ = switchOperator.currentStatus()
-                        model.info = switchOperator.currentInfo()
-                    }
+                self.model.isOn = isOn
+                self.model.processing = false
+                if info != "" {
+                    _ = switchOperator.currentStatus()
+                    model.info = switchOperator.currentInfo()
                 }
             } catch {
-                DispatchQueue.main.async { [self] in
-                    model.processing = false
-                }
+                model.processing = false
             }
         }
     }
