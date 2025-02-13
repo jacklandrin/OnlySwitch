@@ -210,11 +210,11 @@
 		047C1E682A2297DC0061235D /* EvolutionListService+Live.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E672A2297DC0061235D /* EvolutionListService+Live.swift */; };
 		047C1E6A2A2298AB0061235D /* EvolutionListService+Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E692A2298AB0061235D /* EvolutionListService+Test.swift */; };
 		047C1E6B2A2298AB0061235D /* EvolutionListService+Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E692A2298AB0061235D /* EvolutionListService+Test.swift */; };
-		047C1E6E2A22AF840061235D /* EvolutionEditorService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E6D2A22AF840061235D /* EvolutionEditorService.swift */; };
-		047C1E6F2A22AF840061235D /* EvolutionEditorService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E6D2A22AF840061235D /* EvolutionEditorService.swift */; };
-		047C1E712A22AFE20061235D /* EvolutionEditorService+Live.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E702A22AFE20061235D /* EvolutionEditorService+Live.swift */; };
-		047C1E732A22B12E0061235D /* EvolutionEditorService+Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E722A22B12E0061235D /* EvolutionEditorService+Test.swift */; };
-		047C1E742A22B12E0061235D /* EvolutionEditorService+Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E722A22B12E0061235D /* EvolutionEditorService+Test.swift */; };
+		047C1E6E2A22AF840061235D /* EvolutionCommandService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E6D2A22AF840061235D /* EvolutionCommandService.swift */; };
+		047C1E6F2A22AF840061235D /* EvolutionCommandService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E6D2A22AF840061235D /* EvolutionCommandService.swift */; };
+		047C1E712A22AFE20061235D /* EvolutionCommandService+Live.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E702A22AFE20061235D /* EvolutionCommandService+Live.swift */; };
+		047C1E732A22B12E0061235D /* EvolutionCommandService+Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E722A22B12E0061235D /* EvolutionCommandService+Test.swift */; };
+		047C1E742A22B12E0061235D /* EvolutionCommandService+Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E722A22B12E0061235D /* EvolutionCommandService+Test.swift */; };
 		047C1E762A24D1870061235D /* EvolutionCommandEditingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E752A24D1870061235D /* EvolutionCommandEditingView.swift */; };
 		047C1E782A24D2590061235D /* EvolutionCommandEditingReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E772A24D2590061235D /* EvolutionCommandEditingReducer.swift */; };
 		047F3A34285DE600004FFCDF /* EffectSoundHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140B527788486005B160B /* EffectSoundHelper.swift */; };
@@ -557,9 +557,9 @@
 		047C1E642A2297490061235D /* Evolution+Dependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Evolution+Dependencies.swift"; sourceTree = "<group>"; };
 		047C1E672A2297DC0061235D /* EvolutionListService+Live.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EvolutionListService+Live.swift"; sourceTree = "<group>"; };
 		047C1E692A2298AB0061235D /* EvolutionListService+Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EvolutionListService+Test.swift"; sourceTree = "<group>"; };
-		047C1E6D2A22AF840061235D /* EvolutionEditorService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionEditorService.swift; sourceTree = "<group>"; };
-		047C1E702A22AFE20061235D /* EvolutionEditorService+Live.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EvolutionEditorService+Live.swift"; sourceTree = "<group>"; };
-		047C1E722A22B12E0061235D /* EvolutionEditorService+Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EvolutionEditorService+Test.swift"; sourceTree = "<group>"; };
+		047C1E6D2A22AF840061235D /* EvolutionCommandService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionCommandService.swift; sourceTree = "<group>"; };
+		047C1E702A22AFE20061235D /* EvolutionCommandService+Live.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EvolutionCommandService+Live.swift"; sourceTree = "<group>"; };
+		047C1E722A22B12E0061235D /* EvolutionCommandService+Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EvolutionCommandService+Test.swift"; sourceTree = "<group>"; };
 		047C1E752A24D1870061235D /* EvolutionCommandEditingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionCommandEditingView.swift; sourceTree = "<group>"; };
 		047C1E772A24D2590061235D /* EvolutionCommandEditingReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionCommandEditingReducer.swift; sourceTree = "<group>"; };
 		047F3A36285DE67A004FFCDF /* SwitchListApperanceDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchListApperanceDefine.swift; sourceTree = "<group>"; };
@@ -1200,9 +1200,9 @@
 		047C1E6C2A22AF5B0061235D /* EvolutionEditorService */ = {
 			isa = PBXGroup;
 			children = (
-				047C1E6D2A22AF840061235D /* EvolutionEditorService.swift */,
-				047C1E702A22AFE20061235D /* EvolutionEditorService+Live.swift */,
-				047C1E722A22B12E0061235D /* EvolutionEditorService+Test.swift */,
+				047C1E6D2A22AF840061235D /* EvolutionCommandService.swift */,
+				047C1E702A22AFE20061235D /* EvolutionCommandService+Live.swift */,
+				047C1E722A22B12E0061235D /* EvolutionCommandService+Test.swift */,
 			);
 			path = EvolutionEditorService;
 			sourceTree = "<group>";
@@ -1944,7 +1944,7 @@
 				0447E3682B71746E00D07B9A /* ScreenSaverSwitch.swift in Sources */,
 				0434B4C1287388ED00F06AB9 /* GitHubRepositoryProtocol.swift in Sources */,
 				04FB3E73288D54C400F3B5E1 /* ShortcutsBarVM.swift in Sources */,
-				047C1E742A22B12E0061235D /* EvolutionEditorService+Test.swift in Sources */,
+				047C1E742A22B12E0061235D /* EvolutionCommandService+Test.swift in Sources */,
 				047C1E6B2A2298AB0061235D /* EvolutionListService+Test.swift in Sources */,
 				04FC160E283D9B9000D4A4AC /* GitHubInteractor.swift in Sources */,
 				047C1E5F2A2262640061235D /* EvolutionModel.swift in Sources */,
@@ -1957,7 +1957,7 @@
 				047C1E5C2A2255BF0061235D /* EvolutionEditorReducer.swift in Sources */,
 				0447E3562B71746E00D07B9A /* DarkModeSwitch.swift in Sources */,
 				0444D5D92836F1BA00327D0B /* CurrentScreen.swift in Sources */,
-				047C1E6F2A22AF840061235D /* EvolutionEditorService.swift in Sources */,
+				047C1E6F2A22AF840061235D /* EvolutionCommandService.swift in Sources */,
 				04FB3E72288D54B700F3B5E1 /* SwitchListModel.swift in Sources */,
 				0447E3802B71746E00D07B9A /* KeepAwakeSwitch.swift in Sources */,
 				0447E3702B71746E00D07B9A /* AutohideMenuBarSwitch.swift in Sources */,
@@ -2040,7 +2040,7 @@
 				04938D0E2769247A00713F1D /* SendEmail.swift in Sources */,
 				0406E0242CA0BC460007AFC2 /* RefreshNotification.swift in Sources */,
 				0447E3572B71746E00D07B9A /* DarkModeSwitch.swift in Sources */,
-				047C1E712A22AFE20061235D /* EvolutionEditorService+Live.swift in Sources */,
+				047C1E712A22AFE20061235D /* EvolutionCommandService+Live.swift in Sources */,
 				0493374D27625A1E00AE779A /* Parser+PropertyListener.swift in Sources */,
 				04DC6C8428A5A91300888BF9 /* BackNoisesSettingVM.swift in Sources */,
 				0447E35D2B71746E00D07B9A /* DockRecentSwitch.swift in Sources */,
@@ -2093,7 +2093,7 @@
 				04EB1CD42781280900C612AB /* ShortcutsBarView.swift in Sources */,
 				041F9BE82AEEFE53000B27C7 /* StickerService+Live.swift in Sources */,
 				0493374627625A1E00AE779A /* JLAVAudioPlayer.swift in Sources */,
-				047C1E732A22B12E0061235D /* EvolutionEditorService+Test.swift in Sources */,
+				047C1E732A22B12E0061235D /* EvolutionCommandService+Test.swift in Sources */,
 				0451766C27C284D600006BA0 /* iTunesBridge.swift in Sources */,
 				04E89D64289C890F00667710 /* PreferencesObserver.swift in Sources */,
 				04B25451283BEB8400D253E2 /* SwitchBarModel.swift in Sources */,
@@ -2221,7 +2221,7 @@
 				0406E0222CA09F930007AFC2 /* OnlyControlClient.swift in Sources */,
 				043E5D712758176B00ADC004 /* SwitchToggle.swift in Sources */,
 				040E97272760FF3E003D9D42 /* MetadataExtractorError.swift in Sources */,
-				047C1E6E2A22AF840061235D /* EvolutionEditorService.swift in Sources */,
+				047C1E6E2A22AF840061235D /* EvolutionCommandService.swift in Sources */,
 				0456C92D2ACB700000DB7898 /* EvolutionGalleryService+Test.swift in Sources */,
 				0493379C2763C09000AE779A /* OnlySwitch.xcdatamodeld in Sources */,
 			);
@@ -2323,7 +2323,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 206;
+				CURRENT_PROJECT_VERSION = 207;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2349,7 +2349,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 206;
+				CURRENT_PROJECT_VERSION = 207;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2498,7 +2498,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 206;
+				CURRENT_PROJECT_VERSION = 207;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2552,7 +2552,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 206;
+				CURRENT_PROJECT_VERSION = 207;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2606,7 +2606,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 206;
+				CURRENT_PROJECT_VERSION = 207;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2646,7 +2646,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 206;
+				CURRENT_PROJECT_VERSION = 207;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;

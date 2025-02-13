@@ -240,7 +240,7 @@ struct OnlyControlReducer {
                 }
             }
 
-            await send(.updateItems(allUnits, items, switches))
+            send(.updateItems(allUnits, items, switches))
         }
     }
 }

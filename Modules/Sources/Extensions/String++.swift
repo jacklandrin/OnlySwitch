@@ -10,7 +10,7 @@ import Foundation
 import OSAKit
 
 public extension String {
-    func runAppleScript(isShellCMD:Bool = false, with administratorPrivilege:Bool = false) throws -> String {
+    func runAppleScript(isShellCMD: Bool = false, with administratorPrivilege:Bool = false) throws -> String {
         var finalCommand = self
         if isShellCMD {
             finalCommand = "do shell script \"\(self)\""

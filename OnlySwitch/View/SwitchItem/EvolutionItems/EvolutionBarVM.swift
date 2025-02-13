@@ -5,9 +5,11 @@
 //  Created by Jacklandrin on 2023/6/15.
 //
 
+import Dependencies
 import Foundation
 import Switches
 
+@dynamicMemberLookup
 class EvolutionBarVM: BarProvider, ObservableObject {
 
     var barName: String {
@@ -30,6 +32,8 @@ class EvolutionBarVM: BarProvider, ObservableObject {
     @Published var processing = false
     @Published var isOn = false
 
+    @Dependency(\.evolutionCommandService) var evolutionCommandService
+
     private let evolutionItem: EvolutionItem
     private let refreshSwitchQueue = DispatchQueue(label: "jacklandrin.onlyswitch.refreshswitch",attributes: .concurrent)
 
@@ -41,8 +45,7 @@ class EvolutionBarVM: BarProvider, ObservableObject {
         guard evolutionItem.controlType == .Switch else { return }
         self.processing = true
         refreshSwitchQueue.async {
-            guard let command = self.evolutionItem.statusCommand else { return }
-            let _isOn = try? command.commandString.runAppleScript(isShellCMD: command.executeType == .shell) == command.trueCondition
+            let _isOn = try? self.evolutionCommandService.executeCommand(self.statusCommand) == self.statusCommand?.trueCondition
             DispatchQueue.main.async {
                 self.processing = false
                 self.isOn = _isOn ?? false
@@ -53,8 +56,7 @@ class EvolutionBarVM: BarProvider, ObservableObject {
     func refresh() async {
         guard evolutionItem.controlType == .Switch else { return }
         self.processing = true
-        guard let command = self.evolutionItem.statusCommand else { return }
-        let _isOn = try? command.commandString.runAppleScript(isShellCMD: command.executeType == .shell) == command.trueCondition
+        let _isOn = try? self.evolutionCommandService.executeCommand(self.statusCommand) == self.statusCommand?.trueCondition
         self.processing = false
         self.isOn = _isOn ?? false
     }
@@ -64,16 +66,13 @@ class EvolutionBarVM: BarProvider, ObservableObject {
         Task { @MainActor in
             if isOn {
                 if evolutionItem.controlType == .Button {
-                    guard let command = evolutionItem.singleCommand else { return }
-                    _ = try? command.commandString.runAppleScript(isShellCMD: command.executeType == .shell)
+                    _ = try? self.evolutionCommandService.executeCommand(self.singleCommand)
                 } else {
-                    guard let command = evolutionItem.onCommand else { return }
-                    _ = try? command.commandString.runAppleScript(isShellCMD: command.executeType == .shell)
+                    _ = try? self.evolutionCommandService.executeCommand(self.onCommand)
                     self.isOn = true
                 }
             } else {
-                guard let command = evolutionItem.offCommand else { return }
-                _ = try? command.commandString.runAppleScript(isShellCMD: command.executeType == .shell)
+                _ = try? self.evolutionCommandService.executeCommand(self.offCommand)
                 self.isOn = false
             }
             processing = false
@@ -82,5 +81,9 @@ class EvolutionBarVM: BarProvider, ObservableObject {
 
     func doSwitch() {
         evolutionItem.doSwitch()
+    }
+
+    subscript<T>(dynamicMember keyPath: KeyPath<EvolutionItem, T>) -> T {
+        evolutionItem[keyPath: keyPath]
     }
 }

@@ -36,6 +36,7 @@ struct EvolutionReducer: Reducer {
         var showError = false
         var destination: DestinationState?
         var galleryState = EvolutionGalleryReducer.State()
+        var preExecution: String = ""
     }
     
     enum Action: Equatable {
@@ -49,14 +50,19 @@ struct EvolutionReducer: Reducer {
         case editorAction(EvolutionEditorReducer.Action)
         case errorControl(Bool)
         case galleryAction(EvolutionGalleryReducer.Action)
+        case setPreExecution(String)
     }
 
     @Dependency(\.evolutionListService) var evolutionListService
+
+    @Shared(.appStorage("pre-execution"))
+    var preExecution: String?
 
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
                 case .refresh:
+                    state.preExecution = preExecution ?? ""
                     return .run { send in
                         return await send(
                             .loadList(
@@ -134,6 +140,11 @@ struct EvolutionReducer: Reducer {
                     return .send(.refresh)
 
                 case .galleryAction:
+                    return .none
+
+                case let .setPreExecution(preExecution):
+                    state.preExecution = preExecution
+                    self.preExecution = preExecution
                     return .none
             }
         }

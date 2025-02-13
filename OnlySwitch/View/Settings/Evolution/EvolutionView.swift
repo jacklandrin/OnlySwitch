@@ -65,6 +65,17 @@ struct EvolutionView: View {
                         .padding(.top, 10)
 
                         HStack {
+                            Text("Pre-execution")
+                            TextField(
+                                "e.g: source ~/.zshrc",
+                                text: viewStore.binding(
+                                        get: { $0.preExecution},
+                                        send: { .setPreExecution($0) }
+                                    )
+                            )
+                        }
+
+                        HStack {
                             NavigationLink(
                                 destination:
                                     IfLetStore(

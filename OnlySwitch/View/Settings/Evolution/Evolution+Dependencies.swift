@@ -13,9 +13,9 @@ extension DependencyValues {
         set { self[EvolutionListService.self] = newValue }
     }
 
-    var evolutionEditorService: EvolutionEditorService {
-        get { self[EvolutionEditorService.self] }
-        set { self[EvolutionEditorService.self] = newValue }
+    var evolutionCommandService: EvolutionCommandService {
+        get { self[EvolutionCommandService.self] }
+        set { self[EvolutionCommandService.self] = newValue }
     }
 
     var evolutionGalleryService: EvolutionGalleryService {

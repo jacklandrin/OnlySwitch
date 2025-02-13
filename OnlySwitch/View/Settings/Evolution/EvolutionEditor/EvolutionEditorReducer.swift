@@ -75,7 +75,7 @@ struct EvolutionEditorReducer: Reducer {
         }
     }
 
-    @Dependency(\.evolutionEditorService) var evolutionEditorService
+    @Dependency(\.evolutionCommandService) var evolutionCommandService
 
     var body: some ReducerOf<Self> {
 
@@ -104,7 +104,7 @@ struct EvolutionEditorReducer: Reducer {
                         return await send(
                             .finishSaveIcon(
                                 TaskResult {
-                                    try await evolutionEditorService.saveIcon(state.evolution.id, iconName)
+                                    try await evolutionCommandService.saveIcon(state.evolution.id, iconName)
                                 }
                             )
                         )
@@ -141,7 +141,7 @@ struct EvolutionEditorReducer: Reducer {
                         return await send(
                             .finishSave(
                                 TaskResult {
-                                    return try await evolutionEditorService.saveCommand(item)
+                                    return try await evolutionCommandService.saveCommand(item)
                                 }
                             )
                         )

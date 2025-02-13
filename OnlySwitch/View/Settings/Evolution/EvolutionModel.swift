@@ -5,6 +5,7 @@
 //  Created by Jacklandrin on 2023/5/27.
 //
 
+import Dependencies
 import Foundation
 import Switches
 
@@ -20,10 +21,11 @@ struct EvolutionItem: Equatable, Identifiable {
     var statusCommand: EvolutionCommand?
 
     func doSwitch() {
+        @Dependency(\.evolutionCommandService) var evolutionCommandService
         Task { @MainActor in
             if controlType == .Button {
                 guard let singleCommand else { return }
-                _ = try? singleCommand.commandString.runAppleScript(isShellCMD: singleCommand.executeType == .shell)
+                _ = try? evolutionCommandService.executeCommand(singleCommand)
                 _ = try? displayNotificationCMD(
                     title: name,
                     content: "",
@@ -34,7 +36,7 @@ struct EvolutionItem: Equatable, Identifiable {
                 guard
                     let statusCommand,
                     let trueCondition = statusCommand.trueCondition,
-                    let statusResult = try? statusCommand.commandString.runAppleScript(isShellCMD: statusCommand.executeType == .shell)
+                    let statusResult = try? evolutionCommandService.executeCommand(statusCommand)
                 else {
                     return
                 }
@@ -42,11 +44,10 @@ struct EvolutionItem: Equatable, Identifiable {
                 let isOn = trueCondition == statusResult
                 let shouldTurnOn = !isOn
                 if shouldTurnOn {
-                    guard let onCommand else { return }
-                    _ = try? onCommand.commandString.runAppleScript(isShellCMD: onCommand.executeType == .shell)
+                    _ = try? evolutionCommandService.executeCommand(onCommand)
                 } else {
                     guard let offCommand else { return }
-                    _ = try? offCommand.commandString.runAppleScript(isShellCMD: offCommand.executeType == .shell)
+                    _ = try? evolutionCommandService.executeCommand(offCommand)
                 }
                 _ = try? displayNotificationCMD(
                     title: name,

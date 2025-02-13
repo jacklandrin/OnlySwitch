@@ -32,7 +32,7 @@ struct EvolutionCommandEditingReducer: Reducer {
         case delegate(EvolutionCommand)
     }
 
-    @Dependency(\.evolutionEditorService) var evolutionEditorService
+    @Dependency(\.evolutionCommandService) var evolutionCommandService
 
     var body: some ReducerOf<Self> {
         Reduce { state, action in
@@ -58,7 +58,7 @@ struct EvolutionCommandEditingReducer: Reducer {
                         return await send(
                             .testCommand(
                                 TaskResult { @MainActor in
-                                    try evolutionEditorService.executeCommand(command)
+                                    try evolutionCommandService.executeCommand(command)
                                 }
                             )
                         )
