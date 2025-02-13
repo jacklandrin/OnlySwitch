@@ -19,7 +19,12 @@ struct OnlyWidgetBuiltInProvider: AppIntentTimelineProvider {
     }
 
     func timeline(for configuration: SelectBuiltInSwitchesIntent, in context: Context) async -> Timeline<OnlySwitchBuiltInEntry> {
-        let entry = OnlySwitchBuiltInEntry(date: .now, builtInSwitchType: configuration.builtInSwitch.type, id: configuration.builtInSwitch.id)
+        guard let type = configuration.builtInSwitch?.type,
+              let id = configuration.builtInSwitch?.id
+        else {
+            return Timeline(entries: [], policy: .never)
+        }
+        let entry = OnlySwitchBuiltInEntry(date: .now, builtInSwitchType: type, id: id)
         return Timeline(entries: [entry], policy: .never)
     }
 }

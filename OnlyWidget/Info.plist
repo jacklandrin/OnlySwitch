@@ -7,5 +7,7 @@
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.widgetkit-extension</string>
 	</dict>
+    <key>AppIdentifierPrefix</key>
+    <string>$(AppIdentifierPrefix)</string>
 </dict>
 </plist>
