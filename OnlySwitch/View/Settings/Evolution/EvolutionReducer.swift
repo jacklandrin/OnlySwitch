@@ -38,7 +38,7 @@ struct EvolutionReducer: Reducer {
         var galleryState = EvolutionGalleryReducer.State()
         var preExecution: String = ""
     }
-    
+
     enum Action: Equatable {
         case refresh
         case loadList(TaskResult<[EvolutionItem]>)
@@ -144,7 +144,7 @@ struct EvolutionReducer: Reducer {
 
                 case let .setPreExecution(preExecution):
                     state.preExecution = preExecution
-                    self.preExecution = preExecution
+                    self.$preExecution.withLock { $0 = preExecution }
                     return .none
             }
         }
