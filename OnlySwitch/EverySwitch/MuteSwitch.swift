@@ -10,7 +10,7 @@ import AppKit
 import Switches
 import Defines
 
-class MuteSwitch: SwitchProvider {
+final class MuteSwitch: SwitchProvider {
     weak var delegate: SwitchDelegate?
     var type: SwitchType = .mute
     private let muteSwitchOperator:MuteSwitchProtocal = NSMuteSwitchOperator()
@@ -50,29 +50,33 @@ class MuteSwitch: SwitchProvider {
             }
         )
     }
-    
+
+    @MainActor
     func operateSwitch(isOn: Bool) async throws {
-        try muteSwitchOperator.operationSwitch(isOn: isOn)
+        try await muteSwitchOperator.operationSwitch(isOn: isOn)
     }
-    
-    func currentStatus() -> Bool {
-        return muteSwitchOperator.currentStatus()
-        
+
+    @MainActor
+    func currentStatus() async -> Bool {
+        return await muteSwitchOperator.currentStatus()
     }
     
     func isVisible() -> Bool {
         return true
     }
-    
-    func currentInfo() -> String {
+
+    @MainActor
+    func currentInfo() async -> String {
         return ""
     }
     
     private func scheduleNextPoll(on queue: DispatchQueue) {
         queue.asyncAfter(deadline: .now() + pollingInterval) {
-            self.isMute = self.muteSwitchOperator.currentStatus()
-            if !self.isSuspendQueue {
-                self.scheduleNextPoll(on: queue)
+            Task {
+                self.isMute = await self.muteSwitchOperator.currentStatus()
+                if !self.isSuspendQueue {
+                    self.scheduleNextPoll(on: queue)
+                }
             }
         }
     }
@@ -84,12 +88,12 @@ class MuteSwitch: SwitchProvider {
 }
 
 protocol MuteSwitchProtocal {
-    func currentStatus() -> Bool
-    func operationSwitch(isOn: Bool) throws
+    func currentStatus() async -> Bool
+    func operationSwitch(isOn: Bool) async throws
 }
 
-class NSMuteSwitchOperator:MuteSwitchProtocal {
-    func currentStatus() -> Bool {
+class NSMuteSwitchOperator: MuteSwitchProtocal {
+    func currentStatus() async -> Bool {
         if NSSound.systemVolumeIsMuted {
             return true
         } else {
@@ -100,7 +104,7 @@ class NSMuteSwitchOperator:MuteSwitchProtocal {
         }
     }
     
-    func operationSwitch(isOn: Bool) throws {
+    func operationSwitch(isOn: Bool) async throws {
         if isOn {
             NSSound.systemVolumeFadeToMute(seconds: 0, blocking: true)
             let isMuted = NSSound.systemVolumeIsMuted
@@ -123,11 +127,11 @@ class NSMuteSwitchOperator:MuteSwitchProtocal {
     }
 }
 
-class ASMuteSwitchOperator:MuteSwitchProtocal {
-    func currentStatus() -> Bool {
+class ASMuteSwitchOperator: MuteSwitchProtocal {
+    func currentStatus() async -> Bool {
         do {
-            let result = try VolumeCMD.getOutput.runAppleScript()
-            
+            let result = try await VolumeCMD.getOutput.runAppleScript()
+
             let volume:String = result
             let volumeValue:Int = Int(volume) ?? 50
             UserDefaults.standard.set(volume, forKey: UserDefaults.Key.ASVolume)
@@ -140,16 +144,16 @@ class ASMuteSwitchOperator:MuteSwitchProtocal {
         
     }
     
-    func operationSwitch(isOn: Bool) throws {
+    func operationSwitch(isOn: Bool) async throws {
         do {
             if isOn {
                 let cmd = VolumeCMD.setOutput + "0"
-                _ = try cmd.runAppleScript()
+                _ = try await cmd.runAppleScript()
             } else {
                 var volumeValue = UserDefaults.standard.integer(forKey: UserDefaults.Key.ASVolume)
                 volumeValue = (volumeValue == 0) ? 50 : volumeValue
                 let cmd = VolumeCMD.setOutput + String(volumeValue)
-                _ = try cmd.runAppleScript()
+                _ = try await cmd.runAppleScript()
             }
         } catch {
             throw SwitchError.OperationFailed

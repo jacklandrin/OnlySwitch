@@ -12,20 +12,22 @@ final class KeyLightSwitch: SwitchProvider {
     static let shared = KeyLightSwitch()
     var type: SwitchType = .keyLight
     var delegate: SwitchDelegate?
-    
 
     init() {
         KeyboardManager.configure()
     }
 
-    func currentStatus() -> Bool {
+    @MainActor
+    func currentStatus() async -> Bool {
         BrightnessControl.getBrightness() > 0
     }
 
-    func currentInfo() -> String {
+    @MainActor
+    func currentInfo() async -> String {
         return ""
     }
 
+    @MainActor
     func operateSwitch(isOn: Bool) async throws {
         BrightnessControl.setBrightness(isOn ? Preferences.shared.keyLightBrightness : 0)
     }

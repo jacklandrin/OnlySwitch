@@ -9,11 +9,13 @@ import AppKit
 import CoreData
 import Switches
 
-let defaultRadioStations = [["title":"Country Radio", "url":"https://live.leanstream.co/CKRYFM"],
-                            ["title":"Dance UK", "url":"http://uk2.internet-radio.com:8024/stream"],
-                            ["title":"Box UK", "url":"http://51.75.170.46:6191/stream"]]
+let defaultRadioStations = [
+    ["title":"Country Radio", "url":"https://live.leanstream.co/CKRYFM"],
+    ["title":"Dance UK", "url":"http://uk2.internet-radio.com:8024/stream"],
+    ["title":"Box UK", "url":"http://51.75.170.46:6191/stream"]
+]
 
-class RadioStationSwitch:SwitchProvider {
+final class RadioStationSwitch:SwitchProvider {
     static let shared = RadioStationSwitch()
     var type: SwitchType = .radioStation
     weak var delegate: SwitchDelegate?
@@ -50,7 +52,8 @@ class RadioStationSwitch:SwitchProvider {
 //        PlayerManager.shared.player.play(stream: self.playerItem)
 //        PlayerManager.shared.player.stop()
     }
-    
+
+    @MainActor
     func operateSwitch(isOn: Bool) async throws {
         guard Preferences.shared.radioEnable else {return}
         Task { @MainActor in
@@ -62,12 +65,14 @@ class RadioStationSwitch:SwitchProvider {
             }
         }
     }
-    
-    func currentStatus() -> Bool {
+
+    @MainActor
+    func currentStatus() async -> Bool {
         return playerItem.isPlaying
     }
-    
-    func currentInfo() -> String {
+
+    @MainActor
+    func currentInfo() async -> String {
         return playerItem.title
     }
     
@@ -103,5 +108,4 @@ class RadioStationSwitch:SwitchProvider {
             PersistenceController.shared.saveContext()
         }
     }
-    
 }

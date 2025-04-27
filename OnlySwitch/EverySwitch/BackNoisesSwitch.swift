@@ -8,7 +8,7 @@
 import Foundation
 import Switches
 
-class BackNoisesSwitch: SwitchProvider {
+final class BackNoisesSwitch: SwitchProvider {
     
     var type: SwitchType = .backNoises
     
@@ -23,27 +23,28 @@ class BackNoisesSwitch: SwitchProvider {
             self?.autoStopNoisesIfNeeded()
         }
     }
-    
-    func currentStatus() -> Bool {
+
+    @MainActor
+    func currentStatus() async -> Bool {
         backNoisesTrackManager.currentBackNoisesItem.isPlaying
     }
-    
-    func currentInfo() -> String {
+
+    @MainActor
+    func currentInfo() async -> String {
         backNoisesTrackManager.currentBackNoisesItem.title
     }
-    
+
+    @MainActor
     func operateSwitch(isOn: Bool) async throws {
-        DispatchQueue.main.async {
-            if isOn {
-                self.backNoisesTrackManager.currentBackNoisesItem.isPlaying = true
-                if let url = self.backNoisesTrackManager.currentBackNoisesItem.url, !fileExistAtPath(url.absoluteString) {
-                    self.backNoisesTrackManager.currentTrack = self.backNoisesTrackManager.currentBackNoisesItem.track
-                }
-            } else {
-                self.backNoisesTrackManager.currentBackNoisesItem.isPlaying = false
+        if isOn {
+            self.backNoisesTrackManager.currentBackNoisesItem.isPlaying = true
+            if let url = self.backNoisesTrackManager.currentBackNoisesItem.url, !fileExistAtPath(url.absoluteString) {
+                self.backNoisesTrackManager.currentTrack = self.backNoisesTrackManager.currentBackNoisesItem.track
             }
-            self.autoStopNoisesIfNeeded()
+        } else {
+            self.backNoisesTrackManager.currentBackNoisesItem.isPlaying = false
         }
+        self.autoStopNoisesIfNeeded()
     }
     
     func isVisible() -> Bool {

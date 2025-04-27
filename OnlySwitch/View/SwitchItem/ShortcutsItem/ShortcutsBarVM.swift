@@ -43,17 +43,15 @@ class ShortcutsBarVM: BarProvider, ObservableObject {
     
     func runShortCut() {
         self.model.processing = true
-        Task{
+        Task{ @MainActor in
             let _ = await operateCMD()
-            DispatchQueue.main.async {
-                self.model.processing = false
-            }
+            self.model.processing = false
         }
     }
     
     func operateCMD() async -> Bool {
         do {
-            _ = try ShorcutsCMD.runShortcut(name: self.model.name).runAppleScript(isShellCMD: true)
+            _ = try await ShorcutsCMD.runShortcut(name: self.model.name).runAppleScript(isShellCMD: true)
             return true
         } catch {
             return false

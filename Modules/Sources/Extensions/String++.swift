@@ -10,7 +10,8 @@ import Foundation
 import OSAKit
 
 public extension String {
-    func runAppleScript(isShellCMD: Bool = false, with administratorPrivilege:Bool = false) throws -> String {
+    @MainActor
+    func runAppleScript(isShellCMD: Bool = false, with administratorPrivilege:Bool = false) async throws -> String {
         var finalCommand = self
         if isShellCMD {
             finalCommand = "do shell script \"\(self)\""
@@ -19,19 +20,25 @@ public extension String {
             finalCommand += " with prompt \"OnlySwitch\" with administrator privileges"
         }
         print("command:\(finalCommand)")
-        var error: NSDictionary?
-        let osaScript = OSAScript(source: finalCommand)
-        guard let descriptor = osaScript.executeAndReturnError(&error) else {
-            throw SwitchError.ScriptFailed
+        return try await withCheckedThrowingContinuation { continuation in
+            DispatchQueue.global(qos: .utility).async {
+                var error: NSDictionary?
+                let osaScript = OSAScript(source: finalCommand)
+                if let descriptor = osaScript.executeAndReturnError(&error) {
+                    if let outputString = descriptor.stringValue {
+                        print(outputString)
+                        continuation.resume(returning: outputString)
+                    } else if error != nil {
+                        print("error:\(String(describing: error!))")
+                        continuation.resume(throwing: SwitchError.ScriptFailed)
+                    } else {
+                        continuation.resume(returning: "")
+                    }
+                } else {
+                    continuation.resume(throwing: SwitchError.ScriptFailed)
+                }
+            }
         }
-        if let outputString = descriptor.stringValue {
-            print(outputString)
-            return outputString
-        } else if error != nil {
-            print("error:\(String(describing: error!))")
-            throw SwitchError.ScriptFailed
-        }
-        return ""
     }
     
     

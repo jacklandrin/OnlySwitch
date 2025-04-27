@@ -9,22 +9,26 @@ import Foundation
 import Switches
 import Defines
 
-class EmptyTrashSwitch:SwitchProvider {
-    
+final class EmptyTrashSwitch:SwitchProvider {
+
     var type: SwitchType = .emptyTrash
     weak var delegate: SwitchDelegate?
-    func currentInfo() -> String {
+
+    @MainActor
+    func currentInfo() async -> String {
         return ""
     }
-    
-    func currentStatus() -> Bool {
+
+    @MainActor
+    func currentStatus() async -> Bool {
         return true
     }
-    
+
+    @MainActor
     func operateSwitch(isOn: Bool) async throws {
         do {
             if isOn {
-                _ = try emptyTrashCMD.runAppleScript()
+                _ = try await emptyTrashCMD.runAppleScript()
             }
         } catch {
             throw SwitchError.OperationFailed

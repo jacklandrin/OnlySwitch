@@ -9,7 +9,7 @@ import Foundation
 import Switches
 import Defines
 
-class ShowUserLibrarySwitch: SwitchProvider {
+final class ShowUserLibrarySwitch: SwitchProvider {
     var type: SwitchType = .showUserLibrary
     weak var delegate: SwitchDelegate?
     private let manager = FileManager.default
@@ -20,7 +20,8 @@ class ShowUserLibrarySwitch: SwitchProvider {
         self.userLibaray = manager.homeDirectoryForCurrentUser.appendingPathComponent("Library")
     }
 
-    func currentStatus() -> Bool {
+    @MainActor
+    func currentStatus() async -> Bool {
         guard let userLibaray else {
             return false
         }
@@ -28,10 +29,12 @@ class ShowUserLibrarySwitch: SwitchProvider {
         return !userLibaray.isHidden
     }
 
-    func currentInfo() -> String {
+    @MainActor
+    func currentInfo() async -> String {
         return ""
     }
 
+    @MainActor
     func operateSwitch(isOn: Bool) async throws {
         let result = userLibaray?.doHide(!isOn) ?? false
         if !result {

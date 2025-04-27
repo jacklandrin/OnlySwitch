@@ -9,7 +9,7 @@ import Foundation
 import Switches
 import Defines
 
-class AppleMusicSwitch: SwitchProvider, MusicPlayerDelegate {
+final class AppleMusicSwitch: SwitchProvider, MusicPlayerDelegate {
     
     static let shared = AppleMusicSwitch()
     
@@ -24,16 +24,17 @@ class AppleMusicSwitch: SwitchProvider, MusicPlayerDelegate {
     init() {
         player?.delegate = self
     }
-    
-    func currentStatus() -> Bool {
-        
+
+    @MainActor
+    func currentStatus() async -> Bool {
         guard let _ = player else {
             return false
         }
         return state.isActiveState
     }
-    
-    func currentInfo() -> String {
+
+    @MainActor
+    func currentInfo() async -> String {
         return ""
     }
     

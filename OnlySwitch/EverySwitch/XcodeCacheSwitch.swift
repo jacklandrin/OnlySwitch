@@ -9,7 +9,7 @@ import Foundation
 import AppKit
 import Switches
 
-class XcodeCacheSwitch:SwitchProvider {
+final class XcodeCacheSwitch:SwitchProvider {
     weak var delegate: SwitchDelegate?
     var type: SwitchType = .xcodeCache
 
@@ -17,7 +17,7 @@ class XcodeCacheSwitch:SwitchProvider {
     let derivedData = "Library/Developer/Xcode/DerivedData/"
     let xcodepath = "Library/Developer/Xcode/"
     
-    var currentSize:Int {
+    var currentSize: Int {
         var size:Int = 0
         do {
             size = try derivedDataURL.directoryTotalAllocatedSize(includingSubfolders: true) ?? 0
@@ -27,8 +27,8 @@ class XcodeCacheSwitch:SwitchProvider {
         return size
     }
     
-    var lastSizeBeforeCleaning:Int? = 0
-    var progressPercent:Double {
+    var lastSizeBeforeCleaning: Int? = 0
+    var progressPercent: Double {
         let value = 1.0 - Double(currentSize) / Double(lastSizeBeforeCleaning ?? 1)
         print("clean progress:\(value) \(currentSize) \(lastSizeBeforeCleaning ?? 1)")
         return value
@@ -36,14 +36,14 @@ class XcodeCacheSwitch:SwitchProvider {
     
     private let manager = FileManager.default
     
-    private var derivedDataURL:URL {
+    private var derivedDataURL: URL {
         let home = manager.homeDirectoryForCurrentUser
         let url = home.appendingPathComponent(derivedData)
         return url
     }
-    
-    
-    func currentStatus() -> Bool {
+
+    @MainActor
+    func currentStatus() async -> Bool {
         var size:Int? = 0
         do {
             size = try derivedDataURL.directoryTotalAllocatedSize(includingSubfolders: true)
@@ -52,8 +52,9 @@ class XcodeCacheSwitch:SwitchProvider {
         }
         return size == 0
     }
-        
-    func currentInfo() -> String {
+
+    @MainActor
+    func currentInfo() async -> String {
         do {
             return try derivedDataURL.sizeOnDisk() ?? ""
         } catch {
@@ -69,7 +70,8 @@ class XcodeCacheSwitch:SwitchProvider {
         let exist = directoryExistsAtPath(path)
         return exist
     }
-    
+
+    @MainActor
     func operateSwitch(isOn: Bool) async throws {
         let home = manager.homeDirectoryForCurrentUser
         let url = home.appendingPathComponent(derivedData)
@@ -82,6 +84,4 @@ class XcodeCacheSwitch:SwitchProvider {
             throw error
         }
     }
-    
-    
 }

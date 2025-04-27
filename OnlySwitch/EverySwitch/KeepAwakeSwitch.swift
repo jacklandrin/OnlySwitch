@@ -12,7 +12,7 @@ import Combine
 import Switches
 import Defines
 
-class KeepAwakeSwitch: SwitchProvider {
+final class KeepAwakeSwitch: SwitchProvider {
     static let shared = KeepAwakeSwitch()
     var type: SwitchType = .keepAwake
     weak var delegate: SwitchDelegate?
@@ -126,15 +126,18 @@ class KeepAwakeSwitch: SwitchProvider {
         }
 
     }
-    
-    func currentInfo() -> String {
+
+    @MainActor
+    func currentInfo() async -> String {
         return ""
     }
-    
-    func currentStatus() -> Bool {
+
+    @MainActor
+    func currentStatus() async -> Bool {
         return preventedSleep
     }
-    
+
+    @MainActor
     func operateSwitch(isOn: Bool) async throws {
         if isOn {
             try switchOn()

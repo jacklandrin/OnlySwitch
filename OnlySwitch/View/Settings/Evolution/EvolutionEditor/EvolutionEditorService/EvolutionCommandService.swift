@@ -8,7 +8,7 @@
 import Foundation
 
 struct EvolutionCommandService {
-    var executeCommand: @Sendable (EvolutionCommand?) throws -> String
+    var executeCommand: @Sendable (EvolutionCommand?) async throws -> String
     var saveCommand: @Sendable (EvolutionItem) async throws -> Void
     var saveIcon: @Sendable (UUID, String) async throws -> Void
 }

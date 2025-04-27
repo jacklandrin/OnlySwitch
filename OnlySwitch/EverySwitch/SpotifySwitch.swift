@@ -9,8 +9,8 @@ import Foundation
 import Switches
 import Defines
 
-class SpotifySwitch: SwitchProvider, MusicPlayerDelegate {
-    
+final class SpotifySwitch: SwitchProvider, MusicPlayerDelegate {
+
     static let shared = SpotifySwitch()
     
     weak var delegate: SwitchDelegate?
@@ -23,19 +23,22 @@ class SpotifySwitch: SwitchProvider, MusicPlayerDelegate {
     init() {
         player?.delegate = self
     }
-    
-    func currentStatus() -> Bool {
-        
-        guard let _ = player else {
+
+    @MainActor
+    func currentStatus() async -> Bool {
+        guard player != nil else {
             return false
         }
+        
         return state.isActiveState
     }
-    
-    func currentInfo() -> String {
+
+    @MainActor
+    func currentInfo() async -> String {
         return ""
     }
-    
+
+    @MainActor
     func operateSwitch(isOn: Bool) async throws {
         guard let player = player else {
             throw SwitchError.OperationFailed

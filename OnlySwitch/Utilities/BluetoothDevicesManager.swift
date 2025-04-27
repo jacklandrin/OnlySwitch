@@ -40,10 +40,10 @@ class BluetoothDevicesManager:NSObject {
         IOBluetoothPreferenceSetControllerPowerState(isOn ? 1 : 0)
     }
     
-    func getAirPodsBattery(device:IOBluetoothDevice) -> String {
+    func getAirPodsBattery(device:IOBluetoothDevice) async -> String {
         let command = "sh \(scriptDiskFilePath(scriptName: getAirpodsBatteryShell))"
         do {
-            let value = try command.runAppleScript(isShellCMD: true)
+            let value = try await command.runAppleScript(isShellCMD: true)
             let valueGroupedBySpaces = value.split(separator: "\n")
             guard valueGroupedBySpaces.count > 0 else {
                 return ""

@@ -23,17 +23,19 @@ struct TimerCountDownView: View {
             Text(leftTime)
                 .foregroundColor(textColor)
                 .onReceive(timer) { _ in
-                    let info = ptswitch.currentInfo()
-                    if info.isEmpty {
-                        leftTime = ""
-                    } else {
-                        let infoArray = info.split(separator: "-")
-                        let status = PomodoroTimerSwitch.Status(rawValue: String(infoArray[0]))
-                        leftTime = String(infoArray[1])
-                        if status == .rest {
-                            textColor = .green
+                    Task { @MainActor in
+                        let info = await ptswitch.currentInfo()
+                        if info.isEmpty {
+                            leftTime = ""
                         } else {
-                            textColor = .blue
+                            let infoArray = info.split(separator: "-")
+                            let status = PomodoroTimerSwitch.Status(rawValue: String(infoArray[0]))
+                            leftTime = String(infoArray[1])
+                            if status == .rest {
+                                textColor = .green
+                            } else {
+                                textColor = .blue
+                            }
                         }
                     }
                 }

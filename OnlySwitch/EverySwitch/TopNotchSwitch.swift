@@ -10,8 +10,9 @@ import UniformTypeIdentifiers
 import AVFoundation
 import Switches
 import Defines
+import OSLog
 
-class TopNotchSwitch: SwitchProvider, CurrentScreen {
+final class TopNotchSwitch: SwitchProvider, CurrentScreen {
     weak var delegate: SwitchDelegate?
     var type: SwitchType = .topNotch
     // MARK: - private properties
@@ -19,11 +20,10 @@ class TopNotchSwitch: SwitchProvider, CurrentScreen {
     private var currentImageName = ""
     private var notchHeight:CGFloat = 0
     
-    
     // MARK:- SwitchProvider functions
-    
-    func currentStatus() -> Bool {
-        
+
+    @MainActor
+    func currentStatus() async -> Bool {
         let workspace = NSWorkspace.shared
         let appBundleID = Bundle.main.infoDictionary?["CFBundleName"] as! String
         guard let screen = getScreenWithMouse() else {return false}
@@ -35,16 +35,15 @@ class TopNotchSwitch: SwitchProvider, CurrentScreen {
         } else {
             return false
         }
-
     }
     
-    
+    @MainActor
     func operateSwitch(isOn: Bool) async throws {
         var success = false
         if isOn {
-            success = hiddenNotch()
+            success = await hiddenNotch()
         } else {
-            success = recoverNotch()
+            success = await recoverNotch()
         }
         if !success {
             throw SwitchError.OperationFailed
@@ -54,47 +53,48 @@ class TopNotchSwitch: SwitchProvider, CurrentScreen {
     func isVisible() -> Bool {
         return self.isNotchScreen
     }
-    
-    func currentInfo() -> String {
+
+    @MainActor
+    func currentInfo() async -> String {
         return ""
     }
     
-    
     // MARK: - private functions
     
-    private var isNotchScreen:Bool {
+    private var isNotchScreen: Bool {
         if #available(macOS 12, *) {
-            guard let screen = getScreenWithMouse() else {return false}
+            guard let screen = getScreenWithMouse() else { return false }
             guard let topLeftArea = screen.auxiliaryTopLeftArea, let _ = screen.auxiliaryTopRightArea else {return false}
             
             notchHeight = NSApplication.shared.mainMenu?.menuBarHeight ?? (topLeftArea.height + 5) //auxiliaryTopLeftArea is not equivalent to menubar's height
-            print("get notchHeight:\(notchHeight)")
+            Logger.internalSwitch.debug("get notchHeight:\(self.notchHeight)")
             return true
         } else {
             return false
         }
     }
     
-    private var myAppPath:String? {
+    private var myAppPath: String? {
         let appBundleID = Bundle.main.infoDictionary?["CFBundleName"] as! String
         let paths = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).map(\.path)
         let directory = paths.first
         let myAppPath = directory?.appendingPathComponent(string: appBundleID)
         return myAppPath
     }
-    
-    private func recoverNotch() -> Bool {
+
+    @MainActor
+    private func recoverNotch() async -> Bool {
         let originalPath = myAppPath?.appendingPathComponent(string: "original", currentImageName)
         guard let originalPath = originalPath else {return false}
         let success = setDesktopImageURL(url: URL(fileURLWithPath: originalPath))
         if success {
-            let _ = currentStatus()
+            _ = await currentStatus()
         }
         
         return success
     }
   
-    private func hiddenNotch() -> Bool {
+    @MainActor private func hiddenNotch() async -> Bool {
         let workspace = NSWorkspace.shared
         guard let screen = getScreenWithMouse() else {return false}
         guard let path = workspace.desktopImageURL(for: screen) else {return false}
@@ -106,7 +106,7 @@ class TopNotchSwitch: SwitchProvider, CurrentScreen {
                 return setDesktopImageURL(url: URL(fileURLWithPath: processdUrl))
             }
         }
-        print("original path:\(path)")
+        Logger.internalSwitch.debug("original path:\(path)")
         guard let currentWallpaperImage = NSImage(contentsOf: path) else {
             return false
         }
@@ -124,11 +124,11 @@ class TopNotchSwitch: SwitchProvider, CurrentScreen {
             }
 
             let success = hideHeicDesktopNotch(image: currentWallpaperImage, metaDataTag: metaDataTag)
-            let _ = currentStatus()
+            _ = await currentStatus()
             return success
         } else {
             let success = hideSingleDesktopNotch(image: currentWallpaperImage)
-            let _ = currentStatus()
+            _ = await currentStatus()
             return success
         }
     }
@@ -148,9 +148,9 @@ class TopNotchSwitch: SwitchProvider, CurrentScreen {
         CGImageMetadataEnumerateTagsUsingBlock(imageMetadataValue, nil, nil) { (value, metadataTag) -> Bool in
 
             let valueString = value as String
-            print("---------------------------------------------------")
-            print("Metadata key: \(valueString)")
-            
+            Logger.internalSwitch.debug("---------------------------------------------------")
+            Logger.internalSwitch.debug("Metadata key: \(valueString)")
+
             let tag = CGImageMetadataTagCopyValue(metadataTag)
             
             guard let valueTag = tag as? String else {
@@ -246,14 +246,14 @@ class TopNotchSwitch: SwitchProvider, CurrentScreen {
         var screenSize:CGSize = .zero
         if let screen = getScreenWithMouse() {
             screenSize = screen.visibleFrame.size
-            print("screenSize:\(screenSize)")
+            Logger.internalSwitch.debug("screenSize:\(screenSize.width) * \(screenSize.height)")
         }
         
         let nsscreenSize = NSSize(width: screenSize.width,
                                   height: screenSize.height)
         guard let resizeWallpaperImage = image
-            .resizeMaintainingAspectRatio(withSize: nsscreenSize) else {return nil}
-        
+            .resizeMaintainingAspectRatio(withSize: nsscreenSize) else { return nil }
+
         var imageRect = CGRect(origin: .zero,
                                size: CGSize(width: resizeWallpaperImage.width,
                                             height: resizeWallpaperImage.height))
@@ -262,9 +262,9 @@ class TopNotchSwitch: SwitchProvider, CurrentScreen {
             return nil
         }
         
-        guard let finalWallpaper = cgwallpaper.crop(toSize: screenSize) else {return nil}
-        
-        print("notchHeight\(notchHeight)")
+        guard let finalWallpaper = cgwallpaper.crop(toSize: screenSize) else { return nil }
+
+        Logger.internalSwitch.debug("notchHeight\(self.notchHeight)")
         var finalCGImage:CGImage? = nil
 
         if let context = createContext(size: screenSize) {
@@ -292,7 +292,7 @@ class TopNotchSwitch: SwitchProvider, CurrentScreen {
             return nil
         }
         if image.jpgWrite(to: destinationURL, options: .withoutOverwriting) {
-            print("destinationURL:\(destinationURL)")
+            Logger.internalSwitch.debug("destinationURL:\(destinationURL)")
             return destinationURL
         }
         return nil
@@ -318,7 +318,7 @@ class TopNotchSwitch: SwitchProvider, CurrentScreen {
             return nil
         }
         if image.heicWrite(to: destinationURL, options: .withoutOverwriting) {
-            print("destinationURL:\(destinationURL)")
+            Logger.internalSwitch.debug("destinationURL:\(destinationURL)")
             return destinationURL
         }
         return nil
@@ -330,7 +330,7 @@ class TopNotchSwitch: SwitchProvider, CurrentScreen {
         }
         do {
             try data?.write(to: destinationURL, options: .withoutOverwriting)
-            print("destinationURL:\(destinationURL)")
+            Logger.internalSwitch.debug("destinationURL:\(destinationURL)")
             return destinationURL
         } catch {
             return nil

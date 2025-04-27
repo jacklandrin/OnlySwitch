@@ -11,7 +11,7 @@ import LaunchAtLogin
 import Switches
 import Defines
 
-class SwitchManager {
+final class SwitchManager {
     static let shared = SwitchManager()
     
     private var shownSwitchMap = [SwitchType: SwitchProvider?]()

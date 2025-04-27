@@ -71,8 +71,9 @@ class CustomizeItem: ObservableObject {
         self.error = error
         self.keyboardShortcutName = KeyboardShortcuts.Name(rawValue: String(type.rawValue))!
     }
-    
-    func doSwitch() {
-        type.doSwitch()
+
+    @MainActor
+    func doSwitch() async {
+        await type.doSwitch()
     }
 }

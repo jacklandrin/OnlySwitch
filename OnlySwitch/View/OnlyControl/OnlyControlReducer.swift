@@ -89,7 +89,7 @@ struct OnlyControlReducer {
                     }
 
                     return .run { [state, switchControl] send in
-                        let isOn = await switchControl.switchOperator.currentStatusAsync()
+                        let isOn = await switchControl.switchOperator.currentStatus()
                         if var item = state.dashboard.items.first(where: { $0.id == switchControl.id }) {
                             item.status = isOn
                             let image = (isOn ? switchControl.onImage : switchControl.offImage) ?? NSImage(named: "shortcuts_icon")!
@@ -158,7 +158,7 @@ struct OnlyControlReducer {
         .run { @MainActor send in
             let switches = client.fetchSwitchList()
             for switchControl in switches {
-                let isOn = await switchControl.switchOperator.currentStatusAsync()
+                let isOn = await switchControl.switchOperator.currentStatus()
                 switchControl.isOn = isOn
             }
             let shortcuts = client.fetchShortcutsList()

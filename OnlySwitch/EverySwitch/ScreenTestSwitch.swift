@@ -10,7 +10,7 @@ import AppKit
 import SwiftUI
 import Switches
 
-class ScreenTestSwitch: SwitchProvider, CurrentScreen {
+final class ScreenTestSwitch: SwitchProvider, CurrentScreen {
 
     static let shared = ScreenTestSwitch()
     
@@ -19,15 +19,18 @@ class ScreenTestSwitch: SwitchProvider, CurrentScreen {
     var delegate: SwitchDelegate?
     
     var view:NSView?
-    
-    func currentStatus() -> Bool {
+
+    @MainActor
+    func currentStatus() async -> Bool {
         return view != nil
     }
-    
-    func currentInfo() -> String {
+
+    @MainActor
+    func currentInfo() async -> String {
         return ""
     }
-    
+
+    @MainActor
     func operateSwitch(isOn: Bool) async throws {
         DispatchQueue.main.async {
             guard self.checkAccessbilityEnabled() else { return }

@@ -35,28 +35,16 @@ class EvolutionBarVM: BarProvider, ObservableObject {
     @Dependency(\.evolutionCommandService) var evolutionCommandService
 
     private let evolutionItem: EvolutionItem
-    private let refreshSwitchQueue = DispatchQueue(label: "jacklandrin.onlyswitch.refreshswitch",attributes: .concurrent)
 
     init(evolutionItem: EvolutionItem) {
         self.evolutionItem = evolutionItem
     }
 
-    func refreshAsync() {
-        guard evolutionItem.controlType == .Switch else { return }
-        self.processing = true
-        refreshSwitchQueue.async {
-            let _isOn = try? self.evolutionCommandService.executeCommand(self.statusCommand) == self.statusCommand?.trueCondition
-            DispatchQueue.main.async {
-                self.processing = false
-                self.isOn = _isOn ?? false
-            }
-        }
-    }
-
+    @MainActor
     func refresh() async {
         guard evolutionItem.controlType == .Switch else { return }
         self.processing = true
-        let _isOn = try? self.evolutionCommandService.executeCommand(self.statusCommand) == self.statusCommand?.trueCondition
+        let _isOn = try? await evolutionCommandService.executeCommand(self.statusCommand) == self.statusCommand?.trueCondition
         self.processing = false
         self.isOn = _isOn ?? false
     }
@@ -66,13 +54,13 @@ class EvolutionBarVM: BarProvider, ObservableObject {
         Task { @MainActor in
             if isOn {
                 if evolutionItem.controlType == .Button {
-                    _ = try? self.evolutionCommandService.executeCommand(self.singleCommand)
+                    _ = try? await self.evolutionCommandService.executeCommand(self.singleCommand)
                 } else {
-                    _ = try? self.evolutionCommandService.executeCommand(self.onCommand)
+                    _ = try? await self.evolutionCommandService.executeCommand(self.onCommand)
                     self.isOn = true
                 }
             } else {
-                _ = try? self.evolutionCommandService.executeCommand(self.offCommand)
+                _ = try? await self.evolutionCommandService.executeCommand(self.offCommand)
                 self.isOn = false
             }
             processing = false

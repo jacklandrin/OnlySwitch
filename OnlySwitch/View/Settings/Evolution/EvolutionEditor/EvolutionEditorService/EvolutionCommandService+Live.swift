@@ -20,7 +20,7 @@ extension EvolutionCommandService: DependencyKey {
             } else {
                 command.commandString
             }
-            return try commandString.runAppleScript(isShellCMD: command.executeType == .shell)
+            return try await commandString.runAppleScript(isShellCMD: command.executeType == .shell)
         },
         saveCommand: { item in
             try EvolutionCommandEntity.addItem(item: item)

@@ -9,12 +9,14 @@ import Foundation
 import Switches
 import Defines
 
-class SmallLaunchpadIconSwitch: SwitchProvider {
+final class SmallLaunchpadIconSwitch: SwitchProvider {
     var type: SwitchType = .smallLaunchpadIcon
     weak var delegate: SwitchDelegate?
-    func currentStatus() -> Bool {
+
+    @MainActor
+    func currentStatus() async -> Bool {
         do {
-            let result = try SmallLaunchpadCMD.status.runAppleScript(isShellCMD: true)
+            let result = try await SmallLaunchpadCMD.status.runAppleScript(isShellCMD: true)
             
             if (result as NSString).intValue > 5 {
                 return true
@@ -25,27 +27,26 @@ class SmallLaunchpadIconSwitch: SwitchProvider {
         }
         
     }
-    
+
+    @MainActor
     func currentInfo() -> String {
         return ""
     }
-    
+
+    @MainActor
     func operateSwitch(isOn: Bool) async throws {
         do {
             if isOn {
-                _ = try SmallLaunchpadCMD.on.runAppleScript(isShellCMD: true)
+                _ = try await SmallLaunchpadCMD.on.runAppleScript(isShellCMD: true)
             } else {
-                _ = try SmallLaunchpadCMD.off.runAppleScript(isShellCMD: true)
+                _ = try await SmallLaunchpadCMD.off.runAppleScript(isShellCMD: true)
             }
         } catch {
             throw SwitchError.OperationFailed
         }
-        
     }
     
     func isVisible() -> Bool {
         return true
     }
-    
-    
 }

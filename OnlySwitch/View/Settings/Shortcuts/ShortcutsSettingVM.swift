@@ -46,7 +46,9 @@ class ShortcutsItem: ObservableObject {
     }
     
     func doShortcuts() {
-        _ = try? ShorcutsCMD.runShortcut(name: self.name).runAppleScript(isShellCMD: true)
+        Task {
+            _ = try? await ShorcutsCMD.runShortcut(name: self.name).runAppleScript(isShellCMD: true)
+        }
     }
     
 }
@@ -98,24 +100,23 @@ class ShortcutsSettingVM:ObservableObject {
     }
     
     private func loadShortcutsList() {
-        
-        var result:String = ""
-        if #available(macOS 13.0, *) {
-            do {
-                result = try ShorcutsCMD.getList.runAppleScript(isShellCMD: true)
-            } catch {
-                
-            }
-        }
-        
-        DispatchQueue.main.async {
+        Task { @MainActor in
+            var result:String = ""
             if #available(macOS 13.0, *) {
-                
+                do {
+                    result = try await ShorcutsCMD.getList.runAppleScript(isShellCMD: true)
+                } catch {
+
+                }
+            }
+
+            if #available(macOS 13.0, *) {
+
             } else {
                 do {
-                    result = try ShorcutsCMD.getList.runAppleScript(isShellCMD: true)
+                    result = try await ShorcutsCMD.getList.runAppleScript(isShellCMD: true)
                 } catch {
-                    
+
                 }
             }
             let allshortcuts = result.split(separator: "\r")
@@ -142,13 +143,12 @@ class ShortcutsSettingVM:ObservableObject {
                     newShortcutsDic[String(name)] = false
                 }
             }
-            
+
             Preferences.shared.shortcutsDic = newShortcutsDic
         }
-        
     }
-    
-    func addItem(name:String, toggle:Bool) {
+
+    func addItem(name: String, toggle: Bool) {
         self.model.shortcutsList.append(ShortcutsItem(name: String(name), toggle: toggle, error: {[weak self] info in
             guard let strongSelf = self else {return}
             strongSelf.model.errorInfo = info
@@ -156,9 +156,9 @@ class ShortcutsSettingVM:ObservableObject {
         }))
     }
     
-    func getAllInstalledShortcutName() -> [String]? {
+    func getAllInstalledShortcutName() async -> [String]? {
         do {
-            let result = try ShorcutsCMD.getList.runAppleScript(isShellCMD: true)
+            let result = try await ShorcutsCMD.getList.runAppleScript(isShellCMD: true)
             let allshortcuts = result.split(separator: "\r")
             return allshortcuts.map{String($0)}
         } catch {
@@ -168,19 +168,20 @@ class ShortcutsSettingVM:ObservableObject {
     }
     
     func checkIfInstalled() {
-        let installedShortcuts = getAllInstalledShortcutName()
-        guard let installedShortcuts = installedShortcuts else {
-            return
-        }
-        
-        for item in sharedShortcutsList {
-            if installedShortcuts.contains(item.name) {
-                item.hasInstalled = true
+        Task { @MainActor in
+            let installedShortcuts = await getAllInstalledShortcutName()
+            guard let installedShortcuts = installedShortcuts else {
+                return
             }
+
+            for item in sharedShortcutsList {
+                if installedShortcuts.contains(item.name) {
+                    item.hasInstalled = true
+                }
+            }
+            objectWillChange.send()
         }
-        objectWillChange.send()
     }
-    
     
     /// load json data from github
     func loadData() {

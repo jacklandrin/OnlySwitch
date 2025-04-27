@@ -56,7 +56,9 @@ struct OnlySwitchApp: App {
                             return
                         }
                         let theSwitch = CustomizeVM.shared.allSwitches.first{ $0.type == type }
-                        theSwitch?.doSwitch()
+                        Task { @MainActor in
+                            await theSwitch?.doSwitch()
+                        }
                     } else if unitType == .evolution {
                         guard
                             let uuid = UUID(uuidString: id),
@@ -221,7 +223,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         CustomizeVM.shared.allSwitches.forEach{ item in
             KeyboardShortcuts.onKeyDown(for: item.keyboardShortcutName) {
-                item.doSwitch()
+                Task { @MainActor in
+                    await item.doSwitch()
+                }
             }
         }
 

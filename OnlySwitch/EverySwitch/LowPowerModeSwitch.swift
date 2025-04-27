@@ -9,33 +9,36 @@ import Foundation
 import Switches
 import Defines
 
-class LowPowerModeSwitch: SwitchProvider {
+final class LowPowerModeSwitch: SwitchProvider {
     var type: SwitchType = .lowpowerMode
     weak var delegate: SwitchDelegate?
-    func currentStatus() -> Bool {
+
+    @MainActor
+    func currentStatus() async -> Bool {
         do {
-            let result = try LowpowerModeCMD.status.runAppleScript(isShellCMD: true)
+            let result = try await LowpowerModeCMD.status.runAppleScript(isShellCMD: true)
             return result.contains("1")
         } catch {
             return false
         }
     }
-    
-    func currentInfo() -> String {
-        return "require password"
+
+    @MainActor
+    func currentInfo() async -> String {
+        "require password"
     }
-    
+
+    @MainActor
     func operateSwitch(isOn: Bool) async throws {
         do {
             if isOn {
-                _ = try LowpowerModeCMD.on.runAppleScript(isShellCMD: true, with: true)
+                _ = try await LowpowerModeCMD.on.runAppleScript(isShellCMD: true, with: true)
             } else {
-                _ = try LowpowerModeCMD.off.runAppleScript(isShellCMD: true, with: true)
+                _ = try await LowpowerModeCMD.off.runAppleScript(isShellCMD: true, with: true)
             }
         } catch {
             throw SwitchError.OperationFailed
         }
-        
     }
     
     func isVisible() -> Bool {

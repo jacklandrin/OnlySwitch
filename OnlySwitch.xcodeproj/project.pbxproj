@@ -860,8 +860,8 @@
 				0447E3432B71746D00D07B9A /* TopStickerSwitch.swift */,
 				0447E34B2B71746D00D07B9A /* TrueToneSwitch.swift */,
 				0447E34D2B71746D00D07B9A /* XcodeCacheSwitch.swift */,
-				04938D0F27692B6900713F1D /* SwitchManager.swift */,
 				04819CD42BBC8A6700645A0C /* KeyLightSwitch.swift */,
+				04938D0F27692B6900713F1D /* SwitchManager.swift */,
 			);
 			path = EverySwitch;
 			sourceTree = "<group>";

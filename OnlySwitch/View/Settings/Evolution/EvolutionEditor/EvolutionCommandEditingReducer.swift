@@ -58,7 +58,7 @@ struct EvolutionCommandEditingReducer: Reducer {
                         return await send(
                             .testCommand(
                                 TaskResult { @MainActor in
-                                    try evolutionCommandService.executeCommand(command)
+                                    try await evolutionCommandService.executeCommand(command)
                                 }
                             )
                         )

@@ -9,35 +9,37 @@ import AppKit
 import Switches
 import Defines
 
-class AutohideDockSwitch: SwitchProvider {
+final class AutohideDockSwitch: SwitchProvider {
     weak var delegate: SwitchDelegate?
     var type: SwitchType = .autohideDock
 
-    func currentStatus() -> Bool {
+    @MainActor
+    func currentStatus() async -> Bool {
         do {
-            let result = try AutohideDockCMD.status.runAppleScript()
+            let result = try await AutohideDockCMD.status.runAppleScript()
             return (result as NSString).boolValue
             
         } catch {
             return false
         }
     }
-    
-    func currentInfo() -> String {
+
+    @MainActor
+    func currentInfo() async -> String {
         return ""
     }
-    
     
     func isVisible() -> Bool {
         return true
     }
     
+    @MainActor
     func operateSwitch(isOn: Bool) async throws {
         do {
             if isOn {
-                _ = try AutohideDockCMD.on.runAppleScript()
+                _ = try await AutohideDockCMD.on.runAppleScript()
             } else {
-                _ = try AutohideDockCMD.off.runAppleScript()
+                _ = try await AutohideDockCMD.off.runAppleScript()
             }
         } catch {
             throw SwitchError.OperationFailed

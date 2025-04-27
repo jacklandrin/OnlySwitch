@@ -10,16 +10,18 @@ import AppKit
 import Switches
 import Defines
 
-class HideWindowsSwitch:SwitchProvider {
+final class HideWindowsSwitch:SwitchProvider {
     var type: SwitchType = .hideWindows
     
     var delegate: SwitchDelegate?
-    
-    func currentStatus() -> Bool {
+
+    @MainActor
+    func currentStatus() async -> Bool {
         return Preferences.shared.windowsHidden
     }
-    
-    func currentInfo() -> String {
+
+    @MainActor
+    func currentInfo() async -> String {
         return ""
     }
     
@@ -95,7 +97,7 @@ class HideWindowsSwitch:SwitchProvider {
     }
 }
 
-struct AppsSession:Codable {
+private struct AppsSession: Codable {
     let appName:String
     let appUrl:String
     

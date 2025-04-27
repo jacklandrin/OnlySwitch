@@ -8,22 +8,25 @@
 import Foundation
 import Switches
 
-class EjectDiscsSWitch: SwitchProvider {
+final class EjectDiscsSWitch: SwitchProvider {
     var type: SwitchType = .ejectDiscs
     
     var delegate: SwitchDelegate?
-    
-    func currentStatus() -> Bool {
+
+    @MainActor
+    func currentStatus() async -> Bool {
         return true
     }
-    
-    func currentInfo() -> String {
+
+    @MainActor
+    func currentInfo() async -> String {
         return ""
     }
-    
+
+    @MainActor
     func operateSwitch(isOn: Bool) async throws {
         if isOn {
-            _ = try ejectDiscs.runAppleScript()
+            _ = try await ejectDiscs.runAppleScript()
         }
     }
     

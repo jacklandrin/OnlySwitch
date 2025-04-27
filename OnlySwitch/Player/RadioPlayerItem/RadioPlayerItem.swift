@@ -45,21 +45,13 @@ struct RadioPlayerItem {
         self.streamUrl = radio.url!
         self.streamInfo = ""
     }
-    
+
     func nowPlayingNotify(content:String, subtitle:String) {
-        if #available(macOS 13.0, *) {
-            DispatchQueue.global().async {
-                let _ = try? displayNotificationCMD(title: "Now Playing".localized(),
-                                               content: content,
-                                               subtitle: subtitle)
-                    .runAppleScript()
-            }
-        } else {
-            let _ = try? displayNotificationCMD(title: "Now Playing".localized(),
-                                           content: content,
-                                           subtitle: subtitle)
+        Task { @MainActor in
+            let _ = try? await displayNotificationCMD(title: "Now Playing".localized(),
+                                                      content: content,
+                                                      subtitle: subtitle)
                 .runAppleScript()
         }
-        
     }
 }

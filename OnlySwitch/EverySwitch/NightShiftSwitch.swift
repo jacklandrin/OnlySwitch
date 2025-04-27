@@ -9,7 +9,7 @@ import AppKit
 import Combine
 import Switches
 
-class NightShiftSwitch: SwitchProvider {
+final class NightShiftSwitch: SwitchProvider {
     static let shared = NightShiftSwitch()
     weak var delegate: SwitchDelegate?
     var type: SwitchType = .nightShift
@@ -27,7 +27,7 @@ class NightShiftSwitch: SwitchProvider {
             guard let self else { return }
             if self.nightshiftStrength != Preferences.shared.nightShiftStrength {
                 self.nightshiftStrength = Preferences.shared.nightShiftStrength
-                if self.currentStatus() {
+                if isNightShiftEnabled {
                     NightShiftTool.strength = nightshiftStrength
                 }
             }
@@ -42,20 +42,27 @@ class NightShiftSwitch: SwitchProvider {
         return NightShiftTool.supportsNightShift
     }
 
-    func currentInfo() -> String {
+    @MainActor
+    func currentInfo() async -> String {
         return ""
     }
-    
-    func currentStatus() -> Bool {
-        return NightShiftTool.isNightShiftEnabled
+
+    @MainActor
+    func currentStatus() async -> Bool {
+        return isNightShiftEnabled
     }
-    
+
+    @MainActor
     func operateSwitch(isOn: Bool) async throws {
         if isOn {
             switchOn()
         } else {
             switchOff()
         }
+    }
+
+    private var isNightShiftEnabled: Bool {
+        return NightShiftTool.isNightShiftEnabled
     }
 
     private func switchOff() {
@@ -71,19 +78,22 @@ class NightShiftSwitch: SwitchProvider {
         secondTimer.sink { [weak self] _ in
             guard let self else { return }
             if self.isNightShiftScheduleOn {
-                self.scheduleTask()
+                Task {
+                    await self.scheduleTask()
+                }
             }
-        }.store(in: &cancellable)
+        }
+        .store(in: &cancellable)
     }
 
-    private func scheduleTask() {
+    @MainActor private func scheduleTask() {
         let startTimeToday = Date().date(at: 0, minutes: 0).timeIntervalSince1970 + startDate
         var endTimeToday = Date().date(at: 0, minutes: 0).timeIntervalSince1970 + endDate
         if endTimeToday <= startTimeToday {
             endTimeToday += 24 * 60 * 60 //tomorrow time
         }
         let nowTimeInterval = Date().timeIntervalSince1970
-        if currentStatus() {
+        if isNightShiftEnabled {
             if endTimeToday >= nowTimeInterval - 1 && endTimeToday <= nowTimeInterval + 1 {
                 switchOff()
                 NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: self.type)

@@ -10,7 +10,7 @@ import Switches
 import Defines
 import Extensions
 
-class HideMenubarIconsSwitch: SwitchProvider {
+final class HideMenubarIconsSwitch: SwitchProvider {
     static let shared = HideMenubarIconsSwitch()
     var type: SwitchType = .hideMenubarIcons
     
@@ -34,15 +34,18 @@ class HideMenubarIconsSwitch: SwitchProvider {
             self?.autoCollapseIfNeeded()
         }
     }
-    
-    func currentStatus() -> Bool {
+
+    @MainActor
+    func currentStatus() async -> Bool {
         return isMenubarCollapse
     }
-    
-    func currentInfo() -> String {
+
+    @MainActor
+    func currentInfo() async -> String {
         return ""
     }
-    
+
+    @MainActor
     func operateSwitch(isOn: Bool) async throws {
         if isOn {
             guard let isButtonPositionValid = isButtonPositionValid, isButtonPositionValid() else {

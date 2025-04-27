@@ -11,7 +11,7 @@ import SwiftUI
 import ComposableArchitecture
 import Switches
 
-class TopStickerSwitch: SwitchProvider {
+final class TopStickerSwitch: SwitchProvider {
 
     static let shared = TopStickerSwitch()
 
@@ -22,11 +22,13 @@ class TopStickerSwitch: SwitchProvider {
     private var window: StickerWindow?
     private var isWindowVisable = false
 
-    func currentStatus() -> Bool {
+    @MainActor
+    func currentStatus() async -> Bool {
         isWindowVisable
     }
-    
-    func currentInfo() -> String {
+
+    @MainActor
+    func currentInfo() async -> String {
         ""
     }
     

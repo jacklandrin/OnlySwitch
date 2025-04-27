@@ -9,14 +9,15 @@ import AppKit
 import Defines
 import Switches
 
-class HiddenDesktopSwitch: SwitchProvider {
+final class HiddenDesktopSwitch: SwitchProvider {
     weak var delegate: SwitchDelegate?
     
     var type: SwitchType = .hiddeDesktop
-    
-    func currentStatus() -> Bool {
+
+    @MainActor
+    func currentStatus() async -> Bool {
         do {
-            let result = try HideDesktopCMD.status.runAppleScript(isShellCMD: true)
+            let result = try await HideDesktopCMD.status.runAppleScript(isShellCMD: true)
             
             if result == "0" {
                 return true
@@ -27,13 +28,14 @@ class HiddenDesktopSwitch: SwitchProvider {
             return false
         }
     }
-    
+
+    @MainActor
     func operateSwitch(isOn: Bool) async throws {
         do {
             if isOn {
-               _ = try HideDesktopCMD.on.runAppleScript(isShellCMD: true)
+                _ = try await HideDesktopCMD.on.runAppleScript(isShellCMD: true)
             } else {
-               _ = try HideDesktopCMD.off.runAppleScript(isShellCMD: true)
+                _ = try await HideDesktopCMD.off.runAppleScript(isShellCMD: true)
             }
         } catch {
             throw SwitchError.OperationFailed
@@ -43,8 +45,9 @@ class HiddenDesktopSwitch: SwitchProvider {
     func isVisible() -> Bool {
         return true
     }
-    
-    func currentInfo() -> String {
+
+    @MainActor
+    func currentInfo() async -> String {
         return ""
     }
     

@@ -97,15 +97,15 @@ class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
     
     func refreshAsync() {
         self.model.processing = true
-        refreshSwitchQueue.async {
-            let _isOn = self.switchOperator.currentStatus()
+        Task { @MainActor in
+            let _isOn = await self.switchOperator.currentStatus()
             var _info = ""
             if self.switchType != .airPods {
-                _info = self.switchOperator.currentInfo()
+                _info = await self.switchOperator.currentInfo()
             }
             Task { @MainActor in
                 if self.switchType == .airPods {
-                    _info = self.switchOperator.currentInfo()
+                    _info = await self.switchOperator.currentInfo()
                 }
                 self.model.processing = false
                 self.model.isOn = _isOn
@@ -122,8 +122,8 @@ class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
                 self.model.isOn = isOn
                 self.model.processing = false
                 if info != "" {
-                    _ = switchOperator.currentStatus()
-                    model.info = switchOperator.currentInfo()
+                    _ = await switchOperator.currentStatus()
+                    model.info = await switchOperator.currentInfo()
                 }
             } catch {
                 model.processing = false

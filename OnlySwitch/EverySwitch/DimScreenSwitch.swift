@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import Switches
 
-class DimScreenSwitch: SwitchProvider {
+final class DimScreenSwitch: SwitchProvider {
     enum DimScreenError:Error {
         case brightnessTooLow
     }
@@ -54,14 +54,17 @@ class DimScreenSwitch: SwitchProvider {
         cancellable.removeAll()
     }
 
-    func currentStatus() -> Bool {
+    @MainActor
+    func currentStatus() async -> Bool {
         return isDimming
     }
 
-    func currentInfo() -> String {
+    @MainActor
+    func currentInfo() async -> String {
         return "Built-in Screen"
     }
 
+    @MainActor
     func operateSwitch(isOn: Bool) async throws {
         if isOn {
             try dimScreen()

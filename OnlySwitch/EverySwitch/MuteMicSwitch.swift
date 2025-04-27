@@ -9,12 +9,14 @@ import Foundation
 import Switches
 import Defines
 
-class MuteMicSwitch: SwitchProvider {
+final class MuteMicSwitch: SwitchProvider {
     var type: SwitchType = .muteMicrophone
     weak var delegate: SwitchDelegate?
-    func currentStatus() -> Bool {
+
+    @MainActor
+    func currentStatus() async -> Bool {
         do {
-            let volume = try VolumeCMD.getInput.runAppleScript()
+            let volume = try await VolumeCMD.getInput.runAppleScript()
             let volumeValue:Int = Int(volume) ?? 50
             UserDefaults.standard.set(volume, forKey: UserDefaults.Key.MicVolume)
             UserDefaults.standard.synchronize()
@@ -22,33 +24,31 @@ class MuteMicSwitch: SwitchProvider {
         } catch {
             return false
         }
-        
     }
-    
-    func currentInfo() -> String {
+
+    @MainActor
+    func currentInfo() async -> String {
         return ""
     }
-    
+
+    @MainActor
     func operateSwitch(isOn: Bool) async throws {
         do {
             if isOn {
                 let cmd = VolumeCMD.setInput + "0"
-                _ = try cmd.runAppleScript()
+                _ = try await cmd.runAppleScript()
             } else {
                 var volumeValue = UserDefaults.standard.integer(forKey: UserDefaults.Key.MicVolume)
                 volumeValue = (volumeValue == 0) ? 50 : volumeValue
                 let cmd = VolumeCMD.setInput + String(volumeValue)
-                _ = try cmd.runAppleScript()
+                _ = try await cmd.runAppleScript()
             }
         } catch {
             throw SwitchError.OperationFailed
         }
-        
     }
     
     func isVisible() -> Bool {
         return true
     }
-    
-    
 }

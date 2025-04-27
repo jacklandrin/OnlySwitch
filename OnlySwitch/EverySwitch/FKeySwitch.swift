@@ -8,22 +8,24 @@
 import Foundation
 import Switches
 
-class FKeySwitch: SwitchProvider {
-    
+final class FKeySwitch: SwitchProvider {
     static let shared = FKeySwitch()
     var type: SwitchType = .fkey
     
     var delegate: SwitchDelegate?
-    
-    func currentStatus() -> Bool {
+
+    @MainActor
+    func currentStatus() async -> Bool {
         let mode = try? FKeyManager.getCurrentFKeyMode()
         return mode == .function
     }
-    
-    func currentInfo() -> String {
+
+    @MainActor
+    func currentInfo() async -> String {
         return "Macbook Keyboard"
     }
-    
+
+    @MainActor
     func operateSwitch(isOn: Bool) async throws {
         if isOn {
             try FKeyManager.setCurrentFKeyMode(.function)

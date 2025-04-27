@@ -8,19 +8,22 @@
 import Foundation
 import Switches
 
-class TrueToneSwitch: SwitchProvider {
+final class TrueToneSwitch: SwitchProvider {
     var type: SwitchType = .trueTone
     
     var delegate: SwitchDelegate?
-    
-    func currentStatus() -> Bool {
+
+    @MainActor
+    func currentStatus() async -> Bool {
         CBTrueToneClient.shared.isTrueToneEnabled
     }
-    
-    func currentInfo() -> String {
+
+    @MainActor
+    func currentInfo() async -> String {
         ""
     }
-    
+
+    @MainActor
     func operateSwitch(isOn: Bool) async throws {
         CBTrueToneClient.shared.isTrueToneEnabled = isOn
     }
@@ -28,6 +31,4 @@ class TrueToneSwitch: SwitchProvider {
     func isVisible() -> Bool {
         CBTrueToneClient.shared.isTrueToneSupported && CBTrueToneClient.shared.isTrueToneAvailable
     }
-    
-
 }

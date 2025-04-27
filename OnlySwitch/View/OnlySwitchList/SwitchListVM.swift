@@ -91,12 +91,14 @@ class SwitchListVM: ObservableObject, CurrentScreen {
     }
 
     private func refreshSwitchStatus() {
-        for option in switchList {
-            option.refreshStatus()
-        }
+        Task { @MainActor in
+            for option in switchList {
+                option.refreshStatus()
+            }
 
-        for option in evolutionList {
-            option.refreshAsync()
+            for option in evolutionList {
+                await option.refresh()
+            }
         }
     }
 

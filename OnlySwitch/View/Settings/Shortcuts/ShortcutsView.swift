@@ -20,53 +20,13 @@ struct ShortcutsView: View {
     @ObservedObject var langManager = LanguageManager.sharedManager
 
     var body: some View {
-        HStack(spacing:0) {
-
-            VStack(alignment:.leading) {
-                Text("To add or remove any shortcuts on list".localized())
-                    .padding(10)
-                Divider()
-                    .frame(width: 380)
-                if shortcutsVM.shortcutsList.count == 0 {
-                    Spacer()
-                    Text("There's not any Shortcuts.".localized())
-                    Spacer()
-                } else {
-                    List {
-                        ForEach(shortcutsVM.shortcutsList.indices, id:\.self) { index in
-                            HStack {
-                                Toggle("", isOn: $shortcutsVM.shortcutsList[index].toggle)
-                                Text(shortcutsVM.shortcutsList[index].name)
-                                    .frame(width: 170, alignment: .leading)
-                                    .padding(.trailing, 10)
-
-                                KeyboardShortcuts.Recorder(for: shortcutsVM.shortcutsList[index].keyboardShortcutName)
-                                    .environment(\.locale, .init(identifier: langManager.currentLang))//Localizable doesn't work
-
-                                Spacer().frame(width:30)
-                            }
-                        }
-                    }.frame(width: 400)
-                }
+        GeometryReader { geometry in
+            HStack(spacing:0) {
+                installedShortcutsSection
+                    .frame(width: geometry.size.width * 0.6)
+                gallerySection
+                    .frame(width: geometry.size.width * 0.4)
             }
-            VStack(spacing:0) {
-                HStack {
-                    Text("Shortcuts Gallery".localized())
-                    Spacer()
-                    Button(action: {
-                        shortcutsVM.shouldLoadShortcutsList()
-                        shortcutsVM.loadData()
-                    }) {
-                        Image(systemName: "arrow.clockwise")
-                    }
-                    .help("refresh".localized())
-                }
-                .frame(width:300,height: 60)
-                .padding(.trailing, 10)
-                shortcutsMarket
-            }
-
-            Spacer()
         }
         .onAppear{
             shortcutsVM.shouldLoadShortcutsList()
@@ -76,13 +36,65 @@ struct ShortcutsView: View {
             }
         }
         .toast(isPresenting: $shortcutsVM.showErrorToast) {
-            AlertToast(displayMode: .alert,
-                       type: .error(.red),
-                       title: shortcutsVM.errorInfo.localized())
+            AlertToast(
+                        displayMode: .alert,
+                        type: .error(.red),
+                        title: shortcutsVM.errorInfo.localized()
+                       )
         }
     }
 
-    var shortcutsMarket:some View {
+    @ViewBuilder
+    var installedShortcutsSection: some View {
+        VStack(alignment:.leading) {
+            Text("To add or remove any shortcuts on list".localized())
+                .padding(10)
+            Divider()
+            if shortcutsVM.shortcutsList.count == 0 {
+                Spacer()
+                Text("There's not any Shortcuts.".localized())
+                Spacer()
+            } else {
+                List {
+                    ForEach(shortcutsVM.shortcutsList.indices, id:\.self) { index in
+                        HStack {
+                            Toggle("", isOn: $shortcutsVM.shortcutsList[index].toggle)
+                            Text(shortcutsVM.shortcutsList[index].name)
+                                .frame(width: 170, alignment: .leading)
+                                .padding(.trailing, 10)
+
+                            KeyboardShortcuts.Recorder(for: shortcutsVM.shortcutsList[index].keyboardShortcutName)
+                                .environment(\.locale, .init(identifier: langManager.currentLang))//Localizable doesn't work
+
+                            Spacer().frame(width:30)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    var gallerySection: some View {
+        VStack(spacing:0) {
+            HStack {
+                Text("Shortcuts Gallery".localized())
+                Spacer()
+                Button(action: {
+                    shortcutsVM.shouldLoadShortcutsList()
+                    shortcutsVM.loadData()
+                }) {
+                    Image(systemName: "arrow.clockwise")
+                }
+                .help("refresh".localized())
+            }
+            .frame(height: 60)
+            .padding(.trailing, 10)
+            shortcutsMarket
+        }
+    }
+
+    var shortcutsMarket: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 20) {
                 ForEach(shortcutsVM.sharedShortcutsList.indices, id: \.self) { index in
@@ -142,14 +154,15 @@ struct ShortcutsView: View {
                         .help(shortcutsVM.sharedShortcutsList[index].description)
                         .cornerRadius(10)
                         .onTapGesture {
-                            if shortcutsVM.sharedShortcutsList[index].hasInstalled {
-                                _ = try? ShorcutsCMD.showShortcut(name: shortcutsVM.sharedShortcutsList[index].name).runAppleScript(isShellCMD: true)
+                            Task {
+                                if shortcutsVM.sharedShortcutsList[index].hasInstalled {
+                                    _ = try? await ShorcutsCMD.showShortcut(name: shortcutsVM.sharedShortcutsList[index].name).runAppleScript(isShellCMD: true)
+                                }
                             }
                         }
                 }
 
             }
-            .frame(width:300)
             .padding(.trailing, 10)
             Spacer()
         }

@@ -25,8 +25,8 @@ struct EvolutionItem: Equatable, Identifiable {
         Task { @MainActor in
             if controlType == .Button {
                 guard let singleCommand else { return }
-                _ = try? evolutionCommandService.executeCommand(singleCommand)
-                _ = try? displayNotificationCMD(
+                _ = try? await evolutionCommandService.executeCommand(singleCommand)
+                _ = try? await displayNotificationCMD(
                     title: name,
                     content: "",
                     subtitle: "Running".localized()
@@ -36,7 +36,7 @@ struct EvolutionItem: Equatable, Identifiable {
                 guard
                     let statusCommand,
                     let trueCondition = statusCommand.trueCondition,
-                    let statusResult = try? evolutionCommandService.executeCommand(statusCommand)
+                    let statusResult = try? await evolutionCommandService.executeCommand(statusCommand)
                 else {
                     return
                 }
@@ -44,12 +44,12 @@ struct EvolutionItem: Equatable, Identifiable {
                 let isOn = trueCondition == statusResult
                 let shouldTurnOn = !isOn
                 if shouldTurnOn {
-                    _ = try? evolutionCommandService.executeCommand(onCommand)
+                    _ = try? await evolutionCommandService.executeCommand(onCommand)
                 } else {
                     guard let offCommand else { return }
-                    _ = try? evolutionCommandService.executeCommand(offCommand)
+                    _ = try? await evolutionCommandService.executeCommand(offCommand)
                 }
-                _ = try? displayNotificationCMD(
+                _ = try? await displayNotificationCMD(
                     title: name,
                     content: "",
                     subtitle: shouldTurnOn ? "Turn off".localized() : "Turn on".localized()

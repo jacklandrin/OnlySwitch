@@ -8,15 +8,18 @@
 import AppKit
 import Switches
 
-class BluetoothSwitch: SwitchProvider {
+final class BluetoothSwitch: SwitchProvider {
     weak var delegate: SwitchDelegate?
     var type: SwitchType = .bluetooth
     let blManager = BluetoothDevicesManager.shared
-    func currentInfo() -> String {
+
+    @MainActor
+    func currentInfo() async -> String {
         return ""
     }
-    
-    func currentStatus() -> Bool {
+
+    @MainActor
+    func currentStatus() async -> Bool {
         return blManager.centralManager.state == .poweredOn
     }
     

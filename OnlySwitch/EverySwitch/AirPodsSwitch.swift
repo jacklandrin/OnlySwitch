@@ -10,7 +10,7 @@ import IOBluetooth
 import Switches
 import Defines
 
-class AirPodsSwitch: SwitchProvider {
+final class AirPodsSwitch: SwitchProvider {
     weak var delegate: SwitchDelegate?
     var type: SwitchType = .airPods
     
@@ -34,15 +34,17 @@ class AirPodsSwitch: SwitchProvider {
         }
         currentDevice = device
     }
-    
-    func currentStatus() -> Bool {
+
+    @MainActor
+    func currentStatus() async -> Bool {
         guard let currentDevice = currentDevice else {return false}
         return currentDevice.isConnected()
     }
-    
-    func currentInfo() -> String {
-        guard let currentDevice = currentDevice else {return ""}
-        return blManager.getAirPodsBattery(device: currentDevice)
+
+    @MainActor
+    func currentInfo() async -> String {
+        guard let currentDevice else { return "" }
+        return await blManager.getAirPodsBattery(device: currentDevice)
     }
     
     func isVisible() -> Bool {
@@ -51,10 +53,13 @@ class AirPodsSwitch: SwitchProvider {
         guard let currentDevice = currentDevice, currentDevice.isPaired() else {return false}
         return true
     }
-    
+
+    @MainActor
     func operateSwitch(isOn: Bool) async throws {
-        guard let currentDevice = currentDevice else {throw SwitchError.OperationFailed}
-        
+        guard let currentDevice = currentDevice else {
+            throw SwitchError.OperationFailed
+        }
+
         if isOn {
             let result = blManager.connect(device: currentDevice)
             if !result.0 {
@@ -68,6 +73,5 @@ class AirPodsSwitch: SwitchProvider {
                 throw SwitchError.OperationFailed
             }
         }
-        
     }
 }
