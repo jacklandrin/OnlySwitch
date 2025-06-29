@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>AppIdentifierPrefix</key>
+	<string>$(AppIdentifierPrefix)</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -35,8 +37,6 @@
 	<key>SUFeedURL</key>
 	<string>http://jacklandrin.github.io/appcast.xml</string>
 	<key>SUPublicEDKey</key>
-	<string>uE3wX03AQ7gIqY2q7AjcY+dfLIrsNNim5/ZeK/15Cic=</string>
-    <key>AppIdentifierPrefix</key>
-    <string>$(AppIdentifierPrefix)</string>
+	<string>K8EDW6PXeKOd43i6qmC4OeFyCarchE0ZTKP1ZLqVGl0</string>
 </dict>
 </plist>
