@@ -39,6 +39,8 @@ Since Version 2.5.0, OnlySwitch has started to support **Apple Widgets** (Sonoma
 
 Since Version 2.5.4, OnlySwitch has Only Control appearance.
 
+Auto-updating has failed to 2.5.7, please manually update or use Homebrew.
+
 ## Shortcuts Gallery
 
 Everyone can contribute macOS Shortcuts for OnlySwitch now. Please read [How to contribute to Shortcuts Gallery](ShortcutsGalleryContributing.md). The shared Shortcuts will be displayed here:
