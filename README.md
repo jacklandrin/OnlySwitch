@@ -3,7 +3,7 @@
 <img alt="AppIcon" src="https://github.com/jacklandrin/OnlySwitch/blob/main/OnlySwitch/Assets.xcassets/AppIcon.appiconset/icon_256x256@2x.png?raw=true" width="128px" align="center" />
 </p>
 
-‼️ **Auto-updating has failed to 2.5.7, please manually update or use Homebrew.**
+‼️ **Auto-updating has failed from 2.5.6 and below, please manually update or use Homebrew.**
 
 # OnlySwitch
 
