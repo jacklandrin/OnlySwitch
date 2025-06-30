@@ -47,6 +47,9 @@ final class SmallLaunchpadIconSwitch: SwitchProvider {
     }
     
     func isVisible() -> Bool {
+        if #available(macOS 26.0, *) {
+            return false
+        }
         return true
     }
 }

@@ -56,13 +56,11 @@ final class RadioStationSwitch:SwitchProvider {
     @MainActor
     func operateSwitch(isOn: Bool) async throws {
         guard Preferences.shared.radioEnable else {return}
-        Task { @MainActor in
-            if isOn {
-                self.playerItem.isPlaying = true
-            } else {
-                self.playerItem.isPlaying = false
-                self.playerItem.streamInfo = ""
-            }
+        if isOn {
+            self.playerItem.isPlaying = true
+        } else {
+            self.playerItem.isPlaying = false
+            self.playerItem.streamInfo = ""
         }
     }
 

@@ -32,15 +32,13 @@ final class ScreenTestSwitch: SwitchProvider, CurrentScreen {
 
     @MainActor
     func operateSwitch(isOn: Bool) async throws {
-        DispatchQueue.main.async {
-            guard self.checkAccessbilityEnabled() else { return }
-            if isOn {
-                self.view = NSHostingView(rootView: PureColorView())
-                self.view?.enterFullScreenMode(self.getScreenWithMouse()!)
-            } else {
-                self.view?.exitFullScreenMode()
-                self.view = nil
-            }
+        guard self.checkAccessbilityEnabled() else { return }
+        if isOn {
+            self.view = NSHostingView(rootView: PureColorView())
+            self.view?.enterFullScreenMode(self.getScreenWithMouse()!)
+        } else {
+            self.view?.exitFullScreenMode()
+            self.view = nil
         }
     }
     
