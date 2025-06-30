@@ -302,25 +302,34 @@ extension RadioSettingVM {
         openPanel.begin{ (result: NSApplication.ModalResponse) -> Void in
             if result == NSApplication.ModalResponse.OK {
                 if let openURL = openPanel.url {
-                    do {
-                        let jsonData = try Data(contentsOf: openURL)
-                        let importRadioList = try JSONDecoder().decode([RadioItem].self, from: jsonData)
-                        print("name: \(String(describing: importRadioList.first?.name))  url: \(String(describing: importRadioList.first?.url))")
-                        for item in importRadioList {
-                            if item.url.isValidURL && !RadioStations.existence(url: item.url) {
-                                self.addStation(title: item.name, streamUrl: item.url)
-
-                            }
+                    Task {
+                        do {
+                            let jsonData = try Data(contentsOf: openURL)
+                            let importRadioList = try JSONDecoder().decode([RadioItem].self, from: jsonData)
+                            print("name: \(String(describing: importRadioList.first?.name))  url: \(String(describing: importRadioList.first?.url))")
+                            await self.handleSuccess(importRadioList: importRadioList)
+                        } catch {
+                            await self.handleFailed(error: error)
                         }
-                        self.model.successInfo = "Success"
-                        self.model.showSuccessToast = true
-                    } catch {
-                        self.model.errorInfo = error.localizedDescription
-                        self.model.showErrorToast = true
                     }
                 }
             }
         }
+    }
+    
+    @MainActor private func handleSuccess(importRadioList: [RadioItem]) async {
+        for item in importRadioList {
+            if item.url.isValidURL && !RadioStations.existence(url: item.url) {
+                self.addStation(title: item.name, streamUrl: item.url)
+            }
+        }
+        self.model.successInfo = "Success"
+        self.model.showSuccessToast = true
+    }
+    
+    @MainActor private func handleFailed(error: any Error) async {
+        self.model.errorInfo = error.localizedDescription
+        self.model.showErrorToast = true
     }
 
     private func buildOpenPanel() -> NSOpenPanel {

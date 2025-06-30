@@ -311,6 +311,7 @@
 		04D3A9C22C15FD7300628BAE /* SelectEvolutionIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3A9C12C15FD7300628BAE /* SelectEvolutionIntent.swift */; };
 		04D3A9C42C15FE0300628BAE /* EvolutionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3A9C32C15FE0300628BAE /* EvolutionEntity.swift */; };
 		04D3A9C52C16335F00628BAE /* ViewModify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CB89F62B6FFA65006B8620 /* ViewModify.swift */; };
+		04DA45722E12F28A0051047B /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = 04DA45712E12F28A0051047B /* Dependencies */; };
 		04DC6C5C28A2D04B00888BF9 /* UpdateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C5B28A2D04B00888BF9 /* UpdateView.swift */; };
 		04DC6C5E28A2E2B700888BF9 /* UpdateVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C5D28A2E2B700888BF9 /* UpdateVM.swift */; };
 		04DC6C6028A46ECE00888BF9 /* CommonPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC6C5F28A46ECE00888BF9 /* CommonPlayer.swift */; };
@@ -735,6 +736,7 @@
 				04A23B23275D5FC500B454C8 /* CoreBrightness.framework in Frameworks */,
 				04DC6C9C28A7CA7300888BF9 /* DisplayServices.framework in Frameworks */,
 				04A6B54B27715F90003B2647 /* Alamofire in Frameworks */,
+				04DA45722E12F28A0051047B /* Dependencies in Frameworks */,
 				041B17892AD841EE0032919B /* Sparkle in Frameworks */,
 				04581DB6276506B9008ADF30 /* AlertToast in Frameworks */,
 				043316DE2B7168940078B867 /* Extensions in Frameworks */,
@@ -1742,6 +1744,7 @@
 				0478874F2B83EC8E0064B9F5 /* Utilities */,
 				04819CE12BDEB63900645A0C /* CustomDump */,
 				046955D82C7A732300577915 /* OnlyControl */,
+				04DA45712E12F28A0051047B /* Dependencies */,
 			);
 			productName = OnlySwitch;
 			productReference = 04447B582754F08000CD2900 /* OnlySwitch.app */;
@@ -1827,6 +1830,7 @@
 				041B17872AD841EE0032919B /* XCRemoteSwiftPackageReference "Sparkle" */,
 				047594932B531CB2005FC87C /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
 				04819CE02BDEB63900645A0C /* XCRemoteSwiftPackageReference "swift-custom-dump" */,
+				04DA45702E12F28A0051047B /* XCRemoteSwiftPackageReference "swift-dependencies" */,
 			);
 			productRefGroup = 04447B592754F08000CD2900 /* Products */;
 			projectDirPath = "";
@@ -2323,7 +2327,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 210;
+				CURRENT_PROJECT_VERSION = 211;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2349,7 +2353,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 210;
+				CURRENT_PROJECT_VERSION = 211;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2498,7 +2502,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 210;
+				CURRENT_PROJECT_VERSION = 211;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
@@ -2524,7 +2528,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.5.7;
+				MARKETING_VERSION = 2.5.8;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2553,7 +2557,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 210;
+				CURRENT_PROJECT_VERSION = 211;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
@@ -2579,7 +2583,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.5.7;
+				MARKETING_VERSION = 2.5.8;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2608,7 +2612,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 210;
+				CURRENT_PROJECT_VERSION = 211;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2625,7 +2629,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.5.7;
+				MARKETING_VERSION = 2.5.8;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = OnlySwitchWidgets;
@@ -2648,7 +2652,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 210;
+				CURRENT_PROJECT_VERSION = 211;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2665,7 +2669,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.5.7;
+				MARKETING_VERSION = 2.5.8;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = OnlySwitchWidgets;
@@ -2763,7 +2767,7 @@
 			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
 			requirement = {
 				kind = exactVersion;
-				version = 1.19.1;
+				version = 1.20.2;
 			};
 		};
 		04819CE02BDEB63900645A0C /* XCRemoteSwiftPackageReference "swift-custom-dump" */ = {
@@ -2788,6 +2792,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.15.0;
+			};
+		};
+		04DA45702E12F28A0051047B /* XCRemoteSwiftPackageReference "swift-dependencies" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-dependencies";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.9.2;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -2870,6 +2882,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 04BF976927908D5400E7C0E2 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */;
 			productName = KeyboardShortcuts;
+		};
+		04DA45712E12F28A0051047B /* Dependencies */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04DA45702E12F28A0051047B /* XCRemoteSwiftPackageReference "swift-dependencies" */;
+			productName = Dependencies;
 		};
 /* End XCSwiftPackageProductDependency section */
 

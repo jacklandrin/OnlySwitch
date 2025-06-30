@@ -9,7 +9,7 @@ import Foundation
 import AppKit
 import Switches
 
-final class XcodeCacheSwitch:SwitchProvider {
+final class XcodeCacheSwitch: SwitchProvider {
     weak var delegate: SwitchDelegate?
     var type: SwitchType = .xcodeCache
 
@@ -42,18 +42,10 @@ final class XcodeCacheSwitch:SwitchProvider {
         return url
     }
 
-    @MainActor
     func currentStatus() async -> Bool {
-        var size:Int? = 0
-        do {
-            size = try derivedDataURL.directoryTotalAllocatedSize(includingSubfolders: true)
-        } catch {
-            return false
-        }
-        return size == 0
+        return true
     }
 
-    @MainActor
     func currentInfo() async -> String {
         do {
             return try derivedDataURL.sizeOnDisk() ?? ""

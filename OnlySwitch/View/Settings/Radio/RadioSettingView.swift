@@ -126,15 +126,17 @@ struct RadioSettingView: View {
                     radioSettingVM.addStation()
                 }, label: {
                     Image(systemName: "plus")
+                        .frame(height: 14)
                 })
-                    .contentShape(Rectangle())
+                .contentShape(Rectangle())
                 Button(action: {
                     print(radioSettingVM.selectRow ?? "nil")
                     radioSettingVM.deleteStation()
                 }, label: {
                     Image(systemName: "minus")
+                        .frame(height: 14)
                 })
-                    .contentShape(Rectangle())
+                .contentShape(Rectangle())
             }.padding(10)
         }
         .toast(isPresenting: $radioSettingVM.showErrorToast) {

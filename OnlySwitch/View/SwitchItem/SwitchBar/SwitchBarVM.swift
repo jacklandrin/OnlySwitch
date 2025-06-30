@@ -97,7 +97,7 @@ class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
     
     func refreshAsync() {
         self.model.processing = true
-        Task { @MainActor in
+        Task {
             let _isOn = await self.switchOperator.currentStatus()
             var _info = ""
             if self.switchType != .airPods {

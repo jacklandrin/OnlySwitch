@@ -12,9 +12,9 @@ import Combine
 public protocol SwitchProvider:AnyObject {
     var type: SwitchType { get }
     var delegate: SwitchDelegate? { get set }
-    @MainActor func currentStatus() async -> Bool
-    @MainActor func currentInfo() async -> String
-    @MainActor func operateSwitch(isOn:Bool) async throws
+    func currentStatus() async -> Bool
+    func currentInfo() async -> String
+    func operateSwitch(isOn:Bool) async throws
     func isVisible() -> Bool
 }
 

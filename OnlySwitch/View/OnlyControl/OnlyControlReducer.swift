@@ -155,7 +155,7 @@ struct OnlyControlReducer {
     }
 
     private func refreshDashboard() -> EffectOf<Self> {
-        .run { @MainActor send in
+        .run { send in
             let switches = client.fetchSwitchList()
             for switchControl in switches {
                 let isOn = await switchControl.switchOperator.currentStatus()
@@ -240,7 +240,7 @@ struct OnlyControlReducer {
                 }
             }
 
-            send(.updateItems(allUnits, items, switches))
+           await send(.updateItems(allUnits, items, switches))
         }
     }
 }
