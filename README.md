@@ -3,6 +3,8 @@
 <img alt="AppIcon" src="https://github.com/jacklandrin/OnlySwitch/blob/main/OnlySwitch/Assets.xcassets/AppIcon.appiconset/icon_256x256@2x.png?raw=true" width="128px" align="center" />
 </p>
 
+‼️ **Auto-updating has failed to 2.5.7, please manually update or use Homebrew.**
+
 # OnlySwitch
 
 ***Menubar is smaller, you only need an All-in-One switch.***
@@ -39,7 +41,6 @@ Since Version 2.5.0, OnlySwitch has started to support **Apple Widgets** (Sonoma
 
 Since Version 2.5.4, OnlySwitch has Only Control appearance.
 
-Auto-updating has failed to 2.5.7, please manually update or use Homebrew.
 
 ## Shortcuts Gallery
 
