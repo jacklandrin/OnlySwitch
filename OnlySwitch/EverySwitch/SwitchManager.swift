@@ -16,6 +16,18 @@ final class SwitchManager {
     
     private var shownSwitchMap = [SwitchType: SwitchProvider?]()
     
+    @MainActor var barVMList: [SwitchBarVM] {
+        let sortedSwitchMap = shownSwitchMap.sorted() {$0.key.rawValue < $1.key.rawValue}
+        var switchBarVMs = [SwitchBarVM]()
+        for (_, value) in sortedSwitchMap {
+            if let aswitch = value {
+                let switchBarVM = SwitchBarVM(switchOperator: aswitch)
+                switchBarVMs.append(switchBarVM)
+            }
+        }
+        return switchBarVMs
+    }
+    
     var shownSwitchCount:Int {
         shownSwitchMap.count
     }
@@ -33,18 +45,6 @@ final class SwitchManager {
     
     func getSwitch(of type: SwitchType) -> SwitchProvider? {
         return shownSwitchMap[type] ?? nil
-    }
-    
-    func barVMList() -> [SwitchBarVM] {
-        let sortedSwitchMap = shownSwitchMap.sorted() {$0.key.rawValue < $1.key.rawValue}
-        var switchBarVMs = [SwitchBarVM]()
-        for (_, value) in sortedSwitchMap {
-            if let aswitch = value {
-                let switchBarVM = SwitchBarVM(switchOperator: aswitch)
-                switchBarVMs.append(switchBarVM)
-            }
-        }
-        return switchBarVMs
     }
     
     func shortcutsBarVMList() -> [ShortcutsBarVM] {
@@ -116,3 +116,4 @@ final class SwitchManager {
         return bars.compactMap{$0}
     }
 }
+

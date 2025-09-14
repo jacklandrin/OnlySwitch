@@ -66,11 +66,15 @@ struct OnlySwitchListView: View {
                 Spacer().frame(height:SwitchListAppearance(rawValue: switchVM.currentAppearance) == .dual ? 20 : 0)
             }
         }
-        .onReceive(NotificationCenter.default.publisher(for: .showPopover, object: nil)) { notify in
-            switchVM.refreshData()
+        .onReceive(NotificationCenter.default.publisher(for: .showPopover, object: nil)) { _ in
+            Task {
+                await switchVM.refreshData()
+            }
         }
         .onReceive(NotificationCenter.default.publisher(for: .changeSettings, object: nil)) { _ in
-            switchVM.refreshData()
+            Task {
+                await switchVM.refreshData()
+            }
         }
         .onReceive(NotificationCenter.default.publisher(for: .refreshSingleSwitchStatus, object: nil)) { n in
             if let type = n.object as? SwitchType {
@@ -80,7 +84,7 @@ struct OnlySwitchListView: View {
         .onReceive(NotificationCenter.default.publisher(for: .toggleMenubarCollapse, object: nil)) { _ in
             switchVM.refreshSingleSwitchStatus(type: .hideMenubarIcons)
         }
-        .frame(width:listWidth , height:scrollViewHeight + (switchVM.showAds ? 130 : 90))
+        .frame(width: listWidth , height: scrollViewHeight + (switchVM.showAds ? 130 : 90))
     }
     
     var singleSwitchList: some View {
@@ -96,13 +100,13 @@ struct OnlySwitchListView: View {
 
                         if let item = switchVM.allItemList[index] as? SwitchBarVM {
                             SwitchBarView().environmentObject(item)
-                                .frame(height:Layout.singleSwitchHeight)
+                                .frame(height: Layout.singleSwitchHeight)
                         } else if let item = switchVM.allItemList[index] as? ShortcutsBarVM {
                             ShortcutsBarView().environmentObject(item)
-                                .frame(height:Layout.singleSwitchHeight)
+                                .frame(height: Layout.singleSwitchHeight)
                         } else if let item = switchVM.allItemList[index] as? EvolutionBarVM {
                             EvolutionBarView().environmentObject(item)
-                                .frame(height:Layout.singleSwitchHeight)
+                                .frame(height: Layout.singleSwitchHeight)
                         }
                     }
                     .padding(.horizontal, 15)
@@ -144,7 +148,7 @@ struct OnlySwitchListView: View {
                 .gesture(
                     DragGesture()
                         .onChanged{ gesture in
-                            guard switchVM.sortMode else {return}
+                            guard switchVM.sortMode else { return }
 
                             movingIndex = index
                             let locationY = gesture.location.y
@@ -191,7 +195,7 @@ struct OnlySwitchListView: View {
     }
     
     var dualcolumnList: some View {
-        VStack(spacing:0) {
+        VStack(spacing: 0) {
             if switchVM.uncategoryItemList.count > 0 {
                 LazyVGrid(columns: columns, spacing: 0) {
                     ForEach(switchVM.uncategoryItemList.indices, id:\.self) { index in
@@ -211,12 +215,12 @@ struct OnlySwitchListView: View {
                     Text("AUDIO".localized())
                     Rectangle().frame(height: 1)
                         .foregroundColor(.gray)
-                }.frame(height:30)
+                }.frame(height: 30)
                     .opacity(0.7)
                     .shadow(radius: 1)
                 
                 LazyVGrid(columns: columns, spacing: 0) {
-                    ForEach(switchVM.audioItemList.indices, id:\.self) { index in
+                    ForEach(switchVM.audioItemList.indices, id: \.self) { index in
                         HStack {
                             let item = switchVM.audioItemList[index]
                             SwitchBarView().environmentObject(item)
@@ -237,7 +241,7 @@ struct OnlySwitchListView: View {
                     .shadow(radius: 1)
                 
                 LazyVGrid(columns: columns, spacing: 0) {
-                    ForEach(switchVM.cleanupItemList.indices, id:\.self) { index in
+                    ForEach(switchVM.cleanupItemList.indices, id: \.self) { index in
                         HStack {
                             let item = switchVM.cleanupItemList[index]
                             SwitchBarView().environmentObject(item)
@@ -399,9 +403,9 @@ struct OnlySwitchListView: View {
     }
     
     
-    var scrollViewHeight : CGFloat {
+    var scrollViewHeight: CGFloat {
         let switchCount = visableSwitchCount + switchVM.shortcutsList.count + switchVM.evolutionList.count
-        var totalHeight = CGFloat((switchCount)) * (Layout.singleSwitchHeight + 17)
+        var totalHeight = CGFloat(switchCount) * (Layout.singleSwitchHeight + 17)
         //two columns
         if switchVM.currentAppearance == SwitchListAppearance.dual.rawValue {
             totalHeight = categoryHeight(count: switchVM.uncategoryItemList.count)
@@ -414,7 +418,7 @@ struct OnlySwitchListView: View {
         }
         
         let height = min(totalHeight, switchVM.maxHeight - 150)
-        guard height > 0 else {return 300}
+        guard height > 0 else { return 300 }
         return height
     }
     
@@ -431,7 +435,7 @@ struct OnlySwitchListView: View {
     }
     
     var visableSwitchCount:Int {
-        return switchVM.switchList.filter{!$0.isHidden}.count
+        return switchVM.switchList.filter{ !$0.isHidden }.count
     }
     
     func move(from source: IndexSet, to destination: Int) {

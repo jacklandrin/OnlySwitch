@@ -13,19 +13,19 @@ class SwitchListVM: ObservableObject, CurrentScreen {
 
     @Published private var model = SwitchListModel()
 
-    var switchList:[SwitchBarVM] {
+    var switchList: [SwitchBarVM] {
         return model.switchList
     }
 
-    var shortcutsList:[ShortcutsBarVM] {
+    var shortcutsList: [ShortcutsBarVM] {
         return model.shortcutsList
     }
 
-    var evolutionList:[EvolutionBarVM] {
+    var evolutionList: [EvolutionBarVM] {
         return model.evolutionItemList
     }
 
-    var maxHeight:CGFloat {
+    var maxHeight: CGFloat {
         return model.maxHeight
     }
 
@@ -37,31 +37,31 @@ class SwitchListVM: ObservableObject, CurrentScreen {
         return model.uncategoryItemList
     }
 
-    var audioItemList:[SwitchBarVM] {
+    var audioItemList: [SwitchBarVM] {
         return model.audioItemList
     }
 
-    var cleanupItemList:[SwitchBarVM] {
+    var cleanupItemList: [SwitchBarVM] {
         return model.cleanupItemList
     }
 
-    var toolItemList:[SwitchBarVM] {
+    var toolItemList: [SwitchBarVM] {
         return model.toolItemList
     }
 
-    var sortMode:Bool {
+    var sortMode: Bool {
         return model.sortMode
     }
 
-    var soundWaveEffectDisplay:Bool {
+    var soundWaveEffectDisplay: Bool {
         return Preferences.shared.soundWaveEffectDisplay
     }
 
-    var currentAppearance:String {
+    var currentAppearance: String {
         return Preferences.shared.currentAppearance
     }
 
-    var showAds:Bool {
+    var showAds: Bool {
         return Preferences.shared.showAds
     }
 
@@ -85,20 +85,19 @@ class SwitchListVM: ObservableObject, CurrentScreen {
 
     private func refreshList() {
         self.refreshMaxHeight()
-        self.model.switchList = SwitchManager.shared.barVMList()
+        self.model.switchList = SwitchManager.shared.barVMList
         self.model.shortcutsList = SwitchManager.shared.shortcutsBarVMList()
         self.model.evolutionItemList = SwitchManager.shared.activeEvolutionList()
     }
 
-    private func refreshSwitchStatus() {
-        Task { @MainActor in
-            for option in switchList {
-                option.refreshStatus()
-            }
-
-            for option in evolutionList {
-                await option.refresh()
-            }
+    @MainActor
+    private func refreshSwitchStatus() async {
+        for option in switchList {
+            option.refreshStatus()
+        }
+        
+        for option in evolutionList {
+            await option.refresh()
         }
     }
 
@@ -110,11 +109,12 @@ class SwitchListVM: ObservableObject, CurrentScreen {
         self.model.allItemList.move(fromOffsets: source, toOffset: destination)
     }
 
-    func refreshData() {
-        self.model.sortMode = false
-        self.refreshList()
-        self.refreshSwitchStatus()
-        self.model.allItemList = self.switchList.filter{!$0.isHidden} + self.shortcutsList + self.evolutionList
+    @MainActor
+    func refreshData() async {
+        model.sortMode = false
+        refreshList()
+        await refreshSwitchStatus()
+        model.allItemList = switchList.filter{ !$0.isHidden } + shortcutsList + evolutionList
         //for sorting
         let orderDic = UserDefaults.standard.dictionary(forKey: UserDefaults.Key.orderWeight) as? [String:Int] ?? [String:Int]()
         for item in allItemList {
@@ -131,13 +131,11 @@ class SwitchListVM: ObservableObject, CurrentScreen {
             item.weight = weight
         }
         //for two columns
-        self.model.allItemList = self.allItemList.sorted{$0.weight < $1.weight}
-        self.model.uncategoryItemList = self.switchList.filter{ $0.category == .none && !$0.isHidden }
-        self.model.audioItemList = self.switchList.filter{ $0.category == .audio && !$0.isHidden }
-        self.model.cleanupItemList = self.switchList.filter{ $0.category == .cleanup && !$0.isHidden }
-        self.model.toolItemList = self.switchList.filter{ $0.category == .tool && !$0.isHidden }
-
-        print("refresh")
+        model.allItemList = allItemList.sorted{ $0.weight < $1.weight }
+        model.uncategoryItemList = switchList.filter{ $0.category == .none && !$0.isHidden }
+        model.audioItemList = switchList.filter{ $0.category == .audio && !$0.isHidden }
+        model.cleanupItemList = switchList.filter{ $0.category == .cleanup && !$0.isHidden }
+        model.toolItemList = switchList.filter{ $0.category == .tool && !$0.isHidden }
     }
 
     func refreshSingleSwitchStatus(type: SwitchType) {

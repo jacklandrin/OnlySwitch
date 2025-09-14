@@ -53,7 +53,6 @@ final class XcodeCacheSwitch: SwitchProvider {
             return ""
         }
     }
-
     
     func isVisible() -> Bool {
         let home = manager.homeDirectoryForCurrentUser
@@ -63,7 +62,6 @@ final class XcodeCacheSwitch: SwitchProvider {
         return exist
     }
 
-    @MainActor
     func operateSwitch(isOn: Bool) async throws {
         let home = manager.homeDirectoryForCurrentUser
         let url = home.appendingPathComponent(derivedData)

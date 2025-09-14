@@ -8,7 +8,7 @@
 import SwiftUI
 import Switches
 
-class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
+class SwitchBarVM : BarProvider, ObservableObject, @MainActor SwitchDelegate {
     
     let refreshSwitchQueue = DispatchQueue(label: "jacklandrin.onlyswitch.refreshswitch",attributes: .concurrent)
     
@@ -77,16 +77,18 @@ class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
     @Published private var model = SwitchBarModel()
     @Published private(set) var switchOperator:SwitchProvider
     
+    @MainActor
     init(switchOperator: SwitchProvider) {
         self.switchOperator = switchOperator
         self.switchOperator.delegate = self
     }
     
+    @MainActor
     func refreshStatus() {
         model.isHidden = !switchOperator.isVisible()
-        if self.switchType == .xcodeCache {
-            if self.info == "" || self.info != "Calculating..." {
-                self.model.info = "Calculating..."
+        if switchType == .xcodeCache {
+            if info == "" || info != "Calculating..." {
+                model.info = "Calculating..."
                 refreshAsync()
             }
         } else {
@@ -94,7 +96,7 @@ class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
         }
     }
     
-    
+    @MainActor
     func refreshAsync() {
         self.model.processing = true
         Task {
@@ -113,7 +115,8 @@ class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
             }
         }
     }
-        
+    
+    @MainActor
     func doSwitch(isOn: Bool) {
         model.processing = true
         Task { @MainActor in
@@ -131,8 +134,9 @@ class SwitchBarVM : BarProvider, ObservableObject, SwitchDelegate {
         }
     }
     
+    @MainActor
     func shouldRefreshIfNeed(aSwitch:SwitchProvider) {
-        guard self.switchOperator === aSwitch else {return}
+        guard switchOperator === aSwitch else {return}
         refreshAsync()
     }
 }

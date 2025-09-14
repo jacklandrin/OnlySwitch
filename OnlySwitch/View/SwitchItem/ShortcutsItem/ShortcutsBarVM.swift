@@ -37,7 +37,7 @@ class ShortcutsBarVM: BarProvider, ObservableObject {
         return model.name
     }
 
-    init(name:String) {
+    init(name: String) {
         self.model.name = name
     }
     
