@@ -9,7 +9,9 @@ import Foundation
 import ComposableArchitecture
 import Switches
 
-struct StickerReducer: Reducer {
+@Reducer
+struct StickerReducer {
+    @ObservableState
     struct State: Equatable {
         var stickerContent = ""
         var isColorSelectorPresented = false
@@ -17,11 +19,11 @@ struct StickerReducer: Reducer {
         var stickerColor: StickerColor = .yellow
         var canTranslucent: Bool = false
         var previewMode: Bool = false
+        var collaspeMode = false
     }
-
-    enum Action: Equatable {
+    
+    enum Action: BindableAction, Equatable {
         case loadContent
-        case editContent(String)
         case saveContent
         case showColorSelector
         case changeColor(StickerColor)
@@ -29,60 +31,66 @@ struct StickerReducer: Reducer {
         case hover(Bool)
         case toggleTranslucent
         case togglePreviewMode
+        case toggleCollapseMode
+        case binding(BindingAction<State>)
     }
-
+    
     @Dependency(\.stickerService) var stickerService
-
+    
     var body: some ReducerOf<Self> {
+        BindingReducer()
         Reduce { state, action in
             switch action {
-                case .loadContent:
-                    let sticker = stickerService.loadSticker()
-                    state.stickerContent = sticker.content
-                    state.stickerColor = sticker.color
-                    state.canTranslucent = sticker.translucent
-                    state.previewMode = sticker.previewMode
-                    return .none
-                    
-                case .editContent(let content):
-                    state.stickerContent = content
-                    return .none
-                    
-                case .saveContent:
-                    stickerService.saveSticker(
-                        state.stickerContent,
-                        state.stickerColor,
-                        state.canTranslucent,
-                        state.previewMode
-                    )
-                    return .none
-
-                case .showColorSelector:
-                    state.isColorSelectorPresented = true
-                    return .none
-
-                case .changeColor(let color):
-                    state.stickerColor = color
-                    state.isColorSelectorPresented = false
-                    return .send(.saveContent)
-
-                case .closeSticker:
-                    return .run { @MainActor send in
-                        try? await TopStickerSwitch.shared.operateSwitch(isOn: false)
-                        NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.topSticker)
-                    }
-
-                case .hover(let isHovering):
-                    state.isHovering = isHovering
-                    return .none
-
-                case .toggleTranslucent:
-                    state.canTranslucent.toggle()
-                    return .send(.saveContent)
-
-                case .togglePreviewMode:
-                    state.previewMode.toggle()
-                    return .send(.saveContent)
+            case .loadContent:
+                let sticker = stickerService.loadSticker()
+                state.stickerContent = sticker.content
+                state.stickerColor = sticker.color
+                state.canTranslucent = sticker.translucent
+                state.previewMode = sticker.previewMode
+                return .none
+                
+            case .saveContent:
+                stickerService.saveSticker(
+                    state.stickerContent,
+                    state.stickerColor,
+                    state.canTranslucent,
+                    state.previewMode
+                )
+                return .none
+                
+            case .showColorSelector:
+                state.isColorSelectorPresented = true
+                return .none
+                
+            case .changeColor(let color):
+                state.stickerColor = color
+                state.isColorSelectorPresented = false
+                return .send(.saveContent)
+                
+            case .closeSticker:
+                return .run { @MainActor send in
+                    try? await TopStickerSwitch.shared.operateSwitch(isOn: false)
+                    NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.topSticker)
+                }
+                
+            case .hover(let isHovering):
+                state.isHovering = isHovering
+                return .none
+                
+            case .toggleTranslucent:
+                state.canTranslucent.toggle()
+                return .send(.saveContent)
+                
+            case .togglePreviewMode:
+                state.previewMode.toggle()
+                return .send(.saveContent)
+                
+            case .toggleCollapseMode:
+                state.collaspeMode.toggle()
+                return .none
+                
+            case .binding:
+                return .none
             }
         }
     }

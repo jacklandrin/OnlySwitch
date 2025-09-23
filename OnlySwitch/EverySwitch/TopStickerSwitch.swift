@@ -39,7 +39,7 @@ final class TopStickerSwitch: SwitchProvider {
                 if window == nil {
                     let view = NSHostingView(
                         rootView: StickerView(
-                            store: Store(initialState: StickerReducer.State()){
+                            store: Store(initialState: StickerReducer.State()) {
                                 StickerReducer()
                                     ._printChanges()
                             }
