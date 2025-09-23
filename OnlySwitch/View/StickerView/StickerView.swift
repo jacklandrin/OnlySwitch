@@ -129,7 +129,7 @@ struct StickerView: View {
         }
     }
     
-    pri/Volumes/T7/Home/Developer/OnlySwitch/OnlySwitch/View/OnlySwitchList/OnlySwitchListView.swiftvate func isOpacity(canTranslucent: Bool, isHovering: Bool) -> Bool {
+    private func isOpacity(canTranslucent: Bool, isHovering: Bool) -> Bool {
         canTranslucent && !isHovering
     }
     
