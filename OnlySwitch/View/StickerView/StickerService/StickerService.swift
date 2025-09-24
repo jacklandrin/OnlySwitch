@@ -6,7 +6,10 @@
 //
 
 import Foundation
+import Dependencies
+import DependenciesMacros
 
+@DependencyClient
 struct StickerService {
     var saveSticker: (
         _ content: String,
@@ -20,5 +23,5 @@ struct StickerService {
         color: StickerColor,
         translucent: Bool,
         previewMode: Bool
-    )
+    ) = { ("", .yellow, false, false) }
 }

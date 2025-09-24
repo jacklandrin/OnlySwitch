@@ -28,7 +28,6 @@
 		041F9BE22AEEFD18000B27C7 /* StickerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041F9BE12AEEFD18000B27C7 /* StickerModel.swift */; };
 		041F9BE62AEEFDC6000B27C7 /* StickerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041F9BE52AEEFDC6000B27C7 /* StickerService.swift */; };
 		041F9BE82AEEFE53000B27C7 /* StickerService+Live.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041F9BE72AEEFE53000B27C7 /* StickerService+Live.swift */; };
-		041F9BEA2AEEFE71000B27C7 /* StickerService+Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041F9BE92AEEFE71000B27C7 /* StickerService+Test.swift */; };
 		041F9BEC2AEF01AC000B27C7 /* Sticker+Dependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041F9BEB2AEF01AC000B27C7 /* Sticker+Dependencies.swift */; };
 		0427364827C1A5430068108F /* SpotifyScripting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0427364427C1A5430068108F /* SpotifyScripting.swift */; };
 		0427364927C1A5430068108F /* SpotifyBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0427364527C1A5430068108F /* SpotifyBridge.swift */; };
@@ -418,7 +417,6 @@
 		041F9BE12AEEFD18000B27C7 /* StickerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerModel.swift; sourceTree = "<group>"; };
 		041F9BE52AEEFDC6000B27C7 /* StickerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerService.swift; sourceTree = "<group>"; };
 		041F9BE72AEEFE53000B27C7 /* StickerService+Live.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StickerService+Live.swift"; sourceTree = "<group>"; };
-		041F9BE92AEEFE71000B27C7 /* StickerService+Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StickerService+Test.swift"; sourceTree = "<group>"; };
 		041F9BEB2AEF01AC000B27C7 /* Sticker+Dependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sticker+Dependencies.swift"; sourceTree = "<group>"; };
 		042661402780C147005DF2B9 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
 		0427364427C1A5430068108F /* SpotifyScripting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotifyScripting.swift; sourceTree = "<group>"; };
@@ -784,7 +782,6 @@
 			children = (
 				041F9BE52AEEFDC6000B27C7 /* StickerService.swift */,
 				041F9BE72AEEFE53000B27C7 /* StickerService+Live.swift */,
-				041F9BE92AEEFE71000B27C7 /* StickerService+Test.swift */,
 			);
 			path = StickerService;
 			sourceTree = "<group>";
@@ -2138,7 +2135,6 @@
 				047C1E6A2A2298AB0061235D /* EvolutionListService+Test.swift in Sources */,
 				0447E3872B71746E00D07B9A /* HiddenDesktopSwitch.swift in Sources */,
 				04819CD52BBC8A6700645A0C /* KeyLightSwitch.swift in Sources */,
-				041F9BEA2AEEFE71000B27C7 /* StickerService+Test.swift in Sources */,
 				04581DB02764CBCF008ADF30 /* SettingsVM.swift in Sources */,
 				04E03B06275FEBE200EA5FB9 /* AirPodsBatteryView.swift in Sources */,
 				04EB1CD62781299A00C612AB /* ShortcutsBarVM.swift in Sources */,
@@ -2240,7 +2236,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 214;
+				CURRENT_PROJECT_VERSION = 215;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2266,7 +2262,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 214;
+				CURRENT_PROJECT_VERSION = 215;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2419,7 +2415,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 214;
+				CURRENT_PROJECT_VERSION = 215;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
@@ -2474,7 +2470,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 214;
+				CURRENT_PROJECT_VERSION = 215;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
@@ -2529,7 +2525,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 214;
+				CURRENT_PROJECT_VERSION = 215;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2569,7 +2565,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 214;
+				CURRENT_PROJECT_VERSION = 215;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;

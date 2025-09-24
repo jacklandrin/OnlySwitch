@@ -24,7 +24,6 @@ final class EmptyTrashSwitch:SwitchProvider {
         return true
     }
 
-    @MainActor
     func operateSwitch(isOn: Bool) async throws {
         do {
             if isOn {

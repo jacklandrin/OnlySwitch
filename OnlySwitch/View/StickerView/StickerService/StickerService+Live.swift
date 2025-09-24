@@ -57,4 +57,6 @@ extension StickerService: DependencyKey {
             }
         }
     )
+    
+    static var testValue = Self()
 }

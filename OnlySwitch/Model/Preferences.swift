@@ -237,7 +237,7 @@ struct Preferences {
 
     //Sticker
     @UserDefaultValue(key: UserDefaults.Key.sticker, defaultValue: nil)
-    var stickerData:Data?
+    var stickerData: Data?
 
     // KeyLight
     @UserDefaultValue(key: UserDefaults.Key.keyLightBrightness, defaultValue: 1.0)

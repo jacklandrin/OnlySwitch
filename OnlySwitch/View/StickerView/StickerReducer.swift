@@ -12,14 +12,30 @@ import Switches
 @Reducer
 struct StickerReducer {
     @ObservableState
-    struct State: Equatable {
+    struct State: Equatable, Identifiable {
+        var id: String
         var stickerContent = ""
         var isColorSelectorPresented = false
         var isHovering = false
         var stickerColor: StickerColor = .yellow
-        var canTranslucent: Bool = false
-        var previewMode: Bool = false
+        var canTranslucent = false
+        var previewMode = false
         var collaspeMode = false
+        
+        init(
+            id: String = UUID().uuidString,
+            stickerContent: String = "",
+            stickerColor: StickerColor = .yellow,
+            canTranslucent: Bool = false,
+            previewMode: Bool = false,
+            collaspeMode: Bool = false
+        ) {
+            self.id = id
+            self.stickerContent = stickerContent
+            self.stickerColor = stickerColor
+            self.canTranslucent = canTranslucent
+            self.previewMode = previewMode
+        }
     }
     
     enum Action: BindableAction, Equatable {
