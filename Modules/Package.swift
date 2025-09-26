@@ -34,7 +34,8 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", exact: "1.20.2")
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", exact: "1.20.2"),
+        .package(url: "https://github.com/pointfreeco/swift-sharing", exact: "2.7.4")
     ],
     targets: [
         .target(

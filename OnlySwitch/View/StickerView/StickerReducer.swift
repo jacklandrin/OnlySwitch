@@ -9,11 +9,12 @@ import Foundation
 import ComposableArchitecture
 import Switches
 
+@available(macOS 13.0, *)
 @Reducer
 struct StickerReducer {
     @ObservableState
     struct State: Equatable, Identifiable {
-        var id: String
+        let id: String
         var stickerContent = ""
         var isColorSelectorPresented = false
         var isHovering = false
@@ -22,24 +23,17 @@ struct StickerReducer {
         var previewMode = false
         var collaspeMode = false
         
-        init(
-            id: String = UUID().uuidString,
-            stickerContent: String = "",
-            stickerColor: StickerColor = .yellow,
-            canTranslucent: Bool = false,
-            previewMode: Bool = false,
-            collaspeMode: Bool = false
-        ) {
-            self.id = id
-            self.stickerContent = stickerContent
-            self.stickerColor = stickerColor
-            self.canTranslucent = canTranslucent
-            self.previewMode = previewMode
+        init(sticker: StickerModel) {
+            self.id = sticker.id ?? UUID().uuidString
+            self.stickerContent = sticker.content
+            self.stickerColor = StickerColor.generateColor(from: sticker.color)
+            self.canTranslucent = sticker.trancelucent ?? false
+            self.previewMode = sticker.previewMode ?? false
+            self.collaspeMode = sticker.collapseMode ?? false
         }
     }
     
     enum Action: BindableAction, Equatable {
-        case loadContent
         case saveContent
         case showColorSelector
         case changeColor(StickerColor)
@@ -48,30 +42,35 @@ struct StickerReducer {
         case toggleTranslucent
         case togglePreviewMode
         case toggleCollapseMode
+        case addSticker
         case binding(BindingAction<State>)
     }
     
-    @Dependency(\.stickerService) var stickerService
+    @Shared(.stickerCache) var stickerCache: [StickerModel]?
     
     var body: some ReducerOf<Self> {
         BindingReducer()
         Reduce { state, action in
             switch action {
-            case .loadContent:
-                let sticker = stickerService.loadSticker()
-                state.stickerContent = sticker.content
-                state.stickerColor = sticker.color
-                state.canTranslucent = sticker.translucent
-                state.previewMode = sticker.previewMode
-                return .none
-                
             case .saveContent:
-                stickerService.saveSticker(
-                    state.stickerContent,
-                    state.stickerColor,
-                    state.canTranslucent,
-                    state.previewMode
+                // Build a model from current state
+                let model = StickerModel(
+                    id: state.id,
+                    content: state.stickerContent,
+                    color: state.stickerColor.name,
+                    trancelucent: state.canTranslucent,
+                    previewMode: state.previewMode,
+                    collapseMode: state.collaspeMode
                 )
+
+                // Persist to shared cache by id (update or append)
+                $stickerCache.withLock { cache in
+                    var arr = cache ?? []
+                    if let idx = arr.firstIndex(where: { $0.id == state.id }) {
+                        arr[idx] = model
+                    }
+                    cache = arr
+                }
                 return .none
                 
             case .showColorSelector:
@@ -84,10 +83,12 @@ struct StickerReducer {
                 return .send(.saveContent)
                 
             case .closeSticker:
-                return .run { @MainActor send in
-                    try? await TopStickerSwitch.shared.operateSwitch(isOn: false)
-                    NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.topSticker)
+                $stickerCache.withLock { cache in
+                    var arr = cache ?? []
+                    arr.removeAll { $0.id == state.id }
+                    cache = arr
                 }
+                return .none
                 
             case .hover(let isHovering):
                 state.isHovering = isHovering
@@ -103,6 +104,10 @@ struct StickerReducer {
                 
             case .toggleCollapseMode:
                 state.collaspeMode.toggle()
+                return .none
+                
+            case .addSticker:
+                $stickerCache.withLock { $0?.append(StickerModel(color: StickerColor.allCases[Int.random(in: 0..<StickerColor.allCases.count)].name)) }
                 return .none
                 
             case .binding:

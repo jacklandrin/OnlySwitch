@@ -60,9 +60,6 @@ struct StickerView: View {
             .onHover { isHovering in
                 store.send(.hover(isHovering))
             }
-            .task {
-                store.send(.loadContent)
-            }
             .onChange(of: controlActiveState) { newValue in
                 switch newValue {
                 case .key, .active:
@@ -140,7 +137,7 @@ struct StickerView: View {
                 Button(action: {
                     store.send(.closeSticker)
                 }) {
-                    Image(systemName: "xmark")
+                    Image(systemName: "trash")
                         .foregroundStyle(Color(nsColor: store.stickerColor.stroke))
                         .frame(width: 20, height: 20)
                         .contentShape(Rectangle())
@@ -173,45 +170,7 @@ struct StickerView: View {
             }
             
             if store.isHovering {
-                HStack {
-                    Button(action: {
-                        store.send(.togglePreviewMode, animation: .easeInOut)
-                    }) {
-                        Image(systemName: store.previewMode ? "eye" : "keyboard.badge.eye")
-                            .foregroundStyle(Color(nsColor: store.stickerColor.stroke))
-                            .frame(width: 20, height: 20)
-                            .contentShape(Rectangle())
-                    }
-                    .buttonStyle(.plain)
-                    .help(store.previewMode ? "Edit".localized() : "Preview".localized())
-                    .isHidden(store.collaspeMode, remove: true)
-                    
-                    Button(action: {
-                        store.send(.toggleTranslucent, animation: .easeInOut)
-                    }) {
-                        Image(store.canTranslucent ? "fill" : "translucent")
-                            .foregroundStyle(Color(nsColor: store.stickerColor.stroke))
-                            .frame(width: 20, height: 20)
-                            .contentShape(Rectangle())
-                    }
-                    .buttonStyle(.plain)
-                    .help("Translucent".localized())
-                    .isHidden(store.collaspeMode, remove: true)
-                    
-                    Button(action: {
-                        store.send(.showColorSelector, animation: .easeInOut)
-                    }) {
-                        Image(systemName: "ellipsis")
-                            .fontWeight(.bold)
-                            .foregroundStyle(Color(nsColor: store.stickerColor.stroke))
-                            .frame(width: 20, height: 20)
-                            .contentShape(Rectangle())
-                    }
-                    .buttonStyle(.plain)
-                    .help("Color".localized())
-                }
-                .padding(.trailing, 5)
-                .transition(.opacity)
+                barButtons
             }
         }
         .background(
@@ -221,12 +180,67 @@ struct StickerView: View {
         )
         .shadow(color: Color(.sRGBLinear, white: 0, opacity: 0.2), radius: 3)
     }
+    
+    @ViewBuilder
+    private var barButtons: some View {
+        HStack {
+            Button(action: {
+                store.send(.togglePreviewMode, animation: .easeInOut)
+            }) {
+                Image(systemName: store.previewMode ? "eye" : "keyboard.badge.eye")
+                    .foregroundStyle(Color(nsColor: store.stickerColor.stroke))
+                    .frame(width: 20, height: 20)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .help(store.previewMode ? "Edit".localized() : "Preview".localized())
+            .isHidden(store.collaspeMode, remove: true)
+            
+            Button(action: {
+                store.send(.toggleTranslucent, animation: .easeInOut)
+            }) {
+                Image(store.canTranslucent ? "fill" : "translucent")
+                    .foregroundStyle(Color(nsColor: store.stickerColor.stroke))
+                    .frame(width: 20, height: 20)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .help("Translucent".localized())
+            .isHidden(store.collaspeMode, remove: true)
+            
+            Button(action: {
+                store.send(.showColorSelector, animation: .easeInOut)
+            }) {
+                Image(systemName: "paintpalette")
+                    .fontWeight(.bold)
+                    .foregroundStyle(Color(nsColor: store.stickerColor.stroke))
+                    .frame(width: 20, height: 20)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .help("Color".localized())
+            
+            Button {
+                store.send(.addSticker)
+            } label: {
+                Image(systemName: "plus")
+                    .fontWeight(.bold)
+                    .foregroundStyle(Color(nsColor: store.stickerColor.stroke))
+                    .frame(width: 20, height: 20)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .help("Color".localized())
+        }
+        .padding(.trailing, 5)
+        .transition(.opacity)
+    }
 }
 
 @available(macOS 13.0, *)
 #Preview {
     StickerView(
-        store: Store(initialState: StickerReducer.State()) {
+        store: Store(initialState: .init(sticker: StickerModel())) {
             StickerReducer()
         }
     )
