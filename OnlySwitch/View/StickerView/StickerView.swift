@@ -230,7 +230,7 @@ struct StickerView: View {
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .help("Color".localized())
+            .help("Add Sticker".localized())
         }
         .padding(.trailing, 5)
         .transition(.opacity)
