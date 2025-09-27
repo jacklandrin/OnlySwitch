@@ -2089,7 +2089,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hintergeräusche"
+            "value" : "Hintergrundgeräusche"
           }
         },
         "en" : {
@@ -4684,7 +4684,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Individuell Einrichten"
+            "value" : "Individuell einrichten"
           }
         },
         "en" : {
@@ -6368,7 +6368,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Edieren"
+            "value" : "Editieren"
           }
         },
         "en" : {
@@ -10098,7 +10098,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mikrofon stumm schalten"
+            "value" : "Mikrofon stummschalten"
           }
         },
         "en" : {
@@ -12604,7 +12604,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ausführt"
+            "value" : "Ausgeführt"
           }
         },
         "en" : {
@@ -13963,7 +13963,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Finder-pfadleiste einblenden"
+            "value" : "Finder-Pfadleiste einblenden"
           }
         },
         "en" : {
@@ -16203,7 +16203,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Die maximale Anzahl von Kurzbefehle ist 6"
+            "value" : "Die maximale Anzahl von Kurzbefehlen ist 6"
           }
         },
         "en" : {
@@ -17600,7 +17600,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wahrer Zustand(Die Ausgabe beim Einschalten)"
+            "value" : "Wahrer Zustand (Die Ausgabe beim Einschalten)"
           }
         },
         "en" : {
@@ -17939,7 +17939,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ist ausschaltet"
+            "value" : "Ist ausgeschaltet"
           }
         },
         "en" : {
@@ -18278,7 +18278,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ist einschaltet"
+            "value" : "Ist eingeschalte"
           }
         },
         "en" : {
