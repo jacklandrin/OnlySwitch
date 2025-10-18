@@ -98,8 +98,9 @@ final class TopNotchSwitch: SwitchProvider, CurrentScreen {
         let workspace = NSWorkspace.shared
         guard let screen = getScreenWithMouse() else {return false}
         guard let path = workspace.desktopImageURL(for: screen) else {return false}
-        let appBundleID = Bundle.main.infoDictionary?["CFBundleName"] as! String
-        if let myAppPath = myAppPath ,path.absoluteString.contains("/\(appBundleID)/original") {
+        if let appBundleID = Bundle.main.infoDictionary?["CFBundleName"] as? String,
+           let myAppPath,
+           path.absoluteString.contains("/\(appBundleID)/original") {
             currentImageName = URL(fileURLWithPath: path.absoluteString).lastPathComponent
             let processdUrl = myAppPath.appendingPathComponent(string: "processed", currentImageName)
             if FileManager.default.fileExists(atPath: processdUrl) {
