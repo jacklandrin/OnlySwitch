@@ -2,20 +2,54 @@
   "sourceLanguage" : "en",
   "strings" : {
     "" : {
-
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(Empty string)"
+          }
+        }
+      }
     },
     "-" : {
-
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "-"
+          }
+        }
+      }
     },
     "(Build %@)" : {
-
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(Build %@)"
+          }
+        }
+      }
     },
     "@%@" : {
-
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "@%@"
+          }
+        }
+      }
     },
     "%@ downloads" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ downloads"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -129,6 +163,12 @@
     "%d min" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%dd min"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -240,14 +280,34 @@
       }
     },
     "%lld%%" : {
-
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%%"
+          }
+        }
+      }
     },
     "+" : {
-
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+"
+          }
+        }
+      }
     },
     "1 hour" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 hodina"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -361,6 +421,12 @@
     "1 minute" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 minuta"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -474,6 +540,12 @@
     "About" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Aplikaci"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -587,6 +659,12 @@
     "ACTIONS" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AKCE"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -700,6 +778,12 @@
     "Add Sticker" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přidat samolepku"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -813,6 +897,12 @@
     "Adjust keyboard brightness in low light" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nastavte jas klávesnice při slabém osvětlení"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -925,6 +1015,12 @@
     },
     "AirPods" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AirPods"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1032,6 +1128,12 @@
     "Allow notification alert" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Povolit oznámení upozornění"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1145,6 +1247,12 @@
     "Allow Notification of Changing Station" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Povolit oznámení o změně stanice"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1162,6 +1270,12 @@
     "Allow Notification of Track" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Povolit oznámení o skladbě"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1179,6 +1293,12 @@
     "Allow Notification:" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Povolit oznámení:"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1292,6 +1412,12 @@
     "Appearance:" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vzhled:"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1403,11 +1529,24 @@
       }
     },
     "Apple Script" : {
-
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Script"
+          }
+        }
+      }
     },
     "At least one radio station" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alespoň jedna rozhlasová stanice"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1521,6 +1660,12 @@
     "At least remain 4 switches" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zůstaňte alespoň na 4 přepínačích"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1634,6 +1779,12 @@
     "AUDIO" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AUDIO"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1747,6 +1898,12 @@
     "Autohide Dock" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatické skrývání Docku"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1860,6 +2017,12 @@
     "Autohide Menu Bar" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatické skrývání lišty nabídek"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1973,6 +2136,12 @@
     "Automatically hide icons after:" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automaticky skrýt ikony po:"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2086,6 +2255,12 @@
     "Back Noises" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zvuky na pozadí"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2199,6 +2374,12 @@
     "Bluetooth" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bluetooth"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2312,6 +2493,12 @@
     "Break Alert:" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upozornění na přestávku:"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2425,6 +2612,12 @@
     "Break:" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přestávka:"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2538,6 +2731,12 @@
     "Brightness:" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jas:"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2651,6 +2850,12 @@
     "Built-in Screen" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vestavěná obrazovka"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2764,6 +2969,12 @@
     "Button" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tlačítko"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2877,6 +3088,12 @@
     "Cache for Hide Notch Switch" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mezipaměť pro přepínač skrytí výřezu"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2990,6 +3207,12 @@
     "Cache:" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mezipaměť:"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3103,6 +3326,12 @@
     "Calculating..." : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Probíhá výpočet..."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3216,6 +3445,12 @@
     "Can be saved after passing all tests" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lze uložit po úspěšném dokončení všech testů"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3329,6 +3564,12 @@
     "Cancel" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zrušit"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3442,6 +3683,12 @@
     "Changing Station" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Změna stanice"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3554,6 +3801,12 @@
     },
     "Check For Update..." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zkontrolovat aktualizace..."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3661,6 +3914,12 @@
     "Check status" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zkontrolovat stav"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3774,6 +4033,12 @@
     "Check Updates" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zkontrolovat aktualizace"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3887,6 +4152,12 @@
     "Check Updates on Launch" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kontrolovat aktualizace při spuštění"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4000,6 +4271,12 @@
     "CLEANUP" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ÚKLID"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4113,6 +4390,12 @@
     "Clear" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vymazat"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4226,6 +4509,12 @@
     "Clear Cache" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vymazat mezipaměť"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4339,6 +4628,12 @@
     "Color" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Barva"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4452,6 +4747,12 @@
     "Contact:" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kontakt:"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4563,11 +4864,24 @@
       }
     },
     "Copyright @ 2021-2025 " : {
-
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copyright @ 2021-2025 "
+          }
+        }
+      }
     },
     "Current: %@" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktuální: %@"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4681,6 +4995,12 @@
     "Customize" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přizpůsobit"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4794,6 +5114,12 @@
     "Cycle Count:" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Počet cyklů:"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4907,6 +5233,12 @@
     "Daily Schedule:" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Denní plán:"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5020,6 +5352,12 @@
     "Dark Mode" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tmavý režim"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5133,6 +5471,12 @@
     "Debug" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ladění"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5246,6 +5590,12 @@
     "Dim Brightness To" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ztlumit jas na"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5359,6 +5709,12 @@
     "Dim Screen" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ztlumit obrazovku"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5472,6 +5828,12 @@
     "Dim Screen After:" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ztlumit obrazovku po:"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5585,6 +5947,12 @@
     "Disable" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zakázat"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5697,6 +6065,12 @@
     },
     "Disable Hide Menu Bar Icons" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zakázat skrývání ikon na liště"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5803,6 +6177,12 @@
     },
     "Disable Player" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zakázat přehrávač"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5910,6 +6290,12 @@
     "Donation" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Darování"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6023,6 +6409,12 @@
     "Download" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stáhnout"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6136,6 +6528,12 @@
     "Download QRCobot" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stáhnout QRCobot"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6249,6 +6647,12 @@
     "Download WallCard" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stáhnout WallCard"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6360,11 +6764,24 @@
       }
     },
     "e.g: source ~/.zshrc" : {
-
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "např.: source ~/.zshrc"
+          }
+        }
+      }
     },
     "Edit" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upravit"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6478,6 +6895,12 @@
     "Eject Discs" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vysunout disky"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6591,6 +7014,12 @@
     "Empty Pasteboard" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vyprázdnit schránku"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6704,6 +7133,12 @@
     "Empty Trash" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vyprázdnit koš"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6817,6 +7252,12 @@
     "Enable" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Povolit"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6929,6 +7370,12 @@
     },
     "Enable Hide Menu Bar Icons" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Povolit skrývání ikon na liště"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7035,6 +7482,12 @@
     },
     "Enable Player" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Povolit přehrávač"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7140,11 +7593,24 @@
       }
     },
     "EVOLUTION" : {
-
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EVOLUTION"
+          }
+        }
+      }
     },
     "Evolution Editor" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Evolution Editor"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7258,6 +7724,12 @@
     "Evolution Gallery" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Evolution Galerie"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7371,6 +7843,12 @@
     "Export" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7484,6 +7962,12 @@
     "from:" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "od:"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7597,6 +8081,12 @@
     "General" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obecné"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7710,6 +8200,12 @@
     "Get on with work!" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pusť se do práce!"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7821,12 +8317,25 @@
       }
     },
     "GitHub" : {
-
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GitHub"
+          }
+        }
+      }
     },
     "Hide Desktop" : {
       "comment" : "Localizable.strings\n  OnlySwitch\n\n  Created by Jacklandrin on 2021/12/14.",
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skrýt ikony na ploše"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7940,6 +8449,12 @@
     "Hide Menu Bar Icons" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skrýt ikony na liště"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8053,6 +8568,12 @@
     "Hide Notch" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skrýt výřez"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8166,6 +8687,12 @@
     "Hide Windows" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skrýt okna"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8279,6 +8806,12 @@
     "Icon:" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ikona:"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8392,6 +8925,12 @@
     "Import" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importovat"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8503,11 +9042,24 @@
       }
     },
     "Jacklandrin" : {
-
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jacklandrin"
+          }
+        }
+      }
     },
     "Join:" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Připojit:"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8621,6 +9173,12 @@
     "Keep Awake" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zabránit uspání"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8734,6 +9292,12 @@
     "Keep Awake Until After:" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zabránit uspání po dobu:"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8847,6 +9411,12 @@
     "Key Light" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Podsvícení klávesnice"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8960,6 +9530,12 @@
     "Keyboard Locked ↓" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klávesnice uzamčena ↓"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9073,6 +9649,12 @@
     "Language:" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jazyk:"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9186,6 +9768,12 @@
     "Launch at login" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spustit při startu"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9299,6 +9887,12 @@
     "Launch:" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spustit:"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9412,6 +10006,12 @@
     "Load Evolution list failed" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Načtení seznamu Evolution selhalo"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9525,6 +10125,12 @@
     "Low Power Mode" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Režim nízké spotřeby"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9638,6 +10244,12 @@
     "Menu Bar Icon:" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ikona v liště:"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9751,6 +10363,12 @@
     "minutes" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "minut"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9864,6 +10482,12 @@
     "More App, QRCobot" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Více aplikací, QRCobot"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9875,6 +10499,12 @@
     "More Apps" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Více aplikací"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9982,6 +10612,12 @@
     "Mute" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ztlumit"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10095,6 +10731,12 @@
     "Mute Mic" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ztlumit mikrofon"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10208,6 +10850,12 @@
     "Name" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Název"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10321,6 +10969,12 @@
     "Name:" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Název:"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10434,6 +11088,12 @@
     "never" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "nikdy"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10547,6 +11207,12 @@
     "Night Shift" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noční režim"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10660,6 +11326,12 @@
     "Night Shift Strength" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intenzita nočního režimu"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10773,6 +11445,12 @@
     "Notification Alert:" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upozornění:"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10886,6 +11564,12 @@
     "Only Control" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pouze panel"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10895,11 +11579,24 @@
       }
     },
     "Only Switch" : {
-
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only Switch"
+          }
+        }
+      }
     },
     "Output:" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Výstup:"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11013,6 +11710,12 @@
     "Pomodoro Timer" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pomodoro časovač"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11124,11 +11827,24 @@
       }
     },
     "Pre-execution" : {
-
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pre-execution"
+          }
+        }
+      }
     },
     "Press left or right arrow button to change background color" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stiskněte levé nebo pravé šipky pro změnu barvy pozadí"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11242,6 +11958,12 @@
     "Preview" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Náhled"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11355,6 +12077,12 @@
     "Promotion:" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Propagace:"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11468,6 +12196,12 @@
     "Quit" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ukončit"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11581,6 +12315,12 @@
     "Quit Only Switch" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ukončit Only Switch"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11694,6 +12434,12 @@
     "Quit:" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ukončit:"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11807,6 +12553,12 @@
     "Radio" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Radio"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11920,6 +12672,12 @@
     "Radio Player" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Radio přehrávač"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12033,6 +12791,12 @@
     "Recent Apps in Dock" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nedávné aplikace v panelu Dock"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12146,6 +12910,12 @@
     "refresh" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "obnovit"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12259,6 +13029,12 @@
     "Refresh" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obnovit"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12372,6 +13148,12 @@
     "require password" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "vyžaduje heslo"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12483,11 +13265,24 @@
       }
     },
     "run" : {
-
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "run"
+          }
+        }
+      }
     },
     "Run" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spustit"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12601,6 +13396,12 @@
     "Running" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Probíhá"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12714,6 +13515,12 @@
     "Save" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uložit"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12827,6 +13634,12 @@
     "Save commands failed." : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uložení příkazů selhalo."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12940,6 +13753,12 @@
     "Screen Saver" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spořič obrazovky"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -13053,6 +13872,12 @@
     "Screen Test" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Test obrazovky & čištění"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -13166,6 +13991,12 @@
     "seconds" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "vteřiny"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -13279,6 +14110,12 @@
     "Select" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vybrat"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -13392,6 +14229,12 @@
     "Send Email to Jacklandrin" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odeslat e-mail Jacklandrinovi"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -13505,6 +14348,12 @@
     "Settings" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nastavení"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -13616,11 +14465,24 @@
       }
     },
     "Shell" : {
-
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shell"
+          }
+        }
+      }
     },
     "Shortcuts" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zkratky"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -13734,6 +14596,12 @@
     "Shortcuts Gallery" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Galerie Zkratek"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -13847,6 +14715,12 @@
     "Show Extension Name" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zobrazit příponu souboru"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -13960,6 +14834,12 @@
     "Show Finder Path Bar" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zobrazit úplnou cestu ve Finderu"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -14073,6 +14953,12 @@
     "Show Hidden Files" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zobrazit skryté soubory"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -14186,6 +15072,12 @@
     "Show List:" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zobrazit seznam přepínačů:"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -14299,6 +15191,12 @@
     "Show More Apps" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zobrazit další aplikace"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -14412,6 +15310,12 @@
     "Show User Library" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zobrazit složku Uživatelská knihovna"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -14525,6 +15429,12 @@
     "Single Column" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jeden sloupec"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -14638,6 +15548,12 @@
     "Small Launchpad Icon" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Malá ikona Launchpadu"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -14751,6 +15667,12 @@
     "Sort" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seřadit"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -14858,6 +15780,12 @@
     "Sound Alert:" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zvukové upozornění:"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -14971,6 +15899,12 @@
     "Sound Wave Effect" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Efekt zvukových vln"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -15078,6 +16012,12 @@
     "Soundtrack" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soundtrack"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -15185,6 +16125,12 @@
     "SoundTrack" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SoundTrack"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -15196,6 +16142,12 @@
     "Stop After:" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zastavit za:"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -15309,6 +16261,12 @@
     "Stream URL" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stream URL"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -15422,6 +16380,12 @@
     "Success" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dokončeno"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -15535,6 +16499,12 @@
     "Switch" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přepnout"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -15648,6 +16618,12 @@
     "Switch enable" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Povolit přepínač"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -15760,6 +16736,12 @@
     },
     "Switches Availability" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dostupnost přepínačů"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -15867,6 +16849,12 @@
     "Take a break!" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dej si pauzu!"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -15980,6 +16968,12 @@
     "The feature can be triggered when right clicking the arrow-pointing icon, and disabled by right clicking the App icon." : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Funkci lze aktivovat kliknutím pravým tlačítkem na ikonu se šipkou a deaktivovat kliknutím pravým tlačítkem na ikonu aplikace."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -16087,6 +17081,12 @@
     "The latest version is v%@" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nejnovější verze je v%@"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -16200,6 +17200,12 @@
     "The maximum number of shortcuts is 6" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maximální počet zkratek je 6"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -16313,6 +17319,12 @@
     "The maximum number of switch is 14" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maximální počet přepínačů je 14"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -16426,6 +17438,12 @@
     "The radio stations can be imported and exported as a Json file. The keys are \"name\" and \"url\"." : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rádiové stanice lze importovat a exportovat jako soubor ve formátu JSON. Klíče jsou „name“ a „url“."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -16473,6 +17491,12 @@
     "There's not any Shortcuts." : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zde není žádná Zkratka."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -16586,6 +17610,12 @@
     "Time's up." : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Čas vypršel."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -16699,6 +17729,12 @@
     "To add or remove any Evolutions on list" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přidat nebo odebrat položku Evolution ze seznamu"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -16812,6 +17848,12 @@
     "To add or remove any shortcuts on list" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přidat nebo odebrat Zkratky ze seznamu"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -16925,6 +17967,12 @@
     "To add or remove any switches on list" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přidat nebo odebrat přepínače ze seznamu"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -17032,6 +18080,12 @@
     "to:    " : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "do:"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -17145,6 +18199,12 @@
     "Tomorrow" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zítra"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -17258,6 +18318,12 @@
     "TOOLS" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NÁSTROJE"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -17371,6 +18437,12 @@
     "Top Sticker" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Top Sticker"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -17484,6 +18556,12 @@
     "Translucent" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Průhlednost"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -17597,6 +18675,12 @@
     "True Condition" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skutečný stav (výstup při zapnutí)"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -17710,6 +18794,12 @@
     "True Tone" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "True Tone"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -17823,6 +18913,12 @@
     "Turn off" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vypnout"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -17936,6 +19032,12 @@
     "Turn off1" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vypnout"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -18049,6 +19151,12 @@
     "Turn on" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zapnout"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -18162,6 +19270,12 @@
     "Turn on sound alert" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Povolit zvukové upozornění"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -18275,6 +19389,12 @@
     "Turn on1" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zapnout"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -18388,6 +19508,12 @@
     "Two Columns" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dva sloupce"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -18501,6 +19627,12 @@
     "Unlimited" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neomezeně"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -18614,6 +19746,12 @@
     "Update" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktualizovat"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -18727,6 +19865,12 @@
     "Update History:" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Historie aktualizací:"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -18738,6 +19882,12 @@
     "Updates:" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktualizace:"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -18849,11 +19999,24 @@
       }
     },
     "v%@" : {
-
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "v%@"
+          }
+        }
+      }
     },
     "Version History:" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Historie verzí:"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -18961,6 +20124,12 @@
     "Volume" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hlasitost"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -19074,6 +20243,12 @@
     "When the switch is on, items in the left of the arrow-pointing icon are hidden. Hold ⌘ (command) and drag the icon to configure hidden section. This feature only works when the arrow-pointing icon is on the left side of App icon." : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Když je přepínač zapnutý, položky vlevo od ikony se šipkou jsou skryté. Podržte ⌘ (command) a přetáhněte ikonu pro nastavení skrytých položek. Tato funkce funguje pouze, když je ikona se šipkou vlevo od ikony aplikace."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -19187,6 +20362,12 @@
     "Work Alert:" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upozornění na práci:"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -19300,6 +20481,12 @@
     "Work:" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Práce:"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -19413,6 +20600,12 @@
     "Xcode Derived Data" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode Derived Data"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -19526,6 +20719,12 @@
     "You can DIY switches or buttons here." : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zde si můžete vytvořit vlastní přepínače nebo tlačítka."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -19639,6 +20838,12 @@
     "You can update to new version. The latest version is v%@" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Můžete aktualizovat na novou verzi. Nejnovější verze je v%@"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -19752,6 +20957,12 @@
     "You’re up to date!" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Máte nejnovější verzi!"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -19865,6 +21076,12 @@
     "You've rested for %d min." : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odpočíval(a) jste %d minut."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -19978,6 +21195,12 @@
     "You've worked for %d min." : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pracoval(a) jste %d minut."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
