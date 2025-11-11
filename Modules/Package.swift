@@ -31,6 +31,10 @@ let package = Package(
         .library(
             name: "Reorderable",
             targets: ["Reorderable"]
+        ),
+        .library(
+            name: "Design",
+            targets: ["Design"]
         )
     ],
     dependencies: [
@@ -73,6 +77,7 @@ let package = Package(
                 "Reorderable"
             ]
         ),
-        .target(name: "Reorderable")
+        .target(name: "Reorderable"),
+        .target(name: "Design")
     ]
 )

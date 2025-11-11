@@ -6,6 +6,7 @@
 //
 
 import Defines
+import Design
 import SwiftUI
 import Switches
 import Utilities
@@ -41,9 +42,8 @@ struct SwitchBarView: View {
             
             Spacer()
         
-            ProgressView()
-                .progressViewStyle(.circular)
-                .controlSize(.small)
+            AppKitProgressView()
+                .scaleEffect(0.6)
                 .isHidden(!switchOption.processing, remove: true)
             
             switch switchOption.controlType {
