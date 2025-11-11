@@ -10,7 +10,10 @@ import Foundation
 import AVFoundation
 import os.log
        
-func ParserPropertyChangeCallback(_ context: UnsafeMutableRawPointer, _ streamID: AudioFileStreamID, _ propertyID: AudioFileStreamPropertyID, _ flags: UnsafeMutablePointer<AudioFileStreamPropertyFlags>) {
+func ParserPropertyChangeCallback(_ context: UnsafeMutableRawPointer,
+                                  _ streamID: AudioFileStreamID,
+                                  _ propertyID: AudioFileStreamPropertyID,
+                                  _ flags: UnsafeMutablePointer<AudioFileStreamPropertyFlags>) {
     let parser = Unmanaged<Parser>.fromOpaque(context).takeUnretainedValue()
     
     /// Parse the various properties
@@ -32,26 +35,48 @@ func ParserPropertyChangeCallback(_ context: UnsafeMutableRawPointer, _ streamID
 
 // MARK: - Utils
 
-/// Generic method for getting an AudioFileStream property. This method takes care of getting the size of the property and takes in the expected value type and reads it into the value provided. Note it is an inout method so the value passed in will be mutated. This is not as functional as we'd like, but allows us to make this method generic.
+/// Generic method for getting an AudioFileStream property. This method takes care of
+/// getting the size of the property and reads it into the provided `value`.
 ///
 /// - Parameters:
-///   - value: A value of the expected type of the underlying property
+///   - value: A value of the expected type of the underlying property (passed by `inout`).
 ///   - streamID: An `AudioFileStreamID` representing the current audio file stream parser.
 ///   - propertyID: An `AudioFileStreamPropertyID` representing the particular property to get.
-func GetPropertyValue<T>(_ value: inout T, _ streamID: AudioFileStreamID, _ propertyID: AudioFileStreamPropertyID) {
+func GetPropertyValue<T>(_ value: inout T,
+                         _ streamID: AudioFileStreamID,
+                         _ propertyID: AudioFileStreamPropertyID) {
     var propSize: UInt32 = 0
-    guard AudioFileStreamGetPropertyInfo(streamID, propertyID, &propSize, nil) == noErr else {
-        os_log("Failed to get info for property: %@", log: Parser.loggerPropertyListenerCallback, type: .error, String(describing: propertyID))
+    
+    // First obtain the required property size.
+    guard AudioFileStreamGetPropertyInfo(streamID,
+                                         propertyID,
+                                         &propSize,
+                                         nil) == noErr else {
+        os_log("Failed to get info for property: %@",
+               log: Parser.loggerPropertyListenerCallback,
+               type: .error,
+               String(describing: propertyID))
         return
     }
     
-    guard AudioFileStreamGetProperty(streamID, propertyID, &propSize, &value) == noErr else {
-        os_log("Failed to get value [%@]", log: Parser.loggerPropertyListenerCallback, type: .error, String(describing: propertyID))
-        return
+    // Then retrieve the property value safely.
+    withUnsafeMutablePointer(to: &value) { valuePtr in
+        let rawPtr = UnsafeMutableRawPointer(valuePtr)
+        guard AudioFileStreamGetProperty(streamID,
+                                         propertyID,
+                                         &propSize,
+                                         rawPtr) == noErr else {
+            os_log("Failed to get value [%@]",
+                   log: Parser.loggerPropertyListenerCallback,
+                   type: .error,
+                   String(describing: propertyID))
+            return
+        }
     }
 }
 
-/// This extension just helps us print out the name of an `AudioFileStreamPropertyID`. Purely for debugging and not essential to the main functionality of the parser.
+/// This extension just helps us print out the name of an `AudioFileStreamPropertyID`.
+/// Purely for debugging and not essential to the main functionality of the parser.
 extension AudioFileStreamPropertyID {
     public var description: String {
         switch self {
