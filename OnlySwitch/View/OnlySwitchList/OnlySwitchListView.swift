@@ -186,8 +186,8 @@ struct OnlySwitchListView: View {
                 )
             }
         }
-        .padding(.horizontal, 0)
-        .onHover{ isHovering in
+        .contentShape(Rectangle())
+        .onHover { isHovering in
             if !isHovering {
                 hoverIndex = -1
             }
