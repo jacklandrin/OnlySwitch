@@ -9,7 +9,8 @@ import Combine
 import ComposableArchitecture
 import Foundation
 
-struct EvolutionReducer: Reducer {
+@Reducer
+struct EvolutionReducer {
     enum DestinationState: Equatable {
         case editor(EvolutionEditorReducer.State)
 
@@ -25,10 +26,11 @@ struct EvolutionReducer: Reducer {
         }
     }
 
-    enum DestionationAction: Equatable {
+    enum DestionationAction {
         case gotoEditor(EvolutionEditorReducer.Action)
     }
 
+    @ObservableState
     struct State: Equatable {
         var evolutionList: IdentifiedArrayOf<EvolutionRowReducer.State> = []
         var selectID: UUID?
@@ -39,14 +41,15 @@ struct EvolutionReducer: Reducer {
         var preExecution: String = ""
     }
 
-    enum Action: Equatable {
+    @CasePathable
+    enum Action {
         case refresh
         case loadList(TaskResult<[EvolutionItem]>)
         case select(UUID?)
         case toggleItem(UUID)
         case remove
         case setNavigation(tag: DestinationState.Tag?, state: EvolutionEditorReducer.State? = nil)
-        case editor(id: UUID, action: EvolutionRowReducer.Action)
+        case editor(IdentifiedActionOf<EvolutionRowReducer>)
         case editorAction(EvolutionEditorReducer.Action)
         case errorControl(Bool)
         case galleryAction(EvolutionGalleryReducer.Action)
@@ -130,7 +133,7 @@ struct EvolutionReducer: Reducer {
                     state.showError = show
                     return .none
 
-                case .editor(id: _, action: .delegate(.refresh)):
+                case .editor(.element(_, .delegate(.refresh))):
                     return .send(.refresh)
 
                 case .editor:
@@ -148,17 +151,18 @@ struct EvolutionReducer: Reducer {
                     return .none
             }
         }
-        .ifLet(\.editorState, action: /Action.editorAction) {
+        .ifLet(\.editorState, action: \.editorAction) {
             EvolutionEditorReducer()
         }
-        .forEach(\.evolutionList, action: /Action.editor(id:action:)) {
+        .forEach(\.evolutionList, action: \.editor) {
             EvolutionRowReducer()
         }
 
-        Scope(state: \.galleryState, action: /Action.galleryAction) {
+        Scope(state: \.galleryState, action: \.galleryAction) {
             EvolutionGalleryReducer()
                 .dependency(\.evolutionGalleryService, .liveValue)
                 ._printChanges()
         }
     }
 }
+

@@ -8,15 +8,18 @@
 import ComposableArchitecture
 import Foundation
 
-struct EvolutionGalleryReducer: Reducer {
+@Reducer
+struct EvolutionGalleryReducer {
+    @ObservableState
     struct State: Equatable {
         var galleryList: IdentifiedArrayOf<EvolutionGalleryItemReducer.State> = []
     }
 
-    enum Action: Equatable {
+    @CasePathable
+    enum Action {
         case refresh
         case loadList(TaskResult<[EvolutionGalleryItem]>)
-        case itemAction(id:UUID, action: EvolutionGalleryItemReducer.Action)
+        case itemAction(IdentifiedActionOf<EvolutionGalleryItemReducer>)
         case delegate(Delegate)
         enum Delegate: Equatable {
             case installed
@@ -53,11 +56,8 @@ struct EvolutionGalleryReducer: Reducer {
                 case .loadList(.failure(_)):
                     return .none
 
-                case let .itemAction(_ , .delegate(action)):
-                    switch action {
-                        case .installed:
-                            return .send(.delegate(.installed))
-                    }
+                case .itemAction(.element(_, action: .delegate(.installed))):
+                    return .send(.delegate(.installed))
 
                 case .itemAction:
                     return .none
@@ -66,7 +66,7 @@ struct EvolutionGalleryReducer: Reducer {
                     return .none
             }
         }
-        .forEach(\.galleryList, action: /Action.itemAction) {
+        .forEach(\.galleryList, action: \.itemAction) {
             EvolutionGalleryItemReducer()
         }
     }

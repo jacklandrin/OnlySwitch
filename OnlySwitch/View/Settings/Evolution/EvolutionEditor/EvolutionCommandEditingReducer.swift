@@ -8,7 +8,9 @@
 import Foundation
 import ComposableArchitecture
 
-struct EvolutionCommandEditingReducer: Reducer {
+@Reducer
+struct EvolutionCommandEditingReducer {
+    @ObservableState
     struct State: Equatable, Identifiable {
         var id = UUID()
         var command: EvolutionCommand
@@ -22,6 +24,7 @@ struct EvolutionCommandEditingReducer: Reducer {
         }
     }
 
+    @CasePathable
     enum Action: Equatable {
         case editCommand(String)
         case editTrueCondition(String)

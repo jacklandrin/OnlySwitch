@@ -36,7 +36,7 @@ struct EvolutionGalleryView: View {
                         ForEachStore(
                             store.scope(
                                 state: \.galleryList,
-                                action: EvolutionGalleryReducer.Action.itemAction(id: action:)
+                                action: \.itemAction
                             )
                         ) { itemStore in
                             EvolutionGalleryItemView(store: itemStore)

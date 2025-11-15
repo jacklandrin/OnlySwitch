@@ -8,7 +8,8 @@
 import ComposableArchitecture
 import KeyboardShortcuts
 
-struct EvolutionRowReducer: Reducer {
+@Reducer
+struct EvolutionRowReducer {
     enum DestinationState: Equatable {
         case editor(EvolutionEditorReducer.State)
 
@@ -24,10 +25,11 @@ struct EvolutionRowReducer: Reducer {
         }
     }
 
-    enum DestionationAction: Equatable {
+    enum DestionationAction {
         case gotoEditor(EvolutionEditorReducer.Action)
     }
 
+    @ObservableState
     struct State: Equatable, Identifiable {
         let id: UUID
         var evolution: EvolutionItem
@@ -50,7 +52,8 @@ struct EvolutionRowReducer: Reducer {
         }
     }
 
-    enum Action: Equatable {
+    @CasePathable
+    enum Action {
         case toggle
         case setNavigation(tag: DestinationState.Tag?, state: EvolutionEditorReducer.State? = nil)
         case editorAction(EvolutionEditorReducer.Action)
@@ -110,7 +113,7 @@ struct EvolutionRowReducer: Reducer {
             }
         }
 
-        Scope(state: \.editorState, action: /Action.editorAction) {
+        Scope(state: \.editorState, action: \.editorAction) {
             EvolutionEditorReducer()
         }
     }

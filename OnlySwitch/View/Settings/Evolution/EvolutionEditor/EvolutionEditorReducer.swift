@@ -13,25 +13,29 @@ enum EditorError: Error {
     case noName
 }
 
-struct EvolutionEditorReducer: Reducer {
-
+@Reducer
+struct EvolutionEditorReducer {
+    @ObservableState
     struct State: Equatable, Identifiable {
-        var id: UUID
         var evolution: EvolutionItem
-        var commandStates: IdentifiedArrayOf<EvolutionCommandEditingReducer.State>
-        var switchCommandStates:IdentifiedArrayOf<EvolutionCommandEditingReducer.State>
-        var buttonCommandStates:IdentifiedArrayOf<EvolutionCommandEditingReducer.State>
+        var commandStates: IdentifiedArrayOf<EvolutionCommandEditingReducer.State> = []
+        var switchCommandStates: IdentifiedArrayOf<EvolutionCommandEditingReducer.State> = []
+        var buttonCommandStates: IdentifiedArrayOf<EvolutionCommandEditingReducer.State> = []
 
         var showError = false
         var showIconNamesPopover = false
 
+        var id: UUID {
+            evolution.id
+        }
+        
         init(evolution: EvolutionItem? = nil) {
             if let evolution {
                 self.evolution = evolution
             } else {
                 self.evolution = EvolutionItem()
             }
-            self.id = self.evolution.id
+
             self.switchCommandStates = [
                 EvolutionCommandEditingReducer.State(type: .on, command: self.evolution.onCommand),
                 EvolutionCommandEditingReducer.State(type: .off, command: self.evolution.offCommand),
@@ -40,15 +44,17 @@ struct EvolutionEditorReducer: Reducer {
             self.buttonCommandStates = [
                 EvolutionCommandEditingReducer.State(type: .single, command: self.evolution.singleCommand),
             ]
+
             if self.evolution.controlType == .Switch {
-                self.commandStates = switchCommandStates
+                self.commandStates = self.switchCommandStates
             } else {
-                self.commandStates = buttonCommandStates
+                self.commandStates = self.buttonCommandStates
             }
         }
     }
-
-    enum Action: Equatable, Sendable {
+    
+    @CasePathable
+    enum Action: Sendable {
         static func == (lhs: EvolutionEditorReducer.Action, rhs: EvolutionEditorReducer.Action) -> Bool {
             switch (lhs, rhs) {
                 case (.finishSave(_), .finishSave(_)):
@@ -78,7 +84,6 @@ struct EvolutionEditorReducer: Reducer {
     @Dependency(\.evolutionCommandService) var evolutionCommandService
 
     var body: some ReducerOf<Self> {
-
         Reduce { state, action in
             switch action {
                 case .toggleItem:
@@ -178,7 +183,7 @@ struct EvolutionEditorReducer: Reducer {
                             state.evolution.onCommand = command
 
                         case .off:
-                            state.evolution.onCommand = command
+                            state.evolution.offCommand = command
 
                         case .single:
                             state.evolution.singleCommand = command
@@ -200,3 +205,4 @@ struct EvolutionEditorReducer: Reducer {
         }
     }
 }
+

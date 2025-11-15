@@ -49,7 +49,7 @@ struct EvolutionView: View {
                                     ForEachStore(
                                         store.scope(
                                             state: \.evolutionList,
-                                            action: EvolutionReducer.Action.editor(id: action:)
+                                            action: \.editor
                                         )
                                     ) { itemStore in
                                         evolutionItemView(viewStore: viewStore, itemStore: itemStore)
