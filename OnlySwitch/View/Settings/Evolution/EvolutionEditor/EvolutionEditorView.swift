@@ -101,7 +101,7 @@ struct EvolutionEditorView: View {
                         ForEachStore(
                             store.scope(
                                 state: \.commandStates,
-                                action: EvolutionEditorReducer.Action.commandAction(id:action:)
+                                action: \.commandAction
                             ),
                             content: { item in
                                 EvolutionCommandEditingView(store: item)

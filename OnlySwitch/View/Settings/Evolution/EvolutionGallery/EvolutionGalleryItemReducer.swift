@@ -44,8 +44,7 @@ struct EvolutionGalleryItemReducer: Reducer {
         Reduce { state, action in
             switch action {
                 case .checkInstallation:
-                    state.item.installed = galleryService.checkInstallation(state.id)
-                    return .none
+                    return checkInstallation(state: &state)
 
                 case .install:
                     return .run { [state = state] send in
@@ -60,7 +59,7 @@ struct EvolutionGalleryItemReducer: Reducer {
 
                 case .finishInstall(.success(_)):
                     return .merge(
-                        .send(.checkInstallation),
+                        checkInstallation(state: &state),
                         .send(.delegate(.installed))
                     )
 
@@ -71,5 +70,10 @@ struct EvolutionGalleryItemReducer: Reducer {
                     return .none
             }
         }
+    }
+    
+    private func checkInstallation(state: inout State) -> EffectOf<Self> {
+        state.item.installed = galleryService.checkInstallation(state.id)
+        return .none
     }
 }

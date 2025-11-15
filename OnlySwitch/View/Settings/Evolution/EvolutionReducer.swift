@@ -13,23 +13,23 @@ import Foundation
 struct EvolutionReducer {
     enum DestinationState: Equatable {
         case editor(EvolutionEditorReducer.State)
-
+        
         enum Tag: Int {
             case editor
         }
-
+        
         var tag: Tag {
             switch self {
-                case .editor:
-                    return .editor
+            case .editor:
+                return .editor
             }
         }
     }
-
+    
     enum DestionationAction {
         case gotoEditor(EvolutionEditorReducer.Action)
     }
-
+    
     @ObservableState
     struct State: Equatable {
         var evolutionList: IdentifiedArrayOf<EvolutionRowReducer.State> = []
@@ -40,7 +40,7 @@ struct EvolutionReducer {
         var galleryState = EvolutionGalleryReducer.State()
         var preExecution: String = ""
     }
-
+    
     @CasePathable
     enum Action {
         case refresh
@@ -55,100 +55,91 @@ struct EvolutionReducer {
         case galleryAction(EvolutionGalleryReducer.Action)
         case setPreExecution(String)
     }
-
+    
     @Dependency(\.evolutionListService) var evolutionListService
-
+    
     @Shared(.appStorage("pre-execution"))
     var preExecution: String?
-
+    
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-                case .refresh:
-                    state.preExecution = preExecution ?? ""
-                    return .run { send in
-                        return await send(
-                            .loadList(
-                                TaskResult {
-                                    try await evolutionListService.loadEvolutionList()
-                                }
-                            )
-                        )
+            case .refresh:
+                return refresh(state: &state)
+                
+            case let .loadList(.success(list)):
+                state.evolutionList = IdentifiedArray(
+                    uniqueElements: list.compactMap {
+                        EvolutionRowReducer.State(evolution: $0)
                     }
-
-                case let .loadList(.success(list)):
-                    state.evolutionList = IdentifiedArray(
-                        uniqueElements: list.compactMap {
-                            EvolutionRowReducer.State(evolution: $0)
-                        }
-                    )
-                    return .none
-
-                case .loadList(.failure(_)):
-                    state.showError = true
-                    return .none
-
-                case let .select(id):
-                    state.selectID = id
-                    return .none
-
-                case let .toggleItem(id):
-                    state.evolutionList[id: id]?.evolution.active.toggle()
-                    return .none
-
-                case .remove:
-                    return .run { [state = state] send in
-                        if let selectID = state.selectID {
-                            try await evolutionListService.removeItem(selectID)
-                            await send(.refresh)
-                            await send(.galleryAction(.refresh))
-                        }
+                )
+                return .none
+                
+            case .loadList(.failure(_)):
+                state.showError = true
+                return .none
+                
+            case let .select(id):
+                state.selectID = id
+                return .none
+                
+            case let .toggleItem(id):
+                state.evolutionList[id: id]?.evolution.active.toggle()
+                return .none
+                
+            case .remove:
+                return .run { [state = state] send in
+                    if let selectID = state.selectID {
+                        try await evolutionListService.removeItem(selectID)
+                        await send(.refresh)
+                        await send(.galleryAction(.refresh))
                     }
-
-                case let .setNavigation(tag: .editor, state: editorState):
-                    if let editorState {
-                        state.destination = .editor(editorState)
-                    } else {
-                        state.editorState = EvolutionEditorReducer.State()
-                        state.destination = .editor(state.editorState ?? .init())
-                    }
-
-                    return .none
-
-                case .setNavigation(tag: .none, state: _):
+                }
+                
+            case let .setNavigation(tag: .editor, state: editorState):
+                if let editorState {
+                    state.destination = .editor(editorState)
+                } else {
+                    state.editorState = EvolutionEditorReducer.State()
+                    state.destination = .editor(state.editorState ?? .init())
+                }
+                
+                return .none
+                
+            case .setNavigation(tag: .none, state: _):
+                state.destination = nil
+                return .none
+                
+            case let .editorAction(.delegate(action)):
+                switch action {
+                case .goback:
                     state.destination = nil
-                    return .none
-
-                case let .editorAction(.delegate(action)):
-                    switch action {
-                        case .goback:
-                            state.destination = nil
-                    }
-                    return .send(.refresh)
-
-                case .editorAction:
-                    return .none
-
-                case let .errorControl(show):
-                    state.showError = show
-                    return .none
-
-                case .editor(.element(_, .delegate(.refresh))):
-                    return .send(.refresh)
-
-                case .editor:
-                    return .none
-
-                case .galleryAction(.delegate(.installed)):
-                    return .send(.refresh)
-
-                case .galleryAction:
-                    return .none
-
-                case let .setPreExecution(preExecution):
-                    state.preExecution = preExecution
-                    self.$preExecution.withLock { $0 = preExecution }
-                    return .none
+                }
+                return refresh(state: &state)
+                
+            case .editorAction:
+                return .none
+                
+            case let .errorControl(show):
+                state.showError = show
+                return .none
+                
+            case .editor(.element(_, .delegate(.refresh))):
+                return refresh(state: &state)
+                
+            case .editor:
+                return .none
+                
+            case .galleryAction(.delegate(.installed)):
+                return refresh(state: &state)
+                
+            case .galleryAction:
+                return .none
+                
+            case let .setPreExecution(preExecution):
+                state.preExecution = preExecution
+                self.$preExecution.withLock { $0 = preExecution }
+                return .none
             }
         }
         .ifLet(\.editorState, action: \.editorAction) {
@@ -157,11 +148,24 @@ struct EvolutionReducer {
         .forEach(\.evolutionList, action: \.editor) {
             EvolutionRowReducer()
         }
-
+        
         Scope(state: \.galleryState, action: \.galleryAction) {
             EvolutionGalleryReducer()
                 .dependency(\.evolutionGalleryService, .liveValue)
                 ._printChanges()
+        }
+    }
+    
+    private func refresh(state: inout State) -> EffectOf<Self> {
+        state.preExecution = preExecution ?? ""
+        return .run { send in
+            return await send(
+                .loadList(
+                    TaskResult {
+                        try await evolutionListService.loadEvolutionList()
+                    }
+                )
+            )
         }
     }
 }

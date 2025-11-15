@@ -33,7 +33,8 @@ struct StickerReducer {
         }
     }
     
-    enum Action: BindableAction, Equatable {
+    @CasePathable
+    enum Action: BindableAction {
         case saveContent
         case showColorSelector
         case changeColor(StickerColor)
