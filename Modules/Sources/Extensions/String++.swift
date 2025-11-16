@@ -22,20 +22,22 @@ public extension String {
         print("command:\(finalCommand)")
         return try await withCheckedThrowingContinuation { continuation in
             DispatchQueue.global(qos: .utility).async {
-                var error: NSDictionary?
-                let osaScript = OSAScript(source: finalCommand)
-                if let descriptor = osaScript.executeAndReturnError(&error) {
-                    if let outputString = descriptor.stringValue {
-                        print(outputString)
-                        continuation.resume(returning: outputString)
-                    } else if error != nil {
-                        print("error:\(String(describing: error!))")
-                        continuation.resume(throwing: SwitchError.ScriptFailed)
+                autoreleasepool {
+                    var error: NSDictionary?
+                    let osaScript = OSAScript(source: finalCommand)
+                    if let descriptor = osaScript.executeAndReturnError(&error) {
+                        if let outputString = descriptor.stringValue {
+                            print(outputString)
+                            continuation.resume(returning: outputString)
+                        } else if error != nil {
+                            print("error:\(String(describing: error!))")
+                            continuation.resume(throwing: SwitchError.ScriptFailed)
+                        } else {
+                            continuation.resume(returning: "")
+                        }
                     } else {
-                        continuation.resume(returning: "")
+                        continuation.resume(throwing: SwitchError.ScriptFailed)
                     }
-                } else {
-                    continuation.resume(throwing: SwitchError.ScriptFailed)
                 }
             }
         }

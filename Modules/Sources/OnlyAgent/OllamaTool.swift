@@ -27,7 +27,7 @@ final class OllamaTool: Tool {
         let model: String
         let response: String
         let done: Bool
-        let thinking: String
+        let thinking: String?
     }
     
     let description = "Request external Ollama AI models by a prompt"
