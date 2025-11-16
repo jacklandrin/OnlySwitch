@@ -12,8 +12,8 @@ public struct Layout{
     public static let popoverHeight: CGFloat = 650.0
     public static let soundWaveWidth: CGFloat = Layout.popoverWidth
     public static let soundWaveHeight: CGFloat = 150.0
-    public static let settingWindowHeight: CGFloat = 460.0
-    public static let settingWindowWidth: CGFloat = 920.0
+    public static let settingWindowHeight: CGFloat = 500.0
+    public static let settingWindowWidth: CGFloat = 960.0
     public static let singleSwitchHeight: CGFloat = 38.0
     public static let generalSettingItemHeight: CGFloat = 30.0
     public static let generalSettingSpacing: CGFloat = 7.0

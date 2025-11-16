@@ -17,7 +17,7 @@ public extension Bundle {
 
     private static let languageUserDefaults = UserDefaults(suiteName: "\(appIdentifier)OnlySwitch.shared")
     private static var bundle: Bundle!
-    private static var supportLangs = ["en", "zh", "de", "hr", "tr","pl", "fil", "nl", "it", "ru", "es","ja", "so","kr","fr","uk","sk","pt-BR"]
+    private static var supportLangs = ["en", "zh", "de", "hr", "tr","pl", "fil", "nl", "it", "ru", "es","ja", "so","kr","fr","uk","sk","pt-BR", "cs"]
     static func localizedBundle() -> Bundle! {
         if bundle == nil {
             let appLang = languageUserDefaults?.string(forKey: UserDefaults.Key.AppLanguage) ?? "en"
