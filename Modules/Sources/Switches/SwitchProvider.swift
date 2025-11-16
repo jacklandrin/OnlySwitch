@@ -12,6 +12,7 @@ import Combine
 public protocol SwitchProvider:AnyObject {
     var type: SwitchType { get }
     var delegate: SwitchDelegate? { get set }
+    var hint: String? { get }
     func currentStatus() async -> Bool
     func currentInfo() async -> String
     func operateSwitch(isOn:Bool) async throws
@@ -22,4 +23,10 @@ public protocol SwitchProvider:AnyObject {
 public protocol SwitchDelegate:AnyObject {
     /// switch need to update itself for UI
     func shouldRefreshIfNeed(aSwitch:SwitchProvider)
+}
+
+public extension SwitchProvider {
+    var hint: String? {
+        return nil
+    }
 }

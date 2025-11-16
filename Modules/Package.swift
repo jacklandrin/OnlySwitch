@@ -35,6 +35,10 @@ let package = Package(
         .library(
             name: "Design",
             targets: ["Design"]
+        ),
+        .library(
+            name: "OnlyAgent",
+            targets: ["OnlyAgent"]
         )
     ],
     dependencies: [
@@ -78,6 +82,12 @@ let package = Package(
             ]
         ),
         .target(name: "Reorderable"),
-        .target(name: "Design")
+        .target(name: "Design"),
+        .target(
+            name: "OnlyAgent",
+            dependencies: [
+                "Extensions"
+            ]
+        )
     ]
 )
