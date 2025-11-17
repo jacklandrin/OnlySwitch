@@ -123,5 +123,4 @@ final class OnlyControlWindow: NSWindow, NSWindowDelegate {
     func windowShouldClose(_ sender: NSWindow) -> Bool {
         true
     }
-
 }

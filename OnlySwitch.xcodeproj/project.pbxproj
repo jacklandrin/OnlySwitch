@@ -916,7 +916,7 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		043E5D672757C85500ADC004 /* View */ = {
+		043E5D672757C85500ADC004 /* Features */ = {
 			isa = PBXGroup;
 			children = (
 				04A5AA572C39F8A2001070CA /* OnlyControl */,
@@ -930,7 +930,7 @@
 				04447B7527550F6900CD2900 /* VisualEffectView.swift */,
 				0434B4D02876325B00F06AB9 /* HostWindowFinder.swift */,
 			);
-			path = View;
+			path = Features;
 			sourceTree = "<group>";
 		};
 		043E5D682757C86400ADC004 /* ViewModel */ = {
@@ -1034,7 +1034,7 @@
 				04E238612A2C831F00CDD1FA /* CoreData */,
 				040CD2BD27579CEA002E0CC6 /* Info.plist */,
 				04A23B27275D607200B454C8 /* Header */,
-				043E5D672757C85500ADC004 /* View */,
+				043E5D672757C85500ADC004 /* Features */,
 				043E5D682757C86400ADC004 /* ViewModel */,
 				04F118C227AED897005DA861 /* Model */,
 				04243485275641890044D0AD /* EverySwitch */,

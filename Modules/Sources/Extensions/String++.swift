@@ -19,7 +19,7 @@ public extension String {
         if administratorPrivilege {
             finalCommand += " with prompt \"OnlySwitch\" with administrator privileges"
         }
-        print("command:\(finalCommand)")
+        print("command: \(finalCommand)")
         return try await withCheckedThrowingContinuation { continuation in
             DispatchQueue.global(qos: .utility).async {
                 autoreleasepool {

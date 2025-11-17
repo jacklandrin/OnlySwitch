@@ -86,7 +86,10 @@ let package = Package(
         .target(
             name: "OnlyAgent",
             dependencies: [
-                "Extensions"
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                "Extensions",
+                "Defines",
+                "Design"
             ]
         )
     ]

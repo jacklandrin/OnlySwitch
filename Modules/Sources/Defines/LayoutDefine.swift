@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Layout{
+public struct Layout {
     public static let popoverWidth: CGFloat = 330.0
     public static let popoverHeight: CGFloat = 650.0
     public static let soundWaveWidth: CGFloat = Layout.popoverWidth
@@ -19,6 +19,8 @@ public struct Layout{
     public static let generalSettingSpacing: CGFloat = 7.0
     public static let communitySize: CGFloat = 30.0
     public static let iconSize: CGFloat = 25.0
+    public static let promptDialogHeight: CGFloat = 100.0
+    public static let promptDialogWidth: CGFloat = 500.0
 }
 
 

@@ -5,6 +5,7 @@
 //  Created by Bo Liu on 16.11.25.
 //
 
+import OSLog
 import FoundationModels
 import Foundation
 
@@ -34,7 +35,7 @@ final class OllamaTool: Tool {
     let name = "OllamaModels"
     
     func call(arguments: Arguments) async throws -> String {
-        print("model:\(arguments.model) prompt:\(arguments.prompt)")
+        Logger.onlyAgentDebug.log("model:\(arguments.model) prompt:\(arguments.prompt)")
         let requestBody: RequestBody = .init(model: arguments.model, prompt: arguments.prompt)
 
         // Build URL
@@ -60,7 +61,7 @@ final class OllamaTool: Tool {
         // Decode and return the `response` field
         let decoded = try JSONDecoder().decode(ResponseBody.self, from: data)
         let responseMessage = decoded.response
-        print(responseMessage)
+        Logger.onlyAgentDebug.log("\(responseMessage)")
         return responseMessage
     }
 }
