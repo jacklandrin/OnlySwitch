@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Utilities
+import OnlyAgent
 
 struct SettingsView: View {
     @StateObject var settingVM = SettingsVM.shared
@@ -124,6 +125,13 @@ struct SettingsView: View {
                     EmptyView()
                 }
 
+            case .ModelProviders:
+                if #available(macOS 26.0, *) {
+                    ModelProviderSettingView()
+                } else {
+                    EmptyView()
+                }
+            
             case .NightShift:
                 NightShiftSettingsView()
 

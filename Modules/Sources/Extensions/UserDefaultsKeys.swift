@@ -65,6 +65,10 @@ public extension UserDefaults {
         public static let hiddenWindowsInfo = "hiddenWindowsInfoKey"
         //Sticker
         public static let sticker = "stickerKey"
+        //OnlyAgent
+        public static let currentAIModel = "currentAIModelKey"
+        public static let ollamaUrl = "ollamaUrlKey"
+        public static let ollamaModels = "ollamaModelsKey"
         //KeyLight
         public static let keyLightBrightness = "keyLightBrightnessKey"
         //others

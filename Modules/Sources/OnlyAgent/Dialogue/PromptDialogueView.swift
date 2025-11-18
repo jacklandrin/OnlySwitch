@@ -9,6 +9,7 @@ import ComposableArchitecture
 import Defines
 import Design
 import SwiftUI
+import SwiftUIIntrospect
 
 @available(macOS 26.0, *)
 public struct PromptDialogueView: View {
@@ -84,14 +85,16 @@ public struct PromptDialogueView: View {
                         .scrollContentBackground(.hidden)
                         .font(.system(size: 18))
                         .opacity(0.85)
-                        .frame(minHeight: 50)
+                        .frame(minHeight: 60)
                         .padding(.vertical, 10)
                         .background(
                             RoundedRectangle(cornerRadius: 8)
                                 .fill(Color.blue.opacity(0.05))
                         )
                         .padding(.horizontal, 10)
-                        .disabled(store.isAgentMode)
+                        .introspect(.textEditor, on: .macOS(.v26)) { textView in
+                            textView.isEditable = !store.isAgentMode
+                        }
                 }
                 
                 HStack {
@@ -126,11 +129,20 @@ public struct PromptDialogueView: View {
                 }
                 
                 HStack {
+                    Menu(store.currentAIModel ?? "Models") {
+                        ForEach(store.modelTags) { tag in
+                            Button {
+                                store.send(.selectAIModel(tag.model))
+                            } label: {
+                                Text(tag.model)
+                            }
+                        }
+                    }
                     Spacer()
                     Toggle("Agent Mode", isOn: $store.isAgentMode)
                         .disabled(!store.isAppleScriptEmpty)
                 }
-                .padding(.trailing, 10)
+                .padding(.horizontal, 10)
                 .padding(.bottom, 8)
             }
             .glassEffect(in: .rect(cornerRadius: 10.0))
