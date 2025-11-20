@@ -84,7 +84,7 @@ final class AICommanderSwitch: SwitchProvider {
             let visible = screen.visibleFrame
             
             let x = visible.origin.x + (visible.width - Layout.promptDialogWidth) / 2.0
-            let y = visible.origin.y + 130.0
+            let y = visible.origin.y + 150.0
             window.setFrameOrigin(NSPoint(x: x, y: y))
         }
         window.setIsVisible(false)

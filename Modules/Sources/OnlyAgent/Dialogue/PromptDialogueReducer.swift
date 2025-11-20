@@ -125,6 +125,12 @@ public struct PromptDialogueReducer {
                     state.errorMessage = "\(error.localizedDescription)"
                     return .none
                     
+                case .binding(\.prompt):
+                    if state.prompt.isEmpty {
+                        state.isSuccess = nil
+                    }
+                    return .none
+                    
                 case .binding:
                     return .none
             }
