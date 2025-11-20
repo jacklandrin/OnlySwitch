@@ -46,7 +46,17 @@ extension OllamaRequestService: DependencyKey {
             }
             
             return try await withCheckedThrowingContinuation { continuation in
-                AF.request(url)
+                let parameters: Parameters = [
+                    "model": model,
+                    "prompt": prompt,
+                    "stream": false
+                ]
+                AF.request(
+                    url,
+                    method: .post,
+                    parameters: parameters,
+                    encoding: JSONEncoding.default
+                )
                     .validate()
                     .responseDecodable(of: OllamaChatMessage.self) { response in
                         switch response.result {
