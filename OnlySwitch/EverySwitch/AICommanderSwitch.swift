@@ -76,7 +76,6 @@ final class AICommanderSwitch: SwitchProvider {
             $0.hasShadow = true
             $0.isReleasedWhenClosed = false
             $0.backgroundColor = .clear
-            $0.isMovableByWindowBackground = true
             $0.isOpaque = false
         }
 

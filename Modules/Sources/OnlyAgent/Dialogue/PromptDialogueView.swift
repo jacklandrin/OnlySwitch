@@ -8,6 +8,7 @@
 import ComposableArchitecture
 import Defines
 import Design
+import Extensions
 import SwiftUI
 import SwiftUIIntrospect
 
@@ -25,7 +26,7 @@ public struct PromptDialogueView: View {
         WithPerceptionTracking {
             VStack {
                 Text("What can AI commander do for you?")
-                    .padding(4)
+                    .padding(10)
                 TextEditor(text: $store.prompt)
                     .scrollContentBackground(.hidden)
                     .font(.system(size: 18))
@@ -46,13 +47,6 @@ public struct PromptDialogueView: View {
                             }
                         }
                     }
-                    .highPriorityGesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged { _ in
-                                
-                            },
-                        including: .gesture
-                    )
                     .padding(.vertical, 10)
                     .background(
                         RoundedRectangle(cornerRadius: 8)
@@ -138,6 +132,7 @@ public struct PromptDialogueView: View {
                             }
                         }
                     }
+                    .menuIndicator(.visible)
                     Spacer()
                     Toggle("Agent Mode", isOn: $store.isAgentMode)
                         .disabled(!store.isAppleScriptEmpty)
@@ -145,6 +140,7 @@ public struct PromptDialogueView: View {
                 .padding(.horizontal, 10)
                 .padding(.bottom, 8)
             }
+            .appKitWindowDrag()
             .glassEffect(in: .rect(cornerRadius: 10.0))
             .cornerRadius(10.0)
             .onAppear {
