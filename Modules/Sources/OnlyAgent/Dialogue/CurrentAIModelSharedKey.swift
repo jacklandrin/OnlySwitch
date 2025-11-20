@@ -9,9 +9,15 @@ import Sharing
 import Extensions
 import Foundation
 
-extension SharedKey where Self == AppStorageKey<String?>.Default {
+extension SharedKey where Self == FileStorageKey<CurrentAIModel?>.Default {
     @available(macOS 26.0, *)
     static var currentAIModel: Self {
-        Self[.appStorage(UserDefaults.Key.currentAIModel), default: nil]
+        let appBundleID = Bundle.main.infoDictionary?["CFBundleName"] as! String
+        return Self[.fileStorage(.applicationSupportDirectory.appending(component: "\(appBundleID)/currentAIModel")), default: nil]
     }
+}
+
+struct CurrentAIModel: Codable {
+    let provider: String
+    let model: String
 }

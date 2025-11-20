@@ -69,6 +69,8 @@ public extension UserDefaults {
         public static let currentAIModel = "currentAIModelKey"
         public static let ollamaUrl = "ollamaUrlKey"
         public static let ollamaModels = "ollamaModelsKey"
+        public static let openAIAPI = "openAIAPIKey"
+        public static let openAIHost = "openAIHostKey"
         //KeyLight
         public static let keyLightBrightness = "keyLightBrightnessKey"
         //others

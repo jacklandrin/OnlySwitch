@@ -1,5 +1,5 @@
 {
-  "originHash" : "df76cc5338c823eae2b90d3ef3714ae1195cc9b29950275fe939d5dbf3db26c5",
+  "originHash" : "a006ad7dcea91655302f123c26be4535c85160cc9d1e1dcbb9a2160a33d9fde8",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -53,6 +53,15 @@
       "state" : {
         "revision" : "7aff8d1b31148d32c5933d75557d42f6323ee3d1",
         "version" : "6.0.0"
+      }
+    },
+    {
+      "identity" : "openai",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/MacPaw/OpenAI.git",
+      "state" : {
+        "revision" : "28884fcfb15946b119b6eb3498e5a900c1d8d595",
+        "version" : "0.4.7"
       }
     },
     {
@@ -128,6 +137,15 @@
       }
     },
     {
+      "identity" : "swift-http-types",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-http-types",
+      "state" : {
+        "revision" : "45eb0224913ea070ec4fba17291b9e7ecf4749ca",
+        "version" : "1.5.1"
+      }
+    },
+    {
       "identity" : "swift-identified-collections",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-identified-collections",
@@ -152,6 +170,15 @@
       "state" : {
         "revision" : "db6bc9dbfed001f21e6728fd36413d9342c235b4",
         "version" : "2.3.0"
+      }
+    },
+    {
+      "identity" : "swift-openapi-runtime",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-openapi-runtime",
+      "state" : {
+        "revision" : "7722cf8eac05c1f1b5b05895b04cfcc29576d9be",
+        "version" : "1.8.3"
       }
     },
     {

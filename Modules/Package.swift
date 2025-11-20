@@ -45,7 +45,8 @@ let package = Package(
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", exact: "1.20.2"),
         .package(url: "https://github.com/pointfreeco/swift-sharing", exact: "2.7.4"),
         .package(url: "https://github.com/Alamofire/Alamofire", exact: "5.5.0"),
-        .package(url: "https://github.com/siteline/swiftui-introspect", from: "26.0.0")
+        .package(url: "https://github.com/siteline/swiftui-introspect", from: "26.0.0"),
+        .package(url: "https://github.com/MacPaw/OpenAI.git", exact: "0.4.7")
     ],
     targets: [
         .target(
@@ -91,6 +92,7 @@ let package = Package(
                 .product(name: "SwiftUIIntrospect", package: "swiftui-introspect"),
                 .product(name: "Alamofire", package: "Alamofire"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "OpenAI", package: "OpenAI"),
                 "Extensions",
                 "Defines",
                 "Design"

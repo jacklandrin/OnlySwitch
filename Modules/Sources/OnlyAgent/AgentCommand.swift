@@ -11,7 +11,7 @@ import Foundation
 import OSLog
 //import Playgrounds
 
-public enum ModelProvider {
+public enum ModelProvider: String {
     case ollama
     case openai
 }
@@ -46,7 +46,7 @@ final public class AgentCommandGenerater {
     ) async throws -> String {
         let tools: [any Tool] = switch modelProvider {
                 case .ollama: [OllamaTool()]
-                case .openai: []
+                case .openai: [OpenAITool()]
         }
         
         let session = LanguageModelSession(

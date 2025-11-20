@@ -21,7 +21,7 @@ public struct OllamaSettingView: View {
             ScrollView {
                 VStack {
                     HStack {
-                        Text("API host:")
+                        Text("API Host:")
                         Spacer()
                     }
                     TextField("", text: $store.host)
@@ -46,7 +46,6 @@ public struct OllamaSettingView: View {
                             .frame(height: 26)
                             Divider()
                         }
-                        
                     }
                 }
                 .padding()

@@ -194,12 +194,27 @@ public struct PromptDialogueView: View {
     
     private var bottomBar: some View {
         HStack {
-            Menu(store.currentAIModel ?? "Models") {
-                ForEach(store.modelTags) { tag in
-                    Button {
-                        store.send(.selectAIModel(tag.model))
-                    } label: {
-                        Text(tag.model)
+            Menu(store.currentModelName ?? "Models") {
+                if let ollamaModels = store.modelTags[.ollama] {
+                    Text("Ollama")
+                        .foregroundStyle(.secondary)
+                    ForEach(ollamaModels, id: \.self) { model in
+                        Button {
+                            store.send(.selectAIModel(provider: ModelProvider.ollama.rawValue, model: model))
+                        } label: {
+                            Text(model)
+                        }
+                    }
+                }
+                if let openAIModels = store.modelTags[.openai] {
+                    Text("OpenAI")
+                        .foregroundStyle(.secondary)
+                    ForEach(openAIModels, id: \.self) { model in
+                        Button {
+                            store.send(.selectAIModel(provider: ModelProvider.openai.rawValue, model: model))
+                        } label: {
+                            Text(model)
+                        }
                     }
                 }
             }

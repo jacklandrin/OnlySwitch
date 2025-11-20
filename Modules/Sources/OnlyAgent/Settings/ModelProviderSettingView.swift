@@ -21,7 +21,7 @@ public struct ModelProviderSettingView: View {
                 }
                 .tag(0)
             
-            Text("Open AI")
+            OpenAISettingView(store: .init(initialState: .init(), reducer: OpenAISettingReducer.init))
                 .tabItem {
                     Text("Open AI")
                 }

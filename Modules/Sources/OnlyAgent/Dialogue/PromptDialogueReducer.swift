@@ -20,12 +20,13 @@ public struct PromptDialogueReducer {
         var isExecuting: Bool = false
         var errorMessage: String? = nil
         var isSuccess: Bool? = nil
-        var modelTags: IdentifiedArrayOf<OllamaTag> = []
-        var currentAIModel: String? = nil
+        var modelTags: [ModelProvider: [String]] = [:]
+        var currentAIModel: CurrentAIModel? = nil
         var isPromptEmpty: Bool { prompt.isEmpty }
         var isAppleScriptEmpty: Bool { appleScript.isEmpty }
         var sendButtonDisabled: Bool { isGenerating || isExecuting || isPromptEmpty }
         var shouldShowExecuteButton: Bool { !isAgentMode && !isExecuting && !isAppleScriptEmpty }
+        var currentModelName: String? { currentAIModel?.model }
         
         public init(
             prompt: String = "",
@@ -42,7 +43,7 @@ public struct PromptDialogueReducer {
     
     public enum Action: BindableAction {
         case appear
-        case selectAIModel(String)
+        case selectAIModel(provider: String, model: String)
         case sendPrompt
         case generateAppleScript(TaskResult<String>)
         case executeAppleScript
@@ -51,8 +52,9 @@ public struct PromptDialogueReducer {
     }
     
     @Dependency(\.promptDialogueService) var promptDialogueService
+    @Dependency(\.openAIService) var openAIService
     @Shared(.ollamaModels) var ollamaModels: [OllamaTag]
-    @Shared(.currentAIModel) var currentAIModel: String?
+    @Shared(.currentAIModel) var currentAIModel: CurrentAIModel?
     
     public var body: some ReducerOf<Self> {
         BindingReducer()
@@ -62,13 +64,16 @@ public struct PromptDialogueReducer {
                     state.prompt = ""
                     state.appleScript = ""
                     state.errorMessage = nil
-                    state.modelTags = IdentifiedArray(uniqueElements: ollamaModels)
+                    state.modelTags = [
+                        .ollama: ollamaModels.map(\.model),
+                        .openai: openAIService.models().map(\.model)
+                    ]
                     state.currentAIModel = currentAIModel
                     return .none
                     
-                case let .selectAIModel(model):
-                    state.currentAIModel = model
-                    $currentAIModel.withLock { $0 = model }
+                case let .selectAIModel(provider, model):
+                    state.currentAIModel = .init(provider: provider, model: model)
+                    $currentAIModel.withLock { $0 = state.currentAIModel }
                     return .none
                     
                 case .sendPrompt:
@@ -84,7 +89,8 @@ public struct PromptDialogueReducer {
                         await send(
                             .generateAppleScript(
                                 TaskResult {
-                                    try await promptDialogueService.request(prompt, .ollama, currentAIModel, isAgentMode)
+                                    let modelProvider = ModelProvider(rawValue: currentAIModel.provider) ?? .ollama
+                                    return try await promptDialogueService.request(prompt, modelProvider, currentAIModel.model, isAgentMode)
                                 }
                             )
                         )

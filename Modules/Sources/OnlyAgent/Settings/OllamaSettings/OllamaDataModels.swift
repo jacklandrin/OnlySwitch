@@ -11,7 +11,7 @@ public struct OllamaModels: Codable {
     public let models: [OllamaTag]
 }
 
-public struct OllamaTag: Codable, Identifiable, Equatable {
+public struct OllamaTag: Codable, Identifiable, Equatable, AIModel {
     public let model: String
     public let digest: String
     

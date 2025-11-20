@@ -24,10 +24,10 @@ final class OllamaTool: Tool {
     
     func call(arguments: Arguments) async throws -> String {
         @Dependency(\.ollamaRequestService) var ollamaRequestService
-        Logger.onlyAgentDebug.log("model:\(arguments.model) prompt:\(arguments.prompt)")
+        Logger.onlyAgentDebug.log("[Ollama] model:\(arguments.model) prompt:\(arguments.prompt)")
 
         let message = try await ollamaRequestService.chat(arguments.model, arguments.prompt)
-        Logger.onlyAgentDebug.log("\(message)")
+        Logger.onlyAgentDebug.log("[Ollama] \(message)")
         return message
     }
 }
