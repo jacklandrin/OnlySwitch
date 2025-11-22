@@ -56,7 +56,7 @@ struct OnlySwitchApp: App {
                             return
                         }
                         let theSwitch = CustomizeVM.shared.allSwitches.first{ $0.type == type }
-                        Task { @MainActor in
+                        Task {
                             await theSwitch?.doSwitch()
                         }
                     } else if unitType == .evolution {

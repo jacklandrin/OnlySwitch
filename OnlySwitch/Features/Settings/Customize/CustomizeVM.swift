@@ -74,6 +74,6 @@ class CustomizeItem: ObservableObject {
 
     @MainActor
     func doSwitch() async {
-        await type.doSwitch()
+        type.doSwitch()
     }
 }
