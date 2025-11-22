@@ -125,12 +125,11 @@ If you like it, help support this app by giving me a cup of tea for me to keep c
 </p>
 
 
-## Hiding new Macbook Notch 
+## 🤖 Only Agent (Beta)
+Only Switch starts to support Only Agent since 2.6.0. You can control your mac by **English** via AI now. After you write down your purpose, AI can generate an Apple Script to engage it. If the Agent mode is on, the script will be immediately executed. There are two available model providers, with Ollama and OpenAI. Feel free to contribute more providers.
 
-The Hide notch switch only shows on the built-in display of M1 Pro/Max Macbook Pro. The switch just controls the current desktop, not all work desktops.
-Now, the Hide notch switch supports dynamic wallpaper, just the processing takes a much longer time.
 <p align="center">
-<img alt="Sits in the status bar" src="https://github.com/jacklandrin/OnlySwitch/assets/3782279/efddd8d3-edfe-4497-bea0-5051d27625ca" width="60%" align="center" />
+<img alt="Only Agent" src="https://github.com/user-attachments/assets/3710ebf6-f93c-4436-bce2-6fcf2727e3e1" width="70%" align="center" />
 </p>
 
 ## Only Widget
@@ -176,6 +175,15 @@ I use `classOfDevice`(2360344) to check if a Bluetooth device is Airpods Pro, bu
 Radio Player supports m3u, and aac stream, but without sound wave effect. Please send me the crash log and stream URL if your Radio Player crashes. You can close the sound wave effect on the Radio setting, and that player is AVPlayer, more stable. In version 2.3.5, the radio play can be set to enable/disabled. If the function is disabled, the switch will be invisible in the list, and the radio player will be unregistered from Now Playing(But I don't know why there will be a little delay. It should be a problem by macOS).
 
 Since Version 2.3.11, the radio list can be exported and imported.
+
+## Hiding new Macbook Notch 
+
+The Hide notch switch only shows on the built-in display of M1 Pro/Max Macbook Pro. The switch just controls the current desktop, not all work desktops.
+Now, the Hide notch switch supports dynamic wallpaper, just the processing takes a much longer time.
+<p align="center">
+<img alt="Sits in the status bar" src="https://github.com/jacklandrin/OnlySwitch/assets/3782279/efddd8d3-edfe-4497-bea0-5051d27625ca" width="60%" align="center" />
+</p>
+
 
 ## Low Power Mode
 Low Power Mode uses Terminal commands that require root access, so the app will ask you to enter the password on every toggle.
