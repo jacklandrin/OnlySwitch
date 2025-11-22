@@ -8,6 +8,12 @@
 import Dependencies
 import DependenciesMacros
 import OpenAI
+import Foundation
+import Sharing
+
+public enum OpenAIError: Error {
+    case uninitialized
+}
 
 @DependencyClient
 public struct OpenAIService: Sendable {
@@ -56,13 +62,23 @@ private final class OpenAILive: Sendable {
     
     @Sendable
     func chat(_ model: String, _ prompt: String) async throws -> String {
-        let systemMessage = ChatQuery.ChatCompletionMessageParam(role: .system, content: "You are a helpful AI assistant for generating apple scripts. Here is your first question:")
+        @Shared(.openAIAPIKey) var apiKeyShared
+        @Shared(.openAIHost) var hostShared
+        let apiKey: String = apiKeyShared
+        let host: String = hostShared
+        if openAI.value == nil {
+            openAI.setValue(OpenAI(configuration: .init(token: apiKey, host: host)))
+        }
+        guard let openAI = openAI.value else {
+            throw OpenAIError.uninitialized
+        }
+        let systemMessage = ChatQuery.ChatCompletionMessageParam(role: .system, content: "You can generate an executable apple script command in macOS for a specific purpose. ")
         let userMessage = ChatQuery.ChatCompletionMessageParam(role: .user, content: prompt)
         guard let systemMessage, let userMessage else {
             return ""
         }
         
-        let result = try await openAI.value?.chats(
+        let result = try await openAI.chats(
             query: .init(
                 messages: [
                     systemMessage,
@@ -72,7 +88,7 @@ private final class OpenAILive: Sendable {
             )
         )
         
-        return result?.choices.first?.message.content ?? ""
+        return result.choices.first?.message.content ?? ""
     }
     
     @Sendable

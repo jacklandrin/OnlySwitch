@@ -315,6 +315,7 @@ public enum SwitchType: UInt64, CaseIterable, Sendable {
                 title: "AI Commander",
                 onImage: NSImage(named: "ai_commander"),
                 offImage: NSImage(named: "ai_commander"),
+                controlType: .Button,
                 category: .tool
             )
         }
