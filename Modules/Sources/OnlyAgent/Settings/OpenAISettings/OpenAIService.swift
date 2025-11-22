@@ -72,7 +72,7 @@ private final class OpenAILive: Sendable {
         guard let openAI = openAI.value else {
             throw OpenAIError.uninitialized
         }
-        let systemMessage = ChatQuery.ChatCompletionMessageParam(role: .system, content: "You can generate an executable apple script command in macOS for a specific purpose. ")
+        let systemMessage = ChatQuery.ChatCompletionMessageParam(role: .system, content: "You are an AppleScript expert. You generate executable AppleScript code (NOT shell scripts) for macOS automation. Always use AppleScript syntax with 'tell application' commands. Never output shell scripts or bash commands directly.")
         let userMessage = ChatQuery.ChatCompletionMessageParam(role: .user, content: prompt)
         guard let systemMessage, let userMessage else {
             return ""

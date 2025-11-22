@@ -98,7 +98,9 @@ class StatusBarController {
         mainItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         setMainItemButton(image: currentMenubarIcon)
 
-        eventMonitor = EventMonitor(mask: [.leftMouseDown, .rightMouseDown], handler: mouseEventHandler)
+        eventMonitor = EventMonitor(mask: [.leftMouseDown, .rightMouseDown]) { [weak self] event in
+            self?.mouseEventHandler(event)
+        }
 
         HideMenubarIconsSwitch.shared.isButtonPositionValid = {
             var isValid:Bool!
@@ -232,7 +234,7 @@ class StatusBarController {
                 guard let self else {return}
                 let hasShown = notify.object as! Bool
                 if hasShown {
-                    self.otherPopoverBitwise = self.otherPopoverBitwise << 1 + 1
+                    self.otherPopoverBitwise = (self.otherPopoverBitwise << 1) + 1
                 } else {
                     self.otherPopoverBitwise = self.otherPopoverBitwise >> 1
                 }

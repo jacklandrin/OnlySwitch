@@ -9,3 +9,8 @@ public protocol AIModel {
     var model: String { get }
     var id: String { get }
 }
+
+struct ToolArguments {
+    let prompt: String
+    let model: String
+}

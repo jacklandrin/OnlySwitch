@@ -221,7 +221,7 @@ public struct PromptDialogueView: View {
             .menuIndicator(.visible)
             Spacer()
             Toggle("Agent Mode", isOn: $store.isAgentMode)
-                .disabled(!store.isAppleScriptEmpty)
+                .disabled(store.agentToggleDisabled)
         }
         .padding(.horizontal, 10)
         .padding(.bottom, 8)

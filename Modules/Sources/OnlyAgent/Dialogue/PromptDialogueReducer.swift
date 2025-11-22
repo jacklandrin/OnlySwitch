@@ -24,6 +24,7 @@ public struct PromptDialogueReducer {
         var currentAIModel: CurrentAIModel? = nil
         var isPromptEmpty: Bool { prompt.isEmpty }
         var isAppleScriptEmpty: Bool { appleScript.isEmpty }
+        var agentToggleDisabled: Bool { !(isPromptEmpty || isAppleScriptEmpty) || isGenerating || isExecuting }
         var sendButtonDisabled: Bool { isGenerating || isExecuting || isPromptEmpty }
         var shouldShowExecuteButton: Bool { !isAgentMode && !isExecuting && !isAppleScriptEmpty }
         var currentModelName: String? { currentAIModel?.model }
@@ -90,7 +91,7 @@ public struct PromptDialogueReducer {
                             .generateAppleScript(
                                 TaskResult {
                                     let modelProvider = ModelProvider(rawValue: currentAIModel.provider) ?? .ollama
-                                    return try await promptDialogueService.request(prompt, modelProvider, currentAIModel.model, isAgentMode)
+                                    return try await promptDialogueService.request(.purpose(prompt), modelProvider, currentAIModel.model, isAgentMode)
                                 }
                             )
                         )
@@ -99,13 +100,37 @@ public struct PromptDialogueReducer {
                 case .generateAppleScript(.success(let appleScript)):
                     state.appleScript = appleScript
                     state.isGenerating = false
-                    return .none
+
+                    let isAgentMode = state.isAgentMode
+                    if isAgentMode {
+                        guard let currentAIModel = state.currentAIModel else {
+                            return .none
+                        }
+                        return .run { [isAgentMode, currentAIModel] send in
+                            let modelProvider = ModelProvider(rawValue: currentAIModel.provider) ?? .ollama
+                            _ = try await promptDialogueService.request(.success, modelProvider, currentAIModel.model, isAgentMode)
+                        }
+                    } else {
+                        return .none
+                    }
                     
                 case let .generateAppleScript(.failure(error)):
                     state.isGenerating = false
                     state.isSuccess = false
                     state.errorMessage = "\(error.localizedDescription)"
-                    return .none
+                    let isAgentMode = state.isAgentMode
+                    
+                    if isAgentMode {
+                        return .none
+                    } else {
+                        guard let currentAIModel = state.currentAIModel else {
+                            return .none
+                        }
+                        return .run { [isAgentMode, currentAIModel] send in
+                            let modelProvider = ModelProvider(rawValue: currentAIModel.provider) ?? .ollama
+                            _ = try await promptDialogueService.request(.failure, modelProvider, currentAIModel.model, isAgentMode)
+                        }
+                    }
                     
                 case .executeAppleScript:
                     state.isExecuting = true
@@ -123,13 +148,27 @@ public struct PromptDialogueReducer {
                 case .finishExecution(.success):
                     state.isExecuting = false
                     state.isSuccess = true
-                    return .none
+                    let isAgentMode = state.isAgentMode
+                    guard let currentAIModel = state.currentAIModel else {
+                        return .none
+                    }
+                    return .run { [isAgentMode, currentAIModel] send in
+                        let modelProvider = ModelProvider(rawValue: currentAIModel.provider) ?? .ollama
+                        _ = try await promptDialogueService.request(.success, modelProvider, currentAIModel.model, isAgentMode)
+                    }
                     
                 case let .finishExecution(.failure(error)):
                     state.isExecuting = false
                     state.isSuccess = false
                     state.errorMessage = "\(error.localizedDescription)"
-                    return .none
+                    let isAgentMode = state.isAgentMode
+                    guard let currentAIModel = state.currentAIModel else {
+                        return .none
+                    }
+                    return .run { [isAgentMode, currentAIModel] send in
+                        let modelProvider = ModelProvider(rawValue: currentAIModel.provider) ?? .ollama
+                        _ = try await promptDialogueService.request(.failure, modelProvider, currentAIModel.model, isAgentMode)
+                    }
                     
                 case .binding(\.prompt):
                     if state.prompt.isEmpty {
