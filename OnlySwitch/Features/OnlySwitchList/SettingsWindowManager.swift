@@ -111,7 +111,7 @@ class SettingsWindowManager {
                         isSettingViewShowing = true
                         print("new setting window appears")
                     }
-                    if let window = NSApp.windows.first {
+                    if let window = NSApp.windows.first(where: { $0 is OnlyControlWindow }) {
                         window.makeKeyAndOrderFront(self)
                     }
                 } else {
