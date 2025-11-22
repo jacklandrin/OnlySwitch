@@ -331,7 +331,7 @@ public enum ControlType: String, Codable, Sendable{
     case Player
 }
 
-public enum SwitchCategory{
+public enum SwitchCategory {
     case none
     case audio
     case cleanup

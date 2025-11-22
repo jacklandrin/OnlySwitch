@@ -82,5 +82,6 @@ public extension UserDefaults {
         public static let ScreenSaverInterval = "ScreenSaverIntervalKey"
         public static let AppLanguage = "app_lang"
         public static let checkUpdateOnLaunch = "checkUpdateOnLaunchKey"
+        public static let hideMenuAfterRunning = "hideMenuAfterRunningKey"
     }
 }

@@ -8,6 +8,8 @@
 import AppKit
 import Combine
 import KeyboardShortcuts
+import Sharing
+import Foundation
 
 @MainActor
 class GeneralVM: ObservableObject {
@@ -16,6 +18,8 @@ class GeneralVM: ObservableObject {
     @Published var preferences = Preferences.shared
     @Published var invokePopoverName: KeyboardShortcuts.Name = .invokePopoverShortcutsName
 
+    @Shared(.appStorage(UserDefaults.Key.hideMenuAfterRunning)) var hideMenuAfterRunningShared: Bool = false
+    
     var cacheSize:String {
         get {
             return model.cacheSize
@@ -34,19 +38,19 @@ class GeneralVM: ObservableObject {
         }
     }
     
-    var showProgress:Bool {
+    var showProgress: Bool {
         return model.showProgress
     }
     
-    var newestVersion:String {
+    var newestVersion: String {
         return model.newestVersion
     }
     
-    var supportedLanguages:[Language] {
+    var supportedLanguages: [Language] {
         return model.supportedLanguages
     }
     
-    var showMenubarIconPopover:Bool {
+    var showMenubarIconPopover: Bool {
         get {
             return model.showMenubarIconPopover
         }
@@ -55,7 +59,7 @@ class GeneralVM: ObservableObject {
         }
     }
     
-    var menubarIcons:[String] {
+    var menubarIcons: [String] {
         return model.menubarIcons
     }
     
@@ -80,7 +84,7 @@ class GeneralVM: ObservableObject {
         }
     }
     
-    var showAds:Bool {
+    var showAds: Bool {
         get {
             preferences.showAds
         }
@@ -89,15 +93,15 @@ class GeneralVM: ObservableObject {
         }
     }
     
-    var latestVersion:String {
+    var latestVersion: String {
         return checkUpdatePresenter.latestVersion
     }
     
-    var isTheNewestVersion:Bool {
+    var isTheNewestVersion: Bool {
         return checkUpdatePresenter.isTheNewestVersion
     }
     
-    var showErrorToast:Bool {
+    var showErrorToast: Bool {
         get {
             model.showErrorToast
         }
@@ -106,7 +110,7 @@ class GeneralVM: ObservableObject {
         }
     }
     
-    var errorInfo:String {
+    var errorInfo: String {
         model.errorInfo
     }
     
@@ -120,6 +124,16 @@ class GeneralVM: ObservableObject {
         }
     }
 
+    var hideMenuAfterRunning: Bool {
+        get {
+            hideMenuAfterRunningShared
+        }
+        
+        set {
+            $hideMenuAfterRunningShared.withLock { $0 = newValue }
+        }
+    }
+    
     private var cancellable = Set<AnyCancellable>()
     
     init() {

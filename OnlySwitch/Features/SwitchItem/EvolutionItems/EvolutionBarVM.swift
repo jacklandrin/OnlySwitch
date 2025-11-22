@@ -8,10 +8,13 @@
 import Dependencies
 import Foundation
 import Switches
+import Sharing
 
 @dynamicMemberLookup
 class EvolutionBarVM: BarProvider, ObservableObject {
-
+    
+    @Shared(.appStorage(UserDefaults.Key.hideMenuAfterRunning)) var hideMenuAfterRunningShared: Bool = false
+    
     var barName: String {
         evolutionItem.name
     }
@@ -55,6 +58,9 @@ class EvolutionBarVM: BarProvider, ObservableObject {
             if isOn {
                 if evolutionItem.controlType == .Button {
                     _ = try? await self.evolutionCommandService.executeCommand(self.singleCommand)
+                    if hideMenuAfterRunningShared {
+                        NotificationCenter.default.post(name: .shouldHidePopover, object: nil)
+                    }
                 } else {
                     _ = try? await self.evolutionCommandService.executeCommand(self.onCommand)
                     self.isOn = true

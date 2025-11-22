@@ -41,47 +41,54 @@ struct SwitchBarView: View {
             }
             
             Spacer()
-        
+            
             AppKitProgressView()
                 .scaleEffect(0.6)
                 .isHidden(!switchOption.processing, remove: true)
             
             switch switchOption.controlType {
-            case .Switch:
-                SwitchToggle(isOn: $switchOption.isOn) { isOn in
-                    switchOption.doSwitch(isOn: isOn)
-                }.disabled(switchOption.processing)
-                .animation(.spring(), value: switchOption.isOn)
-                .scaleEffect(0.8)
-            case .Button:
-                Button(action: {
-                    switchOption.doSwitch(isOn: true)
-                }, label: {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 15)
-                            .foregroundColor(.accentColor)
-                            .frame(height:26)
-                        Text(buttonTitle(category:switchOption.category).localized())
-                            .font(.system(size: buttonTitle(category:switchOption.category).localized().count > 6 ? 300 : 12))
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.02)
-                            .foregroundColor(.white)
-                    }.frame(width: 46, height: 30)
-                }).buttonStyle(.plain)
-                    .shadow(radius: 2)
-                    .padding(.horizontal, 6)
-            case .Player:
-                Button(action: {
-                    switchOption.doSwitch(isOn: !switchOption.isOn)
-                }, label: {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 15)
-                            .foregroundColor(.accentColor)
-                            .frame(height:26)
-                        Image(systemName: switchOption.isOn ? "pause.fill" : "play.fill")
-                            .foregroundColor(.white)
-                    }.frame(width: 46, height: 30)
-                }).buttonStyle(.plain)
+                case .Switch:
+                    SwitchToggle(isOn: $switchOption.isOn) { isOn in
+                        Task {
+                            await switchOption.doSwitch(isOn: isOn)
+                        }
+                    }.disabled(switchOption.processing)
+                        .animation(.spring(), value: switchOption.isOn)
+                        .scaleEffect(0.8)
+                case .Button:
+                    Button(action: {
+                        Task {
+                            await switchOption.doSwitch(isOn: true)
+                        }
+                    }, label: {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 15)
+                                .foregroundColor(.accentColor)
+                                .frame(height:26)
+                            Text(buttonTitle(category:switchOption.category).localized())
+                                .font(.system(size: buttonTitle(category:switchOption.category).localized().count > 6 ? 300 : 12))
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.02)
+                                .foregroundColor(.white)
+                        }.frame(width: 46, height: 30)
+                    }).buttonStyle(.plain)
+                        .shadow(radius: 2)
+                        .padding(.horizontal, 6)
+                case .Player:
+                    Button {
+                        Task {
+                            await switchOption.doSwitch(isOn: !switchOption.isOn)
+                        }
+                    } label: {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 15)
+                                .foregroundColor(.accentColor)
+                                .frame(height:26)
+                            Image(systemName: switchOption.isOn ? "pause.fill" : "play.fill")
+                                .foregroundColor(.white)
+                        }.frame(width: 46, height: 30)
+                    }
+                    .buttonStyle(.plain)
                     .shadow(radius: 2)
                     .padding(.horizontal, 6)
             }
@@ -106,7 +113,7 @@ struct SwitchBarView: View {
             return option.offImage
         }
     }
-
+    
     func convertBattery(info:String) -> [Float] {
         let pattern = "(-?\\d+)"
         let groups = info.groups(for: pattern).compactMap({$0.first}).map{Float($0)! < 0 ? 0.0 : (Float($0)! / 100.0)}

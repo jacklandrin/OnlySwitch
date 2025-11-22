@@ -7,10 +7,12 @@
 
 import Foundation
 import Switches
+import Sharing
 
 class ShortcutsBarVM: BarProvider, ObservableObject {
     
     @Published private var model = ShortcutsBarModel()
+    @Shared(.appStorage(UserDefaults.Key.hideMenuAfterRunning)) var hideMenuAfterRunningShared: Bool = false
     
     var barName: String {
         return model.name
@@ -43,6 +45,9 @@ class ShortcutsBarVM: BarProvider, ObservableObject {
     
     func runShortCut() {
         self.model.processing = true
+        if hideMenuAfterRunningShared {
+            NotificationCenter.default.post(name: .shouldHidePopover, object: nil)
+        }
         Task{ @MainActor in
             let _ = await operateCMD()
             self.model.processing = false

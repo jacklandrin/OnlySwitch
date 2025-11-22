@@ -22,45 +22,48 @@ struct GeneralView: View, EmailProvider {
             HStack {
                 VStack(alignment: .trailing, spacing: Layout.generalSettingSpacing) {
                     Text("Launch:".localized())
-                        .frame(height:Layout.generalSettingItemHeight)
+                        .frame(height: Layout.generalSettingItemHeight)
                         
                     Text("Language:".localized())
-                        .frame(height:Layout.generalSettingItemHeight)
+                        .frame(height: Layout.generalSettingItemHeight)
                     
                     Text("Appearance:".localized())
                         .frame(height: Layout.generalSettingItemHeight)
                     
                     Text("Promotion:".localized())
-                        .frame(height:Layout.generalSettingItemHeight)
+                        .frame(height: Layout.generalSettingItemHeight)
+                    
+                    Text("Switch Menu:".localized())
+                        .frame(height: Layout.generalSettingItemHeight)
                     
                     Text("Menu Bar Icon:".localized())
-                        .frame(height:Layout.generalSettingItemHeight)
+                        .frame(height: Layout.generalSettingItemHeight)
                     
                     Text("Show List:".localized())
-                        .frame(height:Layout.generalSettingItemHeight)
+                        .frame(height: Layout.generalSettingItemHeight)
 
                     Text("Updates:".localized())
-                        .frame(height:Layout.generalSettingItemHeight)
+                        .frame(height: Layout.generalSettingItemHeight)
                     
                     Text("Check Updates".localized())
-                        .frame(height:Layout.generalSettingItemHeight)
+                        .frame(height: Layout.generalSettingItemHeight)
 
                     Text("Cache:".localized())
                         .frame(height: 50, alignment: .top)
-                        .padding(.top,5)
+                        .padding(.top, 5)
                     
                     Text("Contact:".localized())
-                        .frame(height:Layout.generalSettingItemHeight)
+                        .frame(height: Layout.generalSettingItemHeight)
                     
                     Text("Quit:".localized())
-                        .frame(height:Layout.generalSettingItemHeight)
+                        .frame(height: Layout.generalSettingItemHeight)
                 }
                 VStack(alignment: .leading, spacing: Layout.generalSettingSpacing) {
                     //launch at login
                     LaunchAtLogin.Toggle {
                         Text("Launch at login".localized())
-                    }.frame(height:20)
-                        .padding(.bottom,10)
+                    }.frame(height: 20)
+                        .padding(.bottom, 10)
                     
                     //languages
                     VStack {
@@ -72,7 +75,7 @@ struct GeneralView: View, EmailProvider {
                                 }
                             }
                         }
-                        .frame(maxWidth:150)
+                        .frame(maxWidth: 150)
                     }.frame(height:Layout.generalSettingItemHeight)
                     
                     //Appearance
@@ -89,20 +92,26 @@ struct GeneralView: View, EmailProvider {
                             Button(SwitchListAppearance.onlyControl.rawValue.localized()) {
                                 generalVM.currentAppearance = SwitchListAppearance.onlyControl.rawValue
                             }
-                        }.frame(maxWidth:150)
+                        }.frame(maxWidth: 150)
                     }.frame(height:Layout.generalSettingItemHeight)
                     
                     //Recommendation
                     Toggle(isOn: $generalVM.showAds) {
                         Text("Show More Apps".localized())
                     }
-                        .frame(height: Layout.generalSettingItemHeight)
+                    .frame(height: Layout.generalSettingItemHeight)
+                    
+                    //Hide Menu after Running
+                    Toggle(isOn: $generalVM.hideMenuAfterRunning) {
+                        Text("Hide Menu after Running".localized())
+                    }
+                    .frame(height: Layout.generalSettingItemHeight)
                     
                     //menubar icons
                     Image(generalVM.currentMenubarIcon)
                         .resizable()
                         .scaledToFit()
-                        .frame(width:22,height: 22)
+                        .frame(width: 22,height: 22)
                         .onTapGesture {
                             generalVM.showMenubarIconPopover = true
                         }
@@ -116,10 +125,10 @@ struct GeneralView: View, EmailProvider {
                                             Image(iconName)
                                                 .resizable()
                                                 .scaledToFit()
-                                                .frame(width:22,height: 22)
+                                                .frame(width: 22, height:  22)
                                         }).buttonStyle(PlainButtonStyle())
                                     }
-                                    .frame(width:50)
+                                    .frame(width: 50)
                                     .background(hoverItem == iconName ? Color.blue : Color.clear)
                                     .onHover{_ in
                                         withAnimation {
@@ -127,7 +136,7 @@ struct GeneralView: View, EmailProvider {
                                         }
                                     }
                                 }
-                            }.frame(width:50)
+                            }.frame(width: 50)
                                 .padding(.vertical, 10)
                         }
                         .frame(height:Layout.generalSettingItemHeight)

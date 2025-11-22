@@ -7,9 +7,10 @@
 
 import SwiftUI
 import Switches
+import Sharing
 
 class SwitchBarVM : BarProvider, ObservableObject, @MainActor SwitchDelegate {
-    
+    @Shared(.appStorage(UserDefaults.Key.hideMenuAfterRunning)) var hideMenuAfterRunningShared: Bool = false
     let refreshSwitchQueue = DispatchQueue(label: "jacklandrin.onlyswitch.refreshswitch",attributes: .concurrent)
     
     var barName: String {
@@ -117,20 +118,23 @@ class SwitchBarVM : BarProvider, ObservableObject, @MainActor SwitchDelegate {
     }
     
     @MainActor
-    func doSwitch(isOn: Bool) {
+    func doSwitch(isOn: Bool) async {
         model.processing = true
-        Task { @MainActor in
-            do {
-                _ = try await switchOperator.operateSwitch(isOn: isOn)
-                self.model.isOn = isOn
-                self.model.processing = false
-                if info != "" {
-                    _ = await switchOperator.currentStatus()
-                    model.info = await switchOperator.currentInfo()
-                }
-            } catch {
-                model.processing = false
+        do {
+            _ = try await switchOperator.operateSwitch(isOn: isOn)
+            self.model.isOn = isOn
+            self.model.processing = false
+            if info != "" {
+                _ = await switchOperator.currentStatus()
+                model.info = await switchOperator.currentInfo()
             }
+            if hideMenuAfterRunningShared
+                && switchType.barInfo().controlType == .Button
+                && switchType.barInfo().category == .none {
+                NotificationCenter.default.post(name: .shouldHidePopover, object: nil)
+            }
+        } catch {
+            model.processing = false
         }
     }
     
