@@ -213,7 +213,7 @@ Since version 2.3.10, this switch can be controlled via right-click icons.
 | [korben](https://korben.info/controler-macos-onlyswitch.html)                                                                   | [macg](https://www.macg.co/logiciels/2023/03/onlyswitch-ajoute-une-pelletee-de-raccourcis-pratiques-votre-barre-des-menus-135357)          | [korben.info](https://korben.info/controler-macos-onlyswitch.html)                                                               | [AlternativeTo](https://alternativeto.net/software/only-switch)                                                        |
 | [macsoft.jp](https://macsoft.jp/onlyswitch/)                                                                                    | [macgeneration](https://www.macg.co/logiciels/2023/03/onlyswitch-ajoute-une-pelletee-de-raccourcis-pratiques-votre-barre-des-menus-135357) | [hdwh.de](https://hdwh.de/onlyswitch-vereinfacht-eure-routinearbeit-mit-praktischen-schaltern/)                                  | [MacKed](https://macked.app/onlyswitch.html)                                                                           |
 | [Mac Torrents](https://www.tntmactorrent.net/onlyswitch-for-mac-free-download/)                                                 | [PCtipp](https://www.pctipp.ch/praxis/mac/mac-tipp-onlyswitch-2-2892320.html)                                                              | [lifehacker](https://lifehacker.com/tech/change-hidden-mac-settings-with-onlyswitch)                                             | [PHAPLUAT](https://kynguyenso.plo.vn/su-dung-onlyswitch-de-tuy-chinh-tat-ca-cai-dat-may-mac-nhanh-hon-post776151.html) |
-| [Techgedöns](https://tchgdns.de/onlyswitch-menueleisten-multitool-bekommt-widgets-fuer-den-mac-desktop/)                        | [MacVince](https://www.youtube.com/watch?v=ARfBLKzRQY4&t=41s)                                                                              |                                                                                                                                  |                                                                                                                        |
+| [Techgedöns](https://tchgdns.de/onlyswitch-menueleisten-multitool-bekommt-widgets-fuer-den-mac-desktop/)                        | [MacVince](https://www.youtube.com/watch?v=ARfBLKzRQY4&t=41s)                                                                              |  [onmymenubar](https://onmymenubar.app/onlyswitch/)                                                                                                                                |                                                                                                                        |
 
 
 ## Reference
@@ -237,6 +237,7 @@ Since version 2.3.10, this switch can be controlled via right-click icons.
 * True Tone refers to [Shifty](https://github.com/thompsonate/Shifty)
 * [swift-markdown-ui](https://github.com/gonzalezreal/swift-markdown-ui)
 * Key Light refers to [mac-brightnessctl](https://github.com/rakalex/mac-brightnessctl)
+* [OpenAI](https://github.com/MacPaw/OpenAI)
 
 ## Contributors
 
