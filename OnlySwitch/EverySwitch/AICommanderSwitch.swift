@@ -10,10 +10,12 @@ import Defines
 import OnlyAgent
 import AppKit
 import SwiftUI
+import Sharing
 
 final class AICommanderSwitch: SwitchProvider {
     weak var delegate: SwitchDelegate?
     var type: SwitchType = .aiCommender
+    
     
     private lazy var eventMonitor : EventMonitor = {
         EventMonitor(mask: [.leftMouseDown, .rightMouseDown], handler: mouseEventHandler)
@@ -32,7 +34,11 @@ final class AICommanderSwitch: SwitchProvider {
     
     @MainActor
     func currentInfo() async -> String {
-        ""
+        if #available(macOS 26.0, *) {
+            @Shared(.currentAIModel) var currentAIModel: CurrentAIModel?
+            return currentAIModel?.model ?? ""
+        }
+        return ""
     }
     
     @MainActor
