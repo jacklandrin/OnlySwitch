@@ -28,7 +28,7 @@ public struct PromptDialogueView: View {
     public var body: some View {
         WithPerceptionTracking {
             VStack {
-                Text("What can AI commander do for you?")
+                Text("What can AI commander do for you?".localized())
                     .padding(10)
                 
                 promptEditor
@@ -194,7 +194,7 @@ public struct PromptDialogueView: View {
     
     private var bottomBar: some View {
         HStack {
-            Menu(store.currentModelName ?? "Models") {
+            Menu(store.currentModelName ?? "Models".localized()) {
                 if let ollamaModels = store.modelTags[.ollama] {
                     Text("Ollama")
                         .foregroundStyle(.secondary)
@@ -220,7 +220,7 @@ public struct PromptDialogueView: View {
             }
             .menuIndicator(.visible)
             Spacer()
-            Toggle("Agent Mode", isOn: $store.isAgentMode)
+            Toggle("Agent Mode".localized(), isOn: $store.isAgentMode)
                 .disabled(store.agentToggleDisabled)
         }
         .padding(.horizontal, 10)
