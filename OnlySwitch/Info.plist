@@ -35,7 +35,7 @@
 	<key>SUEnableAutomaticChecks</key>
 	<false/>
 	<key>SUFeedURL</key>
-	<string>http://jacklandrin.github.io/appcast.xml</string>
+	<string>https://jacklandrin.github.io/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>hql7fAvuY+aT7OQzq73IMe0gK0QTwiTm2ftPlhq212s</string>
 </dict>
