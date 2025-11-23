@@ -1,8 +1,9 @@
 ![](https://badgen.net/github/release/jacklandrin/onlyswitch)![](https://img.shields.io/badge/UI-SwiftUI-green)   ![](https://img.shields.io/badge/Platform-Monterey-purple)  ![](https://img.shields.io/badge/License-MIT-orange)
-<p align="left">
-<img alt="AppIcon" src="https://github.com/jacklandrin/OnlySwitch/blob/main/OnlySwitch/Assets.xcassets/AppIcon.appiconset/icon_256x256@2x.png?raw=true" width="128px" align="center" />
+<p align="middle">
+    <a href="https://onlyswitch.click">
+        <img alt="AppIcon" src="https://github.com/jacklandrin/OnlySwitch/blob/main/OnlySwitch/Assets.xcassets/AppIcon.appiconset/icon_256x256@2x.png?raw=true" width="128px" align="center" />
+    </a>
 </p>
-
 ‼️ **Auto-updating has failed from 2.5.6 and below, please manually update or use Homebrew.**
 
 # OnlySwitch
