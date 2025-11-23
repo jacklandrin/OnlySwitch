@@ -39,8 +39,8 @@ class StatusBarController {
             if hasOtherPopover {
                 eventMonitor?.stop()
             } else {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    self.eventMonitor?.start()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+                    self?.eventMonitor?.start()
                 }
             }
         }
@@ -96,7 +96,9 @@ class StatusBarController {
         self.popover = popover
 
         mainItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-        setMainItemButton(image: currentMenubarIcon)
+        
+        // macOS 26 Tahoe: Button might not be immediately available, retry if needed
+        setupMainItemButtonWithRetry(image: currentMenubarIcon)
 
         eventMonitor = EventMonitor(mask: [.leftMouseDown, .rightMouseDown]) { [weak self] event in
             self?.mouseEventHandler(event)
@@ -125,7 +127,38 @@ class StatusBarController {
     }
 
     @objc private func togglePopover(sender:AnyObject?) {
-        if let event = NSApp.currentEvent, event.isRightClicked {
+        // Safety check: ensure we're on main thread
+        guard Thread.isMainThread else {
+            DispatchQueue.main.async { [weak self] in
+                self?.togglePopover(sender: sender)
+            }
+            return
+        }
+        
+        // macOS 26 Tahoe: Validate button still exists before proceeding
+        guard mainItem.button != nil else {
+            print("⚠️ togglePopover called but status bar button is nil")
+            return
+        }
+        
+        // Safety check: ensure currentEvent exists before accessing it
+        guard let event = NSApp.currentEvent else {
+            // If no current event, treat as left click
+            if hasOtherPopover {
+                return
+            }
+            
+            let condition = currentAppearance == .onlyControl ? onlyControlWindow.isVisible : popover.isShown
+            
+            if condition {
+                hidePopover(sender)
+            } else {
+                showPopover(sender)
+            }
+            return
+        }
+        
+        if event.isRightClicked {
             guard menubarCollaspable else {return}
 
             Task {
@@ -150,6 +183,12 @@ class StatusBarController {
     }
 
     @objc private func showMenuBarIcons(sender:AnyObject) {
+        // macOS 26 Tahoe: Validate mark button still exists
+        guard markItem?.button != nil else {
+            print("⚠️ showMenuBarIcons called but mark button is nil")
+            return
+        }
+        
         guard let event = NSApp.currentEvent, event.isRightClicked else {return}
         Task {
             if markItem?.length == MarkItemLength.normal {
@@ -165,27 +204,72 @@ class StatusBarController {
         return mainItemX >= markItemX
     }
 
-    private func setMainItemButton(image: String) {
-        if let mainItemButton = mainItem.button {
-            mainItemButton.image = NSImage(named: image)
-            mainItemButton.image?.size = NSSize(width: 18, height: 18)
-            mainItemButton.image?.isTemplate = true
-            mainItemButton.sendAction(on: [.leftMouseDown, .rightMouseDown])
-            mainItemButton.action = #selector(togglePopover(sender:))
-            mainItemButton.target = self
+    /// Setup main item button with retry mechanism for macOS 26 compatibility
+    private func setupMainItemButtonWithRetry(image: String, attempt: Int = 0) {
+        guard let mainItemButton = mainItem.button else {
+            // On macOS 26 Tahoe, button might not be immediately available
+            if attempt < 5 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+                    self?.setupMainItemButtonWithRetry(image: image, attempt: attempt + 1)
+                }
+                print("⚠️ Status bar button not ready, retrying... (attempt \(attempt + 1))")
+            } else {
+                print("❌ Failed to setup status bar button after 5 attempts")
+            }
+            return
         }
+        
+        // Button is available, configure it
+        mainItemButton.image = NSImage(named: image)
+        mainItemButton.image?.size = NSSize(width: 18, height: 18)
+        mainItemButton.image?.isTemplate = true
+        mainItemButton.sendAction(on: [.leftMouseDown, .rightMouseDown])
+        mainItemButton.action = #selector(togglePopover(sender:))
+        mainItemButton.target = self
+        print("✅ Status bar button setup successfully")
+    }
+    
+    private func setMainItemButton(image: String) {
+        guard let mainItemButton = mainItem.button else {
+            print("⚠️ Cannot update status bar button - button is nil")
+            // Try to setup with retry if button became nil
+            setupMainItemButtonWithRetry(image: image)
+            return
+        }
+        
+        mainItemButton.image = NSImage(named: image)
+        mainItemButton.image?.size = NSSize(width: 18, height: 18)
+        mainItemButton.image?.isTemplate = true
+        mainItemButton.sendAction(on: [.leftMouseDown, .rightMouseDown])
+        mainItemButton.action = #selector(togglePopover(sender:))
+        mainItemButton.target = self
     }
 
-    private func setMarkButton() {
-        markItem = NSStatusBar.system.statusItem(withLength: MarkItemLength.normal)
-        if let markItemButton = markItem?.button {
-            markItemButton.image = NSImage(named: "mark_icon")
-            markItemButton.image?.size = NSSize(width: 22, height: 18)
-            markItemButton.image?.isTemplate = true
-            markItemButton.sendAction(on: [.leftMouseDown, .rightMouseDown])
-            markItemButton.action = #selector(showMenuBarIcons(sender:))
-            markItemButton.target = self
+    private func setMarkButton(attempt: Int = 0) {
+        if markItem == nil {
+            markItem = NSStatusBar.system.statusItem(withLength: MarkItemLength.normal)
         }
+        
+        guard let markItemButton = markItem?.button else {
+            // On macOS 26 Tahoe, button might not be immediately available
+            if attempt < 5 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+                    self?.setMarkButton(attempt: attempt + 1)
+                }
+                print("⚠️ Mark button not ready, retrying... (attempt \(attempt + 1))")
+            } else {
+                print("❌ Failed to setup mark button after 5 attempts")
+            }
+            return
+        }
+        
+        markItemButton.image = NSImage(named: "mark_icon")
+        markItemButton.image?.size = NSSize(width: 22, height: 18)
+        markItemButton.image?.isTemplate = true
+        markItemButton.sendAction(on: [.leftMouseDown, .rightMouseDown])
+        markItemButton.action = #selector(showMenuBarIcons(sender:))
+        markItemButton.target = self
+        print("✅ Mark button setup successfully")
     }
 
     private func observeNotifications() {
@@ -194,11 +278,12 @@ class StatusBarController {
             object: nil,
             queue: .main
         ) { [weak self] notify in
-            Task { @MainActor in
-                guard let self else { return }
-                let newImageName = notify.object as! String
-                self.setMainItemButton(image: newImageName)
+            guard let self else { return }
+            guard let newImageName = notify.object as? String else {
+                print("⚠️ Invalid object type for changeMenuBarIcon notification")
+                return
             }
+            self.setMainItemButton(image: newImageName)
         }
 
         NotificationCenter.default.addObserver(
@@ -206,10 +291,8 @@ class StatusBarController {
             object: nil,
             queue: .main
         ) { [weak self] notify in
-            Task { @MainActor in
-                guard let self else {return}
-                self.togglePopover(sender: nil)
-            }
+            guard let self else {return}
+            self.togglePopover(sender: nil)
         }
 
         NotificationCenter.default.addObserver(
@@ -217,11 +300,9 @@ class StatusBarController {
             object: nil,
             queue: .main
         ) { [weak self] notify in
-            Task { @MainActor in
-                guard let self else {return}
-                if let statusBarButton = self.mainItem.button {
-                    self.hidePopover(statusBarButton)
-                }
+            guard let self else {return}
+            if let statusBarButton = self.mainItem.button {
+                self.hidePopover(statusBarButton)
             }
         }
 
@@ -230,24 +311,20 @@ class StatusBarController {
             object: nil,
             queue: .main
         ) { [weak self] notify in
-            Task { @MainActor in
-                guard let self else {return}
-                let hasShown = notify.object as! Bool
-                if hasShown {
-                    self.otherPopoverBitwise = (self.otherPopoverBitwise << 1) + 1
-                } else {
-                    self.otherPopoverBitwise = self.otherPopoverBitwise >> 1
-                }
-                var existOtherPopover = false
-                if self.otherPopoverBitwise == 0 {
-                    existOtherPopover = false
-                } else {
-                    existOtherPopover = true
-                }
+            guard let self else {return}
+            guard let hasShown = notify.object as? Bool else {
+                print("⚠️ Invalid object type for OtherPopover notification")
+                return
+            }
+            if hasShown {
+                self.otherPopoverBitwise = (self.otherPopoverBitwise << 1) + 1
+            } else {
+                self.otherPopoverBitwise = self.otherPopoverBitwise >> 1
+            }
+            let existOtherPopover = self.otherPopoverBitwise != 0
 
-                if existOtherPopover != self.hasOtherPopover {
-                    self.hasOtherPopover = existOtherPopover
-                }
+            if existOtherPopover != self.hasOtherPopover {
+                self.hasOtherPopover = existOtherPopover
             }
         }
 
@@ -256,17 +333,15 @@ class StatusBarController {
             object: nil,
             queue: .main
         ) { [weak self] notify in
-            Task { @MainActor in
-                guard let self else {return}
-                self.hidePopover(nil)
+            guard let self else {return}
+            self.hidePopover(nil)
 
-                if self.currentAppearance == .single {
-                    self.popover.contentSize.width = Layout.popoverWidth
-                } else if self.currentAppearance == .dual {
-                    self.popover.contentSize.width = Layout.popoverWidth * 2 - 40
-                } else if self.currentAppearance == .onlyControl {
-                    self.popover.performClose(nil)
-                }
+            if self.currentAppearance == .single {
+                self.popover.contentSize.width = Layout.popoverWidth
+            } else if self.currentAppearance == .dual {
+                self.popover.contentSize.width = Layout.popoverWidth * 2 - 40
+            } else if self.currentAppearance == .onlyControl {
+                self.popover.performClose(nil)
             }
         }
 
@@ -275,10 +350,8 @@ class StatusBarController {
             object: nil,
             queue: .main
         ) { [weak self] notify in
-            Task { @MainActor in
-                guard let self, let isOn = notify.object as? Bool else {return}
-                self.markItem?.length = isOn ? MarkItemLength.collapse : MarkItemLength.normal
-            }
+            guard let self, let isOn = notify.object as? Bool else {return}
+            self.markItem?.length = isOn ? MarkItemLength.collapse : MarkItemLength.normal
         }
 
         NotificationCenter.default.addObserver(
@@ -286,49 +359,85 @@ class StatusBarController {
             object: nil,
             queue: .main
         ) { [weak self] notify in
-            Task { @MainActor in
-                guard let self, let enable = notify.object as? Bool else {return}
-                if enable {
-                    self.setMarkButton()
-                    Task {
-                        try? await HideMenubarIconsSwitch.shared.operateSwitch(isOn: false)
-                    }
+            guard let self, let enable = notify.object as? Bool else {return}
+            if enable {
+                self.setMarkButton()
+                Task {
+                    try? await HideMenubarIconsSwitch.shared.operateSwitch(isOn: false)
+                }
 
-                } else {
-                    if let markItem = self.markItem {
-                        NSStatusBar.system.removeStatusItem(markItem)
-                    }
+            } else {
+                if let markItem = self.markItem {
+                    // macOS 26 Tahoe: Safely remove status item
+                    NSStatusBar.system.removeStatusItem(markItem)
+                    self.markItem = nil
+                    print("✅ Mark button removed successfully")
                 }
             }
         }
     }
 
     func showPopover(_ sender: AnyObject?) {
-        if let statusBarButton = mainItem.button {
-            if currentAppearance == .onlyControl {
-                onlyControlWindow.makeKeyAndOrderFront(nil)
-                onlyControlWindow.setFrameUsingName("OnlyControlWindow")
-                onlyControlWindow.setFrameAutosaveName("OnlyControlWindow")
-                onlyControlStore.send(.showControl)
-            } else {
-                popover.show(relativeTo: statusBarButton.bounds,
-                             of: statusBarButton,
-                             preferredEdge: NSRectEdge.maxY)
-                popover.contentViewController?.view.window?.makeKey()
+        // Ensure we're on the main thread for UI operations
+        guard Thread.isMainThread else {
+            DispatchQueue.main.async { [weak self] in
+                self?.showPopover(sender)
             }
-
-            NotificationCenter.default.post(name: .showPopover, object: nil)
-            eventMonitor?.start()
+            return
         }
+        
+        guard let statusBarButton = mainItem.button else {
+            print("⚠️ Status bar button not available")
+            return
+        }
+        
+        if currentAppearance == .onlyControl {
+            onlyControlWindow.makeKeyAndOrderFront(nil)
+            onlyControlWindow.setFrameUsingName("OnlyControlWindow")
+            onlyControlWindow.setFrameAutosaveName("OnlyControlWindow")
+            onlyControlStore.send(.showControl)
+        } else {
+            // macOS 26 Tahoe: Add safety check before showing popover
+            guard !popover.isShown else {
+                print("⚠️ Popover already shown")
+                return
+            }
+            
+            popover.show(relativeTo: statusBarButton.bounds,
+                         of: statusBarButton,
+                         preferredEdge: NSRectEdge.maxY)
+            popover.contentViewController?.view.window?.makeKey()
+        }
+
+        NotificationCenter.default.post(name: .showPopover, object: nil)
+        eventMonitor?.start()
     }
 
     func hidePopover(_ sender: AnyObject?) {
+        // Ensure we're on the main thread for UI operations
+        guard Thread.isMainThread else {
+            DispatchQueue.main.async { [weak self] in
+                self?.hidePopover(sender)
+            }
+            return
+        }
+        
         if currentAppearance == .onlyControl {
+            guard onlyControlWindow.isVisible else {
+                print("⚠️ OnlyControl window already hidden")
+                return
+            }
             onlyControlStore.send(.hideControl)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.51) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.51) { [weak self] in
+                guard let self else { return }
                 self.onlyControlWindow.close()
             }
         } else {
+            // macOS 26 Tahoe: Safety check before closing popover
+            guard popover.isShown else {
+                print("⚠️ Popover already hidden")
+                return
+            }
             popover.performClose(sender)
         }
 
@@ -337,6 +446,14 @@ class StatusBarController {
     }
 
     func mouseEventHandler(_ event: NSEvent?) {
+        // Ensure we're on the main thread
+        guard Thread.isMainThread else {
+            DispatchQueue.main.async { [weak self] in
+                self?.mouseEventHandler(event)
+            }
+            return
+        }
+        
         if hasOtherPopover {
             return
         }
