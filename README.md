@@ -4,6 +4,7 @@
         <img alt="AppIcon" src="https://github.com/jacklandrin/OnlySwitch/blob/main/OnlySwitch/Assets.xcassets/AppIcon.appiconset/icon_256x256@2x.png?raw=true" width="128px" align="center" />
     </a>
 </p>
+
 ‼️ **Auto-updating has failed from 2.5.6 and below, please manually update or use Homebrew.**
 
 # OnlySwitch
@@ -111,7 +112,7 @@ Since Version 1.3, switches can be added to or removed from the list.
 | Set dark mode       | finished          |
 
 ## Supported Languages 🇺🇳
-English, Simplified Chinese, German, Croatian, Turkish, Polish, Filipino, Dutch, Italian, Russian, Spanish, Japanese, Somali, Korean, French, Ukrainian, Slovak, Portuguese (BR)
+English, Simplified Chinese, German, Croatian, Turkish, Polish, Filipino, Dutch, Italian, Russian, Spanish, Japanese, Somali, Korean, French, Ukrainian, Slovak, Portuguese (BR), Czech
 
 ## Welcome to pull requests for these
 
@@ -254,6 +255,7 @@ Since version 2.3.10, this switch can be controlled via right-click icons.
 | Filipino | Rosel                    | Korean          | @iosdevted     |
 | French   | @BtKent and Ange Lefrère | Ukrainian       | @andryua       |
 | Slovak   | @Svec-Tomas              | Portuguese (BR) | @EvertonCa     |
+| Czech    | @ForksApps               |                 |                |
 
 @wrngwrld for the volume slider of the radio player
 
