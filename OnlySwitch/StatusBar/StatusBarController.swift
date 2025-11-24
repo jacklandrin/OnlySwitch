@@ -278,12 +278,14 @@ class StatusBarController {
             object: nil,
             queue: .main
         ) { [weak self] notify in
-            guard let self else { return }
-            guard let newImageName = notify.object as? String else {
-                print("⚠️ Invalid object type for changeMenuBarIcon notification")
-                return
+            Task { @MainActor in
+                guard let self else { return }
+                guard let newImageName = notify.object as? String else {
+                    print("⚠️ Invalid object type for changeMenuBarIcon notification")
+                    return
+                }
+                self.setMainItemButton(image: newImageName)
             }
-            self.setMainItemButton(image: newImageName)
         }
 
         NotificationCenter.default.addObserver(
@@ -291,8 +293,10 @@ class StatusBarController {
             object: nil,
             queue: .main
         ) { [weak self] notify in
-            guard let self else {return}
-            self.togglePopover(sender: nil)
+            Task { @MainActor in
+                guard let self else {return}
+                self.togglePopover(sender: nil)
+            }
         }
 
         NotificationCenter.default.addObserver(
@@ -300,9 +304,11 @@ class StatusBarController {
             object: nil,
             queue: .main
         ) { [weak self] notify in
-            guard let self else {return}
-            if let statusBarButton = self.mainItem.button {
-                self.hidePopover(statusBarButton)
+            Task { @MainActor in
+                guard let self else {return}
+                if let statusBarButton = self.mainItem.button {
+                    self.hidePopover(statusBarButton)
+                }
             }
         }
 
@@ -311,20 +317,22 @@ class StatusBarController {
             object: nil,
             queue: .main
         ) { [weak self] notify in
-            guard let self else {return}
-            guard let hasShown = notify.object as? Bool else {
-                print("⚠️ Invalid object type for OtherPopover notification")
-                return
-            }
-            if hasShown {
-                self.otherPopoverBitwise = (self.otherPopoverBitwise << 1) + 1
-            } else {
-                self.otherPopoverBitwise = self.otherPopoverBitwise >> 1
-            }
-            let existOtherPopover = self.otherPopoverBitwise != 0
+            Task { @MainActor in
+                guard let self else {return}
+                guard let hasShown = notify.object as? Bool else {
+                    print("⚠️ Invalid object type for OtherPopover notification")
+                    return
+                }
+                if hasShown {
+                    self.otherPopoverBitwise = (self.otherPopoverBitwise << 1) + 1
+                } else {
+                    self.otherPopoverBitwise = self.otherPopoverBitwise >> 1
+                }
+                let existOtherPopover = self.otherPopoverBitwise != 0
 
-            if existOtherPopover != self.hasOtherPopover {
-                self.hasOtherPopover = existOtherPopover
+                if existOtherPopover != self.hasOtherPopover {
+                    self.hasOtherPopover = existOtherPopover
+                }
             }
         }
 
@@ -333,15 +341,17 @@ class StatusBarController {
             object: nil,
             queue: .main
         ) { [weak self] notify in
-            guard let self else {return}
-            self.hidePopover(nil)
+            Task { @MainActor in
+                guard let self else {return}
+                self.hidePopover(nil)
 
-            if self.currentAppearance == .single {
-                self.popover.contentSize.width = Layout.popoverWidth
-            } else if self.currentAppearance == .dual {
-                self.popover.contentSize.width = Layout.popoverWidth * 2 - 40
-            } else if self.currentAppearance == .onlyControl {
-                self.popover.performClose(nil)
+                if self.currentAppearance == .single {
+                    self.popover.contentSize.width = Layout.popoverWidth
+                } else if self.currentAppearance == .dual {
+                    self.popover.contentSize.width = Layout.popoverWidth * 2 - 40
+                } else if self.currentAppearance == .onlyControl {
+                    self.popover.performClose(nil)
+                }
             }
         }
 
@@ -350,8 +360,10 @@ class StatusBarController {
             object: nil,
             queue: .main
         ) { [weak self] notify in
-            guard let self, let isOn = notify.object as? Bool else {return}
-            self.markItem?.length = isOn ? MarkItemLength.collapse : MarkItemLength.normal
+            Task { @MainActor in
+                guard let self, let isOn = notify.object as? Bool else {return}
+                self.markItem?.length = isOn ? MarkItemLength.collapse : MarkItemLength.normal
+            }
         }
 
         NotificationCenter.default.addObserver(
@@ -359,19 +371,21 @@ class StatusBarController {
             object: nil,
             queue: .main
         ) { [weak self] notify in
-            guard let self, let enable = notify.object as? Bool else {return}
-            if enable {
-                self.setMarkButton()
-                Task {
-                    try? await HideMenubarIconsSwitch.shared.operateSwitch(isOn: false)
-                }
+            Task { @MainActor in
+                guard let self, let enable = notify.object as? Bool else {return}
+                if enable {
+                    self.setMarkButton()
+                    Task {
+                        try? await HideMenubarIconsSwitch.shared.operateSwitch(isOn: false)
+                    }
 
-            } else {
-                if let markItem = self.markItem {
-                    // macOS 26 Tahoe: Safely remove status item
-                    NSStatusBar.system.removeStatusItem(markItem)
-                    self.markItem = nil
-                    print("✅ Mark button removed successfully")
+                } else {
+                    if let markItem = self.markItem {
+                        // macOS 26 Tahoe: Safely remove status item
+                        NSStatusBar.system.removeStatusItem(markItem)
+                        self.markItem = nil
+                        print("✅ Mark button removed successfully")
+                    }
                 }
             }
         }
