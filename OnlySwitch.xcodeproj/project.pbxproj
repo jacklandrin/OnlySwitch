@@ -2232,7 +2232,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 231;
+				CURRENT_PROJECT_VERSION = 232;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2258,7 +2258,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 231;
+				CURRENT_PROJECT_VERSION = 232;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2411,7 +2411,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 231;
+				CURRENT_PROJECT_VERSION = 232;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
@@ -2437,7 +2437,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.6.1;
+				MARKETING_VERSION = 2.6.2;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2466,7 +2466,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 231;
+				CURRENT_PROJECT_VERSION = 232;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
@@ -2492,7 +2492,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.6.1;
+				MARKETING_VERSION = 2.6.2;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2521,7 +2521,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 231;
+				CURRENT_PROJECT_VERSION = 232;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2538,7 +2538,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.6.1;
+				MARKETING_VERSION = 2.6.2;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = OnlySwitchWidgets;
@@ -2561,7 +2561,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 231;
+				CURRENT_PROJECT_VERSION = 232;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2578,7 +2578,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.6.1;
+				MARKETING_VERSION = 2.6.2;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = OnlySwitchWidgets;

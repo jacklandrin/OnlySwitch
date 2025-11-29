@@ -20,17 +20,26 @@ public extension String {
             finalCommand += " with prompt \"OnlySwitch\" with administrator privileges"
         }
         print("command: \(finalCommand)")
+        return try await AppleScriptExecutor.shared.execute(source: finalCommand)
+    }
+}
+
+fileprivate class AppleScriptExecutor {
+    static let shared = AppleScriptExecutor()
+    private let queue = DispatchQueue(label: "com.onlyswitch.applescript", qos: .utility)
+    
+    func execute(source: String) async throws -> String {
         return try await withCheckedThrowingContinuation { continuation in
-            DispatchQueue.global(qos: .utility).async {
+            queue.async {
                 autoreleasepool {
                     var error: NSDictionary?
-                    let osaScript = OSAScript(source: finalCommand)
+                    let osaScript = OSAScript(source: source)
                     if let descriptor = osaScript.executeAndReturnError(&error) {
                         if let outputString = descriptor.stringValue {
                             print(outputString)
                             continuation.resume(returning: outputString)
-                        } else if error != nil {
-                            print("error:\(String(describing: error!))")
+                        } else if let error = error {
+                            print("error:\(String(describing: error))")
                             continuation.resume(throwing: SwitchError.ScriptFailed)
                         } else {
                             continuation.resume(returning: "")
@@ -42,7 +51,9 @@ public extension String {
             }
         }
     }
-    
+}
+
+public extension String {
     
     func appendingPathComponent(string:String...) -> String {
         var result = self

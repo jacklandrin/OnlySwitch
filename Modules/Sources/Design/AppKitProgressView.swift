@@ -9,8 +9,8 @@ import SwiftUI
 import AppKit
 
 // Workaround for macOS 15 and below: Use SwiftUI ProgressView to avoid popover positioning issues
-// On macOS 16+, use NSViewRepresentable version for better performance
-@available(macOS 16.0, *)
+// On macOS 26+, use NSViewRepresentable version for better performance
+@available(macOS 26.0, *)
 private struct AppKitProgressViewRepresentable: NSViewRepresentable {
     public init() {}
     
@@ -22,7 +22,7 @@ private struct AppKitProgressViewRepresentable: NSViewRepresentable {
         let progress = NSProgressIndicator()
         progress.style = .spinning
         progress.isIndeterminate = true
-        progress.controlSize = .small
+        progress.controlSize = .regular
         progress.startAnimation(nil)
         context.coordinator.progressIndicator = progress
         return progress
@@ -47,7 +47,7 @@ public struct AppKitProgressView: View {
     public init() {}
     
     public var body: some View {
-        if #available(macOS 16.0, *) {
+        if #available(macOS 26.0, *) {
             AppKitProgressViewRepresentable()
         } else {
             // Use SwiftUI ProgressView on macOS 15 and below to avoid popover positioning issues
