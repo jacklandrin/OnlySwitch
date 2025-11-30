@@ -13,11 +13,23 @@ struct AirPodsBatteryView: View {
     private let viewWidth = 24.0
     private let viewHeight = 10.0
     @Environment(\.colorScheme) private var colorScheme
+    
+    private var lowBatteryColor: Color {
+        colorScheme == .dark ? Color(red: 0.6, green: 0, blue: 0) : Color(red: 1.0, green: 0.4, blue: 0.4)
+    }
+    
+    private var normalBatteryColor: Color {
+        colorScheme == .dark ? Color(red: 0, green: 0.5, blue: 0) : Color(red: 0.4, green: 1.0, blue: 0.4)
+    }
+    
+    private func batteryColor(for value: Float) -> Color {
+        value < 0.2 ? lowBatteryColor : normalBatteryColor
+    }
+    
     var body: some View {
-        HStack(spacing:8) {
+        HStack(spacing: 8) {
             ForEach(batteryValues.indices, id:\.self) { index in
-                HStack(spacing:4) {
-                    
+                HStack(spacing: 4) {
                     ZStack{
                         Circle()
                             .foregroundColor(.gray)
@@ -29,11 +41,12 @@ struct AirPodsBatteryView: View {
                     
                     HStack {
                         Rectangle()
-                            .foregroundColor(batteryValues[index] < 0.2 ? .red : .green)
+                            .foregroundColor(batteryColor(for: batteryValues[index]))
                             .frame(width: CGFloat(batteryValues[index]) * viewWidth, height: viewHeight)
                         Spacer()
                             .frame(width: ((1.0 - CGFloat(batteryValues[index])) * viewWidth))
-                    }.frame(width: viewWidth, height: viewHeight)
+                    }
+                    .frame(width: viewWidth, height: viewHeight)
                   .overlay(RoundedRectangle(cornerRadius: 2).stroke(colorScheme == .dark ? .white : .black, lineWidth: 1))
                   .overlay(Text("\(Int(batteryValues[index] * 100))%")
                             .font(.system(size:6)).fontWeight(.medium))
