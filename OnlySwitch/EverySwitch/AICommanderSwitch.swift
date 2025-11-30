@@ -5,6 +5,7 @@
 //  Created by Bo Liu on 16.11.25.
 //
 
+import ComposableArchitecture
 import Switches
 import Defines
 import OnlyAgent
@@ -28,6 +29,24 @@ final class AICommanderSwitch: SwitchProvider {
     }
     
     @MainActor
+    private var _store: Any?
+    
+    @MainActor
+    @available(macOS 26.0, *)
+    var store: StoreOf<PromptDialogueReducer> {
+        if _store == nil {
+            _store = makeStore()
+        }
+        return _store as! StoreOf<PromptDialogueReducer>
+    }
+    
+    @MainActor
+    @available(macOS 26.0, *)
+    private func makeStore() -> StoreOf<PromptDialogueReducer> {
+        return .init(initialState: .init(), reducer: PromptDialogueReducer.init)
+    }
+    
+    @MainActor
     func currentStatus() async -> Bool {
         isWindowPresented
     }
@@ -44,10 +63,10 @@ final class AICommanderSwitch: SwitchProvider {
     @MainActor
     func operateSwitch(isOn: Bool) async throws {
         if isOn {
-            showWindow()
+            await showWindow()
             NotificationCenter.default.post(name: .shouldHidePopover, object: nil)
         } else {
-            hideWindow()
+            await hideWindow()
         }
     }
     
@@ -58,6 +77,7 @@ final class AICommanderSwitch: SwitchProvider {
         return false
     }
     
+    @MainActor
     private func makeWindow() -> PromptDialogueWindow {
         let window = PromptDialogueWindow(
             contentRect: .zero,
@@ -68,7 +88,7 @@ final class AICommanderSwitch: SwitchProvider {
         )
         let contentRect = window.contentRect(forFrameRect: window.frame)
         if #available(macOS 26.0, *) {
-            let view = NSHostingView(rootView: PromptDialogueView(store: .init(initialState: .init(), reducer: PromptDialogueReducer.init)))
+            let view = NSHostingView(rootView: PromptDialogueView(store: store))
             view.frame = contentRect
             view.canDrawSubviewsIntoLayer = true
             window.contentView = view
@@ -97,7 +117,8 @@ final class AICommanderSwitch: SwitchProvider {
         return window
     }
     
-    private func showWindow() {
+    @MainActor
+    private func showWindow() async {
         if promptDialogueWindow == nil {
             promptDialogueWindow = makeWindow()
         }
@@ -105,17 +126,23 @@ final class AICommanderSwitch: SwitchProvider {
         eventMonitor.start()
     }
     
-    private func hideWindow() {
+    @MainActor
+    private func hideWindow() async {
+        guard #available(macOS 26.0, *), store.prompt.isEmpty else {
+            return
+        }
         promptDialogueWindow?.close()
         promptDialogueWindow = nil
         eventMonitor.stop()
     }
     
     private func mouseEventHandler(_ event: NSEvent?) {
-        if isWindowPresented {
-            hideWindow()
-        } else {
-            showWindow()
+        Task {
+            if isWindowPresented {
+                await hideWindow()
+            } else {
+                await showWindow()
+            }
         }
     }
 }

@@ -13,7 +13,7 @@ import Dependencies
 public struct PromptDialogueReducer {
     @ObservableState
     public struct State {
-        var prompt: String = ""
+        public var prompt: String = ""
         var appleScript: String = ""
         var isAgentMode: Bool = false
         var isGenerating: Bool = false
