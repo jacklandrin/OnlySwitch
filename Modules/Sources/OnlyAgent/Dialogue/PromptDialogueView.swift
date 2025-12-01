@@ -50,10 +50,13 @@ public struct PromptDialogueView: View {
             .appKitWindowDrag()
             .glassEffect(in: .rect(cornerRadius: 10.0))
             .cornerRadius(10.0)
+            .opacity(store.opacity)
+            .blur(radius: store.blurRadius)
             .onAppear {
                 store.send(.appear)
                 promptFocused = true
             }
+            .animation(.interactiveSpring(duration: 0.5), value: store.opacity)
         }
     }
     

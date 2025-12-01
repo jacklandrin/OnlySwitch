@@ -24,6 +24,7 @@ final class AICommanderSwitch: SwitchProvider {
     
     private var promptDialogueWindow: NSWindow?
     
+    @MainActor
     private var isWindowPresented: Bool {
         promptDialogueWindow?.isVisible == true
     }
@@ -122,15 +123,20 @@ final class AICommanderSwitch: SwitchProvider {
         if promptDialogueWindow == nil {
             promptDialogueWindow = makeWindow()
         }
+        NSApplication.shared.activate(ignoringOtherApps: true)
         promptDialogueWindow?.makeKeyAndOrderFront(nil)
+        promptDialogueWindow?.makeKey()
         eventMonitor.start()
     }
     
     @MainActor
     private func hideWindow() async {
-        guard #available(macOS 26.0, *), store.prompt.isEmpty else {
+        guard #available(macOS 26.0, *),
+              (store.prompt.isEmpty || store.isSuccess != nil) else {
             return
         }
+        store.send(.disappear)
+        try? await Task.sleep(second: 0.51)
         promptDialogueWindow?.close()
         promptDialogueWindow = nil
         eventMonitor.stop()
@@ -138,7 +144,7 @@ final class AICommanderSwitch: SwitchProvider {
     
     private func mouseEventHandler(_ event: NSEvent?) {
         Task {
-            if isWindowPresented {
+            if await isWindowPresented {
                 await hideWindow()
             } else {
                 await showWindow()

@@ -12,16 +12,18 @@ import Dependencies
 @Reducer
 public struct PromptDialogueReducer {
     @ObservableState
-    public struct State {
+    public struct State: Equatable {
         public var prompt: String = ""
+        public var isSuccess: Bool? = nil
         var appleScript: String = ""
         var isAgentMode: Bool = false
         var isGenerating: Bool = false
         var isExecuting: Bool = false
         var errorMessage: String? = nil
-        var isSuccess: Bool? = nil
         var modelTags: [ModelProvider: [String]] = [:]
         var currentAIModel: CurrentAIModel? = nil
+        var opacity: Double = 1.0
+        var blurRadius: Double = 0.0
         var isPromptEmpty: Bool { prompt.isEmpty }
         var isAppleScriptEmpty: Bool { appleScript.isEmpty }
         var agentToggleDisabled: Bool { !(isPromptEmpty || isAppleScriptEmpty) || isGenerating || isExecuting }
@@ -49,6 +51,7 @@ public struct PromptDialogueReducer {
         case generateAppleScript(TaskResult<String>)
         case executeAppleScript
         case finishExecution(TaskResult<Void>)
+        case disappear
         case binding(BindingAction<State>)
     }
     
@@ -70,6 +73,9 @@ public struct PromptDialogueReducer {
                         .openai: openAIService.models().map(\.model)
                     ]
                     state.currentAIModel = currentAIModel
+                    state.opacity = 1.0
+                    state.blurRadius = 0.0
+                    state.isSuccess = nil
                     return .none
                     
                 case let .selectAIModel(provider, model):
@@ -103,6 +109,7 @@ public struct PromptDialogueReducer {
 
                     let isAgentMode = state.isAgentMode
                     if isAgentMode {
+                        state.isSuccess = true
                         guard let currentAIModel = state.currentAIModel else {
                             return .none
                         }
@@ -121,6 +128,7 @@ public struct PromptDialogueReducer {
                     let isAgentMode = state.isAgentMode
                     
                     if isAgentMode {
+                        state.isSuccess = false
                         return .none
                     } else {
                         guard let currentAIModel = state.currentAIModel else {
@@ -169,6 +177,11 @@ public struct PromptDialogueReducer {
                         let modelProvider = ModelProvider(rawValue: currentAIModel.provider) ?? .ollama
                         _ = try await promptDialogueService.request(.failure, modelProvider, currentAIModel.model, isAgentMode)
                     }
+                    
+                case .disappear:
+                    state.opacity = 0
+                    state.blurRadius = 20.0
+                    return .none
                     
                 case .binding(\.prompt):
                     if state.prompt.isEmpty {
