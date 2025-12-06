@@ -312,7 +312,7 @@ public enum SwitchType: UInt64, CaseIterable, Sendable {
             
         case .aiCommender:
             return SwitchBarInfo(
-                title: "Only Agent (Beta)",
+                title: "Only Agent",
                 onImage: NSImage(named: "ai_commander"),
                 offImage: NSImage(named: "ai_commander"),
                 controlType: .Button,
