@@ -1683,6 +1683,7 @@
 				0430887F275D709C00877E51 /* Launch at Login Helper */,
 				042661862780CBDE005DF2B9 /* Embed App Extensions */,
 				0456C9332ACCA79500DB7898 /* ShellScript */,
+				04A1B2C3D4E5F6789012345A /* Code Sign */,
 			);
 			buildRules = (
 			);
@@ -1884,6 +1885,25 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${BUILT_PRODUCTS_DIR}/LaunchAtLogin_LaunchAtLogin.bundle/Contents/Resources/copy-helper-swiftpm.sh\"\n\n";
+		};
+		04A1B2C3D4E5F6789012345A /* Code Sign */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Code Sign";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Code Sign script\n# Only run for Release builds with Developer ID signing\nif [[ \"${CODE_SIGN_IDENTITY}\" == *\"Developer ID\"* ]] || [[ \"${CONFIGURATION}\" == \"Release\" ]]; then\n    APP_PATH=\"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app\"\n    SIGN_IDENTITY=\"Developer ID Application: Bo Liu (B22726TNGH)\"\n    \n    if [ ! -d \"${APP_PATH}\" ]; then\n        echo \"Error: App bundle not found at ${APP_PATH}\"\n        exit 1\n    fi\n    \n    echo \"Code signing ${APP_PATH}\"\n    \n    # Sign main app bundle\n    codesign --preserve-metadata=entitlements --force --verbose --options=runtime --sign \"${SIGN_IDENTITY}\" \"${APP_PATH}\"\n    \n    # Sign LaunchAtLoginHelper.app if it exists\n    if [ -d \"${APP_PATH}/Contents/Library/LoginItems/LaunchAtLoginHelper.app\" ]; then\n        codesign --preserve-metadata=entitlements --force --verbose --options=runtime --sign \"${SIGN_IDENTITY}\" \"${APP_PATH}/Contents/Library/LoginItems/LaunchAtLoginHelper.app\"\n    fi\n    \n    # Sign OnlyWidgetExtension.appex if it exists\n    if [ -d \"${APP_PATH}/Contents/PlugIns/OnlyWidgetExtension.appex\" ]; then\n        codesign --preserve-metadata=entitlements --force --verbose --options=runtime --sign \"${SIGN_IDENTITY}\" \"${APP_PATH}/Contents/PlugIns/OnlyWidgetExtension.appex\"\n    fi\n    \n    # Sign Sparkle.framework if it exists\n    if [ -d \"${APP_PATH}/Contents/Frameworks/Sparkle.framework\" ]; then\n        codesign --verbose --force --timestamp --deep -o runtime --sign \"${SIGN_IDENTITY}\" \"${APP_PATH}/Contents/Frameworks/Sparkle.framework\"\n    fi\n    \n    echo \"Code signing completed\"\nelse\n    echo \"Skipping code signing (not a Release build or Developer ID signing)\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -2236,7 +2256,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 235;
+				CURRENT_PROJECT_VERSION = 236;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2262,7 +2282,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 235;
+				CURRENT_PROJECT_VERSION = 236;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2415,7 +2435,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 235;
+				CURRENT_PROJECT_VERSION = 236;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
@@ -2470,7 +2490,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 235;
+				CURRENT_PROJECT_VERSION = 236;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
@@ -2525,7 +2545,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 235;
+				CURRENT_PROJECT_VERSION = 236;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2565,7 +2585,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 235;
+				CURRENT_PROJECT_VERSION = 236;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
