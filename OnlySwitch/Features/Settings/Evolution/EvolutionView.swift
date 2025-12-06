@@ -45,7 +45,7 @@ struct EvolutionView: View {
                                     viewStore.send(.refresh)
                                 }
                             } else {
-                                LazyVStack {
+                                VStack {
                                     ForEachStore(
                                         store.scope(
                                             state: \.evolutionList,

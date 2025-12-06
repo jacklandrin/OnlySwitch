@@ -80,6 +80,7 @@ class GeneralVM: ObservableObject {
             preferences.currentAppearance
         }
         set {
+            NotificationCenter.default.post(name: .shouldHidePopover, object: nil)
             preferences.currentAppearance = newValue
         }
     }

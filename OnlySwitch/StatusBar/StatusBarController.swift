@@ -11,16 +11,8 @@ import SwiftUI
 import Foundation
 import ComposableArchitecture
 
-struct OtherPopover {
-    static let name = NSNotification.Name("otherPopover")
-    static func hasShown(_ hasShown:Bool) {
-        NotificationCenter.default.post(name: name, object: hasShown)
-    }
-}
-
 @MainActor
 class StatusBarController {
-
     struct MarkItemLength {
         static let collapse:CGFloat = 10000
         static let normal:CGFloat = NSStatusItem.squareLength
@@ -89,8 +81,6 @@ class StatusBarController {
         window.setIsVisible(false)
         return window
     }()
-
-    private var otherPopoverBitwise:Int = 0
 
     init(_ popover: NSPopover) {
         self.popover = popover
@@ -313,30 +303,6 @@ class StatusBarController {
         }
 
         NotificationCenter.default.addObserver(
-            forName: OtherPopover.name,
-            object: nil,
-            queue: .main
-        ) { [weak self] notify in
-            Task { @MainActor in
-                guard let self else {return}
-                guard let hasShown = notify.object as? Bool else {
-                    print("⚠️ Invalid object type for OtherPopover notification")
-                    return
-                }
-                if hasShown {
-                    self.otherPopoverBitwise = (self.otherPopoverBitwise << 1) + 1
-                } else {
-                    self.otherPopoverBitwise = self.otherPopoverBitwise >> 1
-                }
-                let existOtherPopover = self.otherPopoverBitwise != 0
-
-                if existOtherPopover != self.hasOtherPopover {
-                    self.hasOtherPopover = existOtherPopover
-                }
-            }
-        }
-
-        NotificationCenter.default.addObserver(
             forName: .changePopoverAppearance,
             object: nil,
             queue: .main
@@ -465,10 +431,6 @@ class StatusBarController {
             DispatchQueue.main.async { [weak self] in
                 self?.mouseEventHandler(event)
             }
-            return
-        }
-        
-        if hasOtherPopover {
             return
         }
 
