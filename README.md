@@ -128,8 +128,8 @@ If you like it, help support this app by giving me a cup of tea for me to keep c
 </p>
 
 
-## 🤖 Only Agent (Beta)
-Only Switch starts to support Only Agent since 2.6.0. You can control your mac by **English** via AI now. After you write down your purpose, AI can generate an Apple Script to engage it. If the Agent mode is on, the script will be immediately executed.  There are two available model providers, with Ollama and OpenAI. Feel free to contribute more providers.
+## 🤖 Only Agent
+Only Switch starts to support Only Agent since 2.6.0. You can control your mac by **English** via AI now. After you write down your purpose, AI can generate an Apple Script to engage it. If the Agent mode is on, the script will be immediately executed.  There are two available model providers, with Ollama, OpenAI and Gemini. Feel free to contribute more providers.
 
 It supports only macOS 26.0 and above.
 
