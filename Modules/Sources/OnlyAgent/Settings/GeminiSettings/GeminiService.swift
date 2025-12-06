@@ -82,12 +82,12 @@ private final class GeminiServiceLive: Sendable {
         guard let aiValue = ai.value else {
             throw GeminiError.uninitialized
         }
-        
-        let generativeModel = aiValue.generativeModel(modelName: model)
         let systemPrompt = "You are an AppleScript expert. You generate executable AppleScript code (NOT shell scripts) for macOS automation. Always use AppleScript syntax with 'tell application' commands. Never output shell scripts or bash commands directly."
-        let fullPrompt = "\(systemPrompt)\n\n\(prompt)"
+        let modelContent = ModelContent(role: "system", parts: TextPart(systemPrompt))
         
-        let response = try await generativeModel.generateContent(fullPrompt)
+        let generativeModel = aiValue.generativeModel(modelName: model, systemInstruction: modelContent)
+                
+        let response = try await generativeModel.generateContent(prompt)
         return response.text ?? ""
     }
     
