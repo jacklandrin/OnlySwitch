@@ -32,7 +32,7 @@ public struct OpenAISettingReducer {
     }
     
     @Dependency(\.openAIService) var openAIService
-    @Shared(.openAIAPIKey) var apiKey
+    @Shared(.openAIAPIKey) var apiKey: String = ""
     @Shared(.openAIHost) var host
     
     public var body: some ReducerOf<Self> {

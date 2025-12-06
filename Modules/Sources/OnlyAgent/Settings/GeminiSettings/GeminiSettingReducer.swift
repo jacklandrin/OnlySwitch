@@ -31,7 +31,7 @@ public struct GeminiSettingReducer {
     }
     
     @Dependency(\.geminiService) var geminiService
-    @Shared(.geminiAPIKey) var apiKey
+    @Shared(.geminiAPIKey) var apiKey: String = ""
     
     public var body: some ReducerOf<Self> {
         BindingReducer()

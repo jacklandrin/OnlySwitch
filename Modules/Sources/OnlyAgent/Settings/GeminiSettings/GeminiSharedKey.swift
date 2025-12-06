@@ -9,9 +9,10 @@ import Extensions
 import Sharing
 import Foundation
 
-extension SharedKey where Self == AppStorageKey<String>.Default {
+extension SharedKey where Self == KeychainStorageKey<String>.Default {
     static var geminiAPIKey: Self {
-        Self[.appStorage(UserDefaults.Key.geminiAPI), default: ""]
+        let service = Bundle.main.bundleIdentifier ?? "jacklandrin.OnlySwitch"
+        return .keychainStorage(key: UserDefaults.Key.geminiAPI, defaultValue: "", service: service)
     }
 }
 

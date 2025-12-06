@@ -62,7 +62,7 @@ private final class OpenAILive: Sendable {
     
     @Sendable
     func chat(_ model: String, _ prompt: String) async throws -> String {
-        @Shared(.openAIAPIKey) var apiKeyShared
+        @Shared(.openAIAPIKey) var apiKeyShared: String = ""
         @Shared(.openAIHost) var hostShared
         let apiKey: String = apiKeyShared
         let host: String = hostShared

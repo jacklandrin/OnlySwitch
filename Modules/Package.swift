@@ -53,7 +53,8 @@ let package = Package(
         .target(
             name: "Extensions",
             dependencies: [
-                "Defines"
+                "Defines",
+                .product(name: "Sharing", package: "swift-sharing")
             ]),
         .target(
             name: "Defines"

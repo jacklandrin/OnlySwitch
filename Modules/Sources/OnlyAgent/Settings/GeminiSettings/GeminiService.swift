@@ -74,7 +74,7 @@ private final class GeminiServiceLive: Sendable {
     
     @Sendable
     func chat(_ model: String, _ prompt: String) async throws -> String {
-        @Shared(.geminiAPIKey) var apiKeyShared
+        @Shared(.geminiAPIKey) var apiKeyShared: String = ""
         let apiKey: String = apiKeyShared
         if ai.value == nil && !apiKey.isEmpty {
             setAPIKey(apiKey)
@@ -93,7 +93,7 @@ private final class GeminiServiceLive: Sendable {
     
     @Sendable
     func test() async -> Bool {
-        @Shared(.geminiAPIKey) var apiKeyShared
+        @Shared(.geminiAPIKey) var apiKeyShared: String = ""
         let apiKey: String = apiKeyShared
         if ai.value == nil && !apiKey.isEmpty {
             setAPIKey(apiKey)
@@ -101,7 +101,7 @@ private final class GeminiServiceLive: Sendable {
         guard let aiValue = ai.value else {
             return false
         }
-        let model = aiValue.generativeModel(modelName: "gemini-2.5-flash-lite")
+        let model = aiValue.generativeModel(modelName: "gemini-3-pro-preview")
         let response = try? await model.generateContent("Hello")
         return response?.text != nil
     }

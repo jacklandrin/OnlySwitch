@@ -13,6 +13,7 @@ import Switches
 import Utilities
 import OnlyControl
 import FirebaseCore
+import Extensions
 
 @main
 struct OnlySwitchApp: App {
@@ -173,6 +174,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         FirebaseApp.configure()
+        // Migrate API keys from UserDefaults to Keychain if needed
+        KeychainMigration.migrateAPIKeysIfNeeded()
         //for issue #11
         closeWindow()
         let contentView = OnlySwitchListView()
