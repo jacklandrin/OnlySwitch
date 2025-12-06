@@ -220,6 +220,17 @@ public struct PromptDialogueView: View {
                         }
                     }
                 }
+                if let geminiModels = store.modelTags[.gemini] {
+                    Text("Gemini")
+                        .foregroundStyle(.secondary)
+                    ForEach(geminiModels, id: \.self) { model in
+                        Button {
+                            store.send(.selectAIModel(provider: ModelProvider.gemini.rawValue, model: model))
+                        } label: {
+                            Text(model)
+                        }
+                    }
+                }
             }
             .menuIndicator(.visible)
             Spacer()

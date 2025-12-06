@@ -26,6 +26,12 @@ public struct ModelProviderSettingView: View {
                     Text("Open AI")
                 }
                 .tag(1)
+            
+            GeminiSettingView(store: .init(initialState: .init(), reducer: GeminiSettingReducer.init))
+                .tabItem {
+                    Text("Gemini")
+                }
+                .tag(2)
         }
     }
 }

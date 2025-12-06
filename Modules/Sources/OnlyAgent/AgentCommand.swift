@@ -18,6 +18,7 @@ public enum AgentPrompt {
 public enum ModelProvider: String {
     case ollama
     case openai
+    case gemini
 }
 
 @available(macOS 26.0, *)
@@ -69,6 +70,7 @@ final public class AgentCommandGenerater {
         let script = switch modelProvider {
             case .ollama: try await OllamaTool().call(arguments: .init(prompt: queryMessage, model: model))
             case .openai: try await OpenAITool().call(arguments: .init(prompt: queryMessage, model: model))
+            case .gemini: try await GeminiTool().call(arguments: .init(prompt: queryMessage, model: model))
         }
         return script
     }

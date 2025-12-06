@@ -71,6 +71,7 @@ public extension UserDefaults {
         public static let ollamaModels = "ollamaModelsKey"
         public static let openAIAPI = "openAIAPIKey"
         public static let openAIHost = "openAIHostKey"
+        public static let geminiAPI = "geminiAPIKey"
         //KeyLight
         public static let keyLightBrightness = "keyLightBrightnessKey"
         //others

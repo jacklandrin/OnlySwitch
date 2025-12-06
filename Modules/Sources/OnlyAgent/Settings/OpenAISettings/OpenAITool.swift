@@ -9,7 +9,7 @@ import OSLog
 import Foundation
 import Dependencies
 
-final class OpenAITool {
+final class OpenAITool: ModelTool {
     func call(arguments: ToolArguments) async throws -> String {
         @Dependency(\.openAIService) var openAIService
         Logger.onlyAgentDebug.log("[Open AI] model: \(arguments.model)\n prompt: \(arguments.prompt)")

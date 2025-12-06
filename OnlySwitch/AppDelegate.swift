@@ -12,6 +12,7 @@ import Defines
 import Switches
 import Utilities
 import OnlyControl
+import FirebaseCore
 
 @main
 struct OnlySwitchApp: App {
@@ -171,6 +172,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var checkUpdatePresenter = GitHubPresenter.shared
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        FirebaseApp.configure()
         //for issue #11
         closeWindow()
         let contentView = OnlySwitchListView()

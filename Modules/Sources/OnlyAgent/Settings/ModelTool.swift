@@ -1,9 +1,13 @@
 //
-//  AIModel.swift
+//  ModelTool.swift
 //  Modules
 //
-//  Created by Bo Liu on 20.11.25.
+//  Created by Bo Liu on 06.12.25.
 //
+
+protocol ModelTool {
+    func call(arguments: ToolArguments) async throws -> String
+}
 
 public protocol AIModel {
     var model: String { get }

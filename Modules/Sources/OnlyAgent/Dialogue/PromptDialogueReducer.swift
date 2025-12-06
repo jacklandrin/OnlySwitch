@@ -57,6 +57,7 @@ public struct PromptDialogueReducer {
     
     @Dependency(\.promptDialogueService) var promptDialogueService
     @Dependency(\.openAIService) var openAIService
+    @Dependency(\.geminiService) var geminiService
     @Shared(.ollamaModels) var ollamaModels: [OllamaTag]
     @Shared(.currentAIModel) var currentAIModel: CurrentAIModel?
     
@@ -70,7 +71,8 @@ public struct PromptDialogueReducer {
                     state.errorMessage = nil
                     state.modelTags = [
                         .ollama: ollamaModels.map(\.model),
-                        .openai: openAIService.models().map(\.model)
+                        .openai: openAIService.models().map(\.model),
+                        .gemini: geminiService.models().map(\.model)
                     ]
                     state.currentAIModel = currentAIModel
                     state.opacity = 1.0

@@ -10,7 +10,7 @@ import Foundation
 import Dependencies
 
 @available(macOS 26.0, *)
-final class OllamaTool {
+final class OllamaTool: ModelTool {
     func call(arguments: ToolArguments) async throws -> String {
         @Dependency(\.ollamaRequestService) var ollamaRequestService
         Logger.onlyAgentDebug.log("[Ollama] model:\(arguments.model) prompt:\(arguments.prompt)")
