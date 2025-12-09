@@ -15,7 +15,6 @@ public extension Notification.Name {
     static let togglePopover = Notification.Name("togglePopover")
     static let shouldHidePopover = Notification.Name("shouldHidePopover")
     static let changeMenuBarIcon = Notification.Name("changeMenuBarIcon")
-    static let changePopoverAppearance = Notification.Name("changePopoverAppearanceNotificationName")
     static let volumeChange = Notification.Name("volumeChange")
     static let soundWaveToggle = Notification.Name("soundWaveToggleNotification")
     static let changeSettings = Notification.Name("changeSettingNotification")

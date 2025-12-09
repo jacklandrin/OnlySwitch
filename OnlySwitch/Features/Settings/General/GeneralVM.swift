@@ -75,12 +75,12 @@ class GeneralVM: ObservableObject {
         }
     }
     
-    var currentAppearance:String {
+    var currentAppearance: String {
         get {
             preferences.currentAppearance
         }
+        
         set {
-            NotificationCenter.default.post(name: .shouldHidePopover, object: nil)
             preferences.currentAppearance = newValue
         }
     }
@@ -190,6 +190,3 @@ class GeneralVM: ObservableObject {
         }
     }
 }
-
-
-

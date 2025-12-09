@@ -294,30 +294,11 @@ class StatusBarController {
             object: nil,
             queue: .main
         ) { [weak self] notify in
-            Task { @MainActor in
-                guard let self else {return}
-                if let statusBarButton = self.mainItem.button {
-                    self.hidePopover(statusBarButton)
+            Task {
+                guard let self else {
+                    return
                 }
-            }
-        }
-
-        NotificationCenter.default.addObserver(
-            forName: .changePopoverAppearance,
-            object: nil,
-            queue: .main
-        ) { [weak self] notify in
-            Task { @MainActor in
-                guard let self else {return}
-                self.hidePopover(nil)
-
-                if self.currentAppearance == .single {
-                    self.popover.contentSize.width = Layout.popoverWidth
-                } else if self.currentAppearance == .dual {
-                    self.popover.contentSize.width = Layout.popoverWidth * 2 - 40
-                } else if self.currentAppearance == .onlyControl {
-                    self.popover.performClose(nil)
-                }
+                await self.handleHidePopover()
             }
         }
 
@@ -357,6 +338,13 @@ class StatusBarController {
         }
     }
 
+    @MainActor
+    private func handleHidePopover() {
+        if let statusBarButton = mainItem.button {
+            hidePopover(statusBarButton)
+        }
+    }
+    
     func showPopover(_ sender: AnyObject?) {
         // Ensure we're on the main thread for UI operations
         guard Thread.isMainThread else {
@@ -393,20 +381,9 @@ class StatusBarController {
         eventMonitor?.start()
     }
 
+    @MainActor
     func hidePopover(_ sender: AnyObject?) {
-        // Ensure we're on the main thread for UI operations
-        guard Thread.isMainThread else {
-            DispatchQueue.main.async { [weak self] in
-                self?.hidePopover(sender)
-            }
-            return
-        }
-        
-        if currentAppearance == .onlyControl {
-            guard onlyControlWindow.isVisible else {
-                print("⚠️ OnlyControl window already hidden")
-                return
-            }
+        if currentAppearance == .onlyControl || onlyControlWindow.isVisible {
             onlyControlStore.send(.hideControl)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.51) { [weak self] in
                 guard let self else { return }

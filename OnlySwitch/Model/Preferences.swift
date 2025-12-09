@@ -102,8 +102,8 @@ struct Preferences {
 
     @UserDefaultValue(key: UserDefaults.Key.appearanceColumnCount, defaultValue: SwitchListAppearance.single.rawValue)
     var currentAppearance:String {
-        didSet {
-            NotificationCenter.default.post(name: .changePopoverAppearance, object: nil)
+        willSet {
+            NotificationCenter.default.post(name: .shouldHidePopover, object: nil)
         }
     }
 
