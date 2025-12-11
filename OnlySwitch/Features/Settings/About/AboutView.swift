@@ -10,12 +10,20 @@ import SwiftUI
 
 struct AboutView: View {
     @StateObject var aboutVM = AboutVM()
+    @Environment(\.openURL) private var openURL
+    
     var body: some View {
         HStack {
             VStack {
                 Image("only_switch")
                     .resizable()
-                    .scaledToFit().frame(width: 100, height: 100)
+                    .scaledToFit()
+                    .frame(width: 100, height: 100)
+                    .onTapGesture {
+                        if let url = URL(string: "https://onlyswitch.click") {
+                            openURL(url)
+                        }
+                    }
                 Spacer().frame(height:44)
                 HStack(alignment:.bottom) {
                     Text("Only Switch")
