@@ -26,6 +26,7 @@ class StatusBarController {
     @UserDefaultValue(key: UserDefaults.Key.isMenubarCollapse, defaultValue: false)
     private var isMenubarCollapse:Bool
     private var hasOtherPopover = false
+    private var isOnlyControlWindowVisible = false
     {
         didSet {
             if hasOtherPopover {
@@ -138,7 +139,7 @@ class StatusBarController {
                 return
             }
             
-            let condition = currentAppearance == .onlyControl ? onlyControlWindow.isVisible : popover.isShown
+            let condition = currentAppearance == .onlyControl ? isOnlyControlWindowVisible : popover.isShown
             
             if condition {
                 hidePopover(sender)
@@ -162,7 +163,7 @@ class StatusBarController {
                 return
             }
 
-            let condition = currentAppearance == .onlyControl ? onlyControlWindow.isVisible : popover.isShown
+            let condition = currentAppearance == .onlyControl ? isOnlyControlWindowVisible : popover.isShown
 
             if(condition) {
                 hidePopover(sender)
@@ -363,6 +364,7 @@ class StatusBarController {
             onlyControlWindow.makeKeyAndOrderFront(nil)
             onlyControlWindow.setFrameUsingName("OnlyControlWindow")
             onlyControlWindow.setFrameAutosaveName("OnlyControlWindow")
+            isOnlyControlWindowVisible = true
             onlyControlStore.send(.showControl)
         } else {
             // macOS 26 Tahoe: Add safety check before showing popover
@@ -383,11 +385,12 @@ class StatusBarController {
 
     @MainActor
     func hidePopover(_ sender: AnyObject?) {
-        if currentAppearance == .onlyControl || onlyControlWindow.isVisible {
+        if currentAppearance == .onlyControl || isOnlyControlWindowVisible {
             onlyControlStore.send(.hideControl)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.51) { [weak self] in
                 guard let self else { return }
                 self.onlyControlWindow.close()
+                self.isOnlyControlWindowVisible = false
             }
         } else {
             // macOS 26 Tahoe: Safety check before closing popover
