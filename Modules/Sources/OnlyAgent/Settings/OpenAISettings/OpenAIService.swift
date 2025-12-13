@@ -15,36 +15,7 @@ public enum OpenAIError: Error {
     case uninitialized
 }
 
-@DependencyClient
-public struct OpenAIService: Sendable {
-    public var setAPIToken: @Sendable (String, String) -> Void = { _,_ in }
-    public var models: @Sendable () -> [OpenAIDataModel] = { [] }
-    public var chat: @Sendable (_ model: String, _ prompt: String) async throws -> String = { _,_ in "" }
-    public var test: @Sendable () async -> Bool = { true }
-}
-
-extension OpenAIService: DependencyKey {
-    public static let liveValue: Self = {
-       let client = OpenAILive()
-        return .init(
-            setAPIToken: client.setAPIToken,
-            models: client.models,
-            chat: client.chat,
-            test: client.test
-        )
-    }()
-    
-    public static let testValue = Self()
-}
-
-extension DependencyValues {
-    public var openAIService: OpenAIService {
-        get { self[OpenAIService.self] }
-        set { self[OpenAIService.self] = newValue }
-    }
-}
-
-private final class OpenAILive: Sendable {
+final class OpenAILive: Sendable {
     private let openAI = LockIsolated<OpenAI?>(nil)
     
     @Sendable
@@ -56,7 +27,7 @@ private final class OpenAILive: Sendable {
     }
     
     @Sendable
-    func models() -> [OpenAIDataModel] {
+    func models() -> [ProviderModel] {
         Model.allModels(satisfying: .init(supportedEndpoints: [.chatCompletions])).map { .init(model: $0) }
     }
     

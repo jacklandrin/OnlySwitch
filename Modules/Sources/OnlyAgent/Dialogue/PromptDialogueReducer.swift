@@ -46,6 +46,7 @@ public struct PromptDialogueReducer {
     
     public enum Action: BindableAction {
         case appear
+        case loadModels(TaskResult<[ModelProvider: [String]]>)
         case selectAIModel(provider: String, model: String)
         case sendPrompt
         case generateAppleScript(TaskResult<String>)
@@ -56,8 +57,7 @@ public struct PromptDialogueReducer {
     }
     
     @Dependency(\.promptDialogueService) var promptDialogueService
-    @Dependency(\.openAIService) var openAIService
-    @Dependency(\.geminiService) var geminiService
+    @Dependency(\.modelProviderService) var modelProviderService
     @Shared(.ollamaModels) var ollamaModels: [OllamaTag]
     @Shared(.currentAIModel) var currentAIModel: CurrentAIModel?
     
@@ -70,14 +70,32 @@ public struct PromptDialogueReducer {
                     state.appleScript = ""
                     state.errorMessage = nil
                     state.modelTags = [
-                        .ollama: ollamaModels.map(\.model),
-                        .openai: openAIService.models().map(\.model),
-                        .gemini: geminiService.models().map(\.model)
+                        .ollama: ollamaModels.map(\.model)
                     ]
                     state.currentAIModel = currentAIModel
                     state.opacity = 1.0
                     state.blurRadius = 0.0
                     state.isSuccess = nil
+                    return .run { send in
+                        await send(
+                            .loadModels(
+                                TaskResult {
+                                    let openaiModels = try await modelProviderService.models(.openai)
+                                    let geminiModels = try await modelProviderService.models(.gemini)
+                                    return [
+                                        .openai: openaiModels.map(\.model),
+                                        .gemini: geminiModels.map(\.model)
+                                    ]
+                                }
+                            )
+                        )
+                    }
+                    
+                case let .loadModels(.success(modelTags)):
+                    state.modelTags.merge(modelTags) { (_, new) in new }
+                    return .none
+                    
+                case .loadModels(.failure):
                     return .none
                     
                 case let .selectAIModel(provider, model):

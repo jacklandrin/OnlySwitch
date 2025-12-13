@@ -9,6 +9,7 @@ import ComposableArchitecture
 import Dependencies
 import Foundation
 
+@available(macOS 26.0, *)
 @Reducer
 public struct OpenAISettingReducer {
     @ObservableState
@@ -27,11 +28,12 @@ public struct OpenAISettingReducer {
     public enum Action: BindableAction {
         case appear
         case check
+        case getModels(TaskResult<[String]>)
         case verify(TaskResult<Bool>)
         case binding(BindingAction<State>)
     }
     
-    @Dependency(\.openAIService) var openAIService
+    @Dependency(\.modelProviderService) var modelProviderService
     @Shared(.openAIAPIKey) var apiKey: String = ""
     @Shared(.openAIHost) var host
     
@@ -40,24 +42,38 @@ public struct OpenAISettingReducer {
         Reduce { state, action in
             switch action {
                 case .appear:
-                    state.models = openAIService.models().map(\.model)
                     state.apiKey = apiKey
                     state.host = host
-                    return .none
+                    return .run { send in
+                        await send(
+                            .getModels(
+                                TaskResult {
+                                    try await modelProviderService.models(.openai).map(\.model)
+                                }
+                            )
+                        )
+                    }
             
                 case .check:
-                    openAIService.setAPIToken(state.apiKey, state.host)
+                    modelProviderService.setAPIKey(.openai, state.apiKey, state.host)
                     $apiKey.withLock { $0 = state.apiKey }
                     $host.withLock { $0 = state.host }
                     return .run { send in
                        await send(
                             .verify(
                                 TaskResult {
-                                    await openAIService.test()
+                                    await modelProviderService.test(.openai)
                                 }
                             )
                         )
                     }
+                    
+                case .getModels(.success(let models)):
+                    state.models = models
+                    return .none
+                    
+                case .getModels(.failure):
+                    return .none
                     
                 case let .verify(.success(result)):
                     state.verified = result

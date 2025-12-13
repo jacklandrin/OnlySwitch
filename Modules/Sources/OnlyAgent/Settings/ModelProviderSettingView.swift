@@ -42,7 +42,6 @@ public struct ModelProviderSettingView: View {
                 }
             }
             .frame(height: 70)
-            .background(Color(NSColor.controlBackgroundColor))
                         
             // Content Area
             Group {

@@ -11,36 +11,7 @@ import FirebaseAILogic
 import FirebaseCore
 import Sharing
 
-@DependencyClient
-public struct GeminiService: Sendable {
-    public var setAPIKey: @Sendable (String) -> Void
-    public var models: @Sendable () -> [GeminiDataModel] = { [] }
-    public var chat: @Sendable (_ model: String, _ prompt: String) async throws -> String = { _,_ in "" }
-    public var test: @Sendable () async -> Bool = { true }
-}
-
-extension GeminiService: DependencyKey {
-    public static let liveValue: Self = {
-       let live = GeminiServiceLive()
-        return .init(
-            setAPIKey: live.setAPIKey,
-            models: live.models,
-            chat: live.chat,
-            test: live.test
-        )
-    }()
-    
-    public static let testValue = Self()
-}
-
-extension DependencyValues {
-    public var geminiService: GeminiService {
-        get { self[GeminiService.self] }
-        set { self[GeminiService.self] = newValue }
-    }
-}
-
-private final class GeminiServiceLive: Sendable {
+final class GeminiLive: Sendable {
     private let ai = LockIsolated<FirebaseAI?>(nil)
     
     @Sendable
@@ -62,14 +33,14 @@ private final class GeminiServiceLive: Sendable {
     }
     
     @Sendable
-    func models() -> [GeminiDataModel] {
+    func models() -> [ProviderModel] {
         [
             "gemini-3-pro-preview",
             "gemini-2.5-pro",
             "gemini-2.5-flash",
             "gemini-2.5-flash-lite"
         ]
-            .map(GeminiDataModel.init)
+            .map(ProviderModel.init)
     }
     
     @Sendable

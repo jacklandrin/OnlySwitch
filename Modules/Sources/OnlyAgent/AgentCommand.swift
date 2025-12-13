@@ -15,12 +15,6 @@ public enum AgentPrompt {
     case failure
 }
 
-public enum ModelProvider: String {
-    case ollama
-    case openai
-    case gemini
-}
-
 @available(macOS 26.0, *)
 final public class AgentCommandGenerater {
     public init() {}

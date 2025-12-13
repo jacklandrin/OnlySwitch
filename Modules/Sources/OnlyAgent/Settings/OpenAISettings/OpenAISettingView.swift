@@ -9,6 +9,7 @@ import ComposableArchitecture
 import SwiftUI
 import Design
 
+@available(macOS 26.0, *)
 public struct OpenAISettingView: View {
     @Perception.Bindable var store: StoreOf<OpenAISettingReducer>
     
@@ -81,5 +82,7 @@ public struct OpenAISettingView: View {
 }
 
 #Preview {
-    OpenAISettingView(store: .init(initialState: .init(), reducer: OpenAISettingReducer.init))
+    if #available(macOS 26.0, *) {
+        OpenAISettingView(store: .init(initialState: .init(), reducer: OpenAISettingReducer.init))
+    }
 }

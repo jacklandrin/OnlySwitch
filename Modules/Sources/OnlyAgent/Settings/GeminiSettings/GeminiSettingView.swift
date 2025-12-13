@@ -9,6 +9,7 @@ import ComposableArchitecture
 import SwiftUI
 import Design
 
+@available(macOS 26.0, *)
 public struct GeminiSettingView: View {
     @Perception.Bindable var store: StoreOf<GeminiSettingReducer>
     
@@ -69,6 +70,8 @@ public struct GeminiSettingView: View {
 }
 
 #Preview {
-    GeminiSettingView(store: .init(initialState: .init(), reducer: GeminiSettingReducer.init))
+    if #available(macOS 26.0, *) {
+        GeminiSettingView(store: .init(initialState: .init(), reducer: GeminiSettingReducer.init))
+    }
 }
 

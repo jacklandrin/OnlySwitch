@@ -26,13 +26,13 @@ public struct OllamaSettingReducer {
     public enum Action: BindableAction {
         case appear
         case refresh
-        case finishFetching(TaskResult<[OllamaTag]>)
+        case finishFetching(TaskResult<[ProviderModel]>)
         case binding(BindingAction<State>)
     }
     
     @Shared(.ollamaUrl) var ollamaUrl: String
     @Shared(.ollamaModels) var ollamaModels: [OllamaTag]
-    @Dependency(\.ollamaRequestService) var ollamaRequestService: OllamaRequestService
+    @Dependency(\.modelProviderService) var modelProviderService
     
     public var body: some ReducerOf<Self> {
         BindingReducer()
@@ -43,9 +43,9 @@ public struct OllamaSettingReducer {
                     state.modelTags = IdentifiedArray(uniqueElements: ollamaModels)
                     return refresh(state: &state)
                     
-                case let .finishFetching(.success(tags)):
-                    $ollamaModels.withLock { $0 = tags }
-                    state.modelTags = IdentifiedArray(uniqueElements: tags)
+                case let .finishFetching(.success(providerModels)):
+                    $ollamaModels.withLock { $0 = providerModels.ollamaTags }
+                    state.modelTags = IdentifiedArray(uniqueElements: ollamaModels)
                     return .none
                     
                 case .finishFetching(.failure):
@@ -69,7 +69,7 @@ public struct OllamaSettingReducer {
             await send(
                 .finishFetching(
                     TaskResult {
-                        try await ollamaRequestService.tags()
+                        try await modelProviderService.models(.ollama)
                     }
                 )
             )

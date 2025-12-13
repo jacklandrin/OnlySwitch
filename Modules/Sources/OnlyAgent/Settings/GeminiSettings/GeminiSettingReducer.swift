@@ -9,6 +9,7 @@ import ComposableArchitecture
 import Dependencies
 import Foundation
 
+@available(macOS 26.0, *)
 @Reducer
 public struct GeminiSettingReducer {
     @ObservableState
@@ -26,11 +27,12 @@ public struct GeminiSettingReducer {
     public enum Action: BindableAction {
         case appear
         case check
+        case getModels(TaskResult<[String]>)
         case verify(TaskResult<Bool>)
         case binding(BindingAction<State>)
     }
     
-    @Dependency(\.geminiService) var geminiService
+    @Dependency(\.modelProviderService) var modelProviderService
     @Shared(.geminiAPIKey) var apiKey: String = ""
     
     public var body: some ReducerOf<Self> {
@@ -38,18 +40,32 @@ public struct GeminiSettingReducer {
         Reduce { state, action in
             switch action {
                 case .appear:
-                    state.models = geminiService.models().map(\.model)
                     state.apiKey = apiKey
+                    return .run { send in
+                        await send(
+                            .getModels(
+                                TaskResult {
+                                    try await modelProviderService.models(.gemini).map(\.model)
+                                }
+                            )
+                        )
+                    }
+                    
+                case .getModels(.success(let models)):
+                    state.models = models
+                    return .none
+                    
+                case .getModels(.failure):
                     return .none
             
                 case .check:
-                    geminiService.setAPIKey(state.apiKey)
+                    modelProviderService.setAPIKey(.gemini, state.apiKey, "")
                     $apiKey.withLock { $0 = state.apiKey }
                     return .run { send in
                        await send(
                             .verify(
                                 TaskResult {
-                                    await geminiService.test()
+                                    await modelProviderService.test(.gemini)
                                 }
                             )
                         )
