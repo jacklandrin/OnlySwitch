@@ -100,6 +100,9 @@ let package = Package(
                 "Extensions",
                 "Defines",
                 "Design"
+            ],
+            resources: [
+                .process("Resources")
             ]
         )
     ]
