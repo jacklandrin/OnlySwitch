@@ -55,7 +55,7 @@ public struct OllamaSettingReducer {
                     return refresh(state: &state)
                     
                 case .binding(\.host):
-                    $ollamaUrl.withLock { $0 = state.host }
+                    modelProviderService.setAPIKey(.ollama, "", state.host)
                     return .none
                     
                 case .binding:

@@ -25,12 +25,12 @@ extension ModelProviderService: DependencyKey {
         
         return .init { provider, apiKey, host in
             switch provider {
+                case .ollama:
+                    ollamaClient.setHost(host: host)
                 case .openai:
                     openAIClient.setAPIToken(apiKey, host: host)
                 case .gemini:
                     geminiClient.setAPIKey(apiKey)
-                default:
-                    break
             }
         } models: { provider in
             switch provider {

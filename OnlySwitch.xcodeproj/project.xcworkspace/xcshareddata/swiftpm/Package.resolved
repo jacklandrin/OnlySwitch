@@ -1,5 +1,5 @@
 {
-  "originHash" : "a8efec329ad1c047d3e1d8d20f0fd5c3750f36cebb9a590ec0104719c2edb424",
+  "originHash" : "b9c0c71300f6755da1a3abd54538c1df8b5f76663f2bf71dea85f818d8511a3c",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -161,6 +161,14 @@
       "state" : {
         "revision" : "7aff8d1b31148d32c5933d75557d42f6323ee3d1",
         "version" : "6.0.0"
+      }
+    },
+    {
+      "identity" : "ollama-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/jacklandrin/ollama-swift",
+      "state" : {
+        "revision" : "04a5730fa8aace6fcca8a1cebb83562cfe7dee06"
       }
     },
     {
