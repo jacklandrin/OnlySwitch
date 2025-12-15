@@ -385,6 +385,17 @@ class StatusBarController {
 
     @MainActor
     func hidePopover(_ sender: AnyObject?) {
+        if #available(macOS 26.2, *) {
+            let listAppearance = PreferencesObserver
+                .shared
+                .preferences
+                .currentAppearance
+            if let apperearance = SwitchListAppearance(rawValue: listAppearance) {
+                let originalHeight = popover.contentSize.height
+                popover.contentSize = NSSize(width: apperearance == .single ? Layout.popoverWidth : Layout.popoverWidth * 2 - 40, height: originalHeight)
+            }
+        }
+        
         if currentAppearance == .onlyControl || isOnlyControlWindowVisible {
             onlyControlStore.send(.hideControl)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.51) { [weak self] in
