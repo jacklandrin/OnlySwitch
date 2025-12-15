@@ -94,9 +94,10 @@ class SettingsWindowManager {
 
     func showSettingsWindow() {
         NSApp.setActivationPolicy(.regular)
-        NSApp.activate(ignoringOtherApps: true)
+        NSApplication.shared.activate(ignoringOtherApps: true)
         if let window = self.settingsWindow {
-            window.makeKeyAndOrderFront(self)
+            window.makeKeyAndOrderFront(nil)
+            window.makeKey()
             if #available(macOS 13.0, *) {
                 var windowFrame = window.frame
                 windowFrame.size.height = Layout.settingWindowHeight
@@ -111,8 +112,8 @@ class SettingsWindowManager {
                         isSettingViewShowing = true
                         print("new setting window appears")
                     }
-                    if let window = NSApp.windows.first(where: { $0 is OnlyControlWindow }) {
-                        window.makeKeyAndOrderFront(self)
+                    if let window = NSApp.windows.first(where: { $0.title == "Settings" }) {
+                        window.makeKeyAndOrderFront(nil)
                     }
                 } else {
                     NSWorkspace.shared.open(url)
@@ -124,7 +125,7 @@ class SettingsWindowManager {
         NotificationCenter.default.post(name: .shouldHidePopover, object: nil)
     }
 
-    class Coordinator:NSObject, NSWindowDelegate {
+    class Coordinator: NSObject, NSWindowDelegate {
         func windowShouldClose(_ sender: NSWindow) -> Bool {
             onClose()
             return true
