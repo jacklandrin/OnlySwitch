@@ -398,6 +398,7 @@ class StatusBarController {
         
         if currentAppearance == .onlyControl || isOnlyControlWindowVisible {
             onlyControlStore.send(.hideControl)
+            self.popover.performClose(sender)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.51) { [weak self] in
                 guard let self else { return }
                 self.onlyControlWindow.close()
