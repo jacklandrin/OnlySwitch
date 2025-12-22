@@ -60,12 +60,76 @@ final public class AgentCommandGenerater {
         }
     }
     
-    private func call(queryMessage: String, modelProvider: ModelProvider, model: String) async throws -> String {
+    func call(queryMessage: String, modelProvider: ModelProvider, model: String) async throws -> String {
         let script = switch modelProvider {
             case .ollama: try await OllamaTool().call(arguments: .init(prompt: queryMessage, model: model))
             case .openai: try await OpenAITool().call(arguments: .init(prompt: queryMessage, model: model))
             case .gemini: try await GeminiTool().call(arguments: .init(prompt: queryMessage, model: model))
         }
         return script
+    }
+    
+    public func generatePlanningPrompt(
+        prompt: String,
+        context: String,
+        isInitialPlan: Bool
+    ) -> String {
+        if isInitialPlan {
+            return """
+            Break down the following task into a step-by-step plan. Each step should be a single, executable AppleScript action.
+            
+            Task: "\(prompt)"
+            Context: \(context)
+            
+            Create a detailed plan with multiple steps. For each step, provide:
+            1. A clear description of what the step does
+            2. The AppleScript code to execute it
+            3. The expected outcome
+            
+            Format your response as a JSON array where each step has:
+            - stepNumber: integer
+            - description: string
+            - appleScript: string (raw AppleScript code, no markdown)
+            - expectedOutcome: string
+            
+            Return ONLY the JSON array, no markdown, no explanations.
+            """
+        } else {
+            return """
+            Based on the execution history and current system state, generate the next step to achieve the remaining goal.
+            
+            Context: \(context)
+            
+            Generate the next step as a JSON object with:
+            - stepNumber: integer (next sequential number)
+            - description: string
+            - appleScript: string (raw AppleScript code, no markdown)
+            - expectedOutcome: string
+            
+            Return ONLY the JSON object, no markdown, no explanations.
+            """
+        }
+    }
+    
+    public func generateFixPrompt(
+        failedStep: String,
+        error: String
+    ) -> String {
+        return """
+        The following step failed with an error. Generate a fixed version of the step.
+        
+        Original Step:
+        \(failedStep)
+        
+        Error: \(error)
+        
+        Generate a corrected step as a JSON object with:
+        - stepNumber: integer (same as original)
+        - description: string (updated if needed)
+        - appleScript: string (fixed AppleScript code, no markdown)
+        - expectedOutcome: string
+        
+        Return ONLY the JSON object, no markdown, no explanations.
+        """
     }
 }

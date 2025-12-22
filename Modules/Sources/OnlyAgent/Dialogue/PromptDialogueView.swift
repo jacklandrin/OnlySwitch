@@ -35,10 +35,15 @@ public struct PromptDialogueView: View {
                     
                 promptActionView
                 
-                if !store.isAppleScriptEmpty {
+                if !store.isAppleScriptEmpty && !store.isMultiStepMode {
                     separatorView
                     
                     appleScriptEditor
+                }
+                
+                // Multi-step execution plan view
+                if store.isMultiStepMode, let plan = store.executionPlan {
+                    executionPlanView(plan: plan)
                 }
                 
                 executeActionView
@@ -46,6 +51,9 @@ public struct PromptDialogueView: View {
                 statusInfoView
                 
                 bottomBar
+            }
+            .sheet(isPresented: $store.showPlanPreview) {
+                planPreviewModal
             }
             .appKitWindowDrag()
             .glassEffect(in: .rect(cornerRadius: 10.0))
@@ -239,6 +247,134 @@ public struct PromptDialogueView: View {
         }
         .padding(.horizontal, 10)
         .padding(.bottom, 8)
+    }
+    
+    @ViewBuilder
+    private func executionPlanView(plan: [ExecutionStep]) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text("Execution Plan")
+                    .font(.headline)
+                Spacer()
+                if store.isPlanning {
+                    AppKitProgressView()
+                        .scaleEffect(0.6)
+                } else {
+                    Text("\(plan.filter { $0.status == .completed }.count)/\(plan.count)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .padding(.horizontal, 10)
+            
+            ScrollView {
+                VStack(alignment: .leading, spacing: 4) {
+                    ForEach(plan) { step in
+                        StepRowView(step: step, isCurrent: step.stepNumber == store.currentStepIndex + 1)
+                    }
+                }
+                .padding(.horizontal, 10)
+            }
+            .frame(maxHeight: 200)
+        }
+        .padding(.vertical, 8)
+    }
+    
+    private var planPreviewModal: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Execution Plan Preview")
+                .font(.title2)
+                .fontWeight(.bold)
+            
+            if let plan = store.executionPlan {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 12) {
+                        ForEach(plan) { step in
+                            VStack(alignment: .leading, spacing: 4) {
+                                HStack {
+                                    Text("Step \(step.stepNumber)")
+                                        .font(.headline)
+                                    Spacer()
+                                }
+                                Text(step.description)
+                                    .font(.body)
+                                if let expected = step.expectedOutcome {
+                                    Text("Expected: \(expected)")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                            .padding()
+                            .background(Color.blue.opacity(0.1))
+                            .cornerRadius(8)
+                        }
+                    }
+                }
+                .frame(maxHeight: 400)
+            }
+            
+            HStack {
+                Spacer()
+                Button("Cancel") {
+                    store.send(.cancelExecution)
+                }
+                Button("Approve & Execute") {
+                    store.send(.approvePlan)
+                }
+                .buttonStyle(.borderedProminent)
+            }
+        }
+        .padding()
+        .frame(width: 600, height: 500)
+    }
+}
+
+@available(macOS 26.0, *)
+private struct StepRowView: View {
+    let step: ExecutionStep
+    let isCurrent: Bool
+    
+    var body: some View {
+        HStack(spacing: 8) {
+            // Status indicator
+            Circle()
+                .fill(statusColor)
+                .frame(width: 8, height: 8)
+            
+            Text("\(step.stepNumber).")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            
+            Text(step.description)
+                .font(.caption)
+                .lineLimit(1)
+            
+            Spacer()
+            
+            if isCurrent {
+                AppKitProgressView()
+                    .scaleEffect(0.5)
+            }
+        }
+        .padding(.vertical, 4)
+        .padding(.horizontal, 8)
+        .background(isCurrent ? Color.blue.opacity(0.1) : Color.clear)
+        .cornerRadius(4)
+    }
+    
+    private var statusColor: Color {
+        switch step.status {
+        case .pending:
+            return .gray
+        case .executing:
+            return .blue
+        case .completed:
+            return .green
+        case .failed:
+            return .red
+        case .skipped:
+            return .orange
+        }
     }
 }
 
