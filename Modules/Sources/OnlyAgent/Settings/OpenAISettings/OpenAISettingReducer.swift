@@ -18,7 +18,7 @@ public struct OpenAISettingReducer {
         public var host: String = "api.openai.com"
         public var models: [String] = []
         public var verified: Bool? = nil
-        
+        public var isVerifying: Bool = false
         public init() {}
     }
     
@@ -55,6 +55,7 @@ public struct OpenAISettingReducer {
                     }
             
                 case .check:
+                    state.isVerifying = true
                     modelProviderService.setAPIKey(.openai, state.apiKey, state.host)
                     $apiKey.withLock { $0 = state.apiKey }
                     $host.withLock { $0 = state.host }
@@ -76,10 +77,12 @@ public struct OpenAISettingReducer {
                     return .none
                     
                 case let .verify(.success(result)):
+                    state.isVerifying = false
                     state.verified = result
                     return .none
                     
                 case .verify(.failure(_)):
+                    state.isVerifying = false
                     return .none
                     
                 case .binding:

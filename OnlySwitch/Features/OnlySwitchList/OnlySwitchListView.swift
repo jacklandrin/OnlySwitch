@@ -231,10 +231,12 @@ struct OnlySwitchListView: View {
             }
             if switchVM.cleanupItemList.count > 0 {
                 HStack {
-                    Rectangle().frame(height: 1)
+                    Rectangle()
+                        .frame(height: 1)
                         .foregroundColor(.gray)
                     Text("CLEANUP".localized())
-                    Rectangle().frame(height: 1)
+                    Rectangle()
+                        .frame(height: 1)
                         .foregroundColor(.gray)
                 }.frame(height:30)
                     .opacity(0.7)
@@ -244,8 +246,9 @@ struct OnlySwitchListView: View {
                     ForEach(switchVM.cleanupItemList.indices, id: \.self) { index in
                         HStack {
                             let item = switchVM.cleanupItemList[index]
-                            SwitchBarView().environmentObject(item)
-                                    .frame(height:Layout.singleSwitchHeight)
+                            SwitchBarView()
+                                .environmentObject(item)
+                                .frame(height:Layout.singleSwitchHeight)
                         }
                     }
                 }
@@ -253,21 +256,25 @@ struct OnlySwitchListView: View {
             
             if switchVM.toolItemList.count > 0 {
                 HStack {
-                    Rectangle().frame(height: 1)
+                    Rectangle()
+                        .frame(height: 1)
                         .foregroundColor(.gray)
                     Text("TOOLS".localized())
-                    Rectangle().frame(height: 1)
+                    Rectangle()
+                        .frame(height: 1)
                         .foregroundColor(.gray)
-                }.frame(height:30)
-                    .opacity(0.7)
-                    .shadow(radius: 1)
+                }
+                .frame(height:30)
+                .opacity(0.7)
+                .shadow(radius: 1)
                 
                 LazyVGrid(columns: columns, spacing: 0) {
                     ForEach(switchVM.toolItemList.indices, id:\.self) { index in
                         HStack {
                             let item = switchVM.toolItemList[index]
-                            SwitchBarView().environmentObject(item)
-                                    .frame(height:Layout.singleSwitchHeight)
+                            SwitchBarView()
+                                .environmentObject(item)
+                                .frame(height:Layout.singleSwitchHeight)
                         }
                     }
                 }
@@ -275,9 +282,12 @@ struct OnlySwitchListView: View {
             
             if switchVM.shortcutsList.count > 0 {
                 HStack {
-                    Rectangle().frame(height: 1)
+                    Rectangle()
+                        .frame(height: 1)
                         .foregroundColor(.gray)
+                    
                     Text("ACTIONS".localized())
+                    
                     Rectangle().frame(height: 1)
                         .foregroundColor(.gray)
                 }
@@ -289,8 +299,9 @@ struct OnlySwitchListView: View {
                     ForEach(switchVM.shortcutsList.indices, id:\.self) { index in
                         HStack {
                             let item = switchVM.shortcutsList[index]
-                            ShortcutsBarView().environmentObject(item)
-                                    .frame(height:Layout.singleSwitchHeight)
+                            ShortcutsBarView()
+                                .environmentObject(item)
+                                .frame(height:Layout.singleSwitchHeight)
                         }
                     }
                 }
@@ -321,7 +332,8 @@ struct OnlySwitchListView: View {
                 }
             }
             
-        }.padding(.horizontal, 0)
+        }
+        .padding(.horizontal, 0)
     }
     
     var recommendApp: some View {
@@ -347,8 +359,9 @@ struct OnlySwitchListView: View {
                 }
             }.frame(height: 45)
             
-        }.padding(.horizontal, 15)
-            .opacity(playerItem.isPlaying ? 0.5 : 1)
+        }
+        .padding(.horizontal, 15)
+        .opacity(playerItem.isPlaying ? 0.5 : 1)
     }
     
     var bottomBar : some View {

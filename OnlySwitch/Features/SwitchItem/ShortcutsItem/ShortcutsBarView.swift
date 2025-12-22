@@ -7,6 +7,7 @@
 
 import Defines
 import SwiftUI
+import Design
 
 struct ShortcutsBarView: View {
     @EnvironmentObject var shortcutsBarVM: ShortcutsBarVM
@@ -25,14 +26,12 @@ struct ShortcutsBarView: View {
             
             Spacer()
         
-            ProgressView()
-                .progressViewStyle(.circular)
-                .controlSize(.small)
+            AppKitProgressView()
                 .isHidden(!shortcutsBarVM.processing,remove: true)
             
-            Button(action: {
+            Button {
                 shortcutsBarVM.runShortCut()
-            }, label: {
+            } label: {
                 ZStack {
                     RoundedRectangle(cornerRadius: 15)
                         .foregroundColor(.accentColor)
@@ -43,10 +42,12 @@ struct ShortcutsBarView: View {
                         .minimumScaleFactor(0.01)
                         .foregroundColor(.white)
                         .padding(1)
-                }.frame(width: 46, height: 30)
-            }).buttonStyle(.plain)
-                .shadow(radius: 2)
-                .padding(.horizontal, 6)
+                }
+                .frame(width: 46, height: 30)
+            }
+            .buttonStyle(.plain)
+            .shadow(radius: 2)
+            .padding(.horizontal, 6)
 
         }
     }

@@ -16,7 +16,6 @@ public struct OllamaSettingReducer {
     public struct State {
         var host: String = "http://localhost:11434"
         var modelTags: IdentifiedArrayOf<OllamaTag> = []
-        
         public init() {}
     }
     

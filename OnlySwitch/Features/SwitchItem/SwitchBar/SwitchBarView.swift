@@ -52,15 +52,17 @@ struct SwitchBarView: View {
                         Task {
                             await switchOption.doSwitch(isOn: isOn)
                         }
-                    }.disabled(switchOption.processing)
-                        .animation(.spring(), value: switchOption.isOn)
-                        .scaleEffect(0.8)
+                    }
+                    .disabled(switchOption.processing)
+                    .animation(.spring(), value: switchOption.isOn)
+                    .scaleEffect(0.8)
+                    
                 case .Button:
-                    Button(action: {
+                    Button {
                         Task {
                             await switchOption.doSwitch(isOn: true)
                         }
-                    }, label: {
+                    } label: {
                         ZStack {
                             RoundedRectangle(cornerRadius: 15)
                                 .foregroundColor(.accentColor)
@@ -70,10 +72,13 @@ struct SwitchBarView: View {
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.02)
                                 .foregroundColor(.white)
-                        }.frame(width: 46, height: 30)
-                    }).buttonStyle(.plain)
-                        .shadow(radius: 2)
-                        .padding(.horizontal, 6)
+                        }
+                        .frame(width: 46, height: 30)
+                    }
+                    .buttonStyle(.plain)
+                    .shadow(radius: 2)
+                    .padding(.horizontal, 6)
+                    
                 case .Player:
                     Button {
                         Task {

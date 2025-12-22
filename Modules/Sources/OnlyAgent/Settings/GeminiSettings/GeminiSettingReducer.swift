@@ -17,7 +17,7 @@ public struct GeminiSettingReducer {
         public var apiKey: String = ""
         public var models: [String] = []
         public var verified: Bool? = nil
-        
+        public var isVerifying: Bool = false
         public init() {}
     }
     
@@ -59,6 +59,7 @@ public struct GeminiSettingReducer {
                     return .none
             
                 case .check:
+                    state.isVerifying = true
                     modelProviderService.setAPIKey(.gemini, state.apiKey, "")
                     $apiKey.withLock { $0 = state.apiKey }
                     return .run { send in
@@ -72,10 +73,12 @@ public struct GeminiSettingReducer {
                     }
                     
                 case let .verify(.success(result)):
+                    state.isVerifying = false
                     state.verified = result
                     return .none
                     
                 case .verify(.failure(_)):
+                    state.isVerifying = false
                     state.verified = false
                     return .none
                     

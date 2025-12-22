@@ -29,11 +29,16 @@ public struct GeminiSettingView: View {
                     HStack {
                         SecureInputView("", text: $store.apiKey)
                             
-                        if let verified = store.verified {
-                            if verified {
-                                Text("✅")
-                            } else {
-                                Text("❌")
+                        if store.isVerifying {
+                            AppKitProgressView()
+                                .scaleEffect(0.6)
+                        } else {
+                            if let verified = store.verified {
+                                if verified {
+                                    Text("✅")
+                                } else {
+                                    Text("❌")
+                                }
                             }
                         }
                         
