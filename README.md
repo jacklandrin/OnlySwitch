@@ -240,6 +240,7 @@ Since version 2.3.10, this switch can be controlled via right-click icons.
 * [swift-markdown-ui](https://github.com/gonzalezreal/swift-markdown-ui)
 * Key Light refers to [mac-brightnessctl](https://github.com/rakalex/mac-brightnessctl)
 * [OpenAI](https://github.com/MacPaw/OpenAI)
+* [ollama-swift](https://github.com/mattt/ollama-swift)
 
 ## Contributors
 
