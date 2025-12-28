@@ -82,11 +82,11 @@ class SwitchBarVM : BarProvider, ObservableObject, @MainActor SwitchDelegate {
     init(switchOperator: SwitchProvider) {
         self.switchOperator = switchOperator
         self.switchOperator.delegate = self
+        model.isHidden = !switchOperator.isVisible()
     }
     
     @MainActor
     func refreshStatus() {
-        model.isHidden = !switchOperator.isVisible()
         if switchType == .xcodeCache {
             if info == "" || info != "Calculating..." {
                 model.info = "Calculating..."

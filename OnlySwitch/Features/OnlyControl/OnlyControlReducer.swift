@@ -172,7 +172,6 @@ struct OnlyControlReducer {
             let orderDic = UserDefaults.standard.dictionary(forKey: UserDefaults.Key.onlyControlOrderWeight) as? [String: Int] ?? [String: Int]()
 
             let items: [ControlItemViewState] = allUnits.compactMap { (unit: BarProvider) -> ControlItemViewState? in
-
                 if let switchVM = unit as? SwitchBarVM {
                     guard !switchVM.isHidden else {
                         return nil
