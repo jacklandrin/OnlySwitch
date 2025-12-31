@@ -13,26 +13,35 @@ struct KeyLightView: View {
 
     var body: some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
-            VStack(alignment: .leading, spacing: 40) {
-                HStack {
-                    Text("Brightness:".localized())
-                    Slider(
-                        value: viewStore.binding(
-                            get: { _ in viewStore.brightness},
-                            send: { .setBrightness($0) }
+            Form {
+                // MARK: - Brightness Section
+                Section {
+                    HStack {
+                        Text("Brightness:".localized())
+                        Spacer()
+                        Slider(
+                            value: viewStore.binding(
+                                get: { _ in viewStore.brightness },
+                                send: { .setBrightness($0) }
+                            )
+                        )
+                        .frame(width: 120)
+                        Text("\(Int(viewStore.brightness * 100))%")
+                            .frame(width: 40, alignment: .trailing)
+                    }
+                    
+                    Toggle(
+                        "Adjust keyboard brightness in low light".localized(),
+                        isOn: viewStore.binding(
+                            get: { _ in viewStore.autoBrightness },
+                            send: { .setAutoBrightness($0) }
                         )
                     )
-                    .frame(width: 120, height: 10)
-                    Text("\(Int(viewStore.brightness * 100))%")
+                } header: {
+                    Text("Keyboard".localized())
                 }
-                Toggle(
-                    isOn: viewStore.binding(
-                        get: { _ in viewStore.autoBrightness },
-                        send: { .setAutoBrightness($0) }
-                    ),
-                    label: { Text("Adjust keyboard brightness in low light".localized()) }
-                )
             }
+            .formStyle(.grouped)
             .onAppear {
                 viewStore.send(.viewAppeared)
             }

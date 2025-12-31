@@ -13,102 +13,91 @@ struct PomodoroTimerSettingView: View {
     @Environment(\.colorScheme) private var colorScheme
     
     var body: some View {
-        HStack {
-            VStack(alignment:.trailing, spacing: 20) {
-                Text("Work:".localized())
-                    .frame(height:30)
-                Text("Break:".localized())
-                    .frame(height:30)
-                Text("Cycle Count:".localized())
-                    .frame(height:30)
-                Text("Notification Alert:".localized())
-                    .frame(height:30)
-                Text("Sound Alert:".localized())
-                    .frame(height:30)
-                Text("Work Alert:".localized())
-                    .frame(height:30)
-                Text("Break Alert:".localized())
-                    .frame(height:30)
+        Form {
+            // MARK: - Timer Section
+            Section {
+                Picker("Work:".localized(), selection: Binding(
+                    get: { ptSettingVM.workDuration / 60 },
+                    set: { ptSettingVM.workDuration = $0 * 60 }
+                )) {
+                    ForEach(ptSettingVM.workDurationList, id: \.self) { duration in
+                        Text("%d min".localizeWithFormat(arguments: duration)).tag(Int(duration))
+                    }
+                }
+                .pickerStyle(.menu)
+                
+                Picker("Break:".localized(), selection: Binding(
+                    get: { ptSettingVM.restDuration / 60 },
+                    set: { ptSettingVM.restDuration = $0 * 60 }
+                )) {
+                    ForEach(ptSettingVM.restDurationList, id: \.self) { duration in
+                        Text("%d min".localizeWithFormat(arguments: duration)).tag(Int(duration))
+                    }
+                }
+                .pickerStyle(.menu)
+                
+                Picker("Cycle Count:".localized(), selection: $ptSettingVM.cycleCount) {
+                    ForEach(ptSettingVM.cycleCountList, id: \.self) { count in
+                        Text(cycleCountText(count: count).localized()).tag(count)
+                    }
+                }
+                .pickerStyle(.menu)
+            } header: {
+                Text("Timer".localized())
             }
-            VStack(alignment:.leading, spacing: 20) {
-                MenuButton(label: Text("%d min".localizeWithFormat(arguments: ptSettingVM.workDuration / 60))) {
-                    
-                    ForEach(ptSettingVM.workDurationList, id:\.self) { duration in
-                        Button("%d min".localizeWithFormat(arguments: duration)) {
-                            ptSettingVM.workDuration = Int(duration) * 60
-                        }
-                    }
-                }
-                .frame(height: 30)
-                
-                MenuButton(label: Text("%d min".localizeWithFormat(arguments: ptSettingVM.restDuration / 60))) {
-                    
-                    ForEach(ptSettingVM.restDurationList, id:\.self) { duration in
-                        Button("%d min".localizeWithFormat(arguments: duration)) {
-                            ptSettingVM.restDuration = Int(duration) * 60
-                        }
-                    }
-                }
-                .frame(height: 30)
-                
-                MenuButton(label:Text(cycleCountText(count:ptSettingVM.cycleCount).localized())) {
-                    ForEach(ptSettingVM.cycleCountList, id:\.self) { count in
-                        Button(cycleCountText(count: count).localized()) {
-                            ptSettingVM.cycleCount = count
-                        }
-                    }
-                }
-                .frame(height: 30)
-                
+            
+            // MARK: - Alerts Section
+            Section {
                 Toggle("Allow notification alert".localized(), isOn: $ptSettingVM.allowNotificationAlert)
-                    .frame(height: 30)
                 
-                Toggle("Turn on sound alert".localized(),isOn: $effectSoundHelper.canPlayEffectSound)
-                    .frame(height: 30)
+                Toggle("Turn on sound alert".localized(), isOn: $effectSoundHelper.canPlayEffectSound)
                 
                 HStack {
-                    MenuButton(label: Text(EffectSound(rawValue: ptSettingVM.workAlert)!.alertNameConvert())) {
-                        
-                        ForEach(ptSettingVM.alertSounds, id:\.self) { sound in
-                            Button(sound.alertNameConvert()) {
-                                ptSettingVM.workAlert = sound.rawValue
-                            }
+                    Text("Work Alert:".localized())
+                    Spacer()
+                    Picker("", selection: $ptSettingVM.workAlert) {
+                        ForEach(ptSettingVM.alertSounds, id: \.self) { sound in
+                            Text(sound.alertNameConvert()).tag(sound.rawValue)
                         }
                     }
-                    .frame(height: 30)
+                    .pickerStyle(.menu)
+                    .labelsHidden()
                     
-                    Button(action: {
+                    Button {
                         effectSoundHelper.playSound(name: ptSettingVM.workAlert, type: "wav")
-                    }, label: {
+                    } label: {
                         Image(systemName: "play.circle")
                             .foregroundColor(colorScheme == .dark ? .white : .black)
-                    }).buttonStyle(.plain)
-                        .padding(.leading, 5)
-                }.disabled(!effectSoundHelper.canPlayEffectSound)
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(!effectSoundHelper.canPlayEffectSound)
+                }
                 
                 HStack {
-                    MenuButton(label: Text(EffectSound(rawValue: ptSettingVM.restAlert)!.alertNameConvert())) {
-                        
-                        ForEach(ptSettingVM.alertSounds, id:\.self) { sound in
-                            Button(sound.alertNameConvert()) {
-                                ptSettingVM.restAlert = sound.rawValue
-                            }
+                    Text("Break Alert:".localized())
+                    Spacer()
+                    Picker("", selection: $ptSettingVM.restAlert) {
+                        ForEach(ptSettingVM.alertSounds, id: \.self) { sound in
+                            Text(sound.alertNameConvert()).tag(sound.rawValue)
                         }
                     }
-                    .frame(height: 30)
+                    .pickerStyle(.menu)
+                    .labelsHidden()
                     
-                    Button(action: {
+                    Button {
                         effectSoundHelper.playSound(name: ptSettingVM.restAlert, type: "wav")
-                    }, label: {
+                    } label: {
                         Image(systemName: "play.circle")
                             .foregroundColor(colorScheme == .dark ? .white : .black)
-                    }).buttonStyle(.plain)
-                        .padding(.leading, 5)
-                    
-                }.disabled(!effectSoundHelper.canPlayEffectSound)
-                
-            }.frame(maxWidth:230)
-        } 
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(!effectSoundHelper.canPlayEffectSound)
+                }
+            } header: {
+                Text("Alerts".localized())
+            }
+        }
+        .formStyle(.grouped)
     }
     
     func cycleCountText(count:Int) -> String {

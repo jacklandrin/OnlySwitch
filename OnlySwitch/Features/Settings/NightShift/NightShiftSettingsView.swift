@@ -11,38 +11,41 @@ struct NightShiftSettingsView: View {
     @StateObject var vm = NightShiftSettingsVM()
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 40) {
-            HStack {
-                Text("Night Shift Strength".localized() + ":")
-                Slider(value: $vm.sliderValue)
-                    .frame(width: 120, height: 10)
-                Text("\(Int(vm.sliderValue * 100))%")
-                    .frame(width: 40, alignment: .leading)
-            }
-
-            VStack(alignment:.leading, spacing: 20) {
+        Form {
+            // MARK: - Strength Section
+            Section {
                 HStack {
-                    Toggle("", isOn: $vm.isScheduleOn)
-                    Text("Daily Schedule:".localized())
+                    Text("Night Shift Strength".localized() + ":")
+                    Spacer()
+                    Slider(value: $vm.sliderValue)
+                        .frame(width: 120)
+                    Text("\(Int(vm.sliderValue * 100))%")
+                        .frame(width: 40, alignment: .trailing)
                 }
-
+            } header: {
+                Text("Strength".localized())
+            }
+            
+            // MARK: - Schedule Section
+            Section {
+                Toggle("Daily Schedule:".localized(), isOn: $vm.isScheduleOn)
+                
                 DatePicker("from:".localized(),
                            selection: $vm.startDate,
                            displayedComponents: .hourAndMinute)
-                .frame(width:190)
+                
+                DatePicker("to:".localized(),
+                           selection: $vm.endDate,
+                           displayedComponents: .hourAndMinute)
 
-                HStack {
-                    DatePicker("to:    ".localized(),
-                               selection: $vm.endDate,
-                               displayedComponents: .hourAndMinute)
-                    .frame(width:190)
-
+            } header: {
+                Text("Schedule".localized())
+            } footer: {
+                if vm.isTomorrow {
                     Text("Tomorrow".localized())
-                        .foregroundColor(.green)
-                        .isHidden(!vm.isTomorrow)
                 }
-
-            }.frame(height: 94)
+            }
         }
+        .formStyle(.grouped)
     }
 }

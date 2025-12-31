@@ -11,56 +11,49 @@ struct KeepAwakeSettingView: View {
     @StateObject var vm = KeepAwakeSettingVM()
     
     var body: some View {
-        VStack(alignment:.leading, spacing: 20) {
-            HStack {
+        Form {
+            // MARK: - Duration Section
+            Section {
                 Toggle(isOn: $vm.scheduleMode) {
-                    Text("")
-                }.toggleStyle(.automatic)
-                Text("Keep Awake Until After:".localized())
-                Menu(vm.converTimeDescription(duration: vm.currentDuration)) {
-                    ForEach(vm.durationSet, id:\.self) { duration in
-                        Button(vm.converTimeDescription(duration: duration)){
-                            vm.currentDuration = duration
+                    HStack {
+                        Text("Keep Awake Until After:".localized())
+                        Spacer()
+                        Picker("", selection: $vm.currentDuration) {
+                            ForEach(vm.durationSet, id: \.self) { duration in
+                                Text(vm.converTimeDescription(duration: duration)).tag(duration)
+                            }
                         }
+                        .pickerStyle(.menu)
+                        .labelsHidden()
+                        .frame(width: 120)
                     }
-                }.frame(width:120, height: 30)
-                
+                }
+            } header: {
+                Text("Duration".localized())
             }
             
-            HStack {
-                VStack(alignment:.leading) {
-                    Toggle(isOn: $vm.afterMode) {
-                        Text("")
-                    }
-                    Spacer()
-                        .frame(height: 94)
+            // MARK: - Schedule Section
+            Section {
+                Toggle(isOn: $vm.afterMode) {
+                    Text("Daily Schedule:".localized())
                 }
                 
+                DatePicker("from:".localized(),
+                           selection: $vm.startDate,
+                           displayedComponents: .hourAndMinute)
                 
-                VStack(alignment:.leading, spacing: 20) {
-                    Text("Daily Schedule:".localized())
-                
-
-                    DatePicker("from:".localized(),
-                               selection: $vm.startDate,
-                               displayedComponents: .hourAndMinute)
-                    .frame(width:190)
-                
-                    HStack {
-                        DatePicker("to:    ".localized(),
-                                   selection: $vm.endDate,
-                                   displayedComponents: .hourAndMinute)
-                        .frame(width:190)
-                        
-                        Text("Tomorrow".localized())
-                            .foregroundColor(.green)
-                            .isHidden(!vm.isTomorrow)
-                    }
-                    
-                }.frame(height: 94)
-                
+                DatePicker("to:".localized(),
+                           selection: $vm.endDate,
+                           displayedComponents: .hourAndMinute)
+            } header: {
+                Text("Schedule".localized())
+            } footer: {
+                if vm.isTomorrow {
+                    Text("Tomorrow".localized())
+                }
             }
         }
+        .formStyle(.grouped)
     }
 }
 

@@ -32,27 +32,26 @@ struct SettingsView: View {
                             .lineLimit(2)
                     }
                 }
-                if #available(macOS 13.0, *) {
-
-                } else {
-                    HostingWindowFinder{ window in
-                        if let window = window {
-                            NotificationCenter.default.post(name: .settingsWindowOpened, object: window)
-                        }
-                    }.frame(width: 0, height: 0)
-                        .padding(0)
-                }
-            }.listStyle(.sidebar)
-            if #available(macOS 13.0, *) {
                 HostingWindowFinder{ window in
                     if let window = window {
                         NotificationCenter.default.post(name: .settingsWindowOpened, object: window)
                     }
-                    settingVM.selection = .General
-                }.frame(width: 0, height: 0)
-                    .padding(0)
-            }
-        }.navigationTitle("Settings".localized())
+                }
+                .frame(width: 0, height: 0)
+                .padding(0)
+                
+            }.listStyle(.sidebar)
+            
+            HostingWindowFinder{ window in
+                if let window = window {
+                    NotificationCenter.default.post(name: .settingsWindowOpened, object: window)
+                }
+                settingVM.selection = .General
+            }.frame(width: 0, height: 0)
+                .padding(0)
+            
+        }
+        .navigationTitle("Settings".localized())
             .toolbar {
                 ToolbarItem(placement: .automatic) {
                     Button(action: {
