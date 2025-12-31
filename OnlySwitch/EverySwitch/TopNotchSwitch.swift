@@ -62,16 +62,12 @@ final class TopNotchSwitch: SwitchProvider, CurrentScreen {
     // MARK: - private functions
     
     private var isNotchScreen: Bool {
-        if #available(macOS 12, *) {
-            guard let screen = getScreenWithMouse() else { return false }
-            guard let topLeftArea = screen.auxiliaryTopLeftArea, let _ = screen.auxiliaryTopRightArea else {return false}
-            
-            notchHeight = NSApplication.shared.mainMenu?.menuBarHeight ?? (topLeftArea.height + 5) //auxiliaryTopLeftArea is not equivalent to menubar's height
-            Logger.internalSwitch.debug("get notchHeight:\(self.notchHeight)")
-            return true
-        } else {
-            return false
-        }
+        guard let screen = getScreenWithMouse() else { return false }
+        guard let topLeftArea = screen.auxiliaryTopLeftArea, let _ = screen.auxiliaryTopRightArea else { return false }
+        
+        notchHeight = NSApplication.shared.mainMenu?.menuBarHeight ?? (topLeftArea.height + 5) //auxiliaryTopLeftArea is not equivalent to menubar's height
+        Logger.internalSwitch.debug("get notchHeight:\(self.notchHeight)")
+        return true
     }
     
     private var myAppPath: String? {

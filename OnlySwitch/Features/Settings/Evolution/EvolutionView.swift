@@ -9,7 +9,6 @@ import AlertToast
 import ComposableArchitecture
 import SwiftUI
 
-@available(macOS 13.0, *)
 struct EvolutionView: View {
 
     let store: StoreOf<EvolutionReducer>
@@ -152,7 +151,6 @@ struct EvolutionView: View {
     }
 }
 
-@available(macOS 13.0, *)
 struct EvolutionView_Previews: PreviewProvider {
     static var previews: some View {
         EvolutionView(

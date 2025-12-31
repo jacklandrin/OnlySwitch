@@ -9,7 +9,6 @@ import Foundation
 import ComposableArchitecture
 import Switches
 
-@available(macOS 13.0, *)
 @Reducer
 struct StickerReducer {
     @ObservableState

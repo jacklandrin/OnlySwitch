@@ -118,11 +118,7 @@ struct SettingsView: View {
                 DimScreenSettingView()
 
             case .Evolution:
-                if #available(macOS 13.0, *) {
-                    EvolutionView(store: settingVM.evolutionStore)
-                } else {
-                    EmptyView()
-                }
+                EvolutionView(store: settingVM.evolutionStore)
 
             case .ModelProviders:
                 if #available(macOS 26.0, *) {

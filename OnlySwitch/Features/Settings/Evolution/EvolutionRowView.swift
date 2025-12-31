@@ -10,7 +10,6 @@ import SwiftUI
 import KeyboardShortcuts
 import Utilities
 
-@available(macOS 13.0, *)
 struct EvolutionRowView: View {
 
     let store: StoreOf<EvolutionRowReducer>
@@ -67,7 +66,6 @@ struct EvolutionRowView: View {
     }
 }
 
-@available(macOS 13.0, *)
 struct EvolutionRowView_Previews: PreviewProvider {
     static var previews: some View {
         EvolutionRowView(

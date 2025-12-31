@@ -9,7 +9,6 @@ import ComposableArchitecture
 import MarkdownUI
 import SwiftUI
 
-@available(macOS 13.0, *)
 struct StickerView: View {
     
     @Perception.Bindable var store: StoreOf<StickerReducer>
@@ -237,7 +236,6 @@ struct StickerView: View {
     }
 }
 
-@available(macOS 13.0, *)
 #Preview {
     StickerView(
         store: Store(initialState: .init(sticker: StickerModel())) {

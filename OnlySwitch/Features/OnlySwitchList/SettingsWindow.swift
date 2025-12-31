@@ -39,12 +39,10 @@ class SettingsWindow: NSWindow, NSWindowDelegate {
                     self.isInitialized = true
                     self.makeKeyAndOrderFront(nil)
 
-                    if #available(macOS 13.0, *) {
-                        var windowFrame = self.frame
-                        windowFrame.size.height = Layout.settingWindowHeight
-                        self.setFrame(windowFrame, display: true)
-                        self.styleMask.remove(.resizable)
-                    }
+                    var windowFrame = self.frame
+                    windowFrame.size.height = Layout.settingWindowHeight
+                    self.setFrame(windowFrame, display: true)
+                    self.styleMask.remove(.resizable)
                     window.close()
                 } else {
                     if !self.isShowing {
@@ -80,12 +78,10 @@ class SettingsWindow: NSWindow, NSWindowDelegate {
         if isInitialized {
             makeKeyAndOrderFront(nil)
             makeKey()
-            if #available(macOS 13.0, *) {
-                var windowFrame = frame
-                windowFrame.size.height = Layout.settingWindowHeight
-                setFrame(windowFrame, display: true)
-                styleMask.remove(.resizable)
-            }
+            var windowFrame = frame
+            windowFrame.size.height = Layout.settingWindowHeight
+            setFrame(windowFrame, display: true)
+            styleMask.remove(.resizable)
         } else {
             if let url = URL(string: "onlyswitch://SettingsWindow") {
                 if #available(macOS 13.3, *) {

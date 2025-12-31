@@ -90,34 +90,18 @@ class ShortcutsSettingVM:ObservableObject {
     }
     
     func shouldLoadShortcutsList() {
-        if #available(macOS 13.0, *) {
-            DispatchQueue.global().async {
-                self.loadShortcutsList()
-            }
-        } else {
+        DispatchQueue.global().async {
             self.loadShortcutsList()
         }
     }
     
     private func loadShortcutsList() {
         Task { @MainActor in
-            var result:String = ""
-            if #available(macOS 13.0, *) {
-                do {
-                    result = try await ShorcutsCMD.getList.runAppleScript(isShellCMD: true)
-                } catch {
+            var result: String = ""
+            do {
+                result = try await ShorcutsCMD.getList.runAppleScript(isShellCMD: true)
+            } catch {
 
-                }
-            }
-
-            if #available(macOS 13.0, *) {
-
-            } else {
-                do {
-                    result = try await ShorcutsCMD.getList.runAppleScript(isShellCMD: true)
-                } catch {
-
-                }
             }
             let allshortcuts = result.split(separator: "\r")
             let shortcutsDic = Preferences.shared.shortcutsDic

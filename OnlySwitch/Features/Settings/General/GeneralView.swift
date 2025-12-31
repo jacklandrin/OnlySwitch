@@ -71,14 +71,15 @@ struct GeneralView: View, EmailProvider {
                             VStack {
                                 ForEach(generalVM.menubarIcons, id: \.self) { iconName in
                                     HStack {
-                                        Button(action: {
+                                        Button {
                                             generalVM.currentMenubarIcon = iconName
-                                        }, label: {
+                                        } label: {
                                             Image(iconName)
                                                 .resizable()
                                                 .scaledToFit()
                                                 .frame(width: 22, height: 22)
-                                        }).buttonStyle(PlainButtonStyle())
+                                        }
+                                        .buttonStyle(PlainButtonStyle())
                                     }
                                     .frame(width: 50)
                                     .background(hoverItem == iconName ? Color.blue : Color.clear)
@@ -114,7 +115,7 @@ struct GeneralView: View, EmailProvider {
                     
                     if !generalVM.newestVersion.isEmpty {
                         if generalVM.isTheNewestVersion {
-                            Text("You're up to date!".localized())
+                            Text("You’re up to date!".localized())
                                 .foregroundColor(.green)
                         } else {
                             Text("The latest version is v%@".localizeWithFormat(arguments: generalVM.newestVersion))

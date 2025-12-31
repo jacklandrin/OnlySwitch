@@ -29,34 +29,31 @@ final class TopStickerSwitch: SwitchProvider {
     var currentStickers: [StickerModel] = []
     
     init() {
-        
-        if #available(macOS 13.0, *) {
-            @Shared(.stickerCache) var stickerCache: [StickerModel]?
-            // Migration
-            if let oldStickerData,
-               let stickers = try? JSONDecoder().decode([StickerModel].self, from: oldStickerData) {
-                let stickersWithId = stickers.map {
-                    StickerModel(
-                        content: $0.content,
-                        color: $0.color,
-                        trancelucent: $0.trancelucent ?? false,
-                        previewMode: $0.previewMode ?? false
-                    )
-                }
-                $stickerCache.withLock { $0 = stickersWithId }
-                $oldStickerData.withLock { $0 = nil }
+        @Shared(.stickerCache) var stickerCache: [StickerModel]?
+        // Migration
+        if let oldStickerData,
+           let stickers = try? JSONDecoder().decode([StickerModel].self, from: oldStickerData) {
+            let stickersWithId = stickers.map {
+                StickerModel(
+                    content: $0.content,
+                    color: $0.color,
+                    trancelucent: $0.trancelucent ?? false,
+                    previewMode: $0.previewMode ?? false
+                )
             }
-            
-            
-            $stickerCache.publisher.sink { [weak self] stickers in
-                guard let self else { return }
-                let newStickers: [StickerModel] = stickers ?? []
-                Task { @MainActor in
-                    self.modifyWindows(by: newStickers)
-                }
-            }
-            .store(in: &cancellables)
+            $stickerCache.withLock { $0 = stickersWithId }
+            $oldStickerData.withLock { $0 = nil }
         }
+        
+        
+        $stickerCache.publisher.sink { [weak self] stickers in
+            guard let self else { return }
+            let newStickers: [StickerModel] = stickers ?? []
+            Task { @MainActor in
+                self.modifyWindows(by: newStickers)
+            }
+        }
+        .store(in: &cancellables)
     }
     
     @MainActor
@@ -71,35 +68,29 @@ final class TopStickerSwitch: SwitchProvider {
     
     @MainActor
     func operateSwitch(isOn: Bool) async throws {
-        if #available(macOS 13.0, *) {
-            @Shared(.stickerCache) var stickerCache: [StickerModel]?
-            if isOn {
-                if stickerCache == nil || stickerCache?.count == 0 {
-                    $stickerCache.withLock { $0 = [StickerModel()] }
-                }
-                guard let stickerCache else {
-                    return
-                }
-                windows = stickerCache.map {
-                    showWindow(sticker: $0)
-                }
-                isWindowVisable = true
-                currentStickers = stickerCache
-            } else {
-                for window in windows {
-                    window.close()
-                }
-                isWindowVisable = false
+        @Shared(.stickerCache) var stickerCache: [StickerModel]?
+        if isOn {
+            if stickerCache == nil || stickerCache?.count == 0 {
+                $stickerCache.withLock { $0 = [StickerModel()] }
             }
+            guard let stickerCache else {
+                return
+            }
+            windows = stickerCache.map {
+                showWindow(sticker: $0)
+            }
+            isWindowVisable = true
+            currentStickers = stickerCache
+        } else {
+            for window in windows {
+                window.close()
+            }
+            isWindowVisable = false
         }
     }
     
     func isVisible() -> Bool {
-        if #available(macOS 13.0, *) {
-            return true
-        } else {
-            return false
-        }
+        return true
     }
     
     private static func createWindow(with frame: NSRect) -> StickerWindow {
@@ -125,7 +116,6 @@ final class TopStickerSwitch: SwitchProvider {
         return window
     }
     
-    @available(macOS 13.0, *)
     private func showWindow(sticker: StickerModel) -> StickerWindow {
         let view = NSHostingView(
             rootView: StickerView(
@@ -149,7 +139,6 @@ final class TopStickerSwitch: SwitchProvider {
         return stickerWindow
     }
     
-    @available(macOS 13.0, *)
     private func modifyWindows(by newStickers: [StickerModel]) {
         let idFor: (StickerModel) -> String = { $0.id ?? "stickerWindow" }
         let newIds = Set(newStickers.map(idFor))

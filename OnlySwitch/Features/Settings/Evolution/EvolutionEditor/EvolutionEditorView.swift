@@ -10,7 +10,6 @@ import ComposableArchitecture
 import SwiftUI
 import Switches
 
-@available(macOS 13.0, *)
 struct EvolutionEditorView: View {
     let columns = [
         GridItem(.flexible()),
@@ -162,7 +161,6 @@ struct EvolutionEditorView: View {
     }
 }
 
-@available(macOS 13.0, *)
 extension EvolutionEditorView {
     static let iconNames = [
         "lightswitch.on.square",
@@ -222,7 +220,6 @@ extension EvolutionEditorView {
     ]
 }
 
-@available(macOS 13.0, *)
 struct EvolutionEditorView_Previews: PreviewProvider {
     static var previews: some View {
         EvolutionEditorView(

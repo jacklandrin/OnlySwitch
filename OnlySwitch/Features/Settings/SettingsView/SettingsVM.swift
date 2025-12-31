@@ -52,11 +52,6 @@ class SettingsVM: ObservableObject {
 
     init() {
         settingItems = SettingsItem.allCases
-        if #available(macOS 13.0, *) {} else {
-            if let index = settingItems.firstIndex(of: .Evolution) {
-                settingItems.remove(at: index)
-            }
-        }
         if #available(macOS 26.0, *) {} else {
             if let index = settingItems.firstIndex(of: .ModelProviders) {
                 settingItems.remove(at: index)
