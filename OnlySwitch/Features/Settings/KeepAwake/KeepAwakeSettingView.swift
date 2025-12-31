@@ -38,13 +38,18 @@ struct KeepAwakeSettingView: View {
                     Text("Daily Schedule:".localized())
                 }
                 
-                DatePicker("from:".localized(),
-                           selection: $vm.startDate,
-                           displayedComponents: .hourAndMinute)
+                DatePicker(
+                    "from:".localized(),
+                    selection: $vm.startDate,
+                    displayedComponents: .hourAndMinute
+                )
                 
-                DatePicker("to:".localized(),
-                           selection: $vm.endDate,
-                           displayedComponents: .hourAndMinute)
+                DatePicker(
+                    "to:".localized(),
+                    selection: $vm.endDate,
+                    displayedComponents: .hourAndMinute
+                )
+                
             } header: {
                 Text("Schedule".localized())
             } footer: {

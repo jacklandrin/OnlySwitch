@@ -30,13 +30,17 @@ struct NightShiftSettingsView: View {
             Section {
                 Toggle("Daily Schedule:".localized(), isOn: $vm.isScheduleOn)
                 
-                DatePicker("from:".localized(),
-                           selection: $vm.startDate,
-                           displayedComponents: .hourAndMinute)
+                DatePicker(
+                    "from:".localized(),
+                    selection: $vm.startDate,
+                    displayedComponents: .hourAndMinute
+                )
                 
-                DatePicker("to:".localized(),
-                           selection: $vm.endDate,
-                           displayedComponents: .hourAndMinute)
+                DatePicker(
+                    "to:".localized(),
+                    selection: $vm.endDate,
+                    displayedComponents: .hourAndMinute
+                )
 
             } header: {
                 Text("Schedule".localized())

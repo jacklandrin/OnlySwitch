@@ -32,24 +32,8 @@ struct SettingsView: View {
                             .lineLimit(2)
                     }
                 }
-                HostingWindowFinder{ window in
-                    if let window = window {
-                        NotificationCenter.default.post(name: .settingsWindowOpened, object: window)
-                    }
-                }
-                .frame(width: 0, height: 0)
-                .padding(0)
-                
-            }.listStyle(.sidebar)
-            
-            HostingWindowFinder{ window in
-                if let window = window {
-                    NotificationCenter.default.post(name: .settingsWindowOpened, object: window)
-                }
-                settingVM.selection = .General
-            }.frame(width: 0, height: 0)
-                .padding(0)
-            
+            }
+            .listStyle(.sidebar)
         }
         .navigationTitle("Settings".localized())
             .toolbar {
