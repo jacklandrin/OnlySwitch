@@ -20,14 +20,12 @@ final class TopStickerSwitch: SwitchProvider {
 
     var delegate: SwitchDelegate?
 
-    private var windows: [StickerWindow] = []
-    private var isWindowVisable = false
-
-    private var cancellables: Set<AnyCancellable> = []
-    
     @Shared(.oldStickers) var oldStickerData: Data?
-    var currentStickers: [StickerModel] = []
-    
+
+    private var stickerWindowManager: StickerWindowManager {
+        StickerWindowManager.shared
+    }
+
     init() {
         @Shared(.stickerCache) var stickerCache: [StickerModel]?
         // Migration
@@ -44,8 +42,48 @@ final class TopStickerSwitch: SwitchProvider {
             $stickerCache.withLock { $0 = stickersWithId }
             $oldStickerData.withLock { $0 = nil }
         }
-        
-        
+
+        stickerWindowManager.startObserving()
+    }
+
+    @MainActor
+    func currentStatus() async -> Bool {
+        stickerWindowManager.isShowing
+    }
+
+    @MainActor
+    func currentInfo() async -> String {
+        ""
+    }
+
+    @MainActor
+    func operateSwitch(isOn: Bool) async throws {
+        if isOn {
+            stickerWindowManager.show()
+        } else {
+            stickerWindowManager.hide()
+        }
+    }
+
+    func isVisible() -> Bool {
+        return true
+    }
+}
+
+// MARK: - StickerWindowManager
+
+final class StickerWindowManager {
+    static let shared = StickerWindowManager()
+
+    private(set) var isShowing: Bool = false
+    private var windows: [StickerWindow] = []
+    private var currentStickers: [StickerModel] = []
+    private var cancellables: Set<AnyCancellable> = []
+
+    private init() {}
+
+    func startObserving() {
+        @Shared(.stickerCache) var stickerCache: [StickerModel]?
         $stickerCache.publisher.sink { [weak self] stickers in
             guard let self else { return }
             let newStickers: [StickerModel] = stickers ?? []
@@ -55,104 +93,45 @@ final class TopStickerSwitch: SwitchProvider {
         }
         .store(in: &cancellables)
     }
-    
-    @MainActor
-    func currentStatus() async -> Bool {
-        isWindowVisable
-    }
 
     @MainActor
-    func currentInfo() async -> String {
-        ""
-    }
-    
-    @MainActor
-    func operateSwitch(isOn: Bool) async throws {
+    func show() {
         @Shared(.stickerCache) var stickerCache: [StickerModel]?
-        if isOn {
-            if stickerCache == nil || stickerCache?.count == 0 {
-                $stickerCache.withLock { $0 = [StickerModel()] }
-            }
-            guard let stickerCache else {
-                return
-            }
-            windows = stickerCache.map {
-                showWindow(sticker: $0)
-            }
-            isWindowVisable = true
-            currentStickers = stickerCache
-        } else {
-            for window in windows {
-                window.close()
-            }
-            isWindowVisable = false
+        if stickerCache == nil || stickerCache?.count == 0 {
+            $stickerCache.withLock { $0 = [StickerModel()] }
         }
-    }
-    
-    func isVisible() -> Bool {
-        return true
-    }
-    
-    private static func createWindow(with frame: NSRect) -> StickerWindow {
-        let window = StickerWindow(
-            contentRect: frame,
-            styleMask: [.resizable],
-            backing: .buffered,
-            defer: false,
-            screen: .main
-        )
-        
-        [window].forEach {
-            $0.isMovable = true
-            $0.collectionBehavior = [.participatesInCycle, .canJoinAllSpaces, .fullScreenPrimary]
-            $0.level = .mainMenu
-            $0.ignoresMouseEvents = false
-            $0.hasShadow = true
-            $0.isReleasedWhenClosed = false
-            $0.backgroundColor = .clear
+        guard let stickerCache else {
+            return
         }
-        window.delegate = window
+        windows = stickerCache.map { StickerWindow(sticker: $0) }
+        isShowing = true
+        currentStickers = stickerCache
+    }
 
-        return window
+    @MainActor
+    func hide() {
+        for window in windows {
+            window.close()
+        }
+        windows.removeAll()
+        isShowing = false
     }
-    
-    private func showWindow(sticker: StickerModel) -> StickerWindow {
-        let view = NSHostingView(
-            rootView: StickerView(
-                store: Store(initialState: .init(sticker: sticker)) {
-                    StickerReducer()
-                        ._printChanges()
-                }
-            )
-        )
-        let stickerWindow = Self.createWindow(with: .zero)
-        let contenRect = stickerWindow.contentRect(forFrameRect: stickerWindow.frame)
-        let stickerId: String = sticker.id ?? "stickerWindow"
-        view.frame = contenRect
-        stickerWindow.contentView = view
-        stickerWindow.center()
-        stickerWindow.makeKeyAndOrderFront(nil)
-        stickerWindow.isMovableByWindowBackground = true
-        stickerWindow.setFrameUsingName(stickerId)
-        stickerWindow.setFrameAutosaveName(stickerId)
-        stickerWindow.stickerId = stickerId
-        return stickerWindow
-    }
-    
+
+    @MainActor
     private func modifyWindows(by newStickers: [StickerModel]) {
         let idFor: (StickerModel) -> String = { $0.id ?? "stickerWindow" }
         let newIds = Set(newStickers.map(idFor))
         let currentIds = Set(currentStickers.map(idFor))
 
         // If windows aren't visible, just keep our snapshot updated and exit.
-        if !isWindowVisable {
+        if !isShowing {
             currentStickers = newStickers
             return
         }
 
         // Show windows for stickers that are new (present in newStickers but not in currentStickers).
         for sticker in newStickers where !currentIds.contains(idFor(sticker)) {
-            let window = showWindow(sticker: sticker)
+            let window = StickerWindow(sticker: sticker)
             windows.append(window)
         }
 
@@ -166,9 +145,9 @@ final class TopStickerSwitch: SwitchProvider {
             // Remove closed windows from our tracking array.
             windows.removeAll { $0.stickerId == removedId }
         }
-        
+
         if windows.count == 0 {
-            isWindowVisable = false
+            isShowing = false
             NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.topSticker)
         }
         // Update the snapshot of currently displayed stickers.
@@ -176,11 +155,55 @@ final class TopStickerSwitch: SwitchProvider {
     }
 }
 
-class StickerWindow: NSWindow, NSWindowDelegate {
+// MARK: - StickerWindow
+
+final class StickerWindow: NSWindow, NSWindowDelegate {
     var stickerId: String = "stickerWindow"
-    
+
     override var canBecomeKey: Bool {
         true
+    }
+
+    convenience init(sticker: StickerModel) {
+        self.init(
+            contentRect: .zero,
+            styleMask: [.resizable],
+            backing: .buffered,
+            defer: false
+        )
+        setup(with: sticker)
+    }
+
+    private func setup(with sticker: StickerModel) {
+        let view = NSHostingView(
+            rootView: StickerView(
+                store: Store(initialState: .init(sticker: sticker)) {
+                    StickerReducer()
+                        ._printChanges()
+                }
+            )
+        )
+        let contentRect = contentRect(forFrameRect: frame)
+        let id = sticker.id ?? "stickerWindow"
+
+        view.frame = contentRect
+        contentView = view
+        stickerId = id
+
+        isMovable = true
+        collectionBehavior = [.participatesInCycle, .canJoinAllSpaces, .fullScreenPrimary]
+        level = .mainMenu
+        ignoresMouseEvents = false
+        hasShadow = true
+        isReleasedWhenClosed = false
+        backgroundColor = .clear
+        isMovableByWindowBackground = true
+        delegate = self
+
+        center()
+        makeKeyAndOrderFront(nil)
+        setFrameUsingName(id)
+        setFrameAutosaveName(id)
     }
 
     func windowShouldClose(_ sender: NSWindow) -> Bool {
