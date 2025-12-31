@@ -42,6 +42,12 @@ struct OnlyControlView: View {
                             .padding(.top, 30)
                             .padding(.horizontal, 30)
 
+                        if store.isAirPodsConnected && !store.airPodsBatteryValues.isEmpty {
+                            AirPodsBatteryView(batteryValues: store.airPodsBatteryValues)
+                                .padding(.bottom, 16)
+                                .padding(.leading, 40)
+                        }
+
                         TimerCountDownView(ptswitch: PomodoroTimerSwitch.shared, showImage: true)
                             .font(.system(size: 20, weight: .bold, design: .rounded))
                             .padding(.bottom, 12)
@@ -101,9 +107,6 @@ struct OnlyControlView: View {
             .padding(10)
             .task {
                 store.send(.task)
-            }
-            .onAppear {
-                store.send(.refreshDashboard)
             }
         }
     }

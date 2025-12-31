@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AirPodsBatteryView: View {
-    var batteryValues:[Float]
+    var batteryValues: [Float]
     @State var batteryText = ["C","L","R"]
     private let viewWidth = 24.0
     private let viewHeight = 10.0
@@ -53,7 +53,8 @@ struct AirPodsBatteryView: View {
                 }
                 
             }
-        }.frame(width:viewWidth)
+        }
+        .frame(width: viewWidth)
     }
 }
 
