@@ -18,106 +18,58 @@ struct GeneralView: View, EmailProvider {
     @StateObject var generalVM = GeneralVM()
     @State var hoverItem = ""
     var body: some View {
-        VStack {
-            HStack {
-                VStack(alignment: .trailing, spacing: Layout.generalSettingSpacing) {
-                    Text("Launch:".localized())
-                        .frame(height: Layout.generalSettingItemHeight)
-                        
-                    Text("Language:".localized())
-                        .frame(height: Layout.generalSettingItemHeight)
-                    
-                    Text("Appearance:".localized())
-                        .frame(height: Layout.generalSettingItemHeight)
-                    
-                    Text("Promotion:".localized())
-                        .frame(height: Layout.generalSettingItemHeight)
-                    
-                    Text("Switch Menu:".localized())
-                        .frame(height: Layout.generalSettingItemHeight)
-                    
-                    Text("Menu Bar Icon:".localized())
-                        .frame(height: Layout.generalSettingItemHeight)
-                    
-                    Text("Show List:".localized())
-                        .frame(height: Layout.generalSettingItemHeight)
-
-                    Text("Updates:".localized())
-                        .frame(height: Layout.generalSettingItemHeight)
-                    
-                    Text("Check Updates".localized())
-                        .frame(height: Layout.generalSettingItemHeight)
-
-                    Text("Cache:".localized())
-                        .frame(height: 50, alignment: .top)
-                        .padding(.top, 5)
-                    
-                    Text("Contact:".localized())
-                        .frame(height: Layout.generalSettingItemHeight)
-                    
-                    Text("Quit:".localized())
-                        .frame(height: Layout.generalSettingItemHeight)
+        Form {
+            // MARK: - General Section
+            Section {
+                LaunchAtLogin.Toggle {
+                    Text("Launch at login".localized())
                 }
-                VStack(alignment: .leading, spacing: Layout.generalSettingSpacing) {
-                    //launch at login
-                    LaunchAtLogin.Toggle {
-                        Text("Launch at login".localized())
-                    }.frame(height: 20)
-                        .padding(.bottom, 10)
-                    
-                    //languages
-                    VStack {
-                        MenuButton(label: Text(SupportedLanguages.getLangName(code: langManager.currentLang))) {
-                            ForEach(generalVM.supportedLanguages, id:\.self) { lang in
-                                Button(lang.name) {
-                                    langManager.setCertainLang(lang.code)
-                                    WidgetCenter.shared.reloadAllTimelines()
-                                }
-                            }
-                        }
-                        .frame(maxWidth: 150)
-                    }.frame(height:Layout.generalSettingItemHeight)
-                    
-                    //Appearance
-                    VStack {
-                        MenuButton(label: Text(generalVM.currentAppearance.localized())) {
-                            Button(SwitchListAppearance.single.rawValue.localized()) {
-                                generalVM.currentAppearance = SwitchListAppearance.single.rawValue
-                            }
-                            
-                            Button(SwitchListAppearance.dual.rawValue.localized()) {
-                                generalVM.currentAppearance = SwitchListAppearance.dual.rawValue
-                            }
-
-                            Button(SwitchListAppearance.onlyControl.rawValue.localized()) {
-                                generalVM.currentAppearance = SwitchListAppearance.onlyControl.rawValue
-                            }
-                        }.frame(maxWidth: 150)
-                    }.frame(height:Layout.generalSettingItemHeight)
-                    
-                    //Recommendation
-                    Toggle(isOn: $generalVM.showAds) {
-                        Text("Show More Apps".localized())
+                
+                Picker("Language:".localized(), selection: Binding(
+                    get: { langManager.currentLang },
+                    set: { newLang in
+                        langManager.setCertainLang(newLang)
+                        WidgetCenter.shared.reloadAllTimelines()
                     }
-                    .frame(height: Layout.generalSettingItemHeight)
-                    
-                    //Hide Menu after Running
-                    Toggle(isOn: $generalVM.hideMenuAfterRunning) {
-                        Text("Hide Menu after Running".localized())
+                )) {
+                    ForEach(generalVM.supportedLanguages, id: \.code) { lang in
+                        Text(lang.name).tag(lang.code)
                     }
-                    .frame(height: Layout.generalSettingItemHeight)
-                    
-                    //menubar icons
+                }
+                .pickerStyle(.menu)
+                
+                Picker("Appearance:".localized(), selection: $generalVM.currentAppearance) {
+                    Text(SwitchListAppearance.single.rawValue.localized())
+                        .tag(SwitchListAppearance.single.rawValue)
+                    Text(SwitchListAppearance.dual.rawValue.localized())
+                        .tag(SwitchListAppearance.dual.rawValue)
+                    Text(SwitchListAppearance.onlyControl.rawValue.localized())
+                        .tag(SwitchListAppearance.onlyControl.rawValue)
+                }
+                .pickerStyle(.menu)
+            } header: {
+                Text("General".localized())
+            }
+            
+            // MARK: - Menu Section
+            Section {
+                Toggle("Show More Apps".localized(), isOn: $generalVM.showAds)
+                
+                Toggle("Hide Menu after Running".localized(), isOn: $generalVM.hideMenuAfterRunning)
+                
+                HStack {
+                    Text("Menu Bar Icon".localized())
+                    Spacer()
                     Image(generalVM.currentMenubarIcon)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 22,height: 22)
+                        .frame(width: 22, height: 22)
                         .onTapGesture {
                             generalVM.showMenubarIconPopover = true
                         }
                         .popover(isPresented: $generalVM.showMenubarIconPopover, arrowEdge: .bottom) {
                             VStack {
-                                ForEach(generalVM.menubarIcons, id:\.self) { iconName in
+                                ForEach(generalVM.menubarIcons, id: \.self) { iconName in
                                     HStack {
                                         Button(action: {
                                             generalVM.currentMenubarIcon = iconName
@@ -125,86 +77,99 @@ struct GeneralView: View, EmailProvider {
                                             Image(iconName)
                                                 .resizable()
                                                 .scaledToFit()
-                                                .frame(width: 22, height:  22)
+                                                .frame(width: 22, height: 22)
                                         }).buttonStyle(PlainButtonStyle())
                                     }
                                     .frame(width: 50)
                                     .background(hoverItem == iconName ? Color.blue : Color.clear)
-                                    .onHover{_ in
+                                    .onHover { _ in
                                         withAnimation {
                                             hoverItem = iconName
                                         }
                                     }
                                 }
-                            }.frame(width: 50)
-                                .padding(.vertical, 10)
-                        }
-                        .frame(height:Layout.generalSettingItemHeight)
-                    
-                    //show list
-                    KeyboardShortcuts.Recorder(for: generalVM.invokePopoverName)
-                        .frame(height:Layout.generalSettingItemHeight)
-
-                    //check update
-                    HStack {
-                        Button("Check For Update...".localized()) {
-                            generalVM.checkUpdate()
-                        }
-                        
-                        if !generalVM.newestVersion.isEmpty {
-                            if generalVM.isTheNewestVersion {
-                                Text("You’re up to date!".localized())
-                                    .foregroundColor(.green)
-                            } else {
-                                Text("The latest version is v%@".localizeWithFormat(arguments: generalVM.newestVersion))
-                                    .foregroundColor(.red)
                             }
+                            .frame(width: 50)
+                            .padding(.vertical, 10)
                         }
-                        
-                        ProgressView()
-                            .progressViewStyle(.circular)
-                            .controlSize(.small)
-                            .isHidden(!generalVM.showProgress, remove: true)
-                    }.frame(height: Layout.generalSettingItemHeight)
-                    
-                    //check update on launch
-                    Toggle(
-                        isOn: $generalVM.checkIfUpdateOnlaunch,
-                        label: {
-                            Text("Check Updates on Launch".localized())
-                        }
-                    )
-                    .frame(height: Layout.generalSettingItemHeight)
-
-                    //clear cache
-                    VStack(alignment:.leading,spacing: 15) {
-                        HStack {
-                            Text(generalVM.cacheSize)
-                            Button("Clear Cache".localized()) {
-                                generalVM.clearCache()
-                                generalVM.showCacheSize()
-                            }
-                        }
-                        Text("Cache for Hide Notch Switch".localized())
-                            .foregroundColor(.gray)
-                    }.frame(height: 50)
-                    
-                    //feedback
-                    Button("Send Email to Jacklandrin".localized()) {
-                        sendEmail()
-                    }
-                    .frame(height:Layout.generalSettingItemHeight)
-                   
-                    //quit
-                    Button("Quit Only Switch".localized()) {
-                        NSApp.terminate(self)
-                    }
-                    .frame(height:Layout.generalSettingItemHeight)
                 }
+                
+                HStack {
+                    Text("Show List".localized())
+                    Spacer()
+                    KeyboardShortcuts.Recorder(for: generalVM.invokePopoverName)
+                }
+            } header: {
+                Text("Menu".localized())
+            }
+            
+            // MARK: - Updates Section
+            Section {
+                HStack {
+                    Button("Check For Update...".localized()) {
+                        generalVM.checkUpdate()
+                    }
+                    
+                    Spacer()
+                    
+                    if !generalVM.newestVersion.isEmpty {
+                        if generalVM.isTheNewestVersion {
+                            Text("You're up to date!".localized())
+                                .foregroundColor(.green)
+                        } else {
+                            Text("The latest version is v%@".localizeWithFormat(arguments: generalVM.newestVersion))
+                                .foregroundColor(.red)
+                        }
+                    }
+                    
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                        .controlSize(.small)
+                        .isHidden(!generalVM.showProgress, remove: true)
+                }
+                
+                Toggle("Check Updates on Launch".localized(), isOn: $generalVM.checkIfUpdateOnlaunch)
+            } header: {
+                Text("Updates".localized())
+            }
+            
+            // MARK: - Cache Section
+            Section {
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        Button("Clear Cache".localized()) {
+                            generalVM.clearCache()
+                            generalVM.showCacheSize()
+                        }
+                        
+                        Spacer()
+                        
+                        Text(generalVM.cacheSize)
+                    }
+                    Text("Cache for Hide Notch Switch".localized())
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+            } header: {
+                Text("Cache".localized())
+            }
+            
+            // MARK: - About Section
+            Section {
+                Button("Send Email to Jacklandrin".localized()) {
+                    sendEmail()
+                }
+                
+                Button("Quit Only Switch".localized()) {
+                    NSApp.terminate(self)
+                }
+            } header: {
+                Text("About".localized())
             }
         }
+        .formStyle(.grouped)
         .frame(minWidth: 500)
-        .onAppear{
+        .onAppear {
             generalVM.showCacheSize()
         }
         .toast(isPresenting: $generalVM.showErrorToast) {
