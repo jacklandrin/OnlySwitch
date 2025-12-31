@@ -21,22 +21,13 @@ class StatusBarController {
     private var mainItem: NSStatusItem
     private var markItem: NSStatusItem?
     private var popover: NSPopover
-    private var onlyControlStore: StoreOf<OnlyControlReducer> = .init(initialState: .init()) { OnlyControlReducer() }
     private var eventMonitor : EventMonitor?
     @UserDefaultValue(key: UserDefaults.Key.isMenubarCollapse, defaultValue: false)
     private var isMenubarCollapse:Bool
     private var hasOtherPopover = false
-    private var isOnlyControlWindowVisible = false
-    {
-        didSet {
-            if hasOtherPopover {
-                eventMonitor?.stop()
-            } else {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-                    self?.eventMonitor?.start()
-                }
-            }
-        }
+
+    private var onlyControlWindow: OnlyControlWindow {
+        OnlyControlWindow.shared
     }
 
     var currentMenubarIcon: String {
@@ -50,38 +41,6 @@ class StatusBarController {
     var menubarCollaspable: Bool {
         Preferences.shared.menubarCollaspable
     }
-
-    lazy var onlyControlWindow: NSWindow = {
-        let view = NSHostingView(rootView: OnlyControlView(store: onlyControlStore))
-        let window = OnlyControlWindow(
-            contentRect: .zero,
-            styleMask: [.borderless, .fullSizeContentView],
-            backing: .buffered,
-            defer: false,
-            screen: .main
-        )
-        let contentRect = window.contentRect(forFrameRect: window.frame)
-        view.frame = contentRect
-        view.canDrawSubviewsIntoLayer = true
-        window.contentView = view
-
-        [window].forEach {
-            $0.isMovable = true
-            $0.collectionBehavior = [.participatesInCycle, .canJoinAllSpaces, .fullScreenPrimary]
-            $0.level = .mainMenu
-            $0.ignoresMouseEvents = false
-            $0.hasShadow = true
-            $0.isReleasedWhenClosed = false
-            $0.backgroundColor = .clear
-            $0.isMovableByWindowBackground = true
-            $0.isOpaque = false
-        }
-
-        window.makeKeyAndOrderFront(nil)
-        window.center()
-        window.setIsVisible(false)
-        return window
-    }()
 
     init(_ popover: NSPopover) {
         self.popover = popover
@@ -139,7 +98,7 @@ class StatusBarController {
                 return
             }
             
-            let condition = currentAppearance == .onlyControl ? isOnlyControlWindowVisible : popover.isShown
+            let condition = currentAppearance == .onlyControl ? onlyControlWindow.isShowing : popover.isShown
             
             if condition {
                 hidePopover(sender)
@@ -163,7 +122,7 @@ class StatusBarController {
                 return
             }
 
-            let condition = currentAppearance == .onlyControl ? isOnlyControlWindowVisible : popover.isShown
+            let condition = currentAppearance == .onlyControl ? onlyControlWindow.isShowing : popover.isShown
 
             if(condition) {
                 hidePopover(sender)
@@ -361,11 +320,7 @@ class StatusBarController {
         }
         
         if currentAppearance == .onlyControl {
-            onlyControlWindow.makeKeyAndOrderFront(nil)
-            onlyControlWindow.setFrameUsingName("OnlyControlWindow")
-            onlyControlWindow.setFrameAutosaveName("OnlyControlWindow")
-            isOnlyControlWindowVisible = true
-            onlyControlStore.send(.showControl)
+            onlyControlWindow.show()
         } else {
             // macOS 26 Tahoe: Add safety check before showing popover
             guard !popover.isShown else {
@@ -396,14 +351,9 @@ class StatusBarController {
             }
         }
         
-        if currentAppearance == .onlyControl || isOnlyControlWindowVisible {
-            onlyControlStore.send(.hideControl)
-            self.popover.performClose(sender)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.51) { [weak self] in
-                guard let self else { return }
-                self.onlyControlWindow.close()
-                self.isOnlyControlWindowVisible = false
-            }
+        if currentAppearance == .onlyControl || onlyControlWindow.isShowing {
+            popover.performClose(sender)
+            onlyControlWindow.hide()
         } else {
             // macOS 26 Tahoe: Safety check before closing popover
             guard popover.isShown else {
@@ -426,7 +376,7 @@ class StatusBarController {
             return
         }
 
-        let condition = currentAppearance == .onlyControl ? onlyControlWindow.isVisible : popover.isShown
+        let condition = currentAppearance == .onlyControl ? OnlyControlWindow.shared.isShowing : popover.isShown
 
         if condition {
             hidePopover(event)

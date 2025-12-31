@@ -5,6 +5,7 @@
 //  Created by Jacklandrin on 2024/8/27.
 //
 
+import AppKit
 import ComposableArchitecture
 import SwiftUI
 import OnlyControl
@@ -77,10 +78,12 @@ struct OnlyControlView: View {
                             .transition(.move(edge: .bottom))
 
                         } else {
-                            RollingText(text: playerItem.streamInfo,
-                                        leftFade: 16,
-                                        rightFade: 16,
-                                        startDelay: 3)
+                            RollingText(
+                                text: playerItem.streamInfo,
+                                leftFade: 16,
+                                rightFade: 16,
+                                startDelay: 3
+                            )
                             .frame(height:20)
                             .padding(10)
                             .transition(.move(edge: .bottom))
@@ -119,8 +122,67 @@ struct OnlyControlView: View {
 }
 
 final class OnlyControlWindow: NSWindow, NSWindowDelegate {
+    static let shared = OnlyControlWindow()
+
+    var isShowing: Bool = false
+
+    private let onlyControlStore: StoreOf<OnlyControlReducer> = .init(initialState: .init()) {
+        OnlyControlReducer()
+    }
+
     override var canBecomeKey: Bool {
         true
+    }
+
+    private init() {
+        super.init(
+            contentRect: .zero,
+            styleMask: [.borderless, .fullSizeContentView],
+            backing: .buffered,
+            defer: false
+        )
+        setupWindow()
+    }
+
+    private func setupWindow() {
+        let view = NSHostingView(rootView: OnlyControlView(store: onlyControlStore))
+        let contentRect = contentRect(forFrameRect: frame)
+        view.frame = contentRect
+        view.canDrawSubviewsIntoLayer = true
+        contentView = view
+
+        isMovable = true
+        collectionBehavior = [.participatesInCycle, .canJoinAllSpaces, .fullScreenPrimary]
+        level = .mainMenu
+        ignoresMouseEvents = false
+        hasShadow = true
+        isReleasedWhenClosed = false
+        backgroundColor = .clear
+        isMovableByWindowBackground = true
+        isOpaque = false
+        delegate = self
+
+        makeKeyAndOrderFront(nil)
+        center()
+        setIsVisible(false)
+    }
+
+    func show() {
+        makeKeyAndOrderFront(nil)
+        setFrameUsingName("OnlyControlWindow")
+        setFrameAutosaveName("OnlyControlWindow")
+        isShowing = true
+        onlyControlStore.send(.showControl)
+    }
+
+    func hide(completion: (() -> Void)? = nil) {
+        onlyControlStore.send(.hideControl)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.51) { [weak self] in
+            guard let self else { return }
+            self.close()
+            self.isShowing = false
+            completion?()
+        }
     }
 
     func windowShouldClose(_ sender: NSWindow) -> Bool {
