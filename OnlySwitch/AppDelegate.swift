@@ -152,7 +152,7 @@ struct OnlySwitchApp: App {
 
 extension NSApplication {
     func hideDockIcon() {
-        if !SettingsWindowManager.shared.isSettingViewShowing {
+        if !SettingsWindow.shared.isShowing {
             setActivationPolicy(.accessory)
         }
     }

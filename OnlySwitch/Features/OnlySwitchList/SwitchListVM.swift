@@ -76,7 +76,7 @@ class SwitchListVM: ObservableObject, CurrentScreen {
 
     init() {
         refreshMaxHeight()
-        SettingsWindowManager.shared.receiveSettingWindowOperation()
+        SettingsWindow.shared.receiveSettingWindowOperation()
     }
 
     deinit{
@@ -174,7 +174,7 @@ class SwitchListVM: ObservableObject, CurrentScreen {
     }
 
     func showSettingsWindow() {
-        SettingsWindowManager.shared.showSettingsWindow()
+        SettingsWindow.shared.show()
     }
 }
 

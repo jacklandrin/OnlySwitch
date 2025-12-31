@@ -135,7 +135,7 @@ struct OnlyControlReducer {
                     return .none
 
                 case .openSettings:
-                    SettingsWindowManager.shared.showSettingsWindow()
+                    SettingsWindow.shared.show()
                     return .none
 
                 case .dashboardAction(.delegate(.orderChanged)):
