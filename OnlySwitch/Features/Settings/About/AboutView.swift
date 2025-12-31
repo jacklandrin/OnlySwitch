@@ -39,46 +39,46 @@ struct AboutView: View {
                 HStack {
                     Text("Copyright @ 2021-2026 ")
                         .font(.system(size: 15))
-                    Link(destination: URL(string: "https://jacklandrin.github.io")!, label: {
+                    Link(destination: URL(string: "https://jacklandrin.github.io")!) {
                         Text("Jacklandrin")
                             .font(.system(size: 15))
-                    })
+                    }
                 }
                 HStack {
-                    Link(destination: URL(string: "https://github.com/jacklandrin/OnlySwitch")!, label: {
+                    Link(destination: URL(string: "https://github.com/jacklandrin/OnlySwitch")!) {
                         Text("GitHub")
-                    })
+                    }
                     if aboutVM.downloadCount > 0 {
                         Text("%@ downloads".localizeWithFormat(arguments: formatDownloadCount))
                     }
                 }
 
 
-                Link(destination:
-                    URL(string: "https://github.com/sponsors/jacklandrin")!
-                , label: {
+                Link(destination:URL(string: "https://github.com/sponsors/jacklandrin")!) {
                     Text("Donation".localized())
-                })
+                }
                 .buttonStyle(.bordered)
                 .padding(3)
 
                 HStack {
                     Text("Join:".localized())
                         .font(.system(size: 15))
-                    Link(destination: URL(string: "https://t.me/OnlySwitchforMac")!, label: {
+                    Link(destination: URL(string: "https://t.me/OnlySwitchforMac")!) {
                         Image("telegram")
                             .resizable()
                             .scaledToFit()
                             .frame(width: Layout.communitySize, height: Layout.communitySize)
-                    })
-                    Link(destination: URL(string: "https://discord.gg/UzSNpYdPZj")!, label: {
+                    }
+                    Link(destination: URL(string: "https://discord.gg/UzSNpYdPZj")!) {
                         Image("discord")
                             .resizable()
                             .scaledToFit()
                             .frame(width: Layout.communitySize, height: Layout.communitySize)
-                    })
+                    }
                 }
-            }.offset(y:10)
+            }
+            .offset(y:10)
+            
             VStack {
                 Text("Version History:".localized())
                     .fontWeight(.bold)
