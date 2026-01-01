@@ -8,7 +8,9 @@
 import ComposableArchitecture
 import Foundation
 
-struct EvolutionGalleryItemReducer: Reducer {
+@Reducer
+struct EvolutionGalleryItemReducer {
+    @ObservableState
     struct State: Equatable, Identifiable {
         let id: UUID
         var item: EvolutionGalleryItem
@@ -19,6 +21,7 @@ struct EvolutionGalleryItemReducer: Reducer {
         }
     }
 
+    @CasePathable
     enum Action: Equatable {
         static func == (lhs: EvolutionGalleryItemReducer.Action, rhs: EvolutionGalleryItemReducer.Action) -> Bool {
             switch (lhs, rhs) {

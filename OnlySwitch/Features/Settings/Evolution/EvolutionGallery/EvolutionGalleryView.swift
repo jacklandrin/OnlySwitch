@@ -18,13 +18,13 @@ struct EvolutionGalleryView: View {
     let store: StoreOf<EvolutionGalleryReducer>
 
     var body: some View {
-        WithViewStore(store, observe: { $0 }) { viewStore in
+        WithPerceptionTracking {
             VStack {
                 HStack {
                     Text("Evolution Gallery".localized())
                     Spacer()
                     Button(action: {
-                        viewStore.send(.refresh)
+                        store.send(.refresh)
                     }) {
                         Image(systemName: "arrow.clockwise")
                     }
@@ -48,7 +48,7 @@ struct EvolutionGalleryView: View {
             .frame(width: 300)
             .padding(.horizontal, 10)
             .task {
-                viewStore.send(.refresh)
+                store.send(.refresh)
             }
         }
     }

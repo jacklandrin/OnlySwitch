@@ -17,12 +17,12 @@ struct EvolutionGalleryItemView: View {
     }
 
     var body: some View {
-        WithViewStore(store, observe: { $0 }) { viewStore in
+        WithPerceptionTracking {
             VStack {
                 HStack {
                     Image(
-                        systemName: viewStore.item.evolution.iconName ?? (
-                            viewStore.item.evolution.controlType == .Switch
+                        systemName: store.item.evolution.iconName ?? (
+                            store.item.evolution.controlType == .Switch
                             ? "lightswitch.on.square"
                             : "button.programmable.square.fill"
                         )
@@ -33,25 +33,23 @@ struct EvolutionGalleryItemView: View {
                     .frame(width: 20, height: 20)
 
                     Spacer()
-                    Button(
-                        action: {
-                            viewStore.send(.install)
-                    }
-                    ) {
-                        Image(systemName: viewStore.item.installed ? "checkmark.circle.fill" : "plus.circle.fill")
+                    Button {
+                        store.send(.install)
+                    } label: {
+                        Image(systemName: store.item.installed ? "checkmark.circle.fill" : "plus.circle.fill")
                             .resizable()
                             .scaledToFit()
                             .foregroundColor(.white)
                             .frame(width: 20, height: 20)
                     }
                     .buttonStyle(.plain)
-                    .disabled(viewStore.item.installed)
+                    .disabled(store.item.installed)
                 }
                 .padding(.horizontal, 10)
                 .padding(.top, 10)
 
                 Spacer(minLength: 10)
-                Text(viewStore.item.evolution.name)
+                Text(store.item.evolution.name)
                     .font(.headline)
                     .foregroundColor(.white)
                     .fixedSize(horizontal: false, vertical: true)
@@ -59,7 +57,7 @@ struct EvolutionGalleryItemView: View {
                 Spacer()
                 HStack {
                     Spacer()
-                    Text("@\(viewStore.item.author)")
+                    Text("@\(store.item.author)")
                         .foregroundColor(.white)
                         .font(.system(size: 10))
                 }
@@ -67,21 +65,8 @@ struct EvolutionGalleryItemView: View {
                 .padding(.bottom, 5)
             }
             .frame(width: 140, height: 100)
-            .background(
-                LinearGradient(
-                    gradient: Gradient(
-                        stops: [
-                            Gradient.Stop(color: Color(.themePurple), location: 0.1),
-                            Gradient.Stop(color: Color(.themePink), location: 0.4),
-                            Gradient.Stop(color: Color(.themeGreen), location: 0.7)
-                        ]
-                    ),
-                    startPoint: .topTrailing,
-                    endPoint: .bottomLeading
-                )
-                .blur(radius: 4)
-            )
-            .help(viewStore.item.description)
+            .background(Color(.themeFountainBlue))
+            .help(store.item.description)
             .cornerRadius(10)
         }
     }

@@ -18,7 +18,7 @@ struct ShortcutsView: View {
     ]
     @StateObject var shortcutsVM = ShortcutsSettingVM()
     @ObservedObject var langManager = LanguageManager.sharedManager
-
+    
     var body: some View {
         GeometryReader { geometry in
             HStack(spacing:0) {
@@ -37,13 +37,13 @@ struct ShortcutsView: View {
         }
         .toast(isPresenting: $shortcutsVM.showErrorToast) {
             AlertToast(
-                        displayMode: .alert,
-                        type: .error(.red),
-                        title: shortcutsVM.errorInfo.localized()
-                       )
+                displayMode: .alert,
+                type: .error(.red),
+                title: shortcutsVM.errorInfo.localized()
+            )
         }
     }
-
+    
     @ViewBuilder
     var installedShortcutsSection: some View {
         VStack(alignment:.leading) {
@@ -62,10 +62,10 @@ struct ShortcutsView: View {
                             Text(shortcutsVM.shortcutsList[index].name)
                                 .frame(width: 170, alignment: .leading)
                                 .padding(.trailing, 10)
-
+                            
                             KeyboardShortcuts.Recorder(for: shortcutsVM.shortcutsList[index].keyboardShortcutName)
                                 .environment(\.locale, .init(identifier: langManager.currentLang))//Localizable doesn't work
-
+                            
                             Spacer().frame(width:30)
                         }
                     }
@@ -73,7 +73,7 @@ struct ShortcutsView: View {
             }
         }
     }
-
+    
     @ViewBuilder
     var gallerySection: some View {
         VStack(spacing:0) {
@@ -93,7 +93,7 @@ struct ShortcutsView: View {
             shortcutsMarket
         }
     }
-
+    
     var shortcutsMarket: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 20) {
@@ -105,30 +105,32 @@ struct ShortcutsView: View {
                                 .scaledToFit()
                                 .foregroundColor(.white)
                                 .frame(width: 20, height: 20)
-
+                            
                             Spacer()
-                            Button(action: {
+                            Button {
                                 NSWorkspace.shared.open(URL(string: shortcutsVM.sharedShortcutsList[index].link)!)
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
                                     shortcutsVM.checkIfInstalled()
                                 }
-                            }, label: {
+                            } label: {
                                 Image(systemName: shortcutsVM.sharedShortcutsList[index].hasInstalled ? "checkmark.circle.fill" : "plus.circle.fill")
                                     .resizable()
                                     .scaledToFit()
                                     .foregroundColor(.white)
                                     .frame(width: 20, height: 20)
-                            }).buttonStyle(.plain)
-                                .disabled(shortcutsVM.sharedShortcutsList[index].hasInstalled)
+                            }
+                            .buttonStyle(.plain)
+                            .disabled(shortcutsVM.sharedShortcutsList[index].hasInstalled)
                         }
                         .padding(.horizontal, 10)
                         .padding(.top, 10)
-
+                        
                         Spacer(minLength: 10)
-
+                        
                         Text(shortcutsVM.sharedShortcutsList[index].name)
                             .foregroundColor(.white)
                             .fixedSize(horizontal: false, vertical: true)
+                            .padding(.horizontal, 6)
                         Spacer()
                         HStack {
                             Spacer()
@@ -138,30 +140,20 @@ struct ShortcutsView: View {
                         }
                         .padding(.trailing, 10)
                         .padding(.bottom, 5)
-                    }.frame(width: 140, height: 100)
-                        .background(
-                            LinearGradient(
-                                gradient: Gradient(
-                                    colors:[
-                                        Color(.themePink),
-                                        Color(.themeBlue)
-                                    ]
-                                ),
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .help(shortcutsVM.sharedShortcutsList[index].description)
-                        .cornerRadius(10)
-                        .onTapGesture {
-                            Task {
-                                if shortcutsVM.sharedShortcutsList[index].hasInstalled {
-                                    _ = try? await ShorcutsCMD.showShortcut(name: shortcutsVM.sharedShortcutsList[index].name).runAppleScript(isShellCMD: true)
-                                }
+                    }
+                    .frame(width: 140, height: 100)
+                    .background(Color(.themeLila))
+                    .help(shortcutsVM.sharedShortcutsList[index].description)
+                    .cornerRadius(10)
+                    .onTapGesture {
+                        Task {
+                            if shortcutsVM.sharedShortcutsList[index].hasInstalled {
+                                _ = try? await ShorcutsCMD.showShortcut(name: shortcutsVM.sharedShortcutsList[index].name).runAppleScript(isShellCMD: true)
                             }
                         }
+                    }
                 }
-
+                
             }
             .padding(.trailing, 10)
             Spacer()
