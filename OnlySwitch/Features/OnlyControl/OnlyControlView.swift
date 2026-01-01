@@ -16,6 +16,9 @@ struct OnlyControlView: View {
     @Environment(\.colorScheme) private var colorScheme
     let store: StoreOf<OnlyControlReducer>
     @ObservedObject private var playerItem = RadioStationSwitch.shared.playerItem
+    @State private var currentDate = Date()
+    
+    private let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
 
     init(store: StoreOf<OnlyControlReducer>) {
         self.store = store
@@ -37,11 +40,14 @@ struct OnlyControlView: View {
                 VStack(spacing: 0) {
                     Spacer()
                     HStack(alignment: .bottom) {
-                        Text(Date(), style: .time)
+                        Text(currentDate, style: .time)
                             .font(.system(size: 60, weight: .bold, design: .rounded))
                             .foregroundColor(colorScheme == .dark ? .white : .black)
                             .padding(.top, 30)
                             .padding(.horizontal, 30)
+                            .onReceive(timer) { _ in
+                                currentDate = Date()
+                            }
 
                         if store.isAirPodsConnected && !store.airPodsBatteryValues.isEmpty {
                             AirPodsBatteryView(batteryValues: store.airPodsBatteryValues)
@@ -49,10 +55,12 @@ struct OnlyControlView: View {
                                 .padding(.leading, 40)
                         }
 
+                        Spacer()
+                        
                         TimerCountDownView(ptswitch: PomodoroTimerSwitch.shared, showImage: true)
                             .font(.system(size: 20, weight: .bold, design: .rounded))
                             .padding(.bottom, 12)
-                        Spacer()
+                            .padding(.trailing, 50)
                     }
                     Spacer()
                     DashboardView(store: store.scope(state: \.dashboard, action: \.dashboardAction))
@@ -90,14 +98,15 @@ struct OnlyControlView: View {
                         }
 
                         Spacer()
-                        Button(action: {
+                        Button{
                             store.send(.openSettings)
-                        }, label: {
+                        } label: {
                             Image(systemName: "gear")
                                 .font(.system(size: 18))
-                        }).buttonStyle(.plain)
-                            .padding(10)
-                            .help(Text("Settings".localized()))
+                        }
+                        .buttonStyle(.plain)
+                        .padding(10)
+                        .help(Text("Settings".localized()))
                     }
                 }
             }
