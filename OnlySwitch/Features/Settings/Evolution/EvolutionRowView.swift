@@ -12,52 +12,48 @@ import Utilities
 
 struct EvolutionRowView: View {
 
-    let store: StoreOf<EvolutionRowReducer>
-    @ObservedObject var viewStore: ViewStore<ViewState, EvolutionRowReducer.Action>
+    @Perception.Bindable var store: StoreOf<EvolutionRowReducer>
     @ObservedObject var langManager = LanguageManager.sharedManager
-
-    struct ViewState: Equatable {
-        let destinationTag: EvolutionRowReducer.DestinationState.Tag?
-
-        init(state: EvolutionRowReducer.State) {
-            self.destinationTag = state.destination?.tag
-        }
-    }
 
     init(store: StoreOf<EvolutionRowReducer>) {
         self.store = store
-        self.viewStore = ViewStore(store, observe: ViewState.init)
     }
 
     var body: some View {
-        WithViewStore(store, observe: { $0 }) { viewStore in
+        WithPerceptionTracking {
             HStack {
                 Toggle(
                     "",
-                    isOn: viewStore.binding(
-                        get: { _ in viewStore.evolution.active },
-                        send: .toggle
+                    isOn: Binding(
+                        get: { store.evolution.active },
+                        set: { _ in store.send(.toggle) }
                     )
                 )
-                Text(viewStore.evolution.name)
+                Text(store.evolution.name)
                 Spacer()
-                NavigationLink(
-                    destination:
-                        EvolutionEditorView(
-                            store: store.scope(
-                                state: \.editorState,
-                                action: EvolutionRowReducer.Action.editorAction
-                            )
-                        ),
-                    tag: EvolutionRowReducer.DestinationState.Tag.editor,
-                    selection: viewStore.binding(
-                        get: { _ in self.viewStore.destinationTag },
-                        send: { EvolutionRowReducer.Action.setNavigation(tag:$0, state: viewStore.editorState) }
-                    )
-                ) {
+                Button {
+                    store.send(.setNavigation(tag: .editor, state: store.editorState))
+                } label: {
                     Text("Edit".localized())
                 }
-                KeyboardShortcuts.Recorder(for: viewStore.keyboardShortcutName)
+                .navigationDestination(
+                    isPresented: Binding(
+                        get: { store.destination?.tag == .editor },
+                        set: { isPresented in
+                            if !isPresented {
+                                store.send(.setNavigation(tag: nil, state: store.editorState))
+                            }
+                        }
+                    )
+                ) {
+                    EvolutionEditorView(
+                        store: store.scope(
+                            state: \.editorState,
+                            action: \.editorAction
+                        )
+                    )
+                }
+                KeyboardShortcuts.Recorder(for: store.keyboardShortcutName)
                     .environment(\.locale, .init(identifier: langManager.currentLang))
                     .padding(.leading, 10)
             }

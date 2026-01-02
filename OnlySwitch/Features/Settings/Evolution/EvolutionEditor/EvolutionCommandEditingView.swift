@@ -13,17 +13,17 @@ struct EvolutionCommandEditingView: View {
     let store: StoreOf<EvolutionCommandEditingReducer>
     
     var body: some View {
-        WithViewStore(self.store, observe: { $0 }) { viewStore in
+        WithPerceptionTracking {
             VStack(alignment: .leading) {
                 HStack {
-                    Text(viewStore.command.commandType.typeTitle)
+                    Text(store.command.commandType.typeTitle)
                         .fontWeight(.heavy)
                         .padding(.trailing, 20)
 
                     Picker("",
-                           selection: viewStore.binding(
-                            get: { $0.command.executeType },
-                            send: { .changeExecuteType($0) }
+                           selection: Binding(
+                            get: { store.command.executeType },
+                            set: { store.send(.changeExecuteType($0)) }
                            )
                     ) {
                         Text("Shell").tag(CommandExecuteType.shell)
@@ -34,23 +34,23 @@ struct EvolutionCommandEditingView: View {
                 }
 
                 TextField("",
-                    text: viewStore.binding(
-                        get: { $0.command.commandString },
-                        send: { .editCommand($0) }
+                    text: Binding(
+                        get: { store.command.commandString },
+                        set: { store.send(.editCommand($0)) }
                     ),
                           axis: .vertical
                 )
                 .onSubmit {
-                    viewStore.send(.returnCommandString)
+                    store.send(.returnCommandString)
                 }
                 .multilineTextAlignment(.leading)
                 .lineLimit(5...100)
                 .frame(maxHeight: 300)
 
                 HStack {
-                    Button(action: {
-                        viewStore.send(.shouldTest)
-                    }) {
+                    Button {
+                        store.send(.shouldTest)
+                    } label: {
                         Image(systemName: "play.fill")
                     }
                     .frame(width: 26, height: 26)
@@ -58,12 +58,12 @@ struct EvolutionCommandEditingView: View {
 
                     Spacer().frame(width: 10)
 
-                    if viewStore.command.debugStatus == .failed {
+                    if store.command.debugStatus == .failed {
                         Image(systemName: "xmark.circle.fill")
                             .resizable()
                             .frame(width: 22, height: 22)
                             .foregroundColor(Color.red)
-                    } else if viewStore.command.debugStatus == .success {
+                    } else if store.command.debugStatus == .success {
                         Image(systemName: "checkmark.circle.fill")
                             .resizable()
                             .frame(width: 22, height: 22)
@@ -72,15 +72,15 @@ struct EvolutionCommandEditingView: View {
                     Spacer()
                 }
 
-                if viewStore.command.commandType == .status {
+                if store.command.commandType == .status {
                     HStack {
                         Text("Output:".localized())
-                        Text(viewStore.statusCommandResult)
+                        Text(store.statusCommandResult)
                             .foregroundColor(.green)
                     }
-                    TextField("True Condition".localized(), text: viewStore.binding(
-                        get: { $0.command.trueCondition ?? "" },
-                        send: { .editTrueCondition($0) }
+                    TextField("True Condition".localized(), text: Binding(
+                        get: { store.command.trueCondition ?? "" },
+                        set: { store.send(.editTrueCondition($0)) }
                     ))
                 }
             }
