@@ -122,11 +122,7 @@ English, Simplified Chinese, German, Croatian, Turkish, Polish, Filipino, Dutch,
 If you have other good ideas 💡, feel free to send an E-mail to me.
 
 ## Donate
-If you like it, help support this app by giving me a cup of tea for me to keep coding.
-<p align="center">
-<img alt="Sits in the status bar" src="https://github.com/user-attachments/assets/76347782-e84f-469d-b9bf-2dae89d61979" width="20%" align="medium" title="Made by QRCobot"/>
-</p>
-
+If you like it, help support this app by giving me a cup of coffee to keep coding. [Donate here](https://www.paypal.com/donate/?hosted_button_id=V3NDUXWZ6GVYG)
 
 ## 🤖 Only Agent
 Only Switch starts to support Only Agent since 2.6.0. You can control your mac by **English** via AI now. After you write down your purpose, AI can generate an Apple Script to engage it. If the Agent mode is on, the script will be immediately executed.  There are two available model providers, with Ollama, OpenAI and Gemini. Feel free to contribute more providers.
