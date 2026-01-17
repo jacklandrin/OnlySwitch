@@ -74,6 +74,9 @@ public extension UserDefaults {
         public static let geminiAPI = "geminiAPIKey"
         //KeyLight
         public static let keyLightBrightness = "keyLightBrightnessKey"
+        // Authenticator
+        public static let authenticatorEnabled = "authenticatorEnabledKey"
+        public static let authenticatorAccounts = "authenticatorAccountsKey"
         //others
         public static let newestVersion = "newestVersionKey"
         public static let systemLangPriority = "systemLangPriority"

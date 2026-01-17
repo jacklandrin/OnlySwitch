@@ -77,6 +77,9 @@ struct SettingsView: View {
             case .Radio:
                 RadioSettingView()
 
+            case .Authenticator:
+                AuthenticatorSettingsView()
+
             case .PomodoroTimer:
                 PomodoroTimerSettingView()
 
