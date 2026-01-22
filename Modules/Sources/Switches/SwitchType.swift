@@ -67,6 +67,7 @@ public enum SwitchType: UInt64, CaseIterable, Sendable {
     case topSticker = 17_179_869_184 // 1 << 34
     case keyLight = 34_359_738_368 // 1 << 35
     case aiCommender = 68_719_476_736 // 1 << 36
+    case authenticator = 137_438_953_472 // 1 << 37
     
     public func barInfo() -> SwitchBarInfo {
         switch self {
@@ -316,6 +317,13 @@ public enum SwitchType: UInt64, CaseIterable, Sendable {
                 onImage: NSImage(named: "ai_commander"),
                 offImage: NSImage(named: "ai_commander"),
                 controlType: .Button,
+                category: .tool
+            )
+        case .authenticator:
+            return SwitchBarInfo(
+                title: "Authenticator",
+                onImage: NSImage(systemSymbolName: "key.fill"),
+                offImage: NSImage(systemSymbolName: "key"),
                 category: .tool
             )
         }

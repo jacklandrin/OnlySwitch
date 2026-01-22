@@ -9,6 +9,16 @@
 /* Begin PBXBuildFile section */
 		0406E0222CA09F930007AFC2 /* OnlyControlClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406E0212CA09F8C0007AFC2 /* OnlyControlClient.swift */; };
 		0406E0242CA0BC460007AFC2 /* RefreshNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406E0232CA0BC460007AFC2 /* RefreshNotification.swift */; };
+		A1D0E1002F0A000100BEEF01 /* AuthenticatorModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E0012F0A000100BEEF01 /* AuthenticatorModels.swift */; };
+		A1D0E1012F0A000100BEEF01 /* Base32.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E0022F0A000100BEEF01 /* Base32.swift */; };
+		A1D0E1022F0A000100BEEF01 /* TOTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E0032F0A000100BEEF01 /* TOTP.swift */; };
+		A1D0E1032F0A000100BEEF01 /* ProtoReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E0042F0A000100BEEF01 /* ProtoReader.swift */; };
+		A1D0E1042F0A000100BEEF01 /* OtpAuthImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E0052F0A000100BEEF01 /* OtpAuthImport.swift */; };
+		A1D0E1052F0A000100BEEF01 /* AuthenticatorStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E0062F0A000100BEEF01 /* AuthenticatorStore.swift */; };
+		A1D0E1062F0A000100BEEF01 /* AuthenticatorImportSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E0072F0A000100BEEF01 /* AuthenticatorImportSheet.swift */; };
+		A1D0E1072F0A000100BEEF01 /* AuthenticatorPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E0082F0A000100BEEF01 /* AuthenticatorPanelView.swift */; };
+		A1D0E1082F0A000100BEEF01 /* AuthenticatorSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E0092F0A000100BEEF01 /* AuthenticatorSettingsView.swift */; };
+		A1D0E1092F0A000100BEEF01 /* AuthenticatorSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E00A2F0A000100BEEF01 /* AuthenticatorSwitch.swift */; };
 		0406EDC42ACB3EE80015F4D0 /* EvolutionMarket.json in Resources */ = {isa = PBXBuildFile; fileRef = 0406EDC32ACB3EE80015F4D0 /* EvolutionMarket.json */; };
 		0406EDC62ACB56CE0015F4D0 /* EvolutionGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406EDC52ACB56CE0015F4D0 /* EvolutionGalleryView.swift */; };
 		0406EDC82ACB56F00015F4D0 /* EvolutionGalleryReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406EDC72ACB56F00015F4D0 /* EvolutionGalleryReducer.swift */; };
@@ -399,6 +409,16 @@
 /* Begin PBXFileReference section */
 		0406E0212CA09F8C0007AFC2 /* OnlyControlClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyControlClient.swift; sourceTree = "<group>"; };
 		0406E0232CA0BC460007AFC2 /* RefreshNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshNotification.swift; sourceTree = "<group>"; };
+		A1D0E0012F0A000100BEEF01 /* AuthenticatorModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorModels.swift; sourceTree = "<group>"; };
+		A1D0E0022F0A000100BEEF01 /* Base32.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Base32.swift; sourceTree = "<group>"; };
+		A1D0E0032F0A000100BEEF01 /* TOTP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TOTP.swift; sourceTree = "<group>"; };
+		A1D0E0042F0A000100BEEF01 /* ProtoReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtoReader.swift; sourceTree = "<group>"; };
+		A1D0E0052F0A000100BEEF01 /* OtpAuthImport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtpAuthImport.swift; sourceTree = "<group>"; };
+		A1D0E0062F0A000100BEEF01 /* AuthenticatorStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorStore.swift; sourceTree = "<group>"; };
+		A1D0E0072F0A000100BEEF01 /* AuthenticatorImportSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorImportSheet.swift; sourceTree = "<group>"; };
+		A1D0E0082F0A000100BEEF01 /* AuthenticatorPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorPanelView.swift; sourceTree = "<group>"; };
+		A1D0E0092F0A000100BEEF01 /* AuthenticatorSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorSettingsView.swift; sourceTree = "<group>"; };
+		A1D0E00A2F0A000100BEEF01 /* AuthenticatorSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorSwitch.swift; sourceTree = "<group>"; };
 		0406EDC32ACB3EE80015F4D0 /* EvolutionMarket.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = EvolutionMarket.json; sourceTree = "<group>"; };
 		0406EDC52ACB56CE0015F4D0 /* EvolutionGalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionGalleryView.swift; sourceTree = "<group>"; };
 		0406EDC72ACB56F00015F4D0 /* EvolutionGalleryReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionGalleryReducer.swift; sourceTree = "<group>"; };
@@ -787,6 +807,7 @@
 			children = (
 				0447E39A2B7174F000D07B9A /* SwitchType++.swift */,
 				A93C8BE02ECA34CB00D7CE52 /* AICommanderSwitch.swift */,
+				A1D0E00A2F0A000100BEEF01 /* AuthenticatorSwitch.swift */,
 				0447E33F2B71746C00D07B9A /* AirPodsSwitch.swift */,
 				0447E3382B71746C00D07B9A /* AppleMusicSwitch.swift */,
 				0447E3492B71746D00D07B9A /* AutohideDockSwitch.swift */,
@@ -921,6 +942,7 @@
 		043E5D672757C85500ADC004 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				A1D0E0002F0A000100BEEF01 /* Authenticator */,
 				04A5AA572C39F8A2001070CA /* OnlyControl */,
 				04BF976C27908E0100E7C0E2 /* OnlySwitchList */,
 				04BF976D27908E2800E7C0E2 /* SwitchItem */,
@@ -933,6 +955,22 @@
 				0434B4D02876325B00F06AB9 /* HostWindowFinder.swift */,
 			);
 			path = Features;
+			sourceTree = "<group>";
+		};
+		A1D0E0002F0A000100BEEF01 /* Authenticator */ = {
+			isa = PBXGroup;
+			children = (
+				A1D0E0012F0A000100BEEF01 /* AuthenticatorModels.swift */,
+				A1D0E0062F0A000100BEEF01 /* AuthenticatorStore.swift */,
+				A1D0E0052F0A000100BEEF01 /* OtpAuthImport.swift */,
+				A1D0E0042F0A000100BEEF01 /* ProtoReader.swift */,
+				A1D0E0022F0A000100BEEF01 /* Base32.swift */,
+				A1D0E0032F0A000100BEEF01 /* TOTP.swift */,
+				A1D0E0082F0A000100BEEF01 /* AuthenticatorPanelView.swift */,
+				A1D0E0072F0A000100BEEF01 /* AuthenticatorImportSheet.swift */,
+				A1D0E0092F0A000100BEEF01 /* AuthenticatorSettingsView.swift */,
+			);
+			path = Authenticator;
 			sourceTree = "<group>";
 		};
 		043E5D682757C86400ADC004 /* ViewModel */ = {
@@ -1989,6 +2027,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A1D0E1092F0A000100BEEF01 /* AuthenticatorSwitch.swift in Sources */,
+				A1D0E1002F0A000100BEEF01 /* AuthenticatorModels.swift in Sources */,
+				A1D0E1012F0A000100BEEF01 /* Base32.swift in Sources */,
+				A1D0E1022F0A000100BEEF01 /* TOTP.swift in Sources */,
+				A1D0E1032F0A000100BEEF01 /* ProtoReader.swift in Sources */,
+				A1D0E1042F0A000100BEEF01 /* OtpAuthImport.swift in Sources */,
+				A1D0E1052F0A000100BEEF01 /* AuthenticatorStore.swift in Sources */,
+				A1D0E1062F0A000100BEEF01 /* AuthenticatorImportSheet.swift in Sources */,
+				A1D0E1072F0A000100BEEF01 /* AuthenticatorPanelView.swift in Sources */,
+				A1D0E1082F0A000100BEEF01 /* AuthenticatorSettingsView.swift in Sources */,
 				0447E35F2B71746E00D07B9A /* AppleMusicSwitch.swift in Sources */,
 				04B25453283BEF3800D253E2 /* SupportedLanguage.swift in Sources */,
 				04DC6C8228A5A8C300888BF9 /* BackNoisesSettingView.swift in Sources */,

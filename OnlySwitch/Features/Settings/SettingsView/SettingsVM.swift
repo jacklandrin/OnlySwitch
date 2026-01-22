@@ -17,6 +17,7 @@ enum SettingsItem: String, CaseIterable {
     case ModelProviders = "Model Providers"
     case AirPods = "AirPods"
     case Radio = "Radio"
+    case Authenticator = "Authenticator"
     case PomodoroTimer = "Pomodoro Timer"
     case HideMenubarIcons = "Hide Menu Bar Icons"
     case BackNoises = "Back Noises"
@@ -65,5 +66,4 @@ class SettingsVM: ObservableObject {
         }
     }
 }
-
 
