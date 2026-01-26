@@ -2510,7 +2510,7 @@
 				INFOPLIST_KEY_LSUIElement = NO;
 				INFOPLIST_KEY_NSAppleEventsUsageDescription = "Only Switch needs to control System Events";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Only Switch requests Bluetooth usage to switch Airpods connection";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2021-2025 Jacklandrin";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2021-2026 Jacklandrin";
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2565,7 +2565,7 @@
 				INFOPLIST_KEY_LSUIElement = NO;
 				INFOPLIST_KEY_NSAppleEventsUsageDescription = "Only Switch needs to control System Events";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Only Switch requests Bluetooth usage to switch Airpods connection";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2021-2025 Jacklandrin";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2021-2026 Jacklandrin";
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
