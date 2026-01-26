@@ -258,6 +258,8 @@ Since version 2.3.10, this switch can be controlled via right-click icons.
 
 @kant for syntax issue 
 
+@Ryderwe for Authenticator
+
 
 ## License
 MIT
