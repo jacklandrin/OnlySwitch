@@ -32,7 +32,7 @@ struct AuthenticatorSettingsView: View {
             Divider()
 
             if store.accounts.isEmpty {
-                Text("No accounts. Use Import to add one.")
+                Text("No accounts. Use Import to add one.".localized())
                     .foregroundColor(.secondary)
             } else {
                 TimelineView(.periodic(from: .now, by: 1)) { context in

@@ -7,9 +7,11 @@ import SwiftUI
 import AppKit
 import Defines
 import Extensions
+import Utilities
 
 struct AuthenticatorPanelView: View {
     @ObservedObject private var store = AuthenticatorStore.shared
+    @ObservedObject private var languageManager = LanguageManager.sharedManager
     @State private var showImport = false
     @State private var isExpanded = false
 
@@ -80,6 +82,7 @@ struct AuthenticatorPanelView: View {
         .onTapGesture {
             withAnimation(.spring()) { isExpanded.toggle() }
         }
+        .frame(height: 45)
     }
 
     private var emptyRow: some View {
@@ -100,7 +103,7 @@ struct AuthenticatorPanelView: View {
         let count = store.accounts.count
         if count == 0 { return "" }
         if count == 1 { return "1 account".localized() }
-        return "\(count) accounts".localized()
+        return String(format: "%lld accounts".localized(), count)
     }
 }
 
@@ -143,7 +146,7 @@ private struct AuthenticatorCodeRow: View {
                 Image(systemName: "doc.on.doc")
             }
             .buttonStyle(.borderless)
-            .help(Text("Copy"))
+            .help(Text("Copy".localized()))
         }
         .padding(.horizontal, 15)
         .padding(.vertical, 10)

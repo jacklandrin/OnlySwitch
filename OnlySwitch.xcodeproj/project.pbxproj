@@ -9,16 +9,6 @@
 /* Begin PBXBuildFile section */
 		0406E0222CA09F930007AFC2 /* OnlyControlClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406E0212CA09F8C0007AFC2 /* OnlyControlClient.swift */; };
 		0406E0242CA0BC460007AFC2 /* RefreshNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406E0232CA0BC460007AFC2 /* RefreshNotification.swift */; };
-		A1D0E1002F0A000100BEEF01 /* AuthenticatorModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E0012F0A000100BEEF01 /* AuthenticatorModels.swift */; };
-		A1D0E1012F0A000100BEEF01 /* Base32.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E0022F0A000100BEEF01 /* Base32.swift */; };
-		A1D0E1022F0A000100BEEF01 /* TOTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E0032F0A000100BEEF01 /* TOTP.swift */; };
-		A1D0E1032F0A000100BEEF01 /* ProtoReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E0042F0A000100BEEF01 /* ProtoReader.swift */; };
-		A1D0E1042F0A000100BEEF01 /* OtpAuthImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E0052F0A000100BEEF01 /* OtpAuthImport.swift */; };
-		A1D0E1052F0A000100BEEF01 /* AuthenticatorStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E0062F0A000100BEEF01 /* AuthenticatorStore.swift */; };
-		A1D0E1062F0A000100BEEF01 /* AuthenticatorImportSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E0072F0A000100BEEF01 /* AuthenticatorImportSheet.swift */; };
-		A1D0E1072F0A000100BEEF01 /* AuthenticatorPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E0082F0A000100BEEF01 /* AuthenticatorPanelView.swift */; };
-		A1D0E1082F0A000100BEEF01 /* AuthenticatorSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E0092F0A000100BEEF01 /* AuthenticatorSettingsView.swift */; };
-		A1D0E1092F0A000100BEEF01 /* AuthenticatorSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E00A2F0A000100BEEF01 /* AuthenticatorSwitch.swift */; };
 		0406EDC42ACB3EE80015F4D0 /* EvolutionMarket.json in Resources */ = {isa = PBXBuildFile; fileRef = 0406EDC32ACB3EE80015F4D0 /* EvolutionMarket.json */; };
 		0406EDC62ACB56CE0015F4D0 /* EvolutionGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406EDC52ACB56CE0015F4D0 /* EvolutionGalleryView.swift */; };
 		0406EDC82ACB56F00015F4D0 /* EvolutionGalleryReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406EDC72ACB56F00015F4D0 /* EvolutionGalleryReducer.swift */; };
@@ -368,6 +358,16 @@
 		04FC1613283FDE1D00D4A4AC /* ShortcutsSettingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FC1612283FDE1D00D4A4AC /* ShortcutsSettingModel.swift */; };
 		04FC161628402E5000D4A4AC /* ShortcutOnMarket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FC161528402E5000D4A4AC /* ShortcutOnMarket.swift */; };
 		04FC161728402E5200D4A4AC /* ShortcutOnMarket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FC161528402E5000D4A4AC /* ShortcutOnMarket.swift */; };
+		A1D0E1002F0A000100BEEF01 /* AuthenticatorModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E0012F0A000100BEEF01 /* AuthenticatorModels.swift */; };
+		A1D0E1012F0A000100BEEF01 /* Base32.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E0022F0A000100BEEF01 /* Base32.swift */; };
+		A1D0E1022F0A000100BEEF01 /* TOTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E0032F0A000100BEEF01 /* TOTP.swift */; };
+		A1D0E1032F0A000100BEEF01 /* ProtoReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E0042F0A000100BEEF01 /* ProtoReader.swift */; };
+		A1D0E1042F0A000100BEEF01 /* OtpAuthImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E0052F0A000100BEEF01 /* OtpAuthImport.swift */; };
+		A1D0E1052F0A000100BEEF01 /* AuthenticatorStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E0062F0A000100BEEF01 /* AuthenticatorStore.swift */; };
+		A1D0E1062F0A000100BEEF01 /* AuthenticatorImportSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E0072F0A000100BEEF01 /* AuthenticatorImportSheet.swift */; };
+		A1D0E1072F0A000100BEEF01 /* AuthenticatorPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E0082F0A000100BEEF01 /* AuthenticatorPanelView.swift */; };
+		A1D0E1082F0A000100BEEF01 /* AuthenticatorSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E0092F0A000100BEEF01 /* AuthenticatorSettingsView.swift */; };
+		A1D0E1092F0A000100BEEF01 /* AuthenticatorSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E00A2F0A000100BEEF01 /* AuthenticatorSwitch.swift */; };
 		A93C8BE12ECA34D700D7CE52 /* AICommanderSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93C8BE02ECA34CB00D7CE52 /* AICommanderSwitch.swift */; };
 		A93C8BE22ECA34D700D7CE52 /* AICommanderSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93C8BE02ECA34CB00D7CE52 /* AICommanderSwitch.swift */; };
 		A93C8BE42ECA376900D7CE52 /* OnlyAgent in Frameworks */ = {isa = PBXBuildFile; productRef = A93C8BE32ECA376900D7CE52 /* OnlyAgent */; };
@@ -409,16 +409,6 @@
 /* Begin PBXFileReference section */
 		0406E0212CA09F8C0007AFC2 /* OnlyControlClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyControlClient.swift; sourceTree = "<group>"; };
 		0406E0232CA0BC460007AFC2 /* RefreshNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshNotification.swift; sourceTree = "<group>"; };
-		A1D0E0012F0A000100BEEF01 /* AuthenticatorModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorModels.swift; sourceTree = "<group>"; };
-		A1D0E0022F0A000100BEEF01 /* Base32.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Base32.swift; sourceTree = "<group>"; };
-		A1D0E0032F0A000100BEEF01 /* TOTP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TOTP.swift; sourceTree = "<group>"; };
-		A1D0E0042F0A000100BEEF01 /* ProtoReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtoReader.swift; sourceTree = "<group>"; };
-		A1D0E0052F0A000100BEEF01 /* OtpAuthImport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtpAuthImport.swift; sourceTree = "<group>"; };
-		A1D0E0062F0A000100BEEF01 /* AuthenticatorStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorStore.swift; sourceTree = "<group>"; };
-		A1D0E0072F0A000100BEEF01 /* AuthenticatorImportSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorImportSheet.swift; sourceTree = "<group>"; };
-		A1D0E0082F0A000100BEEF01 /* AuthenticatorPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorPanelView.swift; sourceTree = "<group>"; };
-		A1D0E0092F0A000100BEEF01 /* AuthenticatorSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorSettingsView.swift; sourceTree = "<group>"; };
-		A1D0E00A2F0A000100BEEF01 /* AuthenticatorSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorSwitch.swift; sourceTree = "<group>"; };
 		0406EDC32ACB3EE80015F4D0 /* EvolutionMarket.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = EvolutionMarket.json; sourceTree = "<group>"; };
 		0406EDC52ACB56CE0015F4D0 /* EvolutionGalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionGalleryView.swift; sourceTree = "<group>"; };
 		0406EDC72ACB56F00015F4D0 /* EvolutionGalleryReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionGalleryReducer.swift; sourceTree = "<group>"; };
@@ -690,6 +680,16 @@
 		04FC160F283F92B200D4A4AC /* GitHubEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubEndpoint.swift; sourceTree = "<group>"; };
 		04FC1612283FDE1D00D4A4AC /* ShortcutsSettingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsSettingModel.swift; sourceTree = "<group>"; };
 		04FC161528402E5000D4A4AC /* ShortcutOnMarket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutOnMarket.swift; sourceTree = "<group>"; };
+		A1D0E0012F0A000100BEEF01 /* AuthenticatorModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorModels.swift; sourceTree = "<group>"; };
+		A1D0E0022F0A000100BEEF01 /* Base32.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Base32.swift; sourceTree = "<group>"; };
+		A1D0E0032F0A000100BEEF01 /* TOTP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TOTP.swift; sourceTree = "<group>"; };
+		A1D0E0042F0A000100BEEF01 /* ProtoReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtoReader.swift; sourceTree = "<group>"; };
+		A1D0E0052F0A000100BEEF01 /* OtpAuthImport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtpAuthImport.swift; sourceTree = "<group>"; };
+		A1D0E0062F0A000100BEEF01 /* AuthenticatorStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorStore.swift; sourceTree = "<group>"; };
+		A1D0E0072F0A000100BEEF01 /* AuthenticatorImportSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorImportSheet.swift; sourceTree = "<group>"; };
+		A1D0E0082F0A000100BEEF01 /* AuthenticatorPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorPanelView.swift; sourceTree = "<group>"; };
+		A1D0E0092F0A000100BEEF01 /* AuthenticatorSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorSettingsView.swift; sourceTree = "<group>"; };
+		A1D0E00A2F0A000100BEEF01 /* AuthenticatorSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorSwitch.swift; sourceTree = "<group>"; };
 		A93C8BE02ECA34CB00D7CE52 /* AICommanderSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AICommanderSwitch.swift; sourceTree = "<group>"; };
 		A9C70D052EE490B3000A2367 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -955,22 +955,6 @@
 				0434B4D02876325B00F06AB9 /* HostWindowFinder.swift */,
 			);
 			path = Features;
-			sourceTree = "<group>";
-		};
-		A1D0E0002F0A000100BEEF01 /* Authenticator */ = {
-			isa = PBXGroup;
-			children = (
-				A1D0E0012F0A000100BEEF01 /* AuthenticatorModels.swift */,
-				A1D0E0062F0A000100BEEF01 /* AuthenticatorStore.swift */,
-				A1D0E0052F0A000100BEEF01 /* OtpAuthImport.swift */,
-				A1D0E0042F0A000100BEEF01 /* ProtoReader.swift */,
-				A1D0E0022F0A000100BEEF01 /* Base32.swift */,
-				A1D0E0032F0A000100BEEF01 /* TOTP.swift */,
-				A1D0E0082F0A000100BEEF01 /* AuthenticatorPanelView.swift */,
-				A1D0E0072F0A000100BEEF01 /* AuthenticatorImportSheet.swift */,
-				A1D0E0092F0A000100BEEF01 /* AuthenticatorSettingsView.swift */,
-			);
-			path = Authenticator;
 			sourceTree = "<group>";
 		};
 		043E5D682757C86400ADC004 /* ViewModel */ = {
@@ -1331,6 +1315,7 @@
 		049337952762C05200AE779A /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				A9ABF7312F27C67B00669338 /* Authenticator */,
 				04BF977127908EBC00E7C0E2 /* SettingsView */,
 				047C1E482A2250EF0061235D /* Evolution */,
 				04BF977627908F1100E7C0E2 /* General */,
@@ -1685,6 +1670,29 @@
 				0434B4BF287388ED00F06AB9 /* GitHubRepositoryProtocol.swift */,
 			);
 			path = Networking;
+			sourceTree = "<group>";
+		};
+		A1D0E0002F0A000100BEEF01 /* Authenticator */ = {
+			isa = PBXGroup;
+			children = (
+				A1D0E0012F0A000100BEEF01 /* AuthenticatorModels.swift */,
+				A1D0E0052F0A000100BEEF01 /* OtpAuthImport.swift */,
+				A1D0E0042F0A000100BEEF01 /* ProtoReader.swift */,
+				A1D0E0022F0A000100BEEF01 /* Base32.swift */,
+				A1D0E0032F0A000100BEEF01 /* TOTP.swift */,
+				A1D0E0082F0A000100BEEF01 /* AuthenticatorPanelView.swift */,
+			);
+			path = Authenticator;
+			sourceTree = "<group>";
+		};
+		A9ABF7312F27C67B00669338 /* Authenticator */ = {
+			isa = PBXGroup;
+			children = (
+				A1D0E0092F0A000100BEEF01 /* AuthenticatorSettingsView.swift */,
+				A1D0E0072F0A000100BEEF01 /* AuthenticatorImportSheet.swift */,
+				A1D0E0062F0A000100BEEF01 /* AuthenticatorStore.swift */,
+			);
+			path = Authenticator;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2304,7 +2312,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 248;
+				CURRENT_PROJECT_VERSION = 249;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2330,7 +2338,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 248;
+				CURRENT_PROJECT_VERSION = 249;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2483,7 +2491,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 248;
+				CURRENT_PROJECT_VERSION = 249;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
@@ -2509,7 +2517,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 2.6.4;
+				MARKETING_VERSION = 2.6.5;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2538,7 +2546,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 248;
+				CURRENT_PROJECT_VERSION = 249;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
@@ -2564,7 +2572,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 2.6.4;
+				MARKETING_VERSION = 2.6.5;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2593,7 +2601,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 248;
+				CURRENT_PROJECT_VERSION = 249;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2610,7 +2618,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.6.4;
+				MARKETING_VERSION = 2.6.5;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = OnlySwitchWidgets;
@@ -2633,7 +2641,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 248;
+				CURRENT_PROJECT_VERSION = 249;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2650,7 +2658,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.6.4;
+				MARKETING_VERSION = 2.6.5;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = OnlySwitchWidgets;

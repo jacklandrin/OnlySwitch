@@ -25,7 +25,7 @@ struct BuiltInSwitchEntity: AppEntity {
     }
 
     private static var exceptionSwitches: [SwitchType] {
-        [.topNotch, .airPods, .applemusic, .spotify, .screenTest]
+        [.topNotch, .airPods, .applemusic, .spotify, .screenTest, .authenticator]
     }
 }
 

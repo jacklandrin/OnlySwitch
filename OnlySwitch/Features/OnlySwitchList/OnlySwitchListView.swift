@@ -425,6 +425,9 @@ struct OnlySwitchListView: View {
     var scrollViewHeight: CGFloat {
         let switchCount = visableSwitchCount + switchVM.shortcutsList.count + switchVM.evolutionList.count
         var totalHeight = CGFloat(switchCount) * (Layout.singleSwitchHeight + 17)
+        if shouldShowAuthenticatorPanel {
+            totalHeight += 45.0
+        }
         //two columns
         if switchVM.currentAppearance == SwitchListAppearance.dual.rawValue {
             totalHeight = categoryHeight(count: switchVM.uncategoryItemList.count)

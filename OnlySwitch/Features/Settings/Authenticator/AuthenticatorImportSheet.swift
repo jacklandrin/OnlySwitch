@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import Extensions
 
 struct AuthenticatorImportSheet: View {
     @Environment(\.dismiss) private var dismiss
@@ -15,10 +16,10 @@ struct AuthenticatorImportSheet: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Import Authenticator QR Result")
+            Text("Import Authenticator QR Result".localized())
                 .font(.headline)
 
-            Text("Paste the QR scan result (supports `otpauth://...` and Google Authenticator `otpauth-migration://...`).")
+            Text("Paste the QR scan result (supports `otpauth://...` and Google Authenticator `otpauth-migration://...`).".localized())
                 .font(.subheadline)
                 .foregroundColor(.secondary)
 
@@ -35,15 +36,15 @@ struct AuthenticatorImportSheet: View {
                     .foregroundColor(.red)
                     .font(.footnote)
             } else if let importedCount {
-                Text("Imported \(importedCount) account(s).")
+                Text(String(format: "Imported %lld account(s).".localized(), Int64(importedCount)))
                     .foregroundColor(.green)
                     .font(.footnote)
             }
 
             HStack {
                 Spacer()
-                Button("Cancel") { dismiss() }
-                Button("Import") {
+                Button("Cancel".localized()) { dismiss() }
+                Button("Import".localized()) {
                     do {
                         let count = try store.importFromScanResult(input)
                         importedCount = count

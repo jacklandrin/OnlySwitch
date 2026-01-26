@@ -76,7 +76,7 @@ Everyone can contribute macOS Shortcuts for OnlySwitch now. Please read [How to 
 | Dim Screen          | finished        | Eject Discs              | finished          |
 | Hide Windows        | partly finished | True Tone                | finished          |
 | Top Sticker         | partly finished | Key Light                | finished          |
-| Only Agent          | finished        |                          |                   |
+| Only Agent          | finished        | Authenticator            | finished          |
 
 Since Version 1.3, switches can be added to or removed from the list.
 
