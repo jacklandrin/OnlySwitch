@@ -21,9 +21,9 @@ let Ads:[AdsModel] = [
         hint: "Download QRCobot"
     ),
     AdsModel(
-        imageName: "WallCard",
-        link: "https://apps.apple.com/us/app/wallcard/id1601311095",
-        hint: "Download WallCard"
+        imageName: "OnlyBaby",
+        link: "https://apps.apple.com/us/app/onlybaby/id6758526534",
+        hint: "Download OnlyBaby"
     ),
     AdsModel(
         imageName: "illa",
