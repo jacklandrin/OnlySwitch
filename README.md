@@ -133,6 +133,10 @@ It supports only macOS 26.0 and above.
 <img alt="Only Agent" src="https://github.com/user-attachments/assets/3710ebf6-f93c-4436-bce2-6fcf2727e3e1" width="70%" align="center" />
 </p>
 
+### OpenClaw (natural language)
+
+You can also control OnlySwitch by **natural language** using [OpenClaw](https://openclaw.ai/). An OpenClaw-compatible skill is included in this repo: say things like *"empty trash"*, *"toggle keep awake"*, or *"turn on dark mode"* and OpenClaw will trigger the matching switch via deeplink. See [OpenClaw/README.md](OpenClaw/README.md) for setup (extra skill directory or copy into `~/.openclaw/skills`).
+
 ## Only Widget
 
 Only Switch supports Apple Widgets since version 2.5.0. The Widgets can be edited to any built-in switches and buttons. Clicking them will trigger the reflection of relevant switches and buttons. You can put Only Widgets anywhere, desktop or notification center.
