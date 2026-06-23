@@ -10,6 +10,7 @@ public enum ModelProvider: String, Sendable {
     case openai
     case codex
     case gemini
+    case claude
 }
 
 public enum ModelStreamEvent: Sendable, Equatable {

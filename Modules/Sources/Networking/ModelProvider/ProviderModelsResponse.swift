@@ -11,6 +11,7 @@ public enum RemoteModelProviderKey: String, Sendable {
     case openai
     case codex
     case gemini
+    case claude
 }
 
 struct ProviderModelsResponse: Decodable {
@@ -39,6 +40,8 @@ struct ProviderModelGroup: Decodable {
                 return .codex
             case ("google", "gemini"), ("gemini", "gemini"):
                 return .gemini
+            case ("anthropic", "claude"):
+                return .claude
             default:
                 return nil
         }

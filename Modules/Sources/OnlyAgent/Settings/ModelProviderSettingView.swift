@@ -48,9 +48,17 @@ public struct ModelProviderSettingView: View {
                 ) {
                     selection = .gemini
                 }
+
+                CustomTabItem(
+                    icon: "claude",
+                    title: "Claude",
+                    isSelected: selection == .claude
+                ) {
+                    selection = .claude
+                }
             }
             .frame(height: 70)
-                        
+
             // Content Area
             Group {
                 switch selection {
@@ -62,6 +70,8 @@ public struct ModelProviderSettingView: View {
                         CodexSettingView(store: .init(initialState: .init(), reducer: CodexSettingReducer.init))
                     case .gemini:
                         GeminiSettingView(store: .init(initialState: .init(), reducer: GeminiSettingReducer.init))
+                    case .claude:
+                        ClaudeSettingView(store: .init(initialState: .init(), reducer: ClaudeSettingReducer.init))
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)

@@ -72,6 +72,7 @@ public extension UserDefaults {
         public static let openAIAPI = "openAIAPIKey"
         public static let openAIHost = "openAIHostKey"
         public static let geminiAPI = "geminiAPIKey"
+        public static let claudeAPI = "claudeAPIKey"
         //KeyLight
         public static let keyLightBrightness = "keyLightBrightnessKey"
         // Authenticator
