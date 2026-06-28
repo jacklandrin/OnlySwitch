@@ -1,50 +1,52 @@
 {
-  "updatedAt": "2026-06-23",
-  "models": [
-    {
-      "provider": "openai",
-      "family": "gpt",
-      "items": [
-        "gpt-5.4",
-        "gpt-5.2",
-        "gpt-5-mini",
-        "gpt-5-nano",
-        "gpt-4.1",
-        "gpt-4.1-mini"
-      ]
-    },
-    {
-      "provider": "google",
-      "family": "gemini",
-      "items": [
-        "gemini-3-pro-preview",
-        "gemini-3-flash-preview",
-        "gemini-2.5-pro",
-        "gemini-2.5-flash",
-        "gemini-2.5-flash-lite"
-      ]
-    },
-    {
-      "provider": "openai",
-      "family": "codex",
-      "items": [
-        "codex-mini-latest",
-        "gpt-5.4",
-        "gpt-5.4-mini",
-        "gpt-5.3-codex",
-        "gpt-5.2-codex",
-        "gpt-5.1-codex-max",
-        "gpt-5.1-codex-mini"
-      ]
-    },
-    {
-      "provider": "anthropic",
-      "family": "claude",
-      "items": [
-        "claude-opus-4-8",
-        "claude-sonnet-4-6",
-        "claude-haiku-4-5-20251001"
-      ]
-    }
-  ]
+    "updatedAt": "2026-06-23",
+    "models": [
+        {
+            "provider": "openai",
+            "family": "gpt",
+            "items": [
+                "gpt-5.5",
+                "gpt-5.4",
+                "gpt-5.2",
+                "gpt-5-mini",
+                "gpt-5-nano",
+                "gpt-4.1",
+                "gpt-4.1-mini"
+            ]
+        },
+        {
+            "provider": "google",
+            "family": "gemini",
+            "items": [
+                "gemini-3-pro-preview",
+                "gemini-3-flash-preview",
+                "gemini-2.5-pro",
+                "gemini-2.5-flash",
+                "gemini-2.5-flash-lite"
+            ]
+        },
+        {
+            "provider": "openai",
+            "family": "codex",
+            "items": [
+                "gpt-5.5",
+                "codex-mini-latest",
+                "gpt-5.4",
+                "gpt-5.4-mini",
+                "gpt-5.3-codex",
+                "gpt-5.2-codex",
+                "gpt-5.1-codex-max",
+                "gpt-5.1-codex-mini"
+            ]
+        },
+        {
+            "provider": "anthropic",
+            "family": "claude",
+            "items": [
+                "claude-opus-4-8",
+                "claude-sonnet-4-6",
+                "claude-haiku-4-5-20251001"
+            ]
+        }
+    ]
 }
