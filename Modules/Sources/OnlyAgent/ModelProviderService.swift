@@ -40,6 +40,7 @@ extension ModelProviderService: DependencyKey {
         let openAIClient = OpenAILive()
         let codexClient = CodexLive()
         let geminiClient = GeminiLive()
+        let claudeClient = ClaudeLive()
         let providerModelsRemoteService = ProviderModelsRemoteService()
         
         return .init { provider, apiKey, host in
@@ -52,6 +53,8 @@ extension ModelProviderService: DependencyKey {
                     break
                 case .gemini:
                     geminiClient.setAPIKey(apiKey)
+                case .claude:
+                    claudeClient.setAPIKey(apiKey)
             }
         } models: { provider in
             switch provider {
@@ -63,6 +66,8 @@ extension ModelProviderService: DependencyKey {
                     return try await providerModelsRemoteService.models(for: .codex).map(ProviderModel.init(model:))
                 case .gemini:
                     return try await providerModelsRemoteService.models(for: .gemini).map(ProviderModel.init(model:))
+                case .claude:
+                    return try await providerModelsRemoteService.models(for: .claude).map(ProviderModel.init(model:))
             }
         } chatStream: { provider, model, prompt in
             switch provider {
@@ -74,6 +79,8 @@ extension ModelProviderService: DependencyKey {
                     return try await codexClient.chatStream(model, prompt)
                 case .gemini:
                     return try await geminiClient.chatStream(model, prompt)
+                case .claude:
+                    return try await claudeClient.chatStream(model, prompt)
             }
         } chat: { provider, model, prompt in
             let stream: AsyncThrowingStream<ModelStreamEvent, Error>
@@ -86,6 +93,8 @@ extension ModelProviderService: DependencyKey {
                     stream = try await codexClient.chatStream(model, prompt)
                 case .gemini:
                     stream = try await geminiClient.chatStream(model, prompt)
+                case .claude:
+                    stream = try await claudeClient.chatStream(model, prompt)
             }
             
             var accumulatedContent = ""
@@ -110,6 +119,8 @@ extension ModelProviderService: DependencyKey {
                     return await codexClient.test()
                 case .gemini:
                     return await geminiClient.test()
+                case .claude:
+                    return await claudeClient.test()
             }
         } codexSignIn: {
             try await codexClient.signIn()
