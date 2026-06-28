@@ -265,6 +265,8 @@ Since version 2.3.10, this switch can be controlled via right-click icons.
 
 @Ryderwe for Authenticator
 
+@lou1s19 for Claud models of OnlyAgent
+
 
 ## License
 MIT
