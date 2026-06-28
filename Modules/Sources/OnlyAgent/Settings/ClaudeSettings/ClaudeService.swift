@@ -59,11 +59,12 @@ final class ClaudeLive: Sendable {
             "stream": true
         ]
         request.httpBody = try JSONSerialization.data(withJSONObject: body)
+        let requestToSend = request
 
         return AsyncThrowingStream { continuation in
-            Task {
+            Task { [requestToSend] in
                 do {
-                    let (asyncBytes, response) = try await URLSession.shared.bytes(for: request)
+                    let (asyncBytes, response) = try await URLSession.shared.bytes(for: requestToSend)
                     guard let httpResponse = response as? HTTPURLResponse,
                           httpResponse.statusCode == 200 else {
                         continuation.finish(throwing: ClaudeError.invalidResponse)
