@@ -14,8 +14,6 @@ import Utilities
 struct CustomizeView: View {
     @ObservedObject var customizeVM = CustomizeVM.shared
     @ObservedObject var langManager = LanguageManager.sharedManager
-    @ObservedObject var preferencesvm = PreferencesObserver.shared
-    @State var preferences = PreferencesObserver.shared.preferences
     
     var body: some View {
         VStack(alignment:.leading) {
@@ -24,51 +22,8 @@ struct CustomizeView: View {
             Divider()
             ScrollView {
                 LazyVStack{
-                    ForEach(customizeVM.allSwitches.indices, id:\.self) { index in
-                        HStack {
-                            Toggle("", isOn: $customizeVM.allSwitches[index].toggle)
-                            Image(nsImage: barInfo(index: index).onImage!.resizeMaintainingAspectRatio(withSize: NSSize(width: 50, height: 50))!)
-                                .renderingMode(.template)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 25, height: 25)
-                            Text(barInfo(index:index).title.localized())
-                                .frame(width:170, alignment: .leading)
-                                .padding(.trailing, 10)
-                            KeyboardShortcuts.Recorder(for: customizeVM.allSwitches[index].keyboardShortcutName)
-                                .environment(\.locale, .init(identifier: langManager.currentLang))//Localizable follow system
-                            Group {
-                                if customizeVM.allSwitches[index].type == .hideMenubarIcons {
-                                    Button(action: {
-                                        preferencesvm.preferences.menubarCollaspable = !preferences.menubarCollaspable
-                                    }, label: {
-                                        if preferencesvm.preferences.menubarCollaspable {
-                                            Text("Disable".localized())
-                                        } else {
-                                            Text("Enable".localized())
-                                        }
-                                    })
-                                } else if customizeVM.allSwitches[index].type == .radioStation || customizeVM.allSwitches[index].type == .backNoises {
-                                    Button(action: {
-                                        preferencesvm.preferences.radioEnable = !preferences.radioEnable
-                                        if preferences.radioEnable {
-                                            PlayerManager.shared.player.setupRemoteCommandCenter()
-                                        } else {
-                                            RadioStationSwitch.shared.playerItem.isPlaying = false
-                                            PlayerManager.shared.player.clearCommandCenter()
-                                        }
-                                    }, label: {
-                                        if preferencesvm.preferences.radioEnable {
-                                            Text("Disable".localized())
-                                        } else {
-                                            Text("Enable".localized())
-                                        }
-                                    })
-                                }
-                            }.padding(.leading, 10)
-                            
-                            Spacer()
-                        }.padding(.leading)
+                    ForEach(customizeVM.allSwitches, id: \.type) { item in
+                        CustomizeRowView(item: item, currentLang: langManager.currentLang)
                     }
                 }
                 
@@ -83,9 +38,65 @@ struct CustomizeView: View {
         }
         
     }
-    
-    func barInfo(index:Int) -> SwitchBarInfo {
-        customizeVM.allSwitches[index].type.barInfo()
+}
+
+private struct CustomizeRowView: View {
+    @ObservedObject var item: CustomizeItem
+    @ObservedObject private var preferencesvm = PreferencesObserver.shared
+    let currentLang: String
+
+    var body: some View {
+        HStack {
+            Toggle("", isOn: $item.toggle)
+            if let iconImage = item.iconImage {
+                Image(nsImage: iconImage)
+                    .renderingMode(.template)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 25, height: 25)
+            }
+            Text(item.barInfo.title.localized())
+                .frame(width:170, alignment: .leading)
+                .padding(.trailing, 10)
+            KeyboardShortcuts.Recorder(for: item.keyboardShortcutName)
+                .environment(\.locale, .init(identifier: currentLang))//Localizable follow system
+            extraSettingsButton
+                .padding(.leading, 10)
+
+            Spacer()
+        }
+        .padding(.leading)
+    }
+
+    @ViewBuilder
+    private var extraSettingsButton: some View {
+        if item.type == .hideMenubarIcons {
+            Button(action: {
+                preferencesvm.preferences.menubarCollaspable.toggle()
+            }, label: {
+                if preferencesvm.preferences.menubarCollaspable {
+                    Text("Disable".localized())
+                } else {
+                    Text("Enable".localized())
+                }
+            })
+        } else if item.type == .radioStation || item.type == .backNoises {
+            Button(action: {
+                preferencesvm.preferences.radioEnable.toggle()
+                if preferencesvm.preferences.radioEnable {
+                    PlayerManager.shared.player.setupRemoteCommandCenter()
+                } else {
+                    RadioStationSwitch.shared.playerItem.isPlaying = false
+                    PlayerManager.shared.player.clearCommandCenter()
+                }
+            }, label: {
+                if preferencesvm.preferences.radioEnable {
+                    Text("Disable".localized())
+                } else {
+                    Text("Enable".localized())
+                }
+            })
+        }
     }
 }
 

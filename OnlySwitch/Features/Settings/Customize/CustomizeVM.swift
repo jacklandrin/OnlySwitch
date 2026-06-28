@@ -5,9 +5,11 @@
 //  Created by Jacklandrin on 2021/12/16.
 //
 
+import AppKit
 import Foundation
 import KeyboardShortcuts
 import Switches
+import Utilities
 
 @MainActor
 class CustomizeVM:ObservableObject {
@@ -32,6 +34,8 @@ class CustomizeVM:ObservableObject {
 @MainActor
 class CustomizeItem: ObservableObject {
     let type:SwitchType
+    let barInfo: SwitchBarInfo
+    let iconImage: NSImage?
     let error:(_ info:String) -> Void
     @Published var toggle:Bool
     {
@@ -67,6 +71,8 @@ class CustomizeItem: ObservableObject {
     
     init(type:SwitchType, toggle:Bool, error:@escaping (_ info:String) -> Void) {
         self.type = type
+        self.barInfo = type.barInfo()
+        self.iconImage = barInfo.onImage?.resizeMaintainingAspectRatio(withSize: NSSize(width: 50, height: 50))
         self.toggle = toggle
         self.error = error
         self.keyboardShortcutName = KeyboardShortcuts.Name(rawValue: String(type.rawValue))!
