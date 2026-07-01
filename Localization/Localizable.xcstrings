@@ -1,6 +1,57 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "External Displays" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Externe Bildschirme"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "External Displays"
+          }
+        }
+      }
+    },
+    "External monitors follow the built-in display's brightness (F1/F2) via DDC/CI." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Externe Monitore folgen der Helligkeit des eingebauten Bildschirms (F1/F2) per DDC/CI."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "External monitors follow the built-in display's brightness (F1/F2) via DDC/CI."
+          }
+        }
+      }
+    },
+    "Sync external monitors" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Externe Monitore synchronisieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sync external monitors"
+          }
+        }
+      }
+    },
     "" : {
       "localizations" : {
         "cs" : {

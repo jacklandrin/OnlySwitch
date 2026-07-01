@@ -32,6 +32,20 @@ struct DimScreenSettingView: View {
             } header: {
                 Text("Brightness".localized())
             }
+
+            // MARK: - External Displays Section
+            Section {
+                Toggle(isOn: $vm.syncExternalBrightness) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Sync external monitors".localized())
+                        Text("External monitors follow the built-in display's brightness (F1/F2) via DDC/CI.".localized())
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+            } header: {
+                Text("External Displays".localized())
+            }
         }
         .formStyle(.grouped)
     }
