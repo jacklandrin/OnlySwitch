@@ -213,6 +213,9 @@
 		047F3A38285DE67A004FFCDF /* SwitchListApperanceDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047F3A36285DE67A004FFCDF /* SwitchListApperanceDefine.swift */; };
 		04819CD22BBC884A00645A0C /* BrightnessControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 04819CCF2BBC884900645A0C /* BrightnessControl.m */; };
 		04819CD32BBC884A00645A0C /* KeyboardManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 04819CD12BBC884A00645A0C /* KeyboardManager.m */; };
+		0DDC000000000000000000B2 /* DDCControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC000000000000000000A2 /* DDCControl.m */; };
+		0DDC000000000000000000B3 /* ExternalDisplayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC000000000000000000A3 /* ExternalDisplayManager.swift */; };
+		0DDC000000000000000000B4 /* BrightnessSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC000000000000000000A4 /* BrightnessSyncManager.swift */; };
 		04819CD52BBC8A6700645A0C /* KeyLightSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04819CD42BBC8A6700645A0C /* KeyLightSwitch.swift */; };
 		04819CD82BBC957D00645A0C /* KeyLightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04819CD72BBC957D00645A0C /* KeyLightView.swift */; };
 		04819CDA2BDE9BFA00645A0C /* KeyLightFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04819CD92BDE9BFA00645A0C /* KeyLightFeature.swift */; };
@@ -546,6 +549,10 @@
 		04819CCF2BBC884900645A0C /* BrightnessControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrightnessControl.m; sourceTree = "<group>"; };
 		04819CD02BBC884900645A0C /* KeyboardManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyboardManager.h; sourceTree = "<group>"; };
 		04819CD12BBC884A00645A0C /* KeyboardManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyboardManager.m; sourceTree = "<group>"; };
+		0DDC000000000000000000A1 /* DDCControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDCControl.h; sourceTree = "<group>"; };
+		0DDC000000000000000000A2 /* DDCControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDCControl.m; sourceTree = "<group>"; };
+		0DDC000000000000000000A3 /* ExternalDisplayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalDisplayManager.swift; sourceTree = "<group>"; };
+		0DDC000000000000000000A4 /* BrightnessSyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrightnessSyncManager.swift; sourceTree = "<group>"; };
 		04819CD42BBC8A6700645A0C /* KeyLightSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyLightSwitch.swift; sourceTree = "<group>"; };
 		04819CD72BBC957D00645A0C /* KeyLightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyLightView.swift; sourceTree = "<group>"; };
 		04819CD92BDE9BFA00645A0C /* KeyLightFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyLightFeature.swift; sourceTree = "<group>"; };
@@ -1191,6 +1198,17 @@
 			path = KeyboardBrightness;
 			sourceTree = "<group>";
 		};
+		0DDC000000000000000000C1 /* DDC */ = {
+			isa = PBXGroup;
+			children = (
+				0DDC000000000000000000A1 /* DDCControl.h */,
+				0DDC000000000000000000A2 /* DDCControl.m */,
+				0DDC000000000000000000A3 /* ExternalDisplayManager.swift */,
+				0DDC000000000000000000A4 /* BrightnessSyncManager.swift */,
+			);
+			path = DDC;
+			sourceTree = "<group>";
+		};
 		04819CD62BBC954C00645A0C /* KeyLight */ = {
 			isa = PBXGroup;
 			children = (
@@ -1587,6 +1605,7 @@
 			isa = PBXGroup;
 			children = (
 				04819CCC2BBC881E00645A0C /* KeyboardBrightness */,
+				0DDC000000000000000000C1 /* DDC */,
 				040E97262760FF3E003D9D42 /* MetadataExtractorError.swift */,
 				04E03AFD275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift */,
 				0427B25A275D786400AD783A /* SystemInfo.swift */,
@@ -2078,6 +2097,9 @@
 				04DC6CA028A7D52300888BF9 /* DimScreenSettingView.swift in Sources */,
 				04938D1027692B6900713F1D /* SwitchManager.swift in Sources */,
 				04819CD22BBC884A00645A0C /* BrightnessControl.m in Sources */,
+				0DDC000000000000000000B2 /* DDCControl.m in Sources */,
+				0DDC000000000000000000B3 /* ExternalDisplayManager.swift in Sources */,
+				0DDC000000000000000000B4 /* BrightnessSyncManager.swift in Sources */,
 				0493374527625A1E00AE779A /* JLASAudioPlayer.swift in Sources */,
 				0447E36D2B71746E00D07B9A /* NightShiftSwitch.swift in Sources */,
 				04CB89F72B6FFA65006B8620 /* ViewModify.swift in Sources */,

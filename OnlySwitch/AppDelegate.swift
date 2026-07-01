@@ -195,6 +195,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         Bundle.setLanguage(lang: LanguageManager.sharedManager.currentLang)
 
         registerShortcut()
+
+        // Mirror built-in display brightness to external monitors (issue #206) –
+        // start now if enabled and react to the setting being toggled later.
+        BrightnessSyncManager.shared.updateState()
+        NotificationCenter.default.addObserver(
+            forName: .changeSyncExternalBrightnessSetting,
+            object: nil,
+            queue: .main
+        ) { _ in
+            Task { @MainActor in
+                BrightnessSyncManager.shared.updateState()
+            }
+        }
+
         if PreferencesObserver.shared.preferences.checkUpdateOnLaunch {
             checkUpdate()
         }

@@ -201,6 +201,15 @@ final class Preferences: @unchecked Sendable {
         }
     }
 
+    /// When on, external monitors follow the built-in display's brightness
+    /// (F1/F2, Control Center, Dim Screen, …) over DDC/CI.
+    @UserDefaultValue(key: UserDefaults.Key.syncExternalBrightness, defaultValue: false)
+    var syncExternalBrightness:Bool {
+        didSet {
+            NotificationCenter.default.post(name: .changeSyncExternalBrightnessSetting, object: nil)
+        }
+    }
+
     // MARK: - Night Shift
     @UserDefaultValue(key: UserDefaults.Key.nightShiftStrength, defaultValue: 0.5)
     var nightShiftStrength: Float {

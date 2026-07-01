@@ -55,6 +55,7 @@ public extension UserDefaults {
         //Dim Screen
         public static let autoDimScreenTime = "autoDimScreenTimeKey"
         public static let dimScreenPercent = "dimScreenPercentKey"
+        public static let syncExternalBrightness = "syncExternalBrightnessKey"
         //Night Shift
         public static let nightShiftStrength = "nightShiftStrengthKey"
         public static let nightShiftStartDate = "nightShiftStartDateKey"
