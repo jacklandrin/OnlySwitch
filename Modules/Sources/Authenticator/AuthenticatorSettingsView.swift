@@ -7,11 +7,13 @@ import SwiftUI
 import AppKit
 import Extensions
 
-struct AuthenticatorSettingsView: View {
+public struct AuthenticatorSettingsView: View {
     @ObservedObject private var store = AuthenticatorStore.shared
     @State private var showImport = false
 
-    var body: some View {
+    public init() {}
+
+    public var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack {
                 Text("Authenticator".localized())

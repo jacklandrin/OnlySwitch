@@ -6,16 +6,17 @@
 //
 
 import Foundation
+import Extensions
 import Sharing
 
 extension SharedKey where Self == AppStorageKey<Data?>.Default {
-    static var oldStickers: Self {
+    public static var oldStickers: Self {
         Self[.appStorage(UserDefaults.Key.sticker), default: nil]
     }
 }
 
 extension SharedKey where Self == FileStorageKey<[StickerModel]?>.Default {
-    static var stickerCache: Self {
+    public static var stickerCache: Self {
         let appBundleID = Bundle.main.infoDictionary?["CFBundleName"] as! String
         return Self[.fileStorage(.applicationSupportDirectory.appending(component: "\(appBundleID)/StickerCache")), default: nil]
     }

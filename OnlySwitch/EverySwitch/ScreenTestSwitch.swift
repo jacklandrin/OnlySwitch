@@ -7,6 +7,7 @@
 
 import Foundation
 import AppKit
+import PureColorView
 import SwiftUI
 import Switches
 
@@ -34,7 +35,13 @@ final class ScreenTestSwitch: SwitchProvider, CurrentScreen, @unchecked Sendable
     func operateSwitch(isOn: Bool) async throws {
         guard self.checkAccessbilityEnabled() else { return }
         if isOn {
-            self.view = NSHostingView(rootView: PureColorView())
+            self.view = NSHostingView(
+                rootView: PureColorView {
+                    Task {
+                        try? await ScreenTestSwitch.shared.operateSwitch(isOn: false)
+                    }
+                }
+            )
             self.view?.enterFullScreenMode(self.getScreenWithMouse()!)
         } else {
             self.view?.exitFullScreenMode()

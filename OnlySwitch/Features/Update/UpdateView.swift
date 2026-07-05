@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Defines
 import Networking
 
 struct UpdateView: View {

@@ -43,11 +43,24 @@ let package = Package(
         .library(
             name: "OnlyAgent",
             targets: ["OnlyAgent"]
+        ),
+        .library(
+            name: "PureColorView",
+            targets: ["PureColorView"]
+        ),
+        .library(
+            name: "StickerView",
+            targets: ["StickerView"]
+        ),
+        .library(
+            name: "Authenticator",
+            targets: ["Authenticator"]
         )
     ],
     dependencies: [
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", exact: "1.25.3"),
         .package(url: "https://github.com/pointfreeco/swift-sharing", exact: "2.8.0"),
+        .package(url: "https://github.com/gonzalezreal/swift-markdown-ui", exact: "2.3.1"),
         .package(url: "https://github.com/Alamofire/Alamofire", exact: "5.5.0"),
         .package(url: "https://github.com/siteline/swiftui-introspect", from: "26.0.0"),
         .package(url: "https://github.com/lzell/AIProxySwift", exact: "0.146.0"),
@@ -120,9 +133,34 @@ let package = Package(
                 .process("Resources")
             ]
         ),
+        .target(
+            name: "PureColorView",
+            dependencies: [
+                "Extensions"
+            ]
+        ),
+        .target(
+            name: "StickerView",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "MarkdownUI", package: "swift-markdown-ui"),
+                .product(name: "Sharing", package: "swift-sharing"),
+                "Defines",
+                "Extensions"
+            ]
+        ),
+        .target(
+            name: "Authenticator",
+            dependencies: [
+                "Defines",
+                "Extensions",
+                "Utilities"
+            ]
+        ),
         .testTarget(
             name: "ModulesTests",
             dependencies: [
+                "Authenticator",
                 "OnlyAgent",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ]

@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import Authenticator
 import Switches
 import Defines
 
@@ -36,4 +37,3 @@ final class AuthenticatorSwitch: SwitchProvider, @unchecked Sendable {
         NotificationCenter.default.post(name: .changeSettings, object: nil)
     }
 }
-

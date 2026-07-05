@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum AuthenticatorAlgorithm: String, Codable, Sendable, CaseIterable {
+public enum AuthenticatorAlgorithm: String, Codable, Sendable, CaseIterable {
     case sha1
     case sha256
     case sha512
@@ -21,15 +21,15 @@ enum AuthenticatorAlgorithm: String, Codable, Sendable, CaseIterable {
     }
 }
 
-struct AuthenticatorAccount: Identifiable, Codable, Equatable, Sendable {
-    var id: UUID
-    var issuer: String
-    var name: String
-    var digits: Int
-    var period: Int
-    var algorithm: AuthenticatorAlgorithm
-    var secretKeychainKey: String
-    var createdAt: Date
+public struct AuthenticatorAccount: Identifiable, Codable, Equatable, Sendable {
+    public var id: UUID
+    public var issuer: String
+    public var name: String
+    public var digits: Int
+    public var period: Int
+    public var algorithm: AuthenticatorAlgorithm
+    public var secretKeychainKey: String
+    public var createdAt: Date
 
     var displayName: String {
         if issuer.isEmpty { return name }
@@ -37,4 +37,3 @@ struct AuthenticatorAccount: Identifiable, Codable, Equatable, Sendable {
         return "\(issuer) (\(name))"
     }
 }
-

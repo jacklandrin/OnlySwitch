@@ -7,20 +7,20 @@ import Foundation
 import Extensions
 
 @MainActor
-final class AuthenticatorStore: ObservableObject {
-    static let shared = AuthenticatorStore()
+public final class AuthenticatorStore: ObservableObject {
+    public static let shared = AuthenticatorStore()
 
     private let keychainService = "com.jacklandrin.OnlySwitch.Authenticator"
     private lazy var keychain = KeychainManager(service: keychainService)
 
-    @Published var enabled: Bool {
+    @Published public var enabled: Bool {
         didSet {
             UserDefaults.standard.set(enabled, forKey: UserDefaults.Key.authenticatorEnabled)
             UserDefaults.standard.synchronize()
         }
     }
 
-    @Published private(set) var accounts: [AuthenticatorAccount] {
+    @Published public private(set) var accounts: [AuthenticatorAccount] {
         didSet { persistAccounts() }
     }
 
@@ -31,13 +31,13 @@ final class AuthenticatorStore: ObservableObject {
         self.accounts = Self.loadAccounts()
     }
 
-    func reload() {
+    public func reload() {
         secretCache = [:]
         accounts = Self.loadAccounts()
         enabled = UserDefaults.standard.bool(forKey: UserDefaults.Key.authenticatorEnabled)
     }
 
-    func importFromScanResult(_ input: String) throws -> Int {
+    public func importFromScanResult(_ input: String) throws -> Int {
         let tokens = try OtpAuthImport.parse(input: input)
         guard !tokens.isEmpty else { return 0 }
 
@@ -95,13 +95,13 @@ final class AuthenticatorStore: ObservableObject {
         return added
     }
 
-    func deleteAccount(_ account: AuthenticatorAccount) {
+    public func deleteAccount(_ account: AuthenticatorAccount) {
         accounts.removeAll { $0.id == account.id }
         try? keychain.delete(key: account.secretKeychainKey)
         secretCache.removeValue(forKey: account.id)
     }
 
-    func deleteAll() {
+    public func deleteAll() {
         for account in accounts {
             try? keychain.delete(key: account.secretKeychainKey)
         }
@@ -109,7 +109,7 @@ final class AuthenticatorStore: ObservableObject {
         secretCache = [:]
     }
 
-    func secret(for account: AuthenticatorAccount) -> Data? {
+    public func secret(for account: AuthenticatorAccount) -> Data? {
         if let cached = secretCache[account.id] { return cached }
         guard let secretBase64 = try? keychain.retrieve(key: account.secretKeychainKey) ?? "" else { return nil }
         guard !secretBase64.isEmpty, let data = Data(base64Encoded: secretBase64) else { return nil }

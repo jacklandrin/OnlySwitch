@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import AppKit
 
-extension NSColor {
+public extension NSColor {
     convenience init(hex: String, alpha: CGFloat = 1.0) {
         var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
         hexSanitized = hexSanitized.replacingOccurrences(of: "#", with: "")
@@ -33,15 +33,15 @@ extension NSColor {
     static let themeLila = NSColor(hex: "#BB8ED0")
 }
 
-protocol StickerColorConfiguration {
+public protocol StickerColorConfiguration {
     var content: NSColor { get }
     var stroke: NSColor { get }
     var bar: NSColor { get }
     var name: String { get }
 }
 
-enum StickerColor: StickerColorConfiguration, CaseIterable {
-    var content: NSColor {
+public enum StickerColor: StickerColorConfiguration, CaseIterable {
+    public var content: NSColor {
         switch self {
             case .yellow:
                 return NSColor(hex: "#FDF5A6")
@@ -58,7 +58,7 @@ enum StickerColor: StickerColorConfiguration, CaseIterable {
         }
     }
 
-    var stroke: NSColor {
+    public var stroke: NSColor {
         switch self {
             case .yellow:
                 return NSColor(hex: "#392705", alpha: 0.4)
@@ -75,7 +75,7 @@ enum StickerColor: StickerColorConfiguration, CaseIterable {
         }
     }
 
-    var bar: NSColor {
+    public var bar: NSColor {
         switch self {
             case .yellow:
                 return NSColor(hex: "#F8D841")
@@ -92,7 +92,7 @@ enum StickerColor: StickerColorConfiguration, CaseIterable {
         }
     }
 
-    var name: String {
+    public var name: String {
         switch self {
             case .yellow:
                 return "yellow"
@@ -109,7 +109,7 @@ enum StickerColor: StickerColorConfiguration, CaseIterable {
         }
     }
 
-    static func generateColor(from name: String) -> Self {
+    public static func generateColor(from name: String) -> Self {
         switch name {
             case "yellow":
                 return .yellow

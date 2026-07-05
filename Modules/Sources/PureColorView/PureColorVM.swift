@@ -10,6 +10,7 @@ import CoreGraphics
 
 @MainActor
 class PureColorVM:ObservableObject {
+    private let exitScreenTestModeAction: @MainActor () -> Void
     
     private var runLoopSource:CFRunLoopSource?
     
@@ -50,6 +51,9 @@ class PureColorVM:ObservableObject {
     @Published var currentColor: Color = .black
     @Published var tipAlpha = 1.0
     
+    init(exitScreenTestMode: @escaping @MainActor () -> Void = {}) {
+        self.exitScreenTestModeAction = exitScreenTestMode
+    }
     
     var isHovering:Bool = false
     {
@@ -81,9 +85,7 @@ class PureColorVM:ObservableObject {
     }
     
     func exitScreenTestMode() {
-        Task {
-            try? await ScreenTestSwitch.shared.operateSwitch(isOn: false)
-        }
+        exitScreenTestModeAction()
     }
     
     

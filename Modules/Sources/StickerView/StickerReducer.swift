@@ -7,13 +7,13 @@
 
 import Foundation
 import ComposableArchitecture
-import Switches
+import Defines
 
 @Reducer
-struct StickerReducer {
+public struct StickerReducer {
     @ObservableState
-    struct State: Equatable, Identifiable {
-        let id: String
+    public struct State: Equatable, Identifiable {
+        public let id: String
         var stickerContent = ""
         var isColorSelectorPresented = false
         var isHovering = false
@@ -22,7 +22,7 @@ struct StickerReducer {
         var previewMode = false
         var collaspeMode = false
         
-        init(sticker: StickerModel) {
+        public init(sticker: StickerModel) {
             self.id = sticker.id ?? UUID().uuidString
             self.stickerContent = sticker.content
             self.stickerColor = StickerColor.generateColor(from: sticker.color)
@@ -33,7 +33,7 @@ struct StickerReducer {
     }
     
     @CasePathable
-    enum Action: BindableAction {
+    public enum Action: BindableAction {
         case saveContent
         case showColorSelector
         case changeColor(StickerColor)
@@ -48,7 +48,9 @@ struct StickerReducer {
     
     @Shared(.stickerCache) var stickerCache: [StickerModel]?
     
-    var body: some ReducerOf<Self> {
+    public init() {}
+
+    public var body: some ReducerOf<Self> {
         BindingReducer()
         Reduce { state, action in
             switch action {

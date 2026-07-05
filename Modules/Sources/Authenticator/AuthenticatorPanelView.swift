@@ -9,13 +9,15 @@ import Defines
 import Extensions
 import Utilities
 
-struct AuthenticatorPanelView: View {
+public struct AuthenticatorPanelView: View {
     @ObservedObject private var store = AuthenticatorStore.shared
     @ObservedObject private var languageManager = LanguageManager.sharedManager
     @State private var showImport = false
     @State private var isExpanded = false
 
-    var body: some View {
+    public init() {}
+
+    public var body: some View {
         VStack(spacing: 0) {
             headerRow
             Divider()

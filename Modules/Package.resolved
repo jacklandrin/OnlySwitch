@@ -1,5 +1,5 @@
 {
-  "originHash" : "3a62759a773641f20103226561f6b75d3e613c2628a46eb4b3f5c4ef2aa87247",
+  "originHash" : "87ce784deb1b8d0ae1dc909431c6f9ff3691bcc6a5a68610b9656c75b2ff7e00",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -155,6 +155,15 @@
       }
     },
     {
+      "identity" : "networkimage",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/gonzalezreal/NetworkImage",
+      "state" : {
+        "revision" : "2849f5323265386e200484b0d0f896e73c3411b9",
+        "version" : "6.0.1"
+      }
+    },
+    {
       "identity" : "ollama-swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/jacklandrin/ollama-swift",
@@ -241,6 +250,15 @@
       "state" : {
         "revision" : "322d9ffeeba85c9f7c4984b39422ec7cc3c56597",
         "version" : "1.1.1"
+      }
+    },
+    {
+      "identity" : "swift-markdown-ui",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/gonzalezreal/swift-markdown-ui",
+      "state" : {
+        "revision" : "9a8119b37e09a770367eeb26e05267c75d854053",
+        "version" : "2.3.1"
       }
     },
     {

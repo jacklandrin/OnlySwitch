@@ -11,6 +11,7 @@ import SwiftUI
 import ComposableArchitecture
 import Switches
 import Combine
+import StickerView
 
 final class TopStickerSwitch: SwitchProvider, @unchecked Sendable {
 

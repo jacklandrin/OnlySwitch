@@ -7,15 +7,15 @@
 
 import Foundation
 
-struct StickerModel: Equatable, Codable {
-    let id: String?
-    let content: String
-    let color: String
-    let trancelucent: Bool?
-    let previewMode: Bool?
-    let collapseMode: Bool?
+public struct StickerModel: Equatable, Codable, Sendable {
+    public let id: String?
+    public let content: String
+    public let color: String
+    public let trancelucent: Bool?
+    public let previewMode: Bool?
+    public let collapseMode: Bool?
     
-    init(
+    public init(
         id: String = UUID().uuidString,
         content: String = "",
         color: String = "yellow",

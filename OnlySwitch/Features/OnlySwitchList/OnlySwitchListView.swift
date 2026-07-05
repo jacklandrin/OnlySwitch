@@ -6,6 +6,7 @@
 //
 
 import Defines
+import Authenticator
 import SwiftUI
 import LaunchAtLogin
 import Switches

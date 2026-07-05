@@ -7,6 +7,7 @@
 
 import SwiftUI
 import AlertToast
+import Defines
 import KeyboardShortcuts
 import Switches
 import Utilities
