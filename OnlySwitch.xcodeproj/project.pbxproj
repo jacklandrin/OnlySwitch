@@ -165,9 +165,6 @@
 		04581DC12765522A008ADF30 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04581DC02765522A008ADF30 /* AboutView.swift */; };
 		046331D32795DACB00C5F894 /* ShortcutsMarket.json in Resources */ = {isa = PBXBuildFile; fileRef = 046331D22795DACB00C5F894 /* ShortcutsMarket.json */; };
 		046955D92C7A732300577915 /* OnlyControl in Frameworks */ = {isa = PBXBuildFile; productRef = 046955D82C7A732300577915 /* OnlyControl */; };
-		A1D200012F0B000200BEEF01 /* PureColorView in Frameworks */ = {isa = PBXBuildFile; productRef = A1D201012F0B000200BEEF01 /* PureColorView */; };
-		A1D200022F0B000200BEEF01 /* StickerView in Frameworks */ = {isa = PBXBuildFile; productRef = A1D201022F0B000200BEEF01 /* StickerView */; };
-		A1D200032F0B000200BEEF01 /* Authenticator in Frameworks */ = {isa = PBXBuildFile; productRef = A1D201032F0B000200BEEF01 /* Authenticator */; };
 		046955DB2C7E5E9B00577915 /* OnlyControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046955DA2C7E5E9B00577915 /* OnlyControlView.swift */; };
 		046C0C00293E7C040073F727 /* SwiftUIWebView in Frameworks */ = {isa = PBXBuildFile; productRef = 046C0BFF293E7C040073F727 /* SwiftUIWebView */; };
 		047140B327788364005B160B /* mixkit-alert-bells-echo-765.wav in Resources */ = {isa = PBXBuildFile; fileRef = 047140B127788364005B160B /* mixkit-alert-bells-echo-765.wav */; };
@@ -344,6 +341,9 @@
 		04FC161628402E5000D4A4AC /* ShortcutOnMarket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FC161528402E5000D4A4AC /* ShortcutOnMarket.swift */; };
 		04FC161728402E5200D4A4AC /* ShortcutOnMarket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FC161528402E5000D4A4AC /* ShortcutOnMarket.swift */; };
 		A1D0E1092F0A000100BEEF01 /* AuthenticatorSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E00A2F0A000100BEEF01 /* AuthenticatorSwitch.swift */; };
+		A1D200012F0B000200BEEF01 /* PureColorView in Frameworks */ = {isa = PBXBuildFile; productRef = A1D201012F0B000200BEEF01 /* PureColorView */; };
+		A1D200022F0B000200BEEF01 /* StickerView in Frameworks */ = {isa = PBXBuildFile; productRef = A1D201022F0B000200BEEF01 /* StickerView */; };
+		A1D200032F0B000200BEEF01 /* Authenticator in Frameworks */ = {isa = PBXBuildFile; productRef = A1D201032F0B000200BEEF01 /* Authenticator */; };
 		A93C8BE12ECA34D700D7CE52 /* AICommanderSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93C8BE02ECA34CB00D7CE52 /* AICommanderSwitch.swift */; };
 		A93C8BE22ECA34D700D7CE52 /* AICommanderSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93C8BE02ECA34CB00D7CE52 /* AICommanderSwitch.swift */; };
 		A93C8BE42ECA376900D7CE52 /* OnlyAgent in Frameworks */ = {isa = PBXBuildFile; productRef = A93C8BE32ECA376900D7CE52 /* OnlyAgent */; };
@@ -2195,7 +2195,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 255;
+				CURRENT_PROJECT_VERSION = 256;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2221,7 +2221,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 255;
+				CURRENT_PROJECT_VERSION = 256;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2374,7 +2374,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 255;
+				CURRENT_PROJECT_VERSION = 256;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
@@ -2400,7 +2400,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.6.8;
+				MARKETING_VERSION = 2.6.9;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2429,7 +2429,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 255;
+				CURRENT_PROJECT_VERSION = 256;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
@@ -2455,7 +2455,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.6.8;
+				MARKETING_VERSION = 2.6.9;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2484,7 +2484,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 255;
+				CURRENT_PROJECT_VERSION = 256;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2501,7 +2501,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.6.8;
+				MARKETING_VERSION = 2.6.9;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = OnlySwitchWidgets;
@@ -2524,7 +2524,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 255;
+				CURRENT_PROJECT_VERSION = 256;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2541,7 +2541,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.6.8;
+				MARKETING_VERSION = 2.6.9;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = OnlySwitchWidgets;
@@ -2762,14 +2762,6 @@
 			package = 04DA45702E12F28A0051047B /* XCRemoteSwiftPackageReference "swift-dependencies" */;
 			productName = Dependencies;
 		};
-		A93C8BE32ECA376900D7CE52 /* OnlyAgent */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = OnlyAgent;
-		};
-		A9F007C92EC3D9BD002D9AB0 /* Design */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Design;
-		};
 		A1D201012F0B000200BEEF01 /* PureColorView */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = PureColorView;
@@ -2781,6 +2773,14 @@
 		A1D201032F0B000200BEEF01 /* Authenticator */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Authenticator;
+		};
+		A93C8BE32ECA376900D7CE52 /* OnlyAgent */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OnlyAgent;
+		};
+		A9F007C92EC3D9BD002D9AB0 /* Design */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Design;
 		};
 /* End XCSwiftPackageProductDependency section */
 
