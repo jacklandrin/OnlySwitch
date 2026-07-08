@@ -6,6 +6,7 @@
 #import "DDCControl.h"
 #import <unistd.h>
 #import <math.h>
+#import <string.h>
 @import IOKit;
 
 // DDC/CI over I2C constants (VESA MCCS). Values mirror waydabber/m1ddc.
