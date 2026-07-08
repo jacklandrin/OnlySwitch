@@ -9,6 +9,8 @@
 
 # OnlySwitch
 
+[![Listed on TakoAPI](https://takoapi.com/api/badge/jacklandrin-onlyswitch)](https://takoapi.com/agents/jacklandrin-onlyswitch)
+
 ***Menubar is smaller, you only need an All-in-One switch.***
 
 ## Install by Homebrew
