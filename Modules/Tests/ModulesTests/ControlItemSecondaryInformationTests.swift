@@ -44,4 +44,27 @@ struct ControlItemSecondaryInformationTests {
 
         #expect(first != second)
     }
+
+    @Test func authenticatorTilePresentsItsDetailPanel() {
+        let item = ControlItemViewState(
+            id: "authenticator",
+            title: "Authenticator",
+            detail: .authenticator,
+            iconData: Data(),
+            controlType: .Switch
+        )
+
+        #expect(item.interaction == .presentDetail(.authenticator))
+    }
+
+    @Test func ordinaryTilePerformsItsControl() {
+        let item = ControlItemViewState(
+            id: "dark-mode",
+            title: "Dark Mode",
+            iconData: Data(),
+            controlType: .Switch
+        )
+
+        #expect(item.interaction == .performControl)
+    }
 }

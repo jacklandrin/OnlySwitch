@@ -18,6 +18,7 @@ public struct DashboardView: View {
 
     @State private var active: ControlItemViewState?
     @State private var hasChangedLocation = false
+    @State private var presentedDetailID: String?
 
     public init(store: StoreOf<DashboardReducer>) {
         self.store = store
@@ -30,14 +31,13 @@ public struct DashboardView: View {
                     ReorderableForeach(store.items.elements, active: $active) { item in
                         ControlItemView(viewState: item)
                             .onTapGesture {
-                                store.send(.onTapItem(item.id))
+                                handleTap(item)
                             }
-                            .simultaneousGesture(
-                                TapGesture()
-                                    .onEnded { _ in
-                                        store.send(.didTapItem(item.id))
-                                    }
-                            )
+                            .popover(isPresented: detailBinding(for: item)) {
+                                AuthenticatorControlPopover {
+                                    presentedDetailID = nil
+                                }
+                            }
                             .opacity(item.opacity)
                     } preview: { item in
                         ControlItemView(viewState: item)
@@ -62,6 +62,28 @@ public struct DashboardView: View {
     private var shape: some Shape {
         RoundedRectangle(cornerRadius: 20)
     }
+
+    private func handleTap(_ item: ControlItemViewState) {
+        switch item.interaction {
+            case .performControl:
+                store.send(.onTapItem(item.id))
+                store.send(.didTapItem(item.id))
+            case .presentDetail:
+                presentedDetailID = item.id
+        }
+    }
+
+    private func detailBinding(for item: ControlItemViewState) -> Binding<Bool> {
+        Binding(
+            get: { presentedDetailID == item.id },
+            set: { isPresented in
+                if !isPresented {
+                    presentedDetailID = nil
+                }
+            }
+        )
+    }
+
 }
 
 #Preview {

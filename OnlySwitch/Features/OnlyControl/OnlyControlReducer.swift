@@ -253,6 +253,7 @@ struct OnlyControlReducer {
                     return ControlItemViewState(
                         id: switchVM.id,
                         title: switchVM.barName.localized(),
+                        detail: switchVM.switchType == .authenticator ? .authenticator : nil,
                         iconData: image
                             .resizeMaintainingAspectRatio(withSize: NSSize(width: 60, height: 60))!
                             .pngData!,

@@ -13,9 +13,13 @@ public struct AuthenticatorPanelView: View {
     @ObservedObject private var store = AuthenticatorStore.shared
     @ObservedObject private var languageManager = LanguageManager.sharedManager
     @State private var showImport = false
-    @State private var isExpanded = false
+    @State private var isExpanded: Bool
+    private let onCodeCopied: () -> Void
 
-    public init() {}
+    public init(initiallyExpanded: Bool = false, onCodeCopied: @escaping () -> Void = {}) {
+        _isExpanded = State(initialValue: initiallyExpanded)
+        self.onCodeCopied = onCodeCopied
+    }
 
     public var body: some View {
         VStack(spacing: 0) {
@@ -35,6 +39,7 @@ public struct AuthenticatorPanelView: View {
                                     withAnimation(.spring()) {
                                         isExpanded = false
                                     }
+                                    onCodeCopied()
                                 }
                                 Divider()
                                     .opacity(0.25)

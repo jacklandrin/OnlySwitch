@@ -41,3 +41,7 @@ The complete item label and subtitle will be exposed together to VoiceOver. Long
 ## Scope
 
 This change affects Only Control presentation and its state construction only. It does not change switch-provider APIs, one-column mode, switch behavior, dashboard ordering, or tile sizing.
+
+## Authenticator Detail
+
+The Authenticator tile uses a detail interaction instead of performing its switch control. Clicking it presents a popover anchored to the tile and reuses `AuthenticatorPanelView` in its expanded state. The popover shows account names, live OTP codes, countdowns, and copy buttons. Copying a code dismisses the popover; clicking elsewhere uses standard popover dismissal. Other tiles continue to perform their existing controls.

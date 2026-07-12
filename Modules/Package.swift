@@ -99,6 +99,7 @@ let package = Package(
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 "Extensions",
+                "Authenticator",
                 "Defines",
                 "Switches",
                 "Utilities",
