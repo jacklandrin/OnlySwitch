@@ -28,10 +28,10 @@
 - Produces: `ControlItemSecondaryInformation.subtitle(info:isAirPods:) -> String?`
 - Produces: `ControlItemViewState.subtitle: String?`
 
-- [ ] Write failing Swift Testing cases for empty information, ordinary text, and AirPods battery strings.
-- [ ] Run `rtk swift test --package-path Modules --filter ControlItemSecondaryInformationTests` and confirm the missing formatter/state API causes failure.
-- [ ] Implement the formatter and optional state property with initializer defaulting to `nil`.
-- [ ] Re-run the focused tests and confirm they pass.
+- [x] Write failing Swift Testing cases for empty information, ordinary text, and AirPods battery strings.
+- [x] Run `rtk swift test --package-path Modules --filter ControlItemSecondaryInformationTests` and confirm the missing formatter/state API causes failure.
+- [x] Implement the formatter and optional state property with initializer defaulting to `nil`.
+- [x] Re-run the focused tests and confirm they pass.
 
 ### Task 2: Dashboard Data Flow and Tile Presentation
 
@@ -44,8 +44,8 @@
 - Consumes: `ControlItemSecondaryInformation.subtitle(info:isAirPods:) -> String?`
 - Consumes: `ControlItemViewState.subtitle: String?`
 
-- [ ] Fetch `currentInfo()` for visible built-in switches during dashboard refresh and pass its normalized subtitle into the view state.
-- [ ] Render nonempty subtitles below the title using secondary hierarchical styling, one-line scaling, and a combined accessibility value.
-- [ ] Remove the AirPods battery display beside the clock and its now-unused reducer state/actions.
-- [ ] Run the focused module tests and `rtk swift test --package-path Modules`.
-- [ ] Build with `rtk xcodebuild -project OnlySwitch.xcodeproj -scheme OnlySwitch -configuration Debug -sdk macosx build` and inspect the final diff.
+- [x] Fetch `currentInfo()` for visible built-in switches during dashboard refresh and pass its normalized subtitle into the view state.
+- [x] Render nonempty subtitles below the title using secondary hierarchical styling, one-line scaling, and a combined accessibility value.
+- [x] Remove the AirPods battery display beside the clock and its now-unused reducer state/actions.
+- [x] Run the focused module tests and `rtk swift test --package-path Modules`.
+- [x] Build with `rtk xcodebuild -project OnlySwitch.xcodeproj -scheme OnlySwitch -configuration Debug -sdk macosx build` and inspect the final diff.

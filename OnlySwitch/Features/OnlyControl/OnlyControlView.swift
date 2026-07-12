@@ -49,12 +49,6 @@ struct OnlyControlView: View {
                                 currentDate = Date()
                             }
 
-                        if store.isAirPodsConnected && !store.airPodsBatteryValues.isEmpty {
-                            AirPodsBatteryView(batteryValues: store.airPodsBatteryValues)
-                                .padding(.bottom, 16)
-                                .padding(.leading, 40)
-                        }
-
                         Spacer()
                         
                         TimerCountDownView(ptswitch: PomodoroTimerSwitch.shared, showImage: true)

@@ -13,6 +13,7 @@ import Defines
 public struct ControlItemViewState: Equatable, Hashable, Identifiable {
     public var id: String
     public var title: String
+    public var subtitle: String?
     public var weight: Int
     public var unitType: UnitType
     public var status: Bool
@@ -23,6 +24,7 @@ public struct ControlItemViewState: Equatable, Hashable, Identifiable {
     public init(
         id: String,
         title: String,
+        subtitle: String? = nil,
         iconData: Data,
         controlType: ControlType,
         status: Bool = false,
@@ -31,6 +33,7 @@ public struct ControlItemViewState: Equatable, Hashable, Identifiable {
     ) {
         self.id = id
         self.title = title
+        self.subtitle = subtitle
         self.iconData = iconData
         self.controlType = controlType
         self.status = status

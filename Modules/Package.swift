@@ -161,6 +161,7 @@ let package = Package(
             name: "ModulesTests",
             dependencies: [
                 "Authenticator",
+                "OnlyControl",
                 "OnlyAgent",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ]

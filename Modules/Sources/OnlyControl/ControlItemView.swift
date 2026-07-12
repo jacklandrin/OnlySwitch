@@ -29,21 +29,38 @@ public struct ControlItemView: View {
                     .shadow(radius: 4)
             )
             .overlay {
-                VStack {
+                VStack(spacing: 3) {
                     Image(nsImage: NSImage(data: viewState.iconData)!)
                         .renderingMode(.template)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 30, height: 30)
-                        .foregroundColor(iconColor(isOn: viewState.status))
-                        .padding(.bottom, 6)
+                        .frame(
+                            width: viewState.subtitle == nil ? 30 : 26,
+                            height: viewState.subtitle == nil ? 30 : 26
+                        )
+                        .foregroundStyle(iconColor(isOn: viewState.status))
+                        .accessibilityHidden(true)
 
                     Text(viewState.title)
                         .multilineTextAlignment(.center)
                         .font(.caption)
+                        .lineLimit(2)
                         .padding(.horizontal, 4)
-                        .foregroundColor(textColor(isOn: viewState.status))
+                        .foregroundStyle(textColor(isOn: viewState.status))
+
+                    if let subtitle = viewState.subtitle {
+                        Text(subtitle)
+                            .multilineTextAlignment(.center)
+                            .font(.caption)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.65)
+                            .padding(.horizontal, 4)
+                            .foregroundStyle(textColor(isOn: viewState.status).opacity(0.65))
+                    }
                 }
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(viewState.title)
+                .accessibilityValue(viewState.subtitle ?? "")
             }
             .frame(width: 85, height: 85)
             .foregroundColor(

@@ -25,10 +25,6 @@ struct OnlyControlReducer {
                 return false
             } else if areArraysEqual(lhs: lhs.allUnits, rhs: rhs.allUnits) == false {
                 return false
-            } else if lhs.isAirPodsConnected != rhs.isAirPodsConnected {
-                return false
-            } else if lhs.airPodsBatteryValues != rhs.airPodsBatteryValues {
-                return false
             }
 
             return true
@@ -52,9 +48,6 @@ struct OnlyControlReducer {
         var opacity: Double = 0
         var allUnits: [BarProvider] = []
         var switchList: [SwitchBarVM] = []
-        var isAirPodsConnected: Bool = false
-        var airPodsBatteryValues: [Float] = []
-
         var soundWaveEffectDisplay: Bool {
             Preferences.shared.soundWaveEffectDisplay
         }
@@ -70,8 +63,6 @@ struct OnlyControlReducer {
         case updateItem(ControlItemViewState)
         case openSettings
         case dashboardAction(DashboardReducer.Action)
-        case refreshAirPodsBattery
-        case updateAirPodsBattery(isConnected: Bool, batteryValues: [Float])
     }
 
     @Dependency(\.onlyControlClient) var client
@@ -94,26 +85,14 @@ struct OnlyControlReducer {
 
                 case .refreshSingleSwitchType(let type):
                     guard state.switchList.first(where: { $0.switchType == type}) != nil else {
-                        if type == .airPods {
-                            return .send(.refreshAirPodsBattery)
-                        }
                         return .none
                     }
-
-                    let additionalEffect: EffectOf<Self> = type == .airPods ? .send(.refreshAirPodsBattery) : .none
-
-                    return .merge(
-                        .send(.refreshDashboard),
-                        additionalEffect
-                    )
+                    return .send(.refreshDashboard)
 
                 case .showControl:
                     state.blurRadius = 0
                     state.opacity = 1
-                    return .merge(
-                        .send(.refreshDashboard),
-                        .send(.refreshAirPodsBattery)
-                    )
+                    return .send(.refreshDashboard)
 
                 case .hideControl:
                     state.blurRadius = 20
@@ -166,43 +145,18 @@ struct OnlyControlReducer {
                 case .dashboardAction:
                     return .none
 
-                case .refreshAirPodsBattery:
-                    return .run { @MainActor send in
-                        guard let airPodsSwitch = SwitchManager.shared.getSwitch(of: .airPods) as? AirPodsSwitch else {
-                            await send(.updateAirPodsBattery(isConnected: false, batteryValues: []))
-                            return
-                        }
-
-                        let connected = await airPodsSwitch.currentStatus()
-                        if connected {
-                            let info = await airPodsSwitch.currentInfo()
-                            let batteryValues = convertBattery(info: info)
-                            await send(.updateAirPodsBattery(isConnected: true, batteryValues: batteryValues))
-                        } else {
-                            await send(.updateAirPodsBattery(isConnected: false, batteryValues: []))
-                        }
-                    }
-
-                case let .updateAirPodsBattery(isConnected, batteryValues):
-                    state.isAirPodsConnected = isConnected
-                    state.airPodsBatteryValues = batteryValues
-                    return .none
             }
         }
-    }
-
-    private func convertBattery(info: String) -> [Float] {
-        let pattern = "(-?\\d+)"
-        let groups = info.groups(for: pattern).compactMap({ $0.first }).map { Float($0)! < 0 ? 0.0 : (Float($0)! / 100.0) }
-        return groups
     }
 
     private func refreshDashboard() -> EffectOf<Self> {
         .run { @MainActor send in
             let switches = client.fetchSwitchList()
+            var switchInformation: [String: String] = [:]
             for switchControl in switches {
                 let isOn = await switchControl.switchOperator.currentStatus()
                 switchControl.isOn = isOn
+                switchInformation[switchControl.id] = await switchControl.switchOperator.currentInfo()
             }
             let shortcuts = client.fetchShortcutsList()
             let evolutions = client.fetchEvolutionList()
@@ -223,10 +177,15 @@ struct OnlyControlReducer {
                     let key = "switch-" + switchVM.id
                     let weight = orderDic[key] ?? switchVM.weight
                     let image = (switchVM.isOn ? switchVM.onImage : switchVM.offImage) ?? NSImage(named: "shortcuts_icon")!
+                    let subtitle = ControlItemSecondaryInformation.subtitle(
+                        info: switchInformation[switchVM.id] ?? "",
+                        isAirPods: switchVM.switchType == .airPods
+                    )
 
                     return ControlItemViewState(
                         id: switchVM.id,
                         title: switchVM.barName.localized(),
+                        subtitle: subtitle,
                         iconData: image
                             .resizeMaintainingAspectRatio(withSize: NSSize(width: 60, height: 60))!
                             .pngData!,
