@@ -21,7 +21,7 @@ struct CustomizeView: View {
                 .padding(10)
             Divider()
             ScrollView {
-                LazyVStack{
+                VStack{
                     ForEach(customizeVM.allSwitches, id: \.type) { item in
                         CustomizeRowView(item: item, currentLang: langManager.currentLang)
                     }
