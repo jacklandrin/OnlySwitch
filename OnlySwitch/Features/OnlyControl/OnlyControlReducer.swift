@@ -68,6 +68,7 @@ struct OnlyControlReducer {
         case hideControl
         case updateItems([BarProvider], [ControlItemViewState], [SwitchBarVM])
         case updateItem(ControlItemViewState)
+        case updateSecondaryInformation(id: String, subtitle: String?)
         case openSettings
         case dashboardAction(DashboardReducer.Action)
         case refreshAirPodsBattery
@@ -125,6 +126,30 @@ struct OnlyControlReducer {
                     state.dashboard.items = IdentifiedArray(uniqueElements: items)
                     state.allUnits = units
                     state.switchList = switches
+                    var informationRequests: [SecondaryInformationRequest] = []
+                    for switchControl in switches where switchControl.switchType != .airPods {
+                        informationRequests.append(
+                            SecondaryInformationRequest(
+                                id: switchControl.id,
+                                provider: switchControl.switchOperator
+                            )
+                        )
+                    }
+                    let requests = informationRequests
+                    return .run { send in
+                        await Task.yield()
+                        for request in requests {
+                            let info = await request.provider.currentInfo()
+                            let subtitle = ControlItemSecondaryInformation.subtitle(
+                                info: info,
+                                isAirPods: false
+                            )
+                            await send(.updateSecondaryInformation(id: request.id, subtitle: subtitle))
+                        }
+                    }
+
+                case let .updateSecondaryInformation(id, subtitle):
+                    state.dashboard.items[id: id]?.subtitle = subtitle
                     return .none
 
                 case let .updateItem(item):
@@ -201,13 +226,9 @@ struct OnlyControlReducer {
     private func refreshDashboard() -> EffectOf<Self> {
         .run { @MainActor send in
             let switches = client.fetchSwitchList()
-            var switchInformation: [String: String] = [:]
             for switchControl in switches {
                 let isOn = await switchControl.switchOperator.currentStatus()
                 switchControl.isOn = isOn
-                if switchControl.switchType != .airPods {
-                    switchInformation[switchControl.id] = await switchControl.switchOperator.currentInfo()
-                }
             }
             let shortcuts = client.fetchShortcutsList()
             let evolutions = client.fetchEvolutionList()
@@ -228,15 +249,10 @@ struct OnlyControlReducer {
                     let key = "switch-" + switchVM.id
                     let weight = orderDic[key] ?? switchVM.weight
                     let image = (switchVM.isOn ? switchVM.onImage : switchVM.offImage) ?? NSImage(named: "shortcuts_icon")!
-                    let subtitle = ControlItemSecondaryInformation.subtitle(
-                        info: switchInformation[switchVM.id] ?? "",
-                        isAirPods: switchVM.switchType == .airPods
-                    )
 
                     return ControlItemViewState(
                         id: switchVM.id,
                         title: switchVM.barName.localized(),
-                        subtitle: subtitle,
                         iconData: image
                             .resizeMaintainingAspectRatio(withSize: NSSize(width: 60, height: 60))!
                             .pngData!,
@@ -295,6 +311,11 @@ struct OnlyControlReducer {
            await send(.updateItems(allUnits, items, switches))
         }
     }
+}
+
+private struct SecondaryInformationRequest: Sendable {
+    let id: String
+    let provider: any SwitchProvider
 }
 
 private extension UnitType {

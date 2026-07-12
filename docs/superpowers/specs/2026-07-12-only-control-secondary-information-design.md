@@ -20,7 +20,7 @@ AirPods battery information remains beside the clock as a glanceable system stat
 
 ## Data Flow
 
-When Only Control refreshes its dashboard, it already refreshes each switch status. It will also refresh each switch's information and put the resulting optional subtitle into `ControlItemViewState`. The item view renders the subtitle when nonempty. Existing single-item notifications continue to trigger a dashboard refresh, keeping changing information current when the switch reports an update.
+When Only Control refreshes its dashboard, it refreshes each switch status and publishes the complete tile grid immediately. It then loads switch information in a follow-up effect and updates each tile subtitle progressively. A slow provider, such as the Xcode Derived Data size calculation, therefore cannot delay initial tile presentation. Existing single-item notifications continue to trigger a dashboard refresh, keeping changing information current when the switch reports an update.
 
 AirPods information continues through the dedicated header battery state. Invalid or unavailable battery data hides that status rather than showing misleading percentages or placeholder UI.
 
