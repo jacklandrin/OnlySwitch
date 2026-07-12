@@ -16,21 +16,12 @@ struct ControlItemSecondaryInformationTests {
         )
     }
 
-    @Test func airPodsBatteryInformationUsesCompactLabels() {
+    @Test func airPodsBatteryInformationIsNotUsedAsATileSubtitle() {
         #expect(
             ControlItemSecondaryInformation.subtitle(
                 info: "46 100 100",
                 isAirPods: true
-            ) == "C 46% · L 100% · R 100%"
-        )
-    }
-
-    @Test func unavailableAirPodsBatteryValuesAreOmitted() {
-        #expect(
-            ControlItemSecondaryInformation.subtitle(
-                info: "-1 82 -1",
-                isAirPods: true
-            ) == "L 82%"
+            ) == nil
         )
     }
 

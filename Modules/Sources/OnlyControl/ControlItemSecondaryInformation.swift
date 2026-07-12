@@ -7,24 +7,9 @@ public enum ControlItemSecondaryInformation {
             return nil
         }
 
-        guard isAirPods else {
-            return trimmedInfo
+        if isAirPods {
+            return nil
         }
-
-        let labels = ["C", "L", "R"]
-        let values = trimmedInfo
-            .split { character in
-                !character.isNumber && character != "-"
-            }
-            .compactMap { Int($0) }
-
-        let batteries = zip(labels, values).compactMap { label, value -> String? in
-            guard (0...100).contains(value) else {
-                return nil
-            }
-            return "\(label) \(value)%"
-        }
-
-        return batteries.isEmpty ? nil : batteries.joined(separator: " · ")
+        return trimmedInfo
     }
 }
