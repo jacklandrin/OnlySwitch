@@ -1,4 +1,7 @@
-![](https://badgen.net/github/release/jacklandrin/onlyswitch) ![](https://img.shields.io/badge/UI-SwiftUI-green)   ![](https://img.shields.io/badge/Platform-Tahoe-blue)  ![](https://img.shields.io/badge/License-MIT-orange)
+![](https://badgen.net/github/release/jacklandrin/onlyswitch) ![](https://img.shields.io/badge/UI-SwiftUI-green)
+[![Listed on TakoAPI](https://takoapi.com/api/badge/jacklandrin-onlyswitch)](https://takoapi.com/agents/jacklandrin-onlyswitch)
+![](https://img.shields.io/badge/Platform-Tahoe-blue)
+  ![](https://img.shields.io/badge/License-MIT-orange)
 <p align="middle">
     <a href="https://onlyswitch.click">
         <img alt="AppIcon" src="https://github.com/jacklandrin/OnlySwitch/blob/main/OnlySwitch/Assets.xcassets/AppIcon.appiconset/icon_256x256@2x.png?raw=true" width="128px" align="center" />
@@ -8,8 +11,6 @@
 ‼️ **Auto-updating has failed from 2.5.6 and below, please manually update or use Homebrew.**
 
 # OnlySwitch
-
-[![Listed on TakoAPI](https://takoapi.com/api/badge/jacklandrin-onlyswitch)](https://takoapi.com/agents/jacklandrin-onlyswitch)
 
 ***Menubar is smaller, you only need an All-in-One switch.***
 
