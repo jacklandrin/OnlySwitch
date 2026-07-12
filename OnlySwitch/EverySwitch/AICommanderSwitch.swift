@@ -14,6 +14,8 @@ import SwiftUI
 import Sharing
 
 final class AICommanderSwitch: SwitchProvider, @unchecked Sendable {
+    static let shared = AICommanderSwitch()
+
     weak var delegate: SwitchDelegate?
     var type: SwitchType = .aiCommender
     
@@ -32,6 +34,8 @@ final class AICommanderSwitch: SwitchProvider, @unchecked Sendable {
     }
     
     private var _store: Any?
+
+    private init() {}
     
     @MainActor
     @available(macOS 26.0, *)

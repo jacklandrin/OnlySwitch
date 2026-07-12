@@ -86,7 +86,7 @@ extension SwitchType {
         case .keyLight:
             return KeyLightSwitch.shared
         case .aiCommender:
-            return AICommanderSwitch()
+            return AICommanderSwitch.shared
         case .authenticator:
             return AuthenticatorSwitch.shared
         }
