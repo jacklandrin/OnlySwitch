@@ -18,6 +18,11 @@ class GeneralVM: ObservableObject {
     @Published private var model = GeneralModel()
     @Published var preferences = Preferences.shared
     @Published var invokePopoverName: KeyboardShortcuts.Name = .invokePopoverShortcutsName
+    @Published var currentAppearance: String {
+        didSet {
+            preferences.currentAppearance = currentAppearance
+        }
+    }
 
     @Shared(.appStorage(UserDefaults.Key.hideMenuAfterRunning)) var hideMenuAfterRunningShared: Bool = false
     
@@ -76,16 +81,6 @@ class GeneralVM: ObservableObject {
         }
     }
     
-    var currentAppearance: String {
-        get {
-            preferences.currentAppearance
-        }
-        
-        set {
-            preferences.currentAppearance = newValue
-        }
-    }
-    
     var showAds: Bool {
         get {
             preferences.showAds
@@ -139,6 +134,7 @@ class GeneralVM: ObservableObject {
     private var cancellable = Set<AnyCancellable>()
     
     init() {
+        currentAppearance = Preferences.shared.currentAppearance
         checkUpdatePresenter.objectWillChange.sink{ _ in
             self.objectWillChange.send()
         }.store(in: &cancellable)

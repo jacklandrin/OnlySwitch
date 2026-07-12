@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import Combine
 @testable import OnlySwitch
 
 class OnlySwitchTests: XCTestCase {
@@ -58,6 +59,28 @@ class OnlySwitchTests: XCTestCase {
         Preferences.shared.currentAppearance = newAppearance
 
         XCTAssertEqual(observedAppearance, newAppearance)
+    }
+
+    @MainActor
+    func testGeneralVMPublishesAppearanceSelection() {
+        let viewModel = GeneralVM()
+        let originalAppearance = viewModel.currentAppearance
+        let newAppearance = originalAppearance == SwitchListAppearance.single.rawValue
+            ? SwitchListAppearance.dual.rawValue
+            : SwitchListAppearance.single.rawValue
+        var didPublishChange = false
+        let cancellable = viewModel.objectWillChange.sink {
+            didPublishChange = true
+        }
+        defer {
+            viewModel.currentAppearance = originalAppearance
+            cancellable.cancel()
+        }
+
+        viewModel.currentAppearance = newAppearance
+
+        XCTAssertTrue(didPublishChange)
+        XCTAssertEqual(viewModel.currentAppearance, newAppearance)
     }
 
     
