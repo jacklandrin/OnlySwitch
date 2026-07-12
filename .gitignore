@@ -27,3 +27,4 @@ Temporary Items
 OnlySwitch.xcodeproj/xcuserdata/*
 OnlySwitch.xcodeproj/project.xcworkspace/xcuserdata/*
 appcast
+.worktrees/
