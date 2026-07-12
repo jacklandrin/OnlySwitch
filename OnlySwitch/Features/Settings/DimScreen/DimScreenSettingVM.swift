@@ -36,6 +36,15 @@ class DimScreenSettingVM: ObservableObject {
             preferences.autoDimScreenTime = newValue
         }
     }
+
+    var syncExternalBrightness:Bool {
+        get {
+            preferences.syncExternalBrightness
+        }
+        set {
+            preferences.syncExternalBrightness = newValue
+        }
+    }
     
     func converTimeDescription(duration:Int) -> String {
         if duration == 0 {
