@@ -89,4 +89,39 @@ final class PromptDialogueStreamingTests: XCTestCase {
             $0.errorMessage = TestError.failed.localizedDescription
         }
     }
+
+    func testAgentModeExecutesCompletedScriptWithoutAnotherModelRequest() async {
+        let executedScripts = LockIsolated<[String]>([])
+        let requestCount = LockIsolated(0)
+        var initialState = PromptDialogueReducer.State(
+            prompt: "Turn on dark mode",
+            isAgentMode: true
+        )
+        initialState.currentAIModel = CurrentAIModel(provider: ModelProvider.openai.rawValue, model: "gpt-test")
+
+        let store = TestStore(initialState: initialState) {
+            PromptDialogueReducer()
+        } withDependencies: {
+            $0.promptDialogueService.execute = { script in
+                executedScripts.withValue { $0.append(script) }
+            }
+            $0.promptDialogueService.request = { _, _, _, _ in
+                requestCount.withValue { $0 += 1 }
+                return ""
+            }
+        }
+
+        let script = "tell application \"System Events\" to key code 144"
+        await store.send(.generateAppleScript(.success(script))) {
+            $0.appleScript = script
+            $0.thinkingText = ""
+            $0.isGenerating = false
+            $0.isSuccess = true
+        }
+
+        await store.receive(\.finishExecution)
+
+        XCTAssertEqual(executedScripts.value, [script])
+        XCTAssertEqual(requestCount.value, 0)
+    }
 }

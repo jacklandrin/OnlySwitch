@@ -248,12 +248,14 @@ public struct PromptDialogueReducer {
                     let isAgentMode = state.isAgentMode
                     if isAgentMode {
                         state.isSuccess = true
-                        guard let currentAIModel = state.currentAIModel else {
-                            return .none
-                        }
-                        return .run { [isAgentMode, currentAIModel] send in
-                            let modelProvider = ModelProvider(rawValue: currentAIModel.provider) ?? .ollama
-                            _ = try await promptService.request(.success, modelProvider, currentAIModel.model, isAgentMode)
+                        return .run { [appleScript] send in
+                            await send(
+                                .finishExecution(
+                                    TaskResult {
+                                        try await promptService.execute(appleScript)
+                                    }
+                                )
+                            )
                         }
                     } else {
                         return .none
@@ -296,6 +298,9 @@ public struct PromptDialogueReducer {
                     state.isExecuting = false
                     state.isSuccess = true
                     let isAgentMode = state.isAgentMode
+                    guard !isAgentMode else {
+                        return .none
+                    }
                     guard let currentAIModel = state.currentAIModel else {
                         return .none
                     }
@@ -309,6 +314,9 @@ public struct PromptDialogueReducer {
                     state.isSuccess = false
                     state.errorMessage = "\(error.localizedDescription)"
                     let isAgentMode = state.isAgentMode
+                    guard !isAgentMode else {
+                        return .none
+                    }
                     guard let currentAIModel = state.currentAIModel else {
                         return .none
                     }
