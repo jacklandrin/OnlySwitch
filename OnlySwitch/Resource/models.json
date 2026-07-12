@@ -1,10 +1,14 @@
 {
-    "updatedAt": "2026-06-23",
+    "updatedAt": "2026-07-12",
     "models": [
         {
             "provider": "openai",
             "family": "gpt",
             "items": [
+                "gpt-5.6",
+                "gpt-5.6-sol",
+                "gpt-5.6-terra",
+                "gpt-5.6-luna",
                 "gpt-5.5",
                 "gpt-5.4",
                 "gpt-5.2",
@@ -29,6 +33,10 @@
             "provider": "openai",
             "family": "codex",
             "items": [
+                "gpt-5.6",
+                "gpt-5.6-sol",
+                "gpt-5.6-terra",
+                "gpt-5.6-luna",
                 "gpt-5.5",
                 "codex-mini-latest",
                 "gpt-5.4",
