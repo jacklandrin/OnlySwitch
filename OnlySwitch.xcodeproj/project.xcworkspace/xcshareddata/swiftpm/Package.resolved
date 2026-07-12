@@ -1,5 +1,5 @@
 {
-  "originHash" : "d47821228d1525324c8b66f8f053872e695cde88745f37820966d294706be45c",
+  "originHash" : "d804aa4e13d0b8e9cae8cb78d32bf03fc568790eedca7dae2bdf9222873b84e7",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -51,7 +51,6 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/timazed/CodexKit",
       "state" : {
-        "branch" : "main",
         "revision" : "85c410cc1f3adfd256c7e43bbe978ce892b27408"
       }
     },

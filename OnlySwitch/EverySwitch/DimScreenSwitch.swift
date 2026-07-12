@@ -61,7 +61,7 @@ final class DimScreenSwitch: SwitchProvider, @unchecked Sendable {
 
     @MainActor
     func currentInfo() async -> String {
-        return "Built-in Screen"
+        return ""
     }
 
     @MainActor
@@ -98,7 +98,7 @@ final class DimScreenSwitch: SwitchProvider, @unchecked Sendable {
 
     private func modifyDimPercent() throws {
         let dimBrightness = originalBrightness * dimPercent
-        guard dimBrightness >= 0.15 else { // the minimum brightness is 0.15
+        guard dimBrightness >= 0.10 else { // the minimum brightness is 0.10
             throw DimScreenError.brightnessTooLow
         }
         manager.setBrightness(level: dimBrightness)
