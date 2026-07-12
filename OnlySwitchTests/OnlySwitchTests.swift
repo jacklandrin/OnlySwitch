@@ -36,6 +36,30 @@ class OnlySwitchTests: XCTestCase {
         XCTAssertEqual(Preferences.shared.dimScreenPercent, 0.7)
     }
 
+    @MainActor
+    func testAppearanceNotificationSeesNewValue() {
+        let originalAppearance = Preferences.shared.currentAppearance
+        let newAppearance = originalAppearance == SwitchListAppearance.single.rawValue
+            ? SwitchListAppearance.dual.rawValue
+            : SwitchListAppearance.single.rawValue
+        var observedAppearance: String?
+        let observer = NotificationCenter.default.addObserver(
+            forName: .shouldHidePopover,
+            object: nil,
+            queue: .main
+        ) { _ in
+            observedAppearance = Preferences.shared.currentAppearance
+        }
+        defer {
+            NotificationCenter.default.removeObserver(observer)
+            Preferences.shared.currentAppearance = originalAppearance
+        }
+
+        Preferences.shared.currentAppearance = newAppearance
+
+        XCTAssertEqual(observedAppearance, newAppearance)
+    }
+
     
     
     func testPerformanceExample() throws {

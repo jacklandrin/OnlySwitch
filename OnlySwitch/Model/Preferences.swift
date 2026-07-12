@@ -104,7 +104,8 @@ final class Preferences: @unchecked Sendable {
 
     @UserDefaultValue(key: UserDefaults.Key.appearanceColumnCount, defaultValue: SwitchListAppearance.single.rawValue)
     var currentAppearance:String {
-        willSet {
+        didSet {
+            NotificationCenter.default.post(name: .changeSettings, object: nil)
             NotificationCenter.default.post(name: .shouldHidePopover, object: nil)
         }
     }
