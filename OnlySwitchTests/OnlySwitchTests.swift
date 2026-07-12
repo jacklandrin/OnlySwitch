@@ -6,6 +6,7 @@
 //
 
 import XCTest
+@testable import OnlySwitch
 
 class OnlySwitchTests: XCTestCase {
 
@@ -23,6 +24,16 @@ class OnlySwitchTests: XCTestCase {
         // Any test you write for XCTest can be annotated as throws and async.
         // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
         // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+    }
+
+    @MainActor
+    func testDimScreenSliderPublishesRoundedValue() {
+        let viewModel = DimScreenSettingVM()
+
+        viewModel.sliderValue = 0.73
+
+        XCTAssertEqual(viewModel.sliderValue, 0.7)
+        XCTAssertEqual(Preferences.shared.dimScreenPercent, 0.7)
     }
 
     

@@ -207,9 +207,6 @@
 		047F3A38285DE67A004FFCDF /* SwitchListApperanceDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047F3A36285DE67A004FFCDF /* SwitchListApperanceDefine.swift */; };
 		04819CD22BBC884A00645A0C /* BrightnessControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 04819CCF2BBC884900645A0C /* BrightnessControl.m */; };
 		04819CD32BBC884A00645A0C /* KeyboardManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 04819CD12BBC884A00645A0C /* KeyboardManager.m */; };
-		0DDC000000000000000000B2 /* DDCControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC000000000000000000A2 /* DDCControl.m */; };
-		0DDC000000000000000000B3 /* ExternalDisplayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC000000000000000000A3 /* ExternalDisplayManager.swift */; };
-		0DDC000000000000000000B4 /* BrightnessSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC000000000000000000A4 /* BrightnessSyncManager.swift */; };
 		04819CD52BBC8A6700645A0C /* KeyLightSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04819CD42BBC8A6700645A0C /* KeyLightSwitch.swift */; };
 		04819CD82BBC957D00645A0C /* KeyLightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04819CD72BBC957D00645A0C /* KeyLightView.swift */; };
 		04819CDA2BDE9BFA00645A0C /* KeyLightFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04819CD92BDE9BFA00645A0C /* KeyLightFeature.swift */; };
@@ -343,6 +340,9 @@
 		04FC1613283FDE1D00D4A4AC /* ShortcutsSettingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FC1612283FDE1D00D4A4AC /* ShortcutsSettingModel.swift */; };
 		04FC161628402E5000D4A4AC /* ShortcutOnMarket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FC161528402E5000D4A4AC /* ShortcutOnMarket.swift */; };
 		04FC161728402E5200D4A4AC /* ShortcutOnMarket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FC161528402E5000D4A4AC /* ShortcutOnMarket.swift */; };
+		0DDC000000000000000000B2 /* DDCControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC000000000000000000A2 /* DDCControl.m */; };
+		0DDC000000000000000000B3 /* ExternalDisplayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC000000000000000000A3 /* ExternalDisplayManager.swift */; };
+		0DDC000000000000000000B4 /* BrightnessSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC000000000000000000A4 /* BrightnessSyncManager.swift */; };
 		A1D0E1092F0A000100BEEF01 /* AuthenticatorSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E00A2F0A000100BEEF01 /* AuthenticatorSwitch.swift */; };
 		A1D200012F0B000200BEEF01 /* PureColorView in Frameworks */ = {isa = PBXBuildFile; productRef = A1D201012F0B000200BEEF01 /* PureColorView */; };
 		A1D200022F0B000200BEEF01 /* StickerView in Frameworks */ = {isa = PBXBuildFile; productRef = A1D201022F0B000200BEEF01 /* StickerView */; };
@@ -529,10 +529,6 @@
 		04819CCF2BBC884900645A0C /* BrightnessControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrightnessControl.m; sourceTree = "<group>"; };
 		04819CD02BBC884900645A0C /* KeyboardManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyboardManager.h; sourceTree = "<group>"; };
 		04819CD12BBC884A00645A0C /* KeyboardManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyboardManager.m; sourceTree = "<group>"; };
-		0DDC000000000000000000A1 /* DDCControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDCControl.h; sourceTree = "<group>"; };
-		0DDC000000000000000000A2 /* DDCControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDCControl.m; sourceTree = "<group>"; };
-		0DDC000000000000000000A3 /* ExternalDisplayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalDisplayManager.swift; sourceTree = "<group>"; };
-		0DDC000000000000000000A4 /* BrightnessSyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrightnessSyncManager.swift; sourceTree = "<group>"; };
 		04819CD42BBC8A6700645A0C /* KeyLightSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyLightSwitch.swift; sourceTree = "<group>"; };
 		04819CD72BBC957D00645A0C /* KeyLightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyLightView.swift; sourceTree = "<group>"; };
 		04819CD92BDE9BFA00645A0C /* KeyLightFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyLightFeature.swift; sourceTree = "<group>"; };
@@ -651,6 +647,10 @@
 		04FB3E5F288D49E100F3B5E1 /* SettingsWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsWindow.swift; sourceTree = "<group>"; };
 		04FC1612283FDE1D00D4A4AC /* ShortcutsSettingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsSettingModel.swift; sourceTree = "<group>"; };
 		04FC161528402E5000D4A4AC /* ShortcutOnMarket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutOnMarket.swift; sourceTree = "<group>"; };
+		0DDC000000000000000000A1 /* DDCControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDCControl.h; sourceTree = "<group>"; };
+		0DDC000000000000000000A2 /* DDCControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDCControl.m; sourceTree = "<group>"; };
+		0DDC000000000000000000A3 /* ExternalDisplayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalDisplayManager.swift; sourceTree = "<group>"; };
+		0DDC000000000000000000A4 /* BrightnessSyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrightnessSyncManager.swift; sourceTree = "<group>"; };
 		A1D0E00A2F0A000100BEEF01 /* AuthenticatorSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorSwitch.swift; sourceTree = "<group>"; };
 		A93C8BE02ECA34CB00D7CE52 /* AICommanderSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AICommanderSwitch.swift; sourceTree = "<group>"; };
 		A9A98A402F78834500034ADB /* models.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = models.json; sourceTree = "<group>"; };
@@ -1156,17 +1156,6 @@
 			path = KeyboardBrightness;
 			sourceTree = "<group>";
 		};
-		0DDC000000000000000000C1 /* DDC */ = {
-			isa = PBXGroup;
-			children = (
-				0DDC000000000000000000A1 /* DDCControl.h */,
-				0DDC000000000000000000A2 /* DDCControl.m */,
-				0DDC000000000000000000A3 /* ExternalDisplayManager.swift */,
-				0DDC000000000000000000A4 /* BrightnessSyncManager.swift */,
-			);
-			path = DDC;
-			sourceTree = "<group>";
-		};
 		04819CD62BBC954C00645A0C /* KeyLight */ = {
 			isa = PBXGroup;
 			children = (
@@ -1618,6 +1607,17 @@
 			children = (
 			);
 			path = Networking;
+			sourceTree = "<group>";
+		};
+		0DDC000000000000000000C1 /* DDC */ = {
+			isa = PBXGroup;
+			children = (
+				0DDC000000000000000000A1 /* DDCControl.h */,
+				0DDC000000000000000000A2 /* DDCControl.m */,
+				0DDC000000000000000000A3 /* ExternalDisplayManager.swift */,
+				0DDC000000000000000000A4 /* BrightnessSyncManager.swift */,
+			);
+			path = DDC;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2422,7 +2422,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.6.9;
+				MARKETING_VERSION = 2.6.10;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2477,7 +2477,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.6.9;
+				MARKETING_VERSION = 2.6.10;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2523,7 +2523,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.6.9;
+				MARKETING_VERSION = 2.6.10;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = OnlySwitchWidgets;
@@ -2563,7 +2563,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.6.9;
+				MARKETING_VERSION = 2.6.10;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = OnlySwitchWidgets;
