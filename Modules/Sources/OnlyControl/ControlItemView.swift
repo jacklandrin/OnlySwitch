@@ -55,7 +55,7 @@ public struct ControlItemView: View {
                             .lineLimit(1)
                             .minimumScaleFactor(0.65)
                             .padding(.horizontal, 4)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Color(nsColor: .secondaryLabelColor))
                     }
                 }
                 .accessibilityElement(children: .ignore)
