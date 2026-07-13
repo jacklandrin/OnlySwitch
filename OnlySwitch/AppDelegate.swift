@@ -15,6 +15,7 @@ import OnlyControl
 import Networking
 import FirebaseCore
 import Extensions
+import DesktopPet
 
 @main
 struct OnlySwitchApp: App {
@@ -172,6 +173,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             .currentAppearance
     }
     var checkUpdatePresenter = GitHubPresenter.shared
+    private var desktopPetController: DesktopPetController?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         FirebaseApp.configure()
@@ -187,6 +189,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         popover.contentViewController = NSHostingController(rootView: contentView)
 
         statusBar = StatusBarController(popover)
+        setupDesktopPet()
 
         SwitchManager.shared.registerSwitchesShouldShow()
 
@@ -214,6 +217,42 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         // Workaround for issue [#147](https://github.com/jacklandrin/OnlySwitch/issues/147)
         NSApp.setActivationPolicy(.accessory)
+    }
+
+    func applicationWillTerminate(_ notification: Notification) {
+        NotificationCenter.default.removeObserver(
+            self,
+            name: .desktopPetVisibilityChanged,
+            object: nil
+        )
+    }
+
+    private func setupDesktopPet() {
+        let controller = DesktopPetController {
+            OnlyControlWindow.shared.show()
+        }
+        desktopPetController = controller
+
+        if Preferences.shared.showDesktopPet {
+            controller.show()
+        }
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(desktopPetVisibilityDidChange),
+            name: .desktopPetVisibilityChanged,
+            object: nil
+        )
+    }
+
+    @objc private func desktopPetVisibilityDidChange() {
+        guard let desktopPetController else { return }
+
+        if Preferences.shared.showDesktopPet {
+            desktopPetController.show()
+        } else {
+            desktopPetController.hide()
+        }
     }
 
     func checkUpdate() {

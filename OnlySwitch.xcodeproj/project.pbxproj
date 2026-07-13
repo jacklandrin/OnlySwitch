@@ -165,6 +165,7 @@
 		04581DC12765522A008ADF30 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04581DC02765522A008ADF30 /* AboutView.swift */; };
 		046331D32795DACB00C5F894 /* ShortcutsMarket.json in Resources */ = {isa = PBXBuildFile; fileRef = 046331D22795DACB00C5F894 /* ShortcutsMarket.json */; };
 		046955D92C7A732300577915 /* OnlyControl in Frameworks */ = {isa = PBXBuildFile; productRef = 046955D82C7A732300577915 /* OnlyControl */; };
+		D35C00012F12000100D35C01 /* DesktopPet in Frameworks */ = {isa = PBXBuildFile; productRef = D35C00022F12000100D35C01 /* DesktopPet */; };
 		046955DB2C7E5E9B00577915 /* OnlyControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046955DA2C7E5E9B00577915 /* OnlyControlView.swift */; };
 		046C0C00293E7C040073F727 /* SwiftUIWebView in Frameworks */ = {isa = PBXBuildFile; productRef = 046C0BFF293E7C040073F727 /* SwiftUIWebView */; };
 		047140B327788364005B160B /* mixkit-alert-bells-echo-765.wav in Resources */ = {isa = PBXBuildFile; fileRef = 047140B127788364005B160B /* mixkit-alert-bells-echo-765.wav */; };
@@ -674,6 +675,7 @@
 			files = (
 				A9F007CA2EC3D9BD002D9AB0 /* Design in Frameworks */,
 				046955D92C7A732300577915 /* OnlyControl in Frameworks */,
+				D35C00012F12000100D35C01 /* DesktopPet in Frameworks */,
 				A1D200012F0B000200BEEF01 /* PureColorView in Frameworks */,
 				A1D200022F0B000200BEEF01 /* StickerView in Frameworks */,
 				A1D200032F0B000200BEEF01 /* Authenticator in Frameworks */,
@@ -1676,6 +1678,7 @@
 				0478874F2B83EC8E0064B9F5 /* Utilities */,
 				04819CE12BDEB63900645A0C /* CustomDump */,
 				046955D82C7A732300577915 /* OnlyControl */,
+				D35C00022F12000100D35C01 /* DesktopPet */,
 				04DA45712E12F28A0051047B /* Dependencies */,
 				A9F007C92EC3D9BD002D9AB0 /* Design */,
 				A93C8BE32ECA376900D7CE52 /* OnlyAgent */,
@@ -2732,6 +2735,10 @@
 		046955D82C7A732300577915 /* OnlyControl */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = OnlyControl;
+		};
+		D35C00022F12000100D35C01 /* DesktopPet */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DesktopPet;
 		};
 		046C0BFF293E7C040073F727 /* SwiftUIWebView */ = {
 			isa = XCSwiftPackageProductDependency;

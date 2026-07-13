@@ -63,6 +63,7 @@ public final class DesktopPetController: NSObject {
         panel.collectionBehavior = [
             .canJoinAllSpaces,
             .fullScreenAuxiliary,
+            .ignoresCycle,
             .stationary
         ]
         panel.setFrameAutosaveName(Self.autosaveName)
