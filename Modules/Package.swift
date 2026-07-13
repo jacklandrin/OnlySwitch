@@ -55,6 +55,10 @@ let package = Package(
         .library(
             name: "Authenticator",
             targets: ["Authenticator"]
+        ),
+        .library(
+            name: "DesktopPet",
+            targets: ["DesktopPet"]
         )
     ],
     dependencies: [
@@ -158,10 +162,14 @@ let package = Package(
                 "Utilities"
             ]
         ),
+        .target(
+            name: "DesktopPet"
+        ),
         .testTarget(
             name: "ModulesTests",
             dependencies: [
                 "Authenticator",
+                "DesktopPet",
                 "OnlyControl",
                 "OnlyAgent",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
