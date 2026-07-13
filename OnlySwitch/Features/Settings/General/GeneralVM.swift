@@ -89,6 +89,15 @@ class GeneralVM: ObservableObject {
             preferences.showAds = newValue
         }
     }
+
+    var showDesktopPet: Bool {
+        get {
+            preferences.showDesktopPet
+        }
+        set {
+            preferences.showDesktopPet = newValue
+        }
+    }
     
     var latestVersion: String {
         return checkUpdatePresenter.latestVersion

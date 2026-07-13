@@ -117,6 +117,16 @@ final class Preferences: @unchecked Sendable {
         }
     }
 
+    @UserDefaultValue(key: UserDefaults.Key.showDesktopPet, defaultValue: false)
+    var showDesktopPet: Bool {
+        didSet {
+            NotificationCenter.default.post(
+                name: .desktopPetVisibilityChanged,
+                object: showDesktopPet
+            )
+        }
+    }
+
     // MARK: - Hidden Menubar
     @UserDefaultValue(key: UserDefaults.Key.menubarCollapsable, defaultValue: true)
     var menubarCollaspable:Bool {

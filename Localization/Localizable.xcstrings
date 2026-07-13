@@ -17554,6 +17554,29 @@
         }
       }
     },
+    "Show Desktop Pet" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Desktop Pet"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "显示桌面宠物"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "顯示桌面寵物"
+          }
+        }
+      }
+    },
     "Show Extension Name" : {
       "extractionState" : "manual",
       "localizations" : {

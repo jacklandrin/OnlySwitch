@@ -83,6 +83,37 @@ class OnlySwitchTests: XCTestCase {
         XCTAssertEqual(viewModel.currentAppearance, newAppearance)
     }
 
+    @MainActor
+    func testDesktopPetIsHiddenByDefaultAndPublishesChanges() {
+        let defaults = UserDefaults.standard
+        let key = UserDefaults.Key.showDesktopPet
+        let original = defaults.object(forKey: key)
+        defer {
+            if let original {
+                defaults.set(original, forKey: key)
+            } else {
+                defaults.removeObject(forKey: key)
+            }
+        }
+        defaults.removeObject(forKey: key)
+
+        XCTAssertFalse(Preferences.shared.showDesktopPet)
+
+        var observed: Bool?
+        let observer = NotificationCenter.default.addObserver(
+            forName: .desktopPetVisibilityChanged,
+            object: nil,
+            queue: .main
+        ) { _ in
+            observed = Preferences.shared.showDesktopPet
+        }
+        defer { NotificationCenter.default.removeObserver(observer) }
+
+        Preferences.shared.showDesktopPet = true
+
+        XCTAssertEqual(observed, true)
+    }
+
     
     
     func testPerformanceExample() throws {

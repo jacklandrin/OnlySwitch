@@ -24,6 +24,8 @@ struct GeneralView: View, EmailProvider {
                 LaunchAtLogin.Toggle {
                     Text("Launch at login".localized())
                 }
+
+                Toggle("Show Desktop Pet".localized(), isOn: $generalVM.showDesktopPet)
                 
                 Picker("Language:".localized(), selection: Binding(
                     get: { langManager.currentLang },

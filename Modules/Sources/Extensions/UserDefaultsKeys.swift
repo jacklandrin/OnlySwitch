@@ -13,6 +13,7 @@ public extension UserDefaults {
         public static let menubarIcon = "menubarIconKey"
         public static let appearanceColumnCount = "appearanceColumnCountKey"
         public static let showAds = "showAdsKey"
+        public static let showDesktopPet = "showDesktopPetKey"
         //Evolution
         public static let evolutionIDs = "evolutionIDsKey"
         //PomodoroTimer

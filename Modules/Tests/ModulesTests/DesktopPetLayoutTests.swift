@@ -56,4 +56,8 @@ struct DesktopPetLayoutTests {
 
         #expect(!controller.isVisible)
     }
+
+    @Test func visibilityDefaultsToHidden() {
+        #expect(!DesktopPetDefaults.isVisible)
+    }
 }
