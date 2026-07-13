@@ -3,14 +3,33 @@ import Testing
 @testable import DesktopPet
 
 struct DesktopPetLayoutTests {
-    @Test func defaultFrameUsesLowerLeftInset() {
+    @Test func expandedCanvasKeepsArtworkBoundaryAtRequestedInset() {
         let frame = DesktopPetLayout.defaultFrame(
-            size: CGSize(width: 120, height: 130),
+            size: DesktopPetMetrics.canvasSize,
             visibleFrame: CGRect(x: 0, y: 25, width: 1_440, height: 875),
-            inset: 24
+            horizontalInset: DesktopPetMetrics.defaultPanelInsets.width,
+            verticalInset: DesktopPetMetrics.defaultPanelInsets.height
         )
 
-        #expect(frame == CGRect(x: 24, y: 49, width: 120, height: 130))
+        #expect(frame == CGRect(x: 8, y: 34, width: 152, height: 160))
+        #expect(frame.minX + 16 == 24)
+        #expect(frame.minY + 15 == 49)
+    }
+
+    @Test func resizingLegacyFramePreservesItsCenter() {
+        let frame = DesktopPetLayout.resizedFramePreservingCenter(
+            CGRect(x: 24, y: 49, width: 120, height: 130),
+            to: DesktopPetMetrics.canvasSize
+        )
+
+        #expect(frame == CGRect(x: 8, y: 34, width: 152, height: 160))
+    }
+
+    @Test func artworkInteractionFrameIsCenteredWithinCanvas() {
+        #expect(
+            DesktopPetMetrics.artworkFrame
+                == CGRect(x: 16, y: 15, width: 120, height: 130)
+        )
     }
 
     @Test func frameIsClampedInsideVisibleFrame() {

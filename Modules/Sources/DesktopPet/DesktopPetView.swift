@@ -33,8 +33,15 @@ public struct DesktopPetView: View {
                 isDragging: isDragging,
                 reduceMotion: reduceMotion
             )
+            .frame(
+                width: DesktopPetMetrics.artworkSize.width,
+                height: DesktopPetMetrics.artworkSize.height
+            )
         }
-        .frame(width: 120, height: 130)
+        .frame(
+            width: DesktopPetMetrics.canvasSize.width,
+            height: DesktopPetMetrics.canvasSize.height
+        )
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(isControlPresented ? "Hide Only Control" : "Show Only Control")
         .accessibilityHint("Click to toggle Only Control. Drag to move.")

@@ -12,8 +12,6 @@ public final class DesktopPetController: NSObject {
     }
 
     private static let autosaveName = "OnlySwitchDesktopPetWindow"
-    private static let panelSize = CGSize(width: 120, height: 130)
-    private static let defaultInset: CGFloat = 24
 
     private let onActivate: @MainActor () -> Void
     private let panel: DesktopPetPanel
@@ -25,7 +23,7 @@ public final class DesktopPetController: NSObject {
     public init(onActivate: @escaping @MainActor () -> Void) {
         self.onActivate = onActivate
         panel = DesktopPetPanel(
-            contentRect: CGRect(origin: .zero, size: Self.panelSize),
+            contentRect: CGRect(origin: .zero, size: DesktopPetMetrics.canvasSize),
             styleMask: [.borderless, .nonactivatingPanel],
             backing: .buffered,
             defer: false
@@ -48,6 +46,7 @@ public final class DesktopPetController: NSObject {
     public func show() {
         restoreFrameIfNeeded()
         constrainPanelToVisibleScreen()
+        saveFrame()
         presentation.isActive = true
         isVisible = true
         panel.orderFrontRegardless()
@@ -95,13 +94,21 @@ public final class DesktopPetController: NSObject {
         guard !restoredFrame else { return }
         restoredFrame = true
 
-        if !panel.setFrameUsingName(Self.autosaveName),
-           let screen = NSScreen.main ?? NSScreen.screens.first {
+        if panel.setFrameUsingName(Self.autosaveName) {
+            panel.setFrame(
+                DesktopPetLayout.resizedFramePreservingCenter(
+                    panel.frame,
+                    to: DesktopPetMetrics.canvasSize
+                ),
+                display: false
+            )
+        } else if let screen = NSScreen.main ?? NSScreen.screens.first {
             panel.setFrame(
                 DesktopPetLayout.defaultFrame(
-                    size: Self.panelSize,
+                    size: DesktopPetMetrics.canvasSize,
                     visibleFrame: screen.visibleFrame,
-                    inset: Self.defaultInset
+                    horizontalInset: DesktopPetMetrics.defaultPanelInsets.width,
+                    verticalInset: DesktopPetMetrics.defaultPanelInsets.height
                 ),
                 display: false
             )

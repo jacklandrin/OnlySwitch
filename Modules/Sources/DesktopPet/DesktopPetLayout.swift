@@ -6,9 +6,35 @@ public enum DesktopPetLayout {
         visibleFrame: CGRect,
         inset: CGFloat = 28
     ) -> CGRect {
+        defaultFrame(
+            size: size,
+            visibleFrame: visibleFrame,
+            horizontalInset: inset,
+            verticalInset: inset
+        )
+    }
+
+    public static func defaultFrame(
+        size: CGSize,
+        visibleFrame: CGRect,
+        horizontalInset: CGFloat,
+        verticalInset: CGFloat
+    ) -> CGRect {
         CGRect(
-            x: visibleFrame.minX + inset,
-            y: visibleFrame.minY + inset,
+            x: visibleFrame.minX + horizontalInset,
+            y: visibleFrame.minY + verticalInset,
+            width: size.width,
+            height: size.height
+        )
+    }
+
+    public static func resizedFramePreservingCenter(
+        _ frame: CGRect,
+        to size: CGSize
+    ) -> CGRect {
+        CGRect(
+            x: frame.midX - size.width / 2,
+            y: frame.midY - size.height / 2,
             width: size.width,
             height: size.height
         )
