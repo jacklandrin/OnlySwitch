@@ -220,6 +220,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationWillTerminate(_ notification: Notification) {
+        OnlyControlWindow.shared.onVisibilityChanged = nil
         NotificationCenter.default.removeObserver(
             self,
             name: .desktopPetVisibilityChanged,
@@ -228,10 +229,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func setupDesktopPet() {
+        let onlyControlWindow = OnlyControlWindow.shared
         let controller = DesktopPetController {
-            OnlyControlWindow.shared.show()
+            onlyControlWindow.toggle(monitorsOutsideClicks: true)
         }
         desktopPetController = controller
+        onlyControlWindow.outsideClickExclusionWindowNumbers = [controller.windowNumber]
+        onlyControlWindow.onVisibilityChanged = { [weak controller] isPresented in
+            controller?.setControlPresented(isPresented)
+        }
+        controller.setControlPresented(onlyControlWindow.isShowing)
 
         if Preferences.shared.showDesktopPet {
             controller.show()

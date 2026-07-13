@@ -7,7 +7,7 @@ public enum DesktopPetLayout {
         inset: CGFloat = 28
     ) -> CGRect {
         CGRect(
-            x: visibleFrame.maxX - size.width - inset,
+            x: visibleFrame.minX + inset,
             y: visibleFrame.minY + inset,
             width: size.width,
             height: size.height
@@ -54,6 +54,17 @@ public enum DesktopPetInteraction {
         threshold: CGFloat = 4
     ) -> Bool {
         hypot(translation.width, translation.height) <= threshold
+    }
+
+    public static func draggedOrigin(
+        startOrigin: CGPoint,
+        startMouseLocation: CGPoint,
+        currentMouseLocation: CGPoint
+    ) -> CGPoint {
+        CGPoint(
+            x: startOrigin.x + currentMouseLocation.x - startMouseLocation.x,
+            y: startOrigin.y + currentMouseLocation.y - startMouseLocation.y
+        )
     }
 }
 

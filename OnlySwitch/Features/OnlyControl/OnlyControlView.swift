@@ -130,14 +130,20 @@ struct OnlyControlView: View {
     })
 }
 
+@MainActor
 final class OnlyControlWindow: NSWindow, NSWindowDelegate {
     static let shared = OnlyControlWindow()
 
-    var isShowing: Bool = false
+    private(set) var isShowing = false
+    var onVisibilityChanged: ((Bool) -> Void)?
+    var outsideClickExclusionWindowNumbers = Set<Int>()
 
     private let onlyControlStore: StoreOf<OnlyControlReducer> = .init(initialState: .init()) {
         OnlyControlReducer()
     }
+    private var globalMouseMonitor: Any?
+    private var localMouseMonitor: Any?
+    private var hideTask: Task<Void, Never>?
 
     override var canBecomeKey: Bool {
         true
@@ -176,22 +182,93 @@ final class OnlyControlWindow: NSWindow, NSWindowDelegate {
         setIsVisible(false)
     }
 
-    func show() {
+    func show(monitorsOutsideClicks: Bool = false) {
+        hideTask?.cancel()
+        hideTask = nil
         makeKeyAndOrderFront(nil)
         setFrameUsingName("OnlyControlWindow")
         setFrameAutosaveName("OnlyControlWindow")
-        isShowing = true
+        setShowing(true)
+        if monitorsOutsideClicks {
+            startOutsideClickMonitoring()
+        } else {
+            stopOutsideClickMonitoring()
+        }
         onlyControlStore.send(.showControl)
     }
 
     func hide(completion: (() -> Void)? = nil) {
+        guard isShowing else {
+            completion?()
+            return
+        }
+
+        setShowing(false)
+        stopOutsideClickMonitoring()
         onlyControlStore.send(.hideControl)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.51) { [weak self] in
-            guard let self else { return }
+
+        hideTask?.cancel()
+        hideTask = Task { @MainActor [weak self] in
+            do {
+                try await Task.sleep(for: .milliseconds(510))
+            } catch {
+                return
+            }
+            guard let self, !Task.isCancelled else { return }
             self.close()
-            self.isShowing = false
+            self.hideTask = nil
             completion?()
         }
+    }
+
+    func toggle(monitorsOutsideClicks: Bool = false) {
+        isShowing ? hide() : show(monitorsOutsideClicks: monitorsOutsideClicks)
+    }
+
+    private func setShowing(_ newValue: Bool) {
+        guard isShowing != newValue else { return }
+        isShowing = newValue
+        onVisibilityChanged?(newValue)
+    }
+
+    private func startOutsideClickMonitoring() {
+        guard globalMouseMonitor == nil, localMouseMonitor == nil else { return }
+
+        globalMouseMonitor = NSEvent.addGlobalMonitorForEvents(
+            matching: [.leftMouseDown, .rightMouseDown]
+        ) { [weak self] _ in
+            Task { @MainActor in
+                self?.hide()
+            }
+        }
+
+        localMouseMonitor = NSEvent.addLocalMonitorForEvents(
+            matching: [.leftMouseDown, .rightMouseDown]
+        ) { [weak self] event in
+            Task { @MainActor in
+                self?.handleLocalMouseDown(event)
+            }
+            return event
+        }
+    }
+
+    private func stopOutsideClickMonitoring() {
+        if let globalMouseMonitor {
+            NSEvent.removeMonitor(globalMouseMonitor)
+            self.globalMouseMonitor = nil
+        }
+        if let localMouseMonitor {
+            NSEvent.removeMonitor(localMouseMonitor)
+            self.localMouseMonitor = nil
+        }
+    }
+
+    private func handleLocalMouseDown(_ event: NSEvent) {
+        guard event.windowNumber != windowNumber,
+              !outsideClickExclusionWindowNumbers.contains(event.windowNumber) else {
+            return
+        }
+        hide()
     }
 
     func windowShouldClose(_ sender: NSWindow) -> Bool {

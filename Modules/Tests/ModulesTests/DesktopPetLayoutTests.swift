@@ -3,14 +3,14 @@ import Testing
 @testable import DesktopPet
 
 struct DesktopPetLayoutTests {
-    @Test func defaultFrameUsesLowerRightInset() {
+    @Test func defaultFrameUsesLowerLeftInset() {
         let frame = DesktopPetLayout.defaultFrame(
             size: CGSize(width: 120, height: 130),
             visibleFrame: CGRect(x: 0, y: 25, width: 1_440, height: 875),
-            inset: 28
+            inset: 24
         )
 
-        #expect(frame == CGRect(x: 1_292, y: 53, width: 120, height: 130))
+        #expect(frame == CGRect(x: 24, y: 49, width: 120, height: 130))
     }
 
     @Test func frameIsClampedInsideVisibleFrame() {
@@ -51,10 +51,28 @@ struct DesktopPetLayoutTests {
         #expect(!DesktopPetInteraction.isClick(translation: .init(width: 8, height: 0)))
     }
 
+    @Test func draggedOriginUsesStableScreenMouseDelta() {
+        let origin = DesktopPetInteraction.draggedOrigin(
+            startOrigin: CGPoint(x: 24, y: 49),
+            startMouseLocation: CGPoint(x: 70, y: 100),
+            currentMouseLocation: CGPoint(x: 100, y: 120)
+        )
+
+        #expect(origin == CGPoint(x: 54, y: 69))
+    }
+
     @Test @MainActor func controllerStartsHidden() {
         let controller = DesktopPetController(onActivate: {})
 
         #expect(!controller.isVisible)
+    }
+
+    @Test @MainActor func controllerTracksControlPresentation() {
+        let controller = DesktopPetController(onActivate: {})
+
+        controller.setControlPresented(true)
+
+        #expect(controller.isControlPresented)
     }
 
     @Test func visibilityDefaultsToHidden() {

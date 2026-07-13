@@ -4,14 +4,22 @@ import SwiftUI
 @MainActor
 public final class DesktopPetController: NSObject {
     public private(set) var isVisible = false
+    public var isControlPresented: Bool {
+        presentation.isControlPresented
+    }
+    public var windowNumber: Int {
+        panel.windowNumber
+    }
 
     private static let autosaveName = "OnlySwitchDesktopPetWindow"
     private static let panelSize = CGSize(width: 120, height: 130)
+    private static let defaultInset: CGFloat = 24
 
     private let onActivate: @MainActor () -> Void
     private let panel: DesktopPetPanel
     private let presentation = DesktopPetPresentation()
     private var dragStartOrigin: CGPoint?
+    private var dragStartMouseLocation: CGPoint?
     private var restoredFrame = false
 
     public init(onActivate: @escaping @MainActor () -> Void) {
@@ -53,6 +61,10 @@ public final class DesktopPetController: NSObject {
         panel.orderOut(nil)
     }
 
+    public func setControlPresented(_ isPresented: Bool) {
+        presentation.isControlPresented = isPresented
+    }
+
     private func configurePanel() {
         panel.level = .floating
         panel.backgroundColor = .clear
@@ -66,8 +78,6 @@ public final class DesktopPetController: NSObject {
             .ignoresCycle,
             .stationary
         ]
-        panel.setFrameAutosaveName(Self.autosaveName)
-
         panel.contentView = NSHostingView(
             rootView: DesktopPetRootView(
                 presentation: presentation,
@@ -90,42 +100,60 @@ public final class DesktopPetController: NSObject {
             panel.setFrame(
                 DesktopPetLayout.defaultFrame(
                     size: Self.panelSize,
-                    visibleFrame: screen.visibleFrame
+                    visibleFrame: screen.visibleFrame,
+                    inset: Self.defaultInset
                 ),
                 display: false
             )
         }
+        panel.setFrameAutosaveName(Self.autosaveName)
     }
 
-    private func dragChanged(_ value: DragGesture.Value) {
+    private func dragChanged(_: DragGesture.Value) {
         if dragStartOrigin == nil {
             dragStartOrigin = panel.frame.origin
+            dragStartMouseLocation = NSEvent.mouseLocation
         }
-        guard let dragStartOrigin else { return }
+        guard let dragStartOrigin, let dragStartMouseLocation else { return }
 
-        presentation.isDragging = !DesktopPetInteraction.isClick(
-            translation: value.translation
+        let currentMouseLocation = NSEvent.mouseLocation
+        let currentOrigin = DesktopPetInteraction.draggedOrigin(
+            startOrigin: dragStartOrigin,
+            startMouseLocation: dragStartMouseLocation,
+            currentMouseLocation: currentMouseLocation
         )
-        panel.setFrameOrigin(
-            CGPoint(
-                x: dragStartOrigin.x + value.translation.width,
-                y: dragStartOrigin.y - value.translation.height
+        presentation.isDragging = !DesktopPetInteraction.isClick(
+            translation: CGSize(
+                width: currentOrigin.x - dragStartOrigin.x,
+                height: currentOrigin.y - dragStartOrigin.y
             )
         )
+        panel.setFrameOrigin(currentOrigin)
     }
 
-    private func dragEnded(_ value: DragGesture.Value) {
+    private func dragEnded(_: DragGesture.Value) {
         defer {
             dragStartOrigin = nil
+            dragStartMouseLocation = nil
             presentation.isDragging = false
         }
 
-        if DesktopPetInteraction.isClick(translation: value.translation) {
-            if let dragStartOrigin {
-                panel.setFrameOrigin(dragStartOrigin)
-            }
+        guard let dragStartOrigin, let dragStartMouseLocation else { return }
+        let finalOrigin = DesktopPetInteraction.draggedOrigin(
+            startOrigin: dragStartOrigin,
+            startMouseLocation: dragStartMouseLocation,
+            currentMouseLocation: NSEvent.mouseLocation
+        )
+        let translation = CGSize(
+            width: finalOrigin.x - dragStartOrigin.x,
+            height: finalOrigin.y - dragStartOrigin.y
+        )
+
+        if DesktopPetInteraction.isClick(translation: translation) {
+            panel.setFrameOrigin(dragStartOrigin)
             onActivate()
         } else {
+            panel.setFrameOrigin(finalOrigin)
             constrainPanelToVisibleScreen()
             saveFrame()
         }

@@ -5,10 +5,16 @@ public struct DesktopPetView: View {
 
     private let isActive: Bool
     private let isDragging: Bool
+    private let isControlPresented: Bool
 
-    public init(isActive: Bool = true, isDragging: Bool = false) {
+    public init(
+        isActive: Bool = true,
+        isDragging: Bool = false,
+        isControlPresented: Bool = false
+    ) {
         self.isActive = isActive
         self.isDragging = isDragging
+        self.isControlPresented = isControlPresented
     }
 
     public var body: some View {
@@ -22,14 +28,16 @@ public struct DesktopPetView: View {
             DesktopPetArtwork(
                 verticalOffset: motion.verticalOffset,
                 eyeScale: motion.eyeScale,
-                sliderOffset: motion.sliderOffset,
-                isDragging: isDragging
+                sliderOffset: isControlPresented ? 0 : motion.sliderOffset,
+                isControlPresented: isControlPresented,
+                isDragging: isDragging,
+                reduceMotion: reduceMotion
             )
         }
         .frame(width: 120, height: 130)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Open Only Control")
-        .accessibilityHint("Click to open Only Control. Drag to move.")
+        .accessibilityLabel(isControlPresented ? "Hide Only Control" : "Show Only Control")
+        .accessibilityHint("Click to toggle Only Control. Drag to move.")
         .accessibilityAddTraits(.isButton)
     }
 

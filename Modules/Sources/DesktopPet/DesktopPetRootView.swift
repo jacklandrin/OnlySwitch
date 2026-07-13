@@ -8,7 +8,8 @@ struct DesktopPetRootView: View {
     var body: some View {
         DesktopPetView(
             isActive: presentation.isActive,
-            isDragging: presentation.isDragging
+            isDragging: presentation.isDragging,
+            isControlPresented: presentation.isControlPresented
         )
         .contentShape(.rect)
         .gesture(
