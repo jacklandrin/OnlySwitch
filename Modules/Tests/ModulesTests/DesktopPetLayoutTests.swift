@@ -50,4 +50,10 @@ struct DesktopPetLayoutTests {
         #expect(DesktopPetInteraction.isClick(translation: .init(width: 2, height: 3)))
         #expect(!DesktopPetInteraction.isClick(translation: .init(width: 8, height: 0)))
     }
+
+    @Test @MainActor func controllerStartsHidden() {
+        let controller = DesktopPetController(onActivate: {})
+
+        #expect(!controller.isVisible)
+    }
 }
