@@ -32,6 +32,15 @@ struct DesktopPetLayoutTests {
         )
     }
 
+    @Test func interactionShapeMatchesOriginalPetBounds() {
+        let shape = DesktopPetInteractionShape(size: DesktopPetMetrics.artworkSize)
+        let bounds = shape.path(
+            in: CGRect(origin: .zero, size: DesktopPetMetrics.canvasSize)
+        ).boundingRect
+
+        #expect(bounds == CGRect(x: 16, y: 15, width: 120, height: 130))
+    }
+
     @Test func frameIsClampedInsideVisibleFrame() {
         let frame = DesktopPetLayout.constrainedFrame(
             CGRect(x: -50, y: 850, width: 120, height: 130),

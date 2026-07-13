@@ -6,25 +6,19 @@ struct DesktopPetRootView: View {
     let onDragEnded: @MainActor (DragGesture.Value) -> Void
 
     var body: some View {
-        ZStack {
-            DesktopPetView(
-                isActive: presentation.isActive,
-                isDragging: presentation.isDragging,
-                isControlPresented: presentation.isControlPresented
-            )
-            .allowsHitTesting(false)
-
-            Color.clear
-                .frame(
-                    width: DesktopPetMetrics.artworkFrame.width,
-                    height: DesktopPetMetrics.artworkFrame.height
-                )
-                .contentShape(.rect)
-                .gesture(
-                    DragGesture(minimumDistance: 0, coordinateSpace: .global)
-                        .onChanged(onDragChanged)
-                        .onEnded(onDragEnded)
-                )
-        }
+        DesktopPetView(
+            isActive: presentation.isActive,
+            isDragging: presentation.isDragging,
+            isControlPresented: presentation.isControlPresented
+        )
+        .contentShape(
+            .interaction,
+            DesktopPetInteractionShape(size: DesktopPetMetrics.artworkSize)
+        )
+        .gesture(
+            DragGesture(minimumDistance: 0, coordinateSpace: .global)
+                .onChanged(onDragChanged)
+                .onEnded(onDragEnded)
+        )
     }
 }
