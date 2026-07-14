@@ -230,9 +230,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func setupDesktopPet() {
         let onlyControlWindow = OnlyControlWindow.shared
-        let controller = DesktopPetController {
-            onlyControlWindow.toggle(monitorsOutsideClicks: true)
-        }
+        let controller = DesktopPetController(
+            onActivate: {
+                onlyControlWindow.toggle(monitorsOutsideClicks: true)
+            },
+            onClose: {
+                Preferences.shared.showDesktopPet = false
+            }
+        )
         desktopPetController = controller
         onlyControlWindow.outsideClickExclusionWindowNumbers = [controller.windowNumber]
         onlyControlWindow.onVisibilityChanged = { [weak controller] isPresented in
