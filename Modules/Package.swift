@@ -6,7 +6,8 @@ import PackageDescription
 let package = Package(
     name: "Modules",
     platforms: [
-        .macOS(.v14)
+        .macOS(.v14),
+        .iOS(.v18)
     ],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
@@ -59,6 +60,10 @@ let package = Package(
         .library(
             name: "DesktopPet",
             targets: ["DesktopPet"]
+        ),
+        .library(
+            name: "RemoteCore",
+            targets: ["RemoteCore"]
         )
     ],
     dependencies: [
@@ -165,6 +170,9 @@ let package = Package(
         .target(
             name: "DesktopPet"
         ),
+        .target(
+            name: "RemoteCore"
+        ),
         .testTarget(
             name: "ModulesTests",
             dependencies: [
@@ -172,6 +180,7 @@ let package = Package(
                 "DesktopPet",
                 "OnlyControl",
                 "OnlyAgent",
+                "RemoteCore",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ]
         )
