@@ -64,6 +64,10 @@ let package = Package(
         .library(
             name: "RemoteCore",
             targets: ["RemoteCore"]
+        ),
+        .library(
+            name: "RemoteTransport",
+            targets: ["RemoteTransport"]
         )
     ],
     dependencies: [
@@ -173,6 +177,10 @@ let package = Package(
         .target(
             name: "RemoteCore"
         ),
+        .target(
+            name: "RemoteTransport",
+            dependencies: ["RemoteCore"]
+        ),
         .testTarget(
             name: "ModulesTests",
             dependencies: [
@@ -181,6 +189,7 @@ let package = Package(
                 "OnlyControl",
                 "OnlyAgent",
                 "RemoteCore",
+                "RemoteTransport",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ]
         )
