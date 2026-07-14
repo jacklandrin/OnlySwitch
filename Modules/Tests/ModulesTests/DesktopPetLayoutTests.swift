@@ -103,6 +103,18 @@ struct DesktopPetLayoutTests {
         #expect(controller.isControlPresented)
     }
 
+    @Test @MainActor func controllerRoutesCloseRequest() {
+        var didClose = false
+        let controller = DesktopPetController(
+            onActivate: {},
+            onClose: { didClose = true }
+        )
+
+        controller.close()
+
+        #expect(didClose)
+    }
+
     @Test func visibilityDefaultsToHidden() {
         #expect(!DesktopPetDefaults.isVisible)
     }

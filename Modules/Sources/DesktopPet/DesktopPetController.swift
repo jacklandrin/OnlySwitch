@@ -14,14 +14,19 @@ public final class DesktopPetController: NSObject {
     private static let autosaveName = "OnlySwitchDesktopPetWindow"
 
     private let onActivate: @MainActor () -> Void
+    private let onClose: @MainActor () -> Void
     private let panel: DesktopPetPanel
     private let presentation = DesktopPetPresentation()
     private var dragStartOrigin: CGPoint?
     private var dragStartMouseLocation: CGPoint?
     private var restoredFrame = false
 
-    public init(onActivate: @escaping @MainActor () -> Void) {
+    public init(
+        onActivate: @escaping @MainActor () -> Void,
+        onClose: @escaping @MainActor () -> Void = {}
+    ) {
         self.onActivate = onActivate
+        self.onClose = onClose
         panel = DesktopPetPanel(
             contentRect: CGRect(origin: .zero, size: DesktopPetMetrics.canvasSize),
             styleMask: [.borderless, .nonactivatingPanel],
@@ -64,6 +69,10 @@ public final class DesktopPetController: NSObject {
         presentation.isControlPresented = isPresented
     }
 
+    func close() {
+        onClose()
+    }
+
     private func configurePanel() {
         panel.level = .floating
         panel.backgroundColor = .clear
@@ -85,6 +94,9 @@ public final class DesktopPetController: NSObject {
                 },
                 onDragEnded: { [weak self] value in
                     self?.dragEnded(value)
+                },
+                onClose: { [weak self] in
+                    self?.close()
                 }
             )
         )

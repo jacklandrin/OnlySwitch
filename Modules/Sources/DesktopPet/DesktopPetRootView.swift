@@ -4,6 +4,7 @@ struct DesktopPetRootView: View {
     let presentation: DesktopPetPresentation
     let onDragChanged: @MainActor (DragGesture.Value) -> Void
     let onDragEnded: @MainActor (DragGesture.Value) -> Void
+    let onClose: @MainActor () -> Void
 
     var body: some View {
         DesktopPetView(
@@ -20,5 +21,8 @@ struct DesktopPetRootView: View {
                 .onChanged(onDragChanged)
                 .onEnded(onDragEnded)
         )
+        .contextMenu {
+            Button("Close", role: .destructive, action: onClose)
+        }
     }
 }
