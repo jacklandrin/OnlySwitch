@@ -10,6 +10,7 @@ import Extensions
 public struct AuthenticatorSettingsView: View {
     @ObservedObject private var store = AuthenticatorStore.shared
     @State private var showImport = false
+    @State private var accountBeingRenamed: AuthenticatorAccount?
 
     public init() {}
 
@@ -40,7 +41,9 @@ public struct AuthenticatorSettingsView: View {
                 TimelineView(.periodic(from: .now, by: 1)) { context in
                     List {
                         ForEach(store.accounts) { account in
-                            AuthenticatorSettingsRow(account: account, now: context.date)
+                            AuthenticatorSettingsRow(account: account, now: context.date) {
+                                accountBeingRenamed = account
+                            }
                         }
                         .onDelete { indexSet in
                             for idx in indexSet {
@@ -58,12 +61,18 @@ public struct AuthenticatorSettingsView: View {
         .sheet(isPresented: $showImport) {
             AuthenticatorImportSheet()
         }
+        .sheet(item: $accountBeingRenamed) { account in
+            AuthenticatorRenameSheet(account: account) { proposedName in
+                store.renameAccount(account, to: proposedName)
+            }
+        }
     }
 }
 
 private struct AuthenticatorSettingsRow: View {
     let account: AuthenticatorAccount
     let now: Date
+    let onRename: () -> Void
     @ObservedObject private var store = AuthenticatorStore.shared
 
     var body: some View {
@@ -84,6 +93,10 @@ private struct AuthenticatorSettingsRow: View {
             Spacer()
             Text("\(remaining)s")
                 .foregroundColor(.secondary)
+            Button("Rename".localized(), systemImage: "pencil", action: onRename)
+                .labelStyle(.iconOnly)
+                .buttonStyle(.borderless)
+                .help(Text("Rename".localized()))
             Button {
                 NSPasteboard.general.clearContents()
                 NSPasteboard.general.setString(code, forType: .string)
@@ -92,5 +105,50 @@ private struct AuthenticatorSettingsRow: View {
             }
             .buttonStyle(.borderless)
         }
+        .contextMenu {
+            Button("Rename".localized(), action: onRename)
+        }
+    }
+}
+
+private struct AuthenticatorRenameSheet: View {
+    let account: AuthenticatorAccount
+    let onSave: (String) -> Void
+
+    @Environment(\.dismiss) private var dismiss
+    @FocusState private var isNameFocused: Bool
+    @State private var name: String
+
+    init(account: AuthenticatorAccount, onSave: @escaping (String) -> Void) {
+        self.account = account
+        self.onSave = onSave
+        _name = State(initialValue: account.customName ?? account.displayName)
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Rename".localized())
+                .font(.headline)
+
+            TextField("Name".localized(), text: $name)
+                .focused($isNameFocused)
+                .onSubmit {
+                    onSave(name)
+                    dismiss()
+                }
+
+            HStack {
+                Spacer()
+                Button("Cancel".localized()) { dismiss() }
+                Button("Save".localized()) {
+                    onSave(name)
+                    dismiss()
+                }
+                .keyboardShortcut(.defaultAction)
+            }
+        }
+        .padding(20)
+        .frame(width: 340)
+        .onAppear { isNameFocused = true }
     }
 }

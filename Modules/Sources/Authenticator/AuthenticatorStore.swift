@@ -95,6 +95,10 @@ public final class AuthenticatorStore: ObservableObject {
         return added
     }
 
+    public func renameAccount(_ account: AuthenticatorAccount, to proposedName: String) {
+        accounts.renameAccount(id: account.id, to: proposedName)
+    }
+
     public func deleteAccount(_ account: AuthenticatorAccount) {
         accounts.removeAll { $0.id == account.id }
         try? keychain.delete(key: account.secretKeychainKey)
