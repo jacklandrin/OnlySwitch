@@ -73,8 +73,8 @@ struct RemoteSessionCryptoTests {
             credential: credential,
             transcript: transcript
         )
-        var sender = RemoteSessionCrypto(sendKey: clientKeys.send, receiveKey: clientKeys.receive, noncePrefix: 7)
-        var receiver = RemoteSessionCrypto(sendKey: serverKeys.send, receiveKey: serverKeys.receive, noncePrefix: 9)
+        let sender = RemoteSessionCrypto(sendKey: clientKeys.send, receiveKey: clientKeys.receive, noncePrefix: 7)
+        let receiver = RemoteSessionCrypto(sendKey: serverKeys.send, receiveKey: serverKeys.receive, noncePrefix: 9)
 
         let sealed = try sender.seal(.ping(42))
 
@@ -84,8 +84,8 @@ struct RemoteSessionCryptoTests {
     @Test func replayedCounterIsRejected() throws {
         let sendKey = SymmetricKey(data: Data(repeating: 1, count: 32))
         let receiveKey = SymmetricKey(data: Data(repeating: 2, count: 32))
-        var sender = RemoteSessionCrypto(sendKey: sendKey, receiveKey: receiveKey, noncePrefix: 7)
-        var receiver = RemoteSessionCrypto(sendKey: receiveKey, receiveKey: sendKey, noncePrefix: 9)
+        let sender = RemoteSessionCrypto(sendKey: sendKey, receiveKey: receiveKey, noncePrefix: 7)
+        let receiver = RemoteSessionCrypto(sendKey: receiveKey, receiveKey: sendKey, noncePrefix: 9)
         let sealed = try sender.seal(.ping(1))
 
         _ = try receiver.open(sealed)
@@ -95,11 +95,31 @@ struct RemoteSessionCryptoTests {
         }
     }
 
+    @Test func aliasesShareMonotonicSendAndReplayState() throws {
+        let sendKey = SymmetricKey(data: Data(repeating: 1, count: 32))
+        let receiveKey = SymmetricKey(data: Data(repeating: 2, count: 32))
+        let sender = RemoteSessionCrypto(sendKey: sendKey, receiveKey: receiveKey, noncePrefix: 7)
+        let senderAlias = sender
+        let receiver = RemoteSessionCrypto(sendKey: receiveKey, receiveKey: sendKey, noncePrefix: 9)
+        let receiverAlias = receiver
+
+        let first = try sender.seal(.ping(1))
+        let second = try senderAlias.seal(.ping(2))
+
+        #expect(first.counter == 0)
+        #expect(second.counter == 1)
+        #expect(try receiver.open(first) == .ping(1))
+        #expect(try receiverAlias.open(second) == .ping(2))
+        #expect(throws: RemoteProtocolError.self) {
+            try receiver.open(first)
+        }
+    }
+
     @Test func tamperedCiphertextIsRejected() throws {
         let sendKey = SymmetricKey(data: Data(repeating: 1, count: 32))
         let receiveKey = SymmetricKey(data: Data(repeating: 2, count: 32))
-        var sender = RemoteSessionCrypto(sendKey: sendKey, receiveKey: receiveKey, noncePrefix: 7)
-        var receiver = RemoteSessionCrypto(sendKey: receiveKey, receiveKey: sendKey, noncePrefix: 9)
+        let sender = RemoteSessionCrypto(sendKey: sendKey, receiveKey: receiveKey, noncePrefix: 7)
+        let receiver = RemoteSessionCrypto(sendKey: receiveKey, receiveKey: sendKey, noncePrefix: 9)
         let sealed = try sender.seal(.ping(1))
         var ciphertext = sealed.ciphertext
         ciphertext[ciphertext.startIndex] ^= 1

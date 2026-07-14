@@ -1,5 +1,6 @@
 import CryptoKit
 import Foundation
+import os
 import RemoteCore
 
 public enum RemotePeerRole: Sendable {
@@ -29,7 +30,7 @@ public struct RemoteEncryptedFrame: Codable, Equatable, Sendable {
     }
 }
 
-public struct RemoteSessionCrypto: Sendable {
+public final class RemoteSessionCrypto: Sendable {
     private static let authenticationTagSize = 16
     private static let pairingLabel = Data("OnlySwitch Remote pairing proof v1".utf8)
     private static let clientToServerLabel = Data("OnlySwitch Remote client-to-server v1".utf8)
@@ -38,8 +39,12 @@ public struct RemoteSessionCrypto: Sendable {
     private let sendKey: SymmetricKey
     private let receiveKey: SymmetricKey
     private let noncePrefix: UInt32
-    private var nextSendCounter: UInt64? = 0
-    private var lastReceivedCounter: UInt64?
+    private let state = OSAllocatedUnfairLock(initialState: State())
+
+    private struct State {
+        var nextSendCounter: UInt64? = 0
+        var lastReceivedCounter: UInt64?
+    }
 
     public init(sendKey: SymmetricKey, receiveKey: SymmetricKey, noncePrefix: UInt32) {
         self.sendKey = sendKey
@@ -94,52 +99,56 @@ public struct RemoteSessionCrypto: Sendable {
         }
     }
 
-    public mutating func seal(_ message: RemoteMessage) throws -> RemoteEncryptedFrame {
-        guard let counter = nextSendCounter else {
-            throw Self.invalidFrame("The session nonce counter is exhausted.")
+    public func seal(_ message: RemoteMessage) throws -> RemoteEncryptedFrame {
+        try state.withLock { state in
+            guard let counter = state.nextSendCounter else {
+                throw Self.invalidFrame("The session nonce counter is exhausted.")
+            }
+
+            let nonce = try AES.GCM.Nonce(data: Self.nonce(prefix: noncePrefix, counter: counter))
+            let plaintext = try JSONEncoder().encode(message)
+            let sealedBox = try AES.GCM.seal(
+                plaintext,
+                using: sendKey,
+                nonce: nonce,
+                authenticating: Self.authenticatedHeader(prefix: noncePrefix, counter: counter)
+            )
+            var ciphertext = sealedBox.ciphertext
+            ciphertext.append(sealedBox.tag)
+
+            state.nextSendCounter = counter == UInt64.max ? nil : counter + 1
+            return RemoteEncryptedFrame(noncePrefix: noncePrefix, counter: counter, ciphertext: ciphertext)
         }
-
-        let nonce = try AES.GCM.Nonce(data: Self.nonce(prefix: noncePrefix, counter: counter))
-        let plaintext = try JSONEncoder().encode(message)
-        let sealedBox = try AES.GCM.seal(
-            plaintext,
-            using: sendKey,
-            nonce: nonce,
-            authenticating: Self.authenticatedHeader(prefix: noncePrefix, counter: counter)
-        )
-        var ciphertext = sealedBox.ciphertext
-        ciphertext.append(sealedBox.tag)
-
-        nextSendCounter = counter == UInt64.max ? nil : counter + 1
-        return RemoteEncryptedFrame(noncePrefix: noncePrefix, counter: counter, ciphertext: ciphertext)
     }
 
-    public mutating func open(_ frame: RemoteEncryptedFrame) throws -> RemoteMessage {
-        guard lastReceivedCounter.map({ frame.counter > $0 }) ?? true else {
-            throw RemoteProtocolError(code: .replayDetected, message: "Frame counter is not strictly increasing.")
-        }
-        guard frame.ciphertext.count >= Self.authenticationTagSize else {
-            throw Self.invalidFrame("Encrypted frame is missing its authentication tag.")
-        }
+    public func open(_ frame: RemoteEncryptedFrame) throws -> RemoteMessage {
+        try state.withLock { state in
+            guard state.lastReceivedCounter.map({ frame.counter > $0 }) ?? true else {
+                throw RemoteProtocolError(code: .replayDetected, message: "Frame counter is not strictly increasing.")
+            }
+            guard frame.ciphertext.count >= Self.authenticationTagSize else {
+                throw Self.invalidFrame("Encrypted frame is missing its authentication tag.")
+            }
 
-        do {
-            let nonce = try AES.GCM.Nonce(data: Self.nonce(prefix: frame.noncePrefix, counter: frame.counter))
-            let tagStart = frame.ciphertext.count - Self.authenticationTagSize
-            let sealedBox = try AES.GCM.SealedBox(
-                nonce: nonce,
-                ciphertext: frame.ciphertext.prefix(tagStart),
-                tag: frame.ciphertext.suffix(Self.authenticationTagSize)
-            )
-            let plaintext = try AES.GCM.open(
-                sealedBox,
-                using: receiveKey,
-                authenticating: Self.authenticatedHeader(prefix: frame.noncePrefix, counter: frame.counter)
-            )
-            let message = try JSONDecoder().decode(RemoteMessage.self, from: plaintext)
-            lastReceivedCounter = frame.counter
-            return message
-        } catch {
-            throw RemoteProtocolError(code: .authenticationFailed, message: "Encrypted frame authentication failed.")
+            do {
+                let nonce = try AES.GCM.Nonce(data: Self.nonce(prefix: frame.noncePrefix, counter: frame.counter))
+                let tagStart = frame.ciphertext.count - Self.authenticationTagSize
+                let sealedBox = try AES.GCM.SealedBox(
+                    nonce: nonce,
+                    ciphertext: frame.ciphertext.prefix(tagStart),
+                    tag: frame.ciphertext.suffix(Self.authenticationTagSize)
+                )
+                let plaintext = try AES.GCM.open(
+                    sealedBox,
+                    using: receiveKey,
+                    authenticating: Self.authenticatedHeader(prefix: frame.noncePrefix, counter: frame.counter)
+                )
+                let message = try JSONDecoder().decode(RemoteMessage.self, from: plaintext)
+                state.lastReceivedCounter = frame.counter
+                return message
+            } catch {
+                throw RemoteProtocolError(code: .authenticationFailed, message: "Encrypted frame authentication failed.")
+            }
         }
     }
 

@@ -7,6 +7,8 @@ public struct RemoteFrameCodec: Sendable {
     private let maximumPayloadSize: Int
     private var buffer = Data()
 
+    var bufferedByteCount: Int { buffer.count }
+
     public init(maximumPayloadSize: Int = 4 * 1_024 * 1_024) {
         self.maximumPayloadSize = min(max(0, maximumPayloadSize), Self.protocolMaximumPayloadSize)
     }
@@ -24,21 +26,24 @@ public struct RemoteFrameCodec: Sendable {
     }
 
     public mutating func append<Bytes: DataProtocol>(_ bytes: Bytes) throws -> [RemoteMessage] {
-        buffer.append(contentsOf: bytes)
         var messages: [RemoteMessage] = []
 
-        while buffer.count >= MemoryLayout<UInt32>.size {
-            let payloadSize = buffer.prefix(4).reduce(0) { partialResult, byte in
-                (partialResult << 8) | Int(byte)
+        for byte in bytes {
+            buffer.append(byte)
+
+            guard buffer.count >= MemoryLayout<UInt32>.size else { continue }
+
+            let payloadSize = buffer.prefix(MemoryLayout<UInt32>.size).reduce(0) { result, byte in
+                (result << 8) | Int(byte)
             }
             guard payloadSize <= maximumPayloadSize else {
                 throw Self.invalidFrame("Frame payload exceeds the allowed size.")
             }
 
-            let frameSize = 4 + payloadSize
-            guard buffer.count >= frameSize else { break }
+            let frameSize = MemoryLayout<UInt32>.size + payloadSize
+            guard buffer.count == frameSize else { continue }
 
-            let payloadStart = buffer.index(buffer.startIndex, offsetBy: 4)
+            let payloadStart = buffer.index(buffer.startIndex, offsetBy: MemoryLayout<UInt32>.size)
             let payloadEnd = buffer.index(buffer.startIndex, offsetBy: frameSize)
             let payload = Data(buffer[payloadStart..<payloadEnd])
             do {
@@ -46,7 +51,7 @@ public struct RemoteFrameCodec: Sendable {
             } catch {
                 throw Self.invalidFrame("Frame payload could not be decoded.")
             }
-            buffer.removeFirst(frameSize)
+            buffer.removeAll(keepingCapacity: true)
         }
 
         return messages

@@ -26,4 +26,15 @@ struct RemoteFrameCodecTests {
             try codec.append(Data([0, 0, 0, 9]))
         }
     }
+
+    @Test func oversizedHeaderRejectsBeforeRetainingBody() throws {
+        var codec = RemoteFrameCodec(maximumPayloadSize: 8)
+        var input = Data([0, 0, 0, 9])
+        input.append(Data(repeating: 0xAA, count: 1_024 * 1_024))
+
+        #expect(throws: RemoteProtocolError.self) {
+            try codec.append(input)
+        }
+        #expect(codec.bufferedByteCount <= MemoryLayout<UInt32>.size)
+    }
 }
