@@ -5,6 +5,28 @@ import Testing
 @testable import RemoteTransport
 
 struct RemoteSessionCryptoTests {
+    @Test func sharedHandshakeTranscriptAndAuthenticationProofAreStable() throws {
+        let client = ClientHello(
+            version: .current,
+            deviceID: UUID(uuidString: "00000000-0000-0000-0000-000000000001")!,
+            deviceName: "iPhone",
+            ephemeralPublicKey: Data([1, 2, 3])
+        )
+        let server = ServerHello(
+            version: .current,
+            macID: UUID(uuidString: "00000000-0000-0000-0000-000000000002")!,
+            macName: "Studio",
+            ephemeralPublicKey: Data([4, 5, 6]),
+            challenge: Data(repeating: 7, count: 32)
+        )
+        let credential = Data(repeating: 9, count: 32)
+
+        let transcript = try RemoteHandshakeCrypto.transcript(client: client, server: server)
+        let proof = RemoteHandshakeCrypto.authenticationProof(credential: credential, transcript: transcript)
+
+        #expect(RemoteHandshakeCrypto.verifyAuthenticationProof(proof, credential: credential, transcript: transcript))
+        #expect(!RemoteHandshakeCrypto.verifyAuthenticationProof(Data(repeating: 0, count: 32), credential: credential, transcript: transcript))
+    }
     @Test func bothPeersDeriveMatchingDirectionalKeys() throws {
         let client = P256.KeyAgreement.PrivateKey()
         let server = P256.KeyAgreement.PrivateKey()
