@@ -409,6 +409,16 @@
 		F3A80000000000000000000A /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = F3A800000000000000000030 /* Dependencies */; };
 		F3A80000000000000000000B /* RemoteConnectionClient+Live.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A80000000000000000002A /* RemoteConnectionClient+Live.swift */; };
 		F3A80000000000000000000C /* DependenciesMacros in Frameworks */ = {isa = PBXBuildFile; productRef = F3A800000000000000000031 /* DependenciesMacros */; };
+		F3A900000000000000000001 /* RemoteAppFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A900000000000000000021 /* RemoteAppFeatureTests.swift */; };
+		F3A900000000000000000002 /* PairingFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A900000000000000000022 /* PairingFeatureTests.swift */; };
+		F3A900000000000000000003 /* PairingFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A900000000000000000023 /* PairingFeature.swift */; };
+		F3A900000000000000000004 /* PairingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A900000000000000000024 /* PairingView.swift */; };
+		F3A900000000000000000005 /* SettingsFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A900000000000000000025 /* SettingsFeature.swift */; };
+		F3A900000000000000000006 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A900000000000000000026 /* SettingsView.swift */; };
+		F3A900000000000000000007 /* IdentifiedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = F3A900000000000000000030 /* IdentifiedCollections */; };
+		F3A900000000000000000008 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = F3A900000000000000000031 /* OrderedCollections */; };
+		F3A900000000000000000009 /* IdentifiedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = F3A900000000000000000030 /* IdentifiedCollections */; };
+		F3A90000000000000000000A /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = F3A900000000000000000031 /* OrderedCollections */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -763,6 +773,12 @@
 		F3A800000000000000000028 /* RemoteConnectionEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConnectionEvent.swift; sourceTree = "<group>"; };
 		F3A800000000000000000029 /* RemoteConnectionClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConnectionClient.swift; sourceTree = "<group>"; };
 		F3A80000000000000000002A /* RemoteConnectionClient+Live.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RemoteConnectionClient+Live.swift"; sourceTree = "<group>"; };
+		F3A900000000000000000021 /* RemoteAppFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAppFeatureTests.swift; sourceTree = "<group>"; };
+		F3A900000000000000000022 /* PairingFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingFeatureTests.swift; sourceTree = "<group>"; };
+		F3A900000000000000000023 /* PairingFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingFeature.swift; sourceTree = "<group>"; };
+		F3A900000000000000000024 /* PairingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingView.swift; sourceTree = "<group>"; };
+		F3A900000000000000000025 /* SettingsFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsFeature.swift; sourceTree = "<group>"; };
+		F3A900000000000000000026 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -834,6 +850,8 @@
 				F3A30000000000000000002C /* CasePaths in Frameworks */,
 				F3A80000000000000000000A /* Dependencies in Frameworks */,
 				F3A80000000000000000000C /* DependenciesMacros in Frameworks */,
+				F3A900000000000000000007 /* IdentifiedCollections in Frameworks */,
+				F3A900000000000000000008 /* OrderedCollections in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -845,6 +863,8 @@
 				F3A30000000000000000002A /* RemoteCore in Frameworks */,
 				F3A30000000000000000002B /* RemoteTransport in Frameworks */,
 				F3A30000000000000000002E /* IssueReportingTestSupport in Frameworks */,
+				F3A900000000000000000009 /* IdentifiedCollections in Frameworks */,
+				F3A90000000000000000000A /* OrderedCollections in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1769,6 +1789,7 @@
 				F3A300000000000000000006 /* App */,
 				F3A800000000000000000010 /* Models */,
 				F3A800000000000000000011 /* Dependencies */,
+				F3A900000000000000000010 /* Features */,
 				F3A300000000000000000013 /* Info.plist */,
 				F3A300000000000000000014 /* OnlySwitchRemote.entitlements */,
 				F3A300000000000000000015 /* Assets.xcassets */,
@@ -1793,6 +1814,8 @@
 				F3A300000000000000000017 /* RemoteTestValues.swift */,
 				F3A800000000000000000021 /* RemotePersistenceClientTests.swift */,
 				F3A800000000000000000022 /* RemoteConnectionClientTests.swift */,
+				F3A900000000000000000021 /* RemoteAppFeatureTests.swift */,
+				F3A900000000000000000022 /* PairingFeatureTests.swift */,
 			);
 			path = OnlySwitchRemoteTests;
 			sourceTree = "<group>";
@@ -1817,6 +1840,33 @@
 				F3A80000000000000000002A /* RemoteConnectionClient+Live.swift */,
 			);
 			path = Dependencies;
+			sourceTree = "<group>";
+		};
+		F3A900000000000000000010 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				F3A900000000000000000011 /* Pairing */,
+				F3A900000000000000000012 /* Settings */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		F3A900000000000000000011 /* Pairing */ = {
+			isa = PBXGroup;
+			children = (
+				F3A900000000000000000023 /* PairingFeature.swift */,
+				F3A900000000000000000024 /* PairingView.swift */,
+			);
+			path = Pairing;
+			sourceTree = "<group>";
+		};
+		F3A900000000000000000012 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				F3A900000000000000000025 /* SettingsFeature.swift */,
+				F3A900000000000000000026 /* SettingsView.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 		F3A400000000000000000010 /* RemoteAccess */ = {
@@ -2004,6 +2054,8 @@
 				F3A300000000000000000037 /* CasePaths */,
 				F3A800000000000000000030 /* Dependencies */,
 				F3A800000000000000000031 /* DependenciesMacros */,
+				F3A900000000000000000030 /* IdentifiedCollections */,
+				F3A900000000000000000031 /* OrderedCollections */,
 			);
 			productName = OnlySwitchRemote;
 			productReference = F3A300000000000000000003 /* OnlySwitchRemote.app */;
@@ -2028,6 +2080,8 @@
 				F3A300000000000000000034 /* RemoteCore */,
 				F3A300000000000000000035 /* RemoteTransport */,
 				F3A30000000000000000003A /* IssueReportingTestSupport */,
+				F3A900000000000000000030 /* IdentifiedCollections */,
+				F3A900000000000000000031 /* OrderedCollections */,
 			);
 			productName = OnlySwitchRemoteTests;
 			productReference = F3A300000000000000000004 /* OnlySwitchRemoteTests.xctest */;
@@ -2101,6 +2155,8 @@
 				04DA45702E12F28A0051047B /* XCRemoteSwiftPackageReference "swift-dependencies" */,
 				F3A300000000000000000036 /* XCRemoteSwiftPackageReference "swift-case-paths" */,
 				F3A300000000000000000039 /* XCRemoteSwiftPackageReference "xctest-dynamic-overlay" */,
+				F3A900000000000000000040 /* XCRemoteSwiftPackageReference "swift-identified-collections" */,
+				F3A900000000000000000041 /* XCRemoteSwiftPackageReference "swift-collections" */,
 			);
 			productRefGroup = 04447B592754F08000CD2900 /* Products */;
 			projectDirPath = "";
@@ -2586,6 +2642,10 @@
 				F3A800000000000000000008 /* RemoteConnectionEvent.swift in Sources */,
 				F3A800000000000000000009 /* RemoteConnectionClient.swift in Sources */,
 				F3A80000000000000000000B /* RemoteConnectionClient+Live.swift in Sources */,
+				F3A900000000000000000003 /* PairingFeature.swift in Sources */,
+				F3A900000000000000000004 /* PairingView.swift in Sources */,
+				F3A900000000000000000005 /* SettingsFeature.swift in Sources */,
+				F3A900000000000000000006 /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2597,6 +2657,8 @@
 				F3A300000000000000000025 /* RemoteTestValues.swift in Sources */,
 				F3A800000000000000000001 /* RemotePersistenceClientTests.swift in Sources */,
 				F3A800000000000000000002 /* RemoteConnectionClientTests.swift in Sources */,
+				F3A900000000000000000001 /* RemoteAppFeatureTests.swift in Sources */,
+				F3A900000000000000000002 /* PairingFeatureTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3255,6 +3317,22 @@
 				minimumVersion = 1.9.2;
 			};
 		};
+		F3A900000000000000000040 /* XCRemoteSwiftPackageReference "swift-identified-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-identified-collections";
+			requirement = {
+				kind = exactVersion;
+				version = 1.1.0;
+			};
+		};
+		F3A900000000000000000041 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-collections";
+			requirement = {
+				kind = exactVersion;
+				version = 1.1.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -3426,6 +3504,16 @@
 		F3A400000000000000000033 /* RemoteTransport */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = RemoteTransport;
+		};
+		F3A900000000000000000030 /* IdentifiedCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F3A900000000000000000040 /* XCRemoteSwiftPackageReference "swift-identified-collections" */;
+			productName = IdentifiedCollections;
+		};
+		F3A900000000000000000031 /* OrderedCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F3A900000000000000000041 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = OrderedCollections;
 		};
 /* End XCSwiftPackageProductDependency section */
 
