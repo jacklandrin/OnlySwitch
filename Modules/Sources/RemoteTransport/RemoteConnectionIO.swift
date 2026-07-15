@@ -103,7 +103,7 @@ public actor RemoteConnectionIO {
         do {
             try await withTaskCancellationHandler {
                 try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-                    guard gate.install(continuation) else { return }
+                    _ = gate.install(continuation)
                     connection.send(
                         content: frame,
                         contentContext: .defaultMessage,

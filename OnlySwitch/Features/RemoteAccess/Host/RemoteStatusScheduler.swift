@@ -8,6 +8,11 @@ actor RemoteStatusScheduler {
 
     typealias Sink = @Sendable (RemoteControlStatus) async throws -> Void
     typealias FailureHandler = @Sendable () async -> Void
+    typealias DeliveryDeadline = @Sendable (
+        Duration,
+        @escaping FailureHandler,
+        @escaping @Sendable () async throws -> Void
+    ) async throws -> Void
 
     private struct Subscriber: Sendable {
         let token: UUID
@@ -28,12 +33,13 @@ actor RemoteStatusScheduler {
         case timedOut(sessionID: UUID, token: UUID)
     }
 
-    private struct DeliveryTimeout: Error {}
+    struct DeliveryTimeout: Error {}
 
     private let provider: RemoteCatalogProvider
     private let interval: Duration
     private let observeNotifications: Bool
     private let sendTimeout: Duration
+    private let deliveryDeadline: DeliveryDeadline
     private var subscribers: [UUID: Subscriber] = [:]
     private var updateTokens: [UUID: UUID] = [:]
     private var refreshTasks: [RemoteControlID: Task<Void, Never>] = [:]
@@ -48,12 +54,16 @@ actor RemoteStatusScheduler {
         provider: RemoteCatalogProvider,
         interval: Duration = .seconds(3),
         observeNotifications: Bool = true,
-        sendTimeout: Duration = .seconds(2)
+        sendTimeout: Duration = .seconds(2),
+        deliveryDeadline: DeliveryDeadline? = nil
     ) {
         self.provider = provider
         self.interval = interval
         self.observeNotifications = observeNotifications
         self.sendTimeout = sendTimeout
+        self.deliveryDeadline = deliveryDeadline ?? { duration, onTimeout, operation in
+            try await Self.withTimeout(duration, onTimeout: onTimeout, operation: operation)
+        }
     }
 
     deinit {
@@ -210,13 +220,14 @@ actor RemoteStatusScheduler {
 
     private func deliver(_ status: RemoteControlStatus, to sessionIDs: [UUID]) async {
         let deliveries = sessionIDs.compactMap { id in subscribers[id].map { (id, $0) } }
+        let deadline = deliveryDeadline
         let results = await withTaskGroup(of: DeliveryResult.self, returning: [DeliveryResult].self) { group in
             for (id, subscriber) in deliveries {
-                group.addTask { [sendTimeout] in
+                group.addTask { [sendTimeout, deadline] in
                     do {
-                        try await Self.withTimeout(
+                        try await deadline(
                             sendTimeout,
-                            onTimeout: subscriber.onFailure
+                            subscriber.onFailure
                         ) {
                             try await subscriber.sink(status)
                         }

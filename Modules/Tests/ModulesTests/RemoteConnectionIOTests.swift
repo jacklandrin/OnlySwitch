@@ -75,6 +75,30 @@ struct RemoteConnectionIOTests {
         #expect(connection.cancelCount == 1)
     }
 
+    @Test func cancellationBeforeSendStillEnqueuesReservedFrameWithoutSequenceGap() async throws {
+        let connection = TestRemoteNetworkConnection()
+        let io = RemoteConnectionIO(connection: connection)
+        let start = TestSendGate()
+        let cancelled = Task {
+            await start.wait()
+            try await io.send(.plaintext(.ping(1)))
+        }
+        cancelled.cancel()
+        await start.open()
+
+        await connection.waitForSendCount(1)
+        connection.completeAllSends()
+        await #expect(throws: CancellationError.self) { try await cancelled.value }
+
+        connection.completeSendsImmediately()
+        try await io.send(.plaintext(.ping(2)))
+        let sequences = try connection.sentContent.map { data in
+            var codec = RemoteFrameCodec()
+            return try #require(codec.append(data).first).sequence
+        }
+        #expect(sequences == [0, 1])
+    }
+
     @Test func failedSendPreventsASequenceGapOnTheConnection() async throws {
         let connection = TestRemoteNetworkConnection()
         let io = RemoteConnectionIO(connection: connection)
@@ -91,6 +115,22 @@ struct RemoteConnectionIOTests {
             try await io.send(.plaintext(.ping(2)))
         }
         #expect(connection.sentContent.count == 1)
+    }
+}
+
+private actor TestSendGate {
+    private var continuation: CheckedContinuation<Void, Never>?
+    private var isOpen = false
+
+    func wait() async {
+        guard isOpen == false else { return }
+        await withCheckedContinuation { continuation = $0 }
+    }
+
+    func open() {
+        isOpen = true
+        continuation?.resume()
+        continuation = nil
     }
 }
 

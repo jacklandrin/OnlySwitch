@@ -29,15 +29,52 @@ enum RemoteHandshake {
     }
 }
 
+struct RemotePairingTransaction: Sendable {
+    let record: PairedRemoteDevice
+    let previous: PairedRemoteDevice?
+    let epoch: UInt64
+
+    static func begin(
+        record: PairedRemoteDevice,
+        credentialStore: RemoteCredentialStore,
+        pairingEpoch: @escaping @Sendable (UUID) async -> UInt64,
+        consumePairing: @escaping @Sendable () async -> Bool
+    ) async throws -> Self {
+        let epoch = await pairingEpoch(record.id)
+        guard await consumePairing() else {
+            throw RemoteProtocolError(code: .pairingExpired, message: "Pairing code expired")
+        }
+        let previous = try await credentialStore.replace(with: record)
+        return Self(record: record, previous: previous, epoch: epoch)
+    }
+
+    func authorize(
+        _ authorize: @escaping @Sendable (UUID, UInt64) async -> Bool
+    ) async -> Bool {
+        await authorize(record.id, epoch)
+    }
+
+    func rollback(
+        credentialStore: RemoteCredentialStore,
+        pairingEpoch: @escaping @Sendable (UUID) async -> UInt64
+    ) async {
+        let restorePrevious = await pairingEpoch(record.id) == epoch
+        try? await credentialStore.rollbackReplacement(
+            record,
+            previous: previous,
+            restorePrevious: restorePrevious
+        )
+        if restorePrevious,
+           await pairingEpoch(record.id) != epoch,
+           let previous {
+            try? await credentialStore.delete(record.id, matchingCredential: previous.credential)
+        }
+    }
+}
+
 
 actor RemotePeerSession {
     enum State: Sendable { case awaitingHello, awaitingPairOrAuthentication, authenticated(UUID), closed }
-
-    private struct PendingPairing: Sendable {
-        let record: PairedRemoteDevice
-        let previous: PairedRemoteDevice?
-        let epoch: UInt64
-    }
 
     let id: UUID
     private let io: RemoteConnectionIO
@@ -58,7 +95,7 @@ actor RemotePeerSession {
     private let deadlines: RemotePeerDeadlines
     private var state: State = .awaitingHello
     private var crypto: RemoteSessionCrypto?
-    private var pendingPairing: PendingPairing?
+    private var pendingPairing: RemotePairingTransaction?
 
     init(
         id: UUID = UUID(),
@@ -223,11 +260,6 @@ actor RemotePeerSession {
             await pairingFailed()
             throw RemoteProtocolError(code: .authenticationFailed, message: "Invalid pairing proof")
         }
-        let epoch = await pairingEpoch(client.deviceID)
-        guard await consumePairing(window.code) else {
-            throw RemoteProtocolError(code: .pairingExpired, message: "Pairing code expired")
-        }
-
         let credential = Self.randomData(count: 32)
         let record = PairedRemoteDevice(
             id: client.deviceID,
@@ -236,9 +268,14 @@ actor RemotePeerSession {
             createdAt: .now,
             lastConnectedAt: nil
         )
-        let previous = try await credentialStore.replace(with: record)
-        pendingPairing = PendingPairing(record: record, previous: previous, epoch: epoch)
-        guard await paired(client.deviceID, epoch) else {
+        let transaction = try await RemotePairingTransaction.begin(
+            record: record,
+            credentialStore: credentialStore,
+            pairingEpoch: pairingEpoch,
+            consumePairing: { [consumePairing] in await consumePairing(window.code) }
+        )
+        pendingPairing = transaction
+        guard await transaction.authorize(paired) else {
             await rollbackPendingPairingIfNeeded()
             throw RemoteProtocolError(code: .authenticationFailed, message: "Pairing was superseded")
         }
@@ -283,20 +320,10 @@ actor RemotePeerSession {
     private func rollbackPendingPairingIfNeeded() async {
         guard let pendingPairing else { return }
         self.pendingPairing = nil
-        let restorePrevious = await pairingEpoch(pendingPairing.record.id) == pendingPairing.epoch
-        try? await credentialStore.rollbackReplacement(
-            pendingPairing.record,
-            previous: pendingPairing.previous,
-            restorePrevious: restorePrevious
+        await pendingPairing.rollback(
+            credentialStore: credentialStore,
+            pairingEpoch: pairingEpoch
         )
-        if restorePrevious,
-           await pairingEpoch(pendingPairing.record.id) != pendingPairing.epoch,
-           let previous = pendingPairing.previous {
-            try? await credentialStore.delete(
-                pendingPairing.record.id,
-                matchingCredential: previous.credential
-            )
-        }
     }
 
     private func messageLoop() async throws {

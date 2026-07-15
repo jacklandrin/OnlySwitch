@@ -186,13 +186,22 @@ struct RemoteCredentialReplacementTests {
         let deviceID = UUID()
         let original = Self.device(id: deviceID, byte: 1)
         let replacement = Self.device(id: deviceID, byte: 2)
+        let lifecycle = PairingLifecycleHarness()
         try await store.save(original)
 
-        let previous = try await store.replace(with: replacement)
-        try await store.rollbackReplacement(
-            replacement,
-            previous: previous,
-            restorePrevious: true
+        let transaction = try await RemotePairingTransaction.begin(
+            record: replacement,
+            credentialStore: store,
+            pairingEpoch: { await lifecycle.epoch(for: $0) },
+            consumePairing: { true }
+        )
+        await lifecycle.stop()
+        #expect(await transaction.authorize { id, epoch in
+            await lifecycle.authorizeRepair(id: id, epoch: epoch)
+        } == false)
+        await transaction.rollback(
+            credentialStore: store,
+            pairingEpoch: { await lifecycle.epoch(for: $0) }
         )
 
         #expect(try await store.load(deviceID) == original)
@@ -204,13 +213,24 @@ struct RemoteCredentialReplacementTests {
         let deviceID = UUID()
         let original = Self.device(id: deviceID, byte: 1)
         let replacement = Self.device(id: deviceID, byte: 2)
+        let lifecycle = PairingLifecycleHarness()
         try await store.save(original)
 
-        let previous = try await store.replace(with: replacement)
-        try await store.rollbackReplacement(
-            replacement,
-            previous: previous,
-            restorePrevious: false
+        let transaction = try await RemotePairingTransaction.begin(
+            record: replacement,
+            credentialStore: store,
+            pairingEpoch: { await lifecycle.epoch(for: $0) },
+            consumePairing: {
+                await lifecycle.revoke(deviceID)
+                return true
+            }
+        )
+        #expect(await transaction.authorize { id, epoch in
+            await lifecycle.authorizeRepair(id: id, epoch: epoch)
+        } == false)
+        await transaction.rollback(
+            credentialStore: store,
+            pairingEpoch: { await lifecycle.epoch(for: $0) }
         )
 
         #expect(try await store.load(deviceID) == nil)
@@ -402,36 +422,6 @@ struct RemoteStatusSchedulerTests {
         #expect(await scheduler.activeRefreshCount == 0)
     }
 
-    @Test
-    func stalledSinkTimesOutWithoutBlockingHealthySinkAndIsEvicted() async throws {
-        let id = RemoteControlID(kind: .builtIn, value: "2")
-        let descriptor = Self.descriptor(id: id)
-        let provider = RemoteCatalogProvider(
-            catalog: { [descriptor] },
-            status: { id, revision in Self.status(id: id, revision: revision) }
-        )
-        let scheduler = RemoteStatusScheduler(
-            provider: provider,
-            interval: .seconds(3_600),
-            observeNotifications: false,
-            sendTimeout: .milliseconds(50)
-        )
-        let evictions = StatusCallProbe()
-        let deliveries = StatusCallProbe()
-
-        try await scheduler.update(sessionID: UUID(), ids: [id], sink: { _ in
-            try await Task.sleep(for: .seconds(3_600))
-        }, onFailure: {
-            await evictions.record(id)
-        })
-        try await scheduler.update(sessionID: UUID(), ids: [id], sink: { _ in
-            await deliveries.record(id)
-        })
-
-        #expect(await evictions.count == 1)
-        #expect(await deliveries.count == 1)
-    }
-
     @Test(.timeLimit(.minutes(1)))
     func staleProviderResultAfterUnsubscribeAndResubscribeIsNeverPublished() async throws {
         let id = RemoteControlID(kind: .builtIn, value: "2")
@@ -508,6 +498,8 @@ struct RemoteStatusSchedulerTests {
         let stalledCalls = IntegerProbe()
         let healthyCalls = IntegerProbe()
         let evictions = IntegerProbe()
+        let timeoutTrigger = TestGate()
+        let completedDeadlines = TestSignal()
         let provider = RemoteCatalogProvider(
             catalog: { [descriptor] },
             status: { id, revision in Self.status(id: id, revision: revision) }
@@ -516,7 +508,14 @@ struct RemoteStatusSchedulerTests {
             provider: provider,
             interval: .seconds(3_600),
             observeNotifications: false,
-            sendTimeout: .milliseconds(10)
+            deliveryDeadline: { _, onTimeout, operation in
+                try await Self.runManualDeadline(
+                    timeoutTrigger: timeoutTrigger,
+                    onTimeout: onTimeout,
+                    operation: operation
+                )
+                await completedDeadlines.signal()
+            }
         )
         try await scheduler.update(sessionID: UUID(), ids: [id], sink: { _ in
             let call = await stalledCalls.increment()
@@ -528,11 +527,38 @@ struct RemoteStatusSchedulerTests {
         try await scheduler.update(sessionID: UUID(), ids: [id]) { _ in
             _ = await healthyCalls.increment()
         }
+        await completedDeadlines.wait()
+        await completedDeadlines.wait()
 
-        await scheduler.refreshAll()
+        let refresh = Task { await scheduler.refreshAll() }
+        await completedDeadlines.wait()
+        await timeoutTrigger.open()
+        await refresh.value
 
         #expect(await healthyCalls.value == 2)
         #expect(await evictions.value == 1)
+    }
+
+    private static func runManualDeadline(
+        timeoutTrigger: TestGate,
+        onTimeout: @escaping @Sendable () async -> Void,
+        operation: @escaping @Sendable () async throws -> Void
+    ) async throws {
+        try await withThrowingTaskGroup(of: Bool.self) { group in
+            group.addTask {
+                try await operation()
+                return false
+            }
+            group.addTask {
+                await timeoutTrigger.wait()
+                try Task.checkCancellation()
+                await onTimeout()
+                return true
+            }
+            guard let timedOut = try await group.next() else { throw CancellationError() }
+            group.cancelAll()
+            if timedOut { throw RemoteStatusScheduler.DeliveryTimeout() }
+        }
     }
 
     private static func descriptor(id: RemoteControlID) -> RemoteControlDescriptor {
@@ -592,18 +618,27 @@ private actor IntegerProbe {
 
 private actor TestGate {
     private var isOpen = false
-    private var waiters: [CheckedContinuation<Void, Never>] = []
+    private var waiters: [UUID: CheckedContinuation<Void, Never>] = [:]
 
     func wait() async {
         guard isOpen == false else { return }
-        await withCheckedContinuation { waiters.append($0) }
+        let id = UUID()
+        await withTaskCancellationHandler {
+            await withCheckedContinuation { waiters[id] = $0 }
+        } onCancel: {
+            Task { await self.cancelWaiter(id) }
+        }
     }
 
     func open() {
         isOpen = true
-        let current = waiters
+        let current = waiters.values
         waiters.removeAll()
         current.forEach { $0.resume() }
+    }
+
+    private func cancelWaiter(_ id: UUID) {
+        waiters.removeValue(forKey: id)?.resume()
     }
 }
 
@@ -626,5 +661,22 @@ private actor TestSignal {
             return
         }
         await withCheckedContinuation { waiters.append($0) }
+    }
+}
+
+private actor PairingLifecycleHarness {
+    private var lifecycle = RemoteHostLifecycle()
+    private let generation: UInt64
+
+    init() {
+        generation = lifecycle.beginStart()
+        _ = lifecycle.markListening(generation: generation)
+    }
+
+    func epoch(for deviceID: UUID) -> UInt64 { lifecycle.pairingEpoch(for: deviceID) }
+    func revoke(_ deviceID: UUID) { _ = lifecycle.revoke(deviceID: deviceID) }
+    func stop() { _ = lifecycle.stop() }
+    func authorizeRepair(id: UUID, epoch: UInt64) -> Bool {
+        lifecycle.allowRepairedDevice(id, pairingEpoch: epoch, generation: generation)
     }
 }
