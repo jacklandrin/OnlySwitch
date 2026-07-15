@@ -24,3 +24,9 @@ enum RemoteHostEvent: Equatable, Sendable {
     case devicesChanged([PairedRemoteDevice])
     case connectionCountChanged(Int)
 }
+
+struct RemotePeerDeadlines: Equatable, Sendable {
+    var handshake: Duration = .seconds(15)
+    var stage: Duration = .seconds(5)
+    var idle: Duration = .seconds(120)
+}

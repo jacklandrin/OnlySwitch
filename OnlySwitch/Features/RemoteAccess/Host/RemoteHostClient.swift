@@ -46,17 +46,20 @@ extension RemoteHostClient {
                 return try await host.pairedDevices()
             },
             events: {
-                AsyncStream { continuation in
-                    let task = Task {
-                        let host = await MainActor.run { RemoteHost.shared }
-                        for await event in host.events {
-                            guard Task.isCancelled == false else { break }
-                            continuation.yield(event)
-                        }
-                        continuation.finish()
+                let (stream, continuation) = AsyncStream.makeStream(
+                    of: RemoteHostEvent.self,
+                    bufferingPolicy: .bufferingNewest(64)
+                )
+                let task = Task {
+                    let host = await MainActor.run { RemoteHost.shared }
+                    for await event in host.events {
+                        guard Task.isCancelled == false else { break }
+                        continuation.yield(event)
                     }
-                    continuation.onTermination = { _ in task.cancel() }
+                    continuation.finish()
                 }
+                continuation.onTermination = { _ in task.cancel() }
+                return stream
             }
         )
     }

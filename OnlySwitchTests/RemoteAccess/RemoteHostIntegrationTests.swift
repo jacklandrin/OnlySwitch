@@ -34,6 +34,7 @@ struct RemoteHostIntegrationTests {
         try await client.pair(code: "ABCDEFGH2345")
         #expect(try await client.catalog().contains { $0.title == "Dark Mode" })
         try await client.subscribe([descriptor.id])
+        #expect(try await client.nextStatus(for: descriptor.id).id == descriptor.id)
 
         let request = RemoteActionRequest(
             requestID: UUID(),
@@ -60,4 +61,5 @@ struct RemoteHostIntegrationTests {
         }
         #expect(try await host.pairedDevices().isEmpty)
     }
+
 }

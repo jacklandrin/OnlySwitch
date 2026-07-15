@@ -4,30 +4,6 @@ import Network
 import RemoteCore
 import RemoteTransport
 
-struct RemoteWirePacket: Codable, Sendable {
-    enum Kind: String, Codable, Sendable { case plaintext, encrypted }
-
-    let kind: Kind
-    let plaintext: RemoteMessage?
-    let encrypted: RemoteEncryptedFrame?
-
-    static func plaintext(_ message: RemoteMessage) -> Self {
-        Self(kind: .plaintext, plaintext: message, encrypted: nil)
-    }
-
-    static func encrypted(_ frame: RemoteEncryptedFrame) -> Self {
-        Self(kind: .encrypted, plaintext: nil, encrypted: frame)
-    }
-
-    func validated() throws -> Self {
-        guard (kind == .plaintext && plaintext != nil && encrypted == nil)
-                || (kind == .encrypted && encrypted != nil && plaintext == nil) else {
-            throw RemoteProtocolError(code: .invalidFrame, message: "Invalid wire envelope")
-        }
-        return self
-    }
-}
-
 enum RemoteHandshake {
     static func transcript(client: ClientHello, server: ServerHello) throws -> Data {
         let encoder = JSONEncoder()
@@ -53,120 +29,6 @@ enum RemoteHandshake {
     }
 }
 
-actor RemoteConnectionIO {
-    enum Error: Swift.Error { case closed, incompleteFrame }
-
-    static let maximumPayloadSize = 4 * 1_024 * 1_024
-    let connection: NWConnection
-
-    init(connection: NWConnection) {
-        self.connection = connection
-    }
-
-    func start() async throws {
-        try await withTaskCancellationHandler {
-            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-                let gate = ContinuationGate(continuation)
-                connection.stateUpdateHandler = { state in
-                    switch state {
-                    case .ready: gate.resume(returning: ())
-                    case let .failed(error): gate.resume(throwing: error)
-                    case .cancelled: gate.resume(throwing: CancellationError())
-                    default: break
-                    }
-                }
-                connection.start(queue: .global(qos: .userInitiated))
-            }
-        } onCancel: {
-            connection.cancel()
-        }
-    }
-
-    func send(_ packet: RemoteWirePacket) async throws {
-        let payload = try JSONEncoder().encode(packet.validated())
-        guard payload.count <= Self.maximumPayloadSize else {
-            throw RemoteProtocolError(code: .invalidFrame, message: "Frame exceeds 4 MiB")
-        }
-        var size = UInt32(payload.count).bigEndian
-        var frame = withUnsafeBytes(of: &size) { Data($0) }
-        frame.append(payload)
-        try await withTaskCancellationHandler {
-            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
-                connection.send(content: frame, completion: .contentProcessed { error in
-                    if let error { continuation.resume(throwing: error) }
-                    else { continuation.resume() }
-                })
-            }
-        } onCancel: {
-            connection.cancel()
-        }
-    }
-
-    func receive() async throws -> RemoteWirePacket {
-        let header = try await receiveExactly(4)
-        let count = header.reduce(0) { ($0 << 8) | Int($1) }
-        guard count <= Self.maximumPayloadSize else {
-            throw RemoteProtocolError(code: .invalidFrame, message: "Frame exceeds 4 MiB")
-        }
-        let body = try await receiveExactly(count)
-        do {
-            return try JSONDecoder().decode(RemoteWirePacket.self, from: body).validated()
-        } catch let error as RemoteProtocolError {
-            throw error
-        } catch {
-            throw RemoteProtocolError(code: .invalidFrame, message: "Frame could not be decoded")
-        }
-    }
-
-    func cancel() { connection.cancel() }
-
-    private func receiveExactly(_ count: Int) async throws -> Data {
-        guard count > 0 else { return Data() }
-        var result = Data()
-        while result.count < count {
-            let remaining = count - result.count
-            let part = try await withTaskCancellationHandler {
-                try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Data, Swift.Error>) in
-                    connection.receive(minimumIncompleteLength: 1, maximumLength: remaining) {
-                        data, _, isComplete, error in
-                        if let error { continuation.resume(throwing: error) }
-                        else if let data, data.isEmpty == false { continuation.resume(returning: data) }
-                        else if isComplete { continuation.resume(throwing: Error.closed) }
-                        else { continuation.resume(throwing: Error.incompleteFrame) }
-                    }
-                }
-            } onCancel: {
-                connection.cancel()
-            }
-            result.append(part)
-        }
-        return result
-    }
-}
-
-final class ContinuationGate: @unchecked Sendable {
-    private let lock = NSLock()
-    private var continuation: CheckedContinuation<Void, Swift.Error>?
-
-    init(_ continuation: CheckedContinuation<Void, Swift.Error>) {
-        self.continuation = continuation
-    }
-
-    func resume(returning value: Void) {
-        take()?.resume(returning: value)
-    }
-
-    func resume(throwing error: Swift.Error) {
-        take()?.resume(throwing: error)
-    }
-
-    private func take() -> CheckedContinuation<Void, Swift.Error>? {
-        lock.lock()
-        defer { lock.unlock() }
-        defer { continuation = nil }
-        return continuation
-    }
-}
 
 actor RemotePeerSession {
     enum State: Sendable { case awaitingHello, awaitingPairOrAuthentication, authenticated(UUID), closed }
@@ -181,10 +43,13 @@ actor RemotePeerSession {
     private let pairingWindow: @Sendable () async -> PairingWindow?
     private let pairingFailed: @Sendable () async -> Void
     private let consumePairing: @Sendable (String) async -> Bool
-    private let subscriptionsChanged: @Sendable (UUID, Set<RemoteControlID>, @escaping RemoteStatusScheduler.Sink) async -> Void
+    private let pairingEpoch: @Sendable (UUID) async -> UInt64
+    private let paired: @Sendable (UUID, UInt64) async -> Bool
+    private let subscriptionsChanged: @Sendable (UUID, Set<RemoteControlID>, @escaping RemoteStatusScheduler.Sink) async throws -> Void
     private let refreshRequested: @Sendable (RemoteControlID) async -> Void
     private let authenticated: @Sendable (UUID, UUID) async -> Bool
     private let ended: @Sendable (UUID) async -> Void
+    private let deadlines: RemotePeerDeadlines
     private var state: State = .awaitingHello
     private var crypto: RemoteSessionCrypto?
 
@@ -199,10 +64,13 @@ actor RemotePeerSession {
         pairingWindow: @escaping @Sendable () async -> PairingWindow?,
         pairingFailed: @escaping @Sendable () async -> Void,
         consumePairing: @escaping @Sendable (String) async -> Bool,
-        subscriptionsChanged: @escaping @Sendable (UUID, Set<RemoteControlID>, @escaping RemoteStatusScheduler.Sink) async -> Void,
+        pairingEpoch: @escaping @Sendable (UUID) async -> UInt64,
+        paired: @escaping @Sendable (UUID, UInt64) async -> Bool,
+        subscriptionsChanged: @escaping @Sendable (UUID, Set<RemoteControlID>, @escaping RemoteStatusScheduler.Sink) async throws -> Void,
         refreshRequested: @escaping @Sendable (RemoteControlID) async -> Void,
         authenticated: @escaping @Sendable (UUID, UUID) async -> Bool,
-        ended: @escaping @Sendable (UUID) async -> Void
+        ended: @escaping @Sendable (UUID) async -> Void,
+        deadlines: RemotePeerDeadlines = .init()
     ) {
         self.id = id
         self.io = RemoteConnectionIO(connection: connection)
@@ -214,16 +82,21 @@ actor RemotePeerSession {
         self.pairingWindow = pairingWindow
         self.pairingFailed = pairingFailed
         self.consumePairing = consumePairing
+        self.pairingEpoch = pairingEpoch
+        self.paired = paired
         self.subscriptionsChanged = subscriptionsChanged
         self.refreshRequested = refreshRequested
         self.authenticated = authenticated
         self.ended = ended
+        self.deadlines = deadlines
     }
 
     func run() async {
         do {
-            try await io.start()
-            try await handshake()
+            try await Self.withTimeout(deadlines.handshake) { [self] in
+                try await io.start()
+                try await handshake()
+            }
             try await messageLoop()
         } catch {
             // Protocol and network failures intentionally close without exposing secrets.
@@ -238,12 +111,12 @@ actor RemotePeerSession {
         await io.cancel()
     }
 
-    func sendStatus(_ status: RemoteControlStatus) async {
-        try? await sendEncrypted(.statusChanged(status))
+    func sendStatus(_ status: RemoteControlStatus) async throws {
+        try await sendEncrypted(.statusChanged(status))
     }
 
     private func handshake() async throws {
-        let first = try await io.receive()
+        let first = try await receiveHandshakePacket()
         guard first.kind == .plaintext, case let .clientHello(client)? = first.plaintext else {
             throw RemoteProtocolError(code: .invalidFrame, message: "Client hello required")
         }
@@ -270,7 +143,7 @@ actor RemotePeerSession {
         try await io.send(.plaintext(.serverHello(server)))
         state = .awaitingPairOrAuthentication
         let transcript = try RemoteHandshake.transcript(client: client, server: server)
-        let next = try await io.receive()
+        let next = try await receiveHandshakePacket()
 
         let credential: Data
         if next.kind == .plaintext, next.plaintext == .pairingRequest {
@@ -302,7 +175,12 @@ actor RemotePeerSession {
                 credential: credential,
                 transcript: transcript
             )
-            try await authenticate(packet: try await io.receive(), client: client, credential: credential, transcript: transcript)
+            try await authenticate(
+                packet: try await receiveHandshakePacket(),
+                client: client,
+                credential: credential,
+                transcript: transcript
+            )
         }
     }
 
@@ -314,7 +192,7 @@ actor RemotePeerSession {
         guard let window = await pairingWindow(), window.expiresAt > Date() else {
             throw RemoteProtocolError(code: .pairingExpired, message: "Pairing code expired")
         }
-        let proofPacket = try await io.receive()
+        let proofPacket = try await receiveHandshakePacket()
         guard proofPacket.kind == .plaintext,
               case let .pairingProof(pairingProof)? = proofPacket.plaintext,
               pairingProof.deviceID == client.deviceID else {
@@ -349,7 +227,12 @@ actor RemotePeerSession {
             createdAt: .now,
             lastConnectedAt: nil
         )
+        let epoch = await pairingEpoch(client.deviceID)
         try await credentialStore.save(record)
+        guard await paired(client.deviceID, epoch) else {
+            try? await credentialStore.delete(client.deviceID)
+            throw RemoteProtocolError(code: .authenticationFailed, message: "Pairing was superseded")
+        }
 
         let pairingCrypto = try Self.makeCrypto(
             role: .server,
@@ -389,7 +272,7 @@ actor RemotePeerSession {
 
     private func messageLoop() async throws {
         while case .authenticated = state {
-            let packet = try await io.receive()
+            let packet = try await Self.withTimeout(deadlines.idle) { [io] in try await io.receive() }
             guard packet.kind == .encrypted, let frame = packet.encrypted, let crypto else {
                 throw RemoteProtocolError(code: .authenticationFailed, message: "Encrypted session required")
             }
@@ -405,8 +288,9 @@ actor RemotePeerSession {
                 }
                 try await sendEncrypted(.catalogSnapshot(revision: 1, controls: catalog))
             case let .subscriptionUpdate(ids):
-                await subscriptionsChanged(id, ids) { [weak self] status in
-                    await self?.sendStatus(status)
+                try await subscriptionsChanged(id, ids) { [weak self] status in
+                    guard let self else { throw CancellationError() }
+                    try await self.sendStatus(status)
                 }
             case let .actionRequest(request):
                 let result = await router.perform(request)
@@ -423,6 +307,26 @@ actor RemotePeerSession {
     private func sendEncrypted(_ message: RemoteMessage) async throws {
         guard let crypto else { throw RemoteProtocolError(code: .authenticationFailed, message: "No session") }
         try await io.send(.encrypted(try crypto.seal(message)))
+    }
+
+    private func receiveHandshakePacket() async throws -> RemoteWirePacket {
+        try await Self.withTimeout(deadlines.stage) { [io] in try await io.receive() }
+    }
+
+    static func withTimeout<T: Sendable>(
+        _ duration: Duration,
+        operation: @escaping @Sendable () async throws -> T
+    ) async throws -> T {
+        try await withThrowingTaskGroup(of: T.self) { group in
+            group.addTask { try await operation() }
+            group.addTask {
+                try await Task.sleep(for: duration)
+                throw CancellationError()
+            }
+            guard let value = try await group.next() else { throw CancellationError() }
+            group.cancelAll()
+            return value
+        }
     }
 
     private static func makeCrypto(

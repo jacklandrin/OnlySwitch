@@ -391,6 +391,8 @@
 		F3A500000000000000000007 /* RemoteStatusScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A500000000000000000027 /* RemoteStatusScheduler.swift */; };
 		F3A500000000000000000008 /* RemoteHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A500000000000000000028 /* RemoteHost.swift */; };
 		F3A500000000000000000009 /* RemoteHostClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A500000000000000000029 /* RemoteHostClient.swift */; };
+		F3A600000000000000000001 /* RemoteHostLifecycleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A600000000000000000021 /* RemoteHostLifecycleTests.swift */; };
+		F3A600000000000000000002 /* RemoteHostLifecycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A600000000000000000022 /* RemoteHostLifecycle.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -729,6 +731,8 @@
 		F3A500000000000000000027 /* RemoteStatusScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteStatusScheduler.swift; sourceTree = "<group>"; };
 		F3A500000000000000000028 /* RemoteHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteHost.swift; sourceTree = "<group>"; };
 		F3A500000000000000000029 /* RemoteHostClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteHostClient.swift; sourceTree = "<group>"; };
+		F3A600000000000000000021 /* RemoteHostLifecycleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteHostLifecycleTests.swift; sourceTree = "<group>"; };
+		F3A600000000000000000022 /* RemoteHostLifecycle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteHostLifecycle.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1797,6 +1801,7 @@
 				F3A500000000000000000021 /* RemoteCredentialStoreTests.swift */,
 				F3A500000000000000000022 /* RemoteHostIntegrationTests.swift */,
 				F3A500000000000000000023 /* RemoteHostTestClient.swift */,
+				F3A600000000000000000021 /* RemoteHostLifecycleTests.swift */,
 			);
 			path = RemoteAccess;
 			sourceTree = "<group>";
@@ -1810,6 +1815,7 @@
 				F3A500000000000000000027 /* RemoteStatusScheduler.swift */,
 				F3A500000000000000000028 /* RemoteHost.swift */,
 				F3A500000000000000000029 /* RemoteHostClient.swift */,
+				F3A600000000000000000022 /* RemoteHostLifecycle.swift */,
 			);
 			path = Host;
 			sourceTree = "<group>";
@@ -2162,6 +2168,7 @@
 				F3A500000000000000000001 /* RemoteCredentialStoreTests.swift in Sources */,
 				F3A500000000000000000002 /* RemoteHostIntegrationTests.swift in Sources */,
 				F3A500000000000000000003 /* RemoteHostTestClient.swift in Sources */,
+				F3A600000000000000000001 /* RemoteHostLifecycleTests.swift in Sources */,
 				F3A400000000000000000008 /* RemoteCatalogProviderTests.swift in Sources */,
 				F3A400000000000000000009 /* RemoteCommandRouterTests.swift in Sources */,
 				F3A40000000000000000000A /* RemoteMacTestValues.swift in Sources */,
@@ -2243,6 +2250,7 @@
 				F3A500000000000000000007 /* RemoteStatusScheduler.swift in Sources */,
 				F3A500000000000000000008 /* RemoteHost.swift in Sources */,
 				F3A500000000000000000009 /* RemoteHostClient.swift in Sources */,
+				F3A600000000000000000002 /* RemoteHostLifecycle.swift in Sources */,
 				F3A400000000000000000001 /* RemoteControlAvailability.swift in Sources */,
 				F3A400000000000000000002 /* RemoteIconAdapter.swift in Sources */,
 				F3A400000000000000000003 /* RemoteCatalogProvider.swift in Sources */,

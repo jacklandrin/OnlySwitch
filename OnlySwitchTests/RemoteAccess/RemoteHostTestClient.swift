@@ -92,6 +92,17 @@ actor RemoteHostTestClient {
         try await sendEncrypted(.subscriptionUpdate(ids))
     }
 
+    func nextStatus(for id: RemoteControlID) async throws -> RemoteControlStatus {
+        while true {
+            switch try await receiveEncrypted() {
+            case let .statusChanged(status) where status.id == id: return status
+            case let .statusSnapshot(statuses):
+                if let status = statuses.first(where: { $0.id == id }) { return status }
+            default: continue
+            }
+        }
+    }
+
     func send(_ request: RemoteActionRequest) async throws -> RemoteActionResult {
         try await sendEncrypted(.actionRequest(request))
         while true {
