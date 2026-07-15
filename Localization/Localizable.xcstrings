@@ -25342,7 +25342,36 @@
           }
         }
       }
-    }
+    },
+    "Cancel Pairing" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Cancel Pairing" } } } },
+    "Connected Devices" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Connected Devices" } } } },
+    "Display Name" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Display Name" } } } },
+    "Enable Remote Access" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Enable Remote Access" } } } },
+    "Expires In" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Expires In" } } } },
+    "Failed" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Failed" } } } },
+    "Failed: %@" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Failed: %@" } } } },
+    "iOS Remote" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "iOS Remote" } } } },
+    "Last connected" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Last connected" } } } },
+    "Last connected %@" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Last connected %@" } } } },
+    "Listening on port" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Listening on port" } } } },
+    "Listening on port %d" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Listening on port %d" } } } },
+    "No Paired Devices" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "No Paired Devices" } } } },
+    "Not connected yet" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Not connected yet" } } } },
+    "OK" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "OK" } } } },
+    "OnlySwitch Mac" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "OnlySwitch Mac" } } } },
+    "Paired Devices" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Paired Devices" } } } },
+    "Pairing" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Pairing" } } } },
+    "Pairing Code" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Pairing Code" } } } },
+    "Pairing Code %@" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Pairing Code %@" } } } },
+    "Remote Access" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Remote Access" } } } },
+    "Revoke" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Revoke" } } } },
+    "Revoke %@?" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Revoke %@?" } } } },
+    "Start Pairing" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Start Pairing" } } } },
+    "Start pairing to connect an iPhone or iPad." : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Start pairing to connect an iPhone or iPad." } } } },
+    "Starting…" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Starting…" } } } },
+    "Status" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Status" } } } },
+    "Stopped" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Stopped" } } } },
+    "This device will need to pair with this Mac again." : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "This device will need to pair with this Mac again." } } } }
   },
   "version" : "1.1"
 }

@@ -393,6 +393,10 @@
 		F3A500000000000000000009 /* RemoteHostClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A500000000000000000029 /* RemoteHostClient.swift */; };
 		F3A600000000000000000001 /* RemoteHostLifecycleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A600000000000000000021 /* RemoteHostLifecycleTests.swift */; };
 		F3A600000000000000000002 /* RemoteHostLifecycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A600000000000000000022 /* RemoteHostLifecycle.swift */; };
+		F3A700000000000000000001 /* RemoteAccessSettingsFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A700000000000000000021 /* RemoteAccessSettingsFeatureTests.swift */; };
+		F3A700000000000000000002 /* RemoteAccessSettingsFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A700000000000000000022 /* RemoteAccessSettingsFeature.swift */; };
+		F3A700000000000000000003 /* RemoteAccessSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A700000000000000000023 /* RemoteAccessSettingsView.swift */; };
+		F3A700000000000000000004 /* RemoteAccessController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A700000000000000000024 /* RemoteAccessController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -733,6 +737,10 @@
 		F3A500000000000000000029 /* RemoteHostClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteHostClient.swift; sourceTree = "<group>"; };
 		F3A600000000000000000021 /* RemoteHostLifecycleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteHostLifecycleTests.swift; sourceTree = "<group>"; };
 		F3A600000000000000000022 /* RemoteHostLifecycle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteHostLifecycle.swift; sourceTree = "<group>"; };
+		F3A700000000000000000021 /* RemoteAccessSettingsFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAccessSettingsFeatureTests.swift; sourceTree = "<group>"; };
+		F3A700000000000000000022 /* RemoteAccessSettingsFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAccessSettingsFeature.swift; sourceTree = "<group>"; };
+		F3A700000000000000000023 /* RemoteAccessSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAccessSettingsView.swift; sourceTree = "<group>"; };
+		F3A700000000000000000024 /* RemoteAccessController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAccessController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1767,6 +1775,7 @@
 				F3A400000000000000000011 /* Catalog */,
 				F3A400000000000000000012 /* Commands */,
 				F3A500000000000000000010 /* Host */,
+				F3A700000000000000000010 /* Settings */,
 			);
 			path = RemoteAccess;
 			sourceTree = "<group>";
@@ -1802,6 +1811,7 @@
 				F3A500000000000000000022 /* RemoteHostIntegrationTests.swift */,
 				F3A500000000000000000023 /* RemoteHostTestClient.swift */,
 				F3A600000000000000000021 /* RemoteHostLifecycleTests.swift */,
+				F3A700000000000000000021 /* RemoteAccessSettingsFeatureTests.swift */,
 			);
 			path = RemoteAccess;
 			sourceTree = "<group>";
@@ -1818,6 +1828,16 @@
 				F3A600000000000000000022 /* RemoteHostLifecycle.swift */,
 			);
 			path = Host;
+			sourceTree = "<group>";
+		};
+		F3A700000000000000000010 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				F3A700000000000000000022 /* RemoteAccessSettingsFeature.swift */,
+				F3A700000000000000000023 /* RemoteAccessSettingsView.swift */,
+				F3A700000000000000000024 /* RemoteAccessController.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2169,6 +2189,7 @@
 				F3A500000000000000000002 /* RemoteHostIntegrationTests.swift in Sources */,
 				F3A500000000000000000003 /* RemoteHostTestClient.swift in Sources */,
 				F3A600000000000000000001 /* RemoteHostLifecycleTests.swift in Sources */,
+				F3A700000000000000000001 /* RemoteAccessSettingsFeatureTests.swift in Sources */,
 				F3A400000000000000000008 /* RemoteCatalogProviderTests.swift in Sources */,
 				F3A400000000000000000009 /* RemoteCommandRouterTests.swift in Sources */,
 				F3A40000000000000000000A /* RemoteMacTestValues.swift in Sources */,
@@ -2251,6 +2272,9 @@
 				F3A500000000000000000008 /* RemoteHost.swift in Sources */,
 				F3A500000000000000000009 /* RemoteHostClient.swift in Sources */,
 				F3A600000000000000000002 /* RemoteHostLifecycle.swift in Sources */,
+				F3A700000000000000000002 /* RemoteAccessSettingsFeature.swift in Sources */,
+				F3A700000000000000000003 /* RemoteAccessSettingsView.swift in Sources */,
+				F3A700000000000000000004 /* RemoteAccessController.swift in Sources */,
 				F3A400000000000000000001 /* RemoteControlAvailability.swift in Sources */,
 				F3A400000000000000000002 /* RemoteIconAdapter.swift in Sources */,
 				F3A400000000000000000003 /* RemoteCatalogProvider.swift in Sources */,
