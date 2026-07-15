@@ -79,6 +79,7 @@
     "The pairing code expired.": {},
     "The pairing code is invalid.": {},
     "The selected Mac is no longer available.": {},
+    "The dashboard layout wasn’t saved. Your latest choices are still available to retry.": {},
     "This control can be shown, but it is currently unavailable on the Mac": {},
     "This Mac no longer accepts the saved credential. Start pairing in OnlySwitch on the Mac first.": {},
     "This device was revoked by the Mac.": {},

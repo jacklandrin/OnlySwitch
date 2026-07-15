@@ -42,7 +42,7 @@ struct MacManagementFeature {
         case rePair(UUID)
     }
 
-    @Dependency(\.remotePersistence) var persistence
+    @Dependency(\.remoteConnection) var connection
     private enum CancelID { case forget }
 
     var body: some ReducerOf<Self> {
@@ -63,9 +63,9 @@ struct MacManagementFeature {
                 state.isForgetting = true
                 state.issue = nil
                 let id = state.mac.id
-                return .run { [persistence] send in
+                return .run { [connection] send in
                     do {
-                        try await persistence.forgetMac(id)
+                        try await connection.forgetMac(id)
                         await send(.forgetResponse(.success))
                     } catch is CancellationError {
                         return

@@ -21,6 +21,7 @@ struct SettingsView: View {
 
             if store.selectedMacID != nil {
                 selectedOrderSection
+                layoutSaveErrorSection
                 controlsSection(title: "Built-ins", kind: .builtIn)
                 controlsSection(title: "Shortcuts", kind: .shortcut)
                 controlsSection(title: "Evolutions", kind: .evolution)
@@ -108,6 +109,18 @@ struct SettingsView: View {
     }
 
     @ViewBuilder
+    private var layoutSaveErrorSection: some View {
+        if let macID = store.selectedMacID, store.layoutSaveIssueMacIDs.contains(macID) {
+            Section {
+                Button("Retry Saving Layout") { store.send(.retryLayoutSave(macID)) }
+                    .disabled(store.layoutSaveInFlight.contains(macID))
+            } footer: {
+                Text("The dashboard layout wasn’t saved. Your latest choices are still available to retry.")
+            }
+        }
+    }
+
+    @ViewBuilder
     private func controlsSection(title: LocalizedStringKey, kind: RemoteControlID.Kind) -> some View {
         let controls = store.catalog.filter { $0.id.kind == kind }
         if controls.isEmpty == false {
@@ -118,9 +131,6 @@ struct SettingsView: View {
                         isSelected: store.selectedControlIDs.contains(descriptor.id),
                         selectionChanged: { store.send(.toggleControl(descriptor.id, $0)) }
                     )
-                }
-                if let macID = store.selectedMacID, store.layoutSaveIssueMacIDs.contains(macID) {
-                    Button("Retry Saving Layout") { store.send(.retryLayoutSave(macID)) }
                 }
             }
         }

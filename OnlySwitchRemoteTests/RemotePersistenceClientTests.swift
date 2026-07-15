@@ -33,6 +33,51 @@ struct RemotePersistenceClientTests {
         #expect(try await client.loadLayout(secondMac)?.selectedControlIDs == [.mute])
     }
 
+    @Test func tombstoneRejectsLateWritesUntilPairCommitAtomicallyClearsIt() async throws {
+        let client = RemotePersistenceClient.inMemory()
+        let old = PairedMac(id: firstMac, displayName: "Old", lastEndpointDescription: nil, lastConnectedAt: nil, requiresPairing: false)
+        let replacement = PairedMac(id: firstMac, displayName: "New", lastEndpointDescription: nil, lastConnectedAt: .now, requiresPairing: false)
+        try await client.upsertPairedMac(old)
+        try await client.markMacTombstoned(firstMac)
+
+        try await client.saveLayout(.init(macID: firstMac, selectedControlIDs: [.mute], order: [.mute]))
+        try await client.saveCatalog(firstMac, 9, [])
+        try await client.mergeStatus(firstMac, status(id: .mute, isOn: true, revision: 9))
+        try await client.upsertPairedMac(old)
+
+        #expect(try await client.loadLayout(firstMac) == nil)
+        #expect(try await client.loadCatalog(firstMac) == nil)
+        #expect(try await client.loadStatuses(firstMac) == nil)
+        #expect(try await client.loadPairedMacs() == [old])
+
+        try await client.commitPairing(replacement)
+        try await client.saveLayout(.init(macID: firstMac, selectedControlIDs: [.mute], order: [.mute]))
+        #expect(try await client.loadPairedMacs() == [replacement])
+        #expect(try await client.loadLayout(firstMac)?.order == [.mute])
+    }
+
+    @Test func fileBackedTombstonePreventsLateCacheWritesFromRecreatingMacDirectory() async throws {
+        let suite = "RemotePersistenceTombstoneTests-\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let store = RemoteFilePersistenceStore(defaultsSuiteName: suite, rootURL: root)
+        let client = RemotePersistenceClient.fileBacked(store: store, keychain: .inMemory())
+        let directory = root.appendingPathComponent(firstMac.uuidString.lowercased(), isDirectory: true)
+
+        try await client.markMacTombstoned(firstMac)
+        try await client.saveLayout(.init(macID: firstMac, selectedControlIDs: [.mute], order: [.mute]))
+        try await client.saveCatalog(firstMac, 4, [])
+        try await client.saveStatuses(firstMac, [status(id: .mute, isOn: true, revision: 4)])
+        try await client.mergeStatus(firstMac, status(id: .mute, isOn: false, revision: 5))
+
+        #expect(FileManager.default.fileExists(atPath: directory.path) == false)
+        #expect(try await client.loadLayout(firstMac) == nil)
+        #expect(try await client.loadCatalog(firstMac) == nil)
+        #expect(try await client.loadStatuses(firstMac) == nil)
+    }
+
     @Test func forgettingOneMacPreservesOtherMacData() async throws {
         let client = RemotePersistenceClient.inMemory()
         try await client.savePairedMacs([

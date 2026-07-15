@@ -297,6 +297,27 @@ struct SettingsFeatureTests {
         await store.receive(.delegate(.allMacsRemoved))
     }
 
+    @Test func successfulForgetClearsPerMacSaveBookkeepingAndIgnoresLateCompletion() async {
+        let layout = MacDashboardLayout(macID: studio.id, selectedControlIDs: [mute], order: [mute])
+        var state = SettingsFeature.State(isSetupRequired: false, pairedMacs: [studio, laptop], selectedMacID: laptop.id)
+        state.management = .init(mac: studio)
+        state.pendingLayoutSaves[studio.id] = layout
+        state.layoutSaveGenerations[studio.id] = 4
+        state.layoutSaveInFlight.insert(studio.id)
+        state.layoutSaveIssueMacIDs.insert(studio.id)
+        let store = TestStore(initialState: state) { SettingsFeature() }
+
+        await store.send(.management(.presented(.delegate(.forgotten(studio.id))))) {
+            $0.management = nil; $0.pairedMacs = [laptop]
+            $0.pendingLayoutSaves[studio.id] = nil; $0.layoutSaveGenerations[studio.id] = nil
+            $0.layoutSaveInFlight.remove(studio.id); $0.layoutSaveIssueMacIDs.remove(studio.id)
+        }
+        await store.receive(.delegate(.macForgotten(studio.id)))
+        await store.send(.layoutSaveResponse(studio.id, 4, layout, .success))
+        await store.send(.connectionEvent(.catalog(studio.id, 99, [descriptor(mute)])))
+        #expect(store.state.pendingLayoutSaves[studio.id] == nil)
+    }
+
     private func descriptor(_ id: RemoteControlID, available: Bool = true, reason: String? = nil) -> RemoteControlDescriptor {
         .init(
             id: id,

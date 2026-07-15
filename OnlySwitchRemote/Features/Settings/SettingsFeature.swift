@@ -30,7 +30,8 @@ struct SettingsFeature {
             catalog: IdentifiedArrayOf<RemoteControlDescriptor> = [],
             catalogRevision: UInt64 = 0,
             selectedControlIDs: Set<RemoteControlID> = [],
-            order: [RemoteControlID] = []
+            order: [RemoteControlID] = [],
+            connectionStatuses: [UUID: MacConnectionStatus] = [:]
         ) {
             self.isSetupRequired = isSetupRequired
             self.pairedMacs = pairedMacs
@@ -39,6 +40,7 @@ struct SettingsFeature {
             self.catalogRevision = catalogRevision
             self.selectedControlIDs = selectedControlIDs
             self.order = order
+            self.connectionStatuses = connectionStatuses
         }
 
         var selectedMac: PairedMac? { selectedMacID.flatMap { pairedMacs[id: $0] } }
@@ -84,7 +86,12 @@ struct SettingsFeature {
     @Dependency(\.remoteConnection) var connection
     @Dependency(\.remotePersistence) var persistence
 
-    private enum CancelID { case selectedMacLoad, connectionEvents }
+    private enum CancelID: Hashable {
+        case selectedMacLoad
+        case connectionEvents
+        case layoutSave(UUID)
+        case catalogSave(UUID)
+    }
 
     var body: some ReducerOf<Self> {
         Reduce { state, action in
@@ -113,7 +120,9 @@ struct SettingsFeature {
                 )
 
             case let .selectedMacDataLoaded(generation, id, layout, cache):
-                guard generation == state.selectionGeneration, id == state.selectedMacID else { return .none }
+                guard state.pairedMacs[id: id] != nil,
+                      generation == state.selectionGeneration,
+                      id == state.selectedMacID else { return .none }
                 state.catalog = IdentifiedArray(uniqueElements: cache?.controls ?? [])
                 state.catalogRevision = cache?.revision ?? 0
                 let effectiveLayout = state.pendingLayoutSaves[id] ?? layout
@@ -153,7 +162,8 @@ struct SettingsFeature {
                 return enqueueLayoutSave(macID: macID, state: &state)
 
             case let .layoutSaveResponse(macID, generation, savedLayout, result):
-                guard state.layoutSaveGenerations[macID] == generation else { return .none }
+                guard state.pairedMacs[id: macID] != nil,
+                      state.layoutSaveGenerations[macID] == generation else { return .none }
                 state.layoutSaveInFlight.remove(macID)
                 switch result {
                 case .failure:
@@ -215,21 +225,33 @@ struct SettingsFeature {
                 let wasSelected = state.selectedMacID == id
                 state.pairedMacs.remove(id: id)
                 state.connectionStatuses[id] = nil
+                state.pendingLayoutSaves[id] = nil
+                state.layoutSaveGenerations[id] = nil
+                state.layoutSaveInFlight.remove(id)
+                state.layoutSaveIssueMacIDs.remove(id)
+                var cancellationEffects: [Effect<Action>] = [
+                    .cancel(id: CancelID.layoutSave(id)),
+                    .cancel(id: CancelID.catalogSave(id)),
+                ]
+                if wasSelected { cancellationEffects.append(.cancel(id: CancelID.selectedMacLoad)) }
                 if state.pairedMacs.isEmpty {
                     state.selectedMacID = nil
                     state.catalog = []
                     state.catalogRevision = 0
                     state.selectedControlIDs = []
                     state.order = []
-                    return .send(.delegate(.allMacsRemoved))
+                    cancellationEffects.append(.send(.delegate(.allMacsRemoved)))
+                    return .merge(cancellationEffects)
                 }
                 guard wasSelected, let fallback = state.pairedMacs.first else {
-                    return .send(.delegate(.macForgotten(id)))
+                    cancellationEffects.append(.send(.delegate(.macForgotten(id))))
+                    return .merge(cancellationEffects)
                 }
-                return .concatenate(
+                cancellationEffects.append(.concatenate(
                     .send(.delegate(.macForgotten(id))),
                     .send(.selectedMacChanged(fallback.id))
-                )
+                ))
+                return .merge(cancellationEffects)
 
             case .management(.dismiss):
                 return .none
@@ -282,21 +304,22 @@ struct SettingsFeature {
     }
 
     private func handleConnectionEvent(_ event: RemoteConnectionEvent, state: inout State) -> Effect<Action> {
+        let macID: UUID
+        switch event {
+        case let .connecting(id), let .authenticated(id), let .offline(id, _), let .revoked(id),
+             let .catalog(id, _, _), let .status(id, _), let .action(id, _):
+            macID = id
+        }
+        guard state.pairedMacs[id: macID] != nil else { return .none }
         switch event {
         case let .connecting(id):
             state.connectionStatuses[id] = .connecting
         case let .authenticated(id):
             state.connectionStatuses[id] = .connected
-            if var mac = state.pairedMacs[id: id] {
-                mac.requiresPairing = false
-                mac.lastConnectedAt = Date()
-                state.pairedMacs[id: id] = mac
-            }
         case let .offline(id, reason):
             state.connectionStatuses[id] = .offline(reason)
         case let .revoked(id):
             state.connectionStatuses[id] = .needsPairing
-            if var mac = state.pairedMacs[id: id] { mac.requiresPairing = true; state.pairedMacs[id: id] = mac }
         case let .catalog(id, revision, controls):
             guard id == state.selectedMacID else { return .none }
             if controls.isEmpty, revision > state.catalogRevision { return .none }
@@ -311,6 +334,7 @@ struct SettingsFeature {
                     await send(.catalogCacheSaveResponse(id, revision, .failure))
                 }
             }
+            .cancellable(id: CancelID.catalogSave(id), cancelInFlight: true)
         case .status, .action:
             break
         }
@@ -337,6 +361,7 @@ struct SettingsFeature {
                 await send(.layoutSaveResponse(macID, generation, layout, .failure))
             }
         }
+        .cancellable(id: CancelID.layoutSave(macID), cancelInFlight: true)
     }
 
     private func currentLayout(macID: UUID, state: State) -> MacDashboardLayout {

@@ -15,6 +15,8 @@ extension RemoteConnectionClient {
             pair: { try await runtime.pair($0, code: $1, deviceName: $2) },
             select: { await runtime.select($0) },
             events: { runtime.makeConnectionEventStream() },
+            snapshot: { await runtime.snapshot() },
+            forgetMac: { try await runtime.forgetMac($0) },
             subscribe: { try await runtime.subscribe($0) },
             send: { try await runtime.send($0) },
             setForegrounded: { await runtime.setForegrounded($0) }
@@ -267,7 +269,7 @@ actor RemoteConnectionRuntime {
                     credential: credential,
                     keychain: keychain
                 )
-                try await persistence.upsertPairedMac(value)
+                try await persistence.commitPairing(value)
             }
         }
         do {
@@ -353,6 +355,48 @@ actor RemoteConnectionRuntime {
         connectionTask = Task { [weak self] in
             await self?.connectWithRetry(mac, generation: currentGeneration)
         }
+    }
+
+    func snapshot() -> RemoteConnectionSnapshot {
+        .init(selectedMacID: selected?.id, authenticatedMacID: session == nil ? nil : selected?.id)
+    }
+
+    func forgetMac(_ id: UUID) async throws {
+        let coordinator = localStateMutations
+        try await coordinator.run { [weak self] in
+            guard let self else { throw CancellationError() }
+            try await self.performForget(id)
+        }
+    }
+
+    private func performForget(_ id: UUID) async throws {
+        try await persistence.markMacTombstoned(id)
+
+        generation &+= 1
+        connectionTask?.cancel()
+        pairingTask?.cancel()
+        connectionTask = nil
+        pairingTask = nil
+        pairingToken = nil
+        pendingRevocation = nil
+        pendingPairedMacMetadata[id] = nil
+
+        let detachedSession = selected?.id == id ? session : nil
+        let detachedPendingSession = pendingAuthenticatedSession?.macID == id
+            ? pendingAuthenticatedSession?.session
+            : nil
+        if selected?.id == id { selected = nil }
+        if detachedSession != nil {
+            session = nil
+            sessionToken = nil
+        }
+        if detachedPendingSession != nil { pendingAuthenticatedSession = nil }
+
+        if let detachedSession { await closeSession(detachedSession) }
+        if let detachedPendingSession { await closeSession(detachedPendingSession) }
+
+        try await keychain.deleteCredential(id)
+        try await persistence.forgetMac(id)
     }
 
     func subscribe(_ ids: Set<RemoteControlID>) async throws {
@@ -664,7 +708,11 @@ actor RemoteConnectionRuntime {
 
     private func retryPendingMetadata() async {
         for (id, value) in pendingPairedMacMetadata {
-            if (try? await persistence.upsertPairedMac(value)) != nil {
+            let persistence = self.persistence
+            let coordinator = localStateMutations
+            if (try? await coordinator.run({
+                try await persistence.commitPairing(value)
+            })) != nil {
                 pendingPairedMacMetadata[id] = nil
             }
         }

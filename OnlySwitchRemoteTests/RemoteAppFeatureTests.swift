@@ -31,6 +31,81 @@ struct RemoteAppFeatureTests {
         #expect(await selected.ids == [laptop.id])
     }
 
+    @Test func alreadyAuthenticatedSnapshotSeedsConnectedStateBeforeSettingsOpens() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+
+        await store.send(.connectionSnapshotLoaded(.init(
+            selectedMacID: studio.id,
+            authenticatedMacID: studio.id
+        ))) {
+            $0.connectedMacIDs = [studio.id]
+        }
+        await store.send(.settingsButtonTapped) {
+            $0.path.append(.settings(.init(
+                isSetupRequired: false,
+                pairedMacs: [studio],
+                selectedMacID: studio.id,
+                connectionStatuses: [studio.id: .connected]
+            )))
+        }
+    }
+
+    @Test func revocationRefreshSurvivesSettingsDismissAndReopen() async throws {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.connectedMacIDs = [studio.id]
+        state.path.append(.settings(.init(
+            isSetupRequired: false,
+            pairedMacs: [studio],
+            selectedMacID: studio.id,
+            connectionStatuses: [studio.id: .connected]
+        )))
+        let pathID = try #require(state.path.ids.last)
+        let refreshed = PairedMac(
+            id: studio.id,
+            displayName: studio.displayName,
+            lastEndpointDescription: studio.lastEndpointDescription,
+            lastConnectedAt: studio.lastConnectedAt,
+            requiresPairing: true
+        )
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.loadPairedMacs = { [refreshed] }
+        }
+
+        await store.send(.connectionEvent(.revoked(studio.id))) {
+            $0.connectedMacIDs = []
+            $0.metadataRefreshGeneration = 1
+            if case var .settings(settings) = $0.path[id: pathID] {
+                settings.connectionStatuses[studio.id] = .needsPairing
+                $0.path[id: pathID] = .settings(settings)
+            }
+        }
+        await store.receive(.pairedMetadataRefreshed(1, [refreshed])) {
+            $0.pairedMacs = [refreshed]
+            if case var .settings(settings) = $0.path[id: pathID] {
+                settings.pairedMacs = [refreshed]
+                $0.path[id: pathID] = .settings(settings)
+            }
+        }
+        await store.finish()
+
+        var reopenedState = store.state
+        reopenedState.path.removeAll()
+        let reopenedStore = TestStore(initialState: reopenedState) { RemoteAppFeature() }
+        await reopenedStore.send(.settingsButtonTapped) {
+            $0.path.append(.settings(.init(
+                isSetupRequired: false,
+                pairedMacs: [refreshed],
+                selectedMacID: studio.id,
+                connectionStatuses: [studio.id: .needsPairing]
+            )))
+        }
+    }
+
     @Test func invalidPersistedSelectionFallsBackAndPersists() async {
         let persistence = PersistenceAttemptRecorder(shouldFail: false); let selected = SelectionRecorder(); let studio = studio
         let store = TestStore(initialState: RemoteAppFeature.State(hasCompletedInitialSetup: true)) { RemoteAppFeature() } withDependencies: {
@@ -286,6 +361,12 @@ struct RemoteAppFeatureTests {
             $0.rootIssue = nil
             $0.pairedMacs = [studio]
             $0.selectedMacID = studio.id
+            if let pathID = $0.path.ids.last,
+               case var .settings(settings) = $0.path[id: pathID] {
+                settings.pairedMacs = [studio]
+                settings.selectedMacID = studio.id
+                $0.path[id: pathID] = .settings(settings)
+            }
         }
         await store.finish()
     }

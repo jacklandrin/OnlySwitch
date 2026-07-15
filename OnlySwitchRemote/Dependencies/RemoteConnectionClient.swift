@@ -3,12 +3,24 @@ import DependenciesMacros
 import Foundation
 import RemoteCore
 
+struct RemoteConnectionSnapshot: Equatable, Sendable {
+    var selectedMacID: UUID?
+    var authenticatedMacID: UUID?
+
+    init(selectedMacID: UUID? = nil, authenticatedMacID: UUID? = nil) {
+        self.selectedMacID = selectedMacID
+        self.authenticatedMacID = authenticatedMacID
+    }
+}
+
 @DependencyClient
 struct RemoteConnectionClient: Sendable {
     var discover: @Sendable () -> AsyncStream<DiscoveryEvent> = { AsyncStream { $0.finish() } }
     var pair: @Sendable (DiscoveredMac, String, String) async throws -> PairedMac = { _, _, _ in throw RemoteDependencyError.unimplemented }
     var select: @Sendable (PairedMac?) async -> Void = { _ in }
     var events: @Sendable () -> AsyncStream<RemoteConnectionEvent> = { AsyncStream { $0.finish() } }
+    var snapshot: @Sendable () async -> RemoteConnectionSnapshot = { .init() }
+    var forgetMac: @Sendable (UUID) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
     var subscribe: @Sendable (Set<RemoteControlID>) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
     var send: @Sendable (RemoteActionRequest) async throws -> RemoteActionResult = { _ in throw RemoteDependencyError.unimplemented }
     var setForegrounded: @Sendable (Bool) async -> Void = { _ in }
@@ -16,7 +28,12 @@ struct RemoteConnectionClient: Sendable {
 
 extension RemoteConnectionClient: DependencyKey {
     static var liveValue: Self { .live }
-    static var testValue: Self { Self() }
+    static var testValue: Self {
+        var value = Self()
+        value.events = { AsyncStream { $0.finish() } }
+        value.snapshot = { .init() }
+        return value
+    }
 }
 
 extension DependencyValues {

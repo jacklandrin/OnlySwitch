@@ -32,6 +32,9 @@ struct RemotePersistenceClient: Sendable {
     var loadStatuses: @Sendable (UUID) async throws -> [RemoteControlStatus]? = { _ in nil }
     var saveStatuses: @Sendable (UUID, [RemoteControlStatus]) async throws -> Void = { _, _ in throw RemoteDependencyError.unimplemented }
     var mergeStatus: @Sendable (UUID, RemoteControlStatus) async throws -> Void = { _, _ in throw RemoteDependencyError.unimplemented }
+    var markMacTombstoned: @Sendable (UUID) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
+    var commitPairing: @Sendable (PairedMac) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
+    var isMacTombstoned: @Sendable (UUID) async -> Bool = { _ in false }
     var forgetMac: @Sendable (UUID) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
 }
 
@@ -54,13 +57,16 @@ extension RemotePersistenceClient {
             removePairedMac: { await store.removePairedMac($0) },
             loadSelectedMacID: { await store.selectedMacID },
             saveSelectedMacID: { await store.setSelectedMacID($0) },
-            loadLayout: { await store.layouts[$0] },
+            loadLayout: { await store.loadLayout($0) },
             saveLayout: { await store.setLayout($0) },
-            loadCatalog: { await store.catalogs[$0] },
+            loadCatalog: { await store.loadCatalog($0) },
             saveCatalog: { await store.setCatalog(.init(revision: $1, controls: $2), for: $0) },
-            loadStatuses: { await store.statuses[$0] },
+            loadStatuses: { await store.loadStatuses($0) },
             saveStatuses: { await store.mergeSnapshot($1, for: $0) },
             mergeStatus: { await store.mergeStatus($1, for: $0) },
+            markMacTombstoned: { await store.markTombstoned($0) },
+            commitPairing: { await store.commitPairing($0) },
+            isMacTombstoned: { await store.tombstones.contains($0) },
             forgetMac: { await store.forget($0) }
         )
     }
@@ -92,7 +98,11 @@ extension RemotePersistenceClient {
             loadStatuses: { try await store.load([RemoteControlStatus].self, macID: $0, name: "statuses.json") },
             saveStatuses: { try await store.mergeStatusSnapshot($1, macID: $0) },
             mergeStatus: { try await store.mergeStatus($1, macID: $0) },
+            markMacTombstoned: { await store.markTombstoned($0) },
+            commitPairing: { try await store.commitPairing($0) },
+            isMacTombstoned: { await store.isTombstoned($0) },
             forgetMac: { id in
+                await store.markTombstoned(id)
                 try await keychain.deleteCredential(id)
                 try await store.removeCaches(id)
                 try await store.removePreferences(id)
@@ -130,6 +140,7 @@ private actor InMemoryRemotePersistenceStore {
     var layouts: [UUID: MacDashboardLayout] = [:]
     var catalogs: [UUID: RemoteCatalogCache] = [:]
     var statuses: [UUID: [RemoteControlStatus]] = [:]
+    var tombstones: Set<UUID> = []
 
     init(beforeAppStateCommit: @escaping @Sendable (RemoteAppPersistenceIntent) throws -> Void) {
         self.beforeAppStateCommit = beforeAppStateCommit
@@ -144,16 +155,19 @@ private actor InMemoryRemotePersistenceStore {
 
     func setInitialSetupCompleted(_ value: Bool) { initialSetupCompleted = value }
 
-    func setPairedMacs(_ value: [PairedMac]) { pairedMacs = value }
+    func setPairedMacs(_ value: [PairedMac]) { pairedMacs = value.filter { tombstones.contains($0.id) == false } }
     func upsert(_ value: PairedMac) {
+        guard tombstones.contains(value.id) == false else { return }
         pairedMacs.removeAll { $0.id == value.id }
         pairedMacs.append(value)
     }
     func updateRequiresPairing(_ id: UUID, value: Bool) {
+        guard tombstones.contains(id) == false else { return }
         guard let index = pairedMacs.firstIndex(where: { $0.id == id }) else { return }
         pairedMacs[index].requiresPairing = value
     }
     func updateEndpoint(_ id: UUID, description: String?, connectedAt: Date?) {
+        guard tombstones.contains(id) == false else { return }
         guard let index = pairedMacs.firstIndex(where: { $0.id == id }) else { return }
         pairedMacs[index].lastEndpointDescription = description
         pairedMacs[index].lastConnectedAt = connectedAt
@@ -163,10 +177,23 @@ private actor InMemoryRemotePersistenceStore {
         if selectedMacID == id { selectedMacID = nil }
     }
     func setSelectedMacID(_ value: UUID?) { selectedMacID = value }
-    func setLayout(_ value: MacDashboardLayout) { layouts[value.macID] = value }
-    func setCatalog(_ value: RemoteCatalogCache, for id: UUID) { catalogs[id] = value }
-    func setStatuses(_ value: [RemoteControlStatus], for id: UUID) { statuses[id] = value }
+    func setLayout(_ value: MacDashboardLayout) {
+        guard tombstones.contains(value.macID) == false else { return }
+        layouts[value.macID] = value
+    }
+    func loadLayout(_ id: UUID) -> MacDashboardLayout? { tombstones.contains(id) ? nil : layouts[id] }
+    func loadCatalog(_ id: UUID) -> RemoteCatalogCache? { tombstones.contains(id) ? nil : catalogs[id] }
+    func loadStatuses(_ id: UUID) -> [RemoteControlStatus]? { tombstones.contains(id) ? nil : statuses[id] }
+    func setCatalog(_ value: RemoteCatalogCache, for id: UUID) {
+        guard tombstones.contains(id) == false else { return }
+        catalogs[id] = value
+    }
+    func setStatuses(_ value: [RemoteControlStatus], for id: UUID) {
+        guard tombstones.contains(id) == false else { return }
+        statuses[id] = value
+    }
     func mergeSnapshot(_ incoming: [RemoteControlStatus], for id: UUID) {
+        guard tombstones.contains(id) == false else { return }
         let existing = Dictionary(uniqueKeysWithValues: (statuses[id] ?? []).map { ($0.id, $0) })
         statuses[id] = incoming.map { value in
             guard let cached = existing[value.id], cached.revision > value.revision else { return value }
@@ -174,6 +201,7 @@ private actor InMemoryRemotePersistenceStore {
         }
     }
     func mergeStatus(_ value: RemoteControlStatus, for id: UUID) {
+        guard tombstones.contains(id) == false else { return }
         var values = statuses[id] ?? []
         if let existing = values.first(where: { $0.id == value.id }), existing.revision > value.revision {
             return
@@ -183,11 +211,20 @@ private actor InMemoryRemotePersistenceStore {
         statuses[id] = values
     }
     func forget(_ id: UUID) {
+        tombstones.insert(id)
         pairedMacs.removeAll { $0.id == id }
         if selectedMacID == id { selectedMacID = nil }
         layouts[id] = nil
         catalogs[id] = nil
         statuses[id] = nil
+    }
+
+    func markTombstoned(_ id: UUID) { tombstones.insert(id) }
+
+    func commitPairing(_ mac: PairedMac) {
+        tombstones.remove(mac.id)
+        pairedMacs.removeAll { $0.id == mac.id }
+        pairedMacs.append(mac)
     }
 }
 
@@ -208,6 +245,7 @@ actor RemoteFilePersistenceStore {
     private let decoder = JSONDecoder()
     private let removeDirectory: @Sendable (URL) throws -> Void
     private var appStateSequenceTracker = RemoteAppPersistenceSequenceTracker()
+    private var tombstones: Set<UUID> = []
 
     init(
         defaultsSuiteName: String? = nil,
@@ -226,10 +264,11 @@ actor RemoteFilePersistenceStore {
     }
 
     func savePairedMacs(_ macs: [PairedMac]) throws {
-        defaults.set(try encoder.encode(macs), forKey: Key.pairedMacs)
+        defaults.set(try encoder.encode(macs.filter { tombstones.contains($0.id) == false }), forKey: Key.pairedMacs)
     }
 
     func upsertPairedMac(_ mac: PairedMac) throws {
+        guard tombstones.contains(mac.id) == false else { return }
         var macs = try loadPairedMacs()
         macs.removeAll { $0.id == mac.id }
         macs.append(mac)
@@ -237,6 +276,7 @@ actor RemoteFilePersistenceStore {
     }
 
     func updateRequiresPairing(_ id: UUID, value: Bool) throws {
+        guard tombstones.contains(id) == false else { return }
         var macs = try loadPairedMacs()
         guard let index = macs.firstIndex(where: { $0.id == id }) else { return }
         macs[index].requiresPairing = value
@@ -244,6 +284,7 @@ actor RemoteFilePersistenceStore {
     }
 
     func updateEndpoint(_ id: UUID, description: String?, connectedAt: Date?) throws {
+        guard tombstones.contains(id) == false else { return }
         var macs = try loadPairedMacs()
         guard let index = macs.firstIndex(where: { $0.id == id }) else { return }
         macs[index].lastEndpointDescription = description
@@ -274,18 +315,21 @@ actor RemoteFilePersistenceStore {
     }
 
     func load<Value: Decodable>(_ type: Value.Type, macID: UUID, name: String) throws -> Value? {
+        guard tombstones.contains(macID) == false else { return nil }
         let url = directory(for: macID).appendingPathComponent(name)
         guard FileManager.default.fileExists(atPath: url.path) else { return nil }
         return try decoder.decode(type, from: Data(contentsOf: url, options: .mappedIfSafe))
     }
 
     func save<Value: Encodable>(_ value: Value, macID: UUID, name: String) throws {
+        guard tombstones.contains(macID) == false else { return }
         let directory = directory(for: macID)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         try encoder.encode(value).write(to: directory.appendingPathComponent(name), options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication])
     }
 
     func mergeStatus(_ status: RemoteControlStatus, macID: UUID) throws {
+        guard tombstones.contains(macID) == false else { return }
         var values = try load([RemoteControlStatus].self, macID: macID, name: "statuses.json") ?? []
         if let existing = values.first(where: { $0.id == status.id }), existing.revision > status.revision {
             return
@@ -296,6 +340,7 @@ actor RemoteFilePersistenceStore {
     }
 
     func mergeStatusSnapshot(_ incoming: [RemoteControlStatus], macID: UUID) throws {
+        guard tombstones.contains(macID) == false else { return }
         let cached = try load([RemoteControlStatus].self, macID: macID, name: "statuses.json") ?? []
         let existing = Dictionary(uniqueKeysWithValues: cached.map { ($0.id, $0) })
         let merged = incoming.map { value in
@@ -316,6 +361,24 @@ actor RemoteFilePersistenceStore {
         let directory = directory(for: id)
         if FileManager.default.fileExists(atPath: directory.path) {
             try removeDirectory(directory)
+        }
+    }
+
+    func markTombstoned(_ id: UUID) { tombstones.insert(id) }
+
+    func isTombstoned(_ id: UUID) -> Bool { tombstones.contains(id) }
+
+    func commitPairing(_ mac: PairedMac) throws {
+        let wasTombstoned = tombstones.contains(mac.id)
+        tombstones.remove(mac.id)
+        do {
+            var macs = try loadPairedMacs()
+            macs.removeAll { $0.id == mac.id }
+            macs.append(mac)
+            try savePairedMacs(macs)
+        } catch {
+            if wasTombstoned { tombstones.insert(mac.id) }
+            throw error
         }
     }
 

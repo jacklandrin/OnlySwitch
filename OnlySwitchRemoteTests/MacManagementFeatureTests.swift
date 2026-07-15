@@ -18,7 +18,8 @@ struct MacManagementFeatureTests {
         let store = TestStore(initialState: MacManagementFeature.State(mac: studio)) {
             MacManagementFeature()
         } withDependencies: {
-            $0.remotePersistence.forgetMac = { try await recorder.forget($0) }
+            $0.remoteConnection.forgetMac = { try await recorder.forget($0) }
+            $0.remotePersistence.forgetMac = { _ in Issue.record("UI must not bypass the connection runtime mutation queue") }
         }
 
         await store.send(.forgetTapped) { $0.isForgetConfirmationPresented = true }
@@ -36,7 +37,7 @@ struct MacManagementFeatureTests {
         let store = TestStore(initialState: MacManagementFeature.State(mac: studio)) {
             MacManagementFeature()
         } withDependencies: {
-            $0.remotePersistence.forgetMac = { try await recorder.forget($0) }
+            $0.remoteConnection.forgetMac = { try await recorder.forget($0) }
         }
 
         await store.send(.confirmForgetTapped) { $0.isForgetting = true; $0.issue = nil }

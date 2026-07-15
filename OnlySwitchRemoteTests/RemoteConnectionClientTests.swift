@@ -65,6 +65,64 @@ struct RemoteConnectionClientTests {
         #expect(await recorder.events == [.connect(firstMac), .disconnect(firstMac), .connect(secondMac)])
     }
 
+    @Test func localMutationFIFOForgetThenPairLeavesPairCommitted() async throws {
+        let macID = firstMac
+        let persistence = RemotePersistenceClient.inMemory()
+        let original = PairedMac(id: macID, displayName: "Old", lastEndpointDescription: nil, lastConnectedAt: nil, requiresPairing: false)
+        let repaired = PairedMac(id: macID, displayName: "New", lastEndpointDescription: nil, lastConnectedAt: nil, requiresPairing: false)
+        try await persistence.commitPairing(original)
+        let coordinator = RemoteLocalStateMutationCoordinator()
+        let gate = OperationGate()
+
+        let forget = Task {
+            try await coordinator.run {
+                try await persistence.markMacTombstoned(macID)
+                await gate.wait()
+                try await persistence.forgetMac(macID)
+            }
+        }
+        await gate.waitUntilEntered()
+        let pair = Task {
+            try await coordinator.run { try await persistence.commitPairing(repaired) }
+        }
+        await Task.yield()
+        await gate.open()
+        try await forget.value
+        try await pair.value
+
+        #expect(try await persistence.loadPairedMacs() == [repaired])
+        #expect(await persistence.isMacTombstoned(macID) == false)
+    }
+
+    @Test func localMutationFIFOPairThenForgetLeavesMacTombstoned() async throws {
+        let macID = firstMac
+        let persistence = RemotePersistenceClient.inMemory()
+        let paired = PairedMac(id: macID, displayName: "New", lastEndpointDescription: nil, lastConnectedAt: nil, requiresPairing: false)
+        let coordinator = RemoteLocalStateMutationCoordinator()
+        let gate = OperationGate()
+
+        let pair = Task {
+            try await coordinator.run {
+                await gate.wait()
+                try await persistence.commitPairing(paired)
+            }
+        }
+        await gate.waitUntilEntered()
+        let forget = Task {
+            try await coordinator.run {
+                try await persistence.markMacTombstoned(macID)
+                try await persistence.forgetMac(macID)
+            }
+        }
+        await Task.yield()
+        await gate.open()
+        try await pair.value
+        try await forget.value
+
+        #expect(try await persistence.loadPairedMacs().isEmpty)
+        #expect(await persistence.isMacTombstoned(macID))
+    }
+
     @Test(.timeLimit(.minutes(1)))
     func clientPairingInteroperatesWithProductionWireProtocol() async throws {
         let macID = UUID()
@@ -316,7 +374,7 @@ struct RemoteConnectionClientTests {
         )
         defer { server.cancel() }
         var persistence = RemotePersistenceClient.inMemory()
-        persistence.upsertPairedMac = { _ in throw ConnectionStorageError.metadata }
+        persistence.commitPairing = { _ in throw ConnectionStorageError.metadata }
         let keychain = RemoteKeychainClient.inMemory()
         let runtime = RemoteConnectionRuntime(persistence: persistence, keychain: keychain, deviceID: UUID())
         let discovered = DiscoveredMac(
@@ -331,6 +389,42 @@ struct RemoteConnectionClientTests {
         }
 
         #expect(try await keychain.loadCredential(macID) == credential)
+        await server.waitUntilFinished()
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func forgettingAuthenticatedMacClosesSessionBeforeDeletingCredential() async throws {
+        let macID = UUID()
+        let credential = Data(repeating: 33, count: 32)
+        let server = try await PairingLoopbackServer.start(
+            macID: macID,
+            code: "ABCDEFGH2345",
+            credential: credential
+        )
+        defer { server.cancel() }
+        let operations = ForgetOperationRecorder()
+        let credentials = OrderedCredentialStore(recorder: operations)
+        let runtime = RemoteConnectionRuntime(
+            persistence: .inMemory(),
+            keychain: credentials.client,
+            deviceID: UUID(),
+            closeSession: { session in
+                await operations.record(.close)
+                await session.close()
+            }
+        )
+        let discovered = DiscoveredMac(
+            id: macID,
+            displayName: "Studio",
+            endpoint: server.endpoint,
+            protocolVersion: .current
+        )
+        _ = try await runtime.pair(discovered, code: "ABCDEFGH2345", deviceName: "Test iPhone")
+
+        try await runtime.forgetMac(macID)
+
+        #expect(await operations.values.suffix(2) == [.close, .deleteCredential])
+        #expect(try await credentials.client.loadCredential(macID) == nil)
         await server.waitUntilFinished()
     }
 
@@ -1100,6 +1194,54 @@ private actor GatedCredentialStore {
 private actor SessionCloseRecorder {
     private(set) var count = 0
     func record() { count += 1 }
+}
+
+private actor ForgetOperationRecorder {
+    enum Value: Equatable, Sendable { case close, deleteCredential }
+    private(set) var values: [Value] = []
+    func record(_ value: Value) { values.append(value) }
+}
+
+private actor OrderedCredentialStore {
+    private var credentials: [UUID: Data] = [:]
+    private let recorder: ForgetOperationRecorder
+
+    init(recorder: ForgetOperationRecorder) {
+        self.recorder = recorder
+    }
+
+    nonisolated var client: RemoteKeychainClient {
+        RemoteKeychainClient(
+            saveCredential: { [weak self] id, credential in
+                await self?.save(id, credential: credential)
+            },
+            loadCredential: { [weak self] id in await self?.load(id) },
+            deleteCredential: { [weak self] id in await self?.delete(id) },
+            deleteCredentialIfMatches: { [weak self] id, expected in
+                await self?.delete(id, matching: expected) ?? false
+            }
+        )
+    }
+
+    private func save(_ id: UUID, credential: Data) {
+        credentials[id] = credential
+    }
+
+    private func load(_ id: UUID) -> Data? {
+        credentials[id]
+    }
+
+    private func delete(_ id: UUID) async {
+        await recorder.record(.deleteCredential)
+        credentials[id] = nil
+    }
+
+    private func delete(_ id: UUID, matching expected: Data) async -> Bool {
+        guard credentials[id] == expected else { return false }
+        await recorder.record(.deleteCredential)
+        credentials[id] = nil
+        return true
+    }
 }
 
 private actor MutationGatedCredentialStore {
