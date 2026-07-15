@@ -421,6 +421,11 @@
 		F3A90000000000000000000A /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = F3A900000000000000000031 /* OrderedCollections */; };
 		F3A90000000000000000000B /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = F3A900000000000000000027 /* Localizable.xcstrings */; };
 		F3A90000000000000000000C /* CasePaths in Frameworks */ = {isa = PBXBuildFile; productRef = F3A300000000000000000037 /* CasePaths */; };
+		F3AA00000000000000000001 /* SettingsFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AA00000000000000000021 /* SettingsFeatureTests.swift */; };
+		F3AA00000000000000000002 /* MacManagementFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AA00000000000000000022 /* MacManagementFeatureTests.swift */; };
+		F3AA00000000000000000003 /* MacManagementFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AA00000000000000000023 /* MacManagementFeature.swift */; };
+		F3AA00000000000000000004 /* MacManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AA00000000000000000024 /* MacManagementView.swift */; };
+		F3AA00000000000000000005 /* ControlSelectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AA00000000000000000025 /* ControlSelectionRow.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -782,6 +787,11 @@
 		F3A900000000000000000025 /* SettingsFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsFeature.swift; sourceTree = "<group>"; };
 		F3A900000000000000000026 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		F3A900000000000000000027 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		F3AA00000000000000000021 /* SettingsFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsFeatureTests.swift; sourceTree = "<group>"; };
+		F3AA00000000000000000022 /* MacManagementFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacManagementFeatureTests.swift; sourceTree = "<group>"; };
+		F3AA00000000000000000023 /* MacManagementFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacManagementFeature.swift; sourceTree = "<group>"; };
+		F3AA00000000000000000024 /* MacManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacManagementView.swift; sourceTree = "<group>"; };
+		F3AA00000000000000000025 /* ControlSelectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlSelectionRow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1821,6 +1831,8 @@
 				F3A800000000000000000022 /* RemoteConnectionClientTests.swift */,
 				F3A900000000000000000021 /* RemoteAppFeatureTests.swift */,
 				F3A900000000000000000022 /* PairingFeatureTests.swift */,
+				F3AA00000000000000000021 /* SettingsFeatureTests.swift */,
+				F3AA00000000000000000022 /* MacManagementFeatureTests.swift */,
 			);
 			path = OnlySwitchRemoteTests;
 			sourceTree = "<group>";
@@ -1870,6 +1882,9 @@
 			children = (
 				F3A900000000000000000025 /* SettingsFeature.swift */,
 				F3A900000000000000000026 /* SettingsView.swift */,
+				F3AA00000000000000000023 /* MacManagementFeature.swift */,
+				F3AA00000000000000000024 /* MacManagementView.swift */,
+				F3AA00000000000000000025 /* ControlSelectionRow.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -2653,6 +2668,9 @@
 				F3A900000000000000000004 /* PairingView.swift in Sources */,
 				F3A900000000000000000005 /* SettingsFeature.swift in Sources */,
 				F3A900000000000000000006 /* SettingsView.swift in Sources */,
+				F3AA00000000000000000003 /* MacManagementFeature.swift in Sources */,
+				F3AA00000000000000000004 /* MacManagementView.swift in Sources */,
+				F3AA00000000000000000005 /* ControlSelectionRow.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2666,6 +2684,8 @@
 				F3A800000000000000000002 /* RemoteConnectionClientTests.swift in Sources */,
 				F3A900000000000000000001 /* RemoteAppFeatureTests.swift in Sources */,
 				F3A900000000000000000002 /* PairingFeatureTests.swift in Sources */,
+				F3AA00000000000000000001 /* SettingsFeatureTests.swift in Sources */,
+				F3AA00000000000000000002 /* MacManagementFeatureTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

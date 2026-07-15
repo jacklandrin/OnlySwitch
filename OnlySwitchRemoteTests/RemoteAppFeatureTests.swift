@@ -56,6 +56,43 @@ struct RemoteAppFeatureTests {
         await store.send(.settingsButtonTapped) { $0.path.append(.settings(.init(isSetupRequired: false, pairedMacs: [studio], selectedMacID: studio.id))) }
     }
 
+    @Test func settingsMacSelectionAtomicallyPersistsAndSelectsConnection() async throws {
+        let persistence = PersistenceAttemptRecorder(shouldFail: false)
+        let selections = SelectionRecorder()
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio, laptop]
+        state.selectedMacID = studio.id
+        state.path.append(.settings(.init(isSetupRequired: false, pairedMacs: [studio, laptop], selectedMacID: studio.id)))
+        let pathID = try #require(state.path.ids.last)
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.saveAppState = { try await persistence.save($0) }
+            $0.remoteConnection.select = { await selections.record($0) }
+        }
+        let intent = RemoteAppPersistenceIntent(writerID: store.state.persistenceWriterID, sequence: 1, selectedMacID: laptop.id, hasCompletedInitialSetup: true)
+
+        await store.send(.path(.element(id: pathID, action: .settings(.delegate(.selectedMacChanged(laptop)))))) {
+            $0.selectedMacID = laptop.id
+            $0.nextPersistenceSequence = 1; $0.pendingPersistenceIntent = intent; $0.isPersisting = true
+        }
+        await store.receive(.persistenceResponse(intent, .success)) { $0.pendingPersistenceIntent = nil; $0.isPersisting = false }
+        await store.finish()
+        #expect(await selections.ids == [laptop.id])
+        #expect(await persistence.selectedIDs == [laptop.id])
+    }
+
+    @Test func forgettingNonselectedMacUpdatesRootCollection() async throws {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio, laptop]
+        state.selectedMacID = studio.id
+        state.path.append(.settings(.init(isSetupRequired: false, pairedMacs: [studio, laptop], selectedMacID: studio.id)))
+        let pathID = try #require(state.path.ids.last)
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+
+        await store.send(.path(.element(id: pathID, action: .settings(.delegate(.macForgotten(laptop.id)))))) {
+            $0.pairedMacs = [studio]
+        }
+    }
+
     @Test func attemptedNormalNavigationCannotReplaceRequiredSettingsOrPairingState() async {
         var state = RemoteAppFeature.State(hasCompletedInitialSetup: false)
         state.requiredSettings?.pairing = PairingFeature.State(code: "ABCDEFGHJKMN")

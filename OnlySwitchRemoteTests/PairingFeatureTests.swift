@@ -274,6 +274,8 @@ struct PairingFeatureTests {
             SettingsFeature()
         } withDependencies: {
             $0.remoteConnection.discover = { stream }
+            $0.remotePersistence.loadLayout = { _ in nil }
+            $0.remotePersistence.loadCatalog = { _ in nil }
         }
 
         await store.send(.pairing(.presented(.task))) {
@@ -307,6 +309,8 @@ struct PairingFeatureTests {
             SettingsFeature()
         } withDependencies: {
             $0.remoteConnection.discover = { stream }
+            $0.remotePersistence.loadLayout = { _ in nil }
+            $0.remotePersistence.loadCatalog = { _ in nil }
         }
 
         await store.send(.pairing(.presented(.task))) {
@@ -317,8 +321,10 @@ struct PairingFeatureTests {
             $0.pairing = nil
             $0.pairedMacs = [paired]
             $0.selectedMacID = paired.id
+            $0.selectionGeneration = 1
         }
         await store.receive(.delegate(.paired(paired)))
+        await store.receive(.selectedMacDataLoaded(1, paired.id, nil, nil))
         var iterator = terminations.makeAsyncIterator()
         _ = try #require(await iterator.next())
         continuation.finish()

@@ -217,6 +217,13 @@ struct RemoteAppFeature {
                 state.hasCompletedInitialSetup = true
                 return paired(mac, state: &state)
 
+            case let .requiredSettings(.delegate(.selectedMacChanged(mac))):
+                return select(mac, state: &state)
+
+            case let .requiredSettings(.delegate(.macForgotten(id))):
+                state.pairedMacs.remove(id: id)
+                return .none
+
             case .requiredSettings(.delegate(.allMacsRemoved)):
                 state.pairedMacs.removeAll()
                 state.selectedMacID = nil
@@ -227,6 +234,13 @@ struct RemoteAppFeature {
             case let .path(.element(_, action: .settings(.delegate(.paired(mac))))):
                 state.hasCompletedInitialSetup = true
                 return paired(mac, state: &state)
+
+            case let .path(.element(_, action: .settings(.delegate(.selectedMacChanged(mac))))):
+                return select(mac, state: &state)
+
+            case let .path(.element(_, action: .settings(.delegate(.macForgotten(id))))):
+                state.pairedMacs.remove(id: id)
+                return .none
 
             case .path(.element(_, action: .settings(.delegate(.allMacsRemoved)))):
                 state.pairedMacs.removeAll()
@@ -246,6 +260,20 @@ struct RemoteAppFeature {
 
     private func paired(_ mac: PairedMac, state: inout State) -> Effect<Action> {
         state.pairedMacs.updateOrAppend(mac)
+        state.selectedMacID = mac.id
+        state.rootIssue = nil
+        return .merge(
+            beginPersistence(
+                selectedMacID: mac.id,
+                hasCompletedInitialSetup: true,
+                state: &state
+            ),
+            .run { [connection] _ in await connection.select(mac) }
+        )
+    }
+
+    private func select(_ mac: PairedMac, state: inout State) -> Effect<Action> {
+        guard state.pairedMacs[id: mac.id] != nil else { return .none }
         state.selectedMacID = mac.id
         state.rootIssue = nil
         return .merge(
