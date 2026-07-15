@@ -156,7 +156,7 @@ actor RemoteHost {
         try await Self.performRevocationCleanup(
             sessionIDs: affected,
             removeSubscription: { id in await scheduler.remove(sessionID: id) },
-            closePeer: { id in await peers[id]?.close() },
+            closePeer: { id in await peers[id]?.revoke() },
             deleteCredential: { try await store.delete(deviceID) }
         )
         eventContinuation.yield(.devicesChanged(try await credentialStore.loadAll()))

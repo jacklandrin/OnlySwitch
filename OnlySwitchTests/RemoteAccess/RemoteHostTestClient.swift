@@ -114,6 +114,10 @@ actor RemoteHostTestClient {
         }
     }
 
+    func nextMessage() async throws -> RemoteMessage {
+        try await receiveEncrypted()
+    }
+
     private func sendEncrypted(_ message: RemoteMessage) async throws {
         guard let crypto else { throw RemoteProtocolError(code: .authenticationFailed, message: "Not paired") }
         try await io.send(.encrypted(try crypto.seal(message)))

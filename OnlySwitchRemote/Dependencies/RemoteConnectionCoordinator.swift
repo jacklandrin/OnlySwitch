@@ -3,7 +3,8 @@ import Foundation
 actor RemoteConnectionCoordinator {
     private let connect: @Sendable (PairedMac) async -> Void
     private let disconnect: @Sendable (UUID) async -> Void
-    private var selected: PairedMac?
+    private var plannedSelection: PairedMac?
+    private var operationTail: Task<Void, Never>?
 
     init(
         connect: @escaping @Sendable (PairedMac) async -> Void,
@@ -14,9 +15,21 @@ actor RemoteConnectionCoordinator {
     }
 
     func select(_ mac: PairedMac?) async {
-        guard selected?.id != mac?.id else { return }
-        if let previous = selected { await disconnect(previous.id) }
-        selected = mac
-        if let mac { await connect(mac) }
+        guard plannedSelection?.id != mac?.id else {
+            if let operationTail { await operationTail.value }
+            return
+        }
+        let previous = plannedSelection
+        plannedSelection = mac
+        let predecessor = operationTail
+        let connect = self.connect
+        let disconnect = self.disconnect
+        let operation = Task {
+            if let predecessor { await predecessor.value }
+            if let previous { await disconnect(previous.id) }
+            if let mac { await connect(mac) }
+        }
+        operationTail = operation
+        await operation.value
     }
 }

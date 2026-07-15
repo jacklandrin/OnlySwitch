@@ -3,6 +3,37 @@ import DependenciesMacros
 import Foundation
 import Security
 
+struct RemoteKeychainOperations: Sendable {
+    var update: @Sendable (UUID, Data) async -> OSStatus
+    var add: @Sendable (UUID, Data) async -> OSStatus
+    var load: @Sendable (UUID) async -> (OSStatus, Data?)
+    var delete: @Sendable (UUID) async -> OSStatus
+
+    static let security = Self(
+        update: { id, data in
+            SecItemUpdate(
+                RemoteKeychainClient.baseQuery(id) as CFDictionary,
+                [kSecValueData as String: data] as CFDictionary
+            )
+        },
+        add: { id, data in
+            var attributes = RemoteKeychainClient.baseQuery(id)
+            attributes[kSecValueData as String] = data
+            attributes[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
+            return SecItemAdd(attributes as CFDictionary, nil)
+        },
+        load: { id in
+            var query = RemoteKeychainClient.baseQuery(id)
+            query[kSecReturnData as String] = kCFBooleanTrue
+            query[kSecMatchLimit as String] = kSecMatchLimitOne
+            var result: CFTypeRef?
+            let status = SecItemCopyMatching(query as CFDictionary, &result)
+            return (status, result as? Data)
+        },
+        delete: { SecItemDelete(RemoteKeychainClient.baseQuery($0) as CFDictionary) }
+    )
+}
+
 @DependencyClient
 struct RemoteKeychainClient: Sendable {
     enum Error: Swift.Error, Equatable, Sendable {
@@ -30,39 +61,33 @@ extension RemoteKeychainClient {
         )
     }
 
-    static var live: Self {
+    static var live: Self { live(operations: .security) }
+
+    static func live(operations: RemoteKeychainOperations) -> Self {
         Self(
             saveCredential: { id, credential in
                 guard credential.count == 32 else { throw Error.invalidCredentialLength }
-                let query = baseQuery(id)
-                SecItemDelete(query as CFDictionary)
-                var attributes = query
-                attributes[kSecValueData as String] = credential
-                attributes[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
-                attributes[kSecAttrSynchronizable as String] = kCFBooleanFalse
-                let status = SecItemAdd(attributes as CFDictionary, nil)
+                let updateStatus = await operations.update(id, credential)
+                if updateStatus == errSecSuccess { return }
+                guard updateStatus == errSecItemNotFound else { throw Error.status(updateStatus) }
+                let status = await operations.add(id, credential)
                 guard status == errSecSuccess else { throw Error.status(status) }
             },
             loadCredential: { id in
-                var query = baseQuery(id)
-                query[kSecReturnData as String] = kCFBooleanTrue
-                query[kSecMatchLimit as String] = kSecMatchLimitOne
-                query[kSecAttrSynchronizable as String] = kCFBooleanFalse
-                var result: CFTypeRef?
-                let status = SecItemCopyMatching(query as CFDictionary, &result)
+                let (status, data) = await operations.load(id)
                 if status == errSecItemNotFound { return nil }
-                guard status == errSecSuccess, let data = result as? Data else { throw Error.status(status) }
+                guard status == errSecSuccess, let data else { throw Error.status(status) }
                 guard data.count == 32 else { throw Error.invalidCredentialLength }
                 return data
             },
             deleteCredential: { id in
-                let status = SecItemDelete(baseQuery(id) as CFDictionary)
+                let status = await operations.delete(id)
                 guard status == errSecSuccess || status == errSecItemNotFound else { throw Error.status(status) }
             }
         )
     }
 
-    private static func baseQuery(_ id: UUID) -> [String: Any] {
+    fileprivate static func baseQuery(_ id: UUID) -> [String: Any] {
         [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,

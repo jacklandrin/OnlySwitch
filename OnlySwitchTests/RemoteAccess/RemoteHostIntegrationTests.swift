@@ -62,4 +62,20 @@ struct RemoteHostIntegrationTests {
         #expect(try await host.pairedDevices().isEmpty)
     }
 
+    @Test(.timeLimit(.minutes(1)))
+    func liveRevocationIsAuthenticatedBeforeSessionCloses() async throws {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let host = RemoteHost.testing(catalog: [], router: router, pairingCode: "ABCDEFGH2345")
+        let endpoint = try await host.startForTesting(port: 0)
+        defer { Task { await host.stop() } }
+        let client = try await RemoteHostTestClient.connect(to: endpoint)
+        try await client.pair(code: "ABCDEFGH2345")
+        let device = try #require(try await host.pairedDevices().first)
+
+        try await host.revoke(deviceID: device.id)
+
+        #expect(try await client.nextMessage() == .credentialRevoked)
+        #expect(try await host.pairedDevices().isEmpty)
+    }
+
 }

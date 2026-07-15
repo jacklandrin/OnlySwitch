@@ -88,6 +88,7 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
     case actionResult(RemoteActionResult)
     case ping(UInt64)
     case pong(UInt64)
+    case credentialRevoked
     case sessionError(RemoteProtocolError)
 
     private enum CodingKeys: String, CodingKey {
@@ -117,6 +118,7 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
         case actionResult
         case ping
         case pong
+        case credentialRevoked
         case sessionError
     }
 
@@ -160,6 +162,8 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
             self = .ping(try container.decode(UInt64.self, forKey: .payload))
         case .pong:
             self = .pong(try container.decode(UInt64.self, forKey: .payload))
+        case .credentialRevoked:
+            self = .credentialRevoked
         case .sessionError:
             self = .sessionError(try container.decode(RemoteProtocolError.self, forKey: .payload))
         }
@@ -218,6 +222,8 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
         case let .pong(nonce):
             try container.encode(Kind.pong, forKey: .type)
             try container.encode(nonce, forKey: .payload)
+        case .credentialRevoked:
+            try container.encode(Kind.credentialRevoked, forKey: .type)
         case let .sessionError(error):
             try container.encode(Kind.sessionError, forKey: .type)
             try container.encode(error, forKey: .payload)

@@ -152,6 +152,13 @@ actor RemotePeerSession {
         await io.cancel()
     }
 
+    func revoke() async {
+        if case .authenticated = state {
+            try? await sendEncrypted(.credentialRevoked)
+        }
+        await close()
+    }
+
     func sendStatus(_ status: RemoteControlStatus) async throws {
         try await sendEncrypted(.statusChanged(status))
     }
