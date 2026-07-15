@@ -16,6 +16,7 @@ extension RemoteConnectionClient {
             select: { await runtime.select($0) },
             events: { runtime.makeConnectionEventStream() },
             snapshot: { await runtime.snapshot() },
+            adoptPairedMac: { await runtime.adoptPairedMac($0) },
             forgetMac: { try await runtime.forgetMac($0) },
             subscribe: { try await runtime.subscribe($0) },
             send: { try await runtime.send($0) },
@@ -103,6 +104,7 @@ actor RemoteConnectionRuntime {
     private let backgroundCleanup: @Sendable () async -> Void
     private let catalogRequest: @Sendable (RemoteClientSession) async throws -> Void
     private let closeSession: @Sendable (RemoteClientSession) async -> Void
+    private let reconnectStarted: @Sendable () async -> Void
     private let localStateMutations = RemoteLocalStateMutationCoordinator()
     private var browser: NWBrowser?
     private var browserRetryTask: Task<Void, Never>?
@@ -133,6 +135,7 @@ actor RemoteConnectionRuntime {
     }
     private var pendingRevocation: PendingRevocation?
     private var connectionTask: Task<Void, Never>?
+    private var adoptingMacID: UUID?
     private var generation: UInt64 = 0
     private struct PendingPairedMacMetadata: Sendable {
         let value: PairedMac
@@ -151,7 +154,8 @@ actor RemoteConnectionRuntime {
         catalogRequest: @escaping @Sendable (RemoteClientSession) async throws -> Void = {
             try await $0.requestCatalog()
         },
-        closeSession: @escaping @Sendable (RemoteClientSession) async -> Void = { await $0.close() }
+        closeSession: @escaping @Sendable (RemoteClientSession) async -> Void = { await $0.close() },
+        reconnectStarted: @escaping @Sendable () async -> Void = {}
     ) {
         self.persistence = persistence
         self.keychain = keychain
@@ -159,6 +163,7 @@ actor RemoteConnectionRuntime {
         self.backgroundCleanup = backgroundCleanup
         self.catalogRequest = catalogRequest
         self.closeSession = closeSession
+        self.reconnectStarted = reconnectStarted
     }
 
     nonisolated func makeDiscoveryStream() -> AsyncStream<DiscoveryEvent> {
@@ -365,12 +370,34 @@ actor RemoteConnectionRuntime {
         guard generation == currentGeneration, selected?.id == mac?.id else { return }
         guard let mac, foregrounded else { return }
         connectionTask = Task { [weak self] in
-            await self?.connectWithRetry(mac, generation: currentGeneration)
+            guard let self else { return }
+            await self.reconnectStarted()
+            await self.connectWithRetry(mac, generation: currentGeneration)
+            await self.reconnectFinished(generation: currentGeneration)
         }
+    }
+
+    private func reconnectFinished(generation expectedGeneration: UInt64) {
+        guard generation == expectedGeneration else { return }
+        connectionTask = nil
     }
 
     func snapshot() -> RemoteConnectionSnapshot {
         .init(selectedMacID: selected?.id, authenticatedMacID: session == nil ? nil : selected?.id)
+    }
+
+    func adoptPairedMac(_ mac: PairedMac) async -> RemotePairAdoptionResult {
+        if selected == mac, session != nil, sessionToken != nil {
+            return .authenticated
+        }
+        if adoptingMacID == mac.id || (selected?.id == mac.id && connectionTask != nil) {
+            return .connecting
+        }
+        adoptingMacID = mac.id
+        await select(mac)
+        if adoptingMacID == mac.id { adoptingMacID = nil }
+        guard selected?.id == mac.id, connectionTask != nil else { return .offline }
+        return .connecting
     }
 
     func forgetMac(_ id: UUID) async throws {

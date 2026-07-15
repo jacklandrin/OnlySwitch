@@ -13,6 +13,12 @@ struct RemoteConnectionSnapshot: Equatable, Sendable {
     }
 }
 
+enum RemotePairAdoptionResult: Equatable, Sendable {
+    case authenticated
+    case connecting
+    case offline
+}
+
 @DependencyClient
 struct RemoteConnectionClient: Sendable {
     var discover: @Sendable () -> AsyncStream<DiscoveryEvent> = { AsyncStream { $0.finish() } }
@@ -20,6 +26,7 @@ struct RemoteConnectionClient: Sendable {
     var select: @Sendable (PairedMac?) async -> Void = { _ in }
     var events: @Sendable () -> AsyncStream<RemoteConnectionEvent> = { AsyncStream { $0.finish() } }
     var snapshot: @Sendable () async -> RemoteConnectionSnapshot = { .init() }
+    var adoptPairedMac: @Sendable (PairedMac) async -> RemotePairAdoptionResult = { _ in .offline }
     var forgetMac: @Sendable (UUID) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
     var subscribe: @Sendable (Set<RemoteControlID>) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
     var send: @Sendable (RemoteActionRequest) async throws -> RemoteActionResult = { _ in throw RemoteDependencyError.unimplemented }
@@ -32,6 +39,7 @@ extension RemoteConnectionClient: DependencyKey {
         var value = Self()
         value.events = { AsyncStream { $0.finish() } }
         value.snapshot = { .init() }
+        value.adoptPairedMac = { _ in .offline }
         return value
     }
 }

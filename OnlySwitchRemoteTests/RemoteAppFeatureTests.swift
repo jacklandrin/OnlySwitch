@@ -80,6 +80,7 @@ struct RemoteAppFeatureTests {
             }
         }
         await store.send(.connectionEvent(.connecting(laptopID))) {
+            $0.connectionEventRevision = 1
             $0.connectedMacIDs = []
             if case var .settings(settings) = $0.path[id: pathID] {
                 settings.connectionStatuses = [laptopID: .connecting]
@@ -87,6 +88,7 @@ struct RemoteAppFeatureTests {
             }
         }
         await store.send(.connectionEvent(.authenticated(laptopID))) {
+            $0.connectionEventRevision = 2
             $0.connectedMacIDs = [laptopID]
             $0.metadataRefreshGeneration = 1
             if case var .settings(settings) = $0.path[id: pathID] {
@@ -134,6 +136,7 @@ struct RemoteAppFeatureTests {
         }
 
         await store.send(.connectionEvent(.revoked(studio.id))) {
+            $0.connectionEventRevision = 1
             $0.connectedMacIDs = []
             $0.metadataRefreshGeneration = 1
             if case var .settings(settings) = $0.path[id: pathID] {
@@ -177,6 +180,7 @@ struct RemoteAppFeatureTests {
         }
 
         await store.send(.connectionEvent(.authenticated(studio.id))) {
+            $0.connectionEventRevision = 1
             $0.connectedMacIDs = [studio.id]
             $0.metadataRefreshGeneration = 1
             if case var .settings(settings) = $0.path[id: pathID] {
@@ -194,12 +198,13 @@ struct RemoteAppFeatureTests {
         await store.send(.path(.element(id: pathID, action: .settings(.delegate(.paired(laptop)))))) {
             $0.pairedMacs = [studio, laptop]
             $0.selectedMacID = laptop.id
-            $0.connectedMacIDs = [laptop.id]
+            $0.connectedMacIDs = []
+            $0.pairAdoptionGeneration = 1
             $0.metadataRefreshGeneration = 2
             if case var .settings(settings) = $0.path[id: pathID] {
                 settings.pairedMacs = [studio, laptop]
                 settings.selectedMacID = laptop.id
-                settings.connectionStatuses = [laptop.id: .connected]
+                settings.connectionStatuses = [:]
                 $0.path[id: pathID] = .settings(settings)
             }
             $0.nextPersistenceSequence = 1
@@ -210,6 +215,7 @@ struct RemoteAppFeatureTests {
             $0.pendingPersistenceIntent = nil
             $0.isPersisting = false
         }
+        await store.receive(.pairAdoptionResponse(1, 1, laptop.id, .offline))
         await gate.open()
         await store.send(.pairedMetadataRefreshed(1, [studio]))
         await store.finish()
@@ -228,6 +234,7 @@ struct RemoteAppFeatureTests {
         }
 
         await store.send(.connectionEvent(.authenticated(laptop.id))) {
+            $0.connectionEventRevision = 1
             $0.connectedMacIDs = [laptop.id]
             $0.metadataRefreshGeneration = 1
             if case var .settings(settings) = $0.path[id: pathID] {
@@ -370,12 +377,97 @@ struct RemoteAppFeatureTests {
         let intent = RemoteAppPersistenceIntent(writerID: store.state.persistenceWriterID, sequence: 1, selectedMacID: studio.id, hasCompletedInitialSetup: true)
         await store.send(.requiredSettings(.delegate(.paired(studio)))) {
             $0.requiredSettings = nil; $0.hasCompletedInitialSetup = true; $0.pairedMacs = [studio]; $0.selectedMacID = studio.id
-            $0.connectedMacIDs = [studio.id]; $0.metadataRefreshGeneration = 1
+            $0.pairAdoptionGeneration = 1; $0.metadataRefreshGeneration = 1
             $0.nextPersistenceSequence = 1; $0.pendingPersistenceIntent = intent; $0.isPersisting = true
         }
         await store.receive(.persistenceResponse(intent, .success)) { $0.pendingPersistenceIntent = nil; $0.isPersisting = false }
+        await store.receive(.pairAdoptionResponse(1, 0, studio.id, .offline))
         await store.finish()
         #expect(await persistence.selectedIDs == [studio.id]); #expect(await persistence.completionValues == [true]); #expect(await selected.ids.isEmpty)
+    }
+
+    @Test func offlineEventBetweenPairAdoptionStartAndResponseWins() async {
+        let adoption = PairAdoptionGate(result: .authenticated)
+        let studio = studio
+        let store = TestStore(initialState: RemoteAppFeature.State(hasCompletedInitialSetup: false)) {
+            RemoteAppFeature()
+        } withDependencies: {
+            $0.remotePersistence.saveAppState = { _ in }
+            $0.remoteConnection.adoptPairedMac = { await adoption.adopt($0) }
+        }
+        let intent = RemoteAppPersistenceIntent(
+            writerID: store.state.persistenceWriterID,
+            sequence: 1,
+            selectedMacID: studio.id,
+            hasCompletedInitialSetup: true
+        )
+
+        await store.send(.requiredSettings(.delegate(.paired(studio)))) {
+            $0.requiredSettings = nil
+            $0.pairedMacs = [studio]
+            $0.selectedMacID = studio.id
+            $0.metadataRefreshGeneration = 1
+            $0.pairAdoptionGeneration = 1
+            $0.hasCompletedInitialSetup = true
+            $0.nextPersistenceSequence = 1
+            $0.pendingPersistenceIntent = intent
+            $0.isPersisting = true
+        }
+        await store.receive(.persistenceResponse(intent, .success)) {
+            $0.pendingPersistenceIntent = nil
+            $0.isPersisting = false
+        }
+        await adoption.waitUntilEntered()
+        await store.send(.connectionEvent(.offline(studio.id, "Disconnected"))) {
+            $0.connectionEventRevision = 1
+        }
+        await adoption.open()
+        await store.receive(.pairAdoptionResponse(1, 0, studio.id, .authenticated))
+        #expect(store.state.connectedMacIDs.isEmpty)
+    }
+
+    @Test func authenticatedEventBetweenPairAdoptionStartAndResponseWins() async {
+        let adoption = PairAdoptionGate(result: .offline)
+        let studio = studio
+        let store = TestStore(initialState: RemoteAppFeature.State(hasCompletedInitialSetup: false)) {
+            RemoteAppFeature()
+        } withDependencies: {
+            $0.remotePersistence.saveAppState = { _ in }
+            $0.remotePersistence.loadPairedMacs = { [studio] }
+            $0.remoteConnection.adoptPairedMac = { await adoption.adopt($0) }
+        }
+        let intent = RemoteAppPersistenceIntent(
+            writerID: store.state.persistenceWriterID,
+            sequence: 1,
+            selectedMacID: studio.id,
+            hasCompletedInitialSetup: true
+        )
+
+        await store.send(.requiredSettings(.delegate(.paired(studio)))) {
+            $0.requiredSettings = nil
+            $0.pairedMacs = [studio]
+            $0.selectedMacID = studio.id
+            $0.metadataRefreshGeneration = 1
+            $0.pairAdoptionGeneration = 1
+            $0.hasCompletedInitialSetup = true
+            $0.nextPersistenceSequence = 1
+            $0.pendingPersistenceIntent = intent
+            $0.isPersisting = true
+        }
+        await store.receive(.persistenceResponse(intent, .success)) {
+            $0.pendingPersistenceIntent = nil
+            $0.isPersisting = false
+        }
+        await adoption.waitUntilEntered()
+        await store.send(.connectionEvent(.authenticated(studio.id))) {
+            $0.connectionEventRevision = 1
+            $0.connectedMacIDs = [studio.id]
+            $0.metadataRefreshGeneration = 2
+        }
+        await store.receive(.pairedMetadataRefreshed(2, [studio]))
+        await adoption.open()
+        await store.receive(.pairAdoptionResponse(1, 0, studio.id, .offline))
+        #expect(store.state.connectedMacIDs == [studio.id])
     }
 
     @Test func removingFinalMacCreatesRequiredChild() async throws {
@@ -574,7 +666,7 @@ struct RemoteAppFeatureTests {
             $0.hasCompletedInitialSetup = true
             $0.pairedMacs = [studio]
             $0.selectedMacID = studio.id
-            $0.connectedMacIDs = [studio.id]
+            $0.pairAdoptionGeneration = 1
             $0.metadataRefreshGeneration = 1
             $0.nextPersistenceSequence = 1
             $0.pendingPersistenceIntent = intent
@@ -584,6 +676,7 @@ struct RemoteAppFeatureTests {
             $0.isPersisting = false
             $0.rootIssue = .persistenceFailed
         }
+        await store.receive(.pairAdoptionResponse(1, 0, studio.id, .offline))
 
         await persistence.allowSuccess()
         await store.send(.retryTapped) { $0.isPersisting = true }
@@ -674,12 +767,12 @@ struct RemoteAppFeatureTests {
         await store.send(.path(.element(id: pathID, action: .settings(.delegate(.paired(laptop)))))) {
             $0.pairedMacs = [self.studio, self.laptop]
             $0.selectedMacID = self.laptop.id
-            $0.connectedMacIDs = [self.laptop.id]
+            $0.pairAdoptionGeneration = 1
             $0.metadataRefreshGeneration = 1
             if case var .settings(settings) = $0.path[id: pathID] {
                 settings.pairedMacs = [self.studio, self.laptop]
                 settings.selectedMacID = self.laptop.id
-                settings.connectionStatuses = [self.laptop.id: .connected]
+                settings.connectionStatuses = [:]
                 $0.path[id: pathID] = .settings(settings)
             }
             $0.nextPersistenceSequence = 1
@@ -705,6 +798,7 @@ struct RemoteAppFeatureTests {
         }
         await saver.releaseFirstSave()
         await store.receive(.persistenceResponse(pairedIntent, .success))
+        await store.receive(.pairAdoptionResponse(1, 0, laptop.id, .offline))
         await store.finish()
 
         #expect(try await backing.loadSelectedMacID() == nil)
@@ -714,6 +808,7 @@ struct RemoteAppFeatureTests {
     @Test func rapidFinalRemovalThenPairKeepsNewestStorageWhenOlderSaveCompletesLast() async throws {
         let backing = RemotePersistenceClient.inMemory()
         let saver = ReverseAtomicAppStateSaver(backing: backing)
+        let adoption = PairAdoptionGate(result: .offline)
         let writerID = UUID(uuidString: "00000000-0000-0000-0000-000000000902")!
         var state = RemoteAppFeature.State(
             hasCompletedInitialSetup: true,
@@ -732,6 +827,7 @@ struct RemoteAppFeatureTests {
         } withDependencies: {
             $0.remotePersistence.saveAppState = { try await saver.save($0) }
             $0.remoteConnection.select = { _ in }
+            $0.remoteConnection.adoptPairedMac = { await adoption.adopt($0) }
         }
         let clearedIntent = RemoteAppPersistenceIntent(
             writerID: writerID,
@@ -763,7 +859,7 @@ struct RemoteAppFeatureTests {
             $0.hasCompletedInitialSetup = true
             $0.pairedMacs = [laptop]
             $0.selectedMacID = laptop.id
-            $0.connectedMacIDs = [laptop.id]
+            $0.pairAdoptionGeneration = 1
             $0.metadataRefreshGeneration = 2
             $0.nextPersistenceSequence = 2
             $0.pendingPersistenceIntent = pairedIntent
@@ -773,6 +869,9 @@ struct RemoteAppFeatureTests {
             $0.pendingPersistenceIntent = nil
             $0.isPersisting = false
         }
+        await adoption.waitUntilEntered()
+        await adoption.open()
+        await store.receive(.pairAdoptionResponse(1, 0, laptop.id, .offline))
         await saver.releaseFirstSave()
         await store.receive(.persistenceResponse(clearedIntent, .success))
         await store.finish()
@@ -794,6 +893,34 @@ private actor MetadataLoadGate {
     init(result: [PairedMac]) { self.result = result }
 
     func load() async throws -> [PairedMac] {
+        entered = true
+        let waiters = enteredWaiters
+        enteredWaiters.removeAll()
+        for waiter in waiters { waiter.resume() }
+        await withCheckedContinuation { openContinuation = $0 }
+        return result
+    }
+
+    func waitUntilEntered() async {
+        guard entered == false else { return }
+        await withCheckedContinuation { enteredWaiters.append($0) }
+    }
+
+    func open() {
+        openContinuation?.resume()
+        openContinuation = nil
+    }
+}
+
+private actor PairAdoptionGate {
+    private let result: RemotePairAdoptionResult
+    private var entered = false
+    private var enteredWaiters: [CheckedContinuation<Void, Never>] = []
+    private var openContinuation: CheckedContinuation<Void, Never>?
+
+    init(result: RemotePairAdoptionResult) { self.result = result }
+
+    func adopt(_ mac: PairedMac) async -> RemotePairAdoptionResult {
         entered = true
         let waiters = enteredWaiters
         enteredWaiters.removeAll()

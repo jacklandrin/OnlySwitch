@@ -502,6 +502,7 @@ struct RemoteConnectionClientTests {
             deviceName: "Test iPhone"
         )
         var connection = RemoteConnectionClient.testValue
+        connection.adoptPairedMac = { await runtime.adoptPairedMac($0) }
         connection.select = { mac in
             await selections.record(mac?.id)
             await runtime.select(mac)
@@ -523,8 +524,8 @@ struct RemoteConnectionClientTests {
             $0.requiredSettings = nil
             $0.pairedMacs = [paired]
             $0.selectedMacID = macID
-            $0.connectedMacIDs = [macID]
             $0.metadataRefreshGeneration = 1
+            $0.pairAdoptionGeneration = 1
             $0.hasCompletedInitialSetup = true
             $0.nextPersistenceSequence = 1
             $0.pendingPersistenceIntent = intent
@@ -534,6 +535,9 @@ struct RemoteConnectionClientTests {
             $0.pendingPersistenceIntent = nil
             $0.isPersisting = false
         }
+        await store.receive(.pairAdoptionResponse(1, 0, macID, .authenticated)) {
+            $0.connectedMacIDs = [macID]
+        }
         await store.finish()
         server.stopAdvertising()
 
@@ -542,6 +546,29 @@ struct RemoteConnectionClientTests {
         #expect(await runtime.snapshot().authenticatedMacID == macID)
         try await runtime.subscribe([.darkMode])
         await server.waitUntilFinished()
+    }
+
+    @Test func duplicateAdoptionStartsOnlyOneReconnectTask() async {
+        let starts = ReconnectStartRecorder()
+        let runtime = RemoteConnectionRuntime(
+            persistence: .inMemory(),
+            keychain: .inMemory(),
+            deviceID: UUID(),
+            reconnectStarted: { await starts.record() }
+        )
+        let mac = PairedMac(
+            id: UUID(),
+            displayName: "Studio",
+            lastEndpointDescription: nil,
+            lastConnectedAt: nil,
+            requiresPairing: false
+        )
+
+        #expect(await runtime.adoptPairedMac(mac) == .connecting)
+        #expect(await runtime.adoptPairedMac(mac) == .connecting)
+        await Task.yield()
+        #expect(await starts.count == 1)
+        await runtime.setForegrounded(false)
     }
 
     @Test(.timeLimit(.minutes(1)))
@@ -588,6 +615,7 @@ struct RemoteConnectionClientTests {
     }
 
     @Test(.timeLimit(.minutes(1)))
+    @MainActor
     func catalogFailureAfterRemoteAuthenticationRetainsCredentialAndPairingMetadata() async throws {
         let macID = UUID()
         let credential = Data(repeating: 33, count: 32)
@@ -599,12 +627,15 @@ struct RemoteConnectionClientTests {
         defer { server.cancel() }
         let persistence = RemotePersistenceClient.inMemory()
         let keychain = RemoteKeychainClient.inMemory()
+        let reconnects = ReconnectStartRecorder()
         let runtime = RemoteConnectionRuntime(
             persistence: persistence,
             keychain: keychain,
             deviceID: UUID(),
-            catalogRequest: { _ in throw ConnectionStorageError.catalog }
+            catalogRequest: { _ in throw ConnectionStorageError.catalog },
+            reconnectStarted: { await reconnects.record() }
         )
+        var events = runtime.makeConnectionEventStream().makeAsyncIterator()
         let discovered = DiscoveredMac(
             id: macID,
             displayName: "Studio",
@@ -621,6 +652,52 @@ struct RemoteConnectionClientTests {
         #expect(paired.id == macID)
         #expect(try await keychain.loadCredential(macID) == credential)
         #expect(try await persistence.loadPairedMacs().first?.requiresPairing == false)
+        #expect(await events.next() == .authenticated(macID))
+        guard case let .offline(offlineID, _)? = await events.next() else {
+            Issue.record("Expected catalog failure to publish offline before the pair delegate")
+            return
+        }
+        #expect(offlineID == macID)
+        server.stopAdvertising()
+        #expect(await runtime.snapshot().authenticatedMacID == nil)
+        var rootState = RemoteAppFeature.State(hasCompletedInitialSetup: false)
+        rootState.connectionEventRevision = 2
+        var connection = RemoteConnectionClient.testValue
+        connection.adoptPairedMac = { await runtime.adoptPairedMac($0) }
+        let rootStore = TestStore(initialState: rootState) { RemoteAppFeature() } withDependencies: {
+            $0.remoteConnection = connection
+            $0.remotePersistence.saveAppState = { _ in }
+        }
+        let intent = RemoteAppPersistenceIntent(
+            writerID: rootStore.state.persistenceWriterID,
+            sequence: 1,
+            selectedMacID: macID,
+            hasCompletedInitialSetup: true
+        )
+        await rootStore.send(.requiredSettings(.delegate(.paired(paired)))) {
+            $0.requiredSettings = nil
+            $0.pairedMacs = [paired]
+            $0.selectedMacID = macID
+            $0.pairAdoptionGeneration = 1
+            $0.metadataRefreshGeneration = 1
+            $0.hasCompletedInitialSetup = true
+            $0.nextPersistenceSequence = 1
+            $0.pendingPersistenceIntent = intent
+            $0.isPersisting = true
+        }
+        await rootStore.receive(.persistenceResponse(intent, .success)) {
+            $0.pendingPersistenceIntent = nil
+            $0.isPersisting = false
+        }
+        await rootStore.receive(.pairAdoptionResponse(1, 2, macID, .connecting))
+        await rootStore.finish()
+
+        #expect(await runtime.adoptPairedMac(paired) == .connecting)
+        await Task.yield()
+        #expect(await reconnects.count == 1)
+        #expect(rootStore.state.connectedMacIDs.isEmpty)
+        #expect(await runtime.snapshot().authenticatedMacID == nil)
+        await runtime.setForegrounded(false)
         await server.waitUntilFinished()
     }
 
@@ -1346,6 +1423,11 @@ private actor SessionCloseRecorder {
 private actor RuntimeSelectionRecorder {
     private(set) var ids: [UUID?] = []
     func record(_ id: UUID?) { ids.append(id) }
+}
+
+private actor ReconnectStartRecorder {
+    private(set) var count = 0
+    func record() { count += 1 }
 }
 
 private actor ForgetOperationRecorder {

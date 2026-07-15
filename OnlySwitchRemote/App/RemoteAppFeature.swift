@@ -10,6 +10,8 @@ struct RemoteAppFeature {
         var pairedMacs: IdentifiedArrayOf<PairedMac> = []
         var selectedMacID: UUID?
         var connectedMacIDs: Set<UUID> = []
+        var pairAdoptionGeneration: UInt64 = 0
+        var connectionEventRevision: UInt64 = 0
         var metadataRefreshGeneration: UInt64 = 0
         var hasCompletedInitialSetup: Bool
         var isLoading = false
@@ -86,6 +88,7 @@ struct RemoteAppFeature {
         case launchResponse(UInt64, LaunchResult)
         case connectionSnapshotLoaded(RemoteConnectionSnapshot)
         case connectionEvent(RemoteConnectionEvent)
+        case pairAdoptionResponse(UInt64, UInt64, UUID, RemotePairAdoptionResult)
         case pairedMetadataRefreshed(UInt64, [PairedMac])
         case persistenceResponse(RemoteAppPersistenceIntent, PersistenceResult)
         case retryTapped
@@ -193,6 +196,7 @@ struct RemoteAppFeature {
                 return .none
 
             case let .connectionEvent(event):
+                state.connectionEventRevision &+= 1
                 switch event {
                 case let .authenticated(id):
                     state.connectedMacIDs = [id]
@@ -220,6 +224,19 @@ struct RemoteAppFeature {
                 case .catalog, .status, .action:
                     return .none
                 }
+
+            case let .pairAdoptionResponse(generation, eventRevision, id, result):
+                guard generation == state.pairAdoptionGeneration,
+                      eventRevision == state.connectionEventRevision,
+                      state.selectedMacID == id else { return .none }
+                switch result {
+                case .authenticated:
+                    state.connectedMacIDs = [id]
+                case .connecting, .offline:
+                    state.connectedMacIDs.removeAll()
+                }
+                syncSettingsState(&state)
+                return .none
 
             case let .pairedMetadataRefreshed(generation, macs):
                 guard generation == state.metadataRefreshGeneration else { return .none }
@@ -359,17 +376,25 @@ struct RemoteAppFeature {
     private func paired(_ mac: PairedMac, state: inout State) -> Effect<Action> {
         state.pairedMacs.updateOrAppend(mac)
         state.selectedMacID = mac.id
-        state.connectedMacIDs = [mac.id]
+        state.connectedMacIDs.formIntersection([mac.id])
+        state.pairAdoptionGeneration &+= 1
+        let adoptionGeneration = state.pairAdoptionGeneration
+        let eventRevision = state.connectionEventRevision
         invalidateMetadataRefresh(state: &state)
         syncSettingsState(&state)
         state.rootIssue = nil
+        let persistenceEffect = beginPersistence(
+            selectedMacID: mac.id,
+            hasCompletedInitialSetup: true,
+            state: &state
+        )
+        let adoptionEffect = Effect<Action>.run { [connection] send in
+            let result = await connection.adoptPairedMac(mac)
+            await send(.pairAdoptionResponse(adoptionGeneration, eventRevision, mac.id, result))
+        }
         return .merge(
             .cancel(id: CancelID.metadataRefresh),
-            beginPersistence(
-                selectedMacID: mac.id,
-                hasCompletedInitialSetup: true,
-                state: &state
-            )
+            .concatenate(persistenceEffect, adoptionEffect)
         )
     }
 
