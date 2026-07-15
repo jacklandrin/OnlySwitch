@@ -10,6 +10,7 @@ actor RemoteStatusScheduler {
     typealias FailureHandler = @Sendable () async -> Void
 
     private struct Subscriber: Sendable {
+        let token: UUID
         var ids: Set<RemoteControlID>
         let sink: Sink
         let onFailure: FailureHandler
@@ -20,11 +21,21 @@ actor RemoteStatusScheduler {
         let task: Task<Void, Never>
     }
 
+    private enum DeliveryResult: Sendable {
+        case success
+        case cancelled
+        case failed(sessionID: UUID, token: UUID)
+        case timedOut(sessionID: UUID, token: UUID)
+    }
+
+    private struct DeliveryTimeout: Error {}
+
     private let provider: RemoteCatalogProvider
     private let interval: Duration
     private let observeNotifications: Bool
     private let sendTimeout: Duration
     private var subscribers: [UUID: Subscriber] = [:]
+    private var updateTokens: [UUID: UUID] = [:]
     private var refreshTasks: [RemoteControlID: Task<Void, Never>] = [:]
     private var refreshWork: [RemoteControlID: RefreshWork] = [:]
     private var notificationTasks: [Task<Void, Never>] = []
@@ -60,23 +71,41 @@ actor RemoteStatusScheduler {
         guard ids.count <= Self.maximumSubscriptionsPerSession else {
             throw RemoteProtocolError(code: .invalidFrame, message: "Too many status subscriptions")
         }
-        let catalog = try await provider.catalog()
+        let token = UUID()
+        updateTokens[sessionID] = token
+        let catalog: [RemoteControlDescriptor]
+        do {
+            catalog = try await provider.catalog()
+        } catch {
+            if updateTokens[sessionID] == token { updateTokens[sessionID] = nil }
+            throw error
+        }
+        guard updateTokens[sessionID] == token else { throw CancellationError() }
         let knownIDs = Set(catalog.map(\.id))
         guard ids.isSubset(of: knownIDs) else {
+            updateTokens[sessionID] = nil
             throw RemoteProtocolError(code: .controlNotFound, message: "Subscription contains an unknown control")
         }
 
         let previousUnion = subscribedIDs
-        subscribers[sessionID] = Subscriber(ids: ids, sink: sink, onFailure: onFailure)
+        subscribers[sessionID] = Subscriber(token: token, ids: ids, sink: sink, onFailure: onFailure)
         reconcileTasks()
         let addedToUnion = subscribedIDs.subtracting(previousUnion)
-        for id in addedToUnion { await refresh(id) }
+        for id in addedToUnion {
+            await refresh(id)
+            guard subscribers[sessionID]?.token == token else { throw CancellationError() }
+        }
         for id in ids.subtracting(addedToUnion) {
-            if let status = latestStatuses[id] { await deliver(status, to: [sessionID]) }
+            guard subscribers[sessionID]?.token == token else { throw CancellationError() }
+            if let status = latestStatuses[id] {
+                await deliver(status, to: [sessionID])
+                guard subscribers[sessionID]?.token == token else { throw CancellationError() }
+            }
         }
     }
 
     func remove(sessionID: UUID) {
+        updateTokens[sessionID] = nil
         subscribers[sessionID] = nil
         reconcileTasks()
     }
@@ -105,6 +134,7 @@ actor RemoteStatusScheduler {
         notificationTasks.removeAll()
         latestStatuses.removeAll()
         subscribers.removeAll()
+        updateTokens.removeAll()
     }
 
     private var subscribedIDs: Set<RemoteControlID> {
@@ -163,52 +193,95 @@ actor RemoteStatusScheduler {
         }
         revision &+= 1
         let currentRevision = revision
-        guard let status = try? await provider.status(id, currentRevision),
+        guard refreshWork[id]?.token == token,
+              Task.isCancelled == false,
+              subscribedIDs.contains(id),
+              let status = try? await provider.status(id, currentRevision),
+              refreshWork[id]?.token == token,
+              Task.isCancelled == false,
               subscribedIDs.contains(id) else { return }
         latestStatuses[id] = status
         let sessionIDs = subscribers.compactMap { $0.value.ids.contains(id) ? $0.key : nil }
         await deliver(status, to: sessionIDs)
+        guard refreshWork[id]?.token == token,
+              Task.isCancelled == false,
+              subscribedIDs.contains(id) else { return }
     }
 
     private func deliver(_ status: RemoteControlStatus, to sessionIDs: [UUID]) async {
         let deliveries = sessionIDs.compactMap { id in subscribers[id].map { (id, $0) } }
-        let failures = await withTaskGroup(of: UUID?.self, returning: [UUID].self) { group in
+        let results = await withTaskGroup(of: DeliveryResult.self, returning: [DeliveryResult].self) { group in
             for (id, subscriber) in deliveries {
                 group.addTask { [sendTimeout] in
                     do {
-                        try await Self.withTimeout(sendTimeout) { try await subscriber.sink(status) }
-                        return nil
+                        try await Self.withTimeout(
+                            sendTimeout,
+                            onTimeout: subscriber.onFailure
+                        ) {
+                            try await subscriber.sink(status)
+                        }
+                        return .success
+                    } catch is DeliveryTimeout {
+                        return .timedOut(sessionID: id, token: subscriber.token)
+                    } catch is CancellationError {
+                        return .cancelled
                     } catch {
-                        return id
+                        return .failed(sessionID: id, token: subscriber.token)
                     }
                 }
             }
-            var failed: [UUID] = []
-            for await id in group {
-                if let id { failed.append(id) }
+            var results: [DeliveryResult] = []
+            for await result in group { results.append(result) }
+            return results
+        }
+        var removedAny = false
+        for result in results {
+            switch result {
+            case .success, .cancelled:
+                continue
+            case let .timedOut(id, token):
+                guard subscribers[id]?.token == token else { continue }
+                subscribers[id] = nil
+                updateTokens[id] = nil
+                removedAny = true
+            case let .failed(id, token):
+                guard let subscriber = subscribers[id], subscriber.token == token else { continue }
+                subscribers[id] = nil
+                updateTokens[id] = nil
+                removedAny = true
+                await subscriber.onFailure()
             }
-            return failed
         }
-        for id in failures {
-            guard let subscriber = subscribers.removeValue(forKey: id) else { continue }
-            await subscriber.onFailure()
-        }
-        if failures.isEmpty == false { reconcileTasks() }
+        if removedAny { reconcileTasks() }
     }
 
     private static func withTimeout<T: Sendable>(
         _ duration: Duration,
+        onTimeout: @escaping @Sendable () async -> Void,
         operation: @escaping @Sendable () async throws -> T
     ) async throws -> T {
-        try await withThrowingTaskGroup(of: T.self) { group in
-            group.addTask { try await operation() }
-            group.addTask {
-                try await Task.sleep(for: duration)
-                throw CancellationError()
+        let state = DeliveryDeadlineState()
+        do {
+            return try await withThrowingTaskGroup(of: T.self) { group in
+                group.addTask { try await operation() }
+                group.addTask {
+                    try await Task.sleep(for: duration)
+                    await state.markTimedOut()
+                    await onTimeout()
+                    throw DeliveryTimeout()
+                }
+                guard let value = try await group.next() else { throw CancellationError() }
+                group.cancelAll()
+                return value
             }
-            guard let value = try await group.next() else { throw CancellationError() }
-            group.cancelAll()
-            return value
+        } catch {
+            if await state.didTimeOut { throw DeliveryTimeout() }
+            throw error
         }
     }
+}
+
+private actor DeliveryDeadlineState {
+    private(set) var didTimeOut = false
+    func markTimedOut() { didTimeOut = true }
 }

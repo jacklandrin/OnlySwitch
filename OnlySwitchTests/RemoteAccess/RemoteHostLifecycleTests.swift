@@ -1,4 +1,5 @@
 import Foundation
+import Network
 import RemoteCore
 import Testing
 @testable import OnlySwitch
@@ -8,18 +9,22 @@ struct RemoteHostLifecycleTests {
     func revokeWhileAuthenticationIsSuspendedCannotRegisterSession() {
         var lifecycle = RemoteHostLifecycle(maximumPendingHandshakes: 2, maximumAuthenticatedSessions: 2)
         let generation = lifecycle.beginStart()
-        #expect(lifecycle.markListening(generation: generation))
+        let didListen = lifecycle.markListening(generation: generation)
+        #expect(didListen)
         let sessionID = UUID()
         let deviceID = UUID()
-        #expect(lifecycle.acceptPending(sessionID: sessionID, generation: generation))
+        let didAccept = lifecycle.acceptPending(sessionID: sessionID, generation: generation)
+        #expect(didAccept)
 
-        #expect(lifecycle.revoke(deviceID: deviceID).isEmpty)
-        #expect(lifecycle.authorize(
+        let revokedSessions = lifecycle.revoke(deviceID: deviceID)
+        let didAuthorize = lifecycle.authorize(
             sessionID: sessionID,
             deviceID: deviceID,
             generation: generation,
             credentialExists: true
-        ) == false)
+        )
+        #expect(revokedSessions.isEmpty)
+        #expect(didAuthorize == false)
         #expect(lifecycle.authenticatedCount == 0)
     }
 
@@ -27,19 +32,22 @@ struct RemoteHostLifecycleTests {
     func stopWhileAuthenticationIsSuspendedInvalidatesGenerationAndClearsState() {
         var lifecycle = RemoteHostLifecycle(maximumPendingHandshakes: 2, maximumAuthenticatedSessions: 2)
         let generation = lifecycle.beginStart()
-        #expect(lifecycle.markListening(generation: generation))
+        let didListen = lifecycle.markListening(generation: generation)
+        #expect(didListen)
         let sessionID = UUID()
-        #expect(lifecycle.acceptPending(sessionID: sessionID, generation: generation))
+        let didAccept = lifecycle.acceptPending(sessionID: sessionID, generation: generation)
+        #expect(didAccept)
 
         let sessionsToClose = lifecycle.stop()
 
         #expect(sessionsToClose == [sessionID])
-        #expect(lifecycle.authorize(
+        let didAuthorize = lifecycle.authorize(
             sessionID: sessionID,
             deviceID: UUID(),
             generation: generation,
             credentialExists: true
-        ) == false)
+        )
+        #expect(didAuthorize == false)
         #expect(lifecycle.pendingCount == 0)
         #expect(lifecycle.authenticatedCount == 0)
     }
@@ -48,24 +56,30 @@ struct RemoteHostLifecycleTests {
     func pendingAndAuthenticatedCapsAreEnforcedIndependently() {
         var lifecycle = RemoteHostLifecycle(maximumPendingHandshakes: 1, maximumAuthenticatedSessions: 1)
         let generation = lifecycle.beginStart()
-        #expect(lifecycle.markListening(generation: generation))
+        let didListen = lifecycle.markListening(generation: generation)
+        #expect(didListen)
         let first = UUID()
         let second = UUID()
-        #expect(lifecycle.acceptPending(sessionID: first, generation: generation))
-        #expect(lifecycle.acceptPending(sessionID: second, generation: generation) == false)
-        #expect(lifecycle.authorize(
+        let acceptedFirst = lifecycle.acceptPending(sessionID: first, generation: generation)
+        let acceptedSecondWhileFull = lifecycle.acceptPending(sessionID: second, generation: generation)
+        let authorizedFirst = lifecycle.authorize(
             sessionID: first,
             deviceID: UUID(),
             generation: generation,
             credentialExists: true
-        ))
-        #expect(lifecycle.acceptPending(sessionID: second, generation: generation))
-        #expect(lifecycle.authorize(
+        )
+        let acceptedSecond = lifecycle.acceptPending(sessionID: second, generation: generation)
+        let authorizedSecond = lifecycle.authorize(
             sessionID: second,
             deviceID: UUID(),
             generation: generation,
             credentialExists: true
-        ) == false)
+        )
+        #expect(acceptedFirst)
+        #expect(acceptedSecondWhileFull == false)
+        #expect(authorizedFirst)
+        #expect(acceptedSecond)
+        #expect(authorizedSecond == false)
     }
 
     @Test
@@ -75,9 +89,12 @@ struct RemoteHostLifecycleTests {
         _ = lifecycle.stop()
         let currentGeneration = lifecycle.beginStart()
 
-        #expect(lifecycle.markListening(generation: staleGeneration) == false)
-        #expect(lifecycle.markListening(generation: currentGeneration))
-        #expect(lifecycle.fail(generation: staleGeneration).isEmpty)
+        let staleReady = lifecycle.markListening(generation: staleGeneration)
+        let currentReady = lifecycle.markListening(generation: currentGeneration)
+        let staleFailureSessions = lifecycle.fail(generation: staleGeneration)
+        #expect(staleReady == false)
+        #expect(currentReady)
+        #expect(staleFailureSessions.isEmpty)
         #expect(lifecycle.isListening(generation: currentGeneration))
     }
 
@@ -85,12 +102,16 @@ struct RemoteHostLifecycleTests {
     func listenerFailureTearsDownCurrentGenerationExactlyOnce() {
         var lifecycle = RemoteHostLifecycle(maximumPendingHandshakes: 2, maximumAuthenticatedSessions: 2)
         let generation = lifecycle.beginStart()
-        #expect(lifecycle.markListening(generation: generation))
+        let didListen = lifecycle.markListening(generation: generation)
+        #expect(didListen)
         let sessionID = UUID()
-        #expect(lifecycle.acceptPending(sessionID: sessionID, generation: generation))
+        let didAccept = lifecycle.acceptPending(sessionID: sessionID, generation: generation)
+        #expect(didAccept)
 
-        #expect(lifecycle.fail(generation: generation) == [sessionID])
-        #expect(lifecycle.fail(generation: generation).isEmpty)
+        let firstFailureSessions = lifecycle.fail(generation: generation)
+        let secondFailureSessions = lifecycle.fail(generation: generation)
+        #expect(firstFailureSessions == [sessionID])
+        #expect(secondFailureSessions.isEmpty)
         #expect(lifecycle.isActive(generation: generation) == false)
     }
 
@@ -98,18 +119,23 @@ struct RemoteHostLifecycleTests {
     func endingAStaleSessionAlwaysRemovesPendingAndAuthenticatedMappings() {
         var lifecycle = RemoteHostLifecycle(maximumPendingHandshakes: 2, maximumAuthenticatedSessions: 2)
         let generation = lifecycle.beginStart()
-        #expect(lifecycle.markListening(generation: generation))
+        let didListen = lifecycle.markListening(generation: generation)
+        #expect(didListen)
         let sessionID = UUID()
-        #expect(lifecycle.acceptPending(sessionID: sessionID, generation: generation))
-        #expect(lifecycle.authorize(
+        let didAccept = lifecycle.acceptPending(sessionID: sessionID, generation: generation)
+        let didAuthorize = lifecycle.authorize(
             sessionID: sessionID,
             deviceID: UUID(),
             generation: generation,
             credentialExists: true
-        ))
+        )
+        #expect(didAccept)
+        #expect(didAuthorize)
 
-        #expect(lifecycle.end(sessionID: sessionID))
-        #expect(lifecycle.end(sessionID: sessionID) == false)
+        let firstEnd = lifecycle.end(sessionID: sessionID)
+        let secondEnd = lifecycle.end(sessionID: sessionID)
+        #expect(firstEnd)
+        #expect(secondEnd == false)
         #expect(lifecycle.pendingCount == 0)
         #expect(lifecycle.authenticatedCount == 0)
     }
@@ -118,17 +144,162 @@ struct RemoteHostLifecycleTests {
     func revocationAfterPairingAuthorizationPreventsTombstoneClear() {
         var lifecycle = RemoteHostLifecycle(maximumPendingHandshakes: 1, maximumAuthenticatedSessions: 1)
         let generation = lifecycle.beginStart()
-        #expect(lifecycle.markListening(generation: generation))
+        let didListen = lifecycle.markListening(generation: generation)
+        #expect(didListen)
         let deviceID = UUID()
         let pairingEpoch = lifecycle.pairingEpoch(for: deviceID)
 
         _ = lifecycle.revoke(deviceID: deviceID)
 
-        #expect(lifecycle.allowRepairedDevice(
+        let didAllowRepair = lifecycle.allowRepairedDevice(
             deviceID,
             pairingEpoch: pairingEpoch,
             generation: generation
-        ) == false)
+        )
+        #expect(didAllowRepair == false)
+    }
+
+    @Test
+    func epochCapturedBeforeProofConsumptionRejectsLaterRevocation() {
+        var lifecycle = RemoteHostLifecycle(maximumPendingHandshakes: 1, maximumAuthenticatedSessions: 1)
+        let generation = lifecycle.beginStart()
+        let didListen = lifecycle.markListening(generation: generation)
+        #expect(didListen)
+        let deviceID = UUID()
+
+        let epochCapturedBeforeProofConsumption = lifecycle.pairingEpoch(for: deviceID)
+        _ = lifecycle.revoke(deviceID: deviceID)
+
+        let didAllowRepair = lifecycle.allowRepairedDevice(
+            deviceID,
+            pairingEpoch: epochCapturedBeforeProofConsumption,
+            generation: generation
+        )
+        #expect(didAllowRepair == false)
+    }
+}
+
+struct RemoteCredentialReplacementTests {
+    @Test
+    func stoppedRepairRestoresExistingCredential() async throws {
+        let store = RemoteCredentialStore.inMemory()
+        let deviceID = UUID()
+        let original = Self.device(id: deviceID, byte: 1)
+        let replacement = Self.device(id: deviceID, byte: 2)
+        try await store.save(original)
+
+        let previous = try await store.replace(with: replacement)
+        try await store.rollbackReplacement(
+            replacement,
+            previous: previous,
+            restorePrevious: true
+        )
+
+        #expect(try await store.load(deviceID) == original)
+    }
+
+    @Test
+    func revokedRepairNeverRestoresExistingCredential() async throws {
+        let store = RemoteCredentialStore.inMemory()
+        let deviceID = UUID()
+        let original = Self.device(id: deviceID, byte: 1)
+        let replacement = Self.device(id: deviceID, byte: 2)
+        try await store.save(original)
+
+        let previous = try await store.replace(with: replacement)
+        try await store.rollbackReplacement(
+            replacement,
+            previous: previous,
+            restorePrevious: false
+        )
+
+        #expect(try await store.load(deviceID) == nil)
+    }
+
+    private static func device(id: UUID, byte: UInt8) -> PairedRemoteDevice {
+        .init(
+            id: id,
+            name: "Test iPhone",
+            credential: Data(repeating: byte, count: 32),
+            createdAt: .now,
+            lastConnectedAt: nil
+        )
+    }
+}
+
+struct RemoteRevocationCleanupTests {
+    @Test
+    func runtimeCleanupCompletesBeforePersistenceFailureIsReported() async {
+        let sessionID = UUID()
+        let events = StringEventProbe()
+
+        await #expect(throws: RevocationTestError.failed) {
+            try await RemoteHost.performRevocationCleanup(
+                sessionIDs: [sessionID],
+                removeSubscription: { _ in await events.record("remove") },
+                closePeer: { _ in await events.record("close") },
+                deleteCredential: {
+                    await events.record("delete")
+                    throw RevocationTestError.failed
+                }
+            )
+        }
+
+        #expect(await events.values == ["remove", "close", "delete"])
+    }
+}
+
+struct RemoteHostStartFailureTests {
+    @Test(.timeLimit(.minutes(1)))
+    func listenerCreationFailureCleansLifecycleAndPublishesFailure() async {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let host = RemoteHost.testing(
+            catalog: [],
+            router: router,
+            pairingCode: "123456",
+            listenerFactory: { _ in throw StartTestError.listener }
+        )
+        var events = host.events.makeAsyncIterator()
+
+        await #expect(throws: StartTestError.listener) {
+            try await host.start(configuration: .init(displayName: "Test"))
+        }
+
+        var failure: HostStatus?
+        while let event = await events.next() {
+            if case let .statusChanged(status) = event, case .failed = status {
+                failure = status
+                break
+            }
+        }
+        #expect(failure == .failed("Remote access could not start"))
+        #expect(await host.hasOwnedListener == false)
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func installationIdentityFailureCancelsOwnedListenerAndPublishesFailure() async {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let host = RemoteHost.testing(
+            catalog: [],
+            router: router,
+            pairingCode: "123456",
+            installationIDProvider: { throw StartTestError.identity }
+        )
+        var events = host.events.makeAsyncIterator()
+
+        await #expect(throws: StartTestError.identity) {
+            try await host.start(configuration: .init(displayName: "Test"))
+        }
+
+        var failure: HostStatus?
+        while let event = await events.next() {
+            if case let .statusChanged(status) = event, case .failed = status {
+                failure = status
+                break
+            }
+        }
+        #expect(failure == .failed("Remote access could not start"))
+        #expect(await host.hasOwnedListener == false)
     }
 }
 
@@ -261,6 +432,109 @@ struct RemoteStatusSchedulerTests {
         #expect(await deliveries.count == 1)
     }
 
+    @Test(.timeLimit(.minutes(1)))
+    func staleProviderResultAfterUnsubscribeAndResubscribeIsNeverPublished() async throws {
+        let id = RemoteControlID(kind: .builtIn, value: "2")
+        let descriptor = Self.descriptor(id: id)
+        let providerGate = TestGate()
+        let firstStarted = TestSignal()
+        let calls = IntegerProbe()
+        let deliveries = RevisionProbe()
+        let provider = RemoteCatalogProvider(
+            catalog: { [descriptor] },
+            status: { id, revision in
+                let call = await calls.increment()
+                if call == 1 {
+                    await firstStarted.signal()
+                    await providerGate.wait()
+                }
+                return Self.status(id: id, revision: revision)
+            }
+        )
+        let scheduler = RemoteStatusScheduler(provider: provider, interval: .seconds(3_600), observeNotifications: false)
+        let sessionID = UUID()
+        let first = Task {
+            try await scheduler.update(sessionID: sessionID, ids: [id]) { status in
+                await deliveries.record(status.revision)
+            }
+        }
+        await firstStarted.wait()
+        await scheduler.remove(sessionID: sessionID)
+        try await scheduler.update(sessionID: sessionID, ids: [id]) { status in
+            await deliveries.record(status.revision)
+        }
+
+        await providerGate.open()
+        await #expect(throws: CancellationError.self) { try await first.value }
+
+        #expect(await deliveries.values == [2])
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func unsubscribeDuringDeliveryDoesNotEvictSession() async throws {
+        let id = RemoteControlID(kind: .builtIn, value: "2")
+        let descriptor = Self.descriptor(id: id)
+        let deliveryStarted = TestSignal()
+        let deliveryGate = TestGate()
+        let evictions = IntegerProbe()
+        let provider = RemoteCatalogProvider(
+            catalog: { [descriptor] },
+            status: { id, revision in Self.status(id: id, revision: revision) }
+        )
+        let scheduler = RemoteStatusScheduler(provider: provider, interval: .seconds(3_600), observeNotifications: false)
+        let sessionID = UUID()
+        let update = Task {
+            try await scheduler.update(sessionID: sessionID, ids: [id], sink: { _ in
+                await deliveryStarted.signal()
+                await deliveryGate.wait()
+                throw RevocationTestError.failed
+            }, onFailure: {
+                _ = await evictions.increment()
+            })
+        }
+        await deliveryStarted.wait()
+        await scheduler.remove(sessionID: sessionID)
+        await deliveryGate.open()
+        try await update.value
+
+        #expect(await evictions.value == 0)
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func timeoutClosesStalledSinkWhileHealthyFanoutCompletes() async throws {
+        let id = RemoteControlID(kind: .builtIn, value: "2")
+        let descriptor = Self.descriptor(id: id)
+        let stalledGate = TestGate()
+        let stalledCalls = IntegerProbe()
+        let healthyCalls = IntegerProbe()
+        let evictions = IntegerProbe()
+        let provider = RemoteCatalogProvider(
+            catalog: { [descriptor] },
+            status: { id, revision in Self.status(id: id, revision: revision) }
+        )
+        let scheduler = RemoteStatusScheduler(
+            provider: provider,
+            interval: .seconds(3_600),
+            observeNotifications: false,
+            sendTimeout: .milliseconds(10)
+        )
+        try await scheduler.update(sessionID: UUID(), ids: [id], sink: { _ in
+            let call = await stalledCalls.increment()
+            if call > 1 { await stalledGate.wait() }
+        }, onFailure: {
+            _ = await evictions.increment()
+            await stalledGate.open()
+        })
+        try await scheduler.update(sessionID: UUID(), ids: [id]) { _ in
+            _ = await healthyCalls.increment()
+        }
+
+        await scheduler.refreshAll()
+
+        #expect(await healthyCalls.value == 2)
+        #expect(await evictions.value == 1)
+    }
+
     private static func descriptor(id: RemoteControlID) -> RemoteControlDescriptor {
         .init(
             id: id,
@@ -293,4 +567,64 @@ private actor StatusCallProbe {
     private(set) var ids: [RemoteControlID] = []
     var count: Int { ids.count }
     func record(_ id: RemoteControlID) { ids.append(id) }
+}
+
+private enum RevocationTestError: Error { case failed }
+private enum StartTestError: Error { case listener, identity }
+
+private actor StringEventProbe {
+    private(set) var values: [String] = []
+    func record(_ value: String) { values.append(value) }
+}
+
+private actor RevisionProbe {
+    private(set) var values: [UInt64] = []
+    func record(_ value: UInt64) { values.append(value) }
+}
+
+private actor IntegerProbe {
+    private(set) var value = 0
+    func increment() -> Int {
+        value += 1
+        return value
+    }
+}
+
+private actor TestGate {
+    private var isOpen = false
+    private var waiters: [CheckedContinuation<Void, Never>] = []
+
+    func wait() async {
+        guard isOpen == false else { return }
+        await withCheckedContinuation { waiters.append($0) }
+    }
+
+    func open() {
+        isOpen = true
+        let current = waiters
+        waiters.removeAll()
+        current.forEach { $0.resume() }
+    }
+}
+
+private actor TestSignal {
+    private var count = 0
+    private var waiters: [CheckedContinuation<Void, Never>] = []
+
+    func signal() {
+        if let waiter = waiters.first {
+            waiters.removeFirst()
+            waiter.resume()
+        } else {
+            count += 1
+        }
+    }
+
+    func wait() async {
+        if count > 0 {
+            count -= 1
+            return
+        }
+        await withCheckedContinuation { waiters.append($0) }
+    }
 }

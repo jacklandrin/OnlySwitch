@@ -33,6 +33,12 @@ enum RemoteHandshake {
 actor RemotePeerSession {
     enum State: Sendable { case awaitingHello, awaitingPairOrAuthentication, authenticated(UUID), closed }
 
+    private struct PendingPairing: Sendable {
+        let record: PairedRemoteDevice
+        let previous: PairedRemoteDevice?
+        let epoch: UInt64
+    }
+
     let id: UUID
     private let io: RemoteConnectionIO
     private let macID: UUID
@@ -52,6 +58,7 @@ actor RemotePeerSession {
     private let deadlines: RemotePeerDeadlines
     private var state: State = .awaitingHello
     private var crypto: RemoteSessionCrypto?
+    private var pendingPairing: PendingPairing?
 
     init(
         id: UUID = UUID(),
@@ -101,6 +108,7 @@ actor RemotePeerSession {
         } catch {
             // Protocol and network failures intentionally close without exposing secrets.
         }
+        await rollbackPendingPairingIfNeeded()
         state = .closed
         await io.cancel()
         await ended(id)
@@ -215,6 +223,7 @@ actor RemotePeerSession {
             await pairingFailed()
             throw RemoteProtocolError(code: .authenticationFailed, message: "Invalid pairing proof")
         }
+        let epoch = await pairingEpoch(client.deviceID)
         guard await consumePairing(window.code) else {
             throw RemoteProtocolError(code: .pairingExpired, message: "Pairing code expired")
         }
@@ -227,10 +236,10 @@ actor RemotePeerSession {
             createdAt: .now,
             lastConnectedAt: nil
         )
-        let epoch = await pairingEpoch(client.deviceID)
-        try await credentialStore.save(record)
+        let previous = try await credentialStore.replace(with: record)
+        pendingPairing = PendingPairing(record: record, previous: previous, epoch: epoch)
         guard await paired(client.deviceID, epoch) else {
-            try? await credentialStore.delete(client.deviceID)
+            await rollbackPendingPairingIfNeeded()
             throw RemoteProtocolError(code: .authenticationFailed, message: "Pairing was superseded")
         }
 
@@ -268,6 +277,26 @@ actor RemotePeerSession {
         }
         state = .authenticated(client.deviceID)
         try await sendEncrypted(.authenticationResult(.success(.init(sessionID: id, catalogRevision: 1))))
+        pendingPairing = nil
+    }
+
+    private func rollbackPendingPairingIfNeeded() async {
+        guard let pendingPairing else { return }
+        self.pendingPairing = nil
+        let restorePrevious = await pairingEpoch(pendingPairing.record.id) == pendingPairing.epoch
+        try? await credentialStore.rollbackReplacement(
+            pendingPairing.record,
+            previous: pendingPairing.previous,
+            restorePrevious: restorePrevious
+        )
+        if restorePrevious,
+           await pairingEpoch(pendingPairing.record.id) != pendingPairing.epoch,
+           let previous = pendingPairing.previous {
+            try? await credentialStore.delete(
+                pendingPairing.record.id,
+                matchingCredential: previous.credential
+            )
+        }
     }
 
     private func messageLoop() async throws {

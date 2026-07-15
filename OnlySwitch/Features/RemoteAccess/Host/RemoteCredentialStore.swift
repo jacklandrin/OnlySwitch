@@ -51,6 +51,32 @@ actor RemoteCredentialStore {
         }
     }
 
+    func replace(with device: PairedRemoteDevice) throws -> PairedRemoteDevice? {
+        let previous = try load(device.id)
+        try save(device)
+        return previous
+    }
+
+    func rollbackReplacement(
+        _ replacement: PairedRemoteDevice,
+        previous: PairedRemoteDevice?,
+        restorePrevious: Bool
+    ) throws {
+        guard let current = try load(replacement.id),
+              Self.constantTimeEqual(current.credential, replacement.credential) else { return }
+        if restorePrevious, let previous {
+            try save(previous)
+        } else {
+            try delete(replacement.id)
+        }
+    }
+
+    func delete(_ id: UUID, matchingCredential credential: Data) throws {
+        guard let current = try load(id),
+              Self.constantTimeEqual(current.credential, credential) else { return }
+        try delete(id)
+    }
+
     func load(_ id: UUID) throws -> PairedRemoteDevice? {
         switch backend {
         case .memory:

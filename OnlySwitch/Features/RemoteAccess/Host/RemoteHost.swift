@@ -15,6 +15,8 @@ actor RemoteHost {
     private let router: RemoteCommandRouter
     private let fixedPairingCode: String?
     private let peerDeadlines: RemotePeerDeadlines
+    private let listenerFactory: @Sendable (NWEndpoint.Port) throws -> NWListener
+    private let installationIDProvider: @Sendable () async throws -> UUID
     private let eventStream: AsyncStream<RemoteHostEvent>
     private let eventContinuation: AsyncStream<RemoteHostEvent>.Continuation
     private var listener: NWListener?
@@ -32,7 +34,11 @@ actor RemoteHost {
         catalogProvider: RemoteCatalogProvider,
         router: RemoteCommandRouter,
         fixedPairingCode: String? = nil,
-        peerDeadlines: RemotePeerDeadlines = .init()
+        peerDeadlines: RemotePeerDeadlines = .init(),
+        listenerFactory: @escaping @Sendable (NWEndpoint.Port) throws -> NWListener = {
+            try NWListener(using: .tcp, on: $0)
+        },
+        installationIDProvider: (@Sendable () async throws -> UUID)? = nil
     ) {
         let (stream, continuation) = AsyncStream.makeStream(
             of: RemoteHostEvent.self,
@@ -45,6 +51,10 @@ actor RemoteHost {
         self.router = router
         self.fixedPairingCode = fixedPairingCode
         self.peerDeadlines = peerDeadlines
+        self.listenerFactory = listenerFactory
+        self.installationIDProvider = installationIDProvider ?? {
+            try await credentialStore.installationID()
+        }
         self.statusScheduler = RemoteStatusScheduler(provider: catalogProvider)
     }
 
@@ -56,7 +66,11 @@ actor RemoteHost {
         catalog: [RemoteControlDescriptor],
         router: RemoteCommandRouter,
         pairingCode: String,
-        peerDeadlines: RemotePeerDeadlines = .init()
+        peerDeadlines: RemotePeerDeadlines = .init(),
+        listenerFactory: @escaping @Sendable (NWEndpoint.Port) throws -> NWListener = {
+            try NWListener(using: .tcp, on: $0)
+        },
+        installationIDProvider: (@Sendable () async throws -> UUID)? = nil
     ) -> RemoteHost {
         let provider = RemoteCatalogProvider(
             catalog: { catalog },
@@ -81,7 +95,9 @@ actor RemoteHost {
             catalogProvider: provider,
             router: router,
             fixedPairingCode: pairingCode,
-            peerDeadlines: peerDeadlines
+            peerDeadlines: peerDeadlines,
+            listenerFactory: listenerFactory,
+            installationIDProvider: installationIDProvider
         )
     }
 
@@ -131,11 +147,30 @@ actor RemoteHost {
 
     func revoke(deviceID: UUID) async throws {
         let affected = lifecycle.revoke(deviceID: deviceID)
-        let peers = affected.compactMap { sessions.removeValue(forKey: $0) }
+        let peers = Dictionary(uniqueKeysWithValues: affected.compactMap { id in
+            sessions.removeValue(forKey: id).map { (id, $0) }
+        })
         eventContinuation.yield(.connectionCountChanged(lifecycle.authenticatedCount))
-        try await credentialStore.delete(deviceID)
-        for peer in peers { await peer.close() }
+        let scheduler = statusScheduler
+        let store = credentialStore
+        try await Self.performRevocationCleanup(
+            sessionIDs: affected,
+            removeSubscription: { id in await scheduler.remove(sessionID: id) },
+            closePeer: { id in await peers[id]?.close() },
+            deleteCredential: { try await store.delete(deviceID) }
+        )
         eventContinuation.yield(.devicesChanged(try await credentialStore.loadAll()))
+    }
+
+    static func performRevocationCleanup(
+        sessionIDs: [UUID],
+        removeSubscription: @escaping @Sendable (UUID) async -> Void,
+        closePeer: @escaping @Sendable (UUID) async -> Void,
+        deleteCredential: @escaping @Sendable () async throws -> Void
+    ) async throws {
+        for id in sessionIDs { await removeSubscription(id) }
+        for id in sessionIDs { await closePeer(id) }
+        try await deleteCredential()
     }
 
     func pairedDevices() async throws -> [PairedRemoteDevice] {
@@ -149,33 +184,33 @@ actor RemoteHost {
         if listener != nil { await stop() }
         let generation = lifecycle.beginStart()
         eventContinuation.yield(.statusChanged(.starting))
-        let port = configuration.port == 0 ? NWEndpoint.Port.any : NWEndpoint.Port(rawValue: configuration.port)!
-        let listener = try NWListener(using: .tcp, on: port)
-        let macID = try await credentialStore.installationID()
-        if advertise {
-            let txt = NWTXTRecord([
-                "id": macID.uuidString,
-                "version": String(RemoteProtocolVersion.current.major)
-            ])
-            listener.service = NWListener.Service(
-                name: configuration.displayName,
-                type: configuration.serviceType,
-                txtRecord: txt
-            )
-        }
-        listener.newConnectionHandler = { [weak self] connection in
-            Task {
-                await self?.accept(
-                    connection,
-                    macID: macID,
+        do {
+            let port = configuration.port == 0 ? NWEndpoint.Port.any : NWEndpoint.Port(rawValue: configuration.port)!
+            let listener = try listenerFactory(port)
+            self.listener = listener
+            self.configuration = configuration
+            let macID = try await installationIDProvider()
+            if advertise {
+                let txt = NWTXTRecord([
+                    "id": macID.uuidString,
+                    "version": String(RemoteProtocolVersion.current.major)
+                ])
+                listener.service = NWListener.Service(
                     name: configuration.displayName,
-                    generation: generation
+                    type: configuration.serviceType,
+                    txtRecord: txt
                 )
             }
-        }
-        self.listener = listener
-        self.configuration = configuration
-        do {
+            listener.newConnectionHandler = { [weak self] connection in
+                Task {
+                    await self?.accept(
+                        connection,
+                        macID: macID,
+                        name: configuration.displayName,
+                        generation: generation
+                    )
+                }
+            }
             try await withTaskCancellationHandler {
                 try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
                     let gate = HostContinuationGate(continuation)
@@ -194,20 +229,23 @@ actor RemoteHost {
             } onCancel: {
                 listener.cancel()
             }
+            guard self.listener === listener, lifecycle.markListening(generation: generation) else {
+                listener.cancel()
+                if self.listener === listener {
+                    self.listener = nil
+                    self.configuration = nil
+                }
+                throw CancellationError()
+            }
+            guard let boundPort = listener.port else {
+                throw RemoteProtocolError(code: .invalidFrame, message: "Listener did not bind")
+            }
+            eventContinuation.yield(.statusChanged(.listening(port: boundPort.rawValue)))
+            return .hostPort(host: .ipv4(.loopback), port: boundPort)
         } catch {
             await listenerFailed(generation: generation)
             throw error
         }
-        guard self.listener === listener, lifecycle.markListening(generation: generation) else {
-            listener.cancel()
-            throw CancellationError()
-        }
-        guard let boundPort = listener.port else {
-            listener.cancel()
-            throw RemoteProtocolError(code: .invalidFrame, message: "Listener did not bind")
-        }
-        eventContinuation.yield(.statusChanged(.listening(port: boundPort.rawValue)))
-        return .hostPort(host: .ipv4(.loopback), port: boundPort)
     }
 
     private func accept(_ connection: NWConnection, macID: UUID, name: String, generation: UInt64) {
@@ -361,6 +399,8 @@ actor RemoteHost {
         for peer in peers { await peer.close() }
         await statusScheduler.stop()
     }
+
+    var hasOwnedListener: Bool { listener != nil }
 
 }
 
