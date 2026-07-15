@@ -332,6 +332,7 @@ actor RemotePeerSession {
             credential: credential,
             at: .now
         )
+        let completedPendingPairing = pendingPairing != nil
         if let pendingPairing {
             guard await pendingPairing.commit(commitPairing) else {
                 throw RemoteProtocolError(code: .authenticationFailed, message: "Pairing was superseded")
@@ -340,10 +341,12 @@ actor RemotePeerSession {
         guard await authenticated(id, client.deviceID) else {
             throw RemoteProtocolError(code: .authenticationFailed, message: "Credential was revoked")
         }
-        try? await credentialStore.finalizeRepair(
-            deviceID: client.deviceID,
-            matchingCredential: credential
-        )
+        if completedPendingPairing {
+            try? await credentialStore.finalizeRepair(
+                deviceID: client.deviceID,
+                matchingCredential: credential
+            )
+        }
         state = .authenticated(client.deviceID)
         try await sendEncrypted(.authenticationResult(.success(.init(sessionID: id, catalogRevision: 1))))
         pendingPairing = nil

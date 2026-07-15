@@ -78,4 +78,65 @@ struct RemoteHostIntegrationTests {
         #expect(try await host.pairedDevices().isEmpty)
     }
 
+    @Test(.timeLimit(.minutes(1)))
+    func ordinaryAuthenticationDuringRevocationCannotClearOfflineVerifier() async throws {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let gate = RemoteHostTestGate()
+        let host = RemoteHost.testing(
+            catalog: [],
+            router: router,
+            pairingCode: "ABCDEFGH2345",
+            revocationPrepared: { await gate.wait() }
+        )
+        let endpoint = try await host.startForTesting(port: 0)
+        defer { Task { await host.stop() } }
+        let pairedClient = try await RemoteHostTestClient.connect(to: endpoint)
+        try await pairedClient.pair(code: "ABCDEFGH2345")
+        let identity = try await pairedClient.pairingIdentity()
+
+        let revocation = Task { try await host.revoke(deviceID: identity.deviceID) }
+        await gate.waitUntilEntered()
+        let ordinaryClient = try await RemoteHostTestClient.connect(
+            to: endpoint,
+            deviceID: identity.deviceID
+        )
+        #expect(try await ordinaryClient.authenticate(credential: identity.credential) == .authenticated)
+
+        await gate.open()
+        try await revocation.value
+        #expect(try await host.pairedDevices().isEmpty)
+
+        let offlineClient = try await RemoteHostTestClient.connect(
+            to: endpoint,
+            deviceID: identity.deviceID
+        )
+        #expect(try await offlineClient.authenticate(credential: identity.credential) == .revoked)
+    }
+
+}
+
+private actor RemoteHostTestGate {
+    private var isOpen = false
+    private var entered = false
+    private var waiter: CheckedContinuation<Void, Never>?
+    private var enteredWaiter: CheckedContinuation<Void, Never>?
+
+    func wait() async {
+        entered = true
+        enteredWaiter?.resume()
+        enteredWaiter = nil
+        guard isOpen == false else { return }
+        await withCheckedContinuation { waiter = $0 }
+    }
+
+    func waitUntilEntered() async {
+        guard entered == false else { return }
+        await withCheckedContinuation { enteredWaiter = $0 }
+    }
+
+    func open() {
+        isOpen = true
+        waiter?.resume()
+        waiter = nil
+    }
 }

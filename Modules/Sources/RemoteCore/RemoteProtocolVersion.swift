@@ -14,9 +14,7 @@ public struct RemoteProtocolVersion: Codable, Equatable, Sendable {
     }
 
     public func negotiated(with other: Self) -> Self? {
-        guard major == other.major,
-              minor <= Self.current.minor,
-              other.minor <= Self.current.minor else { return nil }
+        guard major == other.major else { return nil }
         return Self(major: major, minor: min(minor, other.minor))
     }
 

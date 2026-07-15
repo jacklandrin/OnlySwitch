@@ -6,22 +6,26 @@ import RemoteTransport
 @testable import OnlySwitch
 
 actor RemoteHostTestClient {
+    enum AuthenticationOutcome: Equatable { case authenticated, revoked }
+
     private let io: RemoteConnectionIO
-    private let deviceID = UUID()
+    private let deviceID: UUID
     private let deviceName = "Integration Test iPhone"
     private var clientKey: P256.KeyAgreement.PrivateKey?
     private var serverHello: ServerHello?
     private var transcript: Data?
     private var crypto: RemoteSessionCrypto?
+    private var credential: Data?
 
-    static func connect(to endpoint: NWEndpoint) async throws -> RemoteHostTestClient {
-        try await RemoteHostTestClient(endpoint: endpoint)
+    static func connect(to endpoint: NWEndpoint, deviceID: UUID = UUID()) async throws -> RemoteHostTestClient {
+        try await RemoteHostTestClient(endpoint: endpoint, deviceID: deviceID)
     }
 
-    private init(endpoint: NWEndpoint) async throws {
+    private init(endpoint: NWEndpoint, deviceID: UUID) async throws {
         let connection = NWConnection(to: endpoint, using: .tcp)
         let io = RemoteConnectionIO(connection: connection)
         self.io = io
+        self.deviceID = deviceID
         try await io.start()
     }
 
@@ -61,6 +65,7 @@ actor RemoteHostTestClient {
             }
             let sessionCrypto = try makeCrypto(credential: success.credential, key: key, server: server, transcript: transcript)
             crypto = sessionCrypto
+            credential = success.credential
             let authentication = AuthenticationProof(
                 deviceID: deviceID,
                 proof: RemoteHandshake.authenticationProof(credential: success.credential, transcript: transcript)
@@ -75,6 +80,55 @@ actor RemoteHostTestClient {
         } catch {
             throw RemoteProtocolError(code: .authenticationFailed, message: "Pairing failed")
         }
+    }
+
+    func pairingIdentity() throws -> (deviceID: UUID, credential: Data) {
+        guard let credential else {
+            throw RemoteProtocolError(code: .authenticationFailed, message: "Client is not paired")
+        }
+        return (deviceID, credential)
+    }
+
+    func authenticate(credential: Data) async throws -> AuthenticationOutcome {
+        let key = P256.KeyAgreement.PrivateKey()
+        let hello = ClientHello(
+            version: .current,
+            deviceID: deviceID,
+            deviceName: deviceName,
+            ephemeralPublicKey: key.publicKey.rawRepresentation
+        )
+        try await io.send(.plaintext(.clientHello(hello)))
+        guard case let .serverHello(server)? = (try await io.receive()).plaintext else {
+            throw RemoteProtocolError(code: .invalidFrame, message: "Missing server hello")
+        }
+        let transcript = try RemoteHandshake.transcript(client: hello, server: server)
+        let crypto = try makeCrypto(credential: credential, key: key, server: server, transcript: transcript)
+        let proof = AuthenticationProof(
+            deviceID: deviceID,
+            proof: RemoteHandshake.authenticationProof(credential: credential, transcript: transcript)
+        )
+        try await io.send(.encrypted(try crypto.seal(.authenticationProof(proof))))
+        let response = try await io.receive()
+        if case let .credentialRevocationProof(revocation)? = response.plaintext {
+            let verifier = RemoteHandshake.revocationVerifier(credential: credential)
+            guard revocation.deviceID == deviceID,
+                  RemoteHandshake.verifyRevocationProof(
+                    revocation.proof,
+                    verifier: verifier,
+                    transcript: transcript
+                  ) else {
+                throw RemoteProtocolError(code: .authenticationFailed, message: "Invalid revocation proof")
+            }
+            return .revoked
+        }
+        guard let frame = response.encrypted,
+              case let .authenticationResult(result) = try crypto.open(frame),
+              case .success = result else {
+            throw RemoteProtocolError(code: .authenticationFailed, message: "Authentication failed")
+        }
+        self.crypto = crypto
+        self.credential = credential
+        return .authenticated
     }
 
     func catalog() async throws -> [RemoteControlDescriptor] {

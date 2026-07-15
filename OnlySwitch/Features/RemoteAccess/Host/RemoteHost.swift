@@ -17,6 +17,7 @@ actor RemoteHost {
     private let peerDeadlines: RemotePeerDeadlines
     private let listenerFactory: @Sendable (NWEndpoint.Port) throws -> NWListener
     private let installationIDProvider: @Sendable () async throws -> UUID
+    private let revocationPrepared: @Sendable () async -> Void
     private let eventStream: AsyncStream<RemoteHostEvent>
     private let eventContinuation: AsyncStream<RemoteHostEvent>.Continuation
     private var listener: NWListener?
@@ -38,7 +39,8 @@ actor RemoteHost {
         listenerFactory: @escaping @Sendable (NWEndpoint.Port) throws -> NWListener = {
             try NWListener(using: .tcp, on: $0)
         },
-        installationIDProvider: (@Sendable () async throws -> UUID)? = nil
+        installationIDProvider: (@Sendable () async throws -> UUID)? = nil,
+        revocationPrepared: @escaping @Sendable () async -> Void = {}
     ) {
         let (stream, continuation) = AsyncStream.makeStream(
             of: RemoteHostEvent.self,
@@ -55,6 +57,7 @@ actor RemoteHost {
         self.installationIDProvider = installationIDProvider ?? {
             try await credentialStore.installationID()
         }
+        self.revocationPrepared = revocationPrepared
         self.statusScheduler = RemoteStatusScheduler(provider: catalogProvider)
     }
 
@@ -70,7 +73,8 @@ actor RemoteHost {
         listenerFactory: @escaping @Sendable (NWEndpoint.Port) throws -> NWListener = {
             try NWListener(using: .tcp, on: $0)
         },
-        installationIDProvider: (@Sendable () async throws -> UUID)? = nil
+        installationIDProvider: (@Sendable () async throws -> UUID)? = nil,
+        revocationPrepared: @escaping @Sendable () async -> Void = {}
     ) -> RemoteHost {
         let provider = RemoteCatalogProvider(
             catalog: { catalog },
@@ -97,7 +101,8 @@ actor RemoteHost {
             fixedPairingCode: pairingCode,
             peerDeadlines: peerDeadlines,
             listenerFactory: listenerFactory,
-            installationIDProvider: installationIDProvider
+            installationIDProvider: installationIDProvider,
+            revocationPrepared: revocationPrepared
         )
     }
 
@@ -149,6 +154,7 @@ actor RemoteHost {
         let credential = try await credentialStore.load(deviceID)?.credential
         if let credential {
             _ = try await credentialStore.prepareRevocation(deviceID, matchingCredential: credential)
+            await revocationPrepared()
         }
         let affected = lifecycle.revoke(deviceID: deviceID)
         let peers = Dictionary(uniqueKeysWithValues: affected.compactMap { id in

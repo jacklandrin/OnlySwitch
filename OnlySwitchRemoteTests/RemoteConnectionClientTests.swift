@@ -346,10 +346,15 @@ struct RemoteConnectionClientTests {
         defer { server.cancel() }
         let gate = OperationGate()
         let credentialStore = GatedCredentialStore(gate: gate)
+        let closeRecorder = SessionCloseRecorder()
         let runtime = RemoteConnectionRuntime(
             persistence: .inMemory(),
             keychain: credentialStore.client,
-            deviceID: UUID()
+            deviceID: UUID(),
+            closeSession: { session in
+                await session.close()
+                await closeRecorder.record()
+            }
         )
         let discovered = DiscoveredMac(
             id: macID,
@@ -363,6 +368,8 @@ struct RemoteConnectionClientTests {
         await gate.waitUntilEntered()
 
         await runtime.setForegrounded(false)
+        #expect(await closeRecorder.count == 1)
+        #expect(await credentialStore.load(macID) == nil)
         await gate.open()
 
         await #expect(throws: CancellationError.self) { try await pairing.value }
@@ -458,6 +465,84 @@ struct RemoteConnectionClientTests {
         await newServer.waitUntilFinished()
     }
 
+    @Test(.timeLimit(.minutes(1)), arguments: LocalMutationRace.allCases)
+    func pairingAndRevocationUseOneFIFOTransactionBoundary(race: LocalMutationRace) async throws {
+        let macID = UUID()
+        let oldCredential = Data(repeating: 51, count: 32)
+        let newCredential = Data(repeating: 52, count: 32)
+        let saveGate = OperationGate()
+        let deleteGate = OperationGate()
+        if race.revocationFirst { await saveGate.open() }
+        else { await deleteGate.open() }
+        let credentialStore = MutationGatedCredentialStore(
+            initial: [macID: oldCredential],
+            saveGate: saveGate,
+            deleteGate: deleteGate
+        )
+        let persistence = RemotePersistenceClient.inMemory()
+        try await persistence.upsertPairedMac(.init(
+            id: macID,
+            displayName: "Studio",
+            lastEndpointDescription: nil,
+            lastConnectedAt: nil,
+            requiresPairing: false
+        ))
+        let runtime = RemoteConnectionRuntime(
+            persistence: persistence,
+            keychain: credentialStore.client,
+            deviceID: UUID()
+        )
+        let server = try await PairingLoopbackServer.start(
+            macID: macID,
+            code: "ABCDEFGH2345",
+            credential: newCredential
+        )
+        defer { server.cancel() }
+        let discovered = DiscoveredMac(
+            id: macID,
+            displayName: "Studio",
+            endpoint: server.endpoint,
+            protocolVersion: .current
+        )
+
+        if race.revocationFirst {
+            let revocation = Task {
+                await runtime.enqueueRevocationForTesting(
+                    macID: macID,
+                    credential: oldCredential,
+                    source: race.source
+                )
+            }
+            await deleteGate.waitUntilEntered()
+            let pairing = Task {
+                try await runtime.pair(discovered, code: "ABCDEFGH2345", deviceName: "Test iPhone")
+            }
+            await deleteGate.open()
+            await revocation.value
+            _ = try await pairing.value
+        } else {
+            let pairing = Task {
+                try await runtime.pair(discovered, code: "ABCDEFGH2345", deviceName: "Test iPhone")
+            }
+            await saveGate.waitUntilEntered()
+            let revocation = Task {
+                await runtime.enqueueRevocationForTesting(
+                    macID: macID,
+                    credential: oldCredential,
+                    source: race.source
+                )
+            }
+            await saveGate.open()
+            _ = try await pairing.value
+            await revocation.value
+        }
+
+        #expect(await credentialStore.load(macID) == newCredential)
+        #expect(await credentialStore.conditionalDeleteAttempts == 1)
+        #expect(try await persistence.loadPairedMacs().first?.requiresPairing == false)
+        await server.waitUntilFinished()
+    }
+
     @Test func duplicateClaimedMacIDsHaveDeterministicCandidateOrder() {
         let id = UUID()
         let first = DiscoveredMac(
@@ -551,6 +636,37 @@ struct RemoteConnectionClientTests {
         let bounded = RemoteConnectionRuntime.boundedCandidates(candidates)
 
         #expect(bounded.values.reduce(0) { $0 + $1.count } == RemoteConnectionRuntime.maximumCandidatesGlobally)
+    }
+
+    @Test func selectedMacKeepsCandidatesWhenAttackerUUIDsExhaustGlobalCapacity() {
+        let selectedID = UUID(uuidString: "FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF")!
+        let selected = (0..<3).map { index in
+            DiscoveredMac(
+                id: selectedID,
+                displayName: "Selected \(index)",
+                endpoint: .hostPort(host: NWEndpoint.Host("192.168.50.\(index + 10)"), port: 19420),
+                protocolVersion: .current
+            )
+        }
+        let attackers = (0..<80).map { index in
+            DiscoveredMac(
+                id: UUID(uuidString: String(format: "00000000-0000-0000-0000-%012d", index))!,
+                displayName: "Spoof \(index)",
+                endpoint: .hostPort(host: NWEndpoint.Host("10.1.0.\(index + 1)"), port: 19420),
+                protocolVersion: .current
+            )
+        }
+        let previousEndpoint = String(describing: selected[0].endpoint)
+
+        let bounded = RemoteConnectionRuntime.boundedCandidates(
+            attackers + selected,
+            preferredEndpoints: [selectedID: previousEndpoint],
+            selectedMacID: selectedID
+        )
+
+        #expect(bounded[selectedID]?.count == selected.count)
+        #expect(bounded[selectedID]?[previousEndpoint] != nil)
+        #expect(bounded.keys.filter { $0 != selectedID }.count == RemoteConnectionRuntime.maximumCandidatesGlobally - selected.count)
     }
 
     @Test func staleSameMacSessionCallbacksAreRejected() {
@@ -713,6 +829,27 @@ enum OfflineRevocationProofMode: Sendable {
     case valid
     case replayedTranscript
     case invalid
+}
+
+enum LocalMutationRace: CaseIterable, Sendable {
+    case liveRevocationFirst
+    case livePairingFirst
+    case offlineRevocationFirst
+    case offlinePairingFirst
+
+    var source: RemoteConnectionRuntime.LocalRevocationSource {
+        switch self {
+        case .liveRevocationFirst, .livePairingFirst: .live
+        case .offlineRevocationFirst, .offlinePairingFirst: .offline
+        }
+    }
+
+    var revocationFirst: Bool {
+        switch self {
+        case .liveRevocationFirst, .offlineRevocationFirst: true
+        case .livePairingFirst, .offlinePairingFirst: false
+        }
+    }
 }
 
 private enum ConnectionOperation: Equatable, Sendable {
@@ -954,6 +1091,54 @@ private actor GatedCredentialStore {
     private func delete(_ id: UUID) { credentials[id] = nil }
 
     private func delete(_ id: UUID, matching expected: Data) -> Bool {
+        guard credentials[id] == expected else { return false }
+        credentials[id] = nil
+        return true
+    }
+}
+
+private actor SessionCloseRecorder {
+    private(set) var count = 0
+    func record() { count += 1 }
+}
+
+private actor MutationGatedCredentialStore {
+    private var credentials: [UUID: Data]
+    private let saveGate: OperationGate
+    private let deleteGate: OperationGate
+    private(set) var conditionalDeleteAttempts = 0
+
+    init(initial: [UUID: Data], saveGate: OperationGate, deleteGate: OperationGate) {
+        credentials = initial
+        self.saveGate = saveGate
+        self.deleteGate = deleteGate
+    }
+
+    nonisolated var client: RemoteKeychainClient {
+        RemoteKeychainClient(
+            saveCredential: { [weak self] id, credential in
+                try await self?.save(id, credential: credential)
+            },
+            loadCredential: { [weak self] id in await self?.load(id) },
+            deleteCredential: { [weak self] id in await self?.delete(id) },
+            deleteCredentialIfMatches: { [weak self] id, expected in
+                await self?.delete(id, matching: expected) ?? false
+            }
+        )
+    }
+
+    func load(_ id: UUID) -> Data? { credentials[id] }
+
+    private func save(_ id: UUID, credential: Data) async throws {
+        await saveGate.wait()
+        credentials[id] = credential
+    }
+
+    private func delete(_ id: UUID) { credentials[id] = nil }
+
+    private func delete(_ id: UUID, matching expected: Data) async -> Bool {
+        conditionalDeleteAttempts += 1
+        await deleteGate.wait()
         guard credentials[id] == expected else { return false }
         credentials[id] = nil
         return true

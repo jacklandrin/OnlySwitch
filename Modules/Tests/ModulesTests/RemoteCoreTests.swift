@@ -21,7 +21,7 @@ struct RemoteCoreTests {
 
     @Test func majorCompatibilityRejectsDifferentMajor() {
         #expect(!RemoteProtocolVersion.current.isCompatible(with: .init(major: 2, minor: 0)))
-        #expect(!RemoteProtocolVersion.current.isCompatible(with: .init(major: 1, minor: 7)))
+        #expect(RemoteProtocolVersion.current.isCompatible(with: .init(major: 1, minor: 7)))
     }
 
     @Test func authenticatedRevocationMessageRoundTrips() throws {
@@ -44,7 +44,8 @@ struct RemoteCoreTests {
         #expect(RemoteProtocolVersion.current.negotiated(with: legacy) == legacy)
         #expect(legacy.supportsAuthenticatedRevocation == false)
         #expect(RemoteProtocolVersion.current.supportsAuthenticatedRevocation)
-        #expect(RemoteProtocolVersion.current.negotiated(with: future) == nil)
+        #expect(RemoteProtocolVersion.current.negotiated(with: future) == .current)
+        #expect(future.negotiated(with: RemoteProtocolVersion(major: 1, minor: 0)) == .init(major: 1, minor: 0))
         #expect(RemoteProtocolVersion.current.negotiated(with: .init(major: 2, minor: 0)) == nil)
     }
 
