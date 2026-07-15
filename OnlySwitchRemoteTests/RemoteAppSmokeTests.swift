@@ -5,8 +5,9 @@ import Testing
 @MainActor
 struct RemoteAppSmokeTests {
     @Test func initialStateRequiresSetupWithoutPairedMacs() {
-        let state = RemoteAppFeature.State()
+        let state = RemoteAppFeature.State(hasCompletedInitialSetup: false)
         #expect(state.requiresSetup)
         #expect(state.path.isEmpty)
+        #expect(state.requiredSettings != nil)
     }
 }

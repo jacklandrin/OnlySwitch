@@ -20,7 +20,7 @@ struct SettingsView: View {
                 Section("Paired Macs") {
                     ForEach(store.pairedMacs) { mac in
                         Label(mac.displayName, systemImage: "desktopcomputer")
-                            .accessibilityLabel("\(mac.displayName), paired Mac")
+                            .accessibilityLabel(Text("Paired Mac: \(mac.displayName)"))
                     }
                 }
             }

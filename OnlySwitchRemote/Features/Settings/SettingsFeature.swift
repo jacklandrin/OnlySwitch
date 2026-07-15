@@ -46,8 +46,11 @@ struct SettingsFeature {
                 state.selectedMacID = mac.id
                 return .send(.delegate(.paired(mac)))
 
-            case .pairing(.presented(.delegate(.cancelled))), .pairing(.dismiss):
+            case .pairing(.presented(.delegate(.cancelled))):
                 state.pairing = nil
+                return .none
+
+            case .pairing(.dismiss):
                 return .none
 
             case let .foregroundChanged(isForegrounded):

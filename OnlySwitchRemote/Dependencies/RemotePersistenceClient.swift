@@ -3,8 +3,20 @@ import DependenciesMacros
 import Foundation
 import RemoteCore
 
+struct RemoteAppPersistenceIntent: Equatable, Sendable {
+    let writerID: UUID
+    let sequence: UInt64
+    let selectedMacID: UUID?
+    let hasCompletedInitialSetup: Bool
+}
+
 @DependencyClient
 struct RemotePersistenceClient: Sendable {
+    var saveAppState: @Sendable (RemoteAppPersistenceIntent) async throws -> Void = { _ in
+        throw RemoteDependencyError.unimplemented
+    }
+    var loadInitialSetupCompleted: @Sendable () async throws -> Bool = { false }
+    var saveInitialSetupCompleted: @Sendable (Bool) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
     var loadPairedMacs: @Sendable () async throws -> [PairedMac] = { [] }
     var savePairedMacs: @Sendable ([PairedMac]) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
     var upsertPairedMac: @Sendable (PairedMac) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
@@ -26,9 +38,14 @@ struct RemotePersistenceClient: Sendable {
 enum RemoteDependencyError: Swift.Error, Sendable { case unimplemented }
 
 extension RemotePersistenceClient {
-    static func inMemory() -> Self {
-        let store = InMemoryRemotePersistenceStore()
+    static func inMemory(
+        beforeAppStateCommit: @escaping @Sendable (RemoteAppPersistenceIntent) throws -> Void = { _ in }
+    ) -> Self {
+        let store = InMemoryRemotePersistenceStore(beforeAppStateCommit: beforeAppStateCommit)
         return Self(
+            saveAppState: { try await store.saveAppState($0) },
+            loadInitialSetupCompleted: { await store.initialSetupCompleted },
+            saveInitialSetupCompleted: { await store.setInitialSetupCompleted($0) },
             loadPairedMacs: { await store.pairedMacs },
             savePairedMacs: { await store.setPairedMacs($0) },
             upsertPairedMac: { await store.upsert($0) },
@@ -57,6 +74,9 @@ extension RemotePersistenceClient {
         keychain: RemoteKeychainClient
     ) -> Self {
         return Self(
+            saveAppState: { try await store.saveAppState($0) },
+            loadInitialSetupCompleted: { await store.loadInitialSetupCompleted() },
+            saveInitialSetupCompleted: { await store.saveInitialSetupCompleted($0) },
             loadPairedMacs: { try await store.loadPairedMacs() },
             savePairedMacs: { try await store.savePairedMacs($0) },
             upsertPairedMac: { try await store.upsertPairedMac($0) },
@@ -93,12 +113,36 @@ extension DependencyValues {
     }
 }
 
+extension RemotePersistenceClient {
+    static let initialSetupCompletedKey = "hasCompletedInitialSetup"
+
+    static func initialSetupSeed(defaults: UserDefaults = .standard) -> Bool {
+        defaults.bool(forKey: initialSetupCompletedKey)
+    }
+}
+
 private actor InMemoryRemotePersistenceStore {
+    private var appStateSequenceTracker = RemoteAppPersistenceSequenceTracker()
+    private let beforeAppStateCommit: @Sendable (RemoteAppPersistenceIntent) throws -> Void
+    var initialSetupCompleted = false
     var pairedMacs: [PairedMac] = []
     var selectedMacID: UUID?
     var layouts: [UUID: MacDashboardLayout] = [:]
     var catalogs: [UUID: RemoteCatalogCache] = [:]
     var statuses: [UUID: [RemoteControlStatus]] = [:]
+
+    init(beforeAppStateCommit: @escaping @Sendable (RemoteAppPersistenceIntent) throws -> Void) {
+        self.beforeAppStateCommit = beforeAppStateCommit
+    }
+
+    func saveAppState(_ intent: RemoteAppPersistenceIntent) throws {
+        guard appStateSequenceTracker.accepts(intent) else { return }
+        try beforeAppStateCommit(intent)
+        selectedMacID = intent.selectedMacID
+        initialSetupCompleted = intent.hasCompletedInitialSetup
+    }
+
+    func setInitialSetupCompleted(_ value: Bool) { initialSetupCompleted = value }
 
     func setPairedMacs(_ value: [PairedMac]) { pairedMacs = value }
     func upsert(_ value: PairedMac) {
@@ -155,6 +199,7 @@ actor RemoteFilePersistenceStore {
     private enum Key {
         static let pairedMacs = "pairedMacs"
         static let selectedMacID = "selectedMacID"
+        static let initialSetupCompleted = RemotePersistenceClient.initialSetupCompletedKey
     }
 
     private let defaults: UserDefaults
@@ -162,6 +207,7 @@ actor RemoteFilePersistenceStore {
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
     private let removeDirectory: @Sendable (URL) throws -> Void
+    private var appStateSequenceTracker = RemoteAppPersistenceSequenceTracker()
 
     init(
         defaultsSuiteName: String? = nil,
@@ -207,6 +253,20 @@ actor RemoteFilePersistenceStore {
 
     func loadSelectedMacID() -> UUID? {
         defaults.string(forKey: Key.selectedMacID).flatMap(UUID.init(uuidString:))
+    }
+
+    func saveAppState(_ intent: RemoteAppPersistenceIntent) throws {
+        guard appStateSequenceTracker.accepts(intent) else { return }
+        defaults.set(intent.selectedMacID?.uuidString, forKey: Key.selectedMacID)
+        defaults.set(intent.hasCompletedInitialSetup, forKey: Key.initialSetupCompleted)
+    }
+
+    func loadInitialSetupCompleted() -> Bool {
+        defaults.bool(forKey: Key.initialSetupCompleted)
+    }
+
+    func saveInitialSetupCompleted(_ value: Bool) {
+        defaults.set(value, forKey: Key.initialSetupCompleted)
     }
 
     func saveSelectedMacID(_ id: UUID?) {
@@ -261,5 +321,27 @@ actor RemoteFilePersistenceStore {
 
     private func directory(for id: UUID) -> URL {
         rootURL.appendingPathComponent(id.uuidString.lowercased(), isDirectory: true)
+    }
+}
+
+private struct RemoteAppPersistenceSequenceTracker {
+    private static let writerLimit = 8
+    private var highestSequenceByWriter: [UUID: UInt64] = [:]
+    private var writerInsertionOrder: [UUID] = []
+
+    mutating func accepts(_ intent: RemoteAppPersistenceIntent) -> Bool {
+        if let highest = highestSequenceByWriter[intent.writerID] {
+            guard intent.sequence >= highest else { return false }
+            highestSequenceByWriter[intent.writerID] = intent.sequence
+            return true
+        }
+
+        highestSequenceByWriter[intent.writerID] = intent.sequence
+        writerInsertionOrder.append(intent.writerID)
+        if writerInsertionOrder.count > Self.writerLimit {
+            let removed = writerInsertionOrder.removeFirst()
+            highestSequenceByWriter[removed] = nil
+        }
+        return true
     }
 }

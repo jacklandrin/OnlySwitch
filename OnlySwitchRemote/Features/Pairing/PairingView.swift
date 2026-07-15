@@ -41,7 +41,12 @@ struct PairingView: View {
                                 }
                             }
                             .buttonStyle(.plain)
-                            .accessibilityLabel("\(mac.displayName), \(store.selectedMacID == mac.id ? "selected" : "not selected")")
+                            .disabled(store.isPairing)
+                            .accessibilityLabel(
+                                store.selectedMacID == mac.id
+                                    ? Text("Selected Mac: \(mac.displayName)")
+                                    : Text("Unselected Mac: \(mac.displayName)")
+                            )
                             .accessibilityHint("Selects this Mac for pairing")
                         }
                     }
@@ -52,6 +57,7 @@ struct PairingView: View {
                         .font(.body.monospaced())
                         .textInputAutocapitalization(.characters)
                         .autocorrectionDisabled()
+                        .disabled(store.isPairing)
                         .textContentType(.oneTimeCode)
                         .privacySensitive()
                         .accessibilityLabel("Pairing code")
@@ -64,7 +70,11 @@ struct PairingView: View {
 
                 if let issue = store.issue {
                     Section("Pairing Problem") {
-                        Label(issue.message, systemImage: "exclamationmark.triangle.fill")
+                        Label {
+                            Text(issue.message)
+                        } icon: {
+                            Image(systemName: "exclamationmark.triangle.fill")
+                        }
                             .foregroundStyle(.red)
                         Text(issue.helpText)
                             .font(.footnote)
@@ -98,6 +108,5 @@ struct PairingView: View {
             }
         }
         .task { await store.send(.task).finish() }
-        .onDisappear { store.send(.onDisappear) }
     }
 }

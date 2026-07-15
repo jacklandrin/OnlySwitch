@@ -8,6 +8,22 @@ struct RemotePersistenceClientTests {
     private let firstMac = UUID(uuidString: "00000000-0000-0000-0000-000000000001")!
     private let secondMac = UUID(uuidString: "00000000-0000-0000-0000-000000000002")!
 
+    @Test func initialSetupCompletionRoundTripsWithoutAmbientDefaults() async throws {
+        let client = RemotePersistenceClient.inMemory()
+        #expect(try await client.loadInitialSetupCompleted() == false)
+        try await client.saveInitialSetupCompleted(true)
+        #expect(try await client.loadInitialSetupCompleted())
+    }
+
+    @Test func synchronousLaunchSeedUsesInjectedDefaults() throws {
+        let suite = "InitialSetupSeed-\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        #expect(RemotePersistenceClient.initialSetupSeed(defaults: defaults) == false)
+        defaults.set(true, forKey: RemotePersistenceClient.initialSetupCompletedKey)
+        #expect(RemotePersistenceClient.initialSetupSeed(defaults: defaults))
+    }
+
     @Test func layoutsRemainIndependentPerMac() async throws {
         let client = RemotePersistenceClient.inMemory()
         try await client.saveLayout(.init(macID: firstMac, selectedControlIDs: [.darkMode], order: [.darkMode]))
@@ -215,6 +231,103 @@ struct RemotePersistenceClientTests {
         #expect(try await retry.loadSelectedMacID() == nil)
     }
 
+    @Test func olderAppStateCannotOverwriteNewerClearedStateWhenDeliveredLast() async throws {
+        let client = RemotePersistenceClient.inMemory()
+        let writerID = UUID()
+        let older = RemoteAppPersistenceIntent(
+            writerID: writerID,
+            sequence: 1,
+            selectedMacID: firstMac,
+            hasCompletedInitialSetup: true
+        )
+        let newer = RemoteAppPersistenceIntent(
+            writerID: writerID,
+            sequence: 2,
+            selectedMacID: nil,
+            hasCompletedInitialSetup: false
+        )
+
+        try await client.saveAppState(newer)
+        try await client.saveAppState(older)
+
+        #expect(try await client.loadSelectedMacID() == nil)
+        #expect(try await client.loadInitialSetupCompleted() == false)
+    }
+
+    @Test func olderClearedStateCannotOverwriteNewerSelectedStateWhenDeliveredLast() async throws {
+        let client = RemotePersistenceClient.inMemory()
+        let writerID = UUID()
+        let older = RemoteAppPersistenceIntent(
+            writerID: writerID,
+            sequence: 41,
+            selectedMacID: nil,
+            hasCompletedInitialSetup: false
+        )
+        let newer = RemoteAppPersistenceIntent(
+            writerID: writerID,
+            sequence: 42,
+            selectedMacID: secondMac,
+            hasCompletedInitialSetup: true
+        )
+
+        try await client.saveAppState(newer)
+        try await client.saveAppState(older)
+
+        #expect(try await client.loadSelectedMacID() == secondMac)
+        #expect(try await client.loadInitialSetupCompleted())
+    }
+
+    @Test func sameSequenceRetryAfterInjectedFailureIsIdempotent() async throws {
+        let failure = AtomicSaveFailure()
+        let client = RemotePersistenceClient.inMemory { _ in
+            try failure.failFirstAttempt()
+        }
+        let intent = RemoteAppPersistenceIntent(
+            writerID: UUID(),
+            sequence: 9,
+            selectedMacID: firstMac,
+            hasCompletedInitialSetup: true
+        )
+
+        await #expect(throws: AtomicSaveTestError.failed) {
+            try await client.saveAppState(intent)
+        }
+        try await client.saveAppState(intent)
+        try await client.saveAppState(intent)
+
+        #expect(try await client.loadSelectedMacID() == firstMac)
+        #expect(try await client.loadInitialSetupCompleted())
+    }
+
+    @Test func sharedFileStoreOrdersAtomicAppStateAcrossClients() async throws {
+        let suite = "AtomicAppState-\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let store = RemoteFilePersistenceStore(defaultsSuiteName: suite, rootURL: root)
+        let firstClient = RemotePersistenceClient.fileBacked(store: store, keychain: .inMemory())
+        let secondClient = RemotePersistenceClient.fileBacked(store: store, keychain: .inMemory())
+        let writerID = UUID()
+        let older = RemoteAppPersistenceIntent(
+            writerID: writerID,
+            sequence: 3,
+            selectedMacID: firstMac,
+            hasCompletedInitialSetup: true
+        )
+        let newer = RemoteAppPersistenceIntent(
+            writerID: writerID,
+            sequence: 4,
+            selectedMacID: nil,
+            hasCompletedInitialSetup: false
+        )
+
+        try await secondClient.saveAppState(newer)
+        try await firstClient.saveAppState(older)
+
+        #expect(try await firstClient.loadSelectedMacID() == nil)
+        #expect(try await secondClient.loadInitialSetupCompleted() == false)
+    }
+
     private func status(id: RemoteControlID, isOn: Bool, revision: UInt64) -> RemoteControlStatus {
         .init(
             id: id,
@@ -230,6 +343,21 @@ struct RemotePersistenceClientTests {
 }
 
 private enum TestStorageError: Swift.Error, Equatable { case cannotRemoveCache }
+
+private enum AtomicSaveTestError: Swift.Error, Equatable { case failed }
+
+private final class AtomicSaveFailure: @unchecked Sendable {
+    private let lock = NSLock()
+    private var shouldFail = true
+
+    func failFirstAttempt() throws {
+        lock.lock()
+        defer { lock.unlock() }
+        guard shouldFail else { return }
+        shouldFail = false
+        throw AtomicSaveTestError.failed
+    }
+}
 
 private actor PersistenceOperationGate {
     private let expected: Int

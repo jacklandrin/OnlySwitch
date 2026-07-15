@@ -419,6 +419,8 @@
 		F3A900000000000000000008 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = F3A900000000000000000031 /* OrderedCollections */; };
 		F3A900000000000000000009 /* IdentifiedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = F3A900000000000000000030 /* IdentifiedCollections */; };
 		F3A90000000000000000000A /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = F3A900000000000000000031 /* OrderedCollections */; };
+		F3A90000000000000000000B /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = F3A900000000000000000027 /* Localizable.xcstrings */; };
+		F3A90000000000000000000C /* CasePaths in Frameworks */ = {isa = PBXBuildFile; productRef = F3A300000000000000000037 /* CasePaths */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -779,6 +781,7 @@
 		F3A900000000000000000024 /* PairingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingView.swift; sourceTree = "<group>"; };
 		F3A900000000000000000025 /* SettingsFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsFeature.swift; sourceTree = "<group>"; };
 		F3A900000000000000000026 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		F3A900000000000000000027 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -865,6 +868,7 @@
 				F3A30000000000000000002E /* IssueReportingTestSupport in Frameworks */,
 				F3A900000000000000000009 /* IdentifiedCollections in Frameworks */,
 				F3A90000000000000000000A /* OrderedCollections in Frameworks */,
+				F3A90000000000000000000C /* CasePaths in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1793,6 +1797,7 @@
 				F3A300000000000000000013 /* Info.plist */,
 				F3A300000000000000000014 /* OnlySwitchRemote.entitlements */,
 				F3A300000000000000000015 /* Assets.xcassets */,
+				F3A900000000000000000027 /* Localizable.xcstrings */,
 			);
 			path = OnlySwitchRemote;
 			sourceTree = "<group>";
@@ -2082,6 +2087,7 @@
 				F3A30000000000000000003A /* IssueReportingTestSupport */,
 				F3A900000000000000000030 /* IdentifiedCollections */,
 				F3A900000000000000000031 /* OrderedCollections */,
+				F3A300000000000000000037 /* CasePaths */,
 			);
 			productName = OnlySwitchRemoteTests;
 			productReference = F3A300000000000000000004 /* OnlySwitchRemoteTests.xctest */;
@@ -2219,6 +2225,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F3A300000000000000000023 /* Assets.xcassets in Resources */,
+				F3A90000000000000000000B /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

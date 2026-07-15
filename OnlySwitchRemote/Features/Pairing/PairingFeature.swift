@@ -4,6 +4,7 @@ import RemoteCore
 
 enum PairingIssue: Error, Equatable, Sendable {
     case selectedMacUnavailable
+    case identityMismatch
     case invalidCode
     case expired
     case rateLimited
@@ -11,9 +12,10 @@ enum PairingIssue: Error, Equatable, Sendable {
     case upgradeRequired
     case connectionFailed
 
-    var message: String {
+    var message: LocalizedStringResource {
         switch self {
         case .selectedMacUnavailable: "The selected Mac is no longer available."
+        case .identityMismatch: "The paired Mac did not match the selected Mac."
         case .invalidCode: "The pairing code is invalid."
         case .expired: "The pairing code expired."
         case .rateLimited: "Too many pairing attempts."
@@ -23,9 +25,10 @@ enum PairingIssue: Error, Equatable, Sendable {
         }
     }
 
-    var helpText: String {
+    var helpText: LocalizedStringResource {
         switch self {
         case .selectedMacUnavailable: "Wait for the Mac to reappear, then select it again."
+        case .identityMismatch: "Start a new pairing session and verify that you selected the Mac showing the code."
         case .invalidCode: "Check the 12-character code shown in OnlySwitch on your Mac and try again."
         case .expired: "Start a new pairing session in OnlySwitch on your Mac and enter its new code."
         case .rateLimited: "Wait a moment, start a new pairing session on the Mac, and try again."
@@ -42,6 +45,7 @@ struct PairingFeature {
     struct State: Equatable {
         var discoveredMacs: IdentifiedArrayOf<DiscoveredMac> = []
         var selectedMacID: UUID?
+        var pairingTargetID: UUID?
         var code = ""
         var isPairing = false
         var issue: PairingIssue?
@@ -57,7 +61,7 @@ struct PairingFeature {
                 && selectedMacID.flatMap { discoveredMacs[id: $0] } != nil
         }
 
-        var helpText: String {
+        var helpText: LocalizedStringResource {
             if let issue { return issue.helpText }
             if discoveredMacs.isEmpty {
                 return "Enable iOS Remote Access and start pairing in OnlySwitch on your Mac."
@@ -78,9 +82,8 @@ struct PairingFeature {
         case selectMac(UUID)
         case codeChanged(String)
         case pairTapped
-        case pairingResponse(UInt64, Result<PairedMac, PairingIssue>)
+        case pairingResponse(UInt64, UUID, Result<PairedMac, PairingIssue>)
         case foregroundChanged(Bool)
-        case onDisappear
         case cancelTapped
         case delegate(Delegate)
     }
@@ -93,7 +96,7 @@ struct PairingFeature {
     @Dependency(\.remoteConnection) var connection
 
     private enum CancelID { case discovery, pairing }
-    private static let allowedCodeCharacters = Set("23456789ABCDEFGHJKMNPQRSTUVWXYZ")
+    private static let allowedCodeScalars = Set("23456789ABCDEFGHJKMNPQRSTUVWXYZ".unicodeScalars.map(\.value))
 
     var body: some ReducerOf<Self> {
         Reduce { state, action in
@@ -130,6 +133,13 @@ struct PairingFeature {
                         state.selectedMacID = nil
                         state.issue = .selectedMacUnavailable
                     }
+                    if state.pairingTargetID == id {
+                        state.pairingGeneration &+= 1
+                        state.pairingTargetID = nil
+                        state.isPairing = false
+                        state.issue = .selectedMacUnavailable
+                        return .cancel(id: CancelID.pairing)
+                    }
                 }
                 return .none
 
@@ -142,12 +152,14 @@ struct PairingFeature {
                 return .send(.task)
 
             case let .selectMac(id):
+                guard state.isPairing == false else { return .none }
                 guard state.discoveredMacs[id: id] != nil else { return .none }
                 state.selectedMacID = id
                 state.issue = nil
                 return .none
 
             case let .codeChanged(value):
+                guard state.isPairing == false else { return .none }
                 state.code = Self.normalize(value)
                 state.issue = nil
                 return .none
@@ -158,6 +170,7 @@ struct PairingFeature {
                       let mac = state.discoveredMacs[id: id]
                 else { return .none }
                 state.isPairing = true
+                state.pairingTargetID = id
                 state.issue = nil
                 state.pairingGeneration &+= 1
                 let generation = state.pairingGeneration
@@ -167,24 +180,32 @@ struct PairingFeature {
                     do {
                         let paired = try await connection.pair(mac, code, deviceName)
                         try Task.checkCancellation()
-                        await send(.pairingResponse(generation, .success(paired)))
+                        await send(.pairingResponse(generation, id, .success(paired)))
                     } catch is CancellationError {
                     } catch let error as RemoteProtocolError {
-                        await send(.pairingResponse(generation, .failure(Self.issue(for: error))))
+                        await send(.pairingResponse(generation, id, .failure(Self.issue(for: error))))
                     } catch {
-                        await send(.pairingResponse(generation, .failure(.connectionFailed)))
+                        await send(.pairingResponse(generation, id, .failure(.connectionFailed)))
                     }
                 }
                 .cancellable(id: CancelID.pairing, cancelInFlight: true)
 
-            case let .pairingResponse(generation, result):
+            case let .pairingResponse(generation, targetID, result):
                 guard generation == state.pairingGeneration,
+                      targetID == state.pairingTargetID,
+                      targetID == state.selectedMacID,
+                      state.discoveredMacs[id: targetID] != nil,
                       state.isForegrounded,
                       state.isPairing
                 else { return .none }
                 state.isPairing = false
+                state.pairingTargetID = nil
                 switch result {
                 case let .success(mac):
+                    guard mac.id == targetID else {
+                        state.issue = .identityMismatch
+                        return .none
+                    }
                     return .send(.delegate(.paired(mac)))
                 case let .failure(issue):
                     state.issue = issue
@@ -204,13 +225,6 @@ struct PairingFeature {
                 }
                 return .send(.task)
 
-            case .onDisappear:
-                Self.invalidate(&state)
-                return .merge(
-                    .cancel(id: CancelID.discovery),
-                    .cancel(id: CancelID.pairing)
-                )
-
             case .cancelTapped:
                 Self.invalidate(&state)
                 return .merge(
@@ -226,16 +240,21 @@ struct PairingFeature {
     }
 
     private static func normalize(_ value: String) -> String {
-        String(
-            value.uppercased()
-                .filter(allowedCodeCharacters.contains)
-                .prefix(State.codeLength)
-        )
+        var normalized = String.UnicodeScalarView()
+        for scalar in value.unicodeScalars {
+            var candidate = scalar.value
+            if (97...122).contains(candidate) { candidate -= 32 }
+            guard allowedCodeScalars.contains(candidate), let accepted = UnicodeScalar(candidate) else { continue }
+            normalized.append(accepted)
+            if normalized.count == State.codeLength { break }
+        }
+        return String(normalized)
     }
 
     private static func invalidate(_ state: inout State) {
         state.discoveryGeneration &+= 1
         state.pairingGeneration &+= 1
+        state.pairingTargetID = nil
         state.isDiscovering = false
         state.isPairing = false
     }

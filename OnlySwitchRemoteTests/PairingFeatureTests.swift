@@ -77,6 +77,14 @@ struct PairingFeatureTests {
         #expect(store.state.code.allSatisfy { "23456789ABCDEFGHJKMNPQRSTUVWXYZ".contains($0) })
     }
 
+    @Test func unicodePasteNeverExpandsAndSkipsCombiningMarksAndSeparators() async {
+        let store = TestStore(initialState: PairingFeature.State()) { PairingFeature() }
+        await store.send(.codeChanged("ßa\u{301}—o0i1l b.c/d_e:f,g|h jkmnp")) {
+            $0.code = "ABCDEFGHJKMN"
+            $0.issue = nil
+        }
+    }
+
     @Test func pairingRequiresSelectedMacAndCompleteCode() async {
         var state = PairingFeature.State()
         state.code = "ABCDEFGHJKMN"
@@ -110,11 +118,13 @@ struct PairingFeatureTests {
 
         await store.send(.pairTapped) {
             $0.isPairing = true
+            $0.pairingTargetID = macID
             $0.issue = nil
             $0.pairingGeneration = 1
         }
-        await store.receive(.pairingResponse(1, .success(paired))) {
+        await store.receive(.pairingResponse(1, macID, .success(paired))) {
             $0.isPairing = false
+            $0.pairingTargetID = nil
         }
         await store.receive(.delegate(.paired(paired)))
     }
@@ -124,14 +134,16 @@ struct PairingFeatureTests {
 
         await store.send(.pairTapped) {
             $0.isPairing = true
+            $0.pairingTargetID = macID
             $0.issue = nil
             $0.pairingGeneration = 1
         }
-        await store.receive(.pairingResponse(1, .failure(.expired))) {
+        await store.receive(.pairingResponse(1, macID, .failure(.expired))) {
             $0.isPairing = false
+            $0.pairingTargetID = nil
             $0.issue = .expired
         }
-        #expect(store.state.issue?.message.contains("expired") == true)
+        #expect(store.state.issue == .expired)
     }
 
     @Test(arguments: [
@@ -145,14 +157,34 @@ struct PairingFeatureTests {
 
         await store.send(.pairTapped) {
             $0.isPairing = true
+            $0.pairingTargetID = macID
             $0.issue = nil
             $0.pairingGeneration = 1
         }
-        await store.receive(.pairingResponse(1, .failure(value.1))) {
+        await store.receive(.pairingResponse(1, macID, .failure(value.1))) {
             $0.isPairing = false
+            $0.pairingTargetID = nil
             $0.issue = value.1
         }
-        #expect(store.state.issue?.helpText.isEmpty == false)
+        #expect(store.state.issue == value.1)
+    }
+
+    @Test func selectionChangesAreIgnoredWhilePairing() async {
+        let secondID = UUID(uuidString: "00000000-0000-0000-0000-000000000202")!
+        let second = DiscoveredMac(id: secondID, displayName: "Laptop", endpoint: .hostPort(host: "laptop.local", port: 9001), protocolVersion: .current)
+        var state = PairingFeature.State(); state.discoveredMacs = [discovered(), second]; state.selectedMacID = macID; state.pairingTargetID = macID; state.isPairing = true
+        let store = TestStore(initialState: state) { PairingFeature() }
+        await store.send(.selectMac(secondID))
+        #expect(store.state.selectedMacID == macID)
+        #expect(store.state.pairingTargetID == macID)
+    }
+
+    @Test func removingPairingTargetCancelsAndShowsUnavailableIssue() async {
+        var state = PairingFeature.State(); state.discoveredMacs = [discovered()]; state.selectedMacID = macID; state.pairingTargetID = macID; state.isPairing = true; state.pairingGeneration = 4
+        let store = TestStore(initialState: state) { PairingFeature() }
+        await store.send(.discovery(0, .removed(macID))) {
+            $0.discoveredMacs = []; $0.selectedMacID = nil; $0.pairingTargetID = nil; $0.isPairing = false; $0.pairingGeneration = 5; $0.issue = .selectedMacUnavailable
+        }
     }
 
     @Test func stalePairingResponseAfterBackgroundIsIgnored() async {
@@ -160,55 +192,148 @@ struct PairingFeatureTests {
         var state = PairingFeature.State()
         state.pairingGeneration = 7
         state.isPairing = true
+        state.pairingTargetID = macID
         let store = TestStore(initialState: state) { PairingFeature() }
 
         await store.send(.foregroundChanged(false)) {
             $0.isForegrounded = false
             $0.isPairing = false
+            $0.pairingTargetID = nil
             $0.discoveryGeneration = 1
             $0.pairingGeneration = 8
         }
-        await store.send(.pairingResponse(7, .success(paired)))
+        await store.send(.pairingResponse(7, macID, .success(paired)))
         #expect(store.state.issue == nil)
     }
 
-    @Test func dismissalStopsDiscovery() async throws {
+    @Test func pairingResponseForDifferentTargetIsIgnored() async {
+        let otherID = UUID(uuidString: "00000000-0000-0000-0000-000000000202")!
+        let paired = PairedMac(
+            id: otherID,
+            displayName: "Laptop",
+            lastEndpointDescription: nil,
+            lastConnectedAt: nil,
+            requiresPairing: false
+        )
+        var state = PairingFeature.State()
+        state.discoveredMacs = [discovered()]
+        state.selectedMacID = macID
+        state.pairingTargetID = macID
+        state.isPairing = true
+        state.pairingGeneration = 7
+        let store = TestStore(initialState: state) { PairingFeature() }
+
+        await store.send(.pairingResponse(7, otherID, .success(paired)))
+
+        #expect(store.state.isPairing)
+        #expect(store.state.pairingTargetID == macID)
+    }
+
+    @Test func pairingResponseWithMismatchedPairedIdentityStopsWithoutDelegating() async {
+        let otherID = UUID(uuidString: "00000000-0000-0000-0000-000000000202")!
+        let paired = PairedMac(
+            id: otherID,
+            displayName: "Unexpected Mac",
+            lastEndpointDescription: nil,
+            lastConnectedAt: nil,
+            requiresPairing: false
+        )
+        var state = PairingFeature.State()
+        state.discoveredMacs = [discovered()]
+        state.selectedMacID = macID
+        state.pairingTargetID = macID
+        state.isPairing = true
+        state.pairingGeneration = 7
+        let store = TestStore(initialState: state) { PairingFeature() }
+
+        await store.send(.pairingResponse(7, macID, .success(paired))) {
+            $0.isPairing = false
+            $0.pairingTargetID = nil
+            $0.issue = .identityMismatch
+        }
+    }
+
+    @Test func codeChangesAreIgnoredWhilePairing() async {
+        var state = PairingFeature.State()
+        state.code = "ABCDEFGHJKMN"
+        state.isPairing = true
+        state.pairingTargetID = macID
+        let store = TestStore(initialState: state) { PairingFeature() }
+
+        await store.send(.codeChanged("23456789ABCD"))
+
+        #expect(store.state.code == "ABCDEFGHJKMN")
+    }
+
+    @Test func presentationDismissalStopsDiscoveryWithoutAbsentChildAction() async throws {
         let (stream, continuation) = AsyncStream.makeStream(of: DiscoveryEvent.self)
         let (terminations, terminationContinuation) = AsyncStream.makeStream(of: Void.self, bufferingPolicy: .bufferingOldest(1))
         continuation.onTermination = { _ in terminationContinuation.yield(()) }
-        let store = TestStore(initialState: PairingFeature.State()) {
-            PairingFeature()
+        var state = SettingsFeature.State(isSetupRequired: false); state.pairing = PairingFeature.State()
+        let store = TestStore(initialState: state) {
+            SettingsFeature()
         } withDependencies: {
             $0.remoteConnection.discover = { stream }
         }
 
-        await store.send(.task) {
-            $0.discoveryGeneration = 1
-            $0.isForegrounded = true
-            $0.isDiscovering = true
+        await store.send(.pairing(.presented(.task))) {
+            $0.pairing?.discoveryGeneration = 1
+            $0.pairing?.isDiscovering = true
         }
-        await store.send(.onDisappear) {
-            $0.discoveryGeneration = 2
-            $0.pairingGeneration = 1
-            $0.isDiscovering = false
-            $0.isPairing = false
-        }
+        await store.send(.pairing(.dismiss)) { $0.pairing = nil }
         var iterator = terminations.makeAsyncIterator()
         _ = try #require(await iterator.next())
         terminationContinuation.finish()
         await store.finish()
     }
 
-    @Test func dismissalCancelsInFlightPairingWithoutAnError() async throws {
+    @Test func successfulPairingDismissesAndStopsDiscovery() async throws {
+        let paired = PairedMac(
+            id: macID,
+            displayName: "Studio",
+            lastEndpointDescription: nil,
+            lastConnectedAt: nil,
+            requiresPairing: false
+        )
+        let (stream, continuation) = AsyncStream.makeStream(of: DiscoveryEvent.self)
+        let (terminations, terminationContinuation) = AsyncStream.makeStream(
+            of: Void.self,
+            bufferingPolicy: .bufferingOldest(1)
+        )
+        continuation.onTermination = { _ in terminationContinuation.yield(()) }
+        var state = SettingsFeature.State(isSetupRequired: false)
+        state.pairing = PairingFeature.State()
+        let store = TestStore(initialState: state) {
+            SettingsFeature()
+        } withDependencies: {
+            $0.remoteConnection.discover = { stream }
+        }
+
+        await store.send(.pairing(.presented(.task))) {
+            $0.pairing?.discoveryGeneration = 1
+            $0.pairing?.isDiscovering = true
+        }
+        await store.send(.pairing(.presented(.delegate(.paired(paired))))) {
+            $0.pairing = nil
+            $0.pairedMacs = [paired]
+            $0.selectedMacID = paired.id
+        }
+        await store.receive(.delegate(.paired(paired)))
+        var iterator = terminations.makeAsyncIterator()
+        _ = try #require(await iterator.next())
+        continuation.finish()
+        terminationContinuation.finish()
+        await store.finish()
+    }
+
+    @Test func cancelDelegateDismissesAndCancelsInFlightPairing() async throws {
         let (started, startedContinuation) = AsyncStream.makeStream(of: Void.self, bufferingPolicy: .bufferingOldest(1))
         let (gate, gateContinuation) = AsyncStream.makeStream(of: Void.self)
         let (cancelled, cancelledContinuation) = AsyncStream.makeStream(of: Void.self, bufferingPolicy: .bufferingOldest(1))
-        var state = PairingFeature.State()
-        state.discoveredMacs = [discovered()]
-        state.selectedMacID = macID
-        state.code = "ABCDEFGHJKMN"
+        var pairing = PairingFeature.State(); pairing.discoveredMacs = [discovered()]; pairing.selectedMacID = macID; pairing.code = "ABCDEFGHJKMN"
+        var state = SettingsFeature.State(isSetupRequired: false); state.pairing = pairing
         let store = TestStore(initialState: state) {
-            PairingFeature()
+            SettingsFeature()
         } withDependencies: {
             $0.remoteConnection.pair = { _, _, _ in
                 startedContinuation.yield(())
@@ -221,25 +346,25 @@ struct PairingFeatureTests {
             }
         }
 
-        await store.send(.pairTapped) {
-            $0.isPairing = true
-            $0.issue = nil
-            $0.pairingGeneration = 1
+        await store.send(.pairing(.presented(.pairTapped))) {
+            $0.pairing?.isPairing = true
+            $0.pairing?.pairingTargetID = macID
+            $0.pairing?.issue = nil
+            $0.pairing?.pairingGeneration = 1
         }
         var startedIterator = started.makeAsyncIterator()
         _ = try #require(await startedIterator.next())
-        await store.send(.onDisappear) {
-            $0.discoveryGeneration = 1
-            $0.pairingGeneration = 2
-            $0.isPairing = false
+        await store.send(.pairing(.presented(.cancelTapped))) {
+            $0.pairing?.discoveryGeneration = 1; $0.pairing?.pairingGeneration = 2; $0.pairing?.pairingTargetID = nil; $0.pairing?.isPairing = false
         }
+        await store.receive(.pairing(.presented(.delegate(.cancelled)))) { $0.pairing = nil }
         var cancelledIterator = cancelled.makeAsyncIterator()
         _ = try #require(await cancelledIterator.next())
         gateContinuation.finish()
         startedContinuation.finish()
         cancelledContinuation.finish()
         await store.finish()
-        #expect(store.state.issue == nil)
+        #expect(store.state.pairing == nil)
     }
 
     private func discovered(name: String = "Studio", port: UInt16 = 9_000) -> DiscoveredMac {
