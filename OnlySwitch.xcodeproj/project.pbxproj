@@ -367,6 +367,7 @@
 		F3A30000000000000000002A /* RemoteCore in Frameworks */ = {isa = PBXBuildFile; productRef = F3A300000000000000000034 /* RemoteCore */; };
 		F3A30000000000000000002B /* RemoteTransport in Frameworks */ = {isa = PBXBuildFile; productRef = F3A300000000000000000035 /* RemoteTransport */; };
 		F3A30000000000000000002C /* CasePaths in Frameworks */ = {isa = PBXBuildFile; productRef = F3A300000000000000000037 /* CasePaths */; };
+		F3A30000000000000000002E /* IssueReportingTestSupport in Frameworks */ = {isa = PBXBuildFile; productRef = F3A30000000000000000003A /* IssueReportingTestSupport */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -761,6 +762,7 @@
 				F3A300000000000000000029 /* ComposableArchitecture in Frameworks */,
 				F3A30000000000000000002A /* RemoteCore in Frameworks */,
 				F3A30000000000000000002B /* RemoteTransport in Frameworks */,
+				F3A30000000000000000002E /* IssueReportingTestSupport in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1838,6 +1840,7 @@
 				F3A300000000000000000033 /* ComposableArchitecture */,
 				F3A300000000000000000034 /* RemoteCore */,
 				F3A300000000000000000035 /* RemoteTransport */,
+				F3A30000000000000000003A /* IssueReportingTestSupport */,
 			);
 			productName = OnlySwitchRemoteTests;
 			productReference = F3A300000000000000000004 /* OnlySwitchRemoteTests.xctest */;
@@ -1910,6 +1913,7 @@
 				04819CE02BDEB63900645A0C /* XCRemoteSwiftPackageReference "swift-custom-dump" */,
 				04DA45702E12F28A0051047B /* XCRemoteSwiftPackageReference "swift-dependencies" */,
 				F3A300000000000000000036 /* XCRemoteSwiftPackageReference "swift-case-paths" */,
+				F3A300000000000000000039 /* XCRemoteSwiftPackageReference "xctest-dynamic-overlay" */,
 			);
 			productRefGroup = 04447B592754F08000CD2900 /* Products */;
 			projectDirPath = "";
@@ -2937,6 +2941,14 @@
 				version = 1.7.0;
 			};
 		};
+		F3A300000000000000000039 /* XCRemoteSwiftPackageReference "xctest-dynamic-overlay" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/xctest-dynamic-overlay";
+			requirement = {
+				kind = exactVersion;
+				version = 1.5.2;
+			};
+		};
 		041B17872AD841EE0032919B /* XCRemoteSwiftPackageReference "Sparkle" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sparkle-project/Sparkle";
@@ -3159,6 +3171,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = F3A300000000000000000036 /* XCRemoteSwiftPackageReference "swift-case-paths" */;
 			productName = CasePaths;
+		};
+		F3A30000000000000000003A /* IssueReportingTestSupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F3A300000000000000000039 /* XCRemoteSwiftPackageReference "xctest-dynamic-overlay" */;
+			productName = IssueReportingTestSupport;
 		};
 /* End XCSwiftPackageProductDependency section */
 
