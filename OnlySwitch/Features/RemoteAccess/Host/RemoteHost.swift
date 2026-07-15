@@ -18,6 +18,7 @@ actor RemoteHost {
     private let listenerFactory: @Sendable (NWEndpoint.Port) throws -> NWListener
     private let installationIDProvider: @Sendable () async throws -> UUID
     private let revocationPrepared: @Sendable () async -> Void
+    private let authenticationResultWillSend: @Sendable () async throws -> Void
     private let eventStream: AsyncStream<RemoteHostEvent>
     private let eventContinuation: AsyncStream<RemoteHostEvent>.Continuation
     private var listener: NWListener?
@@ -40,7 +41,8 @@ actor RemoteHost {
             try NWListener(using: .tcp, on: $0)
         },
         installationIDProvider: (@Sendable () async throws -> UUID)? = nil,
-        revocationPrepared: @escaping @Sendable () async -> Void = {}
+        revocationPrepared: @escaping @Sendable () async -> Void = {},
+        authenticationResultWillSend: @escaping @Sendable () async throws -> Void = {}
     ) {
         let (stream, continuation) = AsyncStream.makeStream(
             of: RemoteHostEvent.self,
@@ -58,6 +60,7 @@ actor RemoteHost {
             try await credentialStore.installationID()
         }
         self.revocationPrepared = revocationPrepared
+        self.authenticationResultWillSend = authenticationResultWillSend
         self.statusScheduler = RemoteStatusScheduler(provider: catalogProvider)
     }
 
@@ -74,7 +77,8 @@ actor RemoteHost {
             try NWListener(using: .tcp, on: $0)
         },
         installationIDProvider: (@Sendable () async throws -> UUID)? = nil,
-        revocationPrepared: @escaping @Sendable () async -> Void = {}
+        revocationPrepared: @escaping @Sendable () async -> Void = {},
+        authenticationResultWillSend: @escaping @Sendable () async throws -> Void = {}
     ) -> RemoteHost {
         let provider = RemoteCatalogProvider(
             catalog: { catalog },
@@ -102,7 +106,8 @@ actor RemoteHost {
             peerDeadlines: peerDeadlines,
             listenerFactory: listenerFactory,
             installationIDProvider: installationIDProvider,
-            revocationPrepared: revocationPrepared
+            revocationPrepared: revocationPrepared,
+            authenticationResultWillSend: authenticationResultWillSend
         )
     }
 
@@ -187,6 +192,26 @@ actor RemoteHost {
 
     func pairedDevices() async throws -> [PairedRemoteDevice] {
         try await credentialStore.loadAll()
+    }
+
+    func revokePreservingCredentialForTesting(deviceID: UUID) async throws {
+        guard let credential = try await credentialStore.load(deviceID)?.credential else { return }
+        _ = try await credentialStore.prepareRevocation(deviceID, matchingCredential: credential)
+        let affected = lifecycle.revoke(deviceID: deviceID)
+        let peers = affected.compactMap { sessions.removeValue(forKey: $0) }
+        for peer in peers { await peer.close() }
+    }
+
+    func revocationVerifierForTesting(deviceID: UUID) async throws -> Data? {
+        try await credentialStore.loadRevocationVerifier(deviceID)
+    }
+
+    func isRevokedForTesting(deviceID: UUID) -> Bool {
+        lifecycle.isRevoked(deviceID)
+    }
+
+    func deleteCredentialForTesting(deviceID: UUID, matching credential: Data) async throws {
+        try await credentialStore.delete(deviceID, matchingCredential: credential)
     }
 
     private func startListener(
@@ -314,6 +339,7 @@ actor RemoteHost {
                     generation: generation
                 ) ?? false
             },
+            authenticationResultWillSend: authenticationResultWillSend,
             ended: { [weak self] id in await self?.sessionEnded(id) },
             deadlines: peerDeadlines
         )
