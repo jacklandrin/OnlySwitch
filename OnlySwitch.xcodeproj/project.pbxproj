@@ -368,6 +368,20 @@
 		F3A30000000000000000002B /* RemoteTransport in Frameworks */ = {isa = PBXBuildFile; productRef = F3A300000000000000000035 /* RemoteTransport */; };
 		F3A30000000000000000002C /* CasePaths in Frameworks */ = {isa = PBXBuildFile; productRef = F3A300000000000000000037 /* CasePaths */; };
 		F3A30000000000000000002E /* IssueReportingTestSupport in Frameworks */ = {isa = PBXBuildFile; productRef = F3A30000000000000000003A /* IssueReportingTestSupport */; };
+		F3A400000000000000000001 /* RemoteControlAvailability.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A400000000000000000021 /* RemoteControlAvailability.swift */; };
+		F3A400000000000000000002 /* RemoteIconAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A400000000000000000022 /* RemoteIconAdapter.swift */; };
+		F3A400000000000000000003 /* RemoteCatalogProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A400000000000000000023 /* RemoteCatalogProvider.swift */; };
+		F3A400000000000000000004 /* RemoteCatalogProvider+Live.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A400000000000000000024 /* RemoteCatalogProvider+Live.swift */; };
+		F3A400000000000000000005 /* RemoteCommandRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A400000000000000000025 /* RemoteCommandRouter.swift */; };
+		F3A400000000000000000006 /* RemoteCommandRouter+Live.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A400000000000000000026 /* RemoteCommandRouter+Live.swift */; };
+		F3A400000000000000000007 /* RecentRequestCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A400000000000000000027 /* RecentRequestCache.swift */; };
+		F3A400000000000000000008 /* RemoteCatalogProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A400000000000000000028 /* RemoteCatalogProviderTests.swift */; };
+		F3A400000000000000000009 /* RemoteCommandRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A400000000000000000029 /* RemoteCommandRouterTests.swift */; };
+		F3A40000000000000000000A /* RemoteMacTestValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A40000000000000000002A /* RemoteMacTestValues.swift */; };
+		F3A40000000000000000000B /* RemoteCore in Frameworks */ = {isa = PBXBuildFile; productRef = F3A400000000000000000030 /* RemoteCore */; };
+		F3A40000000000000000000C /* RemoteTransport in Frameworks */ = {isa = PBXBuildFile; productRef = F3A400000000000000000031 /* RemoteTransport */; };
+		F3A40000000000000000000D /* RemoteCore in Frameworks */ = {isa = PBXBuildFile; productRef = F3A400000000000000000032 /* RemoteCore */; };
+		F3A40000000000000000000E /* RemoteTransport in Frameworks */ = {isa = PBXBuildFile; productRef = F3A400000000000000000033 /* RemoteTransport */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -687,6 +701,16 @@
 		F3A300000000000000000015 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F3A300000000000000000016 /* RemoteAppSmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAppSmokeTests.swift; sourceTree = "<group>"; };
 		F3A300000000000000000017 /* RemoteTestValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteTestValues.swift; sourceTree = "<group>"; };
+		F3A400000000000000000021 /* RemoteControlAvailability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteControlAvailability.swift; sourceTree = "<group>"; };
+		F3A400000000000000000022 /* RemoteIconAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteIconAdapter.swift; sourceTree = "<group>"; };
+		F3A400000000000000000023 /* RemoteCatalogProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCatalogProvider.swift; sourceTree = "<group>"; };
+		F3A400000000000000000024 /* RemoteCatalogProvider+Live.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RemoteCatalogProvider+Live.swift"; sourceTree = "<group>"; };
+		F3A400000000000000000025 /* RemoteCommandRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommandRouter.swift; sourceTree = "<group>"; };
+		F3A400000000000000000026 /* RemoteCommandRouter+Live.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RemoteCommandRouter+Live.swift"; sourceTree = "<group>"; };
+		F3A400000000000000000027 /* RecentRequestCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentRequestCache.swift; sourceTree = "<group>"; };
+		F3A400000000000000000028 /* RemoteCatalogProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCatalogProviderTests.swift; sourceTree = "<group>"; };
+		F3A400000000000000000029 /* RemoteCommandRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommandRouterTests.swift; sourceTree = "<group>"; };
+		F3A40000000000000000002A /* RemoteMacTestValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteMacTestValues.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -694,6 +718,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3A40000000000000000000D /* RemoteCore in Frameworks */,
+				F3A40000000000000000000E /* RemoteTransport in Frameworks */,
 				0444D5E32838611600327D0B /* AVFoundation.framework in Frameworks */,
 				0444D5D22836D87E00327D0B /* Alamofire in Frameworks */,
 				0444D5E42838616900327D0B /* CoreBrightness.framework in Frameworks */,
@@ -704,6 +730,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3A40000000000000000000B /* RemoteCore in Frameworks */,
+				F3A40000000000000000000C /* RemoteTransport in Frameworks */,
 				A9F007CA2EC3D9BD002D9AB0 /* Design in Frameworks */,
 				046955D92C7A732300577915 /* OnlyControl in Frameworks */,
 				D35C00012F12000100D35C01 /* DesktopPet in Frameworks */,
@@ -817,6 +845,7 @@
 		041D725528353A160083092D /* OnlySwitchTests */ = {
 			isa = PBXGroup;
 			children = (
+				F3A400000000000000000013 /* RemoteAccess */,
 				041D725628353A160083092D /* OnlySwitchTests.swift */,
 				0444D5EA28393FF800327D0B /* Info.plist */,
 			);
@@ -963,6 +992,7 @@
 		043E5D672757C85500ADC004 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				F3A400000000000000000010 /* RemoteAccess */,
 				04A5AA572C39F8A2001070CA /* OnlyControl */,
 				04BF976C27908E0100E7C0E2 /* OnlySwitchList */,
 				04BF976D27908E2800E7C0E2 /* SwitchItem */,
@@ -1709,6 +1739,46 @@
 			path = OnlySwitchRemoteTests;
 			sourceTree = "<group>";
 		};
+		F3A400000000000000000010 /* RemoteAccess */ = {
+			isa = PBXGroup;
+			children = (
+				F3A400000000000000000011 /* Catalog */,
+				F3A400000000000000000012 /* Commands */,
+			);
+			path = RemoteAccess;
+			sourceTree = "<group>";
+		};
+		F3A400000000000000000011 /* Catalog */ = {
+			isa = PBXGroup;
+			children = (
+				F3A400000000000000000021 /* RemoteControlAvailability.swift */,
+				F3A400000000000000000022 /* RemoteIconAdapter.swift */,
+				F3A400000000000000000023 /* RemoteCatalogProvider.swift */,
+				F3A400000000000000000024 /* RemoteCatalogProvider+Live.swift */,
+			);
+			path = Catalog;
+			sourceTree = "<group>";
+		};
+		F3A400000000000000000012 /* Commands */ = {
+			isa = PBXGroup;
+			children = (
+				F3A400000000000000000025 /* RemoteCommandRouter.swift */,
+				F3A400000000000000000026 /* RemoteCommandRouter+Live.swift */,
+				F3A400000000000000000027 /* RecentRequestCache.swift */,
+			);
+			path = Commands;
+			sourceTree = "<group>";
+		};
+		F3A400000000000000000013 /* RemoteAccess */ = {
+			isa = PBXGroup;
+			children = (
+				F3A400000000000000000028 /* RemoteCatalogProviderTests.swift */,
+				F3A400000000000000000029 /* RemoteCommandRouterTests.swift */,
+				F3A40000000000000000002A /* RemoteMacTestValues.swift */,
+			);
+			path = RemoteAccess;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1728,6 +1798,8 @@
 			name = OnlySwitchTests;
 			packageProductDependencies = (
 				0444D5D12836D87E00327D0B /* Alamofire */,
+				F3A400000000000000000032 /* RemoteCore */,
+				F3A400000000000000000033 /* RemoteTransport */,
 			);
 			productName = OnlySwitchTests;
 			productReference = 041D725428353A150083092D /* OnlySwitchTests.xctest */;
@@ -1752,6 +1824,8 @@
 			);
 			name = OnlySwitch;
 			packageProductDependencies = (
+				F3A400000000000000000030 /* RemoteCore */,
+				F3A400000000000000000031 /* RemoteTransport */,
 				0430887D275D707C00877E51 /* LaunchAtLogin */,
 				04581DB5276506B9008ADF30 /* AlertToast */,
 				04A6B54A27715F90003B2647 /* Alamofire */,
@@ -2050,6 +2124,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3A400000000000000000008 /* RemoteCatalogProviderTests.swift in Sources */,
+				F3A400000000000000000009 /* RemoteCommandRouterTests.swift in Sources */,
+				F3A40000000000000000000A /* RemoteMacTestValues.swift in Sources */,
 				0447E36A2B71746E00D07B9A /* TrueToneSwitch.swift in Sources */,
 				0444D5D0283683DF00327D0B /* GitHubReleaseModel.swift in Sources */,
 				0447E38E2B71746E00D07B9A /* TopNotchSwitch.swift in Sources */,
@@ -2122,6 +2199,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3A400000000000000000001 /* RemoteControlAvailability.swift in Sources */,
+				F3A400000000000000000002 /* RemoteIconAdapter.swift in Sources */,
+				F3A400000000000000000003 /* RemoteCatalogProvider.swift in Sources */,
+				F3A400000000000000000004 /* RemoteCatalogProvider+Live.swift in Sources */,
+				F3A400000000000000000005 /* RemoteCommandRouter.swift in Sources */,
+				F3A400000000000000000006 /* RemoteCommandRouter+Live.swift in Sources */,
+				F3A400000000000000000007 /* RecentRequestCache.swift in Sources */,
 				A1D0E1092F0A000100BEEF01 /* AuthenticatorSwitch.swift in Sources */,
 				0447E35F2B71746E00D07B9A /* AppleMusicSwitch.swift in Sources */,
 				04B25453283BEF3800D253E2 /* SupportedLanguage.swift in Sources */,
@@ -3176,6 +3260,22 @@
 			isa = XCSwiftPackageProductDependency;
 			package = F3A300000000000000000039 /* XCRemoteSwiftPackageReference "xctest-dynamic-overlay" */;
 			productName = IssueReportingTestSupport;
+		};
+		F3A400000000000000000030 /* RemoteCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RemoteCore;
+		};
+		F3A400000000000000000031 /* RemoteTransport */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RemoteTransport;
+		};
+		F3A400000000000000000032 /* RemoteCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RemoteCore;
+		};
+		F3A400000000000000000033 /* RemoteTransport */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RemoteTransport;
 		};
 /* End XCSwiftPackageProductDependency section */
 
