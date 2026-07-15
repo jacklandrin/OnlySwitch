@@ -26,20 +26,30 @@ actor RemoteCredentialStore {
     private static let identityAccount = "installation-id"
 
     private let backend: Backend
+    private let finalizeRepairObserver: @Sendable (UUID) -> Void
     private var records: [UUID: PairedRemoteDevice] = [:]
     private var revocationVerifiers: [UUID: Data] = [:]
     private var memoryInstallationID: UUID?
 
-    private init(backend: Backend) {
+    private init(
+        backend: Backend,
+        finalizeRepairObserver: @escaping @Sendable (UUID) -> Void = { _ in }
+    ) {
         self.backend = backend
+        self.finalizeRepairObserver = finalizeRepairObserver
     }
 
     static func live(service: String = "jacklandrin.OnlySwitch.remote.devices") -> RemoteCredentialStore {
         RemoteCredentialStore(backend: .keychain(service: service))
     }
 
-    static func inMemory() -> RemoteCredentialStore {
-        RemoteCredentialStore(backend: .memory)
+    static func inMemory(
+        finalizeRepairObserver: @escaping @Sendable (UUID) -> Void = { _ in }
+    ) -> RemoteCredentialStore {
+        RemoteCredentialStore(
+            backend: .memory,
+            finalizeRepairObserver: finalizeRepairObserver
+        )
     }
 
     func save(_ device: PairedRemoteDevice) throws {
@@ -110,8 +120,10 @@ actor RemoteCredentialStore {
 
     func finalizeRepair(deviceID: UUID, matchingCredential credential: Data) throws {
         guard let current = try load(deviceID),
-              Self.constantTimeEqual(current.credential, credential) else { return }
+              Self.constantTimeEqual(current.credential, credential),
+              try loadRevocationVerifier(deviceID) != nil else { return }
         try deleteRevocationVerifier(deviceID)
+        finalizeRepairObserver(deviceID)
     }
 
     func load(_ id: UUID) throws -> PairedRemoteDevice? {

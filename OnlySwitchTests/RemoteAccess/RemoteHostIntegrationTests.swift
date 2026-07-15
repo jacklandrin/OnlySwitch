@@ -83,17 +83,21 @@ struct RemoteHostIntegrationTests {
     func ordinaryAuthenticationDuringRevocationCannotClearOfflineVerifier() async throws {
         let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
         let gate = RemoteHostTestGate()
+        let boundary = AuthenticationResultBoundaryRecorder()
         let host = RemoteHost.testing(
             catalog: [],
             router: router,
             pairingCode: "ABCDEFGH2345",
-            revocationPrepared: { await gate.wait() }
+            revocationPrepared: { await gate.wait() },
+            authenticationResultSender: { try await boundary.send($0) },
+            finalizeRepairObserver: { _ in boundary.recordFinalized() }
         )
         let endpoint = try await host.startForTesting(port: 0)
         defer { Task { await host.stop() } }
         let pairedClient = try await RemoteHostTestClient.connect(to: endpoint)
         try await pairedClient.pair(code: "ABCDEFGH2345")
         let identity = try await pairedClient.pairingIdentity()
+        boundary.reset()
 
         let revocation = Task { try await host.revoke(deviceID: identity.deviceID) }
         await gate.waitUntilEntered()
@@ -102,6 +106,7 @@ struct RemoteHostIntegrationTests {
             deviceID: identity.deviceID
         )
         #expect(try await ordinaryClient.authenticate(credential: identity.credential) == .authenticated)
+        #expect(boundary.events == [.sendInvoked, .sendReturned])
 
         await gate.open()
         try await revocation.value
@@ -117,12 +122,13 @@ struct RemoteHostIntegrationTests {
     @Test(.timeLimit(.minutes(1)))
     func repairAuthenticationResultSendFailureRollsBackCredentialRevocationAndVerifier() async throws {
         let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
-        let sendControl = AuthenticationResultSendControl()
+        let boundary = AuthenticationResultBoundaryRecorder()
         let host = RemoteHost.testing(
             catalog: [],
             router: router,
             pairingCode: "ABCDEFGH2345",
-            authenticationResultWillSend: { try await sendControl.check() }
+            authenticationResultSender: { try await boundary.send($0) },
+            finalizeRepairObserver: { _ in boundary.recordFinalized() }
         )
         let endpoint = try await host.startForTesting(port: 0)
         defer { Task { await host.stop() } }
@@ -131,7 +137,8 @@ struct RemoteHostIntegrationTests {
         let original = try await originalClient.pairingIdentity()
         try await host.revokePreservingCredentialForTesting(deviceID: original.deviceID)
         _ = await host.startPairing()
-        await sendControl.failNextSend()
+        boundary.reset()
+        boundary.failNextSend()
         let repairClient = try await RemoteHostTestClient.connect(to: endpoint, deviceID: original.deviceID)
 
         do {
@@ -142,6 +149,7 @@ struct RemoteHostIntegrationTests {
         #expect(try await host.pairedDevices().first?.credential == original.credential)
         #expect(await host.isRevokedForTesting(deviceID: original.deviceID))
         #expect(try await host.revocationVerifierForTesting(deviceID: original.deviceID) == RemoteHandshakeCrypto.revocationVerifier(credential: original.credential))
+        #expect(boundary.events == [.sendInvoked])
 
         try await host.deleteCredentialForTesting(
             deviceID: original.deviceID,
@@ -154,12 +162,13 @@ struct RemoteHostIntegrationTests {
     @Test(.timeLimit(.minutes(1)))
     func successfulRepairClearsVerifierOnlyAfterAuthenticationResultSend() async throws {
         let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
-        let sendControl = AuthenticationResultSendControl()
+        let boundary = AuthenticationResultBoundaryRecorder()
         let host = RemoteHost.testing(
             catalog: [],
             router: router,
             pairingCode: "ABCDEFGH2345",
-            authenticationResultWillSend: { try await sendControl.check() }
+            authenticationResultSender: { try await boundary.send($0) },
+            finalizeRepairObserver: { _ in boundary.recordFinalized() }
         )
         let endpoint = try await host.startForTesting(port: 0)
         defer { Task { await host.stop() } }
@@ -168,33 +177,76 @@ struct RemoteHostIntegrationTests {
         let original = try await originalClient.pairingIdentity()
         try await host.revokePreservingCredentialForTesting(deviceID: original.deviceID)
         _ = await host.startPairing()
+        boundary.reset()
         let repairClient = try await RemoteHostTestClient.connect(to: endpoint, deviceID: original.deviceID)
 
         try await repairClient.pair(code: "ABCDEFGH2345")
+        await boundary.waitUntilFinalized()
 
         let repaired = try #require(try await host.pairedDevices().first)
         #expect(repaired.credential != original.credential)
         #expect(await host.isRevokedForTesting(deviceID: original.deviceID) == false)
         #expect(try await host.revocationVerifierForTesting(deviceID: original.deviceID) == nil)
-        #expect(await sendControl.successfulChecks == 2)
+        #expect(boundary.events == [.sendInvoked, .sendReturned, .finalized])
     }
 
 }
 
 private enum AuthenticationResultSendFailure: Swift.Error { case injected }
 
-private actor AuthenticationResultSendControl {
+private enum AuthenticationBoundaryEvent: Equatable {
+    case sendInvoked
+    case sendReturned
+    case finalized
+}
+
+private final class AuthenticationResultBoundaryRecorder: @unchecked Sendable {
+    private let lock = NSLock()
+    private var recordedEvents: [AuthenticationBoundaryEvent] = []
     private var shouldFail = false
-    private(set) var successfulChecks = 0
+    private var finalizeWaiters: [CheckedContinuation<Void, Never>] = []
 
-    func failNextSend() { shouldFail = true }
+    var events: [AuthenticationBoundaryEvent] { lock.withLock { recordedEvents } }
 
-    func check() throws {
-        if shouldFail {
+    func reset() {
+        lock.withLock {
+            recordedEvents = []
             shouldFail = false
-            throw AuthenticationResultSendFailure.injected
         }
-        successfulChecks += 1
+    }
+
+    func failNextSend() { lock.withLock { shouldFail = true } }
+
+    func send(_ operation: @escaping @Sendable () async throws -> Void) async throws {
+        let fails = lock.withLock { () -> Bool in
+            recordedEvents.append(.sendInvoked)
+            defer { shouldFail = false }
+            return shouldFail
+        }
+        if fails { throw AuthenticationResultSendFailure.injected }
+        try await operation()
+        lock.withLock { recordedEvents.append(.sendReturned) }
+    }
+
+    func recordFinalized() {
+        let waiters = lock.withLock { () -> [CheckedContinuation<Void, Never>] in
+            recordedEvents.append(.finalized)
+            defer { finalizeWaiters = [] }
+            return finalizeWaiters
+        }
+        for waiter in waiters { waiter.resume() }
+    }
+
+    func waitUntilFinalized() async {
+        if lock.withLock({ recordedEvents.contains(.finalized) }) { return }
+        await withCheckedContinuation { continuation in
+            let alreadyFinalized = lock.withLock { () -> Bool in
+                guard recordedEvents.contains(.finalized) == false else { return true }
+                finalizeWaiters.append(continuation)
+                return false
+            }
+            if alreadyFinalized { continuation.resume() }
+        }
     }
 }
 

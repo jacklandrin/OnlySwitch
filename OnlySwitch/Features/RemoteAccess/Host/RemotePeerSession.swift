@@ -61,6 +61,10 @@ struct RemotePairingTransaction: Sendable {
 
 
 actor RemotePeerSession {
+    typealias AuthenticationResultSender = @Sendable (
+        _ operation: @escaping @Sendable () async throws -> Void
+    ) async throws -> Void
+
     enum State: Sendable { case awaitingHello, awaitingPairOrAuthentication, authenticated(UUID), closed }
 
     let id: UUID
@@ -81,7 +85,7 @@ actor RemotePeerSession {
     private let subscriptionsChanged: @Sendable (UUID, Set<RemoteControlID>, @escaping RemoteStatusScheduler.Sink) async throws -> Void
     private let refreshRequested: @Sendable (RemoteControlID) async -> Void
     private let authenticated: @Sendable (UUID, UUID) async -> Bool
-    private let authenticationResultWillSend: @Sendable () async throws -> Void
+    private let authenticationResultSender: AuthenticationResultSender
     private let ended: @Sendable (UUID) async -> Void
     private let deadlines: RemotePeerDeadlines
     private var state: State = .awaitingHello
@@ -108,7 +112,9 @@ actor RemotePeerSession {
         subscriptionsChanged: @escaping @Sendable (UUID, Set<RemoteControlID>, @escaping RemoteStatusScheduler.Sink) async throws -> Void,
         refreshRequested: @escaping @Sendable (RemoteControlID) async -> Void,
         authenticated: @escaping @Sendable (UUID, UUID) async -> Bool,
-        authenticationResultWillSend: @escaping @Sendable () async throws -> Void = {},
+        authenticationResultSender: @escaping AuthenticationResultSender = { operation in
+            try await operation()
+        },
         ended: @escaping @Sendable (UUID) async -> Void,
         deadlines: RemotePeerDeadlines = .init()
     ) {
@@ -130,7 +136,7 @@ actor RemotePeerSession {
         self.subscriptionsChanged = subscriptionsChanged
         self.refreshRequested = refreshRequested
         self.authenticated = authenticated
-        self.authenticationResultWillSend = authenticationResultWillSend
+        self.authenticationResultSender = authenticationResultSender
         self.ended = ended
         self.deadlines = deadlines
     }
@@ -344,8 +350,12 @@ actor RemotePeerSession {
         guard await authenticated(id, client.deviceID) else {
             throw RemoteProtocolError(code: .authenticationFailed, message: "Credential was revoked")
         }
-        try await authenticationResultWillSend()
-        try await sendEncrypted(.authenticationResult(.success(.init(sessionID: id, catalogRevision: 1))))
+        let authenticationResult = RemoteMessage.authenticationResult(
+            .success(.init(sessionID: id, catalogRevision: 1))
+        )
+        try await authenticationResultSender { [self] in
+            try await sendEncrypted(authenticationResult)
+        }
         if completedPendingPairing {
             try? await credentialStore.finalizeRepair(
                 deviceID: client.deviceID,

@@ -18,7 +18,7 @@ actor RemoteHost {
     private let listenerFactory: @Sendable (NWEndpoint.Port) throws -> NWListener
     private let installationIDProvider: @Sendable () async throws -> UUID
     private let revocationPrepared: @Sendable () async -> Void
-    private let authenticationResultWillSend: @Sendable () async throws -> Void
+    private let authenticationResultSender: RemotePeerSession.AuthenticationResultSender
     private let eventStream: AsyncStream<RemoteHostEvent>
     private let eventContinuation: AsyncStream<RemoteHostEvent>.Continuation
     private var listener: NWListener?
@@ -42,7 +42,9 @@ actor RemoteHost {
         },
         installationIDProvider: (@Sendable () async throws -> UUID)? = nil,
         revocationPrepared: @escaping @Sendable () async -> Void = {},
-        authenticationResultWillSend: @escaping @Sendable () async throws -> Void = {}
+        authenticationResultSender: @escaping RemotePeerSession.AuthenticationResultSender = { operation in
+            try await operation()
+        }
     ) {
         let (stream, continuation) = AsyncStream.makeStream(
             of: RemoteHostEvent.self,
@@ -60,7 +62,7 @@ actor RemoteHost {
             try await credentialStore.installationID()
         }
         self.revocationPrepared = revocationPrepared
-        self.authenticationResultWillSend = authenticationResultWillSend
+        self.authenticationResultSender = authenticationResultSender
         self.statusScheduler = RemoteStatusScheduler(provider: catalogProvider)
     }
 
@@ -78,7 +80,10 @@ actor RemoteHost {
         },
         installationIDProvider: (@Sendable () async throws -> UUID)? = nil,
         revocationPrepared: @escaping @Sendable () async -> Void = {},
-        authenticationResultWillSend: @escaping @Sendable () async throws -> Void = {}
+        authenticationResultSender: @escaping RemotePeerSession.AuthenticationResultSender = { operation in
+            try await operation()
+        },
+        finalizeRepairObserver: @escaping @Sendable (UUID) -> Void = { _ in }
     ) -> RemoteHost {
         let provider = RemoteCatalogProvider(
             catalog: { catalog },
@@ -99,7 +104,7 @@ actor RemoteHost {
             }
         )
         return RemoteHost(
-            credentialStore: .inMemory(),
+            credentialStore: .inMemory(finalizeRepairObserver: finalizeRepairObserver),
             catalogProvider: provider,
             router: router,
             fixedPairingCode: pairingCode,
@@ -107,7 +112,7 @@ actor RemoteHost {
             listenerFactory: listenerFactory,
             installationIDProvider: installationIDProvider,
             revocationPrepared: revocationPrepared,
-            authenticationResultWillSend: authenticationResultWillSend
+            authenticationResultSender: authenticationResultSender
         )
     }
 
@@ -339,7 +344,7 @@ actor RemoteHost {
                     generation: generation
                 ) ?? false
             },
-            authenticationResultWillSend: authenticationResultWillSend,
+            authenticationResultSender: authenticationResultSender,
             ended: { [weak self] id in await self?.sessionEnded(id) },
             deadlines: peerDeadlines
         )
