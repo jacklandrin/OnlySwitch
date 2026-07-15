@@ -1,0 +1,12 @@
+import ComposableArchitecture
+import Testing
+@testable import OnlySwitchRemote
+
+@MainActor
+struct RemoteAppSmokeTests {
+    @Test func initialStateRequiresSetupWithoutPairedMacs() {
+        let state = RemoteAppFeature.State()
+        #expect(state.requiresSetup)
+        #expect(state.path.count == 1)
+    }
+}

@@ -354,6 +354,19 @@
 		A9C70D062EE490B3000A2367 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A9C70D052EE490B3000A2367 /* GoogleService-Info.plist */; };
 		A9F007CA2EC3D9BD002D9AB0 /* Design in Frameworks */ = {isa = PBXBuildFile; productRef = A9F007C92EC3D9BD002D9AB0 /* Design */; };
 		D35C00012F12000100D35C01 /* DesktopPet in Frameworks */ = {isa = PBXBuildFile; productRef = D35C00022F12000100D35C01 /* DesktopPet */; };
+		F3A300000000000000000020 /* OnlySwitchRemoteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A300000000000000000010 /* OnlySwitchRemoteApp.swift */; };
+		F3A300000000000000000021 /* RemoteAppFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A300000000000000000011 /* RemoteAppFeature.swift */; };
+		F3A300000000000000000022 /* RemoteAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A300000000000000000012 /* RemoteAppView.swift */; };
+		F3A300000000000000000023 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F3A300000000000000000015 /* Assets.xcassets */; };
+		F3A300000000000000000024 /* RemoteAppSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A300000000000000000016 /* RemoteAppSmokeTests.swift */; };
+		F3A300000000000000000025 /* RemoteTestValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A300000000000000000017 /* RemoteTestValues.swift */; };
+		F3A300000000000000000026 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = F3A300000000000000000030 /* ComposableArchitecture */; };
+		F3A300000000000000000027 /* RemoteCore in Frameworks */ = {isa = PBXBuildFile; productRef = F3A300000000000000000031 /* RemoteCore */; };
+		F3A300000000000000000028 /* RemoteTransport in Frameworks */ = {isa = PBXBuildFile; productRef = F3A300000000000000000032 /* RemoteTransport */; };
+		F3A300000000000000000029 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = F3A300000000000000000033 /* ComposableArchitecture */; };
+		F3A30000000000000000002A /* RemoteCore in Frameworks */ = {isa = PBXBuildFile; productRef = F3A300000000000000000034 /* RemoteCore */; };
+		F3A30000000000000000002B /* RemoteTransport in Frameworks */ = {isa = PBXBuildFile; productRef = F3A300000000000000000035 /* RemoteTransport */; };
+		F3A30000000000000000002C /* CasePaths in Frameworks */ = {isa = PBXBuildFile; productRef = F3A300000000000000000037 /* CasePaths */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -370,6 +383,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 04CB89FB2B703AF3006B8620;
 			remoteInfo = OnlyWidgetExtension;
+		};
+		F3A300000000000000000060 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 04447B502754F08000CD2900 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F3A300000000000000000001;
+			remoteInfo = OnlySwitchRemote;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -656,6 +676,16 @@
 		A93C8BE02ECA34CB00D7CE52 /* AICommanderSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AICommanderSwitch.swift; sourceTree = "<group>"; };
 		A9A98A402F78834500034ADB /* models.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = models.json; sourceTree = "<group>"; };
 		A9C70D052EE490B3000A2367 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		F3A300000000000000000003 /* OnlySwitchRemote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnlySwitchRemote.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F3A300000000000000000004 /* OnlySwitchRemoteTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnlySwitchRemoteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F3A300000000000000000010 /* OnlySwitchRemoteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlySwitchRemoteApp.swift; sourceTree = "<group>"; };
+		F3A300000000000000000011 /* RemoteAppFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAppFeature.swift; sourceTree = "<group>"; };
+		F3A300000000000000000012 /* RemoteAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAppView.swift; sourceTree = "<group>"; };
+		F3A300000000000000000013 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F3A300000000000000000014 /* OnlySwitchRemote.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OnlySwitchRemote.entitlements; sourceTree = "<group>"; };
+		F3A300000000000000000015 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F3A300000000000000000016 /* RemoteAppSmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAppSmokeTests.swift; sourceTree = "<group>"; };
+		F3A300000000000000000017 /* RemoteTestValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteTestValues.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -710,6 +740,27 @@
 				047887342B82AF360064B9F5 /* Switches in Frameworks */,
 				047887522B83ECF00064B9F5 /* Utilities in Frameworks */,
 				04CB89FE2B703AF3006B8620 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F3A300000000000000000041 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F3A300000000000000000026 /* ComposableArchitecture in Frameworks */,
+				F3A300000000000000000027 /* RemoteCore in Frameworks */,
+				F3A300000000000000000028 /* RemoteTransport in Frameworks */,
+				F3A30000000000000000002C /* CasePaths in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F3A300000000000000000044 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F3A300000000000000000029 /* ComposableArchitecture in Frameworks */,
+				F3A30000000000000000002A /* RemoteCore in Frameworks */,
+				F3A30000000000000000002B /* RemoteTransport in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1000,6 +1051,8 @@
 				04447B5A2754F08000CD2900 /* OnlySwitch */,
 				041D725528353A160083092D /* OnlySwitchTests */,
 				04CB8A012B703AF4006B8620 /* OnlyWidget */,
+				F3A300000000000000000005 /* OnlySwitchRemote */,
+				F3A300000000000000000007 /* OnlySwitchRemoteTests */,
 				04447B592754F08000CD2900 /* Products */,
 				043E5D6B2757DADB00ADC004 /* Frameworks */,
 			);
@@ -1011,6 +1064,8 @@
 				04447B582754F08000CD2900 /* OnlySwitch.app */,
 				041D725428353A150083092D /* OnlySwitchTests.xctest */,
 				04CB89FC2B703AF3006B8620 /* OnlyWidgetExtension.appex */,
+				F3A300000000000000000003 /* OnlySwitchRemote.app */,
+				F3A300000000000000000004 /* OnlySwitchRemoteTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1622,6 +1677,36 @@
 			path = DDC;
 			sourceTree = "<group>";
 		};
+		F3A300000000000000000005 /* OnlySwitchRemote */ = {
+			isa = PBXGroup;
+			children = (
+				F3A300000000000000000006 /* App */,
+				F3A300000000000000000013 /* Info.plist */,
+				F3A300000000000000000014 /* OnlySwitchRemote.entitlements */,
+				F3A300000000000000000015 /* Assets.xcassets */,
+			);
+			path = OnlySwitchRemote;
+			sourceTree = "<group>";
+		};
+		F3A300000000000000000006 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				F3A300000000000000000010 /* OnlySwitchRemoteApp.swift */,
+				F3A300000000000000000011 /* RemoteAppFeature.swift */,
+				F3A300000000000000000012 /* RemoteAppView.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		F3A300000000000000000007 /* OnlySwitchRemoteTests */ = {
+			isa = PBXGroup;
+			children = (
+				F3A300000000000000000016 /* RemoteAppSmokeTests.swift */,
+				F3A300000000000000000017 /* RemoteTestValues.swift */,
+			);
+			path = OnlySwitchRemoteTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1712,6 +1797,52 @@
 			productReference = 04CB89FC2B703AF3006B8620 /* OnlyWidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		F3A300000000000000000001 /* OnlySwitchRemote */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F3A300000000000000000054 /* Build configuration list for PBXNativeTarget "OnlySwitchRemote" */;
+			buildPhases = (
+				F3A300000000000000000040 /* Sources */,
+				F3A300000000000000000041 /* Frameworks */,
+				F3A300000000000000000042 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OnlySwitchRemote;
+			packageProductDependencies = (
+				F3A300000000000000000030 /* ComposableArchitecture */,
+				F3A300000000000000000031 /* RemoteCore */,
+				F3A300000000000000000032 /* RemoteTransport */,
+				F3A300000000000000000037 /* CasePaths */,
+			);
+			productName = OnlySwitchRemote;
+			productReference = F3A300000000000000000003 /* OnlySwitchRemote.app */;
+			productType = "com.apple.product-type.application";
+		};
+		F3A300000000000000000002 /* OnlySwitchRemoteTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F3A300000000000000000055 /* Build configuration list for PBXNativeTarget "OnlySwitchRemoteTests" */;
+			buildPhases = (
+				F3A300000000000000000043 /* Sources */,
+				F3A300000000000000000044 /* Frameworks */,
+				F3A300000000000000000045 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F3A300000000000000000061 /* PBXTargetDependency */,
+			);
+			name = OnlySwitchRemoteTests;
+			packageProductDependencies = (
+				F3A300000000000000000033 /* ComposableArchitecture */,
+				F3A300000000000000000034 /* RemoteCore */,
+				F3A300000000000000000035 /* RemoteTransport */,
+			);
+			productName = OnlySwitchRemoteTests;
+			productReference = F3A300000000000000000004 /* OnlySwitchRemoteTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1722,6 +1853,13 @@
 				LastSwiftUpdateCheck = 1520;
 				LastUpgradeCheck = 1320;
 				TargetAttributes = {
+					F3A300000000000000000001 = {
+						CreatedOnToolsVersion = 26.0;
+					};
+					F3A300000000000000000002 = {
+						CreatedOnToolsVersion = 26.0;
+						TestTargetID = F3A300000000000000000001;
+					};
 					041D725328353A150083092D = {
 						CreatedOnToolsVersion = 13.4;
 						TestTargetID = 04447B572754F08000CD2900;
@@ -1771,6 +1909,7 @@
 				047594932B531CB2005FC87C /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
 				04819CE02BDEB63900645A0C /* XCRemoteSwiftPackageReference "swift-custom-dump" */,
 				04DA45702E12F28A0051047B /* XCRemoteSwiftPackageReference "swift-dependencies" */,
+				F3A300000000000000000036 /* XCRemoteSwiftPackageReference "swift-case-paths" */,
 			);
 			productRefGroup = 04447B592754F08000CD2900 /* Products */;
 			projectDirPath = "";
@@ -1779,6 +1918,8 @@
 				04447B572754F08000CD2900 /* OnlySwitch */,
 				041D725328353A150083092D /* OnlySwitchTests */,
 				04CB89FB2B703AF3006B8620 /* OnlyWidgetExtension */,
+				F3A300000000000000000001 /* OnlySwitchRemote */,
+				F3A300000000000000000002 /* OnlySwitchRemoteTests */,
 			);
 		};
 /* End PBXProject section */
@@ -1823,6 +1964,21 @@
 			files = (
 				04CB8A072B703AF5006B8620 /* Assets.xcassets in Resources */,
 				04E562022E2467E6004E0BD0 /* Localizable.xcstrings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F3A300000000000000000042 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F3A300000000000000000023 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F3A300000000000000000045 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2199,6 +2355,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F3A300000000000000000040 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F3A300000000000000000020 /* OnlySwitchRemoteApp.swift in Sources */,
+				F3A300000000000000000021 /* RemoteAppFeature.swift in Sources */,
+				F3A300000000000000000022 /* RemoteAppView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F3A300000000000000000043 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F3A300000000000000000024 /* RemoteAppSmokeTests.swift in Sources */,
+				F3A300000000000000000025 /* RemoteTestValues.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -2211,6 +2386,11 @@
 			isa = PBXTargetDependency;
 			target = 04CB89FB2B703AF3006B8620 /* OnlyWidgetExtension */;
 			targetProxy = 04CB8A0A2B703AF5006B8620 /* PBXContainerItemProxy */;
+		};
+		F3A300000000000000000061 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F3A300000000000000000001 /* OnlySwitchRemote */;
+			targetProxy = F3A300000000000000000060 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -2577,6 +2757,118 @@
 			};
 			name = Release;
 		};
+		F3A300000000000000000050 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = OnlySwitchRemote/OnlySwitchRemote.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = OnlySwitchRemote/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitchRemote;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F3A300000000000000000051 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = OnlySwitchRemote/OnlySwitchRemote.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = OnlySwitchRemote/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitchRemote;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		F3A300000000000000000052 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitchRemoteTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OnlySwitchRemote.app/OnlySwitchRemote";
+			};
+			name = Debug;
+		};
+		F3A300000000000000000053 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitchRemoteTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OnlySwitchRemote.app/OnlySwitchRemote";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -2616,9 +2908,35 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		F3A300000000000000000054 /* Build configuration list for PBXNativeTarget "OnlySwitchRemote" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F3A300000000000000000050 /* Debug */,
+				F3A300000000000000000051 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F3A300000000000000000055 /* Build configuration list for PBXNativeTarget "OnlySwitchRemoteTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F3A300000000000000000052 /* Debug */,
+				F3A300000000000000000053 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		F3A300000000000000000036 /* XCRemoteSwiftPackageReference "swift-case-paths" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-case-paths";
+			requirement = {
+				kind = exactVersion;
+				version = 1.7.0;
+			};
+		};
 		041B17872AD841EE0032919B /* XCRemoteSwiftPackageReference "Sparkle" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sparkle-project/Sparkle";
@@ -2810,6 +3128,37 @@
 		D35C00022F12000100D35C01 /* DesktopPet */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DesktopPet;
+		};
+		F3A300000000000000000030 /* ComposableArchitecture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 047C1E4D2A22523B0061235D /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = ComposableArchitecture;
+		};
+		F3A300000000000000000031 /* RemoteCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RemoteCore;
+		};
+		F3A300000000000000000032 /* RemoteTransport */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RemoteTransport;
+		};
+		F3A300000000000000000033 /* ComposableArchitecture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 047C1E4D2A22523B0061235D /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = ComposableArchitecture;
+		};
+		F3A300000000000000000034 /* RemoteCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RemoteCore;
+		};
+		F3A300000000000000000035 /* RemoteTransport */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RemoteTransport;
+		};
+		F3A300000000000000000037 /* CasePaths */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F3A300000000000000000036 /* XCRemoteSwiftPackageReference "swift-case-paths" */;
+			productName = CasePaths;
 		};
 /* End XCSwiftPackageProductDependency section */
 
