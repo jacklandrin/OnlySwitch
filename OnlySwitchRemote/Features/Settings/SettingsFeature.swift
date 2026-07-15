@@ -79,6 +79,7 @@ struct SettingsFeature {
     enum Delegate: Equatable {
         case paired(PairedMac)
         case selectedMacChanged(PairedMac)
+        case layoutChanged(MacDashboardLayout)
         case macForgotten(UUID)
         case allMacsRemoved
     }
@@ -149,7 +150,8 @@ struct SettingsFeature {
                     state.selectedControlIDs.remove(id)
                     state.order.removeAll { $0 == id }
                 }
-                return enqueueLayoutSave(macID: macID, state: &state)
+                let save = enqueueLayoutSave(macID: macID, state: &state)
+                return .concatenate(.send(.delegate(.layoutChanged(currentLayout(macID: macID, state: state)))), save)
 
             case let .move(source, destination):
                 guard let macID = state.selectedMacID else { return .none }
@@ -159,7 +161,8 @@ struct SettingsFeature {
                 let visibleSet = Set(visible)
                 var iterator = reordered.makeIterator()
                 state.order = state.order.map { visibleSet.contains($0) ? (iterator.next() ?? $0) : $0 }
-                return enqueueLayoutSave(macID: macID, state: &state)
+                let save = enqueueLayoutSave(macID: macID, state: &state)
+                return .concatenate(.send(.delegate(.layoutChanged(currentLayout(macID: macID, state: state)))), save)
 
             case let .layoutSaveResponse(macID, generation, savedLayout, result):
                 guard state.pairedMacs[id: macID] != nil,

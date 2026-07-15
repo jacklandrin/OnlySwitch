@@ -426,6 +426,15 @@
 		F3AA00000000000000000003 /* MacManagementFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AA00000000000000000023 /* MacManagementFeature.swift */; };
 		F3AA00000000000000000004 /* MacManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AA00000000000000000024 /* MacManagementView.swift */; };
 		F3AA00000000000000000005 /* ControlSelectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AA00000000000000000025 /* ControlSelectionRow.swift */; };
+		F3AB00000000000000000001 /* DashboardFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AB00000000000000000021 /* DashboardFeatureTests.swift */; };
+		F3AB00000000000000000002 /* DashboardFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AB00000000000000000022 /* DashboardFeature.swift */; };
+		F3AB00000000000000000003 /* SwiftNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = F3AB00000000000000000031 /* SwiftNavigation */; };
+		F3AB00000000000000000004 /* SwiftNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = F3AB00000000000000000032 /* SwiftNavigation */; };
+		F3AB00000000000000000005 /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = F3AB00000000000000000033 /* Dependencies */; };
+		F3AB00000000000000000006 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AB00000000000000000023 /* DashboardView.swift */; };
+		F3AB00000000000000000007 /* ControlTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AB00000000000000000024 /* ControlTileView.swift */; };
+		F3AB00000000000000000008 /* MacPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AB00000000000000000025 /* MacPickerView.swift */; };
+		F3AB00000000000000000009 /* RemoteEndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AB00000000000000000026 /* RemoteEndToEndTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -792,6 +801,12 @@
 		F3AA00000000000000000023 /* MacManagementFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacManagementFeature.swift; sourceTree = "<group>"; };
 		F3AA00000000000000000024 /* MacManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacManagementView.swift; sourceTree = "<group>"; };
 		F3AA00000000000000000025 /* ControlSelectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlSelectionRow.swift; sourceTree = "<group>"; };
+		F3AB00000000000000000021 /* DashboardFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardFeatureTests.swift; sourceTree = "<group>"; };
+		F3AB00000000000000000022 /* DashboardFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardFeature.swift; sourceTree = "<group>"; };
+		F3AB00000000000000000023 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		F3AB00000000000000000024 /* ControlTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlTileView.swift; sourceTree = "<group>"; };
+		F3AB00000000000000000025 /* MacPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacPickerView.swift; sourceTree = "<group>"; };
+		F3AB00000000000000000026 /* RemoteEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteEndToEndTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -857,6 +872,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3AB00000000000000000003 /* SwiftNavigation in Frameworks */,
 				F3A300000000000000000026 /* ComposableArchitecture in Frameworks */,
 				F3A300000000000000000027 /* RemoteCore in Frameworks */,
 				F3A300000000000000000028 /* RemoteTransport in Frameworks */,
@@ -872,6 +888,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3AB00000000000000000004 /* SwiftNavigation in Frameworks */,
+				F3AB00000000000000000005 /* Dependencies in Frameworks */,
 				F3A300000000000000000029 /* ComposableArchitecture in Frameworks */,
 				F3A30000000000000000002A /* RemoteCore in Frameworks */,
 				F3A30000000000000000002B /* RemoteTransport in Frameworks */,
@@ -1833,6 +1851,8 @@
 				F3A900000000000000000022 /* PairingFeatureTests.swift */,
 				F3AA00000000000000000021 /* SettingsFeatureTests.swift */,
 				F3AA00000000000000000022 /* MacManagementFeatureTests.swift */,
+				F3AB00000000000000000021 /* DashboardFeatureTests.swift */,
+				F3AB00000000000000000026 /* RemoteEndToEndTests.swift */,
 			);
 			path = OnlySwitchRemoteTests;
 			sourceTree = "<group>";
@@ -1864,8 +1884,20 @@
 			children = (
 				F3A900000000000000000011 /* Pairing */,
 				F3A900000000000000000012 /* Settings */,
+				F3AB00000000000000000010 /* Dashboard */,
 			);
 			path = Features;
+			sourceTree = "<group>";
+		};
+		F3AB00000000000000000010 /* Dashboard */ = {
+			isa = PBXGroup;
+			children = (
+				F3AB00000000000000000022 /* DashboardFeature.swift */,
+				F3AB00000000000000000023 /* DashboardView.swift */,
+				F3AB00000000000000000024 /* ControlTileView.swift */,
+				F3AB00000000000000000025 /* MacPickerView.swift */,
+			);
+			path = Dashboard;
 			sourceTree = "<group>";
 		};
 		F3A900000000000000000011 /* Pairing */ = {
@@ -2076,6 +2108,7 @@
 				F3A800000000000000000031 /* DependenciesMacros */,
 				F3A900000000000000000030 /* IdentifiedCollections */,
 				F3A900000000000000000031 /* OrderedCollections */,
+				F3AB00000000000000000031 /* SwiftNavigation */,
 			);
 			productName = OnlySwitchRemote;
 			productReference = F3A300000000000000000003 /* OnlySwitchRemote.app */;
@@ -2103,6 +2136,8 @@
 				F3A900000000000000000030 /* IdentifiedCollections */,
 				F3A900000000000000000031 /* OrderedCollections */,
 				F3A300000000000000000037 /* CasePaths */,
+				F3AB00000000000000000032 /* SwiftNavigation */,
+				F3AB00000000000000000033 /* Dependencies */,
 			);
 			productName = OnlySwitchRemoteTests;
 			productReference = F3A300000000000000000004 /* OnlySwitchRemoteTests.xctest */;
@@ -2178,6 +2213,7 @@
 				F3A300000000000000000039 /* XCRemoteSwiftPackageReference "xctest-dynamic-overlay" */,
 				F3A900000000000000000040 /* XCRemoteSwiftPackageReference "swift-identified-collections" */,
 				F3A900000000000000000041 /* XCRemoteSwiftPackageReference "swift-collections" */,
+				F3AB00000000000000000030 /* XCRemoteSwiftPackageReference "swift-navigation" */,
 			);
 			productRefGroup = 04447B592754F08000CD2900 /* Products */;
 			projectDirPath = "";
@@ -2671,6 +2707,10 @@
 				F3AA00000000000000000003 /* MacManagementFeature.swift in Sources */,
 				F3AA00000000000000000004 /* MacManagementView.swift in Sources */,
 				F3AA00000000000000000005 /* ControlSelectionRow.swift in Sources */,
+				F3AB00000000000000000002 /* DashboardFeature.swift in Sources */,
+				F3AB00000000000000000006 /* DashboardView.swift in Sources */,
+				F3AB00000000000000000007 /* ControlTileView.swift in Sources */,
+				F3AB00000000000000000008 /* MacPickerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2686,6 +2726,8 @@
 				F3A900000000000000000002 /* PairingFeatureTests.swift in Sources */,
 				F3AA00000000000000000001 /* SettingsFeatureTests.swift in Sources */,
 				F3AA00000000000000000002 /* MacManagementFeatureTests.swift in Sources */,
+				F3AB00000000000000000001 /* DashboardFeatureTests.swift in Sources */,
+				F3AB00000000000000000009 /* RemoteEndToEndTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3246,6 +3288,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		F3AB00000000000000000030 /* XCRemoteSwiftPackageReference "swift-navigation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-navigation";
+			requirement = {
+				kind = exactVersion;
+				version = 2.7.0;
+			};
+		};
 		F3A300000000000000000036 /* XCRemoteSwiftPackageReference "swift-case-paths" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swift-case-paths";
@@ -3363,6 +3413,21 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		F3AB00000000000000000031 /* SwiftNavigation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F3AB00000000000000000030 /* XCRemoteSwiftPackageReference "swift-navigation" */;
+			productName = SwiftNavigation;
+		};
+		F3AB00000000000000000032 /* SwiftNavigation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F3AB00000000000000000030 /* XCRemoteSwiftPackageReference "swift-navigation" */;
+			productName = SwiftNavigation;
+		};
+		F3AB00000000000000000033 /* Dependencies */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04DA45702E12F28A0051047B /* XCRemoteSwiftPackageReference "swift-dependencies" */;
+			productName = Dependencies;
+		};
 		041B17882AD841EE0032919B /* Sparkle */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 041B17872AD841EE0032919B /* XCRemoteSwiftPackageReference "Sparkle" */;

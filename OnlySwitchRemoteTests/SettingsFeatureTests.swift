@@ -107,6 +107,7 @@ struct SettingsFeatureTests {
             $0.layoutSaveInFlight.insert(studio.id)
         }
         let layout = MacDashboardLayout(macID: studio.id, selectedControlIDs: [unavailable.id], order: [unavailable.id])
+        await store.receive(.delegate(.layoutChanged(layout)))
         await store.receive(.layoutSaveResponse(studio.id, 1, layout, .success)) {
             $0.pendingLayoutSaves[studio.id] = nil
             $0.layoutSaveInFlight.remove(studio.id)
@@ -152,6 +153,7 @@ struct SettingsFeatureTests {
             $0.layoutSaveInFlight.insert(studio.id)
         }
         let saved = MacDashboardLayout(macID: studio.id, selectedControlIDs: [missing, mute, shortcut, evolution], order: [missing, shortcut, evolution, mute])
+        await store.receive(.delegate(.layoutChanged(saved)))
         await store.receive(.layoutSaveResponse(studio.id, 1, saved, .success)) {
             $0.pendingLayoutSaves[studio.id] = nil
             $0.layoutSaveInFlight.remove(studio.id)
@@ -175,11 +177,13 @@ struct SettingsFeatureTests {
             $0.pendingLayoutSaves[studio.id] = .init(macID: studio.id, selectedControlIDs: [mute], order: [mute])
             $0.layoutSaveGenerations[studio.id] = 1; $0.layoutSaveInFlight.insert(studio.id)
         }
+        await store.receive(.delegate(.layoutChanged(.init(macID: studio.id, selectedControlIDs: [mute], order: [mute]))))
         await recorder.waitUntilFirstSaveStarts()
         await store.send(.toggleControl(shortcut, true)) {
             $0.selectedControlIDs = [mute, shortcut]; $0.order = [mute, shortcut]
             $0.pendingLayoutSaves[studio.id] = .init(macID: studio.id, selectedControlIDs: [mute, shortcut], order: [mute, shortcut])
         }
+        await store.receive(.delegate(.layoutChanged(.init(macID: studio.id, selectedControlIDs: [mute, shortcut], order: [mute, shortcut]))))
         await recorder.failFirstSave()
         let first = MacDashboardLayout(macID: studio.id, selectedControlIDs: [mute], order: [mute])
         await store.receive(.layoutSaveResponse(studio.id, 1, first, .failure)) {
@@ -211,11 +215,13 @@ struct SettingsFeatureTests {
             $0.pendingLayoutSaves[studio.id] = .init(macID: studio.id, selectedControlIDs: [mute], order: [mute])
             $0.layoutSaveGenerations[studio.id] = 1; $0.layoutSaveInFlight.insert(studio.id)
         }
+        await store.receive(.delegate(.layoutChanged(.init(macID: studio.id, selectedControlIDs: [mute], order: [mute]))))
         await recorder.waitUntilFirstSaveStarts()
         await store.send(.toggleControl(shortcut, true)) {
             $0.selectedControlIDs = [mute, shortcut]; $0.order = [mute, shortcut]
             $0.pendingLayoutSaves[studio.id] = .init(macID: studio.id, selectedControlIDs: [mute, shortcut], order: [mute, shortcut])
         }
+        await store.receive(.delegate(.layoutChanged(.init(macID: studio.id, selectedControlIDs: [mute, shortcut], order: [mute, shortcut]))))
         await recorder.finishFirstSave()
         let first = MacDashboardLayout(macID: studio.id, selectedControlIDs: [mute], order: [mute])
         await store.receive(.layoutSaveResponse(studio.id, 1, first, .success)) {

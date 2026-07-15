@@ -91,7 +91,26 @@
     "You’ll need a new pairing code to add this Mac again.": {},
     "Wait a moment, start a new pairing session on the Mac, and try again.": {},
     "Wait for the Mac to reappear, then select it again.": {},
-    "Your code stays on this device and is used only for this pairing attempt.": {}
+    "Your code stays on this device and is used only for this pairing attempt.": {},
+    "Action Failed": {},
+    "Choose controls in Settings to add them here.": {},
+    "Connect to this Mac to use this control": {},
+    "Last known status": {},
+    "Mac Offline — controls are disabled": {},
+    "No Dashboard Tiles": {},
+    "Off": {},
+    "Offline, showing last known status": {},
+    "On": {},
+    "Pairing required — open Settings to reconnect": {},
+    "Ready": {},
+    "Requires confirmation before running": {},
+    "Run": {},
+    "Run %@?": {},
+    "Runs this control on the selected Mac": {},
+    "This will run %@ on %@.": {},
+    "The Mac could not complete this action.": {},
+    "Unavailable: %@": {},
+    "Working": {}
   },
   "version": "1.0"
 }

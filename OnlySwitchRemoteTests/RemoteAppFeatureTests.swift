@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import Foundation
+import RemoteCore
 import Testing
 @testable import OnlySwitchRemote
 
@@ -7,6 +8,268 @@ import Testing
 struct RemoteAppFeatureTests {
     private let studio = PairedMac(id: UUID(uuidString: "00000000-0000-0000-0000-000000000101")!, displayName: "Studio", lastEndpointDescription: nil, lastConnectedAt: nil, requiresPairing: false)
     private let laptop = PairedMac(id: UUID(uuidString: "00000000-0000-0000-0000-000000000102")!, displayName: "Laptop", lastEndpointDescription: nil, lastConnectedAt: nil, requiresPairing: false)
+
+    @Test func rootForwardsSelectedMacStatusIntoDashboard() async {
+        let current = RemoteControlStatus(
+            id: .darkMode,
+            isAvailable: true,
+            unavailableReason: nil,
+            isOn: true,
+            secondaryInformation: "Enabled",
+            isProcessing: false,
+            revision: 3,
+            updatedAt: Date(timeIntervalSince1970: 3)
+        )
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.dashboard = .init(
+            pairedMacs: [studio],
+            selectedMacID: studio.id,
+            connectionState: .authenticated,
+            isActive: true
+        )
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.mergeStatus = { _, _ in }
+        }
+
+        await store.send(.connectionEvent(.status(studio.id, current))) {
+            $0.connectionEventRevision = 1
+        }
+        await store.receive(.dashboard(.connectionEvent(.status(studio.id, current)))) {
+            $0.dashboard.statuses[.darkMode] = .init(value: current, isStale: false)
+        }
+    }
+
+    @Test func dashboardLoadsSelectedMacCachedLayoutCatalogAndStatus() async {
+        let layout = MacDashboardLayout(macID: studio.id, selectedControlIDs: [.darkMode], order: [.darkMode])
+        let descriptor = RemoteControlDescriptor(
+            id: .darkMode,
+            title: "Dark Mode",
+            behavior: .switch,
+            icon: .systemSymbol("moon"),
+            isAvailable: true,
+            unavailableReason: nil,
+            isDestructive: false,
+            supportsStatus: true,
+            supportsSecondaryInformation: true
+        )
+        let status = RemoteControlStatus(
+            id: .darkMode,
+            isAvailable: true,
+            unavailableReason: nil,
+            isOn: false,
+            secondaryInformation: "Off",
+            isProcessing: false,
+            revision: 5,
+            updatedAt: Date(timeIntervalSince1970: 5)
+        )
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.dashboard = .init(
+            pairedMacs: [studio],
+            selectedMacID: studio.id,
+            connectionState: .offline(nil),
+            isActive: true
+        )
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.loadLayout = { _ in layout }
+            $0.remotePersistence.loadCatalog = { _ in .init(revision: 4, controls: [descriptor]) }
+            $0.remotePersistence.loadStatuses = { _ in [status] }
+            $0.remoteConnection.subscribe = { _ in }
+        }
+
+        await store.send(.dashboard(.task)) {
+            $0.dashboard.selectionGeneration = 1
+        }
+        await store.receive(.dashboard(.subscriptionStarted([])))
+        await store.receive(\.dashboard.selectedDataLoaded) {
+            $0.dashboard.descriptors = [descriptor]
+            $0.dashboard.catalogRevision = 4
+            $0.dashboard.statuses = [.darkMode: .init(value: status, isStale: true)]
+            $0.dashboard.orderedSelectedIDs = [.darkMode]
+        }
+        await store.receive(.dashboard(.subscriptionStarted([.darkMode])))
+    }
+
+    @Test func firstDashboardTaskAdoptsTheRootSelection() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.loadLayout = { _ in nil }
+            $0.remotePersistence.loadCatalog = { _ in nil }
+            $0.remotePersistence.loadStatuses = { _ in nil }
+            $0.remoteConnection.subscribe = { _ in }
+        }
+        store.exhaustivity = .off(showSkippedAssertions: false)
+
+        await store.send(.dashboard(.task)) {
+            $0.dashboard.isActive = true
+            $0.dashboard.pairedMacs = [self.studio]
+            $0.dashboard.selectedMacID = self.studio.id
+            $0.dashboard.selectionGeneration = 1
+            $0.dashboard.connectionState = .offline(nil)
+        }
+    }
+
+    @Test func launchSelectionReloadsAnAlreadyActiveDashboard() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.loadGeneration = 1
+        state.isLoading = true
+        state.dashboard.isActive = true
+        let loads = DashboardLoadRecorder()
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.loadLayout = { id in await loads.record(id); return nil }
+            $0.remotePersistence.loadCatalog = { _ in nil }
+            $0.remotePersistence.loadStatuses = { _ in nil }
+            $0.remotePersistence.saveAppState = { _ in }
+            $0.remoteConnection.select = { _ in }
+            $0.remoteConnection.subscribe = { _ in }
+        }
+        store.exhaustivity = .off(showSkippedAssertions: false)
+
+        await store.send(.launchResponse(1, .success(.init(
+            pairedMacs: [studio],
+            selectedMacID: studio.id
+        ))))
+        await store.finish()
+
+        #expect(await loads.macIDs == [studio.id])
+    }
+
+    @Test func selectingAnotherMacClearsPriorDashboardStatusImmediately() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio, laptop]
+        state.selectedMacID = studio.id
+        state.dashboard = .init(
+            pairedMacs: [studio, laptop],
+            selectedMacID: studio.id,
+            descriptors: [],
+            statuses: [.darkMode: .init(
+                value: .init(
+                    id: .darkMode,
+                    isAvailable: true,
+                    unavailableReason: nil,
+                    isOn: true,
+                    secondaryInformation: nil,
+                    isProcessing: false,
+                    revision: 2,
+                    updatedAt: .now
+                ),
+                isStale: false
+            )],
+            orderedSelectedIDs: [.darkMode],
+            connectionState: .authenticated,
+            isActive: true
+        )
+        let persistence = PersistenceAttemptRecorder(shouldFail: false)
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.saveAppState = { try await persistence.save($0) }
+            $0.remotePersistence.loadLayout = { _ in nil }
+            $0.remotePersistence.loadCatalog = { _ in nil }
+            $0.remotePersistence.loadStatuses = { _ in nil }
+            $0.remoteConnection.subscribe = { _ in }
+            $0.remoteConnection.select = { _ in }
+        }
+        store.exhaustivity = .off(showSkippedAssertions: false)
+
+        let intent = RemoteAppPersistenceIntent(
+            writerID: state.persistenceWriterID,
+            sequence: 1,
+            selectedMacID: laptop.id,
+            hasCompletedInitialSetup: true
+        )
+        await store.send(.dashboard(.delegate(.selectedMac(laptop)))) {
+            $0.selectedMacID = laptop.id
+            $0.connectedMacIDs = []
+            $0.dashboard.pairedMacs = [studio, laptop]
+            $0.dashboard.selectedMacID = laptop.id
+            $0.dashboard.connectionState = .connecting
+            $0.dashboard.selectionGeneration = 1
+            $0.dashboard.statuses = [:]
+            $0.dashboard.orderedSelectedIDs = []
+            $0.nextPersistenceSequence = 1
+            $0.pendingPersistenceIntent = intent
+            $0.isPersisting = true
+        }
+        await store.receive(.persistenceResponse(intent, .success)) {
+            $0.pendingPersistenceIntent = nil
+            $0.isPersisting = false
+        }
+    }
+
+    @Test func pairingAnotherMacReloadsTheActiveDashboard() async throws {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.dashboard = .init(
+            pairedMacs: [studio],
+            selectedMacID: studio.id,
+            connectionState: .authenticated,
+            isActive: true
+        )
+        state.path.append(.settings(.init(
+            isSetupRequired: false,
+            pairedMacs: [studio],
+            selectedMacID: studio.id
+        )))
+        let pathID = try #require(state.path.ids.last)
+        let loads = DashboardLoadRecorder()
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.saveAppState = { _ in }
+            $0.remotePersistence.loadLayout = { id in await loads.record(id); return nil }
+            $0.remotePersistence.loadCatalog = { _ in nil }
+            $0.remotePersistence.loadStatuses = { _ in nil }
+            $0.remoteConnection.adoptPairedMac = { _ in .offline }
+            $0.remoteConnection.subscribe = { _ in }
+        }
+        store.exhaustivity = .off(showSkippedAssertions: false)
+
+        await store.send(.path(.element(id: pathID, action: .settings(.delegate(.paired(laptop))))))
+        await store.finish()
+
+        #expect(await loads.macIDs == [laptop.id])
+    }
+
+    @Test func settingsLayoutChangeUpdatesDashboardSubscription() async throws {
+        let layout = MacDashboardLayout(
+            macID: studio.id,
+            selectedControlIDs: [.darkMode, .mute],
+            order: [.mute, .darkMode]
+        )
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.dashboard = .init(
+            pairedMacs: [studio],
+            selectedMacID: studio.id,
+            orderedSelectedIDs: [.darkMode],
+            connectionState: .authenticated,
+            isActive: true
+        )
+        state.path.append(.settings(.init(
+            isSetupRequired: false,
+            pairedMacs: [studio],
+            selectedMacID: studio.id
+        )))
+        let pathID = try #require(state.path.ids.last)
+        let subscriptions = DashboardSubscriptionRecorder()
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remoteConnection.subscribe = { try await subscriptions.record($0) }
+        }
+
+        await store.send(.path(.element(
+            id: pathID,
+            action: .settings(.delegate(.layoutChanged(layout)))
+        )))
+        await store.receive(.dashboard(.layoutChanged(layout))) {
+            $0.dashboard.orderedSelectedIDs = [.mute, .darkMode]
+        }
+        await store.receive(.dashboard(.subscriptionStarted([.mute, .darkMode])))
+        #expect(await subscriptions.values == [[.mute, .darkMode]])
+    }
 
     @Test func firstLaunchHasRequiredSettingsBeforeAnyEffect() {
         let state = RemoteAppFeature.State(hasCompletedInitialSetup: false)
@@ -909,6 +1172,14 @@ private actor MetadataLoadGate {
     func open() {
         openContinuation?.resume()
         openContinuation = nil
+    }
+}
+
+private actor DashboardLoadRecorder {
+    private(set) var macIDs: [UUID] = []
+
+    func record(_ id: UUID) {
+        macIDs.append(id)
     }
 }
 
