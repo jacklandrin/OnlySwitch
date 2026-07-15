@@ -181,34 +181,61 @@ struct RemoteHostLifecycleTests {
 
 struct RemoteCredentialReplacementTests {
     @Test
-    func stoppedRepairRestoresExistingCredential() async throws {
+    func abortedRepairRestoresExistingCredentialWithoutClearingTombstone() async throws {
         let store = RemoteCredentialStore.inMemory()
         let deviceID = UUID()
         let original = Self.device(id: deviceID, byte: 1)
         let replacement = Self.device(id: deviceID, byte: 2)
         let lifecycle = PairingLifecycleHarness()
         try await store.save(original)
+        await lifecycle.revoke(deviceID)
 
         let transaction = try await RemotePairingTransaction.begin(
             record: replacement,
             credentialStore: store,
-            pairingEpoch: { await lifecycle.epoch(for: $0) },
+            pairingSnapshot: { await lifecycle.snapshot(for: $0) },
             consumePairing: { true }
         )
-        await lifecycle.stop()
-        #expect(await transaction.authorize { id, epoch in
-            await lifecycle.authorizeRepair(id: id, epoch: epoch)
-        } == false)
+        #expect(await transaction.validate { await lifecycle.validate($0) })
+        #expect(await lifecycle.isRevoked(deviceID))
+
         await transaction.rollback(
             credentialStore: store,
-            pairingEpoch: { await lifecycle.epoch(for: $0) }
+            rollbackPairingState: { await lifecycle.rollback($0) },
+            currentEpoch: { await lifecycle.epoch(for: $0) }
         )
 
         #expect(try await store.load(deviceID) == original)
+        #expect(await lifecycle.isRevoked(deviceID))
+        #expect(await lifecycle.canAuthenticate(deviceID) == false)
     }
 
     @Test
-    func revokedRepairNeverRestoresExistingCredential() async throws {
+    func successfulRepairClearsTombstoneOnlyAtCommit() async throws {
+        let store = RemoteCredentialStore.inMemory()
+        let deviceID = UUID()
+        let original = Self.device(id: deviceID, byte: 1)
+        let replacement = Self.device(id: deviceID, byte: 2)
+        let lifecycle = PairingLifecycleHarness()
+        try await store.save(original)
+        await lifecycle.revoke(deviceID)
+
+        let transaction = try await RemotePairingTransaction.begin(
+            record: replacement,
+            credentialStore: store,
+            pairingSnapshot: { await lifecycle.snapshot(for: $0) },
+            consumePairing: { true }
+        )
+
+        #expect(await transaction.validate { await lifecycle.validate($0) })
+        #expect(await lifecycle.isRevoked(deviceID))
+        #expect(await transaction.commit { await lifecycle.commit($0) })
+        #expect(await lifecycle.isRevoked(deviceID) == false)
+        #expect(try await store.load(deviceID) == replacement)
+    }
+
+    @Test
+    func newRevocationEpochNeverRestoresPriorCredentialOrClearsTombstone() async throws {
         let store = RemoteCredentialStore.inMemory()
         let deviceID = UUID()
         let original = Self.device(id: deviceID, byte: 1)
@@ -219,21 +246,50 @@ struct RemoteCredentialReplacementTests {
         let transaction = try await RemotePairingTransaction.begin(
             record: replacement,
             credentialStore: store,
-            pairingEpoch: { await lifecycle.epoch(for: $0) },
+            pairingSnapshot: { await lifecycle.snapshot(for: $0) },
             consumePairing: {
                 await lifecycle.revoke(deviceID)
                 return true
             }
         )
-        #expect(await transaction.authorize { id, epoch in
-            await lifecycle.authorizeRepair(id: id, epoch: epoch)
-        } == false)
+
+        #expect(await transaction.validate { await lifecycle.validate($0) } == false)
         await transaction.rollback(
             credentialStore: store,
-            pairingEpoch: { await lifecycle.epoch(for: $0) }
+            rollbackPairingState: { await lifecycle.rollback($0) },
+            currentEpoch: { await lifecycle.epoch(for: $0) }
         )
 
         #expect(try await store.load(deviceID) == nil)
+        #expect(await lifecycle.isRevoked(deviceID))
+    }
+
+    @Test
+    func rollbackUsesCredentialCapturedBeforePairingProofConsumption() async throws {
+        let store = RemoteCredentialStore.inMemory()
+        let deviceID = UUID()
+        let original = Self.device(id: deviceID, byte: 1)
+        let intervening = Self.device(id: deviceID, byte: 2)
+        let replacement = Self.device(id: deviceID, byte: 3)
+        let lifecycle = PairingLifecycleHarness()
+        try await store.save(original)
+
+        let transaction = try await RemotePairingTransaction.begin(
+            record: replacement,
+            credentialStore: store,
+            pairingSnapshot: { await lifecycle.snapshot(for: $0) },
+            consumePairing: {
+                try? await store.save(intervening)
+                return true
+            }
+        )
+        await transaction.rollback(
+            credentialStore: store,
+            rollbackPairingState: { await lifecycle.rollback($0) },
+            currentEpoch: { await lifecycle.epoch(for: $0) }
+        )
+
+        #expect(try await store.load(deviceID) == original)
     }
 
     private static func device(id: UUID, byte: UInt8) -> PairedRemoteDevice {
@@ -676,7 +732,29 @@ private actor PairingLifecycleHarness {
     func epoch(for deviceID: UUID) -> UInt64 { lifecycle.pairingEpoch(for: deviceID) }
     func revoke(_ deviceID: UUID) { _ = lifecycle.revoke(deviceID: deviceID) }
     func stop() { _ = lifecycle.stop() }
-    func authorizeRepair(id: UUID, epoch: UInt64) -> Bool {
-        lifecycle.allowRepairedDevice(id, pairingEpoch: epoch, generation: generation)
+    func snapshot(for deviceID: UUID) -> RemotePairingSnapshot? {
+        lifecycle.pairingSnapshot(for: deviceID, generation: generation)
+    }
+    func validate(_ snapshot: RemotePairingSnapshot) -> Bool {
+        lifecycle.validateRepair(snapshot)
+    }
+    func commit(_ snapshot: RemotePairingSnapshot) -> Bool {
+        lifecycle.commitRepair(snapshot)
+    }
+    func rollback(_ snapshot: RemotePairingSnapshot) -> Bool {
+        lifecycle.rollbackRepair(snapshot)
+    }
+    func isRevoked(_ deviceID: UUID) -> Bool {
+        lifecycle.isRevoked(deviceID)
+    }
+    func canAuthenticate(_ deviceID: UUID) -> Bool {
+        let sessionID = UUID()
+        guard lifecycle.acceptPending(sessionID: sessionID, generation: generation) else { return false }
+        return lifecycle.authorize(
+            sessionID: sessionID,
+            deviceID: deviceID,
+            generation: generation,
+            credentialExists: true
+        )
     }
 }

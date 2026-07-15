@@ -32,40 +32,50 @@ enum RemoteHandshake {
 struct RemotePairingTransaction: Sendable {
     let record: PairedRemoteDevice
     let previous: PairedRemoteDevice?
-    let epoch: UInt64
+    let snapshot: RemotePairingSnapshot
 
     static func begin(
         record: PairedRemoteDevice,
         credentialStore: RemoteCredentialStore,
-        pairingEpoch: @escaping @Sendable (UUID) async -> UInt64,
+        pairingSnapshot: @escaping @Sendable (UUID) async -> RemotePairingSnapshot?,
         consumePairing: @escaping @Sendable () async -> Bool
     ) async throws -> Self {
-        let epoch = await pairingEpoch(record.id)
+        guard let snapshot = await pairingSnapshot(record.id) else {
+            throw RemoteProtocolError(code: .authenticationFailed, message: "Pairing was superseded")
+        }
+        let previous = try await credentialStore.load(record.id)
         guard await consumePairing() else {
             throw RemoteProtocolError(code: .pairingExpired, message: "Pairing code expired")
         }
-        let previous = try await credentialStore.replace(with: record)
-        return Self(record: record, previous: previous, epoch: epoch)
+        try await credentialStore.save(record)
+        return Self(record: record, previous: previous, snapshot: snapshot)
     }
 
-    func authorize(
-        _ authorize: @escaping @Sendable (UUID, UInt64) async -> Bool
+    func validate(
+        _ validate: @escaping @Sendable (RemotePairingSnapshot) async -> Bool
     ) async -> Bool {
-        await authorize(record.id, epoch)
+        await validate(snapshot)
+    }
+
+    func commit(
+        _ commit: @escaping @Sendable (RemotePairingSnapshot) async -> Bool
+    ) async -> Bool {
+        await commit(snapshot)
     }
 
     func rollback(
         credentialStore: RemoteCredentialStore,
-        pairingEpoch: @escaping @Sendable (UUID) async -> UInt64
+        rollbackPairingState: @escaping @Sendable (RemotePairingSnapshot) async -> Bool,
+        currentEpoch: @escaping @Sendable (UUID) async -> UInt64
     ) async {
-        let restorePrevious = await pairingEpoch(record.id) == epoch
+        let restorePrevious = await rollbackPairingState(snapshot)
         try? await credentialStore.rollbackReplacement(
             record,
             previous: previous,
             restorePrevious: restorePrevious
         )
         if restorePrevious,
-           await pairingEpoch(record.id) != epoch,
+           await currentEpoch(record.id) != snapshot.epoch,
            let previous {
             try? await credentialStore.delete(record.id, matchingCredential: previous.credential)
         }
@@ -87,7 +97,10 @@ actor RemotePeerSession {
     private let pairingFailed: @Sendable () async -> Void
     private let consumePairing: @Sendable (String) async -> Bool
     private let pairingEpoch: @Sendable (UUID) async -> UInt64
-    private let paired: @Sendable (UUID, UInt64) async -> Bool
+    private let pairingSnapshot: @Sendable (UUID) async -> RemotePairingSnapshot?
+    private let validatePairing: @Sendable (RemotePairingSnapshot) async -> Bool
+    private let commitPairing: @Sendable (RemotePairingSnapshot) async -> Bool
+    private let rollbackPairing: @Sendable (RemotePairingSnapshot) async -> Bool
     private let subscriptionsChanged: @Sendable (UUID, Set<RemoteControlID>, @escaping RemoteStatusScheduler.Sink) async throws -> Void
     private let refreshRequested: @Sendable (RemoteControlID) async -> Void
     private let authenticated: @Sendable (UUID, UUID) async -> Bool
@@ -109,7 +122,10 @@ actor RemotePeerSession {
         pairingFailed: @escaping @Sendable () async -> Void,
         consumePairing: @escaping @Sendable (String) async -> Bool,
         pairingEpoch: @escaping @Sendable (UUID) async -> UInt64,
-        paired: @escaping @Sendable (UUID, UInt64) async -> Bool,
+        pairingSnapshot: @escaping @Sendable (UUID) async -> RemotePairingSnapshot?,
+        validatePairing: @escaping @Sendable (RemotePairingSnapshot) async -> Bool,
+        commitPairing: @escaping @Sendable (RemotePairingSnapshot) async -> Bool,
+        rollbackPairing: @escaping @Sendable (RemotePairingSnapshot) async -> Bool,
         subscriptionsChanged: @escaping @Sendable (UUID, Set<RemoteControlID>, @escaping RemoteStatusScheduler.Sink) async throws -> Void,
         refreshRequested: @escaping @Sendable (RemoteControlID) async -> Void,
         authenticated: @escaping @Sendable (UUID, UUID) async -> Bool,
@@ -127,7 +143,10 @@ actor RemotePeerSession {
         self.pairingFailed = pairingFailed
         self.consumePairing = consumePairing
         self.pairingEpoch = pairingEpoch
-        self.paired = paired
+        self.pairingSnapshot = pairingSnapshot
+        self.validatePairing = validatePairing
+        self.commitPairing = commitPairing
+        self.rollbackPairing = rollbackPairing
         self.subscriptionsChanged = subscriptionsChanged
         self.refreshRequested = refreshRequested
         self.authenticated = authenticated
@@ -271,11 +290,11 @@ actor RemotePeerSession {
         let transaction = try await RemotePairingTransaction.begin(
             record: record,
             credentialStore: credentialStore,
-            pairingEpoch: pairingEpoch,
+            pairingSnapshot: pairingSnapshot,
             consumePairing: { [consumePairing] in await consumePairing(window.code) }
         )
         pendingPairing = transaction
-        guard await transaction.authorize(paired) else {
+        guard await transaction.validate(validatePairing) else {
             await rollbackPendingPairingIfNeeded()
             throw RemoteProtocolError(code: .authenticationFailed, message: "Pairing was superseded")
         }
@@ -309,6 +328,11 @@ actor RemotePeerSession {
             credential: credential,
             at: .now
         )
+        if let pendingPairing {
+            guard await pendingPairing.commit(commitPairing) else {
+                throw RemoteProtocolError(code: .authenticationFailed, message: "Pairing was superseded")
+            }
+        }
         guard await authenticated(id, client.deviceID) else {
             throw RemoteProtocolError(code: .authenticationFailed, message: "Credential was revoked")
         }
@@ -322,7 +346,8 @@ actor RemotePeerSession {
         self.pendingPairing = nil
         await pendingPairing.rollback(
             credentialStore: credentialStore,
-            pairingEpoch: pairingEpoch
+            rollbackPairingState: rollbackPairing,
+            currentEpoch: pairingEpoch
         )
     }
 

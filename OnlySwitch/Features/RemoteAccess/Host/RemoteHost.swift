@@ -268,13 +268,19 @@ actor RemoteHost {
             pairingEpoch: { [weak self] deviceID in
                 await self?.lifecycle.pairingEpoch(for: deviceID) ?? 0
             },
-            paired: { [weak self] deviceID, epoch in
+            pairingSnapshot: { [weak self] deviceID in
+                await self?.pairingSnapshot(deviceID: deviceID, generation: generation)
+            },
+            validatePairing: { [weak self] snapshot in
+                await self?.validatePairing(snapshot) ?? false
+            },
+            commitPairing: { [weak self] snapshot in
                 guard let self else { return false }
-                return await self.allowRepairedDevice(
-                    deviceID,
-                    pairingEpoch: epoch,
-                    generation: generation
-                )
+                return await self.commitPairing(snapshot)
+            },
+            rollbackPairing: { [weak self] snapshot in
+                guard let self else { return false }
+                return await self.rollbackPairing(snapshot)
             },
             subscriptionsChanged: { [weak self] id, ids, sink in
                 guard let self else { throw CancellationError() }
@@ -313,16 +319,23 @@ actor RemoteHost {
         return pairing
     }
 
-    private func allowRepairedDevice(
-        _ deviceID: UUID,
-        pairingEpoch: UInt64,
+    private func pairingSnapshot(
+        deviceID: UUID,
         generation: UInt64
-    ) -> Bool {
-        lifecycle.allowRepairedDevice(
-            deviceID,
-            pairingEpoch: pairingEpoch,
-            generation: generation
-        )
+    ) -> RemotePairingSnapshot? {
+        lifecycle.pairingSnapshot(for: deviceID, generation: generation)
+    }
+
+    private func validatePairing(_ snapshot: RemotePairingSnapshot) -> Bool {
+        lifecycle.validateRepair(snapshot)
+    }
+
+    private func commitPairing(_ snapshot: RemotePairingSnapshot) -> Bool {
+        lifecycle.commitRepair(snapshot)
+    }
+
+    private func rollbackPairing(_ snapshot: RemotePairingSnapshot) -> Bool {
+        lifecycle.rollbackRepair(snapshot)
     }
 
     func recordPairingFailure() {

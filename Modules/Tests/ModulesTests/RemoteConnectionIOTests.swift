@@ -116,6 +116,27 @@ struct RemoteConnectionIOTests {
         }
         #expect(connection.sentContent.count == 1)
     }
+
+    @Test func lateSendFailureAfterWaiterCancellationMarksConnectionTerminal() async throws {
+        let connection = TestRemoteNetworkConnection()
+        let io = RemoteConnectionIO(connection: connection)
+        let first = Task { try await io.send(.plaintext(.ping(1))) }
+
+        await connection.waitForSendCount(1)
+        first.cancel()
+        await #expect(throws: CancellationError.self) {
+            try await first.value
+        }
+        #expect(connection.cancelCount == 0)
+
+        connection.completeAllSends(error: NWError.posix(.ECONNRESET))
+        connection.completeSendsImmediately()
+        await #expect(throws: RemoteConnectionIO.ConnectionError.closed) {
+            try await io.send(.plaintext(.ping(2)))
+        }
+        #expect(connection.sentContent.count == 1)
+        #expect(connection.cancelCount == 0)
+    }
 }
 
 private actor TestSendGate {

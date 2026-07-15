@@ -38,6 +38,7 @@ public actor RemoteConnectionIO {
     private var receiveInProgress = false
     private var pendingReceive: Task<Data, Swift.Error>?
     private var isUsable = true
+    private let connectionHealth = RemoteConnectionHealth()
 
     public init(
         connection: NWConnection,
@@ -62,7 +63,7 @@ public actor RemoteConnectionIO {
     }
 
     public func start() async throws {
-        guard isUsable else { throw ConnectionError.closed }
+        guard isUsable, connectionHealth.isTerminal == false else { throw ConnectionError.closed }
         let gate = RemoteContinuationGate<Void>()
         do {
             try await withTaskCancellationHandler {
@@ -73,8 +74,10 @@ public actor RemoteConnectionIO {
                         case .ready:
                             gate.resume(returning: ())
                         case let .failed(error):
+                            self.connectionHealth.markTerminal()
                             gate.resume(throwing: error)
                         case .cancelled:
+                            self.connectionHealth.markTerminal()
                             gate.resume(throwing: CancellationError())
                         default:
                             break
@@ -95,7 +98,7 @@ public actor RemoteConnectionIO {
     }
 
     public func send(_ packet: RemoteWirePacket) async throws {
-        guard isUsable else { throw ConnectionError.closed }
+        guard isUsable, connectionHealth.isTerminal == false else { throw ConnectionError.closed }
         guard let sequence = nextSendSequence else { throw ConnectionError.sequenceExhausted }
         let frame = try codec.encode(packet, sequence: sequence)
         nextSendSequence = sequence == UInt64.max ? nil : sequence + 1
@@ -109,7 +112,10 @@ public actor RemoteConnectionIO {
                         contentContext: .defaultMessage,
                         isComplete: true,
                         completion: .contentProcessed { error in
-                            if let error { gate.resume(throwing: error) }
+                            if let error {
+                                self.connectionHealth.markTerminal()
+                                gate.resume(throwing: error)
+                            }
                             else { gate.resume(returning: ()) }
                         }
                     )
@@ -126,7 +132,7 @@ public actor RemoteConnectionIO {
     }
 
     public func receive() async throws -> RemoteWirePacket {
-        guard isUsable else { throw ConnectionError.closed }
+        guard isUsable, connectionHealth.isTerminal == false else { throw ConnectionError.closed }
         guard receiveInProgress == false else { throw ConnectionError.concurrentReceive }
         receiveInProgress = true
         defer { receiveInProgress = false }
@@ -164,6 +170,7 @@ public actor RemoteConnectionIO {
 
     public func cancel() {
         isUsable = false
+        connectionHealth.markTerminal()
         connection.cancel()
     }
 
@@ -173,10 +180,18 @@ public actor RemoteConnectionIO {
                 minimumIncompleteLength: 1,
                 maximumLength: RemoteFrameCodec.headerSize + RemoteFrameCodec.protocolMaximumPayloadSize
             ) { data, _, isComplete, error in
-                if let error { continuation.resume(throwing: error) }
+                if let error {
+                    self.connectionHealth.markTerminal()
+                    continuation.resume(throwing: error)
+                }
                 else if let data, data.isEmpty == false { continuation.resume(returning: data) }
-                else if isComplete { continuation.resume(throwing: ConnectionError.closed) }
-                else { continuation.resume(throwing: ConnectionError.incompleteFrame) }
+                else if isComplete {
+                    self.connectionHealth.markTerminal()
+                    continuation.resume(throwing: ConnectionError.closed)
+                } else {
+                    self.connectionHealth.markTerminal()
+                    continuation.resume(throwing: ConnectionError.incompleteFrame)
+                }
             }
         }
     }
@@ -194,6 +209,23 @@ public actor RemoteConnectionIO {
         } onCancel: {
             gate.cancel()
         }
+    }
+}
+
+private final class RemoteConnectionHealth: @unchecked Sendable {
+    private let lock = NSLock()
+    private var terminal = false
+
+    var isTerminal: Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        return terminal
+    }
+
+    func markTerminal() {
+        lock.lock()
+        terminal = true
+        lock.unlock()
     }
 }
 

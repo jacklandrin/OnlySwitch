@@ -1,5 +1,12 @@
 import Foundation
 
+struct RemotePairingSnapshot: Equatable, Sendable {
+    let deviceID: UUID
+    let epoch: UInt64
+    let generation: UInt64
+    let wasRevoked: Bool
+}
+
 struct RemoteHostLifecycle: Sendable {
     private enum Phase: Sendable {
         case stopped
@@ -89,15 +96,51 @@ struct RemoteHostLifecycle: Sendable {
 
     func pairingEpoch(for deviceID: UUID) -> UInt64 { deviceEpochs[deviceID, default: 0] }
 
+    func pairingSnapshot(for deviceID: UUID, generation candidate: UInt64) -> RemotePairingSnapshot? {
+        guard isListening(generation: candidate) else { return nil }
+        return RemotePairingSnapshot(
+            deviceID: deviceID,
+            epoch: pairingEpoch(for: deviceID),
+            generation: candidate,
+            wasRevoked: revokedDevices.contains(deviceID)
+        )
+    }
+
+    func validateRepair(_ snapshot: RemotePairingSnapshot) -> Bool {
+        isListening(generation: snapshot.generation)
+            && pairingEpoch(for: snapshot.deviceID) == snapshot.epoch
+    }
+
+    mutating func commitRepair(_ snapshot: RemotePairingSnapshot) -> Bool {
+        guard validateRepair(snapshot) else { return false }
+        revokedDevices.remove(snapshot.deviceID)
+        return true
+    }
+
+    mutating func rollbackRepair(_ snapshot: RemotePairingSnapshot) -> Bool {
+        guard pairingEpoch(for: snapshot.deviceID) == snapshot.epoch else { return false }
+        if snapshot.wasRevoked {
+            revokedDevices.insert(snapshot.deviceID)
+        } else {
+            revokedDevices.remove(snapshot.deviceID)
+        }
+        return true
+    }
+
+    func isRevoked(_ deviceID: UUID) -> Bool { revokedDevices.contains(deviceID) }
+
     mutating func allowRepairedDevice(
         _ deviceID: UUID,
         pairingEpoch: UInt64,
         generation candidate: UInt64
     ) -> Bool {
-        guard isListening(generation: candidate),
-              self.pairingEpoch(for: deviceID) == pairingEpoch else { return false }
-        revokedDevices.remove(deviceID)
-        return true
+        let snapshot = RemotePairingSnapshot(
+            deviceID: deviceID,
+            epoch: pairingEpoch,
+            generation: candidate,
+            wasRevoked: revokedDevices.contains(deviceID)
+        )
+        return commitRepair(snapshot)
     }
 
     mutating func revoke(deviceID: UUID) -> [UUID] {
