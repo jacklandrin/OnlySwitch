@@ -6,6 +6,7 @@ import Switches
 @MainActor
 final class RemoteCommandRouter: Sendable {
     private let resolveBuiltIn: @MainActor @Sendable (UInt64) -> SwitchProvider?
+    private let installedShortcutNames: @MainActor @Sendable () async -> Set<String>
     private let runShortcut: @MainActor @Sendable (String) async throws -> Void
     private let resolveEvolution: @MainActor @Sendable (UUID) -> EvolutionItem?
     private let runEvolution: @MainActor @Sendable (EvolutionItem, RemoteControlAction) async throws -> Void
@@ -14,6 +15,7 @@ final class RemoteCommandRouter: Sendable {
 
     init(
         resolveBuiltIn: @escaping @MainActor @Sendable (UInt64) -> SwitchProvider?,
+        installedShortcutNames: @escaping @MainActor @Sendable () async -> Set<String> = { [] },
         runShortcut: @escaping @MainActor @Sendable (String) async throws -> Void = { _ in
             throw RemoteProtocolError(
                 code: .actionNotSupported,
@@ -33,6 +35,7 @@ final class RemoteCommandRouter: Sendable {
         cache: RecentRequestCache = .init(capacity: 512)
     ) {
         self.resolveBuiltIn = resolveBuiltIn
+        self.installedShortcutNames = installedShortcutNames
         self.runShortcut = runShortcut
         self.resolveEvolution = resolveEvolution
         self.runEvolution = runEvolution
@@ -79,7 +82,7 @@ final class RemoteCommandRouter: Sendable {
             guard case .trigger = request.action else {
                 throw actionNotSupported()
             }
-            guard request.controlID.value.isEmpty == false else {
+            guard await installedShortcutNames().contains(request.controlID.value) else {
                 throw controlNotFound("Shortcut not found")
             }
             try await runShortcut(request.controlID.value)

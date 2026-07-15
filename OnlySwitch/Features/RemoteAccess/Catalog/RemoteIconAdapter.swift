@@ -58,7 +58,7 @@ enum RemoteIconAdapter {
         case .hiddeDesktop, .darkMode, .bluetooth, .showExtensionName, .dockRecent,
              .spotify, .applemusic, .hideMenubarIcons, .trueTone, .topSticker, .aiCommender:
             nil
-        case .topNotch: "laptopwithnotch"
+        case .topNotch: nil
         case .mute: "speaker.wave.2.circle"
         case .keepAwake: "lock.slash"
         case .screenSaver: "display"

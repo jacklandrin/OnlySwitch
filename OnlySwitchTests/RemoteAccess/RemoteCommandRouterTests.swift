@@ -68,6 +68,7 @@ final class RemoteCommandRouterTests: XCTestCase {
         )
         let router = RemoteCommandRouter(
             resolveBuiltIn: { _ in nil },
+            installedShortcutNames: { ["Focus Setup"] },
             runShortcut: { shortcutNames.append($0) },
             resolveEvolution: { $0 == evolutionID ? evolution : nil },
             runEvolution: { _, action in evolutionActions.append(action) }
@@ -90,6 +91,96 @@ final class RemoteCommandRouterTests: XCTestCase {
         XCTAssertEqual(evolutionActions, [.trigger])
     }
 
+    func testUninstalledShortcutIsRejectedWithoutInvokingRunner() async {
+        var invocations: [String] = []
+        let router = RemoteCommandRouter(
+            resolveBuiltIn: { _ in nil },
+            installedShortcutNames: { ["Installed"] },
+            runShortcut: { invocations.append($0) }
+        )
+
+        let result = await router.perform(.init(
+            requestID: UUID(),
+            controlID: .init(kind: .shortcut, value: "Installed'; touch /tmp/pwned; '"),
+            action: .trigger
+        ))
+
+        XCTAssertEqual(result.error?.code, .controlNotFound)
+        XCTAssertTrue(invocations.isEmpty)
+    }
+
+    func testShortcutProcessPreservesHostileInstalledNameAsLiteralArgument() async throws {
+        let recorder = ShortcutProcessRecorder()
+        let client = RemoteShortcutProcessClient { executableURL, arguments in
+            await recorder.record(executableURL: executableURL, arguments: arguments)
+        }
+        let name = "Deploy 'quoted'; $(touch /tmp/pwned) & done"
+
+        try await client.runShortcut(named: name)
+
+        let recordedInvocation = await recorder.invocation
+        let invocation = try XCTUnwrap(recordedInvocation)
+        XCTAssertEqual(invocation.executableURL.path, "/usr/bin/shortcuts")
+        XCTAssertEqual(invocation.arguments, ["run", name])
+    }
+
+    func testSimultaneousDuplicateFailureExecutesOnceAndCachesFailure() async {
+        let runner = SuspendedShortcutRunner(error: TestFailure())
+        let router = RemoteCommandRouter(
+            resolveBuiltIn: { _ in nil },
+            installedShortcutNames: { ["Fail"] },
+            runShortcut: { _ in try await runner.run() }
+        )
+        let request = RemoteActionRequest(
+            requestID: UUID(),
+            controlID: .init(kind: .shortcut, value: "Fail"),
+            action: .trigger
+        )
+
+        let first = Task { await router.perform(request) }
+        await runner.waitUntilStarted()
+        let second = Task { await router.perform(request) }
+        await Task.yield()
+        runner.resume()
+        let firstResult = await first.value
+        let secondResult = await second.value
+        let cachedResult = await router.perform(request)
+
+        XCTAssertEqual(firstResult.error?.code, .executionFailed)
+        XCTAssertEqual(secondResult, firstResult)
+        XCTAssertEqual(cachedResult, firstResult)
+        XCTAssertEqual(runner.operationCount, 1)
+    }
+
+    func testCancellingDuplicateWaiterDoesNotCancelSharedOperation() async {
+        let runner = SuspendedShortcutRunner()
+        let router = RemoteCommandRouter(
+            resolveBuiltIn: { _ in nil },
+            installedShortcutNames: { ["Slow"] },
+            runShortcut: { _ in try await runner.run() }
+        )
+        let request = RemoteActionRequest(
+            requestID: UUID(),
+            controlID: .init(kind: .shortcut, value: "Slow"),
+            action: .trigger
+        )
+
+        let first = Task { await router.perform(request) }
+        await runner.waitUntilStarted()
+        let cancelledWaiter = Task { await router.perform(request) }
+        cancelledWaiter.cancel()
+        await Task.yield()
+        runner.resume()
+        let firstResult = await first.value
+        let cancelledWaiterResult = await cancelledWaiter.value
+        let cachedResult = await router.perform(request)
+
+        XCTAssertNil(firstResult.error)
+        XCTAssertEqual(cancelledWaiterResult, firstResult)
+        XCTAssertEqual(cachedResult, firstResult)
+        XCTAssertEqual(runner.operationCount, 1)
+    }
+
     func testRecentRequestCacheEvictsOldestResult() async {
         let cache = RecentRequestCache(capacity: 2)
         let ids = [UUID(), UUID(), UUID()]
@@ -103,5 +194,51 @@ final class RemoteCommandRouterTests: XCTestCase {
         XCTAssertNil(first)
         XCTAssertNotNil(second)
         XCTAssertNotNil(third)
+    }
+}
+
+private struct TestFailure: Error {}
+
+private actor ShortcutProcessRecorder {
+    struct Invocation: Sendable {
+        let executableURL: URL
+        let arguments: [String]
+    }
+
+    private(set) var invocation: Invocation?
+
+    func record(executableURL: URL, arguments: [String]) {
+        invocation = .init(executableURL: executableURL, arguments: arguments)
+    }
+}
+
+@MainActor
+private final class SuspendedShortcutRunner {
+    private let error: (any Error)?
+    private var operationContinuation: CheckedContinuation<Void, Never>?
+    private var startedContinuations: [CheckedContinuation<Void, Never>] = []
+    private(set) var operationCount = 0
+
+    init(error: (any Error)? = nil) {
+        self.error = error
+    }
+
+    func run() async throws {
+        operationCount += 1
+        let continuations = startedContinuations
+        startedContinuations.removeAll()
+        continuations.forEach { $0.resume() }
+        await withCheckedContinuation { operationContinuation = $0 }
+        if let error { throw error }
+    }
+
+    func waitUntilStarted() async {
+        guard operationCount == 0 else { return }
+        await withCheckedContinuation { startedContinuations.append($0) }
+    }
+
+    func resume() {
+        operationContinuation?.resume()
+        operationContinuation = nil
     }
 }

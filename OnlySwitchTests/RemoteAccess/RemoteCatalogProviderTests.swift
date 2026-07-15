@@ -34,7 +34,7 @@ final class RemoteCatalogProviderTests: XCTestCase {
 
     func testCatalogMapsBehaviorIconsAndDestructiveFlags() async throws {
         let provider = RemoteCatalogProvider(
-            builtIns: { [.mute, .emptyTrash, .xcodeCache] },
+            builtIns: { [.topNotch, .mute, .emptyTrash, .xcodeCache] },
             makeBuiltIn: { FakeSwitch(type: $0, visible: true) },
             shortcutNames: { [] },
             evolutions: { [] }
@@ -50,6 +50,41 @@ final class RemoteCatalogProviderTests: XCTestCase {
         XCTAssertEqual(catalog[id: .init(kind: .builtIn, value: "16384")]?.behavior, .button)
         XCTAssertEqual(catalog[id: .init(kind: .builtIn, value: "16384")]?.isDestructive, true)
         XCTAssertEqual(catalog[id: .init(kind: .builtIn, value: "2048")]?.isDestructive, true)
+        guard case .png = catalog[id: .init(kind: .builtIn, value: "4")]?.icon else {
+            return XCTFail("Top Notch must use its custom image as PNG data")
+        }
+    }
+
+    func testUnavailableBuiltInsUseReasonsMatchingVisibilityPredicates() async throws {
+        let types: [SwitchType] = [
+            .radioStation, .backNoises, .hideMenubarIcons, .fkey,
+            .smallLaunchpadIcon, .aiCommender, .spotify, .applemusic,
+        ]
+        let provider = RemoteCatalogProvider(
+            builtIns: { types },
+            makeBuiltIn: { FakeSwitch(type: $0, visible: false) },
+            shortcutNames: { [] },
+            evolutions: { [] }
+        )
+
+        let catalog = try await provider.catalog()
+
+        XCTAssertEqual(catalog[id: .init(kind: .builtIn, value: "8192")]?.unavailableReason,
+                       "Radio Player is disabled in OnlySwitch settings")
+        XCTAssertEqual(catalog[id: .init(kind: .builtIn, value: "536870912")]?.unavailableReason,
+                       "Background Noises is disabled in OnlySwitch settings")
+        XCTAssertEqual(catalog[id: .init(kind: .builtIn, value: "134217728")]?.unavailableReason,
+                       "Menu bar icon collapsing is disabled in OnlySwitch settings")
+        XCTAssertEqual(catalog[id: .init(kind: .builtIn, value: "268435456")]?.unavailableReason,
+                       "Function-key mode control is not supported by this keyboard")
+        XCTAssertEqual(catalog[id: .init(kind: .builtIn, value: "524288")]?.unavailableReason,
+                       "Launchpad icon sizing is not supported on macOS 26 or later")
+        XCTAssertEqual(catalog[id: .init(kind: .builtIn, value: "68719476736")]?.unavailableReason,
+                       "Only Agent requires macOS 26 or later")
+        XCTAssertEqual(catalog[id: .init(kind: .builtIn, value: "16777216")]?.unavailableReason,
+                       "Spotify is not running on this Mac")
+        XCTAssertEqual(catalog[id: .init(kind: .builtIn, value: "33554432")]?.unavailableReason,
+                       "Apple Music is not running on this Mac")
     }
 
     func testIncompleteEvolutionIsIncludedButUnavailable() async throws {
