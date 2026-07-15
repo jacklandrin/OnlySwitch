@@ -1,4 +1,5 @@
 import Foundation
+import ComposableArchitecture
 import CryptoKit
 import Network
 import RemoteCore
@@ -393,6 +394,49 @@ struct RemoteConnectionClientTests {
     }
 
     @Test(.timeLimit(.minutes(1)))
+    func forgetEntryInvalidatesMetadataRetryCapturedWhileForgetWaitsToTombstone() async throws {
+        let macID = UUID()
+        let credential = Data(repeating: 34, count: 32)
+        let markGate = OperationGate()
+        let persistence = RetryForgetRacePersistence(markGate: markGate)
+        let server = try await PairingLoopbackServer.start(
+            macID: macID,
+            code: "ABCDEFGH2345",
+            credential: credential
+        )
+        defer { server.cancel() }
+        let runtime = RemoteConnectionRuntime(
+            persistence: persistence.client,
+            keychain: .inMemory(),
+            deviceID: UUID(),
+            catalogRequest: { _ in }
+        )
+        let discovered = DiscoveredMac(
+            id: macID,
+            displayName: "Studio",
+            endpoint: server.endpoint,
+            protocolVersion: .current
+        )
+        await #expect(throws: ConnectionStorageError.metadata) {
+            try await runtime.pair(discovered, code: "ABCDEFGH2345", deviceName: "Test iPhone")
+        }
+        await runtime.setForegrounded(false)
+        await server.waitUntilFinished()
+
+        let forget = Task { try await runtime.forgetMac(macID) }
+        await markGate.waitUntilEntered()
+        let foregroundRetry = Task { await runtime.setForegrounded(true) }
+        await Task.yield()
+        await Task.yield()
+        await markGate.open()
+        try await forget.value
+        await foregroundRetry.value
+
+        #expect(await persistence.isTombstoned(macID))
+        #expect(try await persistence.pairedMacs().isEmpty)
+    }
+
+    @Test(.timeLimit(.minutes(1)))
     func forgettingAuthenticatedMacClosesSessionBeforeDeletingCredential() async throws {
         let macID = UUID()
         let credential = Data(repeating: 33, count: 32)
@@ -425,6 +469,78 @@ struct RemoteConnectionClientTests {
 
         #expect(await operations.values.suffix(2) == [.close, .deleteCredential])
         #expect(try await credentials.client.loadCredential(macID) == nil)
+        await server.waitUntilFinished()
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    @MainActor
+    func rootPairAdoptsInstalledRuntimeSessionWithoutSelectingOrReconnecting() async throws {
+        let macID = UUID()
+        let credential = Data(repeating: 35, count: 32)
+        let server = try await PairingLoopbackServer.start(
+            macID: macID,
+            code: "ABCDEFGH2345",
+            credential: credential
+        )
+        defer { server.cancel() }
+        let closes = SessionCloseRecorder()
+        let selections = RuntimeSelectionRecorder()
+        let persistence = RemotePersistenceClient.inMemory()
+        let runtime = RemoteConnectionRuntime(
+            persistence: persistence,
+            keychain: .inMemory(),
+            deviceID: UUID(),
+            catalogRequest: { _ in },
+            closeSession: { session in
+                await closes.record()
+                await session.close()
+            }
+        )
+        let paired = try await runtime.pair(
+            .init(id: macID, displayName: "Studio", endpoint: server.endpoint, protocolVersion: .current),
+            code: "ABCDEFGH2345",
+            deviceName: "Test iPhone"
+        )
+        var connection = RemoteConnectionClient.testValue
+        connection.select = { mac in
+            await selections.record(mac?.id)
+            await runtime.select(mac)
+        }
+        let store = TestStore(initialState: RemoteAppFeature.State(hasCompletedInitialSetup: false)) {
+            RemoteAppFeature()
+        } withDependencies: {
+            $0.remoteConnection = connection
+            $0.remotePersistence.saveAppState = { _ in }
+        }
+        let intent = RemoteAppPersistenceIntent(
+            writerID: store.state.persistenceWriterID,
+            sequence: 1,
+            selectedMacID: macID,
+            hasCompletedInitialSetup: true
+        )
+
+        await store.send(.requiredSettings(.delegate(.paired(paired)))) {
+            $0.requiredSettings = nil
+            $0.pairedMacs = [paired]
+            $0.selectedMacID = macID
+            $0.connectedMacIDs = [macID]
+            $0.metadataRefreshGeneration = 1
+            $0.hasCompletedInitialSetup = true
+            $0.nextPersistenceSequence = 1
+            $0.pendingPersistenceIntent = intent
+            $0.isPersisting = true
+        }
+        await store.receive(.persistenceResponse(intent, .success)) {
+            $0.pendingPersistenceIntent = nil
+            $0.isPersisting = false
+        }
+        await store.finish()
+        server.stopAdvertising()
+
+        #expect(await selections.ids.isEmpty)
+        #expect(await closes.count == 0)
+        #expect(await runtime.snapshot().authenticatedMacID == macID)
+        try await runtime.subscribe([.darkMode])
         await server.waitUntilFinished()
     }
 
@@ -919,6 +1035,35 @@ struct RemoteConnectionClientTests {
 private enum TestProtocolError: Swift.Error { case unexpectedMessage }
 private enum ConnectionStorageError: Swift.Error, Equatable { case metadata, catalog }
 
+private actor RetryForgetRacePersistence {
+    private let backing = RemotePersistenceClient.inMemory()
+    private let markGate: OperationGate
+    private var commitCount = 0
+
+    init(markGate: OperationGate) { self.markGate = markGate }
+
+    nonisolated var client: RemotePersistenceClient {
+        var client = backing
+        client.commitPairing = { [weak self] mac in try await self?.commit(mac) }
+        client.markMacTombstoned = { [weak self] id in try await self?.markTombstoned(id) }
+        return client
+    }
+
+    func isTombstoned(_ id: UUID) async -> Bool { await backing.isMacTombstoned(id) }
+    func pairedMacs() async throws -> [PairedMac] { try await backing.loadPairedMacs() }
+
+    private func commit(_ mac: PairedMac) async throws {
+        commitCount += 1
+        if commitCount == 1 { throw ConnectionStorageError.metadata }
+        try await backing.commitPairing(mac)
+    }
+
+    private func markTombstoned(_ id: UUID) async throws {
+        await markGate.wait()
+        try await backing.markMacTombstoned(id)
+    }
+}
+
 enum OfflineRevocationProofMode: Sendable {
     case valid
     case replayedTranscript
@@ -1112,6 +1257,8 @@ private final class PairingLoopbackServer: @unchecked Sendable {
 
     func waitUntilFinished() async { await task.value }
 
+    func stopAdvertising() { listener.cancel() }
+
     func cancel() {
         task.cancel()
         listener.cancel()
@@ -1194,6 +1341,11 @@ private actor GatedCredentialStore {
 private actor SessionCloseRecorder {
     private(set) var count = 0
     func record() { count += 1 }
+}
+
+private actor RuntimeSelectionRecorder {
+    private(set) var ids: [UUID?] = []
+    func record(_ id: UUID?) { ids.append(id) }
 }
 
 private actor ForgetOperationRecorder {

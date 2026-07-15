@@ -134,7 +134,12 @@ actor RemoteConnectionRuntime {
     private var pendingRevocation: PendingRevocation?
     private var connectionTask: Task<Void, Never>?
     private var generation: UInt64 = 0
-    private var pendingPairedMacMetadata: [UUID: PairedMac] = [:]
+    private struct PendingPairedMacMetadata: Sendable {
+        let value: PairedMac
+        let token: UInt64
+    }
+    private var pendingPairedMacMetadata: [UUID: PendingPairedMacMetadata] = [:]
+    private var pendingMetadataTokens: [UUID: UInt64] = [:]
     private var foregrounded = true
     private var foregroundLifecycleGeneration: UInt64 = 0
 
@@ -190,6 +195,9 @@ actor RemoteConnectionRuntime {
             throw RemoteProtocolError(code: .upgradeRequired, message: "This Mac requires a compatible OnlySwitch version")
         }
         let cleanName = try Self.validatedDeviceName(deviceName)
+        pendingMetadataTokens[mac.id, default: 0] &+= 1
+        pendingPairedMacMetadata[mac.id] = nil
+        let metadataToken = pendingMetadataTokens[mac.id, default: 0]
         let deviceID = self.deviceID
         generation &+= 1
         let expectedGeneration = generation
@@ -274,7 +282,9 @@ actor RemoteConnectionRuntime {
         }
         do {
             try await commitTask.value
-            pendingPairedMacMetadata[mac.id] = nil
+            if pendingMetadataTokens[mac.id, default: 0] == metadataToken {
+                pendingPairedMacMetadata[mac.id] = nil
+            }
         } catch {
             guard (try? await keychain.loadCredential(mac.id)) == credential else {
                 await result.session.close()
@@ -288,7 +298,9 @@ actor RemoteConnectionRuntime {
                 throw error
             }
             metadataError = error
-            pendingPairedMacMetadata[mac.id] = value
+            if pendingMetadataTokens[mac.id, default: 0] == metadataToken {
+                pendingPairedMacMetadata[mac.id] = .init(value: value, token: metadataToken)
+            }
         }
         guard pendingAuthenticatedSession?.sessionToken == newSessionToken,
               pendingAuthenticatedSession?.pairingToken == pairingToken,
@@ -362,6 +374,8 @@ actor RemoteConnectionRuntime {
     }
 
     func forgetMac(_ id: UUID) async throws {
+        pendingMetadataTokens[id, default: 0] &+= 1
+        pendingPairedMacMetadata[id] = nil
         let coordinator = localStateMutations
         try await coordinator.run { [weak self] in
             guard let self else { throw CancellationError() }
@@ -379,7 +393,6 @@ actor RemoteConnectionRuntime {
         pairingTask = nil
         pairingToken = nil
         pendingRevocation = nil
-        pendingPairedMacMetadata[id] = nil
 
         let detachedSession = selected?.id == id ? session : nil
         let detachedPendingSession = pendingAuthenticatedSession?.macID == id
@@ -707,15 +720,27 @@ actor RemoteConnectionRuntime {
     }
 
     private func retryPendingMetadata() async {
-        for (id, value) in pendingPairedMacMetadata {
+        for (id, entry) in pendingPairedMacMetadata {
             let persistence = self.persistence
             let coordinator = localStateMutations
-            if (try? await coordinator.run({
-                try await persistence.commitPairing(value)
-            })) != nil {
+            let committed = try? await coordinator.run { [weak self] in
+                guard await self?.pendingMetadataIsCurrent(id: id, token: entry.token) == true,
+                      await persistence.isMacTombstoned(id) == false else {
+                    return false
+                }
+                try await persistence.commitPairing(entry.value)
+                return true
+            }
+            if committed == true,
+               pendingMetadataIsCurrent(id: id, token: entry.token) {
                 pendingPairedMacMetadata[id] = nil
             }
         }
+    }
+
+    private func pendingMetadataIsCurrent(id: UUID, token: UInt64) -> Bool {
+        pendingMetadataTokens[id, default: 0] == token
+            && pendingPairedMacMetadata[id]?.token == token
     }
 
     private func updateDiscovery(_ results: Set<NWBrowser.Result>) async {

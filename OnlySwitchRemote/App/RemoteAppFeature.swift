@@ -102,7 +102,7 @@ struct RemoteAppFeature {
 
     @Dependency(\.remoteConnection) var connection
     @Dependency(\.remotePersistence) var persistence
-    private enum CancelID { case load, lifecycle, connectionEvents }
+    private enum CancelID { case load, lifecycle, connectionEvents, metadataRefresh }
 
     var body: some ReducerOf<Self> {
         Reduce { state, action in
@@ -171,6 +171,7 @@ struct RemoteAppFeature {
                     return .merge(effects)
                 }
                 state.selectedMacID = selected.id
+                state.connectedMacIDs.formIntersection([selected.id])
                 state.requiredSettings = nil
                 state.hasCompletedInitialSetup = true
                 syncSettingsState(&state)
@@ -194,18 +195,26 @@ struct RemoteAppFeature {
             case let .connectionEvent(event):
                 switch event {
                 case let .authenticated(id):
-                    state.connectedMacIDs.insert(id)
-                    updateConnectionStatus(.connected, for: id, state: &state)
+                    state.connectedMacIDs = [id]
+                    syncSettingsState(&state)
                     return refreshPairedMetadata(state: &state)
                 case let .revoked(id):
-                    state.connectedMacIDs.remove(id)
+                    if state.connectedMacIDs.contains(id) {
+                        state.connectedMacIDs.removeAll()
+                        syncSettingsState(&state)
+                    }
                     updateConnectionStatus(.needsPairing, for: id, state: &state)
                     return refreshPairedMetadata(state: &state)
                 case let .offline(id, reason):
-                    state.connectedMacIDs.remove(id)
+                    if state.connectedMacIDs.contains(id) {
+                        state.connectedMacIDs.removeAll()
+                        syncSettingsState(&state)
+                    }
                     updateConnectionStatus(.offline(reason), for: id, state: &state)
                     return .none
                 case let .connecting(id):
+                    state.connectedMacIDs.removeAll()
+                    syncSettingsState(&state)
                     updateConnectionStatus(.connecting, for: id, state: &state)
                     return .none
                 case .catalog, .status, .action:
@@ -214,8 +223,17 @@ struct RemoteAppFeature {
 
             case let .pairedMetadataRefreshed(generation, macs):
                 guard generation == state.metadataRefreshGeneration else { return .none }
+                let previousIDs = Set(state.pairedMacs.ids)
                 state.pairedMacs = IdentifiedArray(uniqueElements: macs)
+                if Set(state.pairedMacs.ids) != previousIDs {
+                    invalidateMetadataRefresh(state: &state)
+                }
                 state.connectedMacIDs.formIntersection(macs.map(\.id))
+                if let selectedMacID = state.selectedMacID,
+                   state.pairedMacs[id: selectedMacID] == nil {
+                    state.selectedMacID = state.pairedMacs.first?.id
+                    state.connectedMacIDs.removeAll()
+                }
                 syncSettingsState(&state)
                 return .none
 
@@ -287,7 +305,9 @@ struct RemoteAppFeature {
             case let .requiredSettings(.delegate(.macForgotten(id))):
                 state.pairedMacs.remove(id: id)
                 state.connectedMacIDs.remove(id)
-                return .none
+                invalidateMetadataRefresh(state: &state)
+                syncSettingsState(&state)
+                return .cancel(id: CancelID.metadataRefresh)
 
             case .requiredSettings(.delegate(.allMacsRemoved)):
                 state.pairedMacs.removeAll()
@@ -295,7 +315,11 @@ struct RemoteAppFeature {
                 state.selectedMacID = nil
                 state.requiredSettings = .init(isSetupRequired: true)
                 state.hasCompletedInitialSetup = false
-                return clearedSelection(state: &state)
+                invalidateMetadataRefresh(state: &state)
+                return .merge(
+                    .cancel(id: CancelID.metadataRefresh),
+                    clearedSelection(state: &state)
+                )
 
             case let .path(.element(_, action: .settings(.delegate(.paired(mac))))):
                 state.hasCompletedInitialSetup = true
@@ -307,7 +331,9 @@ struct RemoteAppFeature {
             case let .path(.element(_, action: .settings(.delegate(.macForgotten(id))))):
                 state.pairedMacs.remove(id: id)
                 state.connectedMacIDs.remove(id)
-                return .none
+                invalidateMetadataRefresh(state: &state)
+                syncSettingsState(&state)
+                return .cancel(id: CancelID.metadataRefresh)
 
             case .path(.element(_, action: .settings(.delegate(.allMacsRemoved)))):
                 state.pairedMacs.removeAll()
@@ -316,7 +342,11 @@ struct RemoteAppFeature {
                 state.path.removeAll()
                 state.requiredSettings = .init(isSetupRequired: true)
                 state.hasCompletedInitialSetup = false
-                return clearedSelection(state: &state)
+                invalidateMetadataRefresh(state: &state)
+                return .merge(
+                    .cancel(id: CancelID.metadataRefresh),
+                    clearedSelection(state: &state)
+                )
 
             case .requiredSettings, .path:
                 return .none
@@ -329,20 +359,25 @@ struct RemoteAppFeature {
     private func paired(_ mac: PairedMac, state: inout State) -> Effect<Action> {
         state.pairedMacs.updateOrAppend(mac)
         state.selectedMacID = mac.id
+        state.connectedMacIDs = [mac.id]
+        invalidateMetadataRefresh(state: &state)
+        syncSettingsState(&state)
         state.rootIssue = nil
         return .merge(
+            .cancel(id: CancelID.metadataRefresh),
             beginPersistence(
                 selectedMacID: mac.id,
                 hasCompletedInitialSetup: true,
                 state: &state
-            ),
-            .run { [connection] _ in await connection.select(mac) }
+            )
         )
     }
 
     private func select(_ mac: PairedMac, state: inout State) -> Effect<Action> {
         guard state.pairedMacs[id: mac.id] != nil else { return .none }
         state.selectedMacID = mac.id
+        state.connectedMacIDs.removeAll()
+        syncSettingsState(&state)
         state.rootIssue = nil
         return .merge(
             beginPersistence(
@@ -401,6 +436,11 @@ struct RemoteAppFeature {
             guard let macs = try? await persistence.loadPairedMacs() else { return }
             await send(.pairedMetadataRefreshed(generation, macs))
         }
+        .cancellable(id: CancelID.metadataRefresh, cancelInFlight: true)
+    }
+
+    private func invalidateMetadataRefresh(state: inout State) {
+        state.metadataRefreshGeneration &+= 1
     }
 
     private func updateConnectionStatus(
