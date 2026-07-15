@@ -292,8 +292,8 @@ struct RemoteFrameCodecTests {
 @Test func replayedCounterIsRejected() throws {
     let sendKey = SymmetricKey(data: Data(repeating: 1, count: 32))
     let receiveKey = SymmetricKey(data: Data(repeating: 2, count: 32))
-    var sender = RemoteSessionCrypto(sendKey: sendKey, receiveKey: receiveKey, noncePrefix: 7)
-    var receiver = RemoteSessionCrypto(sendKey: receiveKey, receiveKey: sendKey, noncePrefix: 9)
+    let sender = RemoteSessionCrypto(sendKey: sendKey, receiveKey: receiveKey, noncePrefix: 7)
+    let receiver = RemoteSessionCrypto(sendKey: receiveKey, receiveKey: sendKey, noncePrefix: 9)
     let sealed = try sender.seal(.ping(1))
     _ = try receiver.open(sealed)
     #expect(throws: RemoteProtocolError.self) { try receiver.open(sealed) }
@@ -317,9 +317,9 @@ Add a product and target depending on `RemoteCore`:
 
 Implement `RemoteFrameCodec` with a four-byte big-endian payload length followed by JSON-encoded `RemoteMessage`; buffer incomplete bytes and decode all complete frames in order. Reject payloads above 4 MiB before allocation or decoding.
 
-Implement a 12-character base-32 `PairingCode` generator using `SystemRandomNumberGenerator`, excluding `0/O/1/I/L`, and an injected generator for deterministic tests.
+Implement a 12-character `PairingCode` generator using `SystemRandomNumberGenerator`, drawn from the 31 unambiguous uppercase alphanumeric symbols remaining after excluding `0/O/1/I/L`, and an injected generator for deterministic tests.
 
-Implement `RemoteSessionCrypto` with these boundaries:
+Implement `RemoteSessionCrypto` as a synchronized reference type whose send-counter allocation and receive replay state are shared atomically across aliases, with these boundaries:
 
 ```swift
 public enum RemotePeerRole: Sendable { case client, server }
@@ -331,7 +331,7 @@ public struct RemoteEncryptedFrame: Codable, Equatable, Sendable {
     public let ciphertext: Data
 }
 
-public struct RemoteSessionCrypto: Sendable {
+public final class RemoteSessionCrypto: Sendable {
     public init(sendKey: SymmetricKey, receiveKey: SymmetricKey, noncePrefix: UInt32)
 
     public static func makePairingProof(
