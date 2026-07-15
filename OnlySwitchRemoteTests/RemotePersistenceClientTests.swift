@@ -71,6 +71,18 @@ struct RemotePersistenceClientTests {
         #expect(await recorder.deleteCount == 0)
     }
 
+    @Test func conditionalCredentialDeletePreservesReplacement() async throws {
+        let keychain = RemoteKeychainClient.inMemory()
+        let oldCredential = Data(repeating: 1, count: 32)
+        let replacement = Data(repeating: 2, count: 32)
+        try await keychain.saveCredential(firstMac, replacement)
+
+        #expect(try await keychain.deleteCredentialIfMatches(firstMac, oldCredential) == false)
+        #expect(try await keychain.loadCredential(firstMac) == replacement)
+        #expect(try await keychain.deleteCredentialIfMatches(firstMac, replacement))
+        #expect(try await keychain.loadCredential(firstMac) == nil)
+    }
+
     @Test func statusMergePreservesOtherStatusesAndCatalogRevision() async throws {
         let client = RemotePersistenceClient.inMemory()
         let descriptor = RemoteControlDescriptor(
@@ -97,6 +109,73 @@ struct RemotePersistenceClientTests {
         #expect(Set(statuses.map(\.id)) == [.darkMode, .mute])
         #expect(statuses.first(where: { $0.id == .darkMode })?.revision == 2)
         #expect(statuses.first(where: { $0.id == .mute })?.isOn == true)
+    }
+
+    @Test func olderStatusRevisionCannotOverwriteNewerCache() async throws {
+        let client = RemotePersistenceClient.inMemory()
+        try await client.mergeStatus(firstMac, status(id: .darkMode, isOn: true, revision: 9))
+
+        try await client.mergeStatus(firstMac, status(id: .darkMode, isOn: false, revision: 8))
+
+        let cached = try #require(try await client.loadStatuses(firstMac)?.first)
+        #expect(cached.revision == 9)
+        #expect(cached.isOn == true)
+    }
+
+    @Test func olderStatusSnapshotCannotOverwriteNewerCachedRevision() async throws {
+        let client = RemotePersistenceClient.inMemory()
+        try await client.saveStatuses(firstMac, [status(id: .darkMode, isOn: true, revision: 12)])
+
+        try await client.saveStatuses(firstMac, [status(id: .darkMode, isOn: false, revision: 11)])
+
+        let cached = try #require(try await client.loadStatuses(firstMac)?.first)
+        #expect(cached.revision == 12)
+        #expect(cached.isOn == true)
+    }
+
+    @Test func sharedStoreAtomicUpsertsDoNotClobberDifferentMacs() async throws {
+        let suite = "RemotePersistenceAtomicTests-\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let store = RemoteFilePersistenceStore(defaultsSuiteName: suite, rootURL: root)
+        let firstClient = RemotePersistenceClient.fileBacked(store: store, keychain: .inMemory())
+        let secondClient = RemotePersistenceClient.fileBacked(store: store, keychain: .inMemory())
+        let gate = PersistenceOperationGate(expected: 2)
+        let first = PairedMac(id: firstMac, displayName: "Studio", lastEndpointDescription: nil, lastConnectedAt: nil, requiresPairing: false)
+        let second = PairedMac(id: secondMac, displayName: "Laptop", lastEndpointDescription: nil, lastConnectedAt: nil, requiresPairing: false)
+
+        async let firstWrite: Void = gate.arriveAndWait { try await firstClient.upsertPairedMac(first) }
+        async let secondWrite: Void = gate.arriveAndWait { try await secondClient.upsertPairedMac(second) }
+        try await (firstWrite, secondWrite)
+
+        #expect(Set(try await firstClient.loadPairedMacs().map(\.id)) == [firstMac, secondMac])
+    }
+
+    @Test func concurrentAtomicRemoveAndUpsertCannotResurrectOrClobberMacs() async throws {
+        let suite = "RemotePersistenceRemoveTests-\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let store = RemoteFilePersistenceStore(defaultsSuiteName: suite, rootURL: root)
+        let client = RemotePersistenceClient.fileBacked(store: store, keychain: .inMemory())
+        try await client.upsertPairedMac(.init(
+            id: firstMac,
+            displayName: "Studio",
+            lastEndpointDescription: nil,
+            lastConnectedAt: nil,
+            requiresPairing: false
+        ))
+        let gate = PersistenceOperationGate(expected: 2)
+        let second = PairedMac(id: secondMac, displayName: "Laptop", lastEndpointDescription: nil, lastConnectedAt: nil, requiresPairing: false)
+
+        async let removal: Void = gate.arriveAndWait { try await client.removePairedMac(firstMac) }
+        async let upsert: Void = gate.arriveAndWait { try await client.upsertPairedMac(second) }
+        try await (removal, upsert)
+
+        #expect(try await client.loadPairedMacs().map(\.id) == [secondMac])
     }
 
     @Test func partialForgetKeepsRecoverablePreferencesAndRetryIsIdempotent() async throws {
@@ -152,6 +231,26 @@ struct RemotePersistenceClientTests {
 
 private enum TestStorageError: Swift.Error, Equatable { case cannotRemoveCache }
 
+private actor PersistenceOperationGate {
+    private let expected: Int
+    private var arrivals = 0
+    private var waiters: [CheckedContinuation<Void, Never>] = []
+
+    init(expected: Int) { self.expected = expected }
+
+    func arriveAndWait(_ operation: @Sendable () async throws -> Void) async throws {
+        arrivals += 1
+        if arrivals == expected {
+            let current = waiters
+            waiters.removeAll()
+            for waiter in current { waiter.resume() }
+        } else {
+            await withCheckedContinuation { waiters.append($0) }
+        }
+        try await operation()
+    }
+}
+
 private actor KeychainOperationRecorder {
     private(set) var stored: Data?
     private(set) var addCount = 0
@@ -174,7 +273,11 @@ private actor KeychainOperationRecorder {
                 let value = await self.stored
                 return value.map { (errSecSuccess, $0) } ?? (errSecItemNotFound, nil)
             },
-            delete: { [weak self] _ in await self?.delete() ?? errSecNotAvailable }
+            delete: { [weak self] _ in await self?.delete() ?? errSecNotAvailable },
+            deleteIfMatches: { [weak self] _, expected in
+                guard let self else { return (errSecNotAvailable, false) }
+                return await self.delete(matching: expected)
+            }
         )
     }
 
@@ -193,5 +296,12 @@ private actor KeychainOperationRecorder {
         deleteCount += 1
         stored = nil
         return errSecSuccess
+    }
+
+    private func delete(matching expected: Data) -> (OSStatus, Bool) {
+        guard stored == expected else { return (errSecSuccess, false) }
+        stored = nil
+        deleteCount += 1
+        return (errSecSuccess, true)
     }
 }

@@ -1,4 +1,5 @@
 import Foundation
+import RemoteTransport
 import Security
 
 struct PairedRemoteDevice: Codable, Equatable, Identifiable, Sendable {
@@ -26,6 +27,7 @@ actor RemoteCredentialStore {
 
     private let backend: Backend
     private var records: [UUID: PairedRemoteDevice] = [:]
+    private var revocationVerifiers: [UUID: Data] = [:]
     private var memoryInstallationID: UUID?
 
     private init(backend: Backend) {
@@ -75,6 +77,41 @@ actor RemoteCredentialStore {
         guard let current = try load(id),
               Self.constantTimeEqual(current.credential, credential) else { return }
         try delete(id)
+    }
+
+    @discardableResult
+    func revoke(_ id: UUID, matchingCredential credential: Data? = nil) throws -> Bool {
+        guard let preparedCredential = try prepareRevocation(id, matchingCredential: credential) else {
+            return try loadRevocationVerifier(id) != nil
+        }
+        try delete(id, matchingCredential: preparedCredential)
+        return true
+    }
+
+    func prepareRevocation(_ id: UUID, matchingCredential credential: Data? = nil) throws -> Data? {
+        guard let current = try load(id) else { return nil }
+        if let credential,
+           Self.constantTimeEqual(current.credential, credential) == false {
+            return nil
+        }
+        let verifier = RemoteHandshakeCrypto.revocationVerifier(credential: current.credential)
+        try saveRevocationVerifier(verifier, for: id)
+        return current.credential
+    }
+
+    func loadRevocationVerifier(_ id: UUID) throws -> Data? {
+        switch backend {
+        case .memory:
+            return revocationVerifiers[id]
+        case let .keychain(service):
+            return try Self.loadData(service: Self.revocationService(for: service), account: id.uuidString)
+        }
+    }
+
+    func finalizeRepair(deviceID: UUID, matchingCredential credential: Data) throws {
+        guard let current = try load(deviceID),
+              Self.constantTimeEqual(current.credential, credential) else { return }
+        try deleteRevocationVerifier(deviceID)
     }
 
     func load(_ id: UUID) throws -> PairedRemoteDevice? {
@@ -150,6 +187,37 @@ actor RemoteCredentialStore {
         let record = try JSONDecoder().decode(PairedRemoteDevice.self, from: data)
         guard record.credential.count == 32 else { throw Error.invalidRecord }
         return record
+    }
+
+    private func saveRevocationVerifier(_ verifier: Data, for id: UUID) throws {
+        guard verifier.count == 32 else { throw Error.invalidCredential }
+        switch backend {
+        case .memory:
+            revocationVerifiers[id] = verifier
+        case let .keychain(service):
+            try Self.upsert(
+                data: verifier,
+                service: Self.revocationService(for: service),
+                account: id.uuidString
+            )
+        }
+    }
+
+    private func deleteRevocationVerifier(_ id: UUID) throws {
+        switch backend {
+        case .memory:
+            revocationVerifiers[id] = nil
+        case let .keychain(service):
+            let status = SecItemDelete(Self.baseQuery(
+                service: Self.revocationService(for: service),
+                account: id.uuidString
+            ) as CFDictionary)
+            guard status == errSecSuccess || status == errSecItemNotFound else { throw Error.keychain(status) }
+        }
+    }
+
+    private static func revocationService(for credentialService: String) -> String {
+        credentialService + ".revocations"
     }
 
     private static func baseQuery(service: String, account: String? = nil) -> [CFString: Any] {

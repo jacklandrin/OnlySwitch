@@ -75,11 +75,16 @@ final class RemoteStreamHub<Element: Sendable>: @unchecked Sendable {
 }
 
 actor RemoteConnectionRuntime {
+    static let maximumCandidatesPerMac = 8
+    static let maximumCandidatesGlobally = 64
     private nonisolated let discoveryHub = RemoteStreamHub<DiscoveryEvent>()
     private nonisolated let eventHub = RemoteStreamHub<RemoteConnectionEvent>()
     private let persistence: RemotePersistenceClient
     private let keychain: RemoteKeychainClient
     private let deviceID: UUID
+    private let backgroundCleanup: @Sendable () async -> Void
+    private let catalogRequest: @Sendable (RemoteClientSession) async throws -> Void
+    private let closeSession: @Sendable (RemoteClientSession) async -> Void
     private var browser: NWBrowser?
     private var browserRetryTask: Task<Void, Never>?
     private var browserFailureCount = 0
@@ -92,16 +97,26 @@ actor RemoteConnectionRuntime {
     private var pairingToken: UUID?
     private var connectionTask: Task<Void, Never>?
     private var generation: UInt64 = 0
+    private var pendingPairedMacMetadata: [UUID: PairedMac] = [:]
     private var foregrounded = true
+    private var foregroundLifecycleGeneration: UInt64 = 0
 
     init(
         persistence: RemotePersistenceClient,
         keychain: RemoteKeychainClient,
-        deviceID: UUID = RemoteDeviceIdentity.load()
+        deviceID: UUID = RemoteDeviceIdentity.load(),
+        backgroundCleanup: @escaping @Sendable () async -> Void = {},
+        catalogRequest: @escaping @Sendable (RemoteClientSession) async throws -> Void = {
+            try await $0.requestCatalog()
+        },
+        closeSession: @escaping @Sendable (RemoteClientSession) async -> Void = { await $0.close() }
     ) {
         self.persistence = persistence
         self.keychain = keychain
         self.deviceID = deviceID
+        self.backgroundCleanup = backgroundCleanup
+        self.catalogRequest = catalogRequest
+        self.closeSession = closeSession
     }
 
     nonisolated func makeDiscoveryStream() -> AsyncStream<DiscoveryEvent> {
@@ -150,7 +165,7 @@ actor RemoteConnectionRuntime {
         selected = nil
         let pairingToken = UUID()
         self.pairingToken = pairingToken
-        if let priorSession { await priorSession.close() }
+        if let priorSession { await closeSession(priorSession) }
         guard Self.mayCommitPairing(activeToken: self.pairingToken, candidateToken: pairingToken, currentGeneration: generation, expectedGeneration: expectedGeneration, foregrounded: foregrounded) else {
             throw CancellationError()
         }
@@ -184,62 +199,67 @@ actor RemoteConnectionRuntime {
             }
             throw error
         }
-        guard Self.mayCommitPairing(activeToken: self.pairingToken, candidateToken: pairingToken, currentGeneration: generation, expectedGeneration: expectedGeneration, foregrounded: foregrounded) else {
-            await result.session.close()
-            throw CancellationError()
-        }
         guard result.credential.count == 32 else {
             await result.session.close()
             throw RemoteKeychainClient.Error.invalidCredentialLength
         }
-        let previousCredential = try await keychain.loadCredential(mac.id)
-        let previousMacs = try await persistence.loadPairedMacs()
         do {
-            try await keychain.saveCredential(mac.id, result.credential)
-            guard Self.mayCommitPairing(activeToken: self.pairingToken, candidateToken: pairingToken, currentGeneration: generation, expectedGeneration: expectedGeneration, foregrounded: foregrounded) else {
-                throw CancellationError()
-            }
-            var paired = previousMacs
-            let value = PairedMac(
-                id: mac.id,
-                displayName: mac.displayName,
-                lastEndpointDescription: String(describing: mac.endpoint),
-                lastConnectedAt: .now,
-                requiresPairing: false
-            )
-            paired.removeAll { $0.id == mac.id }
-            paired.append(value)
-            try await persistence.savePairedMacs(paired)
-            guard Self.mayCommitPairing(activeToken: self.pairingToken, candidateToken: pairingToken, currentGeneration: generation, expectedGeneration: expectedGeneration, foregrounded: foregrounded) else {
-                throw CancellationError()
-            }
-            pairingTask = nil
-            self.pairingToken = nil
-            await replaceSession(result.session, token: newSessionToken, selectedMac: value)
-            eventHub.yield(.authenticated(mac.id))
-            result.session.startReceiving()
-            do {
-                try await result.session.requestCatalog()
-            } catch {
-                await result.session.close()
-                if Self.shouldClearSession(currentToken: sessionToken, failedToken: newSessionToken) {
-                    eventHub.yield(.offline(mac.id, Self.safeMessage(error)))
-                    session = nil
-                    sessionToken = nil
-                }
-            }
-            return value
+            try await saveCredentialAfterRemoteCommit(mac.id, credential: result.credential)
         } catch {
             await result.session.close()
-            try? await persistence.savePairedMacs(previousMacs)
-            if let previousCredential { try? await keychain.saveCredential(mac.id, previousCredential) }
-            else { try? await keychain.deleteCredential(mac.id) }
             if self.pairingToken == pairingToken {
                 pairingTask = nil
                 self.pairingToken = nil
             }
             throw error
         }
+        let value = PairedMac(
+            id: mac.id,
+            displayName: mac.displayName,
+            lastEndpointDescription: String(describing: mac.endpoint),
+            lastConnectedAt: .now,
+            requiresPairing: false
+        )
+        pendingPairedMacMetadata[mac.id] = value
+        var metadataError: Swift.Error?
+        do {
+            try await persistence.upsertPairedMac(value)
+            pendingPairedMacMetadata[mac.id] = nil
+        } catch {
+            metadataError = error
+        }
+        guard Self.mayCommitPairing(
+            activeToken: self.pairingToken,
+            candidateToken: pairingToken,
+            currentGeneration: generation,
+            expectedGeneration: expectedGeneration,
+            foregrounded: foregrounded
+        ) else {
+            await result.session.close()
+            if self.pairingToken == pairingToken {
+                pairingTask = nil
+                self.pairingToken = nil
+            }
+            if let metadataError { throw metadataError }
+            throw CancellationError()
+        }
+        pairingTask = nil
+        self.pairingToken = nil
+        await replaceSession(result.session, token: newSessionToken, selectedMac: value)
+        eventHub.yield(.authenticated(mac.id))
+        result.session.startReceiving()
+        do {
+            try await catalogRequest(result.session)
+        } catch {
+            await result.session.close()
+            if Self.shouldClearSession(currentToken: sessionToken, failedToken: newSessionToken) {
+                eventHub.yield(.offline(mac.id, Self.safeMessage(error)))
+                session = nil
+                sessionToken = nil
+            }
+        }
+        if let metadataError { throw metadataError }
+        return value
     }
 
     func select(_ mac: PairedMac?) async {
@@ -254,7 +274,7 @@ actor RemoteConnectionRuntime {
         session = nil
         sessionToken = nil
         selected = mac
-        if let previousSession { await previousSession.close() }
+        if let previousSession { await closeSession(previousSession) }
         guard generation == currentGeneration, selected?.id == mac?.id else { return }
         guard let mac, foregrounded else { return }
         connectionTask = Task { [weak self] in
@@ -273,6 +293,8 @@ actor RemoteConnectionRuntime {
     }
 
     func setForegrounded(_ value: Bool) async {
+        foregroundLifecycleGeneration &+= 1
+        let lifecycleGeneration = foregroundLifecycleGeneration
         foregrounded = value
         guard value else {
             generation &+= 1
@@ -281,7 +303,7 @@ actor RemoteConnectionRuntime {
             connectionTask = nil
             pairingTask = nil
             pairingToken = nil
-            if let session { await session.close() }
+            let detachedSession = session
             session = nil
             sessionToken = nil
             browser?.cancel()
@@ -290,9 +312,14 @@ actor RemoteConnectionRuntime {
             browserRetryTask = nil
             browserGeneration &+= 1
             discovered.removeAll()
+            if let detachedSession { await closeSession(detachedSession) }
+            await backgroundCleanup()
+            guard foregroundLifecycleGeneration == lifecycleGeneration else { return }
             return
         }
         startDiscovery()
+        await retryPendingMetadata()
+        guard foregroundLifecycleGeneration == lifecycleGeneration, foregrounded else { return }
         if let selected, session == nil { await select(selected) }
     }
 
@@ -302,7 +329,10 @@ actor RemoteConnectionRuntime {
             guard Task.isCancelled == false, foregrounded, generation == expectedGeneration, selected?.id == mac.id else { return }
             do {
                 if delay != .zero { try await Task.sleep(for: delay) }
-                let candidates = Self.orderedCandidates(Array((discovered[mac.id] ?? [:]).values))
+                let candidates = Self.orderedCandidates(
+                    Array((discovered[mac.id] ?? [:]).values),
+                    preferredEndpointDescription: mac.lastEndpointDescription
+                )
                 guard candidates.isEmpty == false else {
                     throw RemoteProtocolError(code: .requestTimedOut, message: "Mac was not found on the local network")
                 }
@@ -313,7 +343,7 @@ actor RemoteConnectionRuntime {
                 }
                 eventHub.yield(.connecting(mac.id))
                 let deviceID = self.deviceID
-                var connectedSession: (RemoteClientSession, UUID)?
+                var connectedSession: (RemoteClientSession, UUID, DiscoveredMac)?
                 var candidateError: Swift.Error?
                 for candidate in candidates {
                     guard Task.isCancelled == false, generation == expectedGeneration, selected?.id == mac.id, foregrounded else { return }
@@ -339,13 +369,22 @@ actor RemoteConnectionRuntime {
                                 }
                             )
                         }
-                        connectedSession = (connected, newSessionToken)
+                        connectedSession = (connected, newSessionToken, candidate)
                         break
+                    } catch is RemoteClientSession.AuthenticatedCredentialRevocation {
+                        guard generation == expectedGeneration,
+                              selected?.id == mac.id,
+                              foregrounded else { return }
+                        if (try? await keychain.deleteCredentialIfMatches(mac.id, credential)) == true {
+                            try? await persistence.updateRequiresPairing(mac.id, true)
+                            eventHub.yield(.revoked(mac.id))
+                        }
+                        return
                     } catch {
                         candidateError = error
                     }
                 }
-                guard let (connected, newSessionToken) = connectedSession else {
+                guard let (connected, newSessionToken, authenticatedCandidate) = connectedSession else {
                     throw candidateError ?? RemoteProtocolError(code: .requestTimedOut, message: "No reachable Mac candidate")
                 }
                 guard generation == expectedGeneration, selected?.id == mac.id, foregrounded else {
@@ -354,10 +393,17 @@ actor RemoteConnectionRuntime {
                 }
                 session = connected
                 sessionToken = newSessionToken
+                selected?.lastEndpointDescription = String(describing: authenticatedCandidate.endpoint)
+                selected?.lastConnectedAt = .now
+                try? await persistence.updateEndpoint(
+                    mac.id,
+                    selected?.lastEndpointDescription,
+                    selected?.lastConnectedAt
+                )
                 eventHub.yield(.authenticated(mac.id))
                 connected.startReceiving()
                 do {
-                    try await connected.requestCatalog()
+                    try await catalogRequest(connected)
                 } catch {
                     await connected.close()
                     if Self.shouldClearSession(currentToken: sessionToken, failedToken: newSessionToken) {
@@ -395,11 +441,21 @@ actor RemoteConnectionRuntime {
         ) else { return }
         if Self.isAuthoritativeRevocation(message) {
             let revokedSession = session
+            let revokedCredential = revokedSession?.credentialIdentity
+            generation &+= 1
+            let revocationGeneration = generation
+            connectionTask?.cancel()
+            pairingTask?.cancel()
+            connectionTask = nil
+            pairingTask = nil
+            pairingToken = nil
             session = nil
             sessionToken = nil
-            await revokedSession?.close()
-            try? await keychain.deleteCredential(macID)
-            await markRequiresPairing(macID)
+            if let revokedSession { await closeSession(revokedSession) }
+            guard let revokedCredential,
+                  (try? await keychain.deleteCredentialIfMatches(macID, revokedCredential)) == true else { return }
+            try? await persistence.updateRequiresPairing(macID, true)
+            guard generation == revocationGeneration, session == nil, selected?.id == macID else { return }
             eventHub.yield(.revoked(macID))
             return
         }
@@ -435,20 +491,40 @@ actor RemoteConnectionRuntime {
     }
 
     private func markRequiresPairing(_ id: UUID) async {
-        guard var macs = try? await persistence.loadPairedMacs(),
-              let index = macs.firstIndex(where: { $0.id == id }) else { return }
-        macs[index].requiresPairing = true
-        try? await persistence.savePairedMacs(macs)
+        try? await persistence.updateRequiresPairing(id, true)
+    }
+
+    private func saveCredentialAfterRemoteCommit(_ id: UUID, credential: Data) async throws {
+        var lastError: Swift.Error?
+        for _ in 0..<3 {
+            do {
+                try await keychain.saveCredential(id, credential)
+                return
+            } catch {
+                lastError = error
+            }
+        }
+        guard let lastError else { throw CancellationError() }
+        throw lastError
+    }
+
+    private func retryPendingMetadata() async {
+        for (id, value) in pendingPairedMacMetadata {
+            if (try? await persistence.upsertPairedMac(value)) != nil {
+                pendingPairedMacMetadata[id] = nil
+            }
+        }
     }
 
     private func updateDiscovery(_ results: Set<NWBrowser.Result>) async {
-        var updated: [UUID: [String: DiscoveredMac]] = [:]
+        var candidates: [DiscoveredMac] = []
         for result in results {
             guard case let .bonjour(txtRecord) = result.metadata,
                   let idString = txtRecord["id"],
                   let id = UUID(uuidString: idString),
                   let majorString = txtRecord["version"],
                   let major = UInt16(majorString) else { continue }
+            let minor = txtRecord["minor"].flatMap(UInt16.init) ?? 0
             let name: String
             if case let .service(serviceName, _, _, _) = result.endpoint { name = serviceName }
             else { name = id.uuidString }
@@ -456,19 +532,28 @@ actor RemoteConnectionRuntime {
                 id: id,
                 displayName: name,
                 endpoint: result.endpoint,
-                protocolVersion: .init(major: major, minor: 0)
+                protocolVersion: .init(major: major, minor: minor)
             )
-            updated[id, default: [:]][String(describing: result.endpoint)] = mac
+            candidates.append(mac)
         }
+        let preferred = selected.flatMap { selected in
+            selected.lastEndpointDescription.map { [selected.id: $0] }
+        } ?? [:]
+        let updated = Self.boundedCandidates(candidates, preferredEndpoints: preferred)
         for (id, candidates) in updated {
             let primary = candidates.values.sorted { String(describing: $0.endpoint) < String(describing: $1.endpoint) }.first
             let oldPrimary = discovered[id]?.values.sorted { String(describing: $0.endpoint) < String(describing: $1.endpoint) }.first
             if let primary, primary != oldPrimary { discoveryHub.yield(.added(primary)) }
         }
         for id in discovered.keys where updated[id] == nil { discoveryHub.yield(.removed(id)) }
-        let selectedWasMissing = selected.map { discovered[$0.id]?.isEmpty != false } ?? false
+        let selectedCandidatesChanged = selected.map {
+            Self.candidateSetChanged(
+                previous: discovered[$0.id] ?? [:],
+                updated: updated[$0.id] ?? [:]
+            )
+        } ?? false
         discovered = updated
-        if selectedWasMissing, let selected, updated[selected.id]?.isEmpty == false, session == nil {
+        if selectedCandidatesChanged, let selected, updated[selected.id]?.isEmpty == false, session == nil {
             await select(selected)
         }
     }
@@ -521,8 +606,54 @@ actor RemoteConnectionRuntime {
         return trimmed
     }
 
-    static func orderedCandidates(_ candidates: [DiscoveredMac]) -> [DiscoveredMac] {
-        candidates.sorted { String(describing: $0.endpoint) < String(describing: $1.endpoint) }
+    static func orderedCandidates(
+        _ candidates: [DiscoveredMac],
+        preferredEndpointDescription: String? = nil
+    ) -> [DiscoveredMac] {
+        candidates.sorted { lhs, rhs in
+            let left = String(describing: lhs.endpoint)
+            let right = String(describing: rhs.endpoint)
+            if left == preferredEndpointDescription { return right != preferredEndpointDescription }
+            if right == preferredEndpointDescription { return false }
+            return left < right
+        }
+    }
+
+    static func boundedCandidates(
+        _ candidates: [DiscoveredMac],
+        preferredEndpoints: [UUID: String] = [:]
+    ) -> [UUID: [String: DiscoveredMac]] {
+        let grouped = Dictionary(grouping: candidates, by: \.id)
+        var bounded: [(UUID, String, DiscoveredMac, Bool)] = []
+        for id in grouped.keys.sorted(by: { $0.uuidString < $1.uuidString }) {
+            let preferred = preferredEndpoints[id]
+            for candidate in orderedCandidates(grouped[id] ?? [], preferredEndpointDescription: preferred)
+                .prefix(maximumCandidatesPerMac) {
+                let description = String(describing: candidate.endpoint)
+                bounded.append((id, description, candidate, description == preferred))
+            }
+        }
+        bounded.sort { lhs, rhs in
+            if lhs.3 != rhs.3 { return lhs.3 && !rhs.3 }
+            if lhs.0 != rhs.0 { return lhs.0.uuidString < rhs.0.uuidString }
+            return lhs.1 < rhs.1
+        }
+        var result: [UUID: [String: DiscoveredMac]] = [:]
+        for (id, description, candidate, _) in bounded.prefix(maximumCandidatesGlobally) {
+            result[id, default: [:]][description] = candidate
+        }
+        return result
+    }
+
+    static func candidateSetChanged(
+        previous: [String: DiscoveredMac],
+        updated: [String: DiscoveredMac]
+    ) -> Bool {
+        Set(previous.keys) != Set(updated.keys)
+    }
+
+    var lifecycleSnapshot: (foregrounded: Bool, ownsBrowser: Bool, hasConnectionTask: Bool, hasRetryTask: Bool) {
+        (foregrounded, browser != nil, connectionTask != nil, browserRetryTask != nil)
     }
 
     static func isCurrentSession(
@@ -581,12 +712,15 @@ actor RemoteConnectionRuntime {
 }
 
 actor RemoteClientSession {
+    struct AuthenticatedCredentialRevocation: Swift.Error, Sendable {}
+
     struct PairingResult: Sendable {
         let session: RemoteClientSession
         let credential: Data
     }
 
     nonisolated let token: UUID
+    nonisolated let credentialIdentity: Data
     private let io: RemoteConnectionIO
     private let crypto: RemoteSessionCrypto
     private let event: @Sendable (RemoteMessage) async -> Void
@@ -598,6 +732,7 @@ actor RemoteClientSession {
     private init(
         io: RemoteConnectionIO,
         crypto: RemoteSessionCrypto,
+        credentialIdentity: Data,
         token: UUID,
         event: @escaping @Sendable (RemoteMessage) async -> Void,
         disconnected: @escaping @Sendable (Swift.Error) async -> Void
@@ -605,6 +740,7 @@ actor RemoteClientSession {
         self.token = token
         self.io = io
         self.crypto = crypto
+        self.credentialIdentity = credentialIdentity
         self.event = event
         self.disconnected = disconnected
     }
@@ -637,7 +773,14 @@ actor RemoteClientSession {
             let sessionCrypto = try makeCrypto(credential: success.credential, handshake: handshake)
             try await authenticate(io: handshake.io, crypto: sessionCrypto, credential: success.credential, transcript: handshake.transcript, deviceID: deviceID)
             return PairingResult(
-                session: Self(io: handshake.io, crypto: sessionCrypto, token: sessionToken, event: event, disconnected: disconnected),
+                session: Self(
+                    io: handshake.io,
+                    crypto: sessionCrypto,
+                    credentialIdentity: success.credential,
+                    token: sessionToken,
+                    event: event,
+                    disconnected: disconnected
+                ),
                 credential: success.credential
             )
         } catch {
@@ -660,8 +803,42 @@ actor RemoteClientSession {
         let handshake = try await begin(endpoint: endpoint, expectedMacID: expectedMacID, deviceID: deviceID, deviceName: deviceName)
         do {
             let crypto = try makeCrypto(credential: credential, handshake: handshake)
-            try await authenticate(io: handshake.io, crypto: crypto, credential: credential, transcript: handshake.transcript, deviceID: deviceID)
-            return Self(io: handshake.io, crypto: crypto, token: sessionToken, event: event, disconnected: disconnected)
+            let proof = AuthenticationProof(
+                deviceID: deviceID,
+                proof: RemoteHandshakeCrypto.authenticationProof(
+                    credential: credential,
+                    transcript: handshake.transcript
+                )
+            )
+            try await handshake.io.send(.encrypted(try crypto.seal(.authenticationProof(proof))))
+            let response = try await handshake.io.receive()
+            if case let .credentialRevocationProof(revocation)? = response.plaintext {
+                let verifier = RemoteHandshakeCrypto.revocationVerifier(credential: credential)
+                guard handshake.server.version.supportsAuthenticatedRevocation,
+                      revocation.deviceID == deviceID,
+                      RemoteHandshakeCrypto.verifyRevocationProof(
+                          revocation.proof,
+                          verifier: verifier,
+                          transcript: handshake.transcript
+                      ) else {
+                    throw RemoteProtocolError(code: .authenticationFailed, message: "Invalid revocation proof")
+                }
+                throw AuthenticatedCredentialRevocation()
+            }
+            guard response.kind == .encrypted,
+                  let frame = response.encrypted,
+                  case let .authenticationResult(result) = try crypto.open(frame) else {
+                throw invalid("Authentication result required")
+            }
+            _ = try result.get()
+            return Self(
+                io: handshake.io,
+                crypto: crypto,
+                credentialIdentity: credential,
+                token: sessionToken,
+                event: event,
+                disconnected: disconnected
+            )
         } catch {
             await handshake.io.cancel()
             throw error

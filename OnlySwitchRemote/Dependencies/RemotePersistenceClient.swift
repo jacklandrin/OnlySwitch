@@ -7,6 +7,10 @@ import RemoteCore
 struct RemotePersistenceClient: Sendable {
     var loadPairedMacs: @Sendable () async throws -> [PairedMac] = { [] }
     var savePairedMacs: @Sendable ([PairedMac]) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
+    var upsertPairedMac: @Sendable (PairedMac) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
+    var updateRequiresPairing: @Sendable (UUID, Bool) async throws -> Void = { _, _ in throw RemoteDependencyError.unimplemented }
+    var updateEndpoint: @Sendable (UUID, String?, Date?) async throws -> Void = { _, _, _ in throw RemoteDependencyError.unimplemented }
+    var removePairedMac: @Sendable (UUID) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
     var loadSelectedMacID: @Sendable () async throws -> UUID? = { nil }
     var saveSelectedMacID: @Sendable (UUID?) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
     var loadLayout: @Sendable (UUID) async throws -> MacDashboardLayout? = { _ in nil }
@@ -27,6 +31,10 @@ extension RemotePersistenceClient {
         return Self(
             loadPairedMacs: { await store.pairedMacs },
             savePairedMacs: { await store.setPairedMacs($0) },
+            upsertPairedMac: { await store.upsert($0) },
+            updateRequiresPairing: { await store.updateRequiresPairing($0, value: $1) },
+            updateEndpoint: { await store.updateEndpoint($0, description: $1, connectedAt: $2) },
+            removePairedMac: { await store.removePairedMac($0) },
             loadSelectedMacID: { await store.selectedMacID },
             saveSelectedMacID: { await store.setSelectedMacID($0) },
             loadLayout: { await store.layouts[$0] },
@@ -34,14 +42,14 @@ extension RemotePersistenceClient {
             loadCatalog: { await store.catalogs[$0] },
             saveCatalog: { await store.setCatalog(.init(revision: $1, controls: $2), for: $0) },
             loadStatuses: { await store.statuses[$0] },
-            saveStatuses: { await store.setStatuses($1, for: $0) },
+            saveStatuses: { await store.mergeSnapshot($1, for: $0) },
             mergeStatus: { await store.mergeStatus($1, for: $0) },
             forgetMac: { await store.forget($0) }
         )
     }
 
     static var live: Self {
-        fileBacked(store: RemoteFilePersistenceStore(), keychain: .live)
+        fileBacked(store: RemotePersistenceLiveContainer.store, keychain: .live)
     }
 
     static func fileBacked(
@@ -51,6 +59,10 @@ extension RemotePersistenceClient {
         return Self(
             loadPairedMacs: { try await store.loadPairedMacs() },
             savePairedMacs: { try await store.savePairedMacs($0) },
+            upsertPairedMac: { try await store.upsertPairedMac($0) },
+            updateRequiresPairing: { try await store.updateRequiresPairing($0, value: $1) },
+            updateEndpoint: { try await store.updateEndpoint($0, description: $1, connectedAt: $2) },
+            removePairedMac: { try await store.removePreferences($0) },
             loadSelectedMacID: { await store.loadSelectedMacID() },
             saveSelectedMacID: { await store.saveSelectedMacID($0) },
             loadLayout: { try await store.load(MacDashboardLayout.self, macID: $0, name: "layout.json") },
@@ -58,7 +70,7 @@ extension RemotePersistenceClient {
             loadCatalog: { try await store.load(RemoteCatalogCache.self, macID: $0, name: "catalog.json") },
             saveCatalog: { try await store.save(RemoteCatalogCache(revision: $1, controls: $2), macID: $0, name: "catalog.json") },
             loadStatuses: { try await store.load([RemoteControlStatus].self, macID: $0, name: "statuses.json") },
-            saveStatuses: { try await store.save($1, macID: $0, name: "statuses.json") },
+            saveStatuses: { try await store.mergeStatusSnapshot($1, macID: $0) },
             mergeStatus: { try await store.mergeStatus($1, macID: $0) },
             forgetMac: { id in
                 try await keychain.deleteCredential(id)
@@ -89,12 +101,39 @@ private actor InMemoryRemotePersistenceStore {
     var statuses: [UUID: [RemoteControlStatus]] = [:]
 
     func setPairedMacs(_ value: [PairedMac]) { pairedMacs = value }
+    func upsert(_ value: PairedMac) {
+        pairedMacs.removeAll { $0.id == value.id }
+        pairedMacs.append(value)
+    }
+    func updateRequiresPairing(_ id: UUID, value: Bool) {
+        guard let index = pairedMacs.firstIndex(where: { $0.id == id }) else { return }
+        pairedMacs[index].requiresPairing = value
+    }
+    func updateEndpoint(_ id: UUID, description: String?, connectedAt: Date?) {
+        guard let index = pairedMacs.firstIndex(where: { $0.id == id }) else { return }
+        pairedMacs[index].lastEndpointDescription = description
+        pairedMacs[index].lastConnectedAt = connectedAt
+    }
+    func removePairedMac(_ id: UUID) {
+        pairedMacs.removeAll { $0.id == id }
+        if selectedMacID == id { selectedMacID = nil }
+    }
     func setSelectedMacID(_ value: UUID?) { selectedMacID = value }
     func setLayout(_ value: MacDashboardLayout) { layouts[value.macID] = value }
     func setCatalog(_ value: RemoteCatalogCache, for id: UUID) { catalogs[id] = value }
     func setStatuses(_ value: [RemoteControlStatus], for id: UUID) { statuses[id] = value }
+    func mergeSnapshot(_ incoming: [RemoteControlStatus], for id: UUID) {
+        let existing = Dictionary(uniqueKeysWithValues: (statuses[id] ?? []).map { ($0.id, $0) })
+        statuses[id] = incoming.map { value in
+            guard let cached = existing[value.id], cached.revision > value.revision else { return value }
+            return cached
+        }
+    }
     func mergeStatus(_ value: RemoteControlStatus, for id: UUID) {
         var values = statuses[id] ?? []
+        if let existing = values.first(where: { $0.id == value.id }), existing.revision > value.revision {
+            return
+        }
         values.removeAll { $0.id == value.id }
         values.append(value)
         statuses[id] = values
@@ -106,6 +145,10 @@ private actor InMemoryRemotePersistenceStore {
         catalogs[id] = nil
         statuses[id] = nil
     }
+}
+
+private enum RemotePersistenceLiveContainer {
+    static let store = RemoteFilePersistenceStore()
 }
 
 actor RemoteFilePersistenceStore {
@@ -140,6 +183,28 @@ actor RemoteFilePersistenceStore {
         defaults.set(try encoder.encode(macs), forKey: Key.pairedMacs)
     }
 
+    func upsertPairedMac(_ mac: PairedMac) throws {
+        var macs = try loadPairedMacs()
+        macs.removeAll { $0.id == mac.id }
+        macs.append(mac)
+        try savePairedMacs(macs)
+    }
+
+    func updateRequiresPairing(_ id: UUID, value: Bool) throws {
+        var macs = try loadPairedMacs()
+        guard let index = macs.firstIndex(where: { $0.id == id }) else { return }
+        macs[index].requiresPairing = value
+        try savePairedMacs(macs)
+    }
+
+    func updateEndpoint(_ id: UUID, description: String?, connectedAt: Date?) throws {
+        var macs = try loadPairedMacs()
+        guard let index = macs.firstIndex(where: { $0.id == id }) else { return }
+        macs[index].lastEndpointDescription = description
+        macs[index].lastConnectedAt = connectedAt
+        try savePairedMacs(macs)
+    }
+
     func loadSelectedMacID() -> UUID? {
         defaults.string(forKey: Key.selectedMacID).flatMap(UUID.init(uuidString:))
     }
@@ -162,9 +227,22 @@ actor RemoteFilePersistenceStore {
 
     func mergeStatus(_ status: RemoteControlStatus, macID: UUID) throws {
         var values = try load([RemoteControlStatus].self, macID: macID, name: "statuses.json") ?? []
+        if let existing = values.first(where: { $0.id == status.id }), existing.revision > status.revision {
+            return
+        }
         values.removeAll { $0.id == status.id }
         values.append(status)
         try save(values, macID: macID, name: "statuses.json")
+    }
+
+    func mergeStatusSnapshot(_ incoming: [RemoteControlStatus], macID: UUID) throws {
+        let cached = try load([RemoteControlStatus].self, macID: macID, name: "statuses.json") ?? []
+        let existing = Dictionary(uniqueKeysWithValues: cached.map { ($0.id, $0) })
+        let merged = incoming.map { value in
+            guard let current = existing[value.id], current.revision > value.revision else { return value }
+            return current
+        }
+        try save(merged, macID: macID, name: "statuses.json")
     }
 
     func removePreferences(_ id: UUID) throws {

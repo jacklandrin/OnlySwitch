@@ -70,6 +70,16 @@ public struct AuthenticationSuccess: Codable, Equatable, Sendable {
     }
 }
 
+public struct CredentialRevocationProof: Codable, Equatable, Sendable {
+    public let deviceID: UUID
+    public let proof: Data
+
+    public init(deviceID: UUID, proof: Data) {
+        self.deviceID = deviceID
+        self.proof = proof
+    }
+}
+
 public enum RemoteMessage: Codable, Equatable, Sendable {
     case clientHello(ClientHello)
     case serverHello(ServerHello)
@@ -89,6 +99,7 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
     case ping(UInt64)
     case pong(UInt64)
     case credentialRevoked
+    case credentialRevocationProof(CredentialRevocationProof)
     case sessionError(RemoteProtocolError)
 
     private enum CodingKeys: String, CodingKey {
@@ -119,6 +130,7 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
         case ping
         case pong
         case credentialRevoked
+        case credentialRevocationProof
         case sessionError
     }
 
@@ -164,6 +176,8 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
             self = .pong(try container.decode(UInt64.self, forKey: .payload))
         case .credentialRevoked:
             self = .credentialRevoked
+        case .credentialRevocationProof:
+            self = .credentialRevocationProof(try container.decode(CredentialRevocationProof.self, forKey: .payload))
         case .sessionError:
             self = .sessionError(try container.decode(RemoteProtocolError.self, forKey: .payload))
         }
@@ -224,6 +238,9 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
             try container.encode(nonce, forKey: .payload)
         case .credentialRevoked:
             try container.encode(Kind.credentialRevoked, forKey: .type)
+        case let .credentialRevocationProof(value):
+            try container.encode(Kind.credentialRevocationProof, forKey: .type)
+            try container.encode(value, forKey: .payload)
         case let .sessionError(error):
             try container.encode(Kind.sessionError, forKey: .type)
             try container.encode(error, forKey: .payload)

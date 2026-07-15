@@ -86,6 +86,7 @@ actor RemotePeerSession {
     private var state: State = .awaitingHello
     private var crypto: RemoteSessionCrypto?
     private var pendingPairing: RemotePairingTransaction?
+    private var negotiatedVersion: RemoteProtocolVersion?
 
     init(
         id: UUID = UUID(),
@@ -152,11 +153,20 @@ actor RemotePeerSession {
         await io.cancel()
     }
 
-    func revoke() async {
-        if case .authenticated = state {
-            try? await sendEncrypted(.credentialRevoked)
+    func revoke(deadline: Duration = .seconds(2)) async {
+        guard case .authenticated = state,
+              negotiatedVersion?.supportsAuthenticatedRevocation == true else {
+            await close()
+            return
         }
-        await close()
+        await Self.notifyRevocation(
+            deadline: deadline,
+            send: { [weak self] in
+                guard let self else { throw CancellationError() }
+                try await self.sendEncrypted(.credentialRevoked)
+            },
+            close: { [weak self] in await self?.close() }
+        )
     }
 
     func sendStatus(_ status: RemoteControlStatus) async throws {
@@ -168,13 +178,14 @@ actor RemotePeerSession {
         guard first.kind == .plaintext, case let .clientHello(client)? = first.plaintext else {
             throw RemoteProtocolError(code: .invalidFrame, message: "Client hello required")
         }
-        guard client.version.isCompatible(with: .current) else {
+        guard let negotiatedVersion = client.version.negotiated(with: .current) else {
             try? await io.send(.plaintext(.sessionError(.init(
                 code: .upgradeRequired,
                 message: "A compatible OnlySwitch version is required"
             ))))
             throw RemoteProtocolError(code: .upgradeRequired, message: "Incompatible protocol")
         }
+        self.negotiatedVersion = negotiatedVersion
         guard client.deviceName.utf8.count <= 128,
               client.deviceName.isEmpty == false,
               client.deviceName.unicodeScalars.allSatisfy({ CharacterSet.controlCharacters.contains($0) == false }) else {
@@ -182,7 +193,7 @@ actor RemotePeerSession {
         }
         let serverKey = P256.KeyAgreement.PrivateKey()
         let server = ServerHello(
-            version: .current,
+            version: negotiatedVersion,
             macID: macID,
             macName: macName,
             ephemeralPublicKey: serverKey.publicKey.rawRepresentation,
@@ -202,6 +213,15 @@ actor RemotePeerSession {
             )
         } else {
             guard let stored = try await credentialStore.load(client.deviceID) else {
+                if negotiatedVersion.supportsAuthenticatedRevocation,
+                   let verifier = try await credentialStore.loadRevocationVerifier(client.deviceID) {
+                    let proof = RemoteHandshake.revocationProof(verifier: verifier, transcript: transcript)
+                    try await io.send(.plaintext(.credentialRevocationProof(.init(
+                        deviceID: client.deviceID,
+                        proof: proof
+                    ))))
+                    throw RemoteProtocolError(code: .authenticationFailed, message: "Credential was revoked")
+                }
                 throw RemoteProtocolError(code: .authenticationFailed, message: "Pairing required")
             }
             credential = stored.credential
@@ -320,6 +340,10 @@ actor RemotePeerSession {
         guard await authenticated(id, client.deviceID) else {
             throw RemoteProtocolError(code: .authenticationFailed, message: "Credential was revoked")
         }
+        try? await credentialStore.finalizeRepair(
+            deviceID: client.deviceID,
+            matchingCredential: credential
+        )
         state = .authenticated(client.deviceID)
         try await sendEncrypted(.authenticationResult(.success(.init(sessionID: id, catalogRevision: 1))))
         pendingPairing = nil
@@ -392,6 +416,27 @@ actor RemotePeerSession {
             group.cancelAll()
             return value
         }
+    }
+
+    static func notifyRevocation(
+        deadline: Duration,
+        send: @escaping @Sendable () async throws -> Void,
+        close: @escaping @Sendable () async -> Void
+    ) async {
+        do {
+            try await withThrowingTaskGroup(of: Void.self) { group in
+                group.addTask { try await send() }
+                group.addTask {
+                    try await Task.sleep(for: deadline)
+                    await close()
+                    throw CancellationError()
+                }
+                _ = try await group.next()
+                group.cancelAll()
+            }
+        } catch {
+        }
+        await close()
     }
 
     private static func makeCrypto(

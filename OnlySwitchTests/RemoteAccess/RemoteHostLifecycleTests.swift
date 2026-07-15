@@ -323,6 +323,30 @@ struct RemoteRevocationCleanupTests {
 
         #expect(await events.values == ["remove", "close", "delete"])
     }
+
+    @Test func stalledLiveNotificationIsClosedBeforeCredentialDeletionContinues() async throws {
+        let sessionID = UUID()
+        let stalledSend = TestGate()
+        let events = StringEventProbe()
+
+        try await RemoteHost.performRevocationCleanup(
+            sessionIDs: [sessionID],
+            removeSubscription: { _ in },
+            closePeer: { _ in
+                await RemotePeerSession.notifyRevocation(
+                    deadline: .zero,
+                    send: { await stalledSend.wait() },
+                    close: {
+                        await events.record("force-close")
+                        await stalledSend.open()
+                    }
+                )
+            },
+            deleteCredential: { await events.record("delete") }
+        )
+
+        #expect(await events.values == ["force-close", "delete"])
+    }
 }
 
 struct RemoteHostStartFailureTests {

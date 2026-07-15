@@ -146,6 +146,10 @@ actor RemoteHost {
     }
 
     func revoke(deviceID: UUID) async throws {
+        let credential = try await credentialStore.load(deviceID)?.credential
+        if let credential {
+            _ = try await credentialStore.prepareRevocation(deviceID, matchingCredential: credential)
+        }
         let affected = lifecycle.revoke(deviceID: deviceID)
         let peers = Dictionary(uniqueKeysWithValues: affected.compactMap { id in
             sessions.removeValue(forKey: id).map { (id, $0) }
@@ -157,7 +161,9 @@ actor RemoteHost {
             sessionIDs: affected,
             removeSubscription: { id in await scheduler.remove(sessionID: id) },
             closePeer: { id in await peers[id]?.revoke() },
-            deleteCredential: { try await store.delete(deviceID) }
+            deleteCredential: {
+                if let credential { try await store.delete(deviceID, matchingCredential: credential) }
+            }
         )
         eventContinuation.yield(.devicesChanged(try await credentialStore.loadAll()))
     }
@@ -193,7 +199,8 @@ actor RemoteHost {
             if advertise {
                 let txt = NWTXTRecord([
                     "id": macID.uuidString,
-                    "version": String(RemoteProtocolVersion.current.major)
+                    "version": String(RemoteProtocolVersion.current.major),
+                    "minor": String(RemoteProtocolVersion.current.minor)
                 ])
                 listener.service = NWListener.Service(
                     name: configuration.displayName,
