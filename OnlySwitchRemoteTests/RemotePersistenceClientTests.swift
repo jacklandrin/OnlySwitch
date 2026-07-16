@@ -1,3 +1,4 @@
+import Darwin
 import Foundation
 import RemoteCore
 import Security
@@ -140,6 +141,212 @@ struct RemotePersistenceClientTests {
         #expect(finalized.selectedMacID == candidate.id)
         #expect(finalized.pairedMacs == [candidate])
         #expect(finalized.preparedPairing == nil)
+    }
+
+    @Test func restoreRejectsCallerRecordThatDiffersFromPersistedPrepare() async throws {
+        let harness = try AtomicEnvelopeHarness.make()
+        let candidate = mac(id: secondMac, name: "Candidate")
+        let prepared = try await harness.store.preparePairingState(
+            candidate,
+            transactionID: UUID(),
+            credentialIdentity: Data(repeating: 4, count: 32)
+        )
+        let forged = PreparedPairingPersistenceRecord(
+            transactionID: prepared.transactionID,
+            candidate: prepared.candidate,
+            candidateCredentialIdentity: prepared.candidateCredentialIdentity,
+            previous: .init(
+                pairedMacs: [mac(id: firstMac, name: "Forged")],
+                selectedMacID: firstMac,
+                hasCompletedInitialSetup: true,
+                tombstonedMacIDs: []
+            )
+        )
+        let bytesBefore = try Data(contentsOf: harness.envelopeURL)
+
+        await #expect(throws: (any Error).self) {
+            try await harness.store.restorePairingState(forged)
+        }
+        #expect(try Data(contentsOf: harness.envelopeURL) == bytesBefore)
+        #expect(try await harness.store.loadEnvelope().preparedPairing == prepared)
+    }
+
+    @Test func restorePreservesOtherMacAndSetupMutationsAfterPrepare() async throws {
+        let harness = try AtomicEnvelopeHarness.make()
+        let original = mac(id: firstMac, name: "Original")
+        let otherID = UUID()
+        let other = mac(id: otherID, name: "Other")
+        let candidate = mac(id: secondMac, name: "Candidate")
+        try await harness.store.saveEnvelope(.init(
+            pairedMacs: [original, other],
+            selectedMacID: original.id,
+            hasCompletedInitialSetup: false
+        ))
+        let prepared = try await harness.store.preparePairingState(
+            candidate,
+            transactionID: UUID(),
+            credentialIdentity: Data(repeating: 5, count: 32)
+        )
+
+        try await harness.store.updateEndpoint(otherID, description: "updated.local", connectedAt: .now)
+        try await harness.store.saveInitialSetupCompleted(true)
+        try await harness.store.restorePairingState(prepared)
+
+        let restored = try await harness.store.loadEnvelope()
+        #expect(restored.pairedMacs.first(where: { $0.id == otherID })?.lastEndpointDescription == "updated.local")
+        #expect(restored.pairedMacs.contains(original))
+        #expect(restored.pairedMacs.contains(where: { $0.id == candidate.id }) == false)
+        #expect(restored.selectedMacID == original.id)
+        #expect(restored.hasCompletedInitialSetup)
+        #expect(RemotePersistenceClient.initialSetupSeed(defaults: harness.defaults))
+    }
+
+    @Test func restorePreservesPostPrepareForgetAndTombstone() async throws {
+        let harness = try AtomicEnvelopeHarness.make()
+        let original = mac(id: firstMac, name: "Original")
+        let forgottenID = UUID()
+        let forgotten = mac(id: forgottenID, name: "Forgotten")
+        let candidate = mac(id: secondMac, name: "Candidate")
+        try await harness.store.saveEnvelope(.init(
+            pairedMacs: [original, forgotten],
+            selectedMacID: original.id,
+            hasCompletedInitialSetup: false
+        ))
+        let prepared = try await harness.store.preparePairingState(
+            candidate,
+            transactionID: UUID(),
+            credentialIdentity: Data(repeating: 6, count: 32)
+        )
+
+        try await harness.store.markTombstoned(forgottenID)
+        try await harness.store.removePreferences(forgottenID)
+        try await harness.store.restorePairingState(prepared)
+
+        let restored = try await harness.store.loadEnvelope()
+        #expect(restored.pairedMacs.contains(where: { $0.id == forgottenID }) == false)
+        #expect(restored.tombstonedMacIDs.contains(forgottenID))
+        #expect(restored.pairedMacs.contains(original))
+        #expect(restored.selectedMacID == original.id)
+    }
+
+    @Test func missingMigratedEnvelopeFailsClosedWithoutLegacyResurrection() async throws {
+        let harness = try AtomicEnvelopeHarness.make()
+        let stale = mac(id: firstMac, name: "Stale")
+        harness.defaults.set(try JSONEncoder().encode([stale]), forKey: "pairedMacs")
+        _ = try await harness.store.loadEnvelope()
+        try FileManager.default.removeItem(at: harness.envelopeURL)
+
+        await #expect(throws: (any Error).self) {
+            try await harness.store.loadEnvelope()
+        }
+        let client = RemotePersistenceClient.fileBacked(store: harness.store, keychain: .inMemory())
+        #expect(await client.isMacTombstoned(stale.id))
+        await #expect(throws: (any Error).self) {
+            try await client.loadPairedMacs()
+        }
+    }
+
+    @Test func idempotentPrepareRetrySkipsReplacement() async throws {
+        let harness = try AtomicEnvelopeHarness.make()
+        let candidate = mac(id: secondMac, name: "Candidate")
+        let transactionID = UUID()
+        let credential = Data(repeating: 7, count: 32)
+        let prepared = try await harness.store.preparePairingState(
+            candidate,
+            transactionID: transactionID,
+            credentialIdentity: credential
+        )
+        harness.failNextReplacement()
+
+        let retry = try await harness.store.preparePairingState(
+            candidate,
+            transactionID: transactionID,
+            credentialIdentity: credential
+        )
+        #expect(retry == prepared)
+    }
+
+    @Test func idempotentFinalizeAndRestoreRetriesSkipReplacement() async throws {
+        let finalizeHarness = try AtomicEnvelopeHarness.make()
+        let candidate = mac(id: secondMac, name: "Candidate")
+        let transactionID = UUID()
+        _ = try await finalizeHarness.store.preparePairingState(
+            candidate,
+            transactionID: transactionID,
+            credentialIdentity: Data(repeating: 8, count: 32)
+        )
+        try await finalizeHarness.store.finalizePairingState(transactionID)
+        finalizeHarness.failNextReplacement()
+        try await finalizeHarness.store.finalizePairingState(transactionID)
+
+        let restoreHarness = try AtomicEnvelopeHarness.make()
+        let prepared = try await restoreHarness.store.preparePairingState(
+            candidate,
+            transactionID: UUID(),
+            credentialIdentity: Data(repeating: 9, count: 32)
+        )
+        try await restoreHarness.store.restorePairingState(prepared)
+        restoreHarness.failNextReplacement()
+        try await restoreHarness.store.restorePairingState(prepared)
+    }
+
+    @Test func restorePreservesSelectionExplicitlyChangedAfterPrepare() async throws {
+        let harness = try AtomicEnvelopeHarness.make()
+        let original = mac(id: firstMac, name: "Original")
+        let candidate = mac(id: secondMac, name: "Candidate")
+        let laterSelection = mac(id: UUID(), name: "Later")
+        try await harness.store.saveEnvelope(.init(
+            pairedMacs: [original, laterSelection],
+            selectedMacID: original.id,
+            hasCompletedInitialSetup: false
+        ))
+        let prepared = try await harness.store.preparePairingState(
+            candidate,
+            transactionID: UUID(),
+            credentialIdentity: Data(repeating: 10, count: 32)
+        )
+        try await harness.store.saveSelectedMacID(laterSelection.id)
+
+        try await harness.store.restorePairingState(prepared)
+
+        #expect(try await harness.store.loadEnvelope().selectedMacID == laterSelection.id)
+    }
+
+    @Test func directorySyncFailureAfterRenameKeepsExactNewEnvelope() async throws {
+        let suite = "DirectorySyncFailure-\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suite))
+        defaults.removePersistentDomain(forName: suite)
+        let rootURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        let failure = AtomicReplacementFailure()
+        let store = RemoteFilePersistenceStore(
+            defaults: defaults,
+            rootURL: rootURL,
+            synchronizeEnvelopeDirectory: { _ in try failure.check() }
+        )
+        let envelopeURL = rootURL.appendingPathComponent("state-envelope-v1.json")
+        let initial = RemotePersistentStateEnvelope(
+            pairedMacs: [mac(id: firstMac, name: "Initial")],
+            selectedMacID: firstMac,
+            hasCompletedInitialSetup: false
+        )
+        try await store.saveEnvelope(initial)
+        let priorBytes = try Data(contentsOf: envelopeURL)
+        let updated = RemotePersistentStateEnvelope(
+            pairedMacs: [mac(id: secondMac, name: "Updated")],
+            selectedMacID: secondMac,
+            hasCompletedInitialSetup: true
+        )
+        failure.failNext()
+
+        await #expect(throws: (any Error).self) {
+            try await store.saveEnvelope(updated)
+        }
+
+        let newBytes = try Data(contentsOf: envelopeURL)
+        #expect(newBytes != priorBytes)
+        #expect(try JSONDecoder().decode(RemotePersistentStateEnvelope.self, from: newBytes) == updated)
+        #expect(RemotePersistenceClient.initialSetupSeed(defaults: UserDefaults(suiteName: suite)!))
     }
 
     @Test func initialSetupCompletionRoundTripsWithoutAmbientDefaults() async throws {
@@ -561,6 +768,16 @@ struct RemotePersistenceClientTests {
             updatedAt: Date(timeIntervalSince1970: TimeInterval(revision))
         )
     }
+
+    private func mac(id: UUID, name: String) -> PairedMac {
+        PairedMac(
+            id: id,
+            displayName: name,
+            lastEndpointDescription: nil,
+            lastConnectedAt: nil,
+            requiresPairing: false
+        )
+    }
 }
 
 private enum TestStorageError: Swift.Error, Equatable { case cannotRemoveCache }
@@ -586,10 +803,8 @@ private struct AtomicEnvelopeHarness {
             rootURL: rootURL,
             replaceEnvelope: { temporaryURL, envelopeURL in
                 try failure.check()
-                if FileManager.default.fileExists(atPath: envelopeURL.path) {
-                    _ = try FileManager.default.replaceItemAt(envelopeURL, withItemAt: temporaryURL)
-                } else {
-                    try FileManager.default.moveItem(at: temporaryURL, to: envelopeURL)
+                guard rename(temporaryURL.path, envelopeURL.path) == 0 else {
+                    throw POSIXError(POSIXErrorCode(rawValue: errno) ?? .EIO)
                 }
             }
         )

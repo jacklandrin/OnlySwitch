@@ -1,5 +1,6 @@
 import Dependencies
 import DependenciesMacros
+import Darwin
 import Foundation
 import RemoteCore
 
@@ -330,13 +331,7 @@ private actor InMemoryRemotePersistenceStore {
     }
 
     func restorePairingState(_ record: PreparedPairingPersistenceRecord) throws {
-        guard let prepared = envelope.preparedPairing else { return }
-        guard prepared.transactionID == record.transactionID else { throw RemotePersistenceError.transactionMismatch }
-        envelope.pairedMacs = record.previous.pairedMacs
-        envelope.selectedMacID = record.previous.selectedMacID
-        envelope.hasCompletedInitialSetup = record.previous.hasCompletedInitialSetup
-        envelope.tombstonedMacIDs = record.previous.tombstonedMacIDs
-        envelope.preparedPairing = nil
+        try restorePreparedPairing(record, in: &envelope)
     }
 
     func commitPairing(_ mac: PairedMac) {
@@ -379,8 +374,36 @@ private actor InMemoryRemotePersistenceStore {
 
 private enum RemotePersistenceError: Swift.Error {
     case unsupportedEnvelopeVersion(Int)
+    case missingMigratedEnvelope
     case pairingAlreadyPrepared
     case transactionMismatch
+}
+
+private func restorePreparedPairing(
+    _ supplied: PreparedPairingPersistenceRecord,
+    in envelope: inout RemotePersistentStateEnvelope
+) throws {
+    guard let persisted = envelope.preparedPairing else { return }
+    guard persisted == supplied else { throw RemotePersistenceError.transactionMismatch }
+
+    let candidateID = persisted.candidate.id
+    let wasTombstonedBefore = persisted.previous.tombstonedMacIDs.contains(candidateID)
+    let wasTombstonedAfterPrepare = envelope.tombstonedMacIDs.contains(candidateID) && !wasTombstonedBefore
+    envelope.pairedMacs.removeAll { $0.id == candidateID }
+
+    if wasTombstonedAfterPrepare || wasTombstonedBefore {
+        envelope.tombstonedMacIDs.insert(candidateID)
+    } else {
+        envelope.tombstonedMacIDs.remove(candidateID)
+        if let previousCandidate = persisted.previous.pairedMacs.first(where: { $0.id == candidateID }) {
+            envelope.pairedMacs.append(previousCandidate)
+        }
+    }
+
+    if envelope.selectedMacID == candidateID {
+        envelope.selectedMacID = persisted.previous.selectedMacID
+    }
+    envelope.preparedPairing = nil
 }
 
 private enum RemotePersistenceLiveContainer {
@@ -402,19 +425,22 @@ actor RemoteFilePersistenceStore {
     private let decoder = JSONDecoder()
     private let removeDirectory: @Sendable (URL) throws -> Void
     private let replaceEnvelope: @Sendable (URL, URL) throws -> Void
+    private let synchronizeEnvelopeDirectory: @Sendable (URL) throws -> Void
     private var appStateSequenceTracker = RemoteAppPersistenceSequenceTracker()
 
     init(
         defaultsSuiteName: String? = nil,
         rootURL: URL? = nil,
         removeDirectory: @escaping @Sendable (URL) throws -> Void = { try FileManager.default.removeItem(at: $0) },
-        replaceEnvelope: @escaping @Sendable (URL, URL) throws -> Void = RemoteFilePersistenceStore.replaceEnvelopeAtomically
+        replaceEnvelope: @escaping @Sendable (URL, URL) throws -> Void = RemoteFilePersistenceStore.replaceEnvelopeAtomically,
+        synchronizeEnvelopeDirectory: @escaping @Sendable (URL) throws -> Void = RemoteFilePersistenceStore.synchronizeDirectory
     ) {
         self.defaults = defaultsSuiteName.flatMap(UserDefaults.init(suiteName:)) ?? .standard
         self.rootURL = rootURL ?? FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
             .appendingPathComponent("OnlySwitchRemote", isDirectory: true)
         self.removeDirectory = removeDirectory
         self.replaceEnvelope = replaceEnvelope
+        self.synchronizeEnvelopeDirectory = synchronizeEnvelopeDirectory
         encoder.outputFormatting = [.sortedKeys]
     }
 
@@ -422,12 +448,14 @@ actor RemoteFilePersistenceStore {
         defaults: UserDefaults,
         rootURL: URL,
         removeDirectory: @escaping @Sendable (URL) throws -> Void = { try FileManager.default.removeItem(at: $0) },
-        replaceEnvelope: @escaping @Sendable (URL, URL) throws -> Void = RemoteFilePersistenceStore.replaceEnvelopeAtomically
+        replaceEnvelope: @escaping @Sendable (URL, URL) throws -> Void = RemoteFilePersistenceStore.replaceEnvelopeAtomically,
+        synchronizeEnvelopeDirectory: @escaping @Sendable (URL) throws -> Void = RemoteFilePersistenceStore.synchronizeDirectory
     ) {
         self.defaults = defaults
         self.rootURL = rootURL
         self.removeDirectory = removeDirectory
         self.replaceEnvelope = replaceEnvelope
+        self.synchronizeEnvelopeDirectory = synchronizeEnvelopeDirectory
         encoder.outputFormatting = [.sortedKeys]
     }
 
@@ -476,7 +504,6 @@ actor RemoteFilePersistenceStore {
             $0.selectedMacID = intent.selectedMacID
             $0.hasCompletedInitialSetup = intent.hasCompletedInitialSetup
         }
-        defaults.set(intent.hasCompletedInitialSetup, forKey: Key.initialSetupCompleted)
     }
 
     func loadInitialSetupCompleted() throws -> Bool {
@@ -485,7 +512,6 @@ actor RemoteFilePersistenceStore {
 
     func saveInitialSetupCompleted(_ value: Bool) throws {
         try mutateEnvelope { $0.hasCompletedInitialSetup = value }
-        defaults.set(value, forKey: Key.initialSetupCompleted)
     }
 
     func saveSelectedMacID(_ id: UUID?) throws {
@@ -595,15 +621,7 @@ actor RemoteFilePersistenceStore {
     }
 
     func restorePairingState(_ record: PreparedPairingPersistenceRecord) throws {
-        try mutateEnvelope {
-            guard let prepared = $0.preparedPairing else { return }
-            guard prepared.transactionID == record.transactionID else { throw RemotePersistenceError.transactionMismatch }
-            $0.pairedMacs = record.previous.pairedMacs
-            $0.selectedMacID = record.previous.selectedMacID
-            $0.hasCompletedInitialSetup = record.previous.hasCompletedInitialSetup
-            $0.tombstonedMacIDs = record.previous.tombstonedMacIDs
-            $0.preparedPairing = nil
-        }
+        try mutateEnvelope { try restorePreparedPairing(record, in: &$0) }
     }
 
     func commitPairingAndSelect(_ mac: PairedMac) throws -> RemotePairingPersistenceSnapshot {
@@ -647,7 +665,15 @@ actor RemoteFilePersistenceStore {
             guard envelope.version == 1 else {
                 throw RemotePersistenceError.unsupportedEnvelopeVersion(envelope.version)
             }
+            if defaults.integer(forKey: Key.migratedEnvelopeVersion) < 1 {
+                try synchronizeEnvelopeDirectory(rootURL)
+                defaults.set(1, forKey: Key.migratedEnvelopeVersion)
+            }
             return envelope
+        }
+
+        guard defaults.integer(forKey: Key.migratedEnvelopeVersion) < 1 else {
+            throw RemotePersistenceError.missingMigratedEnvelope
         }
 
         let legacyMacs: [PairedMac]
@@ -691,14 +717,19 @@ actor RemoteFilePersistenceStore {
             throw error
         }
         try replaceEnvelope(temporaryURL, envelopeURL)
+        defaults.set(envelope.hasCompletedInitialSetup, forKey: Key.initialSetupCompleted)
+        try synchronizeEnvelopeDirectory(rootURL)
     }
 
     private func mutateEnvelope<Result>(
         _ mutation: (inout RemotePersistentStateEnvelope) throws -> Result
     ) throws -> Result {
         var envelope = try loadEnvelope()
+        let original = envelope
         let result = try mutation(&envelope)
-        try saveEnvelope(envelope)
+        if envelope != original {
+            try saveEnvelope(envelope)
+        }
         return result
     }
 
@@ -716,11 +747,20 @@ actor RemoteFilePersistenceStore {
     }
 
     private nonisolated static func replaceEnvelopeAtomically(_ temporaryURL: URL, _ envelopeURL: URL) throws {
-        if FileManager.default.fileExists(atPath: envelopeURL.path) {
-            _ = try FileManager.default.replaceItemAt(envelopeURL, withItemAt: temporaryURL)
-        } else {
-            try FileManager.default.moveItem(at: temporaryURL, to: envelopeURL)
+        guard rename(temporaryURL.path, envelopeURL.path) == 0 else {
+            throw currentPOSIXError()
         }
+    }
+
+    private nonisolated static func synchronizeDirectory(_ directoryURL: URL) throws {
+        let descriptor = open(directoryURL.path, O_RDONLY)
+        guard descriptor >= 0 else { throw currentPOSIXError() }
+        defer { close(descriptor) }
+        guard fsync(descriptor) == 0 else { throw currentPOSIXError() }
+    }
+
+    private nonisolated static func currentPOSIXError() -> POSIXError {
+        POSIXError(POSIXErrorCode(rawValue: errno) ?? .EIO)
     }
 
     private func directory(for id: UUID) -> URL {
