@@ -19,6 +19,8 @@ actor RemoteHost {
     private let installationIDProvider: @Sendable () async throws -> UUID
     private let revocationPrepared: @Sendable () async -> Void
     private let authenticationResultSender: RemotePeerSession.AuthenticationResultSender
+    private let commitStageReached: @Sendable (RemotePairingCommitStage) async -> Void
+    private let authenticatedSessionObserver: @Sendable () -> Void
     private let eventStream: AsyncStream<RemoteHostEvent>
     private let eventContinuation: AsyncStream<RemoteHostEvent>.Continuation
     private var listener: NWListener?
@@ -46,7 +48,9 @@ actor RemoteHost {
         revocationPrepared: @escaping @Sendable () async -> Void = {},
         authenticationResultSender: @escaping RemotePeerSession.AuthenticationResultSender = { operation in
             try await operation()
-        }
+        },
+        commitStageReached: @escaping @Sendable (RemotePairingCommitStage) async -> Void = { _ in },
+        authenticatedSessionObserver: @escaping @Sendable () -> Void = {}
     ) {
         let (stream, continuation) = AsyncStream.makeStream(
             of: RemoteHostEvent.self,
@@ -65,6 +69,8 @@ actor RemoteHost {
         }
         self.revocationPrepared = revocationPrepared
         self.authenticationResultSender = authenticationResultSender
+        self.commitStageReached = commitStageReached
+        self.authenticatedSessionObserver = authenticatedSessionObserver
         self.statusScheduler = RemoteStatusScheduler(provider: catalogProvider)
         self.catalogMonitor = RemoteCatalogMonitor(provider: catalogProvider)
     }
@@ -87,6 +93,8 @@ actor RemoteHost {
         authenticationResultSender: @escaping RemotePeerSession.AuthenticationResultSender = { operation in
             try await operation()
         },
+        commitStageReached: @escaping @Sendable (RemotePairingCommitStage) async -> Void = { _ in },
+        authenticatedSessionObserver: @escaping @Sendable () -> Void = {},
         finalizeRepairObserver: @escaping @Sendable (UUID) -> Void = { _ in }
     ) -> RemoteHost {
         let fixedProvider = RemoteCatalogProvider(
@@ -117,7 +125,9 @@ actor RemoteHost {
             listenerFactory: listenerFactory,
             installationIDProvider: installationIDProvider,
             revocationPrepared: revocationPrepared,
-            authenticationResultSender: authenticationResultSender
+            authenticationResultSender: authenticationResultSender,
+            commitStageReached: commitStageReached,
+            authenticatedSessionObserver: authenticatedSessionObserver
         )
     }
 
@@ -229,6 +239,15 @@ actor RemoteHost {
     @discardableResult
     func refreshCatalogForTesting() async throws -> RemoteCatalogSnapshot? {
         try await catalogMonitor.refresh()
+    }
+
+    func closeSessionsForTesting() async {
+        let peers = Array(sessions.values)
+        for peer in peers { await peer.close() }
+    }
+
+    func authenticatedSessionCountForTesting() -> Int {
+        lifecycle.authenticatedCount
     }
 
     private func startListener(
@@ -359,6 +378,7 @@ actor RemoteHost {
                 ) ?? false
             },
             authenticationResultSender: authenticationResultSender,
+            commitStageReached: commitStageReached,
             ended: { [weak self] id in await self?.sessionEnded(id) },
             deadlines: peerDeadlines
         )
@@ -408,6 +428,7 @@ actor RemoteHost {
     }
 
     private func sessionAuthenticated(_ sessionID: UUID, deviceID: UUID, generation: UInt64) async -> Bool {
+        authenticatedSessionObserver()
         guard lifecycle.mayAuthorize(
             sessionID: sessionID,
             deviceID: deviceID,

@@ -12,6 +12,12 @@ struct PairedRemoteDevice: Codable, Equatable, Identifiable, Sendable {
 }
 
 actor RemoteCredentialStore {
+    enum AuthenticationRecord: Equatable, Sendable {
+        case credential(PairedRemoteDevice)
+        case revoked
+        case missing
+    }
+
     enum Error: Swift.Error, Equatable {
         case invalidCredential
         case keychain(OSStatus)
@@ -53,6 +59,7 @@ actor RemoteCredentialStore {
 
     private let backend: Backend
     private let finalizeRepairObserver: @Sendable (UUID) -> Void
+    private let beforeRevocationDelete: @Sendable () throws -> Void
     private var records: [UUID: PairedRemoteDevice] = [:]
     private var revocationVerifiers: [UUID: Data] = [:]
     private var preparedReplacements: [UUID: PreparedReplacement] = [:]
@@ -60,10 +67,18 @@ actor RemoteCredentialStore {
 
     private init(
         backend: Backend,
-        finalizeRepairObserver: @escaping @Sendable (UUID) -> Void = { _ in }
+        finalizeRepairObserver: @escaping @Sendable (UUID) -> Void = { _ in },
+        beforeRevocationDelete: @escaping @Sendable () throws -> Void = {},
+        records: [UUID: PairedRemoteDevice] = [:],
+        revocationVerifiers: [UUID: Data] = [:],
+        preparedReplacements: [UUID: PreparedReplacement] = [:]
     ) {
         self.backend = backend
         self.finalizeRepairObserver = finalizeRepairObserver
+        self.beforeRevocationDelete = beforeRevocationDelete
+        self.records = records
+        self.revocationVerifiers = revocationVerifiers
+        self.preparedReplacements = preparedReplacements
     }
 
     static func live(service: String = "jacklandrin.OnlySwitch.remote.devices") -> RemoteCredentialStore {
@@ -71,11 +86,22 @@ actor RemoteCredentialStore {
     }
 
     static func inMemory(
-        finalizeRepairObserver: @escaping @Sendable (UUID) -> Void = { _ in }
+        finalizeRepairObserver: @escaping @Sendable (UUID) -> Void = { _ in },
+        beforeRevocationDelete: @escaping @Sendable () throws -> Void = {}
     ) -> RemoteCredentialStore {
         RemoteCredentialStore(
             backend: .memory,
-            finalizeRepairObserver: finalizeRepairObserver
+            finalizeRepairObserver: finalizeRepairObserver,
+            beforeRevocationDelete: beforeRevocationDelete
+        )
+    }
+
+    func restartedInMemoryForTesting() -> RemoteCredentialStore {
+        RemoteCredentialStore(
+            backend: .memory,
+            records: records,
+            revocationVerifiers: revocationVerifiers,
+            preparedReplacements: preparedReplacements
         )
     }
 
@@ -148,6 +174,7 @@ actor RemoteCredentialStore {
         case .prepared:
             guard transaction.expiresAt > Date() else {
                 transaction.state = .aborted
+                transaction.previous = nil
                 transaction.updatedAt = .now
                 try savePreparedReplacement(transaction)
                 throw Self.authenticationFailure()
@@ -171,6 +198,7 @@ actor RemoteCredentialStore {
         switch transaction.state {
         case .prepared:
             transaction.state = .aborted
+            transaction.previous = nil
             transaction.updatedAt = .now
             try savePreparedReplacement(transaction)
         case .committing:
@@ -202,12 +230,17 @@ actor RemoteCredentialStore {
         return transaction.publicState
     }
 
+    func transactionRetainsPreviousCredentialForTesting(_ transactionID: UUID) throws -> Bool {
+        try loadPreparedReplacement(transactionID)?.previous != nil
+    }
+
     func recoverExpiredTransactions(now: Date = .now) throws {
         let transactions = try loadPreparedReplacements()
         for var transaction in transactions.values {
             switch transaction.state {
             case .prepared where transaction.expiresAt <= now:
                 transaction.state = .aborted
+                transaction.previous = nil
                 transaction.updatedAt = now
                 try savePreparedReplacement(transaction)
             case .committing:
@@ -265,6 +298,7 @@ actor RemoteCredentialStore {
 
     func prepareAndDeleteForRevocation(_ id: UUID) throws -> Data? {
         guard let credential = try prepareRevocation(id) else { return nil }
+        try beforeRevocationDelete()
         try delete(id, matchingCredential: credential)
         return credential
     }
@@ -275,6 +309,7 @@ actor RemoteCredentialStore {
             switch transaction.state {
             case .prepared:
                 transaction.state = .aborted
+                transaction.previous = nil
                 transaction.updatedAt = .now
                 try savePreparedReplacement(transaction)
             case .committing:
@@ -287,6 +322,7 @@ actor RemoteCredentialStore {
                     }
                 }
                 transaction.state = .aborted
+                transaction.previous = nil
                 transaction.updatedAt = .now
                 try savePreparedReplacement(transaction)
             case .committed, .aborted:
@@ -302,6 +338,22 @@ actor RemoteCredentialStore {
         case let .keychain(service):
             return try Self.loadData(service: Self.revocationService(for: service), account: id.uuidString)
         }
+    }
+
+    func authenticationRecord(_ id: UUID) throws -> AuthenticationRecord {
+        let record = try load(id)
+        let verifier = try loadRevocationVerifier(id)
+        if let record {
+            if let verifier,
+               Self.constantTimeEqual(
+                RemoteHandshakeCrypto.revocationVerifier(credential: record.credential),
+                verifier
+               ) {
+                return .revoked
+            }
+            return .credential(record)
+        }
+        return verifier == nil ? .missing : .revoked
     }
 
     func finalizeRepair(deviceID: UUID, matchingCredential credential: Data) throws {

@@ -6,6 +6,11 @@ import RemoteTransport
 
 typealias RemoteHandshake = RemoteHandshakeCrypto
 
+enum RemotePairingCommitStage: Equatable, Sendable {
+    case afterFinalize
+    case beforeHostAuthentication
+}
+
 struct RemotePairingTransaction: Sendable {
     let record: PairedRemoteDevice
     let previous: PairedRemoteDevice?
@@ -100,6 +105,7 @@ actor RemotePeerSession {
     private let refreshRequested: @Sendable (RemoteControlID) async -> Void
     private let authenticated: @Sendable (UUID, UUID) async -> Bool
     private let authenticationResultSender: AuthenticationResultSender
+    private let commitStageReached: @Sendable (RemotePairingCommitStage) async -> Void
     private let ended: @Sendable (UUID) async -> Void
     private let deadlines: RemotePeerDeadlines
     private var state: State = .awaitingHello
@@ -130,6 +136,7 @@ actor RemotePeerSession {
         authenticationResultSender: @escaping AuthenticationResultSender = { operation in
             try await operation()
         },
+        commitStageReached: @escaping @Sendable (RemotePairingCommitStage) async -> Void = { _ in },
         ended: @escaping @Sendable (UUID) async -> Void,
         deadlines: RemotePeerDeadlines = .init()
     ) {
@@ -152,6 +159,7 @@ actor RemotePeerSession {
         self.refreshRequested = refreshRequested
         self.authenticated = authenticated
         self.authenticationResultSender = authenticationResultSender
+        self.commitStageReached = commitStageReached
         self.ended = ended
         self.deadlines = deadlines
     }
@@ -175,6 +183,7 @@ actor RemotePeerSession {
     func close() async {
         state = .closed
         await io.cancel()
+        await ended(id)
     }
 
     func revoke(deadline: Duration = .seconds(2)) async {
@@ -244,7 +253,11 @@ actor RemotePeerSession {
             return
         }
 
-        guard let stored = try await credentialStore.load(client.deviceID) else {
+        let stored: PairedRemoteDevice
+        switch try await credentialStore.authenticationRecord(client.deviceID) {
+        case let .credential(record):
+            stored = record
+        case .revoked:
             if negotiatedVersion.supportsAuthenticatedRevocation,
                let verifier = try await credentialStore.loadRevocationVerifier(client.deviceID) {
                 let proof = RemoteHandshake.revocationProof(verifier: verifier, transcript: transcript)
@@ -254,6 +267,8 @@ actor RemotePeerSession {
                 ))))
                 throw RemoteProtocolError(code: .authenticationFailed, message: "Credential was revoked")
             }
+            throw RemoteProtocolError(code: .authenticationFailed, message: "Pairing required")
+        case .missing:
             throw RemoteProtocolError(code: .authenticationFailed, message: "Pairing required")
         }
         crypto = try Self.makeCrypto(
@@ -494,47 +509,72 @@ actor RemotePeerSession {
         pendingPairing: PendingPairing
     ) async throws {
         try await validate(command, pendingPairing: pendingPairing)
+        try requireProvisional(pendingPairing)
         guard await validatePairing(pendingPairing.snapshot) else {
             throw RemoteProtocolError(code: .authenticationFailed, message: "Pairing was superseded")
         }
+        try requireProvisional(pendingPairing)
         state = .committing(pendingPairing.record.id, command.transactionID)
         let committed = try await credentialStore.finalizePrepared(command.transactionID)
+        do {
+            try requireCommitting(committed.id, transactionID: command.transactionID)
+        } catch {
+            self.pendingPairing = nil
+            _ = await commitPairing(pendingPairing.snapshot)
+            throw error
+        }
+        await commitStageReached(.afterFinalize)
+        do {
+            try requireCommitting(committed.id, transactionID: command.transactionID)
+        } catch {
+            self.pendingPairing = nil
+            _ = await commitPairing(pendingPairing.snapshot)
+            throw error
+        }
         guard await commitPairing(pendingPairing.snapshot) else {
             throw RemoteProtocolError(code: .authenticationFailed, message: "Pairing was superseded")
         }
+        try requireCommitting(committed.id, transactionID: command.transactionID)
         self.pendingPairing = nil
         _ = try await credentialStore.markConnected(
             deviceID: committed.id,
             credential: committed.credential,
             at: .now
         )
+        try requireCommitting(committed.id, transactionID: command.transactionID)
+        await commitStageReached(.beforeHostAuthentication)
+        try requireCommitting(committed.id, transactionID: command.transactionID)
         guard await authenticated(id, committed.id) else {
             throw RemoteProtocolError(code: .authenticationFailed, message: "Credential was revoked")
         }
-        guard case let .committing(confirmedDeviceID, confirmedTransactionID) = state,
-              confirmedDeviceID == committed.id,
-              confirmedTransactionID == command.transactionID else {
-            throw CancellationError()
-        }
+        try requireCommitting(committed.id, transactionID: command.transactionID)
         try await authenticationResultSender { [self] in
             try await sendEncrypted(.pairingCommitted(command))
         }
-        guard case let .committing(committingDeviceID, committingTransactionID) = state,
-              committingDeviceID == committed.id,
-              committingTransactionID == command.transactionID else {
-            throw CancellationError()
-        }
+        try requireCommitting(committed.id, transactionID: command.transactionID)
         try? await credentialStore.finalizeRepair(
             deviceID: committed.id,
             matchingCredential: committed.credential
         )
-        guard case let .committing(finalizedDeviceID, finalizedTransactionID) = state,
-              finalizedDeviceID == committed.id,
-              finalizedTransactionID == command.transactionID else {
-            throw CancellationError()
-        }
+        try requireCommitting(committed.id, transactionID: command.transactionID)
         authenticatedCredential = committed.credential
         state = .authenticated(committed.id)
+    }
+
+    private func requireProvisional(_ pendingPairing: PendingPairing) throws {
+        guard case let .provisional(deviceID, transactionID) = state,
+              deviceID == pendingPairing.record.id,
+              transactionID == pendingPairing.transactionID else {
+            throw CancellationError()
+        }
+    }
+
+    private func requireCommitting(_ deviceID: UUID, transactionID: UUID) throws {
+        guard case let .committing(activeDeviceID, activeTransactionID) = state,
+              activeDeviceID == deviceID,
+              activeTransactionID == transactionID else {
+            throw CancellationError()
+        }
     }
 
     private func validate(

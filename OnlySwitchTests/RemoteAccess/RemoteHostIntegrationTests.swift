@@ -68,6 +68,9 @@ struct RemoteHostIntegrationTests {
         try await store.abortPrepared(replacementID)
         try await store.abortPrepared(replacementID)
         #expect(try await store.load(existingID) == old)
+        #expect(try await store.transactionRetainsPreviousCredentialForTesting(replacementID) == false)
+        let restartedAfterAbort = await store.restartedInMemoryForTesting()
+        #expect(try await restartedAfterAbort.transactionRetainsPreviousCredentialForTesting(replacementID) == false)
 
         let newID = UUID(uuidString: "00000000-0000-0000-0000-000000000922")!
         let newDevice = PairedRemoteDevice(
@@ -86,6 +89,7 @@ struct RemoteHostIntegrationTests {
         try await store.recoverExpiredTransactions(now: Date(timeIntervalSince1970: 11))
         #expect(try await store.load(newID) == nil)
         #expect(try await store.transactionStatus(expiringID) == .aborted)
+        #expect(try await store.transactionRetainsPreviousCredentialForTesting(expiringID) == false)
     }
 
     @Test(.timeLimit(.minutes(1)))
@@ -315,6 +319,48 @@ struct RemoteHostIntegrationTests {
         #expect(try await commitFirst.loadRevocationVerifier(deviceID) == RemoteHandshakeCrypto.revocationVerifier(credential: candidate.credential))
     }
 
+    @Test
+    func verifierWrittenBeforeDeleteRejectsMatchingCredentialAfterRecovery() async throws {
+        let deviceID = UUID()
+        let revoked = PairedRemoteDevice(
+            id: deviceID,
+            name: "Phone",
+            credential: Data(repeating: 8, count: 32),
+            createdAt: .distantPast,
+            lastConnectedAt: nil
+        )
+        let repaired = PairedRemoteDevice(
+            id: deviceID,
+            name: "Phone",
+            credential: Data(repeating: 9, count: 32),
+            createdAt: .now,
+            lastConnectedAt: nil
+        )
+        let store = RemoteCredentialStore.inMemory(
+            beforeRevocationDelete: { throw RevocationBoundaryFailure.injected }
+        )
+        try await store.save(revoked)
+
+        await #expect(throws: RevocationBoundaryFailure.self) {
+            _ = try await store.prepareAndDeleteForRevocation(deviceID)
+        }
+
+        let restarted = await store.restartedInMemoryForTesting()
+        #expect(try await restarted.authenticationRecord(deviceID) == .revoked)
+        try await restarted.save(repaired)
+        #expect(try await restarted.authenticationRecord(deviceID) == .credential(repaired))
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func closeAfterDurableFinalizeDoesNotAuthenticateClosedPeer() async throws {
+        try await assertCommitCloseRecovery(at: .afterFinalize)
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func closeBeforeHostAuthenticationDoesNotLeakAuthenticatedSession() async throws {
+        try await assertCommitCloseRecovery(at: .beforeHostAuthentication)
+    }
+
     @Test(.timeLimit(.minutes(1)))
     func minorOneClientCannotStartTransactionalPairing() async throws {
         let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
@@ -330,6 +376,40 @@ struct RemoteHostIntegrationTests {
             _ = try await client.preparePairing(code: "ABCDEFGH2345")
         }
         #expect(try await host.pairedDevices().isEmpty)
+    }
+
+    private func assertCommitCloseRecovery(at stage: RemotePairingCommitStage) async throws {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let gate = RemoteHostTestGate()
+        let authenticationInvocations = AuthenticationInvocationRecorder()
+        let host = RemoteHost.testing(
+            catalog: [],
+            router: router,
+            pairingCode: "ABCDEFGH2345",
+            commitStageReached: { reached in
+                if reached == stage { await gate.wait() }
+            },
+            authenticatedSessionObserver: { authenticationInvocations.record() }
+        )
+        let endpoint = try await host.startForTesting(port: 0)
+        defer { Task { await host.stop() } }
+        let client = try await RemoteHostTestClient.connect(to: endpoint)
+        let prepared = try await client.preparePairing(code: "ABCDEFGH2345")
+        try await client.sendTransaction(.pairingCommit(.init(transactionID: prepared.transactionID)))
+        await gate.waitUntilEntered()
+
+        await host.closeSessionsForTesting()
+        await gate.open()
+        await #expect(throws: (any Error).self) {
+            _ = try await client.receiveTransactionStatus()
+        }
+        #expect(await host.authenticatedSessionCountForTesting() == 0)
+        #expect(authenticationInvocations.count == 0)
+
+        let recovery = try await RemoteHostTestClient.connect(to: endpoint, deviceID: await client.id)
+        #expect(try await recovery.authenticate(credential: prepared.credential) == .authenticated)
+        try await recovery.sendTransaction(.pairingStatusRequest(.init(transactionID: prepared.transactionID)))
+        #expect(try await recovery.receiveTransactionStatus().state == .committed)
     }
 
     @Test(.timeLimit(.minutes(1)))
@@ -603,6 +683,7 @@ private actor IntegrationCatalogSource {
 }
 
 private enum AuthenticationResultSendFailure: Swift.Error { case injected }
+private enum RevocationBoundaryFailure: Swift.Error { case injected }
 
 private enum AuthenticationBoundaryEvent: Equatable {
     case sendInvoked
@@ -658,6 +739,15 @@ private final class AuthenticationResultBoundaryRecorder: @unchecked Sendable {
             if alreadyFinalized { continuation.resume() }
         }
     }
+}
+
+private final class AuthenticationInvocationRecorder: @unchecked Sendable {
+    private let lock = NSLock()
+    private var invocations = 0
+
+    var count: Int { lock.withLock { invocations } }
+
+    func record() { lock.withLock { invocations += 1 } }
 }
 
 private actor RemoteHostTestGate {
