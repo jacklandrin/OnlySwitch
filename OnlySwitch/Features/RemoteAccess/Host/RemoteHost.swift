@@ -408,8 +408,11 @@ actor RemoteHost {
         lifecycle.validateRepair(snapshot)
     }
 
-    private func commitPairing(_ snapshot: RemotePairingSnapshot) -> Bool {
-        lifecycle.commitRepair(snapshot)
+    private func commitPairing(_ snapshot: RemotePairingSnapshot) async -> Bool {
+        await commitStageReached(.duringLifecycleCommit)
+        let committed = lifecycle.commitRepair(snapshot)
+        await commitStageReached(.afterLifecycleCommit)
+        return committed
     }
 
     private func rollbackPairing(_ snapshot: RemotePairingSnapshot) -> Bool {

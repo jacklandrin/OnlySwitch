@@ -8,6 +8,8 @@ typealias RemoteHandshake = RemoteHandshakeCrypto
 
 enum RemotePairingCommitStage: Equatable, Sendable {
     case afterFinalize
+    case duringLifecycleCommit
+    case afterLifecycleCommit
     case beforeHostAuthentication
 }
 
@@ -531,11 +533,12 @@ actor RemotePeerSession {
             _ = await commitPairing(pendingPairing.snapshot)
             throw error
         }
-        guard await commitPairing(pendingPairing.snapshot) else {
+        let lifecycleCommitted = await commitPairing(pendingPairing.snapshot)
+        guard lifecycleCommitted else {
             throw RemoteProtocolError(code: .authenticationFailed, message: "Pairing was superseded")
         }
-        try requireCommitting(committed.id, transactionID: command.transactionID)
         self.pendingPairing = nil
+        try requireCommitting(committed.id, transactionID: command.transactionID)
         _ = try await credentialStore.markConnected(
             deviceID: committed.id,
             credential: committed.credential,

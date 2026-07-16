@@ -362,6 +362,51 @@ struct RemoteHostIntegrationTests {
     }
 
     @Test(.timeLimit(.minutes(1)))
+    func closeDuringLifecycleCommitKeepsRepairRecoverable() async throws {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let gate = RemoteConditionalHostTestGate()
+        let authenticationInvocations = AuthenticationInvocationRecorder()
+        let host = RemoteHost.testing(
+            catalog: [],
+            router: router,
+            pairingCode: "ABCDEFGH2345",
+            commitStageReached: { reached in
+                if reached == .duringLifecycleCommit { await gate.waitIfEnabled() }
+                if reached == .afterLifecycleCommit { await gate.recordLifecycleCompleted() }
+            },
+            authenticatedSessionObserver: { authenticationInvocations.record() }
+        )
+        let endpoint = try await host.startForTesting(port: 0)
+        defer { Task { await host.stop() } }
+        let originalClient = try await RemoteHostTestClient.connect(to: endpoint)
+        try await originalClient.pair(code: "ABCDEFGH2345")
+        let original = try await originalClient.pairingIdentity()
+        try await host.revokePreservingCredentialForTesting(deviceID: original.deviceID)
+        _ = await host.startPairing()
+        authenticationInvocations.reset()
+        await gate.enable()
+        let repairClient = try await RemoteHostTestClient.connect(to: endpoint, deviceID: original.deviceID)
+        let prepared = try await repairClient.preparePairing(code: "ABCDEFGH2345")
+        try await repairClient.sendTransaction(.pairingCommit(.init(transactionID: prepared.transactionID)))
+        await gate.waitUntilEntered()
+
+        await host.closeSessionsForTesting()
+        await gate.open()
+        await gate.waitUntilLifecycleCompleted()
+        await #expect(throws: (any Error).self) {
+            _ = try await repairClient.receiveTransactionStatus()
+        }
+        #expect(await host.authenticatedSessionCountForTesting() == 0)
+        #expect(await host.isRevokedForTesting(deviceID: original.deviceID) == false)
+        #expect(authenticationInvocations.count == 0)
+
+        let recovery = try await RemoteHostTestClient.connect(to: endpoint, deviceID: original.deviceID)
+        #expect(try await recovery.authenticate(credential: prepared.credential) == .authenticated)
+        try await recovery.sendTransaction(.pairingStatusRequest(.init(transactionID: prepared.transactionID)))
+        #expect(try await recovery.receiveTransactionStatus().state == .committed)
+    }
+
+    @Test(.timeLimit(.minutes(1)))
     func minorOneClientCannotStartTransactionalPairing() async throws {
         let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
         let host = RemoteHost.testing(catalog: [], router: router, pairingCode: "ABCDEFGH2345")
@@ -748,6 +793,51 @@ private final class AuthenticationInvocationRecorder: @unchecked Sendable {
     var count: Int { lock.withLock { invocations } }
 
     func record() { lock.withLock { invocations += 1 } }
+    func reset() { lock.withLock { invocations = 0 } }
+}
+
+private actor RemoteConditionalHostTestGate {
+    private var enabled = false
+    private var entered = false
+    private var isOpen = false
+    private var waiter: CheckedContinuation<Void, Never>?
+    private var enteredWaiter: CheckedContinuation<Void, Never>?
+    private var lifecycleCompleted = false
+    private var lifecycleCompletionWaiter: CheckedContinuation<Void, Never>?
+
+    func enable() { enabled = true }
+
+    func waitIfEnabled() async {
+        guard enabled else { return }
+        entered = true
+        enteredWaiter?.resume()
+        enteredWaiter = nil
+        guard isOpen == false else { return }
+        await withCheckedContinuation { waiter = $0 }
+    }
+
+    func waitUntilEntered() async {
+        guard entered == false else { return }
+        await withCheckedContinuation { enteredWaiter = $0 }
+    }
+
+    func open() {
+        isOpen = true
+        waiter?.resume()
+        waiter = nil
+    }
+
+    func recordLifecycleCompleted() {
+        guard enabled else { return }
+        lifecycleCompleted = true
+        lifecycleCompletionWaiter?.resume()
+        lifecycleCompletionWaiter = nil
+    }
+
+    func waitUntilLifecycleCompleted() async {
+        guard lifecycleCompleted == false else { return }
+        await withCheckedContinuation { lifecycleCompletionWaiter = $0 }
+    }
 }
 
 private actor RemoteHostTestGate {
