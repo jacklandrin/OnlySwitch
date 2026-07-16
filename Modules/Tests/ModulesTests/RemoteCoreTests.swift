@@ -24,6 +24,33 @@ struct RemoteCoreTests {
         #expect(RemoteProtocolVersion.current.isCompatible(with: .init(major: 1, minor: 7)))
     }
 
+    @Test func transactionalPairingRequiresMinorTwo() {
+        #expect(!RemoteProtocolVersion(major: 1, minor: 1).supportsTransactionalPairing)
+        #expect(RemoteProtocolVersion(major: 1, minor: 2).supportsTransactionalPairing)
+        #expect(RemoteProtocolVersion.current == .init(major: 1, minor: 2))
+    }
+
+    @Test func pairingTransactionMessagesRoundTrip() throws {
+        let id = UUID(uuidString: "00000000-0000-0000-0000-000000000912")!
+        let prepared = PairingPrepared(
+            transactionID: id,
+            macID: UUID(uuidString: "00000000-0000-0000-0000-000000000913")!,
+            credential: Data(repeating: 7, count: 32),
+            catalogRevision: 4,
+            expiresAt: Date(timeIntervalSince1970: 1_800_000_000)
+        )
+        for message in [
+            RemoteMessage.pairingPrepared(prepared),
+            .pairingCommit(.init(transactionID: id)),
+            .pairingAbort(.init(transactionID: id)),
+            .pairingStatusRequest(.init(transactionID: id)),
+            .pairingStatus(.init(transactionID: id, state: .prepared)),
+            .pairingCommitted(.init(transactionID: id)),
+        ] {
+            #expect(try JSONDecoder().decode(RemoteMessage.self, from: JSONEncoder().encode(message)) == message)
+        }
+    }
+
     @Test func authenticatedRevocationMessageRoundTrips() throws {
         let message = RemoteMessage.credentialRevoked
         #expect(try JSONDecoder().decode(RemoteMessage.self, from: JSONEncoder().encode(message)) == message)
@@ -40,7 +67,7 @@ struct RemoteCoreTests {
         let legacy = RemoteProtocolVersion(major: 1, minor: 0)
         let future = RemoteProtocolVersion(major: 1, minor: 2)
 
-        #expect(RemoteProtocolVersion.current == .init(major: 1, minor: 1))
+        #expect(RemoteProtocolVersion.current == .init(major: 1, minor: 2))
         #expect(RemoteProtocolVersion.current.negotiated(with: legacy) == legacy)
         #expect(legacy.supportsAuthenticatedRevocation == false)
         #expect(RemoteProtocolVersion.current.supportsAuthenticatedRevocation)

@@ -50,6 +50,44 @@ public struct PairingSuccess: Codable, Equatable, Sendable {
     }
 }
 
+public struct PairingPrepared: Codable, Equatable, Sendable {
+    public let transactionID: UUID
+    public let macID: UUID
+    public let credential: Data
+    public let catalogRevision: UInt64
+    public let expiresAt: Date
+
+    public init(transactionID: UUID, macID: UUID, credential: Data, catalogRevision: UInt64, expiresAt: Date) {
+        self.transactionID = transactionID
+        self.macID = macID
+        self.credential = credential
+        self.catalogRevision = catalogRevision
+        self.expiresAt = expiresAt
+    }
+}
+
+public struct PairingTransactionCommand: Codable, Equatable, Sendable {
+    public let transactionID: UUID
+
+    public init(transactionID: UUID) {
+        self.transactionID = transactionID
+    }
+}
+
+public enum PairingTransactionState: String, Codable, Equatable, Sendable {
+    case prepared, committed, aborted
+}
+
+public struct PairingTransactionStatus: Codable, Equatable, Sendable {
+    public let transactionID: UUID
+    public let state: PairingTransactionState
+
+    public init(transactionID: UUID, state: PairingTransactionState) {
+        self.transactionID = transactionID
+        self.state = state
+    }
+}
+
 public struct AuthenticationProof: Codable, Equatable, Sendable {
     public let deviceID: UUID
     public let proof: Data
@@ -86,6 +124,12 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
     case pairingRequest
     case pairingProof(PairingProof)
     case pairingResult(Result<PairingSuccess, RemoteProtocolError>)
+    case pairingPrepared(PairingPrepared)
+    case pairingCommit(PairingTransactionCommand)
+    case pairingAbort(PairingTransactionCommand)
+    case pairingStatusRequest(PairingTransactionCommand)
+    case pairingStatus(PairingTransactionStatus)
+    case pairingCommitted(PairingTransactionCommand)
     case authenticationProof(AuthenticationProof)
     case authenticationResult(Result<AuthenticationSuccess, RemoteProtocolError>)
     case catalogRequest
@@ -117,6 +161,12 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
         case pairingRequest
         case pairingProof
         case pairingResult
+        case pairingPrepared
+        case pairingCommit
+        case pairingAbort
+        case pairingStatusRequest
+        case pairingStatus
+        case pairingCommitted
         case authenticationProof
         case authenticationResult
         case catalogRequest
@@ -147,6 +197,18 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
             self = .pairingProof(try container.decode(PairingProof.self, forKey: .payload))
         case .pairingResult:
             self = .pairingResult(try Self.decodeResult(PairingSuccess.self, from: container))
+        case .pairingPrepared:
+            self = .pairingPrepared(try container.decode(PairingPrepared.self, forKey: .payload))
+        case .pairingCommit:
+            self = .pairingCommit(try container.decode(PairingTransactionCommand.self, forKey: .payload))
+        case .pairingAbort:
+            self = .pairingAbort(try container.decode(PairingTransactionCommand.self, forKey: .payload))
+        case .pairingStatusRequest:
+            self = .pairingStatusRequest(try container.decode(PairingTransactionCommand.self, forKey: .payload))
+        case .pairingStatus:
+            self = .pairingStatus(try container.decode(PairingTransactionStatus.self, forKey: .payload))
+        case .pairingCommitted:
+            self = .pairingCommitted(try container.decode(PairingTransactionCommand.self, forKey: .payload))
         case .authenticationProof:
             self = .authenticationProof(try container.decode(AuthenticationProof.self, forKey: .payload))
         case .authenticationResult:
@@ -200,6 +262,24 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
         case let .pairingResult(result):
             try container.encode(Kind.pairingResult, forKey: .type)
             try Self.encodeResult(result, into: &container)
+        case let .pairingPrepared(value):
+            try container.encode(Kind.pairingPrepared, forKey: .type)
+            try container.encode(value, forKey: .payload)
+        case let .pairingCommit(value):
+            try container.encode(Kind.pairingCommit, forKey: .type)
+            try container.encode(value, forKey: .payload)
+        case let .pairingAbort(value):
+            try container.encode(Kind.pairingAbort, forKey: .type)
+            try container.encode(value, forKey: .payload)
+        case let .pairingStatusRequest(value):
+            try container.encode(Kind.pairingStatusRequest, forKey: .type)
+            try container.encode(value, forKey: .payload)
+        case let .pairingStatus(value):
+            try container.encode(Kind.pairingStatus, forKey: .type)
+            try container.encode(value, forKey: .payload)
+        case let .pairingCommitted(value):
+            try container.encode(Kind.pairingCommitted, forKey: .type)
+            try container.encode(value, forKey: .payload)
         case let .authenticationProof(value):
             try container.encode(Kind.authenticationProof, forKey: .type)
             try container.encode(value, forKey: .payload)
