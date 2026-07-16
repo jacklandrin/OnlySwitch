@@ -215,7 +215,8 @@ struct SettingsFeature {
                 return .none
 
             case .pairing(.dismiss):
-                return .none
+                state.pairing = nil
+                return .run { [connection] _ in await connection.cancelPairing() }
 
             case let .management(.presented(.delegate(.rePair(id)))):
                 guard state.pairedMacs[id: id] != nil else { return .none }
@@ -310,7 +311,8 @@ struct SettingsFeature {
         let macID: UUID
         switch event {
         case let .connecting(id), let .authenticated(id), let .offline(id, _), let .revoked(id),
-             let .catalog(id, _, _), let .status(id, _), let .action(id, _):
+             let .sessionStarted(id, _), let .catalog(id, _, _), let .catalogInvalidated(id, _),
+             let .statusSnapshot(id, _), let .status(id, _), let .action(id, _):
             macID = id
         }
         guard state.pairedMacs[id: macID] != nil else { return .none }
@@ -338,7 +340,7 @@ struct SettingsFeature {
                 }
             }
             .cancellable(id: CancelID.catalogSave(id), cancelInFlight: true)
-        case .status, .action:
+        case .sessionStarted, .catalogInvalidated, .statusSnapshot, .status, .action:
             break
         }
         return .none

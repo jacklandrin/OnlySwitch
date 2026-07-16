@@ -72,7 +72,7 @@ actor RemotePeerSession {
     private let macID: UUID
     private let macName: String
     private let credentialStore: RemoteCredentialStore
-    private let catalogProvider: RemoteCatalogProvider
+    private let catalogSnapshot: @Sendable () async throws -> RemoteCatalogSnapshot
     private let router: RemoteCommandRouter
     private let pairingWindow: @Sendable () async -> PairingWindow?
     private let pairingFailed: @Sendable () async -> Void
@@ -99,7 +99,7 @@ actor RemotePeerSession {
         macID: UUID,
         macName: String,
         credentialStore: RemoteCredentialStore,
-        catalogProvider: RemoteCatalogProvider,
+        catalogSnapshot: @escaping @Sendable () async throws -> RemoteCatalogSnapshot,
         router: RemoteCommandRouter,
         pairingWindow: @escaping @Sendable () async -> PairingWindow?,
         pairingFailed: @escaping @Sendable () async -> Void,
@@ -123,7 +123,7 @@ actor RemotePeerSession {
         self.macID = macID
         self.macName = macName
         self.credentialStore = credentialStore
-        self.catalogProvider = catalogProvider
+        self.catalogSnapshot = catalogSnapshot
         self.router = router
         self.pairingWindow = pairingWindow
         self.pairingFailed = pairingFailed
@@ -350,8 +350,9 @@ actor RemotePeerSession {
         guard await authenticated(id, client.deviceID) else {
             throw RemoteProtocolError(code: .authenticationFailed, message: "Credential was revoked")
         }
+        let catalog = try await catalogSnapshot()
         let authenticationResult = RemoteMessage.authenticationResult(
-            .success(.init(sessionID: id, catalogRevision: 1))
+            .success(.init(sessionID: id, catalogRevision: catalog.revision))
         )
         try await authenticationResultSender { [self] in
             try await sendEncrypted(authenticationResult)
@@ -385,14 +386,17 @@ actor RemotePeerSession {
             let message = try crypto.open(frame)
             switch message {
             case .catalogRequest:
-                let catalog = try await catalogProvider.catalog()
-                guard catalog.allSatisfy({ descriptor in
+                let snapshot = try await catalogSnapshot()
+                guard snapshot.controls.allSatisfy({ descriptor in
                     if case let .png(data) = descriptor.icon { return data.count <= 256 * 1_024 }
                     return true
                 }) else {
                     throw RemoteProtocolError(code: .invalidFrame, message: "Catalog icon exceeds 256 KiB")
                 }
-                try await sendEncrypted(.catalogSnapshot(revision: 1, controls: catalog))
+                try await sendEncrypted(.catalogSnapshot(
+                    revision: snapshot.revision,
+                    controls: snapshot.controls
+                ))
             case let .subscriptionUpdate(ids):
                 try await subscriptionsChanged(id, ids) { [weak self] status in
                     guard let self else { throw CancellationError() }
@@ -413,6 +417,11 @@ actor RemotePeerSession {
     private func sendEncrypted(_ message: RemoteMessage) async throws {
         guard let crypto else { throw RemoteProtocolError(code: .authenticationFailed, message: "No session") }
         try await io.send(.encrypted(try crypto.seal(message)))
+    }
+
+    func catalogDidChange(revision: UInt64) async throws {
+        guard case .authenticated = state else { return }
+        try await sendEncrypted(.catalogChanged(revision: revision))
     }
 
     private func receiveHandshakePacket() async throws -> RemoteWirePacket {

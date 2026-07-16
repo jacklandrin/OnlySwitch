@@ -207,7 +207,7 @@ struct SettingsFeatureTests {
             selectedMacID: studio.id,
             catalog: [descriptor(mute), descriptor(shortcut)]
         )) { SettingsFeature() } withDependencies: {
-            $0.remotePersistence.saveLayout = { try await recorder.save($0) }
+            $0.remotePersistence.saveLayout = { await recorder.save($0) }
         }
 
         await store.send(.toggleControl(mute, true)) {
@@ -240,7 +240,7 @@ struct SettingsFeatureTests {
         state.isObservingConnectionEvents = true
         let controls = [descriptor(mute)]
         let store = TestStore(initialState: state) { SettingsFeature() } withDependencies: {
-            $0.remotePersistence.saveCatalog = { try await cacheRecorder.save(macID: $0, revision: $1, controls: $2) }
+            $0.remotePersistence.saveCatalog = { await cacheRecorder.save(macID: $0, revision: $1, controls: $2) }
         }
 
         await store.send(.connectionEvent(.catalog(studio.id, 12, controls))) {

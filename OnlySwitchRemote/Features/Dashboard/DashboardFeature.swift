@@ -27,9 +27,15 @@ struct DashboardFeature {
         var orderedSelectedIDs: [RemoteControlID]
         var requestsInFlight: Set<RemoteControlID>
         var requestIDs: [RemoteControlID: UUID]
+        var retryInvocations: [RemoteControlID: RemoteActionInvocation] = [:]
         var connectionState: ConnectionState
         var isActive: Bool
         var selectionGeneration: UInt64 = 0
+        var activeSessionID: UUID?
+        var awaitingInitialCatalog = false
+        var pendingCatalogRevision: UInt64?
+        var hasAcceptedLiveCatalog = false
+        var liveStatusControlIDs: Set<RemoteControlID> = []
         @Presents var alert: AlertState<Action.Alert>?
 
         init(
@@ -57,7 +63,13 @@ struct DashboardFeature {
         }
 
         var selectedMac: PairedMac? { selectedMacID.flatMap { pairedMacs[id: $0] } }
-        var canSendActions: Bool { connectionState == .authenticated && selectedMac != nil }
+        var canSendActions: Bool {
+            connectionState == .authenticated
+                && selectedMac != nil
+                && activeSessionID != nil
+                && awaitingInitialCatalog == false
+                && pendingCatalogRevision == nil
+        }
 
         var visibleDescriptors: [RemoteControlDescriptor] {
             orderedSelectedIDs.compactMap { descriptors[id: $0] }
@@ -96,12 +108,15 @@ struct DashboardFeature {
         case connectionEvent(RemoteConnectionEvent)
         case tileTapped(RemoteControlID)
         case actionResponse(RemoteControlID, UUID, Result<RemoteActionResult, RemoteProtocolError>)
+        case actionCompleted(RemoteControlID, RemoteActionInvocation, Result<RemoteActionResult, RemoteProtocolError>)
         case menuTapped
         case alert(PresentationAction<Alert>)
         case delegate(Delegate)
 
         enum Alert: Equatable {
             case confirmDestructive(RemoteControlID)
+            case retryTimedOut(RemoteControlID)
+            case cancelTimedOut(RemoteControlID)
         }
     }
 
@@ -114,7 +129,7 @@ struct DashboardFeature {
     @Dependency(\.remotePersistence) var persistence
     @Dependency(\.uuid) var uuid
 
-    private enum CancelID: Hashable { case selectedData, subscription, action(RemoteControlID) }
+    enum CancelID: Hashable { case selectedData, subscription, action(RemoteControlID) }
 
     var body: some ReducerOf<Self> {
         Reduce { state, action in
@@ -130,15 +145,17 @@ struct DashboardFeature {
 
             case let .selectedDataLoaded(generation, id, .success(layout, cache, cachedStatuses)):
                 guard generation == state.selectionGeneration, id == state.selectedMacID else { return .none }
-                if let cache, cache.revision > state.catalogRevision {
+                if let cache,
+                   state.hasAcceptedLiveCatalog == false,
+                   cache.revision > state.catalogRevision {
                     state.descriptors = IdentifiedArray(uniqueElements: cache.controls)
                     state.catalogRevision = cache.revision
                 }
                 state.orderedSelectedIDs = orderedIDs(from: layout)
                 state.statuses = authoritativeStatuses(
-                    cachedStatuses,
+                    cachedStatuses.filter { state.liveStatusControlIDs.contains($0.id) == false },
                     existing: state.statuses,
-                    stale: state.connectionState != .authenticated
+                    stale: true
                 )
                 return subscribe(state.orderedSelectedIDs)
 
@@ -156,16 +173,20 @@ struct DashboardFeature {
 
             case let .synchronize(macs, selectedID, connectionState):
                 let changedSelection = selectedID != state.selectedMacID
+                let activeActionIDs = state.requestsInFlight
                 state.pairedMacs = macs
                 state.selectedMacID = selectedID
                 state.connectionState = connectionState
                 guard changedSelection else { return .none }
                 resetSelectionState(&state)
-                guard let selectedID else { return subscribe([]) }
+                guard let selectedID else {
+                    return .merge(subscribe([]), cancelActions(activeActionIDs))
+                }
                 state.selectionGeneration &+= 1
                 return .merge(
                     loadSelectedMac(id: selectedID, generation: state.selectionGeneration),
-                    subscribe([])
+                    subscribe([]),
+                    cancelActions(activeActionIDs)
                 )
 
             case let .layoutChanged(layout):
@@ -196,11 +217,42 @@ struct DashboardFeature {
                 guard state.canTrigger(id), let descriptor = state.descriptors[id: id] else { return .none }
                 return startAction(id, descriptor: descriptor, state: &state)
 
+            case let .alert(.presented(.retryTimedOut(id))):
+                guard let invocation = state.retryInvocations.removeValue(forKey: id),
+                      state.selectedMacID == invocation.macID,
+                      state.activeSessionID == invocation.sessionID,
+                      state.canTrigger(id)
+                else { return .none }
+                return sendAction(id, invocation: invocation, state: &state)
+
+            case let .alert(.presented(.cancelTimedOut(id))):
+                state.retryInvocations[id] = nil
+                return .none
+
             case .alert:
                 return .none
 
             case let .actionResponse(id, requestID, result):
                 return handleActionResponse(id: id, requestID: requestID, response: result, state: &state)
+
+            case let .actionCompleted(id, invocation, result):
+                guard state.requestIDs[id] == invocation.request.requestID else { return .none }
+                if case let .failure(error) = result, error.code == .requestTimedOut {
+                    state.requestsInFlight.remove(id)
+                    state.requestIDs[id] = nil
+                    state.retryInvocations[id] = invocation
+                    state.alert = .actionTimedOut(
+                        controlID: id,
+                        destructive: state.descriptors[id: id]?.isDestructive == true
+                    )
+                    return .none
+                }
+                return handleActionResponse(
+                    id: id,
+                    requestID: invocation.request.requestID,
+                    response: result,
+                    state: &state
+                )
 
             case .menuTapped:
                 return .send(.delegate(.openSettings))
@@ -255,16 +307,39 @@ struct DashboardFeature {
         case .switch, .player:
             action = .setState(!(state.statuses[id]?.value.isOn ?? false))
         }
+        guard let macID = state.selectedMacID, let sessionID = state.activeSessionID else { return .none }
         let request = RemoteActionRequest(requestID: uuid(), controlID: id, action: action)
+        return sendAction(
+            id,
+            invocation: .init(macID: macID, sessionID: sessionID, request: request),
+            state: &state
+        )
+    }
+
+    private func sendAction(
+        _ id: RemoteControlID,
+        invocation: RemoteActionInvocation,
+        state: inout State
+    ) -> Effect<Action> {
         state.requestsInFlight.insert(id)
-        state.requestIDs[id] = request.requestID
+        state.requestIDs[id] = invocation.request.requestID
         return .run { [connection] send in
             do {
-                await send(.actionResponse(id, request.requestID, .success(try await connection.send(request))))
+                await send(.actionResponse(
+                    id,
+                    invocation.request.requestID,
+                    .success(try await connection.send(invocation))
+                ))
             } catch let error as RemoteProtocolError {
-                await send(.actionResponse(id, request.requestID, .failure(error)))
+                if error.code == .requestTimedOut {
+                    await send(.actionCompleted(id, invocation, .failure(error)))
+                } else {
+                    await send(.actionResponse(id, invocation.request.requestID, .failure(error)))
+                }
+            } catch is CancellationError {
+                return
             } catch {
-                await send(.actionResponse(id, request.requestID, .failure(.init(
+                await send(.actionResponse(id, invocation.request.requestID, .failure(.init(
                     code: .executionFailed,
                     message: String(localized: "The Mac could not complete this action.")
                 ))))
@@ -306,7 +381,8 @@ struct DashboardFeature {
         let macID: UUID
         switch event {
         case let .connecting(id), let .authenticated(id), let .offline(id, _), let .revoked(id),
-             let .catalog(id, _, _), let .status(id, _), let .action(id, _):
+             let .sessionStarted(id, _), let .catalog(id, _, _), let .catalogInvalidated(id, _),
+             let .statusSnapshot(id, _), let .status(id, _), let .action(id, _):
             macID = id
         }
         guard macID == state.selectedMacID else { return .none }
@@ -314,24 +390,57 @@ struct DashboardFeature {
         switch event {
         case .connecting:
             state.connectionState = .connecting
+            state.activeSessionID = nil
             markStatusesStale(&state)
+            return cancelActiveActions(&state)
+        case let .sessionStarted(_, sessionID):
+            state.activeSessionID = sessionID
+            state.awaitingInitialCatalog = true
+            state.pendingCatalogRevision = nil
+            state.hasAcceptedLiveCatalog = false
+            state.liveStatusControlIDs.removeAll()
+            markStatusesStale(&state)
+            return cancelActiveActions(&state)
         case .authenticated:
             state.connectionState = .authenticated
             return subscribe(state.orderedSelectedIDs)
         case let .offline(_, reason):
             state.connectionState = .offline(reason)
+            state.activeSessionID = nil
+            state.awaitingInitialCatalog = false
+            state.pendingCatalogRevision = nil
+            state.hasAcceptedLiveCatalog = false
             markStatusesStale(&state)
-            clearRequests(&state)
+            return cancelActiveActions(&state)
         case .revoked:
             state.connectionState = .revoked
+            state.activeSessionID = nil
             markStatusesStale(&state)
-            clearRequests(&state)
+            return cancelActiveActions(&state)
         case let .catalog(_, revision, controls):
-            guard revision > state.catalogRevision else { return .none }
+            guard state.awaitingInitialCatalog || revision > state.catalogRevision || revision == state.pendingCatalogRevision else { return .none }
             state.catalogRevision = revision
             state.descriptors = IdentifiedArray(uniqueElements: controls)
+            state.awaitingInitialCatalog = false
+            state.pendingCatalogRevision = nil
+            state.hasAcceptedLiveCatalog = true
+        case let .catalogInvalidated(_, revision):
+            guard state.awaitingInitialCatalog || revision > state.catalogRevision else { return .none }
+            state.pendingCatalogRevision = revision
+        case let .statusSnapshot(_, statuses):
+            for status in statuses {
+                if state.liveStatusControlIDs.insert(status.id).inserted {
+                    state.statuses[status.id] = .init(value: status, isStale: false)
+                } else {
+                    apply(status, to: &state)
+                }
+            }
         case let .status(_, status):
-            apply(status, to: &state)
+            if state.liveStatusControlIDs.insert(status.id).inserted {
+                state.statuses[status.id] = .init(value: status, isStale: false)
+            } else {
+                apply(status, to: &state)
+            }
         case let .action(_, result):
             guard let id = state.requestIDs.first(where: { $0.value == result.requestID })?.key else { return .none }
             return handleActionResponse(
@@ -351,17 +460,34 @@ struct DashboardFeature {
 
     private func resetSelectionState(_ state: inout State) {
         state.selectionGeneration &+= 1
+        state.activeSessionID = nil
+        state.awaitingInitialCatalog = false
+        state.pendingCatalogRevision = nil
+        state.hasAcceptedLiveCatalog = false
+        state.liveStatusControlIDs.removeAll()
         state.descriptors = []
         state.catalogRevision = 0
         state.statuses = [:]
         state.orderedSelectedIDs = []
         clearRequests(&state)
+        state.retryInvocations.removeAll()
         state.alert = nil
     }
 
     private func clearRequests(_ state: inout State) {
         state.requestsInFlight.removeAll()
         state.requestIDs.removeAll()
+    }
+
+    private func cancelActiveActions(_ state: inout State) -> Effect<Action> {
+        let ids = state.requestsInFlight
+        clearRequests(&state)
+        state.retryInvocations.removeAll()
+        return cancelActions(ids)
+    }
+
+    private func cancelActions(_ ids: Set<RemoteControlID>) -> Effect<Action> {
+        .merge(ids.map { .cancel(id: CancelID.action($0)) })
     }
 
     private func markStatusesStale(_ state: inout State) {
@@ -416,6 +542,20 @@ extension AlertState where Action == DashboardFeature.Action.Alert {
             ButtonState(role: .cancel) { TextState("OK") }
         } message: {
             TextState(message)
+        }
+    }
+
+
+    static func actionTimedOut(controlID: RemoteControlID, destructive: Bool) -> Self {
+        AlertState {
+            TextState(destructive ? "Outcome Unknown" : "Action Timed Out")
+        } actions: {
+            ButtonState(action: .retryTimedOut(controlID)) { TextState("Retry") }
+            ButtonState(role: .cancel, action: .cancelTimedOut(controlID)) { TextState("Cancel") }
+        } message: {
+            TextState(destructive
+                ? "The Mac may already have completed this action. Retrying sends the same request so OnlySwitch can safely deduplicate it."
+                : "The Mac did not respond. Retry the same request?")
         }
     }
 }

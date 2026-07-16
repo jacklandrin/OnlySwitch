@@ -11,6 +11,7 @@ struct RemoteAppFeature {
         var selectedMacID: UUID?
         var dashboard = DashboardFeature.State()
         var connectedMacIDs: Set<UUID> = []
+        var activeSessionID: UUID?
         var pairAdoptionGeneration: UInt64 = 0
         var connectionEventRevision: UInt64 = 0
         var metadataRefreshGeneration: UInt64 = 0
@@ -154,6 +155,7 @@ struct RemoteAppFeature {
                 let hadCompletedInitialSetup = state.hasCompletedInitialSetup
                 state.pairedMacs = IdentifiedArray(uniqueElements: response.pairedMacs)
                 state.connectedMacIDs = Set(response.connectionSnapshot.authenticatedMacID.map { [$0] } ?? [])
+                state.activeSessionID = response.connectionSnapshot.authenticatedSessionID
                 state.connectedMacIDs.formIntersection(response.pairedMacs.map(\.id))
                 guard let selected = selectedMac(
                     from: response.pairedMacs,
@@ -178,6 +180,9 @@ struct RemoteAppFeature {
                 }
                 state.selectedMacID = selected.id
                 state.connectedMacIDs.formIntersection([selected.id])
+                if response.connectionSnapshot.authenticatedMacID != selected.id {
+                    state.activeSessionID = nil
+                }
                 state.requiredSettings = nil
                 state.hasCompletedInitialSetup = true
                 syncSettingsState(&state)
@@ -196,6 +201,9 @@ struct RemoteAppFeature {
 
             case let .connectionSnapshotLoaded(snapshot):
                 state.connectedMacIDs = Set(snapshot.authenticatedMacID.map { [$0] } ?? [])
+                state.activeSessionID = snapshot.authenticatedMacID == state.selectedMacID
+                    ? snapshot.authenticatedSessionID
+                    : nil
                 syncSettingsState(&state)
                 return .none
 
@@ -207,6 +215,7 @@ struct RemoteAppFeature {
                     syncSettingsState(&state)
                     return forwardToDashboard(event, alongside: refreshPairedMetadata(state: &state), state: state)
                 case let .revoked(id):
+                    state.activeSessionID = nil
                     if state.connectedMacIDs.contains(id) {
                         state.connectedMacIDs.removeAll()
                         syncSettingsState(&state)
@@ -214,6 +223,7 @@ struct RemoteAppFeature {
                     updateConnectionStatus(.needsPairing, for: id, state: &state)
                     return forwardToDashboard(event, alongside: refreshPairedMetadata(state: &state), state: state)
                 case let .offline(id, reason):
+                    state.activeSessionID = nil
                     if state.connectedMacIDs.contains(id) {
                         state.connectedMacIDs.removeAll()
                         syncSettingsState(&state)
@@ -221,11 +231,15 @@ struct RemoteAppFeature {
                     updateConnectionStatus(.offline(reason), for: id, state: &state)
                     return forwardToDashboard(event, state: state)
                 case let .connecting(id):
+                    state.activeSessionID = nil
                     state.connectedMacIDs.removeAll()
                     syncSettingsState(&state)
                     updateConnectionStatus(.connecting, for: id, state: &state)
                     return forwardToDashboard(event, state: state)
-                case .catalog, .status, .action:
+                case let .sessionStarted(_, sessionID):
+                    state.activeSessionID = sessionID
+                    return forwardToDashboard(event, state: state)
+                case .catalog, .catalogInvalidated, .statusSnapshot, .status, .action:
                     return forwardToDashboard(event, state: state)
                 }
 
@@ -428,8 +442,10 @@ struct RemoteAppFeature {
 
     private func select(_ mac: PairedMac, state: inout State) -> Effect<Action> {
         guard state.pairedMacs[id: mac.id] != nil else { return .none }
+        let activeActionIDs = state.dashboard.requestsInFlight
         state.selectedMacID = mac.id
         state.connectedMacIDs.removeAll()
+        state.activeSessionID = nil
         if state.dashboard.isActive { state.dashboard.connectionState = .connecting }
         syncSettingsState(&state)
         state.rootIssue = nil
@@ -442,18 +458,27 @@ struct RemoteAppFeature {
             .run { [connection] _ in await connection.select(mac) }
         ]
         if state.dashboard.isActive { effects.append(.send(.dashboard(.task))) }
+        effects.append(contentsOf: activeActionIDs.map {
+            .cancel(id: DashboardFeature.CancelID.action($0))
+        })
         return .merge(effects)
     }
 
     private func clearedSelection(state: inout State) -> Effect<Action> {
+        let activeActionIDs = state.dashboard.requestsInFlight
         state.rootIssue = nil
+        state.activeSessionID = nil
+        syncDashboardState(&state)
         return .merge(
             beginPersistence(
                 selectedMacID: nil,
                 hasCompletedInitialSetup: false,
                 state: &state
             ),
-            .run { [connection] _ in await connection.select(nil) }
+            .run { [connection] _ in await connection.select(nil) },
+            .merge(activeActionIDs.map {
+                .cancel(id: DashboardFeature.CancelID.action($0))
+            })
         )
     }
 
@@ -558,6 +583,12 @@ struct RemoteAppFeature {
             state.dashboard.orderedSelectedIDs = []
             state.dashboard.requestsInFlight = []
             state.dashboard.requestIDs = [:]
+            state.dashboard.retryInvocations = [:]
+            state.dashboard.activeSessionID = nil
+            state.dashboard.awaitingInitialCatalog = false
+            state.dashboard.pendingCatalogRevision = nil
+            state.dashboard.hasAcceptedLiveCatalog = false
+            state.dashboard.liveStatusControlIDs = []
             state.dashboard.alert = nil
         }
         if let id = selectedID {
@@ -565,11 +596,14 @@ struct RemoteAppFeature {
                 state.dashboard.connectionState = .revoked
             } else if state.connectedMacIDs.contains(id) {
                 state.dashboard.connectionState = .authenticated
+                state.dashboard.activeSessionID = state.activeSessionID
             } else if state.dashboard.connectionState != .connecting {
                 state.dashboard.connectionState = .offline(nil)
+                state.dashboard.activeSessionID = nil
             }
         } else {
             state.dashboard.connectionState = .idle
+            state.dashboard.activeSessionID = nil
         }
     }
 

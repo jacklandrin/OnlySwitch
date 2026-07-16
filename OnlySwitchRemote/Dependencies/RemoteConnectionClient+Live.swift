@@ -13,6 +13,7 @@ extension RemoteConnectionClient {
         return Self(
             discover: { runtime.makeDiscoveryStream() },
             pair: { try await runtime.pair($0, code: $1, deviceName: $2) },
+            cancelPairing: { await runtime.cancelPairing() },
             select: { await runtime.select($0) },
             events: { runtime.makeConnectionEventStream() },
             snapshot: { await runtime.snapshot() },
@@ -94,6 +95,10 @@ actor RemoteLocalStateMutationCoordinator {
 }
 
 actor RemoteConnectionRuntime {
+    typealias ActionDeadline = @Sendable (
+        Duration,
+        @escaping @Sendable () async throws -> RemoteActionResult
+    ) async throws -> RemoteActionResult
     static let maximumCandidatesPerMac = 8
     static let maximumCandidatesGlobally = 64
     private nonisolated let discoveryHub = RemoteStreamHub<DiscoveryEvent>()
@@ -105,6 +110,9 @@ actor RemoteConnectionRuntime {
     private let catalogRequest: @Sendable (RemoteClientSession) async throws -> Void
     private let closeSession: @Sendable (RemoteClientSession) async -> Void
     private let reconnectStarted: @Sendable () async -> Void
+    private let actionTimeout: Duration
+    private let actionDeadline: ActionDeadline
+    private let pairingDurableCommitCompleted: @Sendable () async -> Void
     private let localStateMutations = RemoteLocalStateMutationCoordinator()
     private var browser: NWBrowser?
     private var browserRetryTask: Task<Void, Never>?
@@ -116,12 +124,41 @@ actor RemoteConnectionRuntime {
     private var sessionToken: UUID?
     private var pairingTask: Task<RemoteClientSession.PairingResult, Swift.Error>?
     private var pairingToken: UUID?
+    private var pairingCommitContext: PairingCommitContext?
     private struct PendingAuthenticatedSession: Sendable {
         let session: RemoteClientSession
         let sessionToken: UUID
         let pairingToken: UUID
         let generation: UInt64
         let macID: UUID
+    }
+
+    private actor PairingCommitContext {
+        let token: UUID
+        let macID: UUID
+        let candidateCredential: Data
+        private var previousCredential: Data?
+        private var hasRecordedPreviousCredential = false
+        private var persistenceSnapshot: RemotePairingPersistenceSnapshot?
+
+        init(token: UUID, macID: UUID, candidateCredential: Data) {
+            self.token = token
+            self.macID = macID
+            self.candidateCredential = candidateCredential
+        }
+
+        func recordPreviousCredential(_ credential: Data?) {
+            previousCredential = credential
+            hasRecordedPreviousCredential = true
+        }
+
+        func recordPersistenceSnapshot(_ snapshot: RemotePairingPersistenceSnapshot) {
+            persistenceSnapshot = snapshot
+        }
+
+        func previousState() -> (credential: Data?, hasCredential: Bool, persistence: RemotePairingPersistenceSnapshot?) {
+            (previousCredential, hasRecordedPreviousCredential, persistenceSnapshot)
+        }
     }
     private var pendingAuthenticatedSession: PendingAuthenticatedSession?
     enum LocalRevocationSource: Sendable { case live, offline }
@@ -137,12 +174,6 @@ actor RemoteConnectionRuntime {
     private var connectionTask: Task<Void, Never>?
     private var adoptingMacID: UUID?
     private var generation: UInt64 = 0
-    private struct PendingPairedMacMetadata: Sendable {
-        let value: PairedMac
-        let token: UInt64
-    }
-    private var pendingPairedMacMetadata: [UUID: PendingPairedMacMetadata] = [:]
-    private var pendingMetadataTokens: [UUID: UInt64] = [:]
     private var foregrounded = true
     private var foregroundLifecycleGeneration: UInt64 = 0
 
@@ -155,7 +186,12 @@ actor RemoteConnectionRuntime {
             try await $0.requestCatalog()
         },
         closeSession: @escaping @Sendable (RemoteClientSession) async -> Void = { await $0.close() },
-        reconnectStarted: @escaping @Sendable () async -> Void = {}
+        reconnectStarted: @escaping @Sendable () async -> Void = {},
+        pairingDurableCommitCompleted: @escaping @Sendable () async -> Void = {},
+        actionTimeout: Duration = .seconds(10),
+        actionDeadline: @escaping ActionDeadline = { duration, operation in
+            try await RemoteConnectionRuntime.withTimeout(duration, operation: operation)
+        }
     ) {
         self.persistence = persistence
         self.keychain = keychain
@@ -164,6 +200,9 @@ actor RemoteConnectionRuntime {
         self.catalogRequest = catalogRequest
         self.closeSession = closeSession
         self.reconnectStarted = reconnectStarted
+        self.pairingDurableCommitCompleted = pairingDurableCommitCompleted
+        self.actionTimeout = actionTimeout
+        self.actionDeadline = actionDeadline
     }
 
     nonisolated func makeDiscoveryStream() -> AsyncStream<DiscoveryEvent> {
@@ -200,28 +239,11 @@ actor RemoteConnectionRuntime {
             throw RemoteProtocolError(code: .upgradeRequired, message: "This Mac requires a compatible OnlySwitch version")
         }
         let cleanName = try Self.validatedDeviceName(deviceName)
-        pendingMetadataTokens[mac.id, default: 0] &+= 1
-        pendingPairedMacMetadata[mac.id] = nil
-        let metadataToken = pendingMetadataTokens[mac.id, default: 0]
+        await cancelPairing()
+        guard foregrounded else { throw CancellationError() }
         let deviceID = self.deviceID
-        generation &+= 1
-        let expectedGeneration = generation
-        connectionTask?.cancel()
-        connectionTask = nil
-        pairingTask?.cancel()
-        let priorSession = session
-        let priorPendingSession = pendingAuthenticatedSession?.session
-        session = nil
-        sessionToken = nil
-        pendingAuthenticatedSession = nil
-        selected = nil
         let pairingToken = UUID()
         self.pairingToken = pairingToken
-        if let priorSession { await closeSession(priorSession) }
-        if let priorPendingSession { await closeSession(priorPendingSession) }
-        guard Self.mayCommitPairing(activeToken: self.pairingToken, candidateToken: pairingToken, currentGeneration: generation, expectedGeneration: expectedGeneration, foregrounded: foregrounded) else {
-            throw CancellationError()
-        }
         let newSessionToken = UUID()
         let task = Task {
             try await Self.withTimeout(.seconds(15)) {
@@ -244,23 +266,30 @@ actor RemoteConnectionRuntime {
         pairingTask = task
         let result: RemoteClientSession.PairingResult
         do {
-            result = try await task.value
-        } catch {
-            if self.pairingToken == pairingToken {
-                pairingTask = nil
-                self.pairingToken = nil
+            result = try await withTaskCancellationHandler {
+                try await task.value
+            } onCancel: {
+                task.cancel()
+                Task { await self.cancelPairing(token: pairingToken) }
             }
+        } catch {
+            await cancelPairing(token: pairingToken)
             throw error
         }
         guard result.credential.count == 32 else {
             await result.session.close()
+            await cancelPairing(token: pairingToken)
             throw RemoteKeychainClient.Error.invalidCredentialLength
+        }
+        guard self.pairingToken == pairingToken, foregrounded, Task.isCancelled == false else {
+            await result.session.close()
+            throw CancellationError()
         }
         pendingAuthenticatedSession = PendingAuthenticatedSession(
             session: result.session,
             sessionToken: newSessionToken,
             pairingToken: pairingToken,
-            generation: expectedGeneration,
+            generation: generation,
             macID: mac.id
         )
         let value = PairedMac(
@@ -270,94 +299,121 @@ actor RemoteConnectionRuntime {
             lastConnectedAt: .now,
             requiresPairing: false
         )
-        var metadataError: Swift.Error?
-        let keychain = self.keychain
-        let persistence = self.persistence
-        let coordinator = localStateMutations
+        do {
+            try await catalogRequest(result.session)
+        } catch {
+            await cancelPairing(token: pairingToken)
+            throw error
+        }
+        guard self.pairingToken == pairingToken, foregrounded, Task.isCancelled == false else {
+            await cancelPairing(token: pairingToken)
+            throw CancellationError()
+        }
+
         let credential = result.credential
-        let commitTask = Task.detached {
-            try await coordinator.run {
+        let commitContext = PairingCommitContext(
+            token: pairingToken,
+            macID: mac.id,
+            candidateCredential: credential
+        )
+        pairingCommitContext = commitContext
+        do {
+            try await localStateMutations.run { [keychain, persistence] in
+                let previousCredential = try await keychain.loadCredential(mac.id)
+                await commitContext.recordPreviousCredential(previousCredential)
                 try await Self.saveCredentialAfterRemoteCommit(
                     mac.id,
                     credential: credential,
                     keychain: keychain
                 )
-                try await persistence.commitPairing(value)
-            }
-        }
-        do {
-            try await commitTask.value
-            if pendingMetadataTokens[mac.id, default: 0] == metadataToken {
-                pendingPairedMacMetadata[mac.id] = nil
+                let snapshot = try await persistence.commitPairingAndSelect(value)
+                await commitContext.recordPersistenceSnapshot(snapshot)
             }
         } catch {
-            guard (try? await keychain.loadCredential(mac.id)) == credential else {
-                await result.session.close()
-                if pendingAuthenticatedSession?.sessionToken == newSessionToken {
-                    pendingAuthenticatedSession = nil
-                }
-                if self.pairingToken == pairingToken {
-                    pairingTask = nil
-                    self.pairingToken = nil
-                }
-                throw error
-            }
-            metadataError = error
-            if pendingMetadataTokens[mac.id, default: 0] == metadataToken {
-                pendingPairedMacMetadata[mac.id] = .init(value: value, token: metadataToken)
-            }
+            await rollbackPairingCommit(commitContext)
+            await cancelPairing(token: pairingToken)
+            throw error
         }
-        guard pendingAuthenticatedSession?.sessionToken == newSessionToken,
-              pendingAuthenticatedSession?.pairingToken == pairingToken,
-              pendingAuthenticatedSession?.generation == expectedGeneration,
-              pendingAuthenticatedSession?.macID == mac.id,
-              Self.mayCommitPairing(
-            activeToken: self.pairingToken,
-            candidateToken: pairingToken,
-            currentGeneration: generation,
-            expectedGeneration: expectedGeneration,
-            foregrounded: foregrounded
-        ) else {
-            await result.session.close()
-            if pendingAuthenticatedSession?.sessionToken == newSessionToken {
-                pendingAuthenticatedSession = nil
-            }
-            if self.pairingToken == pairingToken {
-                pairingTask = nil
-                self.pairingToken = nil
-            }
-            if let metadataError { throw metadataError }
+        await pairingDurableCommitCompleted()
+        guard self.pairingToken == pairingToken,
+              pendingAuthenticatedSession?.sessionToken == newSessionToken,
+              foregrounded,
+              Task.isCancelled == false else {
+            await rollbackPairingCommit(commitContext)
+            await cancelPairing(token: pairingToken)
             throw CancellationError()
         }
+
+        generation &+= 1
+        connectionTask?.cancel()
+        connectionTask = nil
+        let previousSession = session
+        session = result.session
+        sessionToken = newSessionToken
+        selected = value
         pairingTask = nil
         self.pairingToken = nil
-        if pendingAuthenticatedSession?.sessionToken == newSessionToken {
-            pendingAuthenticatedSession = nil
-        }
-        await replaceSession(result.session, token: newSessionToken, selectedMac: value)
+        if pairingCommitContext === commitContext { pairingCommitContext = nil }
+        pendingAuthenticatedSession = nil
+        eventHub.yield(.sessionStarted(mac.id, newSessionToken))
         eventHub.yield(.authenticated(mac.id))
         result.session.startReceiving()
-        do {
-            try await catalogRequest(result.session)
-        } catch {
-            await result.session.close()
-            if Self.shouldClearSession(currentToken: sessionToken, failedToken: newSessionToken) {
-                eventHub.yield(.offline(mac.id, Self.safeMessage(error)))
-                session = nil
-                sessionToken = nil
-            }
-        }
-        if let metadataError { throw metadataError }
+        if let previousSession { await closeSession(previousSession) }
         return value
     }
 
-    func select(_ mac: PairedMac?) async {
-        generation &+= 1
-        let currentGeneration = generation
-        connectionTask?.cancel()
+    func cancelPairing() async {
+        guard let pairingToken else { return }
+        await cancelPairing(token: pairingToken)
+    }
+
+    private func cancelPairing(token: UUID) async {
+        guard pairingToken == token else { return }
         pairingTask?.cancel()
         pairingTask = nil
         pairingToken = nil
+        let candidate = pendingAuthenticatedSession?.pairingToken == token
+            ? pendingAuthenticatedSession?.session
+            : nil
+        if pendingAuthenticatedSession?.pairingToken == token {
+            pendingAuthenticatedSession = nil
+        }
+        if let candidate { await closeSession(candidate) }
+        if let context = pairingCommitContext, context.token == token {
+            await rollbackPairingCommit(context)
+            if pairingCommitContext === context { pairingCommitContext = nil }
+        }
+    }
+
+    private func rollbackPairingCommit(_ context: PairingCommitContext) async {
+        let keychain = self.keychain
+        let persistence = self.persistence
+        try? await localStateMutations.run {
+            let previous = await context.previousState()
+            guard previous.hasCredential else { return }
+            let currentCredential = try await keychain.loadCredential(context.macID)
+            if currentCredential == context.candidateCredential {
+                guard try await keychain.deleteCredentialIfMatches(
+                    context.macID,
+                    context.candidateCredential
+                ) else { return }
+                if let credential = previous.credential {
+                    try await keychain.saveCredential(context.macID, credential)
+                }
+            } else if currentCredential != previous.credential {
+                return
+            }
+            if let snapshot = previous.persistence {
+                try await persistence.restorePairingSnapshot(context.macID, snapshot)
+            }
+        }
+    }
+
+    func select(_ mac: PairedMac?) async {
+        await cancelPairing()
+        generation &+= 1
+        let currentGeneration = generation
+        connectionTask?.cancel()
         connectionTask = nil
         let previousSession = session
         let previousPendingSession = pendingAuthenticatedSession?.session
@@ -383,7 +439,11 @@ actor RemoteConnectionRuntime {
     }
 
     func snapshot() -> RemoteConnectionSnapshot {
-        .init(selectedMacID: selected?.id, authenticatedMacID: session == nil ? nil : selected?.id)
+        .init(
+            selectedMacID: selected?.id,
+            authenticatedMacID: session == nil ? nil : selected?.id,
+            authenticatedSessionID: session == nil ? nil : sessionToken
+        )
     }
 
     func adoptPairedMac(_ mac: PairedMac) async -> RemotePairAdoptionResult {
@@ -401,8 +461,7 @@ actor RemoteConnectionRuntime {
     }
 
     func forgetMac(_ id: UUID) async throws {
-        pendingMetadataTokens[id, default: 0] &+= 1
-        pendingPairedMacMetadata[id] = nil
+        await cancelPairing()
         let coordinator = localStateMutations
         try await coordinator.run { [weak self] in
             guard let self else { throw CancellationError() }
@@ -444,9 +503,14 @@ actor RemoteConnectionRuntime {
         try await session.subscribe(ids)
     }
 
-    func send(_ request: RemoteActionRequest) async throws -> RemoteActionResult {
-        guard let session else { throw RemoteProtocolError(code: .authenticationFailed, message: "Mac is offline") }
-        return try await session.send(request)
+    func send(_ invocation: RemoteActionInvocation) async throws -> RemoteActionResult {
+        guard selected?.id == invocation.macID,
+              sessionToken == invocation.sessionID,
+              let session
+        else { throw RemoteProtocolError(code: .authenticationFailed, message: "The selected Mac session changed") }
+        return try await actionDeadline(actionTimeout) {
+            try await session.send(invocation.request)
+        }
     }
 
     func setForegrounded(_ value: Bool) async {
@@ -454,12 +518,10 @@ actor RemoteConnectionRuntime {
         let lifecycleGeneration = foregroundLifecycleGeneration
         foregrounded = value
         guard value else {
+            await cancelPairing()
             generation &+= 1
             connectionTask?.cancel()
-            pairingTask?.cancel()
             connectionTask = nil
-            pairingTask = nil
-            pairingToken = nil
             let detachedSession = session
             let detachedPendingSession = pendingAuthenticatedSession?.session
             session = nil
@@ -478,7 +540,6 @@ actor RemoteConnectionRuntime {
             return
         }
         startDiscovery()
-        await retryPendingMetadata()
         guard foregroundLifecycleGeneration == lifecycleGeneration, foregrounded else { return }
         if let selected, session == nil { await select(selected) }
     }
@@ -564,6 +625,7 @@ actor RemoteConnectionRuntime {
                     selected?.lastEndpointDescription,
                     selected?.lastConnectedAt
                 )
+                eventHub.yield(.sessionStarted(mac.id, newSessionToken))
                 eventHub.yield(.authenticated(mac.id))
                 connected.startReceiving()
                 do {
@@ -608,10 +670,8 @@ actor RemoteConnectionRuntime {
             generation &+= 1
             let revocationGeneration = generation
             connectionTask?.cancel()
-            pairingTask?.cancel()
             connectionTask = nil
-            pairingTask = nil
-            pairingToken = nil
+            await cancelPairing()
             let revokedPendingSession = pendingAuthenticatedSession?.session
             pendingAuthenticatedSession = nil
             session = nil
@@ -641,19 +701,49 @@ actor RemoteConnectionRuntime {
             try? await persistence.saveCatalog(macID, revision, controls)
             eventHub.yield(.catalog(macID, revision, controls))
         case let .statusSnapshot(statuses):
-            try? await persistence.saveStatuses(macID, statuses)
-            for status in statuses { eventHub.yield(.status(macID, status)) }
+            try? await persistence.replaceStatusSnapshot(macID, statuses)
+            eventHub.yield(.statusSnapshot(macID, statuses))
         case let .statusChanged(status):
             try? await persistence.mergeStatus(macID, status)
             eventHub.yield(.status(macID, status))
         case let .actionResult(result):
             eventHub.yield(.action(macID, result))
         case let .catalogChanged(revision):
-            eventHub.yield(.catalog(macID, revision, []))
-            try? await session?.requestCatalog()
+            eventHub.yield(.catalogInvalidated(macID, revision))
+            guard let activeSession = session else { return }
+            do {
+                try await catalogRequest(activeSession)
+            } catch {
+                await recoverFromCatalogRefreshFailure(
+                    macID: macID,
+                    sessionToken: token,
+                    error: error
+                )
+            }
         default:
             break
         }
+    }
+
+    private func recoverFromCatalogRefreshFailure(
+        macID: UUID,
+        sessionToken token: UUID,
+        error: Swift.Error
+    ) async {
+        guard foregrounded,
+              Self.isCurrentSession(
+                  selectedMacID: selected?.id,
+                  currentToken: sessionToken,
+                  eventMacID: macID,
+                  eventToken: token
+              ),
+              let failedSession = session
+        else { return }
+        session = nil
+        sessionToken = nil
+        eventHub.yield(.offline(macID, Self.safeMessage(error) ?? "Catalog refresh failed"))
+        await closeSession(failedSession)
+        if let selected { await select(selected) }
     }
 
     private func sessionDisconnected(macID: UUID, sessionToken token: UUID, error: Swift.Error) async {
@@ -744,30 +834,6 @@ actor RemoteConnectionRuntime {
         }
         guard let lastError else { throw CancellationError() }
         throw lastError
-    }
-
-    private func retryPendingMetadata() async {
-        for (id, entry) in pendingPairedMacMetadata {
-            let persistence = self.persistence
-            let coordinator = localStateMutations
-            let committed = try? await coordinator.run { [weak self] in
-                guard await self?.pendingMetadataIsCurrent(id: id, token: entry.token) == true,
-                      await persistence.isMacTombstoned(id) == false else {
-                    return false
-                }
-                try await persistence.commitPairing(entry.value)
-                return true
-            }
-            if committed == true,
-               pendingMetadataIsCurrent(id: id, token: entry.token) {
-                pendingPairedMacMetadata[id] = nil
-            }
-        }
-    }
-
-    private func pendingMetadataIsCurrent(id: UUID, token: UInt64) -> Bool {
-        pendingMetadataTokens[id, default: 0] == token
-            && pendingPairedMacMetadata[id]?.token == token
     }
 
     private func updateDiscovery(_ results: Set<NWBrowser.Result>) async {

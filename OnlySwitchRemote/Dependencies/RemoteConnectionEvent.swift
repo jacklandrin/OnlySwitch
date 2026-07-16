@@ -11,10 +11,13 @@ struct DiscoveredMac: Equatable, Identifiable, Sendable {
 
 enum RemoteConnectionEvent: Equatable, Sendable {
     case connecting(UUID)
+    case sessionStarted(UUID, UUID)
     case authenticated(UUID)
     case offline(UUID, String?)
     case revoked(UUID)
     case catalog(UUID, UInt64, [RemoteControlDescriptor])
+    case catalogInvalidated(UUID, UInt64)
+    case statusSnapshot(UUID, [RemoteControlStatus])
     case status(UUID, RemoteControlStatus)
     case action(UUID, RemoteActionResult)
 }

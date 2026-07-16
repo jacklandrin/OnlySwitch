@@ -333,6 +333,7 @@ struct PairingFeatureTests {
     }
 
     @Test func cancelDelegateDismissesAndCancelsInFlightPairing() async throws {
+        let transportCancellations = LockIsolated(0)
         let (started, startedContinuation) = AsyncStream.makeStream(of: Void.self, bufferingPolicy: .bufferingOldest(1))
         let (gate, gateContinuation) = AsyncStream.makeStream(of: Void.self)
         let (cancelled, cancelledContinuation) = AsyncStream.makeStream(of: Void.self, bufferingPolicy: .bufferingOldest(1))
@@ -341,6 +342,7 @@ struct PairingFeatureTests {
         let store = TestStore(initialState: state) {
             SettingsFeature()
         } withDependencies: {
+            $0.remoteConnection.cancelPairing = { transportCancellations.withValue { $0 += 1 } }
             $0.remoteConnection.pair = { _, _, _ in
                 startedContinuation.yield(())
                 for await _ in gate { break }
@@ -371,6 +373,20 @@ struct PairingFeatureTests {
         cancelledContinuation.finish()
         await store.finish()
         #expect(store.state.pairing == nil)
+        #expect(transportCancellations.value == 1)
+    }
+
+    @Test func interactivePairingDismissCancelsTransportTransaction() async {
+        let transportCancellations = LockIsolated(0)
+        var state = SettingsFeature.State(isSetupRequired: false)
+        state.pairing = PairingFeature.State()
+        let store = TestStore(initialState: state) { SettingsFeature() } withDependencies: {
+            $0.remoteConnection.cancelPairing = { transportCancellations.withValue { $0 += 1 } }
+        }
+
+        await store.send(.pairing(.dismiss)) { $0.pairing = nil }
+        await store.finish()
+        #expect(transportCancellations.value == 1)
     }
 
     private func discovered(name: String = "Studio", port: UInt16 = 9_000) -> DiscoveredMac {

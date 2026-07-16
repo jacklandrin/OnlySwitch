@@ -38,6 +38,7 @@ struct RemoteAppFeatureTests {
         }
         await store.receive(.dashboard(.connectionEvent(.status(studio.id, current)))) {
             $0.dashboard.statuses[.darkMode] = .init(value: current, isStale: false)
+            $0.dashboard.liveStatusControlIDs = [.darkMode]
         }
     }
 
@@ -257,7 +258,7 @@ struct RemoteAppFeatureTests {
         let pathID = try #require(state.path.ids.last)
         let subscriptions = DashboardSubscriptionRecorder()
         let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
-            $0.remoteConnection.subscribe = { try await subscriptions.record($0) }
+            $0.remoteConnection.subscribe = { await subscriptions.record($0) }
         }
 
         await store.send(.path(.element(
@@ -295,6 +296,7 @@ struct RemoteAppFeatureTests {
     }
 
     @Test func alreadyAuthenticatedSnapshotSeedsConnectedStateBeforeSettingsOpens() async {
+        let sessionID = UUID(uuidString: "00000000-0000-0000-0000-000000000103")!
         var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
         state.pairedMacs = [studio]
         state.selectedMacID = studio.id
@@ -302,9 +304,11 @@ struct RemoteAppFeatureTests {
 
         await store.send(.connectionSnapshotLoaded(.init(
             selectedMacID: studio.id,
-            authenticatedMacID: studio.id
+            authenticatedMacID: studio.id,
+            authenticatedSessionID: sessionID
         ))) {
             $0.connectedMacIDs = [studio.id]
+            $0.activeSessionID = sessionID
         }
         await store.send(.settingsButtonTapped) {
             $0.path.append(.settings(.init(
@@ -621,6 +625,46 @@ struct RemoteAppFeatureTests {
         }
     }
 
+    @Test func removingLastMacResetsActiveDashboardSession() async throws {
+        let sessionID = UUID(uuidString: "00000000-0000-0000-0000-000000000701")!
+        let requestID = UUID(uuidString: "00000000-0000-0000-0000-000000000702")!
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.activeSessionID = sessionID
+        state.dashboard = .init(
+            pairedMacs: [studio],
+            selectedMacID: studio.id,
+            connectionState: .authenticated,
+            isActive: true
+        )
+        state.dashboard.activeSessionID = sessionID
+        state.dashboard.requestsInFlight = [.darkMode]
+        state.dashboard.requestIDs = [.darkMode: requestID]
+        state.path.append(.settings(.init(
+            isSetupRequired: false,
+            pairedMacs: [studio],
+            selectedMacID: studio.id
+        )))
+        let pathID = try #require(state.path.ids.last)
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.saveAppState = { _ in }
+            $0.remoteConnection.select = { _ in }
+        }
+        store.exhaustivity = .off(showSkippedAssertions: false)
+
+        await store.send(.path(.element(
+            id: pathID,
+            action: .settings(.delegate(.allMacsRemoved))
+        )))
+
+        #expect(store.state.dashboard.selectedMacID == nil)
+        #expect(store.state.dashboard.connectionState == .idle)
+        #expect(store.state.dashboard.activeSessionID == nil)
+        #expect(store.state.dashboard.requestsInFlight.isEmpty)
+        #expect(store.state.dashboard.requestIDs.isEmpty)
+    }
+
     @Test func attemptedNormalNavigationCannotReplaceRequiredSettingsOrPairingState() async {
         var state = RemoteAppFeature.State(hasCompletedInitialSetup: false)
         state.requiredSettings?.pairing = PairingFeature.State(code: "ABCDEFGHJKMN")
@@ -874,7 +918,7 @@ struct RemoteAppFeatureTests {
             RemoteAppFeature()
         } withDependencies: {
             $0.remotePersistence.loadPairedMacs = { try await loader.loadMacs() }
-            $0.remotePersistence.loadSelectedMacID = { await loader.selectedMacID }
+            $0.remotePersistence.loadSelectedMacID = { loader.selectedMacID }
             $0.remoteConnection.select = { _ in }
         }
 

@@ -10,6 +10,12 @@ struct RemoteAppPersistenceIntent: Equatable, Sendable {
     let hasCompletedInitialSetup: Bool
 }
 
+struct RemotePairingPersistenceSnapshot: Equatable, Sendable {
+    let previousMac: PairedMac?
+    let previousSelectedMacID: UUID?
+    let wasTombstoned: Bool
+}
+
 @DependencyClient
 struct RemotePersistenceClient: Sendable {
     var saveAppState: @Sendable (RemoteAppPersistenceIntent) async throws -> Void = { _ in
@@ -31,9 +37,16 @@ struct RemotePersistenceClient: Sendable {
     var saveCatalog: @Sendable (UUID, UInt64, [RemoteControlDescriptor]) async throws -> Void = { _, _, _ in throw RemoteDependencyError.unimplemented }
     var loadStatuses: @Sendable (UUID) async throws -> [RemoteControlStatus]? = { _ in nil }
     var saveStatuses: @Sendable (UUID, [RemoteControlStatus]) async throws -> Void = { _, _ in throw RemoteDependencyError.unimplemented }
+    var replaceStatusSnapshot: @Sendable (UUID, [RemoteControlStatus]) async throws -> Void = { _, _ in throw RemoteDependencyError.unimplemented }
     var mergeStatus: @Sendable (UUID, RemoteControlStatus) async throws -> Void = { _, _ in throw RemoteDependencyError.unimplemented }
     var markMacTombstoned: @Sendable (UUID) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
     var commitPairing: @Sendable (PairedMac) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
+    var commitPairingAndSelect: @Sendable (PairedMac) async throws -> RemotePairingPersistenceSnapshot = { _ in
+        throw RemoteDependencyError.unimplemented
+    }
+    var restorePairingSnapshot: @Sendable (UUID, RemotePairingPersistenceSnapshot) async throws -> Void = { _, _ in
+        throw RemoteDependencyError.unimplemented
+    }
     var isMacTombstoned: @Sendable (UUID) async -> Bool = { _ in false }
     var forgetMac: @Sendable (UUID) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
 }
@@ -63,9 +76,12 @@ extension RemotePersistenceClient {
             saveCatalog: { await store.setCatalog(.init(revision: $1, controls: $2), for: $0) },
             loadStatuses: { await store.loadStatuses($0) },
             saveStatuses: { await store.mergeSnapshot($1, for: $0) },
+            replaceStatusSnapshot: { await store.setStatuses($1, for: $0) },
             mergeStatus: { await store.mergeStatus($1, for: $0) },
             markMacTombstoned: { await store.markTombstoned($0) },
             commitPairing: { await store.commitPairing($0) },
+            commitPairingAndSelect: { await store.commitPairingAndSelect($0) },
+            restorePairingSnapshot: { await store.restorePairingSnapshot(macID: $0, snapshot: $1) },
             isMacTombstoned: { await store.tombstones.contains($0) },
             forgetMac: { await store.forget($0) }
         )
@@ -97,9 +113,12 @@ extension RemotePersistenceClient {
             saveCatalog: { try await store.save(RemoteCatalogCache(revision: $1, controls: $2), macID: $0, name: "catalog.json") },
             loadStatuses: { try await store.load([RemoteControlStatus].self, macID: $0, name: "statuses.json") },
             saveStatuses: { try await store.mergeStatusSnapshot($1, macID: $0) },
+            replaceStatusSnapshot: { try await store.save($1, macID: $0, name: "statuses.json") },
             mergeStatus: { try await store.mergeStatus($1, macID: $0) },
             markMacTombstoned: { await store.markTombstoned($0) },
             commitPairing: { try await store.commitPairing($0) },
+            commitPairingAndSelect: { try await store.commitPairingAndSelect($0) },
+            restorePairingSnapshot: { try await store.restorePairingSnapshot(macID: $0, snapshot: $1) },
             isMacTombstoned: { await store.isTombstoned($0) },
             forgetMac: { id in
                 await store.markTombstoned(id)
@@ -225,6 +244,28 @@ private actor InMemoryRemotePersistenceStore {
         tombstones.remove(mac.id)
         pairedMacs.removeAll { $0.id == mac.id }
         pairedMacs.append(mac)
+    }
+
+    func commitPairingAndSelect(_ mac: PairedMac) -> RemotePairingPersistenceSnapshot {
+        let snapshot = RemotePairingPersistenceSnapshot(
+            previousMac: pairedMacs.first { $0.id == mac.id },
+            previousSelectedMacID: selectedMacID,
+            wasTombstoned: tombstones.contains(mac.id)
+        )
+        commitPairing(mac)
+        selectedMacID = mac.id
+        return snapshot
+    }
+
+    func restorePairingSnapshot(macID: UUID, snapshot: RemotePairingPersistenceSnapshot) {
+        pairedMacs.removeAll { $0.id == macID }
+        if snapshot.wasTombstoned {
+            tombstones.insert(macID)
+        } else {
+            tombstones.remove(macID)
+            if let previousMac = snapshot.previousMac { pairedMacs.append(previousMac) }
+        }
+        selectedMacID = snapshot.previousSelectedMacID
     }
 }
 
@@ -380,6 +421,33 @@ actor RemoteFilePersistenceStore {
             if wasTombstoned { tombstones.insert(mac.id) }
             throw error
         }
+    }
+
+    func commitPairingAndSelect(_ mac: PairedMac) throws -> RemotePairingPersistenceSnapshot {
+        let snapshot = RemotePairingPersistenceSnapshot(
+            previousMac: try loadPairedMacs().first { $0.id == mac.id },
+            previousSelectedMacID: loadSelectedMacID(),
+            wasTombstoned: tombstones.contains(mac.id)
+        )
+        try commitPairing(mac)
+        saveSelectedMacID(mac.id)
+        return snapshot
+    }
+
+    func restorePairingSnapshot(
+        macID: UUID,
+        snapshot: RemotePairingPersistenceSnapshot
+    ) throws {
+        var macs = try loadPairedMacs()
+        macs.removeAll { $0.id == macID }
+        if snapshot.wasTombstoned {
+            tombstones.insert(macID)
+        } else {
+            tombstones.remove(macID)
+            if let previousMac = snapshot.previousMac { macs.append(previousMac) }
+        }
+        try savePairedMacs(macs)
+        saveSelectedMacID(snapshot.previousSelectedMacID)
     }
 
     private func directory(for id: UUID) -> URL {

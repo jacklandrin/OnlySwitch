@@ -447,6 +447,127 @@ struct RemotePeerDeadlineTests {
     }
 }
 
+struct RemoteCatalogMonitorTests {
+    @Test
+    func lazySnapshotStartsAtOneAndOrderOnlyChangesDoNotAdvanceRevision() async throws {
+        let source = CatalogSource([
+            Self.descriptor(id: .init(kind: .shortcut, value: "B"), available: true),
+            Self.descriptor(id: .init(kind: .shortcut, value: "A"), available: true),
+        ])
+        let monitor = RemoteCatalogMonitor(provider: await source.provider)
+
+        let first = try await monitor.current()
+        #expect(first.revision == 1)
+        #expect(first.controls.map(\.id.value) == ["A", "B"])
+
+        await source.set(first.controls.reversed())
+        #expect(try await monitor.refresh() == nil)
+        #expect(try await monitor.current().revision == 1)
+    }
+
+    @Test
+    func structuralChangeAdvancesRevisionOnceAndPublishesIt() async throws {
+        let id = RemoteControlID(kind: .builtIn, value: "2")
+        let source = CatalogSource([Self.descriptor(id: id, available: true)])
+        let monitor = RemoteCatalogMonitor(provider: await source.provider)
+        var changes = monitor.changes.makeAsyncIterator()
+        _ = try await monitor.current()
+
+        await source.set([Self.descriptor(id: id, available: false)])
+        let changed = try #require(try await monitor.refresh())
+        #expect(changed.revision == 2)
+        #expect(await changes.next() == changed)
+        #expect(try await monitor.refresh() == nil)
+    }
+
+    @Test
+    func pollingRunsOnlyWhileAuthenticatedSessionsExist() async throws {
+        let source = CatalogSource([])
+        let (ticks, tickContinuation) = AsyncStream.makeStream(of: Void.self)
+        let monitor = RemoteCatalogMonitor(
+            provider: await source.provider,
+            observeNotifications: false,
+            pollWait: { _ in
+                for await _ in ticks { return }
+                throw CancellationError()
+            }
+        )
+        _ = try await monitor.current()
+        #expect(await source.catalogCalls == 1)
+
+        await monitor.setAuthenticatedSessionCount(1)
+        tickContinuation.yield(())
+        await source.waitUntilCalls(2)
+        let authenticatedCalls = await source.catalogCalls
+        #expect(authenticatedCalls == 2)
+
+        await monitor.setAuthenticatedSessionCount(0)
+        tickContinuation.yield(())
+        #expect(await source.catalogCalls == authenticatedCalls)
+        tickContinuation.finish()
+    }
+
+    private static func descriptor(
+        id: RemoteControlID,
+        available: Bool
+    ) -> RemoteControlDescriptor {
+        .init(
+            id: id,
+            title: id.value,
+            behavior: .switch,
+            icon: .systemSymbol("switch.2"),
+            isAvailable: available,
+            unavailableReason: available ? nil : "Unavailable",
+            isDestructive: false,
+            supportsStatus: true,
+            supportsSecondaryInformation: false
+        )
+    }
+}
+
+private actor CatalogSource {
+    private var controls: [RemoteControlDescriptor]
+    private(set) var catalogCalls = 0
+    private var callWaiters: [(Int, CheckedContinuation<Void, Never>)] = []
+
+    init(_ controls: [RemoteControlDescriptor]) { self.controls = controls }
+
+    var provider: RemoteCatalogProvider {
+        RemoteCatalogProvider(
+            catalog: { [weak self] in await self?.load() ?? [] },
+            status: { id, revision in
+                RemoteControlStatus(
+                    id: id,
+                    isAvailable: true,
+                    unavailableReason: nil,
+                    isOn: nil,
+                    secondaryInformation: nil,
+                    isProcessing: false,
+                    revision: revision,
+                    updatedAt: .now
+                )
+            }
+        )
+    }
+
+    func set<S: Sequence>(_ controls: S) where S.Element == RemoteControlDescriptor {
+        self.controls = Array(controls)
+    }
+
+    private func load() -> [RemoteControlDescriptor] {
+        catalogCalls += 1
+        let ready = callWaiters.filter { catalogCalls >= $0.0 }
+        callWaiters.removeAll { catalogCalls >= $0.0 }
+        ready.forEach { $0.1.resume() }
+        return controls
+    }
+
+    func waitUntilCalls(_ count: Int) async {
+        guard catalogCalls < count else { return }
+        await withCheckedContinuation { callWaiters.append((count, $0)) }
+    }
+}
+
 struct RemoteStatusSchedulerTests {
     @Test
     func rejectsUnknownAndOversizedSubscriptionsWithoutCreatingRefreshes() async throws {

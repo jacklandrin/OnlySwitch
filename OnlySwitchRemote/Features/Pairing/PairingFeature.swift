@@ -138,7 +138,10 @@ struct PairingFeature {
                         state.pairingTargetID = nil
                         state.isPairing = false
                         state.issue = .selectedMacUnavailable
-                        return .cancel(id: CancelID.pairing)
+                        return .merge(
+                            .cancel(id: CancelID.pairing),
+                            .run { [connection] _ in await connection.cancelPairing() }
+                        )
                     }
                 }
                 return .none
@@ -220,7 +223,8 @@ struct PairingFeature {
                     state.selectedMacID = nil
                     return .merge(
                         .cancel(id: CancelID.discovery),
-                        .cancel(id: CancelID.pairing)
+                        .cancel(id: CancelID.pairing),
+                        .run { [connection] _ in await connection.cancelPairing() }
                     )
                 }
                 return .send(.task)
@@ -230,6 +234,7 @@ struct PairingFeature {
                 return .merge(
                     .cancel(id: CancelID.discovery),
                     .cancel(id: CancelID.pairing),
+                    .run { [connection] _ in await connection.cancelPairing() },
                     .send(.delegate(.cancelled))
                 )
 

@@ -56,6 +56,37 @@ struct RemotePersistenceClientTests {
         #expect(try await client.loadLayout(firstMac)?.order == [.mute])
     }
 
+    @Test func pairingTransactionAtomicallySelectsCandidateAndRestoresPreviousSelection() async throws {
+        let client = RemotePersistenceClient.inMemory()
+        let first = PairedMac(id: firstMac, displayName: "Studio", lastEndpointDescription: nil, lastConnectedAt: nil, requiresPairing: false)
+        let second = PairedMac(id: secondMac, displayName: "Laptop", lastEndpointDescription: nil, lastConnectedAt: nil, requiresPairing: false)
+        try await client.commitPairing(first)
+        try await client.saveSelectedMacID(firstMac)
+
+        let snapshot = try await client.commitPairingAndSelect(second)
+        #expect(snapshot.previousSelectedMacID == firstMac)
+        #expect(try await client.loadSelectedMacID() == secondMac)
+        #expect(Set(try await client.loadPairedMacs().map(\.id)) == [firstMac, secondMac])
+
+        try await client.restorePairingSnapshot(secondMac, snapshot)
+        #expect(try await client.loadSelectedMacID() == firstMac)
+        #expect(try await client.loadPairedMacs() == [first])
+    }
+
+    @Test func pairingTransactionRollbackRestoresCandidateTombstone() async throws {
+        let client = RemotePersistenceClient.inMemory()
+        let candidate = PairedMac(id: secondMac, displayName: "Laptop", lastEndpointDescription: nil, lastConnectedAt: nil, requiresPairing: false)
+        try await client.markMacTombstoned(secondMac)
+
+        let snapshot = try await client.commitPairingAndSelect(candidate)
+        #expect(await client.isMacTombstoned(secondMac) == false)
+        try await client.restorePairingSnapshot(secondMac, snapshot)
+
+        #expect(await client.isMacTombstoned(secondMac))
+        #expect(try await client.loadPairedMacs().isEmpty)
+        #expect(try await client.loadSelectedMacID() == nil)
+    }
+
     @Test func fileBackedTombstonePreventsLateCacheWritesFromRecreatingMacDirectory() async throws {
         let suite = "RemotePersistenceTombstoneTests-\(UUID().uuidString)"
         let defaults = try #require(UserDefaults(suiteName: suite))
@@ -194,6 +225,17 @@ struct RemotePersistenceClientTests {
         #expect(cached.isOn == true)
     }
 
+    @Test func newSessionSnapshotReplacesHigherRevisionCache() async throws {
+        let client = RemotePersistenceClient.inMemory()
+        try await client.saveStatuses(firstMac, [status(id: .darkMode, isOn: false, revision: 99)])
+
+        try await client.replaceStatusSnapshot(firstMac, [status(id: .darkMode, isOn: true, revision: 1)])
+
+        let cached = try #require(try await client.loadStatuses(firstMac)?.first)
+        #expect(cached.revision == 1)
+        #expect(cached.isOn == true)
+    }
+
     @Test func sharedStoreAtomicUpsertsDoNotClobberDifferentMacs() async throws {
         let suite = "RemotePersistenceAtomicTests-\(UUID().uuidString)"
         let defaults = try #require(UserDefaults(suiteName: suite))
@@ -209,7 +251,7 @@ struct RemotePersistenceClientTests {
 
         async let firstWrite: Void = gate.arriveAndWait { try await firstClient.upsertPairedMac(first) }
         async let secondWrite: Void = gate.arriveAndWait { try await secondClient.upsertPairedMac(second) }
-        try await (firstWrite, secondWrite)
+        _ = try await (firstWrite, secondWrite)
 
         #expect(Set(try await firstClient.loadPairedMacs().map(\.id)) == [firstMac, secondMac])
     }
@@ -234,7 +276,7 @@ struct RemotePersistenceClientTests {
 
         async let removal: Void = gate.arriveAndWait { try await client.removePairedMac(firstMac) }
         async let upsert: Void = gate.arriveAndWait { try await client.upsertPairedMac(second) }
-        try await (removal, upsert)
+        _ = try await (removal, upsert)
 
         #expect(try await client.loadPairedMacs().map(\.id) == [secondMac])
     }

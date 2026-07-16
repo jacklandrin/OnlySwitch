@@ -28,6 +28,8 @@ actor RemoteHost {
     private var sessions: [UUID: RemotePeerSession] = [:]
     private var lifecycle = RemoteHostLifecycle()
     private let statusScheduler: RemoteStatusScheduler
+    private let catalogMonitor: RemoteCatalogMonitor
+    private var catalogMonitorTask: Task<Void, Never>?
 
     nonisolated var events: AsyncStream<RemoteHostEvent> { eventStream }
 
@@ -64,6 +66,7 @@ actor RemoteHost {
         self.revocationPrepared = revocationPrepared
         self.authenticationResultSender = authenticationResultSender
         self.statusScheduler = RemoteStatusScheduler(provider: catalogProvider)
+        self.catalogMonitor = RemoteCatalogMonitor(provider: catalogProvider)
     }
 
     deinit {
@@ -72,6 +75,7 @@ actor RemoteHost {
 
     static func testing(
         catalog: [RemoteControlDescriptor],
+        catalogProvider injectedCatalogProvider: RemoteCatalogProvider? = nil,
         router: RemoteCommandRouter,
         pairingCode: String,
         peerDeadlines: RemotePeerDeadlines = .init(),
@@ -85,7 +89,7 @@ actor RemoteHost {
         },
         finalizeRepairObserver: @escaping @Sendable (UUID) -> Void = { _ in }
     ) -> RemoteHost {
-        let provider = RemoteCatalogProvider(
+        let fixedProvider = RemoteCatalogProvider(
             catalog: { catalog },
             status: { id, revision in
                 guard let descriptor = catalog.first(where: { $0.id == id }) else {
@@ -103,6 +107,7 @@ actor RemoteHost {
                 )
             }
         )
+        let provider = injectedCatalogProvider ?? fixedProvider
         return RemoteHost(
             credentialStore: .inMemory(finalizeRepairObserver: finalizeRepairObserver),
             catalogProvider: provider,
@@ -141,6 +146,9 @@ actor RemoteHost {
         eventContinuation.yield(.statusChanged(.stopped))
         for peer in peers { await peer.close() }
         await statusScheduler.stop()
+        catalogMonitorTask?.cancel()
+        catalogMonitorTask = nil
+        await catalogMonitor.stop()
     }
 
     func startPairing(expiresAt: Date = Date().addingTimeInterval(300)) -> PairingWindow {
@@ -171,6 +179,7 @@ actor RemoteHost {
             sessions.removeValue(forKey: id).map { (id, $0) }
         })
         eventContinuation.yield(.connectionCountChanged(lifecycle.authenticatedCount))
+        await catalogMonitor.setAuthenticatedSessionCount(lifecycle.authenticatedCount)
         let scheduler = statusScheduler
         let store = credentialStore
         try await Self.performRevocationCleanup(
@@ -219,11 +228,17 @@ actor RemoteHost {
         try await credentialStore.delete(deviceID, matchingCredential: credential)
     }
 
+    @discardableResult
+    func refreshCatalogForTesting() async throws -> RemoteCatalogSnapshot? {
+        try await catalogMonitor.refresh()
+    }
+
     private func startListener(
         configuration: RemoteHostConfiguration,
         advertise: Bool
     ) async throws -> NWEndpoint {
         if listener != nil { await stop() }
+        startCatalogObservationIfNeeded()
         let generation = lifecycle.beginStart()
         eventContinuation.yield(.statusChanged(.starting))
         do {
@@ -303,7 +318,7 @@ actor RemoteHost {
             macID: macID,
             macName: name,
             credentialStore: credentialStore,
-            catalogProvider: catalogProvider,
+            catalogSnapshot: { [catalogMonitor] in try await catalogMonitor.current() },
             router: router,
             pairingWindow: { [weak self] in await self?.activePairingWindow() },
             pairingFailed: { [weak self] in await self?.recordPairingFailure() },
@@ -407,6 +422,7 @@ actor RemoteHost {
             credentialExists: credentialExists
         ) else { return false }
         eventContinuation.yield(.connectionCountChanged(lifecycle.authenticatedCount))
+        await catalogMonitor.setAuthenticatedSessionCount(lifecycle.authenticatedCount)
         if let devices = try? await credentialStore.loadAll() {
             guard lifecycle.isAuthorized(
                 sessionID: sessionID,
@@ -428,6 +444,7 @@ actor RemoteHost {
         sessions.removeValue(forKey: id)
         await statusScheduler.remove(sessionID: id)
         if lifecycle.authenticatedCount != previousCount {
+            await catalogMonitor.setAuthenticatedSessionCount(lifecycle.authenticatedCount)
             eventContinuation.yield(.connectionCountChanged(lifecycle.authenticatedCount))
         }
     }
@@ -439,6 +456,7 @@ actor RemoteHost {
         await statusScheduler.remove(sessionID: id)
         await peer?.close()
         if lifecycle.authenticatedCount != previousCount {
+            await catalogMonitor.setAuthenticatedSessionCount(lifecycle.authenticatedCount)
             eventContinuation.yield(.connectionCountChanged(lifecycle.authenticatedCount))
         }
     }
@@ -455,6 +473,28 @@ actor RemoteHost {
         eventContinuation.yield(.statusChanged(.failed("Remote access could not start")))
         for peer in peers { await peer.close() }
         await statusScheduler.stop()
+        await catalogMonitor.setAuthenticatedSessionCount(0)
+    }
+
+    private func startCatalogObservationIfNeeded() {
+        guard catalogMonitorTask == nil else { return }
+        let changes = catalogMonitor.changes
+        catalogMonitorTask = Task { [weak self] in
+            for await snapshot in changes {
+                guard Task.isCancelled == false else { return }
+                await self?.broadcastCatalogChange(snapshot.revision)
+            }
+        }
+    }
+
+    private func broadcastCatalogChange(_ revision: UInt64) async {
+        for (id, peer) in Array(sessions) {
+            do {
+                try await peer.catalogDidChange(revision: revision)
+            } catch {
+                await evictSession(id)
+            }
+        }
     }
 
     var hasOwnedListener: Bool { listener != nil }

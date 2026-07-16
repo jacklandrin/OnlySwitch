@@ -16,6 +16,7 @@ actor RemoteHostTestClient {
     private var transcript: Data?
     private var crypto: RemoteSessionCrypto?
     private var credential: Data?
+    private(set) var authenticatedCatalogRevision: UInt64?
 
     static func connect(to endpoint: NWEndpoint, deviceID: UUID = UUID()) async throws -> RemoteHostTestClient {
         try await RemoteHostTestClient(endpoint: endpoint, deviceID: deviceID)
@@ -72,9 +73,10 @@ actor RemoteHostTestClient {
             )
             try await io.send(.encrypted(try sessionCrypto.seal(.authenticationProof(authentication))))
             guard case let .authenticationResult(authenticationResult) = try await receiveEncrypted(),
-                  case .success = authenticationResult else {
+                  case let .success(success) = authenticationResult else {
                 throw RemoteProtocolError(code: .authenticationFailed, message: "Authentication failed")
             }
+            authenticatedCatalogRevision = success.catalogRevision
         } catch let error as RemoteProtocolError {
             throw error
         } catch {
@@ -123,19 +125,25 @@ actor RemoteHostTestClient {
         }
         guard let frame = response.encrypted,
               case let .authenticationResult(result) = try crypto.open(frame),
-              case .success = result else {
+              case let .success(success) = result else {
             throw RemoteProtocolError(code: .authenticationFailed, message: "Authentication failed")
         }
         self.crypto = crypto
         self.credential = credential
+        authenticatedCatalogRevision = success.catalogRevision
         return .authenticated
     }
 
     func catalog() async throws -> [RemoteControlDescriptor] {
+        (try await catalogSnapshot()).controls
+    }
+
+    func catalogSnapshot() async throws -> RemoteCatalogSnapshot {
         try await sendEncrypted(.catalogRequest)
         while true {
             switch try await receiveEncrypted() {
-            case let .catalogSnapshot(_, controls): return controls
+            case let .catalogSnapshot(revision, controls):
+                return RemoteCatalogSnapshot(revision: revision, controls: controls)
             case .statusChanged, .statusSnapshot: continue
             default: throw RemoteProtocolError(code: .invalidFrame, message: "Unexpected catalog response")
             }

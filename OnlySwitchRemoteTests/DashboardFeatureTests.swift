@@ -14,6 +14,30 @@ struct DashboardFeatureTests {
         requiresPairing: false
     )
 
+    @Test func serverProcessingStatusIsAnnouncedAsWorking() {
+        let processing = RemoteControlStatus(
+            id: .darkMode,
+            isAvailable: true,
+            unavailableReason: nil,
+            isOn: false,
+            secondaryInformation: nil,
+            isProcessing: true,
+            revision: 1,
+            updatedAt: .now
+        )
+        let tile = ControlTileView(
+            descriptor: descriptor(id: .darkMode, title: "Dark Mode", behavior: .switch),
+            status: .init(value: processing, isStale: false),
+            macName: "Studio",
+            isRequestInFlight: false,
+            isEnabled: false,
+            reduceMotion: true,
+            action: {}
+        )
+
+        #expect(tile.accessibilityValue == "Working")
+    }
+
     @Test func taskSubscribesOnlyToSelectedTiles() async {
         let subscriptions = DashboardSubscriptionRecorder()
         let state = DashboardFeature.State(
@@ -26,7 +50,7 @@ struct DashboardFeatureTests {
             connectionState: .authenticated
         )
         let store = TestStore(initialState: state) { DashboardFeature() } withDependencies: {
-            $0.remoteConnection.subscribe = { try await subscriptions.record($0) }
+            $0.remoteConnection.subscribe = { await subscriptions.record($0) }
         }
 
         await store.send(.task) { $0.isActive = true }
@@ -46,10 +70,13 @@ struct DashboardFeatureTests {
             requestsInFlight: [],
             connectionState: .authenticated
         )
-        let store = TestStore(initialState: state) { DashboardFeature() }
+        let store = TestStore(initialState: state) { DashboardFeature() } withDependencies: {
+            $0.remoteConnection.subscribe = { _ in }
+        }
 
         await store.send(.connectionEvent(.offline(mac.id, "Mac went to sleep"))) {
             $0.connectionState = .offline("Mac went to sleep")
+            $0.activeSessionID = nil
             $0.statuses[.darkMode]?.isStale = true
         }
         #expect(!store.state.canSendActions)
@@ -112,6 +139,109 @@ struct DashboardFeatureTests {
         #expect(store.state.statuses[.darkMode]?.value == current)
     }
 
+    @Test func firstLiveSnapshotsOverrideHigherRevisionCacheForNewSession() async {
+        let sessionID = UUID(uuidString: "00000000-0000-0000-0000-000000000401")!
+        let cachedDescriptor = descriptor(id: .darkMode, title: "Cached Dark Mode", behavior: .switch)
+        let liveDescriptor = descriptor(id: .darkMode, title: "Live Dark Mode", behavior: .switch)
+        var state = makeState(
+            descriptor: cachedDescriptor,
+            status: status(id: .darkMode, isOn: false, revision: 99)
+        )
+        state.catalogRevision = 99
+        let liveStatus = status(id: .darkMode, isOn: true, revision: 1)
+        let store = TestStore(initialState: state) { DashboardFeature() }
+
+        await store.send(.connectionEvent(.sessionStarted(mac.id, sessionID))) {
+            $0.activeSessionID = sessionID
+            $0.awaitingInitialCatalog = true
+            $0.liveStatusControlIDs = []
+            $0.statuses[.darkMode]?.isStale = true
+        }
+        await store.send(.connectionEvent(.catalog(mac.id, 1, [liveDescriptor]))) {
+            $0.catalogRevision = 1
+            $0.descriptors = [liveDescriptor]
+            $0.awaitingInitialCatalog = false
+            $0.hasAcceptedLiveCatalog = true
+        }
+        await store.send(.connectionEvent(.statusSnapshot(mac.id, [liveStatus]))) {
+            $0.statuses[.darkMode] = .init(value: liveStatus, isStale: false)
+            $0.liveStatusControlIDs = [.darkMode]
+        }
+
+        await store.send(.connectionEvent(.catalog(mac.id, 1, [cachedDescriptor])))
+        await store.send(.connectionEvent(.status(mac.id, status(id: .darkMode, isOn: false, revision: 1))))
+        #expect(store.state.descriptors[id: .darkMode] == liveDescriptor)
+        #expect(store.state.statuses[.darkMode]?.value == liveStatus)
+    }
+
+    @Test func catalogInvalidationPreservesTilesUntilSameRevisionSnapshotArrives() async {
+        let current = descriptor(id: .darkMode, title: "Current", behavior: .switch)
+        let refreshed = descriptor(id: .darkMode, title: "Refreshed", behavior: .switch)
+        var state = makeState(descriptor: current, status: status(id: .darkMode, isOn: true, revision: 3))
+        state.catalogRevision = 3
+        state.awaitingInitialCatalog = false
+        let store = TestStore(initialState: state) { DashboardFeature() }
+
+        await store.send(.connectionEvent(.catalogInvalidated(mac.id, 4))) {
+            $0.pendingCatalogRevision = 4
+        }
+        #expect(store.state.descriptors[id: .darkMode] == current)
+        await store.send(.connectionEvent(.catalog(mac.id, 4, [refreshed]))) {
+            $0.catalogRevision = 4
+            $0.descriptors = [refreshed]
+            $0.pendingCatalogRevision = nil
+            $0.hasAcceptedLiveCatalog = true
+        }
+    }
+
+    @Test func offlineRecoveryClearsPendingCatalogRefresh() async {
+        var state = makeState(
+            descriptor: descriptor(id: .darkMode, title: "Dark Mode", behavior: .switch),
+            status: status(id: .darkMode, isOn: true, revision: 3)
+        )
+        state.catalogRevision = 3
+        state.pendingCatalogRevision = 4
+        let store = TestStore(initialState: state) { DashboardFeature() } withDependencies: {
+            $0.remoteConnection.subscribe = { _ in }
+        }
+
+        await store.send(.connectionEvent(.offline(mac.id, "Catalog refresh failed"))) {
+            $0.connectionState = .offline("Catalog refresh failed")
+            $0.activeSessionID = nil
+            $0.pendingCatalogRevision = nil
+            $0.statuses[.darkMode]?.isStale = true
+        }
+
+        #expect(store.state.canSendActions == false)
+        let newSessionID = UUID()
+        await store.send(.connectionEvent(.sessionStarted(mac.id, newSessionID))) {
+            $0.activeSessionID = newSessionID
+            $0.awaitingInitialCatalog = true
+            $0.hasAcceptedLiveCatalog = false
+            $0.liveStatusControlIDs = []
+        }
+        await store.send(.connectionEvent(.authenticated(mac.id))) {
+            $0.connectionState = .authenticated
+        }
+        await store.receive(.subscriptionStarted([.darkMode]))
+        await store.send(.connectionEvent(.catalog(mac.id, 4, Array(store.state.descriptors)))) {
+            $0.catalogRevision = 4
+            $0.awaitingInitialCatalog = false
+            $0.hasAcceptedLiveCatalog = true
+        }
+        await store.send(.connectionEvent(.statusSnapshot(mac.id, [
+            status(id: .darkMode, isOn: true, revision: 4),
+        ]))) {
+            $0.statuses[.darkMode] = .init(
+                value: status(id: .darkMode, isOn: true, revision: 4),
+                isStale: false
+            )
+            $0.liveStatusControlIDs = [.darkMode]
+        }
+        #expect(store.state.pendingCatalogRevision == nil)
+        #expect(store.state.canSendActions)
+    }
+
     @Test func newerPushedStatusIsAuthoritative() async {
         let state = makeState(
             descriptor: descriptor(id: .darkMode, title: "Dark Mode", behavior: .switch),
@@ -149,6 +279,116 @@ struct DashboardFeatureTests {
         #expect(store.state.statuses[.darkMode]?.value.isOn == false)
     }
 
+    @Test func timedOutActionRetriesOnlyAfterConfirmationWithSameRequestIdentity() async {
+        let requestID = UUID(uuidString: "00000000-0000-0000-0000-000000000402")!
+        let sent = DashboardActionRecorder()
+        let timeout = RemoteProtocolError(code: .requestTimedOut, message: "The Mac did not respond in time")
+        let state = makeState(
+            descriptor: descriptor(id: .emptyTrash, title: "Empty Trash", behavior: .button, destructive: true),
+            status: status(id: .emptyTrash, isOn: nil, revision: 1)
+        )
+        let store = TestStore(initialState: state) { DashboardFeature() } withDependencies: {
+            $0.uuid = UUIDGenerator { requestID }
+            $0.remoteConnection.send = {
+                _ = try await sent.send($0)
+                throw timeout
+            }
+        }
+
+        await store.send(.tileTapped(.emptyTrash)) {
+            $0.alert = .confirmDestructive(controlID: .emptyTrash, controlTitle: "Empty Trash", macName: "Studio")
+        }
+        await store.send(.alert(.presented(.confirmDestructive(.emptyTrash)))) {
+            $0.alert = nil
+            $0.requestsInFlight = [.emptyTrash]
+            $0.requestIDs[.emptyTrash] = requestID
+        }
+        let invocation = RemoteActionInvocation(
+            macID: mac.id,
+            sessionID: store.state.activeSessionID!,
+            request: .init(requestID: requestID, controlID: .emptyTrash, action: .trigger)
+        )
+        await store.receive(.actionCompleted(.emptyTrash, invocation, .failure(timeout))) {
+            $0.requestsInFlight = []
+            $0.requestIDs = [:]
+            $0.retryInvocations[.emptyTrash] = invocation
+            $0.alert = .actionTimedOut(controlID: .emptyTrash, destructive: true)
+        }
+        #expect(await sent.invocations == [invocation])
+
+        await store.send(.alert(.presented(.retryTimedOut(.emptyTrash)))) {
+            $0.alert = nil
+            $0.retryInvocations[.emptyTrash] = nil
+            $0.requestsInFlight = [.emptyTrash]
+            $0.requestIDs[.emptyTrash] = requestID
+        }
+        await store.receive(.actionCompleted(.emptyTrash, invocation, .failure(timeout))) {
+            $0.requestsInFlight = []
+            $0.requestIDs = [:]
+            $0.retryInvocations[.emptyTrash] = invocation
+            $0.alert = .actionTimedOut(controlID: .emptyTrash, destructive: true)
+        }
+        #expect(await sent.invocations == [invocation, invocation])
+    }
+
+    @Test func goingOfflineCancelsActiveActionAndIgnoresItsLateResponse() async {
+        let probe = DashboardActionCancellationProbe()
+        let requestID = UUID(uuidString: "00000000-0000-0000-0000-000000000403")!
+        let state = makeState(
+            descriptor: descriptor(id: .darkMode, title: "Dark Mode", behavior: .switch),
+            status: status(id: .darkMode, isOn: false, revision: 2)
+        )
+        let store = TestStore(initialState: state) { DashboardFeature() } withDependencies: {
+            $0.uuid = UUIDGenerator { requestID }
+            $0.remoteConnection.send = { try await probe.send($0) }
+        }
+
+        await store.send(.tileTapped(.darkMode)) {
+            $0.requestsInFlight = [.darkMode]
+            $0.requestIDs[.darkMode] = requestID
+        }
+        await probe.waitUntilStarted()
+        await store.send(.connectionEvent(.offline(mac.id, "Sleeping"))) {
+            $0.connectionState = .offline("Sleeping")
+            $0.activeSessionID = nil
+            $0.statuses[.darkMode]?.isStale = true
+            $0.requestsInFlight = []
+            $0.requestIDs = [:]
+        }
+        await probe.waitUntilCancelled()
+        #expect(await probe.wasCancelled)
+    }
+
+    @Test func switchingMacCancelsActiveAction() async {
+        let probe = DashboardActionCancellationProbe()
+        let requestID = UUID(uuidString: "00000000-0000-0000-0000-000000000405")!
+        let other = PairedMac(
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000202")!,
+            displayName: "Laptop",
+            lastEndpointDescription: nil,
+            lastConnectedAt: nil,
+            requiresPairing: false
+        )
+        let state = makeState(
+            descriptor: descriptor(id: .darkMode, title: "Dark Mode", behavior: .switch),
+            status: status(id: .darkMode, isOn: false, revision: 2)
+        )
+        let store = TestStore(initialState: state) { DashboardFeature() } withDependencies: {
+            $0.uuid = UUIDGenerator { requestID }
+            $0.remoteConnection.send = { try await probe.send($0) }
+            $0.remoteConnection.subscribe = { _ in }
+            $0.remotePersistence.loadLayout = { _ in nil }
+            $0.remotePersistence.loadCatalog = { _ in nil }
+            $0.remotePersistence.loadStatuses = { _ in nil }
+        }
+        store.exhaustivity = .off(showSkippedAssertions: false)
+
+        await store.send(.tileTapped(.darkMode))
+        await probe.waitUntilStarted()
+        await store.send(.synchronize([mac, other], other.id, .connecting))
+        #expect(await probe.cancellationObserved())
+    }
+
     @Test func anotherMacEventsCannotOverwriteSelectedMac() async {
         let otherID = UUID(uuidString: "00000000-0000-0000-0000-000000000202")!
         let current = status(id: .darkMode, isOn: false, revision: 2)
@@ -181,6 +421,96 @@ struct DashboardFeatureTests {
         }
         #expect(store.state.statuses[.darkMode] == .init(value: live, isStale: false))
         await store.receive(.subscriptionStarted([.darkMode]))
+    }
+
+    @Test func delayedHigherRevisionCacheCannotOverwriteNewSessionSnapshot() async {
+        let live = status(id: .darkMode, isOn: true, revision: 1)
+        let cached = status(id: .darkMode, isOn: false, revision: 99)
+        var state = makeState(
+            descriptor: descriptor(id: .darkMode, title: "Dark Mode", behavior: .switch),
+            status: status(id: .darkMode, isOn: false, revision: 88)
+        )
+        state.selectionGeneration = 2
+        state.activeSessionID = UUID(uuidString: "00000000-0000-0000-0000-000000000404")!
+        state.liveStatusControlIDs = []
+        let layout = MacDashboardLayout(macID: mac.id, selectedControlIDs: [.darkMode], order: [.darkMode])
+        let store = TestStore(initialState: state) { DashboardFeature() } withDependencies: {
+            $0.remoteConnection.subscribe = { _ in }
+        }
+
+        await store.send(.connectionEvent(.statusSnapshot(mac.id, [live]))) {
+            $0.statuses[.darkMode] = .init(value: live, isStale: false)
+            $0.liveStatusControlIDs = [.darkMode]
+        }
+        await store.send(.selectedDataLoaded(2, mac.id, .success(layout, nil, [cached])))
+        #expect(store.state.statuses[.darkMode]?.value == live)
+        await store.receive(.subscriptionStarted([.darkMode]))
+    }
+
+    @Test func delayedHigherRevisionCatalogCacheCannotOverwriteAcceptedSessionCatalog() async {
+        let sessionID = UUID(uuidString: "00000000-0000-0000-0000-000000000405")!
+        let liveDescriptor = descriptor(id: .darkMode, title: "Live Dark Mode", behavior: .switch)
+        let cachedDescriptor = descriptor(id: .darkMode, title: "Cached Dark Mode", behavior: .switch)
+        var state = makeState(
+            descriptor: cachedDescriptor,
+            status: status(id: .darkMode, isOn: true, revision: 1)
+        )
+        state.catalogRevision = 88
+        state.selectionGeneration = 2
+        state.hasAcceptedLiveCatalog = true
+        let layout = MacDashboardLayout(macID: mac.id, selectedControlIDs: [.darkMode], order: [.darkMode])
+        let cache = RemoteCatalogCache(revision: 99, controls: [cachedDescriptor])
+        let store = TestStore(initialState: state) { DashboardFeature() } withDependencies: {
+            $0.remoteConnection.subscribe = { _ in }
+        }
+
+        await store.send(.connectionEvent(.sessionStarted(mac.id, sessionID))) {
+            $0.activeSessionID = sessionID
+            $0.awaitingInitialCatalog = true
+            $0.hasAcceptedLiveCatalog = false
+            $0.liveStatusControlIDs = []
+            $0.statuses[.darkMode]?.isStale = true
+        }
+        await store.send(.connectionEvent(.catalog(mac.id, 1, [liveDescriptor]))) {
+            $0.catalogRevision = 1
+            $0.descriptors = [liveDescriptor]
+            $0.awaitingInitialCatalog = false
+            $0.hasAcceptedLiveCatalog = true
+        }
+        await store.send(.selectedDataLoaded(2, mac.id, .success(layout, cache, [])))
+
+        #expect(store.state.catalogRevision == 1)
+        #expect(store.state.descriptors[id: .darkMode] == liveDescriptor)
+        await store.receive(.subscriptionStarted([.darkMode]))
+    }
+
+    @Test func catalogRefreshBoundariesDisableActions() async {
+        let initialRecorder = DashboardActionRecorder()
+        var awaitingState = makeState(
+            descriptor: descriptor(id: .darkMode, title: "Dark Mode", behavior: .switch),
+            status: status(id: .darkMode, isOn: false, revision: 1)
+        )
+        awaitingState.awaitingInitialCatalog = true
+        let awaitingStore = TestStore(initialState: awaitingState) { DashboardFeature() } withDependencies: {
+            $0.remoteConnection.send = { try await initialRecorder.send($0) }
+        }
+
+        await awaitingStore.send(.tileTapped(.darkMode))
+        #expect(await initialRecorder.requests.isEmpty)
+
+        let invalidationRecorder = DashboardActionRecorder()
+        var invalidatedState = makeState(
+            descriptor: descriptor(id: .emptyTrash, title: "Empty Trash", behavior: .button, destructive: true),
+            status: status(id: .emptyTrash, isOn: nil, revision: 1)
+        )
+        invalidatedState.pendingCatalogRevision = 2
+        let invalidatedStore = TestStore(initialState: invalidatedState) { DashboardFeature() } withDependencies: {
+            $0.remoteConnection.send = { try await invalidationRecorder.send($0) }
+        }
+
+        await invalidatedStore.send(.tileTapped(.emptyTrash))
+        #expect(invalidatedStore.state.alert == nil)
+        #expect(await invalidationRecorder.requests.isEmpty)
     }
 
     @Test func delayedOlderCatalogCacheCannotOverwriteLiveCatalog() async {
@@ -257,7 +587,7 @@ struct DashboardFeatureTests {
         descriptor: RemoteControlDescriptor,
         status: RemoteControlStatus
     ) -> DashboardFeature.State {
-        .init(
+        var state = DashboardFeature.State(
             pairedMacs: [mac],
             selectedMacID: mac.id,
             descriptors: [descriptor],
@@ -266,6 +596,9 @@ struct DashboardFeatureTests {
             requestsInFlight: [],
             connectionState: .authenticated
         )
+        state.activeSessionID = UUID(uuidString: "00000000-0000-0000-0000-000000000400")!
+        state.liveStatusControlIDs = [descriptor.id]
+        return state
     }
 
     private func descriptor(
@@ -311,9 +644,39 @@ actor DashboardSubscriptionRecorder {
 }
 
 private actor DashboardActionRecorder {
-    private(set) var requests: [RemoteActionRequest] = []
-    func send(_ request: RemoteActionRequest) throws -> RemoteActionResult {
-        requests.append(request)
-        return .init(requestID: request.requestID, result: .success(nil))
+    private(set) var invocations: [RemoteActionInvocation] = []
+    var requests: [RemoteActionRequest] { invocations.map(\.request) }
+    func send(_ invocation: RemoteActionInvocation) throws -> RemoteActionResult {
+        invocations.append(invocation)
+        return .init(requestID: invocation.request.requestID, result: .success(nil))
+    }
+}
+
+private actor DashboardActionCancellationProbe {
+    private var started = false
+    private(set) var wasCancelled = false
+
+    func send(_ invocation: RemoteActionInvocation) async throws -> RemoteActionResult {
+        started = true
+        do {
+            try await Task.sleep(for: .seconds(60))
+            return .init(requestID: invocation.request.requestID, result: .success(nil))
+        } catch is CancellationError {
+            wasCancelled = true
+            throw CancellationError()
+        }
+    }
+
+    func waitUntilStarted() async {
+        while started == false { await Task.yield() }
+    }
+
+    func waitUntilCancelled() async {
+        while wasCancelled == false { await Task.yield() }
+    }
+
+    func cancellationObserved() async -> Bool {
+        for _ in 0..<100 where wasCancelled == false { await Task.yield() }
+        return wasCancelled
     }
 }

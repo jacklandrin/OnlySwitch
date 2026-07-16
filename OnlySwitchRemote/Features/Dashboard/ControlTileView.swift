@@ -96,10 +96,10 @@ struct ControlTileView: View {
         return nil
     }
 
-    private var accessibilityValue: String {
+    var accessibilityValue: String {
         if let unavailableReason { return String(localized: "Unavailable: \(unavailableReason)") }
         if status?.isStale == true { return String(localized: "Offline, showing last known status") }
-        if isRequestInFlight { return String(localized: "Working") }
+        if isRequestInFlight || status?.value.isProcessing == true { return String(localized: "Working") }
         if let isOn = status?.value.isOn { return isOn ? String(localized: "On") : String(localized: "Off") }
         return String(localized: "Ready")
     }

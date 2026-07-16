@@ -50,6 +50,61 @@ struct RemoteHostIntegrationTests {
     }
 
     @Test(.timeLimit(.minutes(1)))
+    func catalogChangesBroadcastOnlyAfterStructuralChangeAndRefreshUsesSameRevision() async throws {
+        let id = RemoteControlID(kind: .shortcut, value: "Morning")
+        let initial = RemoteControlDescriptor(
+            id: id,
+            title: "Morning",
+            behavior: .button,
+            icon: .systemSymbol("sunrise"),
+            isAvailable: true,
+            unavailableReason: nil,
+            isDestructive: false,
+            supportsStatus: false,
+            supportsSecondaryInformation: false
+        )
+        let changed = RemoteControlDescriptor(
+            id: id,
+            title: "Morning",
+            behavior: .button,
+            icon: .systemSymbol("sunrise"),
+            isAvailable: false,
+            unavailableReason: "Shortcut is unavailable",
+            isDestructive: false,
+            supportsStatus: false,
+            supportsSecondaryInformation: false
+        )
+        let source = IntegrationCatalogSource([initial])
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let host = RemoteHost.testing(
+            catalog: [],
+            catalogProvider: await source.provider,
+            router: router,
+            pairingCode: "ABCDEFGH2345"
+        )
+        let endpoint = try await host.startForTesting(port: 0)
+        defer { Task { await host.stop() } }
+        let client = try await RemoteHostTestClient.connect(to: endpoint)
+        try await client.pair(code: "ABCDEFGH2345")
+        #expect(await client.authenticatedCatalogRevision == 1)
+        #expect(try await client.catalogSnapshot() == .init(revision: 1, controls: [initial]))
+        _ = await host.startPairing()
+        let secondClient = try await RemoteHostTestClient.connect(to: endpoint)
+        try await secondClient.pair(code: "ABCDEFGH2345")
+        #expect(await secondClient.authenticatedCatalogRevision == 1)
+        #expect(try await secondClient.catalogSnapshot() == .init(revision: 1, controls: [initial]))
+
+        #expect(try await host.refreshCatalogForTesting() == nil)
+        await source.set([changed])
+        let snapshot = try #require(try await host.refreshCatalogForTesting())
+        #expect(snapshot.revision == 2)
+        #expect(try await client.nextMessage() == .catalogChanged(revision: 2))
+        #expect(try await secondClient.nextMessage() == .catalogChanged(revision: 2))
+        #expect(try await client.catalogSnapshot() == .init(revision: 2, controls: [changed]))
+        #expect(try await secondClient.catalogSnapshot() == .init(revision: 2, controls: [changed]))
+    }
+
+    @Test(.timeLimit(.minutes(1)))
     func wrongPairingProofIsRejected() async throws {
         let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
         let host = RemoteHost.testing(catalog: [], router: router, pairingCode: "ABCDEFGH2345")
@@ -190,6 +245,32 @@ struct RemoteHostIntegrationTests {
         #expect(boundary.events == [.sendInvoked, .sendReturned, .finalized])
     }
 
+}
+
+private actor IntegrationCatalogSource {
+    private var controls: [RemoteControlDescriptor]
+
+    init(_ controls: [RemoteControlDescriptor]) { self.controls = controls }
+
+    var provider: RemoteCatalogProvider {
+        RemoteCatalogProvider(
+            catalog: { [weak self] in await self?.controls ?? [] },
+            status: { id, revision in
+                RemoteControlStatus(
+                    id: id,
+                    isAvailable: true,
+                    unavailableReason: nil,
+                    isOn: nil,
+                    secondaryInformation: nil,
+                    isProcessing: false,
+                    revision: revision,
+                    updatedAt: .now
+                )
+            }
+        )
+    }
+
+    func set(_ controls: [RemoteControlDescriptor]) { self.controls = controls }
 }
 
 private enum AuthenticationResultSendFailure: Swift.Error { case injected }
