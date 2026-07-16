@@ -65,7 +65,21 @@ actor RemotePeerSession {
         _ operation: @escaping @Sendable () async throws -> Void
     ) async throws -> Void
 
-    enum State: Sendable { case awaitingHello, awaitingPairOrAuthentication, authenticated(UUID), closed }
+    private struct PendingPairing: Sendable {
+        let transactionID: UUID
+        let record: PairedRemoteDevice
+        let snapshot: RemotePairingSnapshot
+        let expiresAt: Date
+    }
+
+    enum State: Sendable {
+        case awaitingHello
+        case awaitingPairOrAuthentication
+        case provisional(UUID, UUID)
+        case committing(UUID, UUID)
+        case authenticated(UUID)
+        case closed
+    }
 
     let id: UUID
     private let io: RemoteConnectionIO
@@ -90,7 +104,8 @@ actor RemotePeerSession {
     private let deadlines: RemotePeerDeadlines
     private var state: State = .awaitingHello
     private var crypto: RemoteSessionCrypto?
-    private var pendingPairing: RemotePairingTransaction?
+    private var pendingPairing: PendingPairing?
+    private var authenticatedCredential: Data?
     private var negotiatedVersion: RemoteProtocolVersion?
 
     init(
@@ -213,59 +228,54 @@ actor RemotePeerSession {
         let transcript = try RemoteHandshake.transcript(client: client, server: server)
         let next = try await receiveHandshakePacket()
 
-        let credential: Data
         if next.kind == .plaintext, next.plaintext == .pairingRequest {
-            credential = try await completePairing(
+            guard negotiatedVersion.supportsTransactionalPairing else {
+                try? await io.send(.plaintext(.sessionError(.init(
+                    code: .upgradeRequired,
+                    message: "Transactional pairing requires protocol 1.2"
+                ))))
+                throw RemoteProtocolError(code: .upgradeRequired, message: "Transactional pairing requires protocol 1.2")
+            }
+            try await completePairing(
                 client: client,
                 serverKey: serverKey,
                 transcript: transcript
             )
-        } else {
-            guard let stored = try await credentialStore.load(client.deviceID) else {
-                if negotiatedVersion.supportsAuthenticatedRevocation,
-                   let verifier = try await credentialStore.loadRevocationVerifier(client.deviceID) {
-                    let proof = RemoteHandshake.revocationProof(verifier: verifier, transcript: transcript)
-                    try await io.send(.plaintext(.credentialRevocationProof(.init(
-                        deviceID: client.deviceID,
-                        proof: proof
-                    ))))
-                    throw RemoteProtocolError(code: .authenticationFailed, message: "Credential was revoked")
-                }
-                throw RemoteProtocolError(code: .authenticationFailed, message: "Pairing required")
-            }
-            credential = stored.credential
-            crypto = try Self.makeCrypto(
-                role: .server,
-                privateKey: serverKey,
-                peerKey: client.ephemeralPublicKey,
-                credential: credential,
-                transcript: transcript
-            )
-            try await authenticate(packet: next, client: client, credential: credential, transcript: transcript)
+            return
         }
 
-        if crypto == nil {
-            crypto = try Self.makeCrypto(
-                role: .server,
-                privateKey: serverKey,
-                peerKey: client.ephemeralPublicKey,
-                credential: credential,
-                transcript: transcript
-            )
-            try await authenticate(
-                packet: try await receiveHandshakePacket(),
-                client: client,
-                credential: credential,
-                transcript: transcript
-            )
+        guard let stored = try await credentialStore.load(client.deviceID) else {
+            if negotiatedVersion.supportsAuthenticatedRevocation,
+               let verifier = try await credentialStore.loadRevocationVerifier(client.deviceID) {
+                let proof = RemoteHandshake.revocationProof(verifier: verifier, transcript: transcript)
+                try await io.send(.plaintext(.credentialRevocationProof(.init(
+                    deviceID: client.deviceID,
+                    proof: proof
+                ))))
+                throw RemoteProtocolError(code: .authenticationFailed, message: "Credential was revoked")
+            }
+            throw RemoteProtocolError(code: .authenticationFailed, message: "Pairing required")
         }
+        crypto = try Self.makeCrypto(
+            role: .server,
+            privateKey: serverKey,
+            peerKey: client.ephemeralPublicKey,
+            credential: stored.credential,
+            transcript: transcript
+        )
+        try await authenticate(
+            packet: next,
+            client: client,
+            credential: stored.credential,
+            transcript: transcript
+        )
     }
 
     private func completePairing(
         client: ClientHello,
         serverKey: P256.KeyAgreement.PrivateKey,
         transcript: Data
-    ) async throws -> Data {
+    ) async throws {
         guard let window = await pairingWindow(), window.expiresAt > Date() else {
             throw RemoteProtocolError(code: .pairingExpired, message: "Pairing code expired")
         }
@@ -292,6 +302,9 @@ actor RemotePeerSession {
             await pairingFailed()
             throw RemoteProtocolError(code: .authenticationFailed, message: "Invalid pairing proof")
         }
+        guard let snapshot = await pairingSnapshot(client.deviceID) else {
+            throw RemoteProtocolError(code: .authenticationFailed, message: "Pairing was superseded")
+        }
         let credential = Self.randomData(count: 32)
         let record = PairedRemoteDevice(
             id: client.deviceID,
@@ -300,14 +313,25 @@ actor RemotePeerSession {
             createdAt: .now,
             lastConnectedAt: nil
         )
-        let transaction = try await RemotePairingTransaction.begin(
-            record: record,
-            credentialStore: credentialStore,
-            pairingSnapshot: pairingSnapshot,
-            consumePairing: { [consumePairing] in await consumePairing(window.code) }
+        let transactionID = UUID()
+        let expiresAt = min(window.expiresAt, Date().addingTimeInterval(30))
+        try await credentialStore.prepareReplacement(
+            record,
+            transactionID: transactionID,
+            expiresAt: expiresAt
         )
-        pendingPairing = transaction
-        guard await transaction.validate(validatePairing) else {
+        pendingPairing = .init(
+            transactionID: transactionID,
+            record: record,
+            snapshot: snapshot,
+            expiresAt: expiresAt
+        )
+        guard await consumePairing(window.code) else {
+            try await credentialStore.abortPrepared(transactionID)
+            pendingPairing = nil
+            throw RemoteProtocolError(code: .pairingExpired, message: "Pairing code expired")
+        }
+        guard await validatePairing(snapshot) else {
             await rollbackPendingPairingIfNeeded()
             throw RemoteProtocolError(code: .authenticationFailed, message: "Pairing was superseded")
         }
@@ -319,9 +343,37 @@ actor RemotePeerSession {
             credential: Data(window.code.utf8),
             transcript: transcript
         )
-        let protectedResult = try pairingCrypto.seal(.pairingResult(.success(.init(macID: macID, credential: credential))))
+        let catalog = try await catalogSnapshot()
+        let protectedResult = try pairingCrypto.seal(.pairingPrepared(.init(
+            transactionID: transactionID,
+            macID: macID,
+            credential: credential,
+            catalogRevision: catalog.revision,
+            expiresAt: expiresAt
+        )))
         try await io.send(.encrypted(protectedResult))
-        return credential
+        crypto = try Self.makeCrypto(
+            role: .server,
+            privateKey: serverKey,
+            peerKey: client.ephemeralPublicKey,
+            credential: credential,
+            transcript: transcript
+        )
+        let authenticationPacket = try await receiveHandshakePacket()
+        guard let crypto,
+              authenticationPacket.kind == .encrypted,
+              let frame = authenticationPacket.encrypted,
+              case let .authenticationProof(proof) = try crypto.open(frame),
+              proof.deviceID == client.deviceID,
+              RemoteHandshake.verifyAuthenticationProof(
+                proof.proof,
+                credential: credential,
+                transcript: transcript
+              ) else {
+            throw RemoteProtocolError(code: .authenticationFailed, message: "Authentication failed")
+        }
+        authenticatedCredential = credential
+        state = .provisional(client.deviceID, transactionID)
     }
 
     private func authenticate(
@@ -341,12 +393,6 @@ actor RemotePeerSession {
             credential: credential,
             at: .now
         )
-        let completedPendingPairing = pendingPairing != nil
-        if let pendingPairing {
-            guard await pendingPairing.commit(commitPairing) else {
-                throw RemoteProtocolError(code: .authenticationFailed, message: "Pairing was superseded")
-            }
-        }
         guard await authenticated(id, client.deviceID) else {
             throw RemoteProtocolError(code: .authenticationFailed, message: "Credential was revoked")
         }
@@ -357,61 +403,227 @@ actor RemotePeerSession {
         try await authenticationResultSender { [self] in
             try await sendEncrypted(authenticationResult)
         }
-        if completedPendingPairing {
-            try? await credentialStore.finalizeRepair(
-                deviceID: client.deviceID,
-                matchingCredential: credential
-            )
-        }
-        pendingPairing = nil
+        authenticatedCredential = credential
         state = .authenticated(client.deviceID)
     }
 
     private func rollbackPendingPairingIfNeeded() async {
         guard let pendingPairing else { return }
         self.pendingPairing = nil
-        await pendingPairing.rollback(
-            credentialStore: credentialStore,
-            rollbackPairingState: rollbackPairing,
-            currentEpoch: pairingEpoch
-        )
+        try? await credentialStore.abortPrepared(pendingPairing.transactionID)
+        _ = await rollbackPairing(pendingPairing.snapshot)
     }
 
     private func messageLoop() async throws {
-        while case .authenticated = state {
-            let packet = try await Self.withTimeout(deadlines.idle) { [io] in try await io.receive() }
-            guard packet.kind == .encrypted, let frame = packet.encrypted, let crypto else {
-                throw RemoteProtocolError(code: .authenticationFailed, message: "Encrypted session required")
-            }
-            let message = try crypto.open(frame)
-            switch message {
-            case .catalogRequest:
-                let snapshot = try await catalogSnapshot()
-                guard snapshot.controls.allSatisfy({ descriptor in
-                    if case let .png(data) = descriptor.icon { return data.count <= 256 * 1_024 }
-                    return true
-                }) else {
-                    throw RemoteProtocolError(code: .invalidFrame, message: "Catalog icon exceeds 256 KiB")
-                }
-                try await sendEncrypted(.catalogSnapshot(
-                    revision: snapshot.revision,
-                    controls: snapshot.controls
-                ))
-            case let .subscriptionUpdate(ids):
-                try await subscriptionsChanged(id, ids) { [weak self] status in
-                    guard let self else { throw CancellationError() }
-                    try await self.sendStatus(status)
-                }
-            case let .actionRequest(request):
-                let result = await router.perform(request)
-                try await sendEncrypted(.actionResult(result))
-                await refreshRequested(request.controlID)
-            case let .ping(nonce):
-                try await sendEncrypted(.pong(nonce))
-            default:
-                throw RemoteProtocolError(code: .invalidFrame, message: "Message is not valid in authenticated state")
-            }
+        while true {
+            if case .closed = state { return }
+            try await receiveAndHandleMessage()
         }
+    }
+
+    private func receiveAndHandleMessage() async throws {
+        let timeout: Duration
+        if let pendingPairing {
+            timeout = .seconds(max(0, pendingPairing.expiresAt.timeIntervalSinceNow))
+        } else {
+            timeout = deadlines.idle
+        }
+        let packet = try await Self.withTimeout(timeout) { [io] in try await io.receive() }
+        guard packet.kind == .encrypted, let frame = packet.encrypted, let crypto else {
+            throw RemoteProtocolError(code: .authenticationFailed, message: "Encrypted session required")
+        }
+        let message = try crypto.open(frame)
+        switch state {
+        case .provisional:
+            try await handleProvisional(message)
+        case .authenticated:
+            try await handleAuthenticated(message)
+        case .committing:
+            throw RemoteProtocolError(code: .authenticationFailed, message: "Pairing commit is in progress")
+        case .awaitingHello, .awaitingPairOrAuthentication, .closed:
+            return
+        }
+    }
+
+    private func handleProvisional(_ message: RemoteMessage) async throws {
+        guard let pendingPairing,
+              case let .provisional(deviceID, transactionID) = state,
+              deviceID == pendingPairing.record.id,
+              transactionID == pendingPairing.transactionID else {
+            throw RemoteProtocolError(code: .authenticationFailed, message: "Pairing transaction is unavailable")
+        }
+        switch message {
+        case .catalogRequest:
+            try await sendCatalog()
+        case let .pairingCommit(command):
+            try await commitProvisional(command, pendingPairing: pendingPairing)
+        case let .pairingAbort(command):
+            try await validate(command, pendingPairing: pendingPairing)
+            try await credentialStore.abortPrepared(command.transactionID)
+            let status = try await credentialStore.transactionStatus(command.transactionID)
+            try await sendEncrypted(.pairingStatus(.init(
+                transactionID: command.transactionID,
+                state: status
+            )))
+            await rollbackPendingPairingIfNeeded()
+            state = .closed
+        case let .pairingStatusRequest(command):
+            try await validate(command, pendingPairing: pendingPairing)
+            let status = try await credentialStore.transactionStatus(
+                command.transactionID,
+                deviceID: deviceID,
+                credential: pendingPairing.record.credential
+            )
+            try await sendEncrypted(.pairingStatus(.init(
+                transactionID: command.transactionID,
+                state: status
+            )))
+            if status == .aborted {
+                await rollbackPendingPairingIfNeeded()
+                state = .closed
+            }
+        case let .ping(nonce):
+            try await sendEncrypted(.pong(nonce))
+        default:
+            throw RemoteProtocolError(code: .authenticationFailed, message: "Provisional peers cannot execute controls")
+        }
+    }
+
+    private func commitProvisional(
+        _ command: PairingTransactionCommand,
+        pendingPairing: PendingPairing
+    ) async throws {
+        try await validate(command, pendingPairing: pendingPairing)
+        guard await validatePairing(pendingPairing.snapshot) else {
+            throw RemoteProtocolError(code: .authenticationFailed, message: "Pairing was superseded")
+        }
+        state = .committing(pendingPairing.record.id, command.transactionID)
+        let committed = try await credentialStore.finalizePrepared(command.transactionID)
+        guard await commitPairing(pendingPairing.snapshot) else {
+            throw RemoteProtocolError(code: .authenticationFailed, message: "Pairing was superseded")
+        }
+        self.pendingPairing = nil
+        _ = try await credentialStore.markConnected(
+            deviceID: committed.id,
+            credential: committed.credential,
+            at: .now
+        )
+        guard await authenticated(id, committed.id) else {
+            throw RemoteProtocolError(code: .authenticationFailed, message: "Credential was revoked")
+        }
+        guard case let .committing(confirmedDeviceID, confirmedTransactionID) = state,
+              confirmedDeviceID == committed.id,
+              confirmedTransactionID == command.transactionID else {
+            throw CancellationError()
+        }
+        try await authenticationResultSender { [self] in
+            try await sendEncrypted(.pairingCommitted(command))
+        }
+        guard case let .committing(committingDeviceID, committingTransactionID) = state,
+              committingDeviceID == committed.id,
+              committingTransactionID == command.transactionID else {
+            throw CancellationError()
+        }
+        try? await credentialStore.finalizeRepair(
+            deviceID: committed.id,
+            matchingCredential: committed.credential
+        )
+        guard case let .committing(finalizedDeviceID, finalizedTransactionID) = state,
+              finalizedDeviceID == committed.id,
+              finalizedTransactionID == command.transactionID else {
+            throw CancellationError()
+        }
+        authenticatedCredential = committed.credential
+        state = .authenticated(committed.id)
+    }
+
+    private func validate(
+        _ command: PairingTransactionCommand,
+        pendingPairing: PendingPairing
+    ) async throws {
+        guard command.transactionID == pendingPairing.transactionID else {
+            throw RemoteProtocolError(code: .authenticationFailed, message: "Pairing transaction is unavailable")
+        }
+        _ = try await credentialStore.transactionStatus(
+            command.transactionID,
+            deviceID: pendingPairing.record.id,
+            credential: pendingPairing.record.credential
+        )
+    }
+
+    private func handleAuthenticated(_ message: RemoteMessage) async throws {
+        guard case let .authenticated(deviceID) = state,
+              let authenticatedCredential else {
+            throw RemoteProtocolError(code: .authenticationFailed, message: "Authenticated session required")
+        }
+        switch message {
+        case .catalogRequest:
+            try await sendCatalog()
+        case let .subscriptionUpdate(ids):
+            try await subscriptionsChanged(id, ids) { [weak self] status in
+                guard let self else { throw CancellationError() }
+                try await self.sendStatus(status)
+            }
+        case let .actionRequest(request):
+            let result = await router.perform(request)
+            try await sendEncrypted(.actionResult(result))
+            await refreshRequested(request.controlID)
+        case let .pairingCommit(command):
+            let status = try await credentialStore.transactionStatus(
+                command.transactionID,
+                deviceID: deviceID,
+                credential: authenticatedCredential
+            )
+            guard status == .committed else {
+                throw RemoteProtocolError(code: .authenticationFailed, message: "Pairing transaction was not committed")
+            }
+            _ = try await credentialStore.finalizePrepared(command.transactionID)
+            try await sendEncrypted(.pairingCommitted(command))
+            try? await credentialStore.finalizeRepair(
+                deviceID: deviceID,
+                matchingCredential: authenticatedCredential
+            )
+        case let .pairingAbort(command):
+            _ = try await credentialStore.transactionStatus(
+                command.transactionID,
+                deviceID: deviceID,
+                credential: authenticatedCredential
+            )
+            try await credentialStore.abortPrepared(command.transactionID)
+            let status = try await credentialStore.transactionStatus(command.transactionID)
+            try await sendEncrypted(.pairingStatus(.init(
+                transactionID: command.transactionID,
+                state: status
+            )))
+        case let .pairingStatusRequest(command):
+            let status = try await credentialStore.transactionStatus(
+                command.transactionID,
+                deviceID: deviceID,
+                credential: authenticatedCredential
+            )
+            try await sendEncrypted(.pairingStatus(.init(
+                transactionID: command.transactionID,
+                state: status
+            )))
+        case let .ping(nonce):
+            try await sendEncrypted(.pong(nonce))
+        default:
+            throw RemoteProtocolError(code: .invalidFrame, message: "Message is not valid in authenticated state")
+        }
+    }
+
+    private func sendCatalog() async throws {
+        let snapshot = try await catalogSnapshot()
+        guard snapshot.controls.allSatisfy({ descriptor in
+            if case let .png(data) = descriptor.icon { return data.count <= 256 * 1_024 }
+            return true
+        }) else {
+            throw RemoteProtocolError(code: .invalidFrame, message: "Catalog icon exceeds 256 KiB")
+        }
+        try await sendEncrypted(.catalogSnapshot(
+            revision: snapshot.revision,
+            controls: snapshot.controls
+        ))
     }
 
     private func sendEncrypted(_ message: RemoteMessage) async throws {

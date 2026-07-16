@@ -1,4 +1,5 @@
 import Foundation
+import RemoteCore
 import RemoteTransport
 import Security
 
@@ -22,13 +23,39 @@ actor RemoteCredentialStore {
         case memory
     }
 
+    private struct PreparedReplacement: Codable, Sendable {
+        enum State: String, Codable, Sendable {
+            case prepared
+            case committing
+            case committed
+            case aborted
+        }
+
+        let transactionID: UUID
+        let candidate: PairedRemoteDevice
+        var previous: PairedRemoteDevice?
+        let expiresAt: Date
+        var state: State
+        var updatedAt: Date
+
+        var publicState: PairingTransactionState {
+            switch state {
+            case .prepared: .prepared
+            case .committing, .committed: .committed
+            case .aborted: .aborted
+            }
+        }
+    }
+
     private static let identityService = "jacklandrin.OnlySwitch.remote.identity"
     private static let identityAccount = "installation-id"
+    private static let maximumTransactions = 32
 
     private let backend: Backend
     private let finalizeRepairObserver: @Sendable (UUID) -> Void
     private var records: [UUID: PairedRemoteDevice] = [:]
     private var revocationVerifiers: [UUID: Data] = [:]
+    private var preparedReplacements: [UUID: PreparedReplacement] = [:]
     private var memoryInstallationID: UUID?
 
     private init(
@@ -69,6 +96,132 @@ actor RemoteCredentialStore {
         return previous
     }
 
+    func prepareReplacement(
+        _ candidate: PairedRemoteDevice,
+        transactionID: UUID,
+        expiresAt: Date
+    ) throws {
+        guard candidate.credential.count == 32 else { throw Error.invalidCredential }
+        try recoverExpiredTransactions(now: .now)
+        var transactions = try loadPreparedReplacements()
+
+        if let existing = transactions[transactionID] {
+            guard existing.candidate == candidate else { throw Self.authenticationFailure() }
+            guard existing.state != .aborted else { throw Self.authenticationFailure() }
+            return
+        }
+        guard transactions.values.contains(where: {
+            $0.candidate.id == candidate.id && ($0.state == .prepared || $0.state == .committing)
+        }) == false else {
+            throw Self.authenticationFailure()
+        }
+
+        try makeTransactionCapacity(in: &transactions)
+        let record = PreparedReplacement(
+            transactionID: transactionID,
+            candidate: candidate,
+            previous: try load(candidate.id),
+            expiresAt: expiresAt,
+            state: .prepared,
+            updatedAt: .now
+        )
+        try savePreparedReplacement(record)
+    }
+
+    @discardableResult
+    func finalizePrepared(_ transactionID: UUID) throws -> PairedRemoteDevice {
+        guard var transaction = try loadPreparedReplacement(transactionID) else {
+            throw Self.authenticationFailure()
+        }
+        switch transaction.state {
+        case .committed:
+            return transaction.candidate
+        case .aborted:
+            throw Self.authenticationFailure()
+        case .committing:
+            try save(transaction.candidate)
+            transaction.state = .committed
+            transaction.previous = nil
+            transaction.updatedAt = .now
+            try savePreparedReplacement(transaction)
+            return transaction.candidate
+        case .prepared:
+            guard transaction.expiresAt > Date() else {
+                transaction.state = .aborted
+                transaction.updatedAt = .now
+                try savePreparedReplacement(transaction)
+                throw Self.authenticationFailure()
+            }
+            transaction.state = .committing
+            transaction.updatedAt = .now
+            try savePreparedReplacement(transaction)
+            try save(transaction.candidate)
+            transaction.state = .committed
+            transaction.previous = nil
+            transaction.updatedAt = .now
+            try savePreparedReplacement(transaction)
+            return transaction.candidate
+        }
+    }
+
+    func abortPrepared(_ transactionID: UUID) throws {
+        guard var transaction = try loadPreparedReplacement(transactionID) else {
+            throw Self.authenticationFailure()
+        }
+        switch transaction.state {
+        case .prepared:
+            transaction.state = .aborted
+            transaction.updatedAt = .now
+            try savePreparedReplacement(transaction)
+        case .committing:
+            _ = try finalizePrepared(transactionID)
+        case .committed, .aborted:
+            return
+        }
+    }
+
+    func transactionStatus(_ transactionID: UUID) throws -> PairingTransactionState {
+        try recoverExpiredTransactions(now: .now)
+        guard let transaction = try loadPreparedReplacement(transactionID) else {
+            throw Self.authenticationFailure()
+        }
+        return transaction.publicState
+    }
+
+    func transactionStatus(
+        _ transactionID: UUID,
+        deviceID: UUID,
+        credential: Data
+    ) throws -> PairingTransactionState {
+        try recoverExpiredTransactions(now: .now)
+        guard let transaction = try loadPreparedReplacement(transactionID),
+              transaction.candidate.id == deviceID,
+              Self.constantTimeEqual(transaction.candidate.credential, credential) else {
+            throw Self.authenticationFailure()
+        }
+        return transaction.publicState
+    }
+
+    func recoverExpiredTransactions(now: Date = .now) throws {
+        let transactions = try loadPreparedReplacements()
+        for var transaction in transactions.values {
+            switch transaction.state {
+            case .prepared where transaction.expiresAt <= now:
+                transaction.state = .aborted
+                transaction.updatedAt = now
+                try savePreparedReplacement(transaction)
+            case .committing:
+                try save(transaction.candidate)
+                transaction.state = .committed
+                transaction.previous = nil
+                transaction.updatedAt = now
+                try savePreparedReplacement(transaction)
+            default:
+                break
+            }
+        }
+    }
+
     func rollbackReplacement(
         _ replacement: PairedRemoteDevice,
         previous: PairedRemoteDevice?,
@@ -99,6 +252,7 @@ actor RemoteCredentialStore {
     }
 
     func prepareRevocation(_ id: UUID, matchingCredential credential: Data? = nil) throws -> Data? {
+        try abortActiveReplacements(for: id)
         guard let current = try load(id) else { return nil }
         if let credential,
            Self.constantTimeEqual(current.credential, credential) == false {
@@ -107,6 +261,38 @@ actor RemoteCredentialStore {
         let verifier = RemoteHandshakeCrypto.revocationVerifier(credential: current.credential)
         try saveRevocationVerifier(verifier, for: id)
         return current.credential
+    }
+
+    func prepareAndDeleteForRevocation(_ id: UUID) throws -> Data? {
+        guard let credential = try prepareRevocation(id) else { return nil }
+        try delete(id, matchingCredential: credential)
+        return credential
+    }
+
+    private func abortActiveReplacements(for deviceID: UUID) throws {
+        let transactions = try loadPreparedReplacements()
+        for var transaction in transactions.values where transaction.candidate.id == deviceID {
+            switch transaction.state {
+            case .prepared:
+                transaction.state = .aborted
+                transaction.updatedAt = .now
+                try savePreparedReplacement(transaction)
+            case .committing:
+                if let current = try load(deviceID),
+                   Self.constantTimeEqual(current.credential, transaction.candidate.credential) {
+                    if let previous = transaction.previous {
+                        try save(previous)
+                    } else {
+                        try delete(deviceID)
+                    }
+                }
+                transaction.state = .aborted
+                transaction.updatedAt = .now
+                try savePreparedReplacement(transaction)
+            case .committed, .aborted:
+                break
+            }
+        }
     }
 
     func loadRevocationVerifier(_ id: UUID) throws -> Data? {
@@ -201,6 +387,90 @@ actor RemoteCredentialStore {
         return record
     }
 
+    private func loadPreparedReplacement(_ transactionID: UUID) throws -> PreparedReplacement? {
+        switch backend {
+        case .memory:
+            return preparedReplacements[transactionID]
+        case let .keychain(service):
+            guard let data = try Self.loadData(
+                service: Self.transactionService(for: service),
+                account: transactionID.uuidString
+            ) else { return nil }
+            return try Self.decodePreparedReplacement(data)
+        }
+    }
+
+    private func loadPreparedReplacements() throws -> [UUID: PreparedReplacement] {
+        switch backend {
+        case .memory:
+            return preparedReplacements
+        case let .keychain(service):
+            var query = Self.baseQuery(service: Self.transactionService(for: service))
+            query[kSecMatchLimit] = kSecMatchLimitAll
+            query[kSecReturnData] = true
+            var result: CFTypeRef?
+            let status = SecItemCopyMatching(query as CFDictionary, &result)
+            if status == errSecItemNotFound { return [:] }
+            guard status == errSecSuccess else { throw Error.keychain(status) }
+            let dataItems = (result as? [Data]) ?? (result as? Data).map { [$0] } ?? []
+            return try Dictionary(uniqueKeysWithValues: dataItems.map {
+                let record = try Self.decodePreparedReplacement($0)
+                return (record.transactionID, record)
+            })
+        }
+    }
+
+    private func savePreparedReplacement(_ transaction: PreparedReplacement) throws {
+        switch backend {
+        case .memory:
+            preparedReplacements[transaction.transactionID] = transaction
+        case let .keychain(service):
+            try Self.upsert(
+                data: try JSONEncoder().encode(transaction),
+                service: Self.transactionService(for: service),
+                account: transaction.transactionID.uuidString
+            )
+        }
+    }
+
+    private func deletePreparedReplacement(_ transactionID: UUID) throws {
+        switch backend {
+        case .memory:
+            preparedReplacements[transactionID] = nil
+        case let .keychain(service):
+            let status = SecItemDelete(Self.baseQuery(
+                service: Self.transactionService(for: service),
+                account: transactionID.uuidString
+            ) as CFDictionary)
+            guard status == errSecSuccess || status == errSecItemNotFound else {
+                throw Error.keychain(status)
+            }
+        }
+    }
+
+    private func makeTransactionCapacity(
+        in transactions: inout [UUID: PreparedReplacement]
+    ) throws {
+        while transactions.count >= Self.maximumTransactions {
+            guard let evicted = transactions.values
+                .filter({ $0.state == .committed || $0.state == .aborted })
+                .min(by: { $0.updatedAt < $1.updatedAt }) else {
+                throw Self.authenticationFailure()
+            }
+            try deletePreparedReplacement(evicted.transactionID)
+            transactions[evicted.transactionID] = nil
+        }
+    }
+
+    private static func decodePreparedReplacement(_ data: Data) throws -> PreparedReplacement {
+        let transaction = try JSONDecoder().decode(PreparedReplacement.self, from: data)
+        guard transaction.candidate.credential.count == 32,
+              transaction.previous?.credential.count == nil || transaction.previous?.credential.count == 32 else {
+            throw Error.invalidRecord
+        }
+        return transaction
+    }
+
     private func saveRevocationVerifier(_ verifier: Data, for id: UUID) throws {
         guard verifier.count == 32 else { throw Error.invalidCredential }
         switch backend {
@@ -230,6 +500,14 @@ actor RemoteCredentialStore {
 
     private static func revocationService(for credentialService: String) -> String {
         credentialService + ".revocations"
+    }
+
+    private static func transactionService(for credentialService: String) -> String {
+        credentialService + ".pairing-transactions"
+    }
+
+    private static func authenticationFailure() -> RemoteProtocolError {
+        RemoteProtocolError(code: .authenticationFailed, message: "Pairing transaction is unavailable")
     }
 
     private static func baseQuery(service: String, account: String? = nil) -> [CFString: Any] {

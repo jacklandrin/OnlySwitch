@@ -6,6 +6,332 @@ import Switches
 @testable import OnlySwitch
 
 struct RemoteHostIntegrationTests {
+    @Test
+    func preparedReplacementDoesNotReplaceCommittedCredential() async throws {
+        let store = RemoteCredentialStore.inMemory()
+        let id = UUID(uuidString: "00000000-0000-0000-0000-000000000920")!
+        let old = PairedRemoteDevice(
+            id: id,
+            name: "Phone",
+            credential: Data(repeating: 1, count: 32),
+            createdAt: .distantPast,
+            lastConnectedAt: nil
+        )
+        let candidate = PairedRemoteDevice(
+            id: id,
+            name: "Phone",
+            credential: Data(repeating: 2, count: 32),
+            createdAt: .now,
+            lastConnectedAt: nil
+        )
+        try await store.save(old)
+        let transactionID = UUID()
+
+        try await store.prepareReplacement(
+            candidate,
+            transactionID: transactionID,
+            expiresAt: .distantFuture
+        )
+
+        #expect(try await store.load(old.id) == old)
+        #expect(try await store.transactionStatus(transactionID) == .prepared)
+        _ = try await store.finalizePrepared(transactionID)
+        #expect(try await store.load(old.id)?.credential == candidate.credential)
+        #expect(try await store.transactionStatus(transactionID) == .committed)
+    }
+
+    @Test
+    func abortAndExpiryRestorePreviousCredentialIdempotently() async throws {
+        let store = RemoteCredentialStore.inMemory()
+        let existingID = UUID(uuidString: "00000000-0000-0000-0000-000000000921")!
+        let old = PairedRemoteDevice(
+            id: existingID,
+            name: "Phone",
+            credential: Data(repeating: 1, count: 32),
+            createdAt: .distantPast,
+            lastConnectedAt: nil
+        )
+        let replacement = PairedRemoteDevice(
+            id: existingID,
+            name: "Phone",
+            credential: Data(repeating: 2, count: 32),
+            createdAt: .now,
+            lastConnectedAt: nil
+        )
+        try await store.save(old)
+        let replacementID = UUID()
+        try await store.prepareReplacement(
+            replacement,
+            transactionID: replacementID,
+            expiresAt: .distantFuture
+        )
+        try await store.abortPrepared(replacementID)
+        try await store.abortPrepared(replacementID)
+        #expect(try await store.load(existingID) == old)
+
+        let newID = UUID(uuidString: "00000000-0000-0000-0000-000000000922")!
+        let newDevice = PairedRemoteDevice(
+            id: newID,
+            name: "Tablet",
+            credential: Data(repeating: 3, count: 32),
+            createdAt: .now,
+            lastConnectedAt: nil
+        )
+        let expiringID = UUID()
+        try await store.prepareReplacement(
+            newDevice,
+            transactionID: expiringID,
+            expiresAt: Date(timeIntervalSince1970: 10)
+        )
+        try await store.recoverExpiredTransactions(now: Date(timeIntervalSince1970: 11))
+        #expect(try await store.load(newID) == nil)
+        #expect(try await store.transactionStatus(expiringID) == .aborted)
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func prepareDoesNotReplaceCommittedCredential() async throws {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let host = RemoteHost.testing(catalog: [], router: router, pairingCode: "ABCDEFGH2345")
+        let endpoint = try await host.startForTesting(port: 0)
+        defer { Task { await host.stop() } }
+        let originalClient = try await RemoteHostTestClient.connect(to: endpoint)
+        try await originalClient.pair(code: "ABCDEFGH2345")
+        let original = try #require(try await host.pairedDevices().first)
+        _ = await host.startPairing()
+        let repairClient = try await RemoteHostTestClient.connect(to: endpoint, deviceID: original.id)
+
+        let prepared = try await repairClient.preparePairing(code: "ABCDEFGH2345")
+
+        #expect(try await host.pairedDevices().first == original)
+        try await repairClient.sendTransaction(.pairingAbort(.init(transactionID: prepared.transactionID)))
+        #expect(try await repairClient.receiveTransactionStatus().state == .aborted)
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func provisionalPeerRejectsAction() async throws {
+        let control = await MainActor.run { FakeSwitch(type: .darkMode, visible: true) }
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in control }) }
+        let host = RemoteHost.testing(catalog: [], router: router, pairingCode: "ABCDEFGH2345")
+        let endpoint = try await host.startForTesting(port: 0)
+        defer { Task { await host.stop() } }
+        let client = try await RemoteHostTestClient.connect(to: endpoint)
+        _ = try await client.preparePairing(code: "ABCDEFGH2345")
+        let request = RemoteActionRequest(
+            requestID: UUID(),
+            controlID: .init(kind: .builtIn, value: String(SwitchType.darkMode.rawValue)),
+            action: .setState(true)
+        )
+
+        await #expect(throws: (any Error).self) {
+            _ = try await client.send(request)
+        }
+        #expect(await MainActor.run { control.operationCount } == 0)
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func abortRestoresPreviousCredential() async throws {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let host = RemoteHost.testing(catalog: [], router: router, pairingCode: "ABCDEFGH2345")
+        let endpoint = try await host.startForTesting(port: 0)
+        defer { Task { await host.stop() } }
+        let oldClient = try await RemoteHostTestClient.connect(to: endpoint)
+        try await oldClient.pair(code: "ABCDEFGH2345")
+        let original = try #require(try await host.pairedDevices().first)
+        _ = await host.startPairing()
+        let repairClient = try await RemoteHostTestClient.connect(to: endpoint, deviceID: original.id)
+        let prepared = try await repairClient.preparePairing(code: "ABCDEFGH2345")
+
+        try await repairClient.sendTransaction(.pairingAbort(.init(transactionID: prepared.transactionID)))
+        #expect(try await repairClient.receiveTransactionStatus().state == .aborted)
+        #expect(try await host.pairedDevices().first == original)
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func commitIsIdempotent() async throws {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let host = RemoteHost.testing(catalog: [], router: router, pairingCode: "ABCDEFGH2345")
+        let endpoint = try await host.startForTesting(port: 0)
+        defer { Task { await host.stop() } }
+        let client = try await RemoteHostTestClient.connect(to: endpoint)
+        let prepared = try await client.preparePairing(code: "ABCDEFGH2345")
+        let command = RemoteMessage.pairingCommit(.init(transactionID: prepared.transactionID))
+
+        try await client.sendTransaction(command)
+        #expect(try await client.receiveTransactionStatus().state == .committed)
+        try await client.sendTransaction(command)
+        #expect(try await client.receiveTransactionStatus().state == .committed)
+        #expect(try await host.pairedDevices().first?.credential == prepared.credential)
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func lostCommitConfirmationResolvesThroughStatus() async throws {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let boundary = AuthenticationResultBoundaryRecorder()
+        let host = RemoteHost.testing(
+            catalog: [],
+            router: router,
+            pairingCode: "ABCDEFGH2345",
+            authenticationResultSender: { try await boundary.send($0) }
+        )
+        let endpoint = try await host.startForTesting(port: 0)
+        defer { Task { await host.stop() } }
+        let client = try await RemoteHostTestClient.connect(to: endpoint)
+        let prepared = try await client.preparePairing(code: "ABCDEFGH2345")
+        boundary.failNextSend()
+        try await client.sendTransaction(.pairingCommit(.init(transactionID: prepared.transactionID)))
+        await #expect(throws: (any Error).self) {
+            _ = try await client.receiveTransactionStatus()
+        }
+
+        let recovery = try await RemoteHostTestClient.connect(to: endpoint, deviceID: await client.id)
+        #expect(try await recovery.authenticate(credential: prepared.credential) == .authenticated)
+        try await recovery.sendTransaction(.pairingStatusRequest(.init(transactionID: prepared.transactionID)))
+        #expect(try await recovery.receiveTransactionStatus().state == .committed)
+    }
+
+    @Test
+    func expiryRecoveryAbortsPreparedRecord() async throws {
+        let store = RemoteCredentialStore.inMemory()
+        let device = PairedRemoteDevice(
+            id: UUID(),
+            name: "Phone",
+            credential: Data(repeating: 4, count: 32),
+            createdAt: .now,
+            lastConnectedAt: nil
+        )
+        let transactionID = UUID()
+        try await store.prepareReplacement(
+            device,
+            transactionID: transactionID,
+            expiresAt: Date(timeIntervalSince1970: 20)
+        )
+
+        try await store.recoverExpiredTransactions(now: Date(timeIntervalSince1970: 21))
+
+        #expect(try await store.transactionStatus(transactionID) == .aborted)
+        #expect(try await store.load(device.id) == nil)
+    }
+
+    @Test
+    func mismatchedTransactionCandidateIsRejectedWithoutMutation() async throws {
+        let store = RemoteCredentialStore.inMemory()
+        let transactionID = UUID()
+        let original = PairedRemoteDevice(
+            id: UUID(),
+            name: "Phone",
+            credential: Data(repeating: 5, count: 32),
+            createdAt: .now,
+            lastConnectedAt: nil
+        )
+        var mismatch = original
+        mismatch.name = "Different Phone"
+        try await store.prepareReplacement(
+            original,
+            transactionID: transactionID,
+            expiresAt: .distantFuture
+        )
+
+        await #expect(throws: RemoteProtocolError.self) {
+            try await store.prepareReplacement(
+                mismatch,
+                transactionID: transactionID,
+                expiresAt: .distantFuture
+            )
+        }
+
+        #expect(try await store.transactionStatus(transactionID) == .prepared)
+        #expect(try await store.load(original.id) == nil)
+    }
+
+    @Test
+    func preparedTransactionCountIsBounded() async throws {
+        let store = RemoteCredentialStore.inMemory()
+        for byte in UInt8(0)..<UInt8(32) {
+            try await store.prepareReplacement(
+                .init(
+                    id: UUID(),
+                    name: "Phone",
+                    credential: Data(repeating: byte, count: 32),
+                    createdAt: .now,
+                    lastConnectedAt: nil
+                ),
+                transactionID: UUID(),
+                expiresAt: .distantFuture
+            )
+        }
+        let overflow = PairedRemoteDevice(
+            id: UUID(),
+            name: "Overflow",
+            credential: Data(repeating: 32, count: 32),
+            createdAt: .now,
+            lastConnectedAt: nil
+        )
+
+        await #expect(throws: RemoteProtocolError.self) {
+            try await store.prepareReplacement(
+                overflow,
+                transactionID: UUID(),
+                expiresAt: .distantFuture
+            )
+        }
+        #expect(try await store.load(overflow.id) == nil)
+    }
+
+    @Test
+    func revocationSerializesAgainstPreparedFinalization() async throws {
+        let deviceID = UUID()
+        let old = PairedRemoteDevice(
+            id: deviceID,
+            name: "Phone",
+            credential: Data(repeating: 6, count: 32),
+            createdAt: .distantPast,
+            lastConnectedAt: nil
+        )
+        let candidate = PairedRemoteDevice(
+            id: deviceID,
+            name: "Phone",
+            credential: Data(repeating: 7, count: 32),
+            createdAt: .now,
+            lastConnectedAt: nil
+        )
+
+        let revokeFirst = RemoteCredentialStore.inMemory()
+        try await revokeFirst.save(old)
+        let abortedID = UUID()
+        try await revokeFirst.prepareReplacement(candidate, transactionID: abortedID, expiresAt: .distantFuture)
+        #expect(try await revokeFirst.prepareAndDeleteForRevocation(deviceID) == old.credential)
+        await #expect(throws: RemoteProtocolError.self) {
+            _ = try await revokeFirst.finalizePrepared(abortedID)
+        }
+        #expect(try await revokeFirst.load(deviceID) == nil)
+
+        let commitFirst = RemoteCredentialStore.inMemory()
+        try await commitFirst.save(old)
+        let committedID = UUID()
+        try await commitFirst.prepareReplacement(candidate, transactionID: committedID, expiresAt: .distantFuture)
+        _ = try await commitFirst.finalizePrepared(committedID)
+        #expect(try await commitFirst.prepareAndDeleteForRevocation(deviceID) == candidate.credential)
+        #expect(try await commitFirst.load(deviceID) == nil)
+        #expect(try await commitFirst.loadRevocationVerifier(deviceID) == RemoteHandshakeCrypto.revocationVerifier(credential: candidate.credential))
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func minorOneClientCannotStartTransactionalPairing() async throws {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let host = RemoteHost.testing(catalog: [], router: router, pairingCode: "ABCDEFGH2345")
+        let endpoint = try await host.startForTesting(port: 0)
+        defer { Task { await host.stop() } }
+        let client = try await RemoteHostTestClient.connect(
+            to: endpoint,
+            version: .init(major: 1, minor: 1)
+        )
+
+        await #expect(throws: (any Error).self) {
+            _ = try await client.preparePairing(code: "ABCDEFGH2345")
+        }
+        #expect(try await host.pairedDevices().isEmpty)
+    }
+
     @Test(.timeLimit(.minutes(1)))
     func pairsAuthenticatesAndDeduplicatesAnActionOverLoopback() async throws {
         let control = await MainActor.run { FakeSwitch(type: .darkMode, visible: true) }
@@ -160,8 +486,8 @@ struct RemoteHostIntegrationTests {
             to: endpoint,
             deviceID: identity.deviceID
         )
-        #expect(try await ordinaryClient.authenticate(credential: identity.credential) == .authenticated)
-        #expect(boundary.events == [.sendInvoked, .sendReturned])
+        #expect(try await ordinaryClient.authenticate(credential: identity.credential) == .revoked)
+        #expect(boundary.events.isEmpty)
 
         await gate.open()
         try await revocation.value
@@ -175,7 +501,7 @@ struct RemoteHostIntegrationTests {
     }
 
     @Test(.timeLimit(.minutes(1)))
-    func repairAuthenticationResultSendFailureRollsBackCredentialRevocationAndVerifier() async throws {
+    func repairCommitConfirmationFailureRetainsCommittedCredentialAndVerifier() async throws {
         let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
         let boundary = AuthenticationResultBoundaryRecorder()
         let host = RemoteHost.testing(
@@ -193,29 +519,32 @@ struct RemoteHostIntegrationTests {
         try await host.revokePreservingCredentialForTesting(deviceID: original.deviceID)
         _ = await host.startPairing()
         boundary.reset()
-        boundary.failNextSend()
         let repairClient = try await RemoteHostTestClient.connect(to: endpoint, deviceID: original.deviceID)
+        let prepared = try await repairClient.preparePairing(code: "ABCDEFGH2345")
+        boundary.failNextSend()
+        try await repairClient.sendTransaction(.pairingCommit(.init(transactionID: prepared.transactionID)))
 
-        do {
-            try await repairClient.pair(code: "ABCDEFGH2345")
-            Issue.record("Expected the authentication result send to fail")
-        } catch {}
+        await #expect(throws: (any Error).self) {
+            _ = try await repairClient.receiveTransactionStatus()
+        }
 
-        #expect(try await host.pairedDevices().first?.credential == original.credential)
-        #expect(await host.isRevokedForTesting(deviceID: original.deviceID))
+        let committed = try #require(try await host.pairedDevices().first)
+        #expect(committed.credential != original.credential)
+        #expect(await host.isRevokedForTesting(deviceID: original.deviceID) == false)
         #expect(try await host.revocationVerifierForTesting(deviceID: original.deviceID) == RemoteHandshakeCrypto.revocationVerifier(credential: original.credential))
         #expect(boundary.events == [.sendInvoked])
 
-        try await host.deleteCredentialForTesting(
-            deviceID: original.deviceID,
-            matching: original.credential
-        )
-        let offlineClient = try await RemoteHostTestClient.connect(to: endpoint, deviceID: original.deviceID)
-        #expect(try await offlineClient.authenticate(credential: original.credential) == .revoked)
+        let recovery = try await RemoteHostTestClient.connect(to: endpoint, deviceID: original.deviceID)
+        #expect(try await recovery.authenticate(credential: committed.credential) == .authenticated)
+        try await recovery.sendTransaction(.pairingCommit(.init(transactionID: prepared.transactionID)))
+        #expect(try await recovery.receiveTransactionStatus().state == .committed)
+        #expect(try await host.revocationVerifierForTesting(deviceID: original.deviceID) == nil)
+        try await recovery.sendTransaction(.pairingStatusRequest(.init(transactionID: prepared.transactionID)))
+        #expect(try await recovery.receiveTransactionStatus().state == .committed)
     }
 
     @Test(.timeLimit(.minutes(1)))
-    func successfulRepairClearsVerifierOnlyAfterAuthenticationResultSend() async throws {
+    func successfulRepairClearsVerifierOnlyAfterCommitConfirmation() async throws {
         let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
         let boundary = AuthenticationResultBoundaryRecorder()
         let host = RemoteHost.testing(

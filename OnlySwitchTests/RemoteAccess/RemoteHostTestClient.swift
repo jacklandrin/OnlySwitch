@@ -10,6 +10,7 @@ actor RemoteHostTestClient {
 
     private let io: RemoteConnectionIO
     private let deviceID: UUID
+    private let version: RemoteProtocolVersion
     private let deviceName = "Integration Test iPhone"
     private var clientKey: P256.KeyAgreement.PrivateKey?
     private var serverHello: ServerHello?
@@ -18,22 +19,38 @@ actor RemoteHostTestClient {
     private var credential: Data?
     private(set) var authenticatedCatalogRevision: UInt64?
 
-    static func connect(to endpoint: NWEndpoint, deviceID: UUID = UUID()) async throws -> RemoteHostTestClient {
-        try await RemoteHostTestClient(endpoint: endpoint, deviceID: deviceID)
+    var id: UUID { deviceID }
+
+    static func connect(
+        to endpoint: NWEndpoint,
+        deviceID: UUID = UUID(),
+        version: RemoteProtocolVersion = .current
+    ) async throws -> RemoteHostTestClient {
+        try await RemoteHostTestClient(endpoint: endpoint, deviceID: deviceID, version: version)
     }
 
-    private init(endpoint: NWEndpoint, deviceID: UUID) async throws {
+    private init(endpoint: NWEndpoint, deviceID: UUID, version: RemoteProtocolVersion) async throws {
         let connection = NWConnection(to: endpoint, using: .tcp)
         let io = RemoteConnectionIO(connection: connection)
         self.io = io
         self.deviceID = deviceID
+        self.version = version
         try await io.start()
     }
 
     func pair(code: String) async throws {
+        let prepared = try await preparePairing(code: code)
+        try await sendTransaction(.pairingCommit(.init(transactionID: prepared.transactionID)))
+        guard try await receiveTransactionStatus().state == .committed else {
+            throw RemoteProtocolError(code: .authenticationFailed, message: "Pairing was not committed")
+        }
+        authenticatedCatalogRevision = prepared.catalogRevision
+    }
+
+    func preparePairing(code: String) async throws -> PairingPrepared {
         let key = P256.KeyAgreement.PrivateKey()
         let hello = ClientHello(
-            version: .current,
+            version: version,
             deviceID: deviceID,
             deviceName: deviceName,
             ephemeralPublicKey: key.publicKey.rawRepresentation
@@ -60,23 +77,27 @@ actor RemoteHostTestClient {
             let protectedResult = try await io.receive()
             let pairingCrypto = try makeCrypto(credential: Data(code.utf8), key: key, server: server, transcript: transcript)
             guard protectedResult.kind == .encrypted, let frame = protectedResult.encrypted,
-                  case let .pairingResult(result) = try pairingCrypto.open(frame),
-                  case let .success(success) = result else {
+                  case let .pairingPrepared(prepared) = try pairingCrypto.open(frame),
+                  prepared.credential.count == 32 else {
                 throw RemoteProtocolError(code: .authenticationFailed, message: "Pairing failed")
             }
-            let sessionCrypto = try makeCrypto(credential: success.credential, key: key, server: server, transcript: transcript)
+            let sessionCrypto = try makeCrypto(
+                credential: prepared.credential,
+                key: key,
+                server: server,
+                transcript: transcript
+            )
             crypto = sessionCrypto
-            credential = success.credential
+            credential = prepared.credential
             let authentication = AuthenticationProof(
                 deviceID: deviceID,
-                proof: RemoteHandshake.authenticationProof(credential: success.credential, transcript: transcript)
+                proof: RemoteHandshake.authenticationProof(
+                    credential: prepared.credential,
+                    transcript: transcript
+                )
             )
             try await io.send(.encrypted(try sessionCrypto.seal(.authenticationProof(authentication))))
-            guard case let .authenticationResult(authenticationResult) = try await receiveEncrypted(),
-                  case let .success(success) = authenticationResult else {
-                throw RemoteProtocolError(code: .authenticationFailed, message: "Authentication failed")
-            }
-            authenticatedCatalogRevision = success.catalogRevision
+            return prepared
         } catch let error as RemoteProtocolError {
             throw error
         } catch {
@@ -94,7 +115,7 @@ actor RemoteHostTestClient {
     func authenticate(credential: Data) async throws -> AuthenticationOutcome {
         let key = P256.KeyAgreement.PrivateKey()
         let hello = ClientHello(
-            version: .current,
+            version: version,
             deviceID: deviceID,
             deviceName: deviceName,
             ephemeralPublicKey: key.publicKey.rawRepresentation
@@ -178,6 +199,30 @@ actor RemoteHostTestClient {
 
     func nextMessage() async throws -> RemoteMessage {
         try await receiveEncrypted()
+    }
+
+    func sendTransaction(_ message: RemoteMessage) async throws {
+        switch message {
+        case .pairingCommit, .pairingAbort, .pairingStatusRequest:
+            try await sendEncrypted(message)
+        default:
+            throw RemoteProtocolError(code: .invalidFrame, message: "Expected pairing transaction command")
+        }
+    }
+
+    func receiveTransactionStatus() async throws -> PairingTransactionStatus {
+        switch try await receiveEncrypted() {
+        case let .pairingStatus(status):
+            return status
+        case let .pairingCommitted(command):
+            return .init(transactionID: command.transactionID, state: .committed)
+        default:
+            throw RemoteProtocolError(code: .invalidFrame, message: "Expected pairing transaction status")
+        }
+    }
+
+    func close() async {
+        await io.cancel()
     }
 
     private func sendEncrypted(_ message: RemoteMessage) async throws {

@@ -169,9 +169,8 @@ actor RemoteHost {
     }
 
     func revoke(deviceID: UUID) async throws {
-        let credential = try await credentialStore.load(deviceID)?.credential
-        if let credential {
-            _ = try await credentialStore.prepareRevocation(deviceID, matchingCredential: credential)
+        let credential = try await credentialStore.prepareAndDeleteForRevocation(deviceID)
+        if credential != nil {
             await revocationPrepared()
         }
         let affected = lifecycle.revoke(deviceID: deviceID)
@@ -209,8 +208,7 @@ actor RemoteHost {
     }
 
     func revokePreservingCredentialForTesting(deviceID: UUID) async throws {
-        guard let credential = try await credentialStore.load(deviceID)?.credential else { return }
-        _ = try await credentialStore.prepareRevocation(deviceID, matchingCredential: credential)
+        guard try await credentialStore.prepareRevocation(deviceID) != nil else { return }
         let affected = lifecycle.revoke(deviceID: deviceID)
         let peers = affected.compactMap { sessions.removeValue(forKey: $0) }
         for peer in peers { await peer.close() }
@@ -238,6 +236,7 @@ actor RemoteHost {
         advertise: Bool
     ) async throws -> NWEndpoint {
         if listener != nil { await stop() }
+        try await credentialStore.recoverExpiredTransactions()
         startCatalogObservationIfNeeded()
         let generation = lifecycle.beginStart()
         eventContinuation.yield(.statusChanged(.starting))
