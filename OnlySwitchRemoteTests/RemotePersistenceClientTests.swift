@@ -349,6 +349,97 @@ struct RemotePersistenceClientTests {
         #expect(RemotePersistenceClient.initialSetupSeed(defaults: UserDefaults(suiteName: suite)!))
     }
 
+    @Test func firstSaveSynchronizesNewRootParentBeforeEnvelopeDirectory() async throws {
+        let suite = "FirstSaveDirectorySync-\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suite))
+        defaults.removePersistentDomain(forName: suite)
+        let rootURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        let recorder = DirectorySynchronizationRecorder()
+        let store = RemoteFilePersistenceStore(
+            defaults: defaults,
+            rootURL: rootURL,
+            synchronizeEnvelopeDirectory: recorder.synchronize
+        )
+
+        try await store.saveEnvelope(.init(
+            pairedMacs: [],
+            selectedMacID: nil,
+            hasCompletedInitialSetup: false
+        ))
+
+        #expect(recorder.urls == [rootURL.deletingLastPathComponent(), rootURL])
+    }
+
+    @Test func failedNewRootParentSyncDoesNotPublishEnvelopeAndRetriesParentSync() async throws {
+        let suite = "FailedParentDirectorySync-\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suite))
+        defaults.removePersistentDomain(forName: suite)
+        let rootURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        let recorder = DirectorySynchronizationRecorder(failFirstParentOf: rootURL)
+        let store = RemoteFilePersistenceStore(
+            defaults: defaults,
+            rootURL: rootURL,
+            synchronizeEnvelopeDirectory: recorder.synchronize
+        )
+        let envelope = RemotePersistentStateEnvelope(
+            pairedMacs: [],
+            selectedMacID: nil,
+            hasCompletedInitialSetup: false
+        )
+        let envelopeURL = rootURL.appendingPathComponent("state-envelope-v1.json")
+
+        await #expect(throws: DirectorySynchronizationTestError.failed) {
+            try await store.saveEnvelope(envelope)
+        }
+        #expect(FileManager.default.fileExists(atPath: envelopeURL.path) == false)
+
+        try await store.saveEnvelope(envelope)
+        #expect(recorder.urls == [
+            rootURL.deletingLastPathComponent(),
+            rootURL.deletingLastPathComponent(),
+            rootURL,
+        ])
+    }
+
+    @Test func migrationRootSyncFailureRetriesEnvelopeWithoutLegacyResurrection() async throws {
+        let suite = "MigrationRootSyncFailure-\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suite))
+        defaults.removePersistentDomain(forName: suite)
+        let rootURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        let original = mac(id: firstMac, name: "Original")
+        let stale = mac(id: secondMac, name: "Stale")
+        defaults.set(try JSONEncoder().encode([original]), forKey: "pairedMacs")
+        let recorder = DirectorySynchronizationRecorder(failFirstRoot: rootURL)
+        let store = RemoteFilePersistenceStore(
+            defaults: defaults,
+            rootURL: rootURL,
+            synchronizeEnvelopeDirectory: recorder.synchronize
+        )
+        let envelopeURL = rootURL.appendingPathComponent("state-envelope-v1.json")
+
+        await #expect(throws: DirectorySynchronizationTestError.failed) {
+            try await store.loadEnvelope()
+        }
+        let bytesAfterRename = try Data(contentsOf: envelopeURL)
+        let persistedDefaults = try #require(UserDefaults(suiteName: suite))
+        #expect(persistedDefaults.integer(forKey: "remoteStateEnvelopeMigrationVersion") == 0)
+        persistedDefaults.set(try JSONEncoder().encode([stale]), forKey: "pairedMacs")
+
+        let recovered = try await store.loadEnvelope()
+
+        #expect(recovered.pairedMacs == [original])
+        #expect(try Data(contentsOf: envelopeURL) == bytesAfterRename)
+        #expect(persistedDefaults.integer(forKey: "remoteStateEnvelopeMigrationVersion") == 1)
+        #expect(recorder.urls == [
+            rootURL.deletingLastPathComponent(),
+            rootURL,
+            rootURL,
+        ])
+    }
+
     @Test func initialSetupCompletionRoundTripsWithoutAmbientDefaults() async throws {
         let client = RemotePersistenceClient.inMemory()
         #expect(try await client.loadInitialSetupCompleted() == false)
@@ -815,6 +906,35 @@ private struct AtomicEnvelopeHarness {
 }
 
 private enum AtomicReplacementTestError: Swift.Error { case failed }
+
+private enum DirectorySynchronizationTestError: Swift.Error { case failed }
+
+private final class DirectorySynchronizationRecorder: @unchecked Sendable {
+    private let lock = NSLock()
+    private let failingURL: URL?
+    private var didFail = false
+    private var recordedURLs: [URL] = []
+
+    init(failFirstParentOf rootURL: URL? = nil, failFirstRoot: URL? = nil) {
+        self.failingURL = rootURL?.deletingLastPathComponent() ?? failFirstRoot
+    }
+
+    var urls: [URL] {
+        lock.lock()
+        defer { lock.unlock() }
+        return recordedURLs
+    }
+
+    func synchronize(_ url: URL) throws {
+        lock.lock()
+        defer { lock.unlock() }
+        recordedURLs.append(url)
+        if didFail == false, url == failingURL {
+            didFail = true
+            throw DirectorySynchronizationTestError.failed
+        }
+    }
+}
 
 private final class AtomicReplacementFailure: @unchecked Sendable {
     private let lock = NSLock()

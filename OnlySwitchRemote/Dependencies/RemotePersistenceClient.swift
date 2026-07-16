@@ -427,6 +427,7 @@ actor RemoteFilePersistenceStore {
     private let replaceEnvelope: @Sendable (URL, URL) throws -> Void
     private let synchronizeEnvelopeDirectory: @Sendable (URL) throws -> Void
     private var appStateSequenceTracker = RemoteAppPersistenceSequenceTracker()
+    private var hasSynchronizedRootParent = false
 
     init(
         defaultsSuiteName: String? = nil,
@@ -666,6 +667,7 @@ actor RemoteFilePersistenceStore {
                 throw RemotePersistenceError.unsupportedEnvelopeVersion(envelope.version)
             }
             if defaults.integer(forKey: Key.migratedEnvelopeVersion) < 1 {
+                try synchronizeRootParentIfNeeded()
                 try synchronizeEnvelopeDirectory(rootURL)
                 defaults.set(1, forKey: Key.migratedEnvelopeVersion)
             }
@@ -704,6 +706,7 @@ actor RemoteFilePersistenceStore {
             throw RemotePersistenceError.unsupportedEnvelopeVersion(envelope.version)
         }
         try FileManager.default.createDirectory(at: rootURL, withIntermediateDirectories: true)
+        try synchronizeRootParentIfNeeded()
         let temporaryURL = rootURL.appendingPathComponent(".state-envelope-v1-\(UUID().uuidString).tmp")
         defer { try? FileManager.default.removeItem(at: temporaryURL) }
         FileManager.default.createFile(atPath: temporaryURL.path, contents: nil)
@@ -740,6 +743,12 @@ actor RemoteFilePersistenceStore {
             hasCompletedInitialSetup: envelope.hasCompletedInitialSetup,
             tombstonedMacIDs: envelope.tombstonedMacIDs
         )
+    }
+
+    private func synchronizeRootParentIfNeeded() throws {
+        guard hasSynchronizedRootParent == false else { return }
+        try synchronizeEnvelopeDirectory(rootURL.deletingLastPathComponent())
+        hasSynchronizedRootParent = true
     }
 
     private var envelopeURL: URL {
