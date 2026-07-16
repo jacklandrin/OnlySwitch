@@ -49,9 +49,9 @@ Each attempt has a cryptographically random transaction ID, separate from the tr
 
 ### UI adoption gate
 
-The runtime returns a `PreparedPairing` value rather than publishing a paired Mac. PairingFeature verifies that its generation, target, foreground state, and presentation are still authoritative. It then explicitly calls `finalizePairing(transactionID)`.
+The runtime returns a `PreparedPairing` value rather than publishing a paired Mac. PairingFeature verifies that its generation, target, foreground state, and presentation are still authoritative. Reducer acceptance of that value is the linearized commitment gate: it enters a non-dismissible finalizing state and explicitly calls `finalizePairing(transactionID)`.
 
-Cancel, interactive dismissal, discovery loss, backgrounding, or a superseding pairing calls `abortPairing(transactionID)`. Cancellation remains valid until final confirmation is received; the runtime retains the transaction token during this interval.
+Before the reducer accepts the prepared value, Cancel, interactive dismissal, discovery loss, backgrounding, or a superseding pairing calls `abortPairing(transactionID)`. Once finalization starts, the UI no longer offers cancellation; interruption recovery resolves the transaction by ID and completes the outcome idempotently. This defines an achievable distributed commitment point and prevents the previous runtime-publication-before-reducer-adoption race.
 
 ### Commit phase
 
@@ -63,9 +63,9 @@ Cancel, interactive dismissal, discovery loss, backgrounding, or a superseding p
 
 ### Abort and uncertain outcomes
 
-- Before Mac confirmation, abort restores both sides to their previous state.
+- Before the reducer commitment gate, abort restores both sides to their previous state.
 - A commit timeout does not silently retry with a new transaction. iOS queries transaction status using the same transaction ID.
-- `prepared` causes iOS to resend commit or abort according to the still-authoritative UI transaction.
+- Before the commitment gate, `prepared` is aborted when the UI transaction is no longer authoritative. After the gate, `prepared` causes iOS to resend commit.
 - `committed` causes iOS to finish local finalization idempotently.
 - `aborted` causes iOS to restore its prepared envelope and credential.
 - A transaction status that cannot be resolved keeps the old active session selected and presents a retryable pairing error; it never publishes the candidate as paired.
