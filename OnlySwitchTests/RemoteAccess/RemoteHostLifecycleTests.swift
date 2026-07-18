@@ -448,6 +448,119 @@ struct RemotePeerDeadlineTests {
 }
 
 struct RemoteCatalogMonitorTests {
+    @Test(.timeLimit(.minutes(1)))
+    func overlappingRefreshCannotPublishOlderCatalogAsNewerRevision() async throws {
+        let provider = SuspendedCatalogProvider(initial: [.darkModeDescriptor])
+        let monitor = RemoteCatalogMonitor(provider: await provider.provider, observeNotifications: false)
+
+        #expect(try await monitor.current().revision == 1)
+        async let first = monitor.requestRefresh()
+        async let second = monitor.requestRefresh()
+
+        await provider.waitUntilSuspendedCalls(1)
+        await provider.resumeOldest(with: [.hideDesktopDescriptor])
+        await provider.waitUntilSuspendedCalls(2)
+        await provider.resumeNewest(with: [.muteDescriptor])
+        _ = try await (first, second)
+
+        let current = try await monitor.current()
+        #expect(current.controls == [.muteDescriptor])
+        #expect(current.revision == 2)
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func notificationsCoalesceIntoOneFollowUp() async throws {
+        let source = CatalogSource([Self.descriptor(id: .init(kind: .builtIn, value: "1"), available: true)])
+        let monitor = RemoteCatalogMonitor(
+            provider: await source.provider,
+            pollInterval: .hours(1),
+            debounceInterval: .zero,
+            pollWait: { try await Task.sleep(for: $0) }
+        )
+        _ = try await monitor.current()
+        await monitor.setAuthenticatedSessionCount(1)
+
+        await monitor.scheduleDebouncedRefresh()
+        await monitor.scheduleDebouncedRefresh()
+        await source.waitUntilCalls(2)
+
+        #expect(await source.catalogCalls == 2)
+        await monitor.stop()
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func transientProviderFailureRecoversOnNextTick() async throws {
+        let source = CatalogSource([Self.descriptor(id: .init(kind: .builtIn, value: "1"), available: true)])
+        let (ticks, continuation) = AsyncStream.makeStream(of: Void.self)
+        let monitor = RemoteCatalogMonitor(
+            provider: await source.provider,
+            observeNotifications: false,
+            pollWait: { _ in
+                for await _ in ticks { return }
+                throw CancellationError()
+            }
+        )
+        _ = try await monitor.current()
+        await source.failNextLoad()
+        await monitor.setAuthenticatedSessionCount(1)
+        continuation.yield(())
+        await source.waitUntilCalls(2)
+
+        await source.set([Self.descriptor(id: .init(kind: .builtIn, value: "1"), available: false)])
+        continuation.yield(())
+        await source.waitUntilCalls(3)
+
+        #expect(try await monitor.current().revision == 2)
+        continuation.finish()
+        await monitor.stop()
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func rapidStopStartCreatesOnePoller() async throws {
+        let source = CatalogSource([])
+        let (ticks, continuation) = AsyncStream.makeStream(of: Void.self)
+        let monitor = RemoteCatalogMonitor(
+            provider: await source.provider,
+            observeNotifications: false,
+            pollWait: { _ in
+                for await _ in ticks { return }
+                throw CancellationError()
+            }
+        )
+        _ = try await monitor.current()
+        await monitor.setAuthenticatedSessionCount(1)
+        continuation.yield(())
+        await source.waitUntilCalls(2)
+        await monitor.setAuthenticatedSessionCount(0)
+        await monitor.setAuthenticatedSessionCount(1)
+        continuation.yield(())
+        await source.waitUntilCalls(3)
+
+        #expect(await source.catalogCalls == 3)
+        continuation.finish()
+        await monitor.stop()
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func stopAwaitsObservationTasks() async throws {
+        let source = CatalogSource([])
+        let started = TestSignal()
+        let monitor = RemoteCatalogMonitor(
+            provider: await source.provider,
+            observeNotifications: false,
+            pollWait: { _ in
+                await started.signal()
+                try await Task.sleep(for: .hours(1))
+            }
+        )
+        _ = try await monitor.current()
+        await monitor.setAuthenticatedSessionCount(1)
+        await started.wait()
+
+        await monitor.stop()
+        #expect(await source.catalogCalls == 1)
+    }
+
     @Test
     func lazySnapshotStartsAtOneAndOrderOnlyChangesDoNotAdvanceRevision() async throws {
         let source = CatalogSource([
@@ -529,12 +642,13 @@ private actor CatalogSource {
     private var controls: [RemoteControlDescriptor]
     private(set) var catalogCalls = 0
     private var callWaiters: [(Int, CheckedContinuation<Void, Never>)] = []
+    private var nextLoadError: (any Error)?
 
     init(_ controls: [RemoteControlDescriptor]) { self.controls = controls }
 
     var provider: RemoteCatalogProvider {
         RemoteCatalogProvider(
-            catalog: { [weak self] in await self?.load() ?? [] },
+            catalog: { [weak self] in try await self?.load() ?? [] },
             status: { id, revision in
                 RemoteControlStatus(
                     id: id,
@@ -554,17 +668,99 @@ private actor CatalogSource {
         self.controls = Array(controls)
     }
 
-    private func load() -> [RemoteControlDescriptor] {
+    func failNextLoad() { nextLoadError = RevocationTestError.failed }
+
+    private func load() throws -> [RemoteControlDescriptor] {
         catalogCalls += 1
         let ready = callWaiters.filter { catalogCalls >= $0.0 }
         callWaiters.removeAll { catalogCalls >= $0.0 }
         ready.forEach { $0.1.resume() }
+        if let nextLoadError {
+            self.nextLoadError = nil
+            throw nextLoadError
+        }
         return controls
     }
 
     func waitUntilCalls(_ count: Int) async {
         guard catalogCalls < count else { return }
         await withCheckedContinuation { callWaiters.append((count, $0)) }
+    }
+}
+
+private actor SuspendedCatalogProvider {
+    private var initial: [RemoteControlDescriptor]?
+    private var suspendedCalls = 0
+    private var suspendedCallWaiters: [CheckedContinuation<Void, Never>] = []
+    private var continuations: [CheckedContinuation<[RemoteControlDescriptor], Error>] = []
+
+    init(initial: [RemoteControlDescriptor]) {
+        self.initial = initial
+    }
+
+    var provider: RemoteCatalogProvider {
+        RemoteCatalogProvider(
+            catalog: { [weak self] in try await self?.load() ?? [] },
+            status: { id, revision in
+                RemoteControlStatus(
+                    id: id,
+                    isAvailable: true,
+                    unavailableReason: nil,
+                    isOn: nil,
+                    secondaryInformation: nil,
+                    isProcessing: false,
+                    revision: revision,
+                    updatedAt: .now
+                )
+            }
+        )
+    }
+
+    func waitUntilSuspendedCalls(_ count: Int) async {
+        guard suspendedCalls < count else { return }
+        await withCheckedContinuation { suspendedCallWaiters.append($0) }
+    }
+
+    func resumeNewest(with controls: [RemoteControlDescriptor]) {
+        continuations.removeLast().resume(returning: controls)
+    }
+
+    func resumeOldest(with controls: [RemoteControlDescriptor]) {
+        continuations.removeFirst().resume(returning: controls)
+    }
+
+    private func load() async throws -> [RemoteControlDescriptor] {
+        if let initial {
+            self.initial = nil
+            return initial
+        }
+        suspendedCalls += 1
+        if suspendedCalls >= 2 {
+            let waiters = suspendedCallWaiters
+            suspendedCallWaiters.removeAll()
+            waiters.forEach { $0.resume() }
+        }
+        return try await withCheckedThrowingContinuation { continuations.append($0) }
+    }
+}
+
+private extension RemoteControlDescriptor {
+    static var darkModeDescriptor: Self { descriptor(kind: .builtIn, value: "darkMode") }
+    static var muteDescriptor: Self { descriptor(kind: .builtIn, value: "mute") }
+    static var hideDesktopDescriptor: Self { descriptor(kind: .builtIn, value: "hideDesktop") }
+
+    private static func descriptor(kind: RemoteControlKind, value: String) -> Self {
+        .init(
+            id: .init(kind: kind, value: value),
+            title: value,
+            behavior: .switch,
+            icon: .systemSymbol("switch.2"),
+            isAvailable: true,
+            unavailableReason: nil,
+            isDestructive: false,
+            supportsStatus: true,
+            supportsSecondaryInformation: false
+        )
     }
 }
 

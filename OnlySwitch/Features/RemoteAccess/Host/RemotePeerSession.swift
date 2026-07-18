@@ -106,6 +106,7 @@ actor RemotePeerSession {
     private let subscriptionsChanged: @Sendable (UUID, Set<RemoteControlID>, @escaping RemoteStatusScheduler.Sink) async throws -> Void
     private let refreshRequested: @Sendable (RemoteControlID) async -> Void
     private let authenticated: @Sendable (UUID, UUID) async -> Bool
+    private let authenticationConfirmed: @Sendable (UUID, UUID) async -> Bool
     private let authenticationResultSender: AuthenticationResultSender
     private let commitStageReached: @Sendable (RemotePairingCommitStage) async -> Void
     private let ended: @Sendable (UUID) async -> Void
@@ -115,6 +116,7 @@ actor RemotePeerSession {
     private var pendingPairing: PendingPairing?
     private var authenticatedCredential: Data?
     private var negotiatedVersion: RemoteProtocolVersion?
+    private var advertisedCatalogRevision: UInt64?
 
     init(
         id: UUID = UUID(),
@@ -135,6 +137,7 @@ actor RemotePeerSession {
         subscriptionsChanged: @escaping @Sendable (UUID, Set<RemoteControlID>, @escaping RemoteStatusScheduler.Sink) async throws -> Void,
         refreshRequested: @escaping @Sendable (RemoteControlID) async -> Void,
         authenticated: @escaping @Sendable (UUID, UUID) async -> Bool,
+        authenticationConfirmed: @escaping @Sendable (UUID, UUID) async -> Bool,
         authenticationResultSender: @escaping AuthenticationResultSender = { operation in
             try await operation()
         },
@@ -160,6 +163,7 @@ actor RemotePeerSession {
         self.subscriptionsChanged = subscriptionsChanged
         self.refreshRequested = refreshRequested
         self.authenticated = authenticated
+        self.authenticationConfirmed = authenticationConfirmed
         self.authenticationResultSender = authenticationResultSender
         self.commitStageReached = commitStageReached
         self.ended = ended
@@ -465,6 +469,7 @@ actor RemotePeerSession {
                 sessionID: id,
                 catalogRevision: catalog.revision
             ))))
+            advertisedCatalogRevision = catalog.revision
             return true
         }
         return false
@@ -490,15 +495,21 @@ actor RemotePeerSession {
         guard await authenticated(id, client.deviceID) else {
             throw RemoteProtocolError(code: .authenticationFailed, message: "Credential was revoked")
         }
-        let catalog = try await catalogSnapshot()
+        let advertisedCatalog = try await catalogSnapshot()
         let authenticationResult = RemoteMessage.authenticationResult(
-            .success(.init(sessionID: id, catalogRevision: catalog.revision))
+            .success(.init(sessionID: id, catalogRevision: advertisedCatalog.revision))
         )
         try await authenticationResultSender { [self] in
             try await sendEncrypted(authenticationResult)
         }
         authenticatedCredential = credential
         state = .authenticated(client.deviceID)
+        advertisedCatalogRevision = advertisedCatalog.revision
+        guard await authenticationConfirmed(id, client.deviceID) else {
+            throw RemoteProtocolError(code: .authenticationFailed, message: "Credential was revoked")
+        }
+        let currentCatalog = try await catalogSnapshot()
+        try await sendCatalogChangeIfNeeded(currentCatalog)
     }
 
     private func rollbackPendingPairingIfNeeded() async {
@@ -632,13 +643,18 @@ actor RemotePeerSession {
             try await sendEncrypted(.pairingCommitted(command))
         }
         try requireCommitting(committed.id, transactionID: command.transactionID)
+        authenticatedCredential = committed.credential
+        state = .authenticated(committed.id)
+        guard await authenticationConfirmed(id, committed.id) else {
+            throw RemoteProtocolError(code: .authenticationFailed, message: "Credential was revoked")
+        }
+        let currentCatalog = try await catalogSnapshot()
+        try await sendCatalogChangeIfNeeded(currentCatalog)
         try? await credentialStore.finalizeRepair(
             deviceID: committed.id,
             matchingCredential: committed.credential
         )
         try requireCommitting(committed.id, transactionID: command.transactionID)
-        authenticatedCredential = committed.credential
-        state = .authenticated(committed.id)
     }
 
     private func requireProvisional(_ pendingPairing: PendingPairing) throws {
@@ -744,6 +760,7 @@ actor RemotePeerSession {
             revision: snapshot.revision,
             controls: snapshot.controls
         ))
+        advertisedCatalogRevision = snapshot.revision
     }
 
     private func sendEncrypted(_ message: RemoteMessage) async throws {
@@ -752,8 +769,16 @@ actor RemotePeerSession {
     }
 
     func catalogDidChange(revision: UInt64) async throws {
-        guard case .authenticated = state else { return }
+        guard case .authenticated = state,
+              advertisedCatalogRevision.map({ revision > $0 }) ?? true else { return }
         try await sendEncrypted(.catalogChanged(revision: revision))
+        advertisedCatalogRevision = revision
+    }
+
+    private func sendCatalogChangeIfNeeded(_ snapshot: RemoteCatalogSnapshot) async throws {
+        guard advertisedCatalogRevision.map({ snapshot.revision > $0 }) ?? true else { return }
+        try await sendEncrypted(.catalogChanged(revision: snapshot.revision))
+        advertisedCatalogRevision = snapshot.revision
     }
 
     private func receiveHandshakePacket() async throws -> RemoteWirePacket {

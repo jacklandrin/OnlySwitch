@@ -156,8 +156,10 @@ actor RemoteHost {
         eventContinuation.yield(.statusChanged(.stopped))
         for peer in peers { await peer.close() }
         await statusScheduler.stop()
-        catalogMonitorTask?.cancel()
+        let activeCatalogMonitorTask = catalogMonitorTask
+        activeCatalogMonitorTask?.cancel()
         catalogMonitorTask = nil
+        await activeCatalogMonitorTask?.value
         await catalogMonitor.stop()
     }
 
@@ -381,6 +383,13 @@ actor RemoteHost {
                     generation: generation
                 ) ?? false
             },
+            authenticationConfirmed: { [weak self] sessionID, deviceID in
+                await self?.sessionAuthenticationConfirmed(
+                    sessionID,
+                    deviceID: deviceID,
+                    generation: generation
+                ) ?? false
+            },
             authenticationResultSender: authenticationResultSender,
             commitStageReached: commitStageReached,
             ended: { [weak self] id in await self?.sessionEnded(id) },
@@ -447,6 +456,19 @@ actor RemoteHost {
             deviceID: deviceID,
             generation: generation,
             credentialExists: credentialExists
+        ) else { return false }
+        return true
+    }
+
+    private func sessionAuthenticationConfirmed(
+        _ sessionID: UUID,
+        deviceID: UUID,
+        generation: UInt64
+    ) async -> Bool {
+        guard lifecycle.isAuthorized(
+            sessionID: sessionID,
+            deviceID: deviceID,
+            generation: generation
         ) else { return false }
         eventContinuation.yield(.connectionCountChanged(lifecycle.authenticatedCount))
         await catalogMonitor.setAuthenticatedSessionCount(lifecycle.authenticatedCount)

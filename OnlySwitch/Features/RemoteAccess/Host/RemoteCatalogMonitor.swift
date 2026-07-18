@@ -18,6 +18,10 @@ actor RemoteCatalogMonitor {
     private var pollingTask: Task<Void, Never>?
     private var notificationTasks: [Task<Void, Never>] = []
     private var debounceTask: Task<Void, Never>?
+    private var refreshTask: Task<RemoteCatalogSnapshot?, Error>?
+    private var activeRefreshID: UInt64?
+    private var refreshGeneration: UInt64 = 0
+    private var refreshFollowUpRequested = false
     private var authenticatedSessionCount = 0
 
     nonisolated var changes: AsyncStream<RemoteCatalogSnapshot> { changeStream }
@@ -62,11 +66,52 @@ actor RemoteCatalogMonitor {
 
     @discardableResult
     func refresh() async throws -> RemoteCatalogSnapshot? {
+        try await requestRefresh()
+    }
+
+    @discardableResult
+    func requestRefresh() async throws -> RemoteCatalogSnapshot? {
+        if let refreshTask {
+            refreshFollowUpRequested = true
+            return try await refreshTask.value
+        }
+
+        refreshGeneration &+= 1
+        let refreshID = refreshGeneration
+        let task = Task { [weak self] () throws -> RemoteCatalogSnapshot? in
+            guard let self else { throw CancellationError() }
+            return try await self.performRequestedRefreshes()
+        }
+        refreshTask = task
+        activeRefreshID = refreshID
+        do {
+            let result = try await task.value
+            if activeRefreshID == refreshID {
+                self.refreshTask = nil
+                activeRefreshID = nil
+            }
+            return result
+        } catch {
+            if activeRefreshID == refreshID {
+                self.refreshTask = nil
+                activeRefreshID = nil
+            }
+            throw error
+        }
+    }
+
+    private func performRequestedRefreshes() async throws -> RemoteCatalogSnapshot? {
+        try Task.checkCancellation()
         guard snapshot != nil else {
             _ = try await current()
             return nil
         }
-        let controls = try await loadNormalizedCatalog()
+        var controls: [RemoteControlDescriptor] = []
+        repeat {
+            refreshFollowUpRequested = false
+            controls = try await loadNormalizedCatalog()
+            try Task.checkCancellation()
+        } while refreshFollowUpRequested
         guard let existing = snapshot, controls != existing.controls else { return nil }
         let changed = RemoteCatalogSnapshot(
             revision: existing.revision &+ 1,
@@ -88,8 +133,8 @@ actor RemoteCatalogMonitor {
 
     func stop() async {
         authenticatedSessionCount = 0
-        await stopMonitoring()
         snapshot = nil
+        await stopMonitoring()
     }
 
     private func startMonitoringIfNeeded() {
@@ -101,7 +146,7 @@ actor RemoteCatalogMonitor {
                 do {
                     try await pollWait(interval)
                     try Task.checkCancellation()
-                    _ = try await self?.refresh()
+                    _ = try await self?.requestRefresh()
                 } catch is CancellationError {
                     return
                 } catch {
@@ -128,14 +173,23 @@ actor RemoteCatalogMonitor {
         let activePollingTask = pollingTask
         activePollingTask?.cancel()
         self.pollingTask = nil
-        notificationTasks.forEach { $0.cancel() }
+        let activeNotificationTasks = notificationTasks
+        activeNotificationTasks.forEach { $0.cancel() }
         notificationTasks.removeAll()
-        debounceTask?.cancel()
+        let activeDebounceTask = debounceTask
+        activeDebounceTask?.cancel()
         debounceTask = nil
+        let activeRefreshTask = refreshTask
+        activeRefreshTask?.cancel()
+        refreshTask = nil
+        activeRefreshID = nil
         await activePollingTask?.value
+        for task in activeNotificationTasks { await task.value }
+        await activeDebounceTask?.value
+        _ = await activeRefreshTask?.result
     }
 
-    private func scheduleDebouncedRefresh() {
+    func scheduleDebouncedRefresh() {
         guard authenticatedSessionCount > 0 else { return }
         debounceTask?.cancel()
         let interval = debounceInterval
@@ -143,7 +197,7 @@ actor RemoteCatalogMonitor {
             do {
                 try await Task.sleep(for: interval)
                 try Task.checkCancellation()
-                _ = try await self?.refresh()
+                _ = try await self?.requestRefresh()
             } catch {
                 // Polling remains the bounded fallback for transient catalog failures.
             }

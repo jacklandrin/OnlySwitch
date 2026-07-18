@@ -630,6 +630,48 @@ struct RemoteHostIntegrationTests {
     }
 
     @Test(.timeLimit(.minutes(1)))
+    func authenticationRevisionAdvanceAlwaysProducesInvalidation() async throws {
+        let id = RemoteControlID(kind: .shortcut, value: "Morning")
+        let initial = RemoteControlDescriptor(
+            id: id, title: "Morning", behavior: .button, icon: .systemSymbol("sunrise"),
+            isAvailable: true, unavailableReason: nil, isDestructive: false,
+            supportsStatus: false, supportsSecondaryInformation: false
+        )
+        let changed = RemoteControlDescriptor(
+            id: id, title: "Morning", behavior: .button, icon: .systemSymbol("sunrise"),
+            isAvailable: false, unavailableReason: "Shortcut is unavailable", isDestructive: false,
+            supportsStatus: false, supportsSecondaryInformation: false
+        )
+        let source = IntegrationCatalogSource([initial])
+        let boundary = AuthenticationResultGate()
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let host = RemoteHost.testing(
+            catalog: [],
+            catalogProvider: await source.provider,
+            router: router,
+            pairingCode: "ABCDEFGH2345",
+            authenticationResultSender: { try await boundary.send($0) }
+        )
+        let endpoint = try await host.startForTesting(port: 0)
+        defer { Task { await host.stop() } }
+        let paired = try await RemoteHostTestClient.connect(to: endpoint)
+        try await paired.pair(code: "ABCDEFGH2345")
+        let identity = try await paired.pairingIdentity()
+
+        await boundary.suspendNextAuthenticationResult()
+        let reconnecting = try await RemoteHostTestClient.connect(to: endpoint, deviceID: identity.deviceID)
+        let authentication = Task { try await reconnecting.authenticate(credential: identity.credential) }
+        await boundary.waitUntilSuspended()
+        await source.set([changed])
+        #expect(try await host.refreshCatalogForTesting()?.revision == 2)
+
+        await boundary.open()
+        #expect(try await authentication.value == .authenticated)
+        #expect(await reconnecting.authenticatedCatalogRevision == 1)
+        #expect(try await reconnecting.nextMessage() == .catalogChanged(revision: 2))
+    }
+
+    @Test(.timeLimit(.minutes(1)))
     func wrongPairingProofIsRejected() async throws {
         let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
         let host = RemoteHost.testing(catalog: [], router: router, pairingCode: "ABCDEFGH2345")
@@ -799,6 +841,42 @@ private actor IntegrationCatalogSource {
     }
 
     func set(_ controls: [RemoteControlDescriptor]) { self.controls = controls }
+}
+
+private actor AuthenticationResultGate {
+    private var shouldSuspend = false
+    private var isOpen = false
+    private var enteredWaiters: [CheckedContinuation<Void, Never>] = []
+    private var openWaiters: [CheckedContinuation<Void, Never>] = []
+
+    func suspendNextAuthenticationResult() {
+        shouldSuspend = true
+        isOpen = false
+    }
+
+    func waitUntilSuspended() async {
+        await withCheckedContinuation { enteredWaiters.append($0) }
+    }
+
+    func open() {
+        isOpen = true
+        let waiters = openWaiters
+        openWaiters.removeAll()
+        waiters.forEach { $0.resume() }
+    }
+
+    func send(_ operation: @escaping @Sendable () async throws -> Void) async throws {
+        if shouldSuspend {
+            shouldSuspend = false
+            let waiters = enteredWaiters
+            enteredWaiters.removeAll()
+            waiters.forEach { $0.resume() }
+            if isOpen == false {
+                await withCheckedContinuation { openWaiters.append($0) }
+            }
+        }
+        try await operation()
+    }
 }
 
 private enum AuthenticationResultSendFailure: Swift.Error { case injected }
