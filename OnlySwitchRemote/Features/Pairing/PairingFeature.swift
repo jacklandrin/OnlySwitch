@@ -70,16 +70,21 @@ struct PairingFeature {
 
         var isDismissDisabled: Bool { isFinalizing }
 
+        var selectedMacRequiresUpdate: Bool {
+            guard let selectedMacID,
+                  let selected = discoveredMacs[id: selectedMacID]
+            else { return false }
+            return selected.protocolVersion.isCompatible(with: .current) == false
+                || selected.protocolVersion.supportsTransactionalPairing == false
+        }
+
         var helpText: LocalizedStringResource {
             if let issue { return issue.helpText }
             if discoveredMacs.isEmpty {
                 return "Enable iOS Remote Access and start pairing in OnlySwitch on your Mac."
             }
             if selectedMacID == nil { return "Select a Mac to continue." }
-            if let selectedMacID,
-               let selected = discoveredMacs[id: selectedMacID],
-               selected.protocolVersion.isCompatible(with: .current) == false
-                || selected.protocolVersion.supportsTransactionalPairing == false {
+            if selectedMacRequiresUpdate {
                 return "Update OnlySwitch on this Mac before pairing."
             }
             if code.count < Self.codeLength { return "Enter the 12-character code shown on your Mac." }

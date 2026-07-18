@@ -88,6 +88,7 @@
     "Remove this device from OnlySwitch on the Mac, then start a new pairing session.": {},
     "Unselected Mac: %@": {},
     "Unavailable on this Mac": {},
+    "Update OnlySwitch on this Mac before pairing.": {},
     "You’ll need a new pairing code to add this Mac again.": {},
     "Wait a moment, start a new pairing session on the Mac, and try again.": {},
     "Wait for the Mac to reappear, then select it again.": {},

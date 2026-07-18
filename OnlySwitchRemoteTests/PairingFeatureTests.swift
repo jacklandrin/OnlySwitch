@@ -103,18 +103,21 @@ struct PairingFeatureTests {
         #expect(store.state.canPair)
     }
 
-    @Test func legacyMacRemainsVisibleButPairingIsDisabledWithUpgradeExplanation() async {
+    @Test(arguments: [UInt16(0), 1])
+    func legacyMacRemainsVisibleButPairingIsDisabledWithUpgradeExplanation(minor: UInt16) async {
         let legacy = DiscoveredMac(
             id: macID,
             displayName: "Studio",
             endpoint: .hostPort(host: "studio.local", port: 9_000),
-            protocolVersion: .init(major: 1, minor: 1)
+            protocolVersion: .init(major: 1, minor: minor)
         )
         var state = PairingFeature.State()
         state.discoveredMacs = [legacy]
         state.selectedMacID = macID
         state.code = "ABCDEFGHJKMN"
 
+        #expect(state.discoveredMacs[id: macID] == legacy)
+        #expect(state.selectedMacRequiresUpdate)
         #expect(state.canPair == false)
         #expect(state.helpText == "Update OnlySwitch on this Mac before pairing.")
     }

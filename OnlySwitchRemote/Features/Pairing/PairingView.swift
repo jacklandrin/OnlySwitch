@@ -66,6 +66,7 @@ struct PairingView: View {
                     Text(store.helpText)
                         .font(.footnote)
                         .foregroundStyle(.secondary)
+                        .accessibilityLabel(Text(store.helpText))
                 }
 
                 if let issue = store.issue {
