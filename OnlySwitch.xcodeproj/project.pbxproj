@@ -3134,7 +3134,6 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				OTHER_LDFLAGS = "$(inherited) -framework PerceptionCore -framework IssueReporting";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitchRemote;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -3164,7 +3163,6 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				OTHER_LDFLAGS = "$(inherited) -framework PerceptionCore -framework IssueReporting";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitchRemote;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
