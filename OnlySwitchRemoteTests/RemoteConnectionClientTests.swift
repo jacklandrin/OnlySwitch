@@ -920,6 +920,54 @@ struct RemoteConnectionClientTests {
     }
 
     @Test(.timeLimit(.minutes(1)))
+    func freshRuntimeRestoresPreparedPairingOfflineWithoutDiscoveryCandidate() async throws {
+        let old = PairedMac(
+            id: UUID(), displayName: "Old Mac", lastEndpointDescription: nil,
+            lastConnectedAt: nil, requiresPairing: false
+        )
+        let candidate = PairedMac(
+            id: UUID(), displayName: "New Mac", lastEndpointDescription: nil,
+            lastConnectedAt: nil, requiresPairing: false
+        )
+        let transactionID = UUID()
+        let credential = Data(repeating: 82, count: 32)
+        let backingPersistence = RemotePersistenceClient.inMemory()
+        let restoreCompleted = OperationGate()
+        var persistence = backingPersistence
+        persistence.restorePairingState = { record in
+            try await backingPersistence.restorePairingState(record)
+            await restoreCompleted.open()
+        }
+        let keychain = RemoteKeychainClient.inMemory()
+        try await backingPersistence.commitPairing(old)
+        try await backingPersistence.saveSelectedMacID(old.id)
+        _ = try await backingPersistence.preparePairingState(
+            candidate,
+            transactionID,
+            RemoteKeychainClient.credentialVerifier(credential)
+        )
+        try await keychain.saveProvisionalCredential(transactionID, credential)
+        let runtime = RemoteConnectionRuntime(persistence: persistence, keychain: keychain, deviceID: UUID())
+        let eventRecorder = RemoteConnectionEventRecorder()
+        let eventTask = Task {
+            for await event in runtime.makeConnectionEventStream() {
+                await eventRecorder.record(event)
+            }
+        }
+        defer { eventTask.cancel() }
+
+        await runtime.select(candidate)
+        await restoreCompleted.wait()
+        await eventRecorder.waitUntilPersistenceRestored()
+
+        #expect(try await backingPersistence.loadPreparedPairingState() == nil)
+        #expect(try await backingPersistence.loadSelectedMacID() == old.id)
+        #expect(try await keychain.loadProvisionalCredential(transactionID) == nil)
+        #expect(await runtime.snapshot().selectedMacID == old.id)
+        #expect(await eventRecorder.values.contains(.persistenceRestored))
+    }
+
+    @Test(.timeLimit(.minutes(1)))
     func restoredPersistenceStillReconcilesAfterSelectionGenerationChanges() async throws {
         let old = PairedMac(
             id: UUID(), displayName: "Old Mac", lastEndpointDescription: nil,

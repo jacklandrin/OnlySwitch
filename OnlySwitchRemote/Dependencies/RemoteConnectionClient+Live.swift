@@ -672,15 +672,15 @@ actor RemoteConnectionRuntime {
                     Array((discovered[mac.id] ?? [:]).values),
                     preferredEndpointDescription: mac.lastEndpointDescription
                 )
-                guard candidates.isEmpty == false else {
-                    throw RemoteProtocolError(code: .requestTimedOut, message: "Mac was not found on the local network")
-                }
                 if try await recoverPreparedPairingIfNeeded(
                     mac,
                     candidates: candidates,
                     expectedGeneration: expectedGeneration
                 ) {
                     return
+                }
+                guard candidates.isEmpty == false else {
+                    throw RemoteProtocolError(code: .requestTimedOut, message: "Mac was not found on the local network")
                 }
                 guard let credential = try await keychain.loadCredential(mac.id), credential.count == 32 else {
                     await markRequiresPairing(mac.id)
@@ -869,6 +869,11 @@ actor RemoteConnectionRuntime {
             } catch {
                 lastError = error
             }
+        }
+        if record.phase == .prepared {
+            try await restorePersistedPreparedPairing(record)
+            installPreviousSelection(from: record, expectedGeneration: expectedGeneration)
+            return true
         }
         throw lastError ?? RemoteProtocolError(code: .requestTimedOut, message: "Pairing recovery Mac was unreachable")
     }
