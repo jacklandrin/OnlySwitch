@@ -112,14 +112,20 @@ struct PairingFeatureTests {
             protocolVersion: .init(major: 1, minor: minor)
         )
         var state = PairingFeature.State()
-        state.discoveredMacs = [legacy]
-        state.selectedMacID = macID
         state.code = "ABCDEFGHJKMN"
+        let store = TestStore(initialState: state) { PairingFeature() }
 
-        #expect(state.discoveredMacs[id: macID] == legacy)
-        #expect(state.selectedMacRequiresUpdate)
-        #expect(state.canPair == false)
-        #expect(state.helpText == "Update OnlySwitch on this Mac before pairing.")
+        await store.send(.discovery(0, .added(legacy))) {
+            $0.discoveredMacs = [legacy]
+        }
+        await store.send(.selectMac(macID)) {
+            $0.selectedMacID = macID
+            $0.issue = nil
+        }
+        #expect(store.state.discoveredMacs[id: macID] == legacy)
+        #expect(store.state.selectedMacRequiresUpdate)
+        #expect(store.state.canPair == false)
+        #expect(store.state.helpText == "Update OnlySwitch on this Mac before pairing.")
     }
 
     @Test func preparedPairingBecomesNonDismissibleBeforeFinalizingAndDelegating() async {
