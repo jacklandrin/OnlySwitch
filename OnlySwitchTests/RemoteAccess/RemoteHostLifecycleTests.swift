@@ -470,21 +470,31 @@ struct RemoteCatalogMonitorTests {
 
     @Test(.timeLimit(.minutes(1)))
     func notificationsCoalesceIntoOneFollowUp() async throws {
-        let source = CatalogSource([Self.descriptor(id: .init(kind: .builtIn, value: "1"), available: true)])
+        let provider = SuspendedCatalogProvider(initial: [.darkModeDescriptor])
+        let coalesced = CoalescedRefreshProbe()
         let monitor = RemoteCatalogMonitor(
-            provider: await source.provider,
+            provider: await provider.provider,
             pollInterval: .hours(1),
             debounceInterval: .zero,
-            pollWait: { try await Task.sleep(for: $0) }
+            pollWait: { try await Task.sleep(for: $0) },
+            refreshCoalescedObserver: { coalesced.record() }
         )
         _ = try await monitor.current()
         await monitor.setAuthenticatedSessionCount(1)
 
+        let first = Task { try await monitor.requestRefresh() }
+        await provider.waitUntilSuspendedCalls(1)
         await monitor.scheduleDebouncedRefresh()
+        await coalesced.waitUntilCount(1)
         await monitor.scheduleDebouncedRefresh()
-        await source.waitUntilCalls(2)
+        await coalesced.waitUntilCount(2)
+        await provider.resumeOldest(with: [.hideDesktopDescriptor])
+        await provider.waitUntilSuspendedCalls(2)
+        await provider.resumeNewest(with: [.muteDescriptor])
+        _ = try await first.value
 
-        #expect(await source.catalogCalls == 2)
+        #expect(await provider.suspendedCallCount == 2)
+        #expect(try await monitor.current().controls == [.muteDescriptor])
         await monitor.stop()
     }
 
@@ -575,12 +585,39 @@ struct RemoteCatalogMonitorTests {
     }
 
     @Test(.timeLimit(.minutes(1)))
+    func oldCancelledRefreshCannotClearItsReplacement() async throws {
+        let provider = CancellationAwareCatalogProvider(
+            leading: [[.darkModeDescriptor]],
+            first: [.hideDesktopDescriptor],
+            subsequent: [.muteDescriptor]
+        )
+        let monitor = RemoteCatalogMonitor(
+            provider: provider.provider,
+            observeNotifications: false
+        )
+        #expect(try await monitor.current().controls == [.darkModeDescriptor])
+        let oldRefresh = Task { try await monitor.requestRefresh() }
+        await provider.waitUntilFirstStarted()
+
+        let stopping = Task { await monitor.setAuthenticatedSessionCount(0) }
+        await provider.waitUntilFirstCancelled()
+        let replacement = try #require(try await monitor.requestRefresh())
+        provider.resumeFirst()
+        await stopping.value
+        await #expect(throws: CancellationError.self) { try await oldRefresh.value }
+
+        #expect(replacement == .init(revision: 2, controls: [.muteDescriptor]))
+        #expect(try await monitor.current() == replacement)
+        #expect(provider.callCount == 3)
+    }
+
+    @Test(.timeLimit(.minutes(1)))
     func stopAwaitsObservationTasks() async throws {
         let source = CatalogSource([])
         let started = TestSignal()
         let monitor = RemoteCatalogMonitor(
             provider: await source.provider,
-            observeNotifications: false,
+            debounceInterval: .hours(1),
             pollWait: { _ in
                 await started.signal()
                 try await Task.sleep(for: .hours(1))
@@ -589,6 +626,7 @@ struct RemoteCatalogMonitorTests {
         _ = try await monitor.current()
         await monitor.setAuthenticatedSessionCount(1)
         await started.wait()
+        await monitor.scheduleDebouncedRefresh()
 
         await monitor.stop()
         #expect(await source.catalogCalls == 1)
@@ -748,12 +786,14 @@ private actor CatalogSource {
 private actor SuspendedCatalogProvider {
     private var initial: [RemoteControlDescriptor]?
     private var suspendedCalls = 0
-    private var suspendedCallWaiters: [CheckedContinuation<Void, Never>] = []
+    private var suspendedCallWaiters: [(Int, CheckedContinuation<Void, Never>)] = []
     private var continuations: [CheckedContinuation<[RemoteControlDescriptor], Error>] = []
 
     init(initial: [RemoteControlDescriptor]) {
         self.initial = initial
     }
+
+    var suspendedCallCount: Int { suspendedCalls }
 
     var provider: RemoteCatalogProvider {
         RemoteCatalogProvider(
@@ -775,7 +815,7 @@ private actor SuspendedCatalogProvider {
 
     func waitUntilSuspendedCalls(_ count: Int) async {
         guard suspendedCalls < count else { return }
-        await withCheckedContinuation { suspendedCallWaiters.append($0) }
+        await withCheckedContinuation { suspendedCallWaiters.append((count, $0)) }
     }
 
     func resumeNewest(with controls: [RemoteControlDescriptor]) {
@@ -792,12 +832,37 @@ private actor SuspendedCatalogProvider {
             return initial
         }
         suspendedCalls += 1
-        if suspendedCalls >= 2 {
-            let waiters = suspendedCallWaiters
-            suspendedCallWaiters.removeAll()
-            waiters.forEach { $0.resume() }
-        }
+        let waiters = suspendedCallWaiters.filter { suspendedCalls >= $0.0 }.map(\.1)
+        suspendedCallWaiters.removeAll { suspendedCalls >= $0.0 }
+        waiters.forEach { $0.resume() }
         return try await withCheckedThrowingContinuation { continuations.append($0) }
+    }
+}
+
+private final class CoalescedRefreshProbe: @unchecked Sendable {
+    private let lock = NSLock()
+    private var count = 0
+    private var waiters: [(Int, CheckedContinuation<Void, Never>)] = []
+
+    func record() {
+        let ready = lock.withLock {
+            count += 1
+            let ready = waiters.filter { count >= $0.0 }.map(\.1)
+            waiters.removeAll { count >= $0.0 }
+            return ready
+        }
+        ready.forEach { $0.resume() }
+    }
+
+    func waitUntilCount(_ expected: Int) async {
+        await withCheckedContinuation { continuation in
+            let shouldResume = lock.withLock {
+                guard count < expected else { return true }
+                waiters.append((expected, continuation))
+                return false
+            }
+            if shouldResume { continuation.resume() }
+        }
     }
 }
 
@@ -874,13 +939,19 @@ private final class CancellationAwareCatalogProvider: @unchecked Sendable {
     private let lock = NSLock()
     private let first: [RemoteControlDescriptor]
     private let subsequent: [RemoteControlDescriptor]
+    private let leading: [[RemoteControlDescriptor]]
     private var calls = 0
     private var firstContinuation: CheckedContinuation<Void, Never>?
     private var startedWaiters: [CheckedContinuation<Void, Never>] = []
     private var cancelledWaiters: [CheckedContinuation<Void, Never>] = []
     private var firstCancelled = false
 
-    init(first: [RemoteControlDescriptor], subsequent: [RemoteControlDescriptor]) {
+    init(
+        leading: [[RemoteControlDescriptor]] = [],
+        first: [RemoteControlDescriptor],
+        subsequent: [RemoteControlDescriptor]
+    ) {
+        self.leading = leading
         self.first = first
         self.subsequent = subsequent
     }
@@ -939,7 +1010,8 @@ private final class CancellationAwareCatalogProvider: @unchecked Sendable {
             calls += 1
             return calls
         }
-        guard call == 1 else { return subsequent }
+        if call <= leading.count { return leading[call - 1] }
+        guard call == leading.count + 1 else { return subsequent }
 
         try await withTaskCancellationHandler {
             await withCheckedContinuation { continuation in

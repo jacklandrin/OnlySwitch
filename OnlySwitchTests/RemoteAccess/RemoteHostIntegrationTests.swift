@@ -715,6 +715,66 @@ struct RemoteHostIntegrationTests {
     }
 
     @Test(.timeLimit(.minutes(1)))
+    func revocationWhileAuthenticationResultIsSuspendedCannotSendSuccess() async throws {
+        let boundary = AuthenticationResultGate()
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let host = RemoteHost.testing(
+            catalog: [],
+            router: router,
+            pairingCode: "ABCDEFGH2345",
+            authenticationResultSender: { try await boundary.send($0) }
+        )
+        let endpoint = try await host.startForTesting(port: 0)
+        defer { Task { await host.stop() } }
+        let paired = try await RemoteHostTestClient.connect(to: endpoint)
+        try await paired.pair(code: "ABCDEFGH2345")
+        let identity = try await paired.pairingIdentity()
+
+        await boundary.suspendNextAuthenticationResult()
+        let reconnecting = try await RemoteHostTestClient.connect(
+            to: endpoint,
+            deviceID: identity.deviceID
+        )
+        let authentication = Task {
+            try await reconnecting.authenticate(credential: identity.credential)
+        }
+        await boundary.waitUntilSuspended()
+        try await host.revoke(deviceID: identity.deviceID)
+        await boundary.open()
+
+        await #expect(throws: (any Error).self) { try await authentication.value }
+        #expect(await host.authenticatedSessionCountForTesting() == 0)
+        #expect(try await host.pairedDevices().isEmpty)
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func revocationWhilePairingCommitResultIsSuspendedCannotConfirmCommit() async throws {
+        let boundary = AuthenticationResultGate()
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let host = RemoteHost.testing(
+            catalog: [],
+            router: router,
+            pairingCode: "ABCDEFGH2345",
+            authenticationResultSender: { try await boundary.send($0) }
+        )
+        let endpoint = try await host.startForTesting(port: 0)
+        defer { Task { await host.stop() } }
+        let client = try await RemoteHostTestClient.connect(to: endpoint)
+        let prepared = try await client.preparePairing(code: "ABCDEFGH2345")
+
+        await boundary.suspendNextAuthenticationResult()
+        try await client.sendTransaction(.pairingCommit(.init(transactionID: prepared.transactionID)))
+        let confirmation = Task { try await client.receiveTransactionStatus() }
+        await boundary.waitUntilSuspended()
+        try await host.revoke(deviceID: await client.id)
+        await boundary.open()
+
+        await #expect(throws: (any Error).self) { try await confirmation.value }
+        #expect(await host.authenticatedSessionCountForTesting() == 0)
+        #expect(try await host.pairedDevices().isEmpty)
+    }
+
+    @Test(.timeLimit(.minutes(1)))
     func wrongPairingProofIsRejected() async throws {
         let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
         let host = RemoteHost.testing(catalog: [], router: router, pairingCode: "ABCDEFGH2345")
@@ -890,15 +950,18 @@ private actor IntegrationCatalogSource {
 private actor AuthenticationResultGate {
     private var shouldSuspend = false
     private var isOpen = false
+    private var didSuspend = false
     private var enteredWaiters: [CheckedContinuation<Void, Never>] = []
     private var openWaiters: [CheckedContinuation<Void, Never>] = []
 
     func suspendNextAuthenticationResult() {
         shouldSuspend = true
         isOpen = false
+        didSuspend = false
     }
 
     func waitUntilSuspended() async {
+        guard didSuspend == false else { return }
         await withCheckedContinuation { enteredWaiters.append($0) }
     }
 
@@ -912,6 +975,7 @@ private actor AuthenticationResultGate {
     func send(_ operation: @escaping @Sendable () async throws -> Void) async throws {
         if shouldSuspend {
             shouldSuspend = false
+            didSuspend = true
             let waiters = enteredWaiters
             enteredWaiters.removeAll()
             waiters.forEach { $0.resume() }

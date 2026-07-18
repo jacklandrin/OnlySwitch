@@ -12,6 +12,7 @@ actor RemoteCatalogMonitor {
     private let debounceInterval: Duration
     private let observeNotifications: Bool
     private let pollWait: @Sendable (Duration) async throws -> Void
+    private let refreshCoalescedObserver: @Sendable () -> Void
     private let changeStream: AsyncStream<RemoteCatalogSnapshot>
     private let changeContinuation: AsyncStream<RemoteCatalogSnapshot>.Continuation
     private var snapshot: RemoteCatalogSnapshot?
@@ -34,7 +35,8 @@ actor RemoteCatalogMonitor {
         observeNotifications: Bool = true,
         pollWait: @escaping @Sendable (Duration) async throws -> Void = { duration in
             try await Task.sleep(for: duration)
-        }
+        },
+        refreshCoalescedObserver: @escaping @Sendable () -> Void = {}
     ) {
         let (stream, continuation) = AsyncStream.makeStream(
             of: RemoteCatalogSnapshot.self,
@@ -45,6 +47,7 @@ actor RemoteCatalogMonitor {
         self.debounceInterval = debounceInterval
         self.observeNotifications = observeNotifications
         self.pollWait = pollWait
+        self.refreshCoalescedObserver = refreshCoalescedObserver
         self.changeStream = stream
         self.changeContinuation = continuation
     }
@@ -75,6 +78,7 @@ actor RemoteCatalogMonitor {
     @discardableResult
     func requestRefresh() async throws -> RemoteCatalogSnapshot? {
         if let refreshTask {
+            refreshCoalescedObserver()
             refreshFollowUpRequested = true
             return try await refreshTask.value
         }

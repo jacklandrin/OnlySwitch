@@ -106,6 +106,7 @@ actor RemotePeerSession {
     private let subscriptionsChanged: @Sendable (UUID, Set<RemoteControlID>, @escaping RemoteStatusScheduler.Sink) async throws -> Void
     private let refreshRequested: @Sendable (RemoteControlID) async -> Void
     private let authenticated: @Sendable (UUID, UUID) async -> Bool
+    private let authenticationAuthorized: @Sendable (UUID, UUID) async -> Bool
     private let authenticationConfirmed: @Sendable (UUID, UUID) async -> Bool
     private let authenticationResultSender: AuthenticationResultSender
     private let commitStageReached: @Sendable (RemotePairingCommitStage) async -> Void
@@ -137,6 +138,7 @@ actor RemotePeerSession {
         subscriptionsChanged: @escaping @Sendable (UUID, Set<RemoteControlID>, @escaping RemoteStatusScheduler.Sink) async throws -> Void,
         refreshRequested: @escaping @Sendable (RemoteControlID) async -> Void,
         authenticated: @escaping @Sendable (UUID, UUID) async -> Bool,
+        authenticationAuthorized: @escaping @Sendable (UUID, UUID) async -> Bool,
         authenticationConfirmed: @escaping @Sendable (UUID, UUID) async -> Bool,
         authenticationResultSender: @escaping AuthenticationResultSender = { operation in
             try await operation()
@@ -163,6 +165,7 @@ actor RemotePeerSession {
         self.subscriptionsChanged = subscriptionsChanged
         self.refreshRequested = refreshRequested
         self.authenticated = authenticated
+        self.authenticationAuthorized = authenticationAuthorized
         self.authenticationConfirmed = authenticationConfirmed
         self.authenticationResultSender = authenticationResultSender
         self.commitStageReached = commitStageReached
@@ -501,8 +504,14 @@ actor RemotePeerSession {
             .success(.init(sessionID: id, catalogRevision: advertisedCatalog.revision))
         )
         try await authenticationResultSender { [self] in
+            try await requireAwaitingAuthentication()
+            guard await authenticationAuthorized(id, client.deviceID) else {
+                throw RemoteProtocolError(code: .authenticationFailed, message: "Credential was revoked")
+            }
+            try await requireAwaitingAuthentication()
             try await sendEncrypted(authenticationResult)
         }
+        try requireAwaitingAuthentication()
         authenticatedCredential = credential
         state = .authenticated(client.deviceID)
         advertisedCatalogRevision = advertisedCatalog.revision
@@ -641,6 +650,11 @@ actor RemotePeerSession {
         }
         try requireCommitting(committed.id, transactionID: command.transactionID)
         try await authenticationResultSender { [self] in
+            try await requireCommitting(committed.id, transactionID: command.transactionID)
+            guard await authenticationAuthorized(id, committed.id) else {
+                throw RemoteProtocolError(code: .authenticationFailed, message: "Credential was revoked")
+            }
+            try await requireCommitting(committed.id, transactionID: command.transactionID)
             try await sendEncrypted(.pairingCommitted(command))
         }
         try requireCommitting(committed.id, transactionID: command.transactionID)
@@ -679,6 +693,12 @@ actor RemotePeerSession {
         guard case let .committing(activeDeviceID, activeTransactionID) = state,
               activeDeviceID == deviceID,
               activeTransactionID == transactionID else {
+            throw CancellationError()
+        }
+    }
+
+    private func requireAwaitingAuthentication() throws {
+        guard case .awaitingPairOrAuthentication = state else {
             throw CancellationError()
         }
     }

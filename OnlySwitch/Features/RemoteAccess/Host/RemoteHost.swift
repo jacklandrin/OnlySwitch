@@ -383,6 +383,13 @@ actor RemoteHost {
                     generation: generation
                 ) ?? false
             },
+            authenticationAuthorized: { [weak self] sessionID, deviceID in
+                await self?.sessionAuthenticationIsAuthorized(
+                    sessionID,
+                    deviceID: deviceID,
+                    generation: generation
+                ) ?? false
+            },
             authenticationConfirmed: { [weak self] sessionID, deviceID in
                 await self?.sessionAuthenticationConfirmed(
                     sessionID,
@@ -481,6 +488,18 @@ actor RemoteHost {
             eventContinuation.yield(.devicesChanged(devices))
         }
         return lifecycle.isAuthorized(
+            sessionID: sessionID,
+            deviceID: deviceID,
+            generation: generation
+        )
+    }
+
+    private func sessionAuthenticationIsAuthorized(
+        _ sessionID: UUID,
+        deviceID: UUID,
+        generation: UInt64
+    ) -> Bool {
+        lifecycle.isAuthorized(
             sessionID: sessionID,
             deviceID: deviceID,
             generation: generation
