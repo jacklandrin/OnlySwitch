@@ -15,6 +15,7 @@ actor RemoteCatalogMonitor {
     private let changeStream: AsyncStream<RemoteCatalogSnapshot>
     private let changeContinuation: AsyncStream<RemoteCatalogSnapshot>.Continuation
     private var snapshot: RemoteCatalogSnapshot?
+    private var snapshotGeneration: UInt64 = 0
     private var pollingTask: Task<Void, Never>?
     private var notificationTasks: [Task<Void, Never>] = []
     private var debounceTask: Task<Void, Never>?
@@ -57,8 +58,10 @@ actor RemoteCatalogMonitor {
 
     func current() async throws -> RemoteCatalogSnapshot {
         if let snapshot { return snapshot }
+        let generation = snapshotGeneration
         let controls = try await loadNormalizedCatalog()
         if let snapshot { return snapshot }
+        guard snapshotGeneration == generation else { throw CancellationError() }
         let initial = RemoteCatalogSnapshot(revision: 1, controls: controls)
         snapshot = initial
         return initial
@@ -143,6 +146,7 @@ actor RemoteCatalogMonitor {
 
     func stop() async {
         authenticatedSessionCount = 0
+        snapshotGeneration &+= 1
         snapshot = nil
         await stopMonitoring()
     }

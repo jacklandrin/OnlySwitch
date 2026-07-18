@@ -594,6 +594,30 @@ struct RemoteCatalogMonitorTests {
         #expect(await source.catalogCalls == 1)
     }
 
+    @Test(.timeLimit(.minutes(1)))
+    func stopDuringInitialRefreshCannotRestoreClearedSnapshot() async throws {
+        let provider = CancellationAwareCatalogProvider(
+            first: [.darkModeDescriptor],
+            subsequent: [.muteDescriptor]
+        )
+        let monitor = RemoteCatalogMonitor(
+            provider: provider.provider,
+            observeNotifications: false
+        )
+        let refresh = Task { try await monitor.requestRefresh() }
+        await provider.waitUntilFirstStarted()
+
+        let stopping = Task { await monitor.stop() }
+        await provider.waitUntilFirstCancelled()
+        provider.resumeFirst()
+        await stopping.value
+        await #expect(throws: CancellationError.self) { try await refresh.value }
+
+        let restarted = try await monitor.current()
+        #expect(restarted == .init(revision: 1, controls: [.muteDescriptor]))
+        #expect(provider.callCount == 2)
+    }
+
     @Test
     func lazySnapshotStartsAtOneAndOrderOnlyChangesDoNotAdvanceRevision() async throws {
         let source = CatalogSource([
@@ -843,6 +867,99 @@ private final class PollWaitGate: @unchecked Sendable {
             return waits
         }
         continuations.forEach { $0.resume() }
+    }
+}
+
+private final class CancellationAwareCatalogProvider: @unchecked Sendable {
+    private let lock = NSLock()
+    private let first: [RemoteControlDescriptor]
+    private let subsequent: [RemoteControlDescriptor]
+    private var calls = 0
+    private var firstContinuation: CheckedContinuation<Void, Never>?
+    private var startedWaiters: [CheckedContinuation<Void, Never>] = []
+    private var cancelledWaiters: [CheckedContinuation<Void, Never>] = []
+    private var firstCancelled = false
+
+    init(first: [RemoteControlDescriptor], subsequent: [RemoteControlDescriptor]) {
+        self.first = first
+        self.subsequent = subsequent
+    }
+
+    var callCount: Int { lock.withLock { calls } }
+
+    var provider: RemoteCatalogProvider {
+        RemoteCatalogProvider(
+            catalog: { [weak self] in try await self?.load() ?? [] },
+            status: { id, revision in
+                RemoteControlStatus(
+                    id: id,
+                    isAvailable: true,
+                    unavailableReason: nil,
+                    isOn: nil,
+                    secondaryInformation: nil,
+                    isProcessing: false,
+                    revision: revision,
+                    updatedAt: .now
+                )
+            }
+        )
+    }
+
+    func waitUntilFirstStarted() async {
+        await withCheckedContinuation { continuation in
+            let shouldResume = lock.withLock {
+                guard calls == 0 else { return true }
+                startedWaiters.append(continuation)
+                return false
+            }
+            if shouldResume { continuation.resume() }
+        }
+    }
+
+    func waitUntilFirstCancelled() async {
+        await withCheckedContinuation { continuation in
+            let shouldResume = lock.withLock {
+                guard firstCancelled == false else { return true }
+                cancelledWaiters.append(continuation)
+                return false
+            }
+            if shouldResume { continuation.resume() }
+        }
+    }
+
+    func resumeFirst() {
+        lock.withLock {
+            defer { firstContinuation = nil }
+            return firstContinuation
+        }?.resume()
+    }
+
+    private func load() async throws -> [RemoteControlDescriptor] {
+        let call = lock.withLock {
+            calls += 1
+            return calls
+        }
+        guard call == 1 else { return subsequent }
+
+        try await withTaskCancellationHandler {
+            await withCheckedContinuation { continuation in
+                let waiters = lock.withLock {
+                    firstContinuation = continuation
+                    defer { startedWaiters.removeAll() }
+                    return startedWaiters
+                }
+                waiters.forEach { $0.resume() }
+            }
+        } onCancel: {
+            let waiters = self.lock.withLock {
+                self.firstCancelled = true
+                defer { self.cancelledWaiters.removeAll() }
+                return self.cancelledWaiters
+            }
+            waiters.forEach { $0.resume() }
+        }
+        try Task.checkCancellation()
+        return first
     }
 }
 
