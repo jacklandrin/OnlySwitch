@@ -944,6 +944,7 @@ private final class CancellationAwareCatalogProvider: @unchecked Sendable {
     private var firstContinuation: CheckedContinuation<Void, Never>?
     private var startedWaiters: [CheckedContinuation<Void, Never>] = []
     private var cancelledWaiters: [CheckedContinuation<Void, Never>] = []
+    private var firstStarted = false
     private var firstCancelled = false
 
     init(
@@ -979,7 +980,7 @@ private final class CancellationAwareCatalogProvider: @unchecked Sendable {
     func waitUntilFirstStarted() async {
         await withCheckedContinuation { continuation in
             let shouldResume = lock.withLock {
-                guard calls == 0 else { return true }
+                guard firstStarted == false else { return true }
                 startedWaiters.append(continuation)
                 return false
             }
@@ -1017,6 +1018,7 @@ private final class CancellationAwareCatalogProvider: @unchecked Sendable {
             await withCheckedContinuation { continuation in
                 let waiters = lock.withLock {
                     firstContinuation = continuation
+                    firstStarted = true
                     defer { startedWaiters.removeAll() }
                     return startedWaiters
                 }
