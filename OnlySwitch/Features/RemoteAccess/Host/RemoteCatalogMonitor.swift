@@ -80,38 +80,48 @@ actor RemoteCatalogMonitor {
         let refreshID = refreshGeneration
         let task = Task { [weak self] () throws -> RemoteCatalogSnapshot? in
             guard let self else { throw CancellationError() }
-            return try await self.performRequestedRefreshes()
+            return try await self.performRequestedRefreshes(refreshID: refreshID)
         }
         refreshTask = task
         activeRefreshID = refreshID
-        do {
-            let result = try await task.value
-            if activeRefreshID == refreshID {
-                self.refreshTask = nil
-                activeRefreshID = nil
-            }
-            return result
-        } catch {
-            if activeRefreshID == refreshID {
-                self.refreshTask = nil
-                activeRefreshID = nil
-            }
-            throw error
-        }
+        return try await task.value
     }
 
-    private func performRequestedRefreshes() async throws -> RemoteCatalogSnapshot? {
+    private func performRequestedRefreshes(refreshID: UInt64) async throws -> RemoteCatalogSnapshot? {
+        defer {
+            if activeRefreshID == refreshID {
+                refreshTask = nil
+                activeRefreshID = nil
+                refreshFollowUpRequested = false
+            }
+        }
         try Task.checkCancellation()
         guard snapshot != nil else {
             _ = try await current()
-            return nil
+            try Task.checkCancellation()
+            guard refreshFollowUpRequested else { return nil }
+            refreshFollowUpRequested = false
+            return try await loadAndPublishChangedCatalog()
         }
-        var controls: [RemoteControlDescriptor] = []
-        repeat {
+        var controls = try await loadNormalizedCatalog()
+        try Task.checkCancellation()
+        if refreshFollowUpRequested {
             refreshFollowUpRequested = false
             controls = try await loadNormalizedCatalog()
             try Task.checkCancellation()
-        } while refreshFollowUpRequested
+        }
+        return publishChangedCatalog(controls)
+    }
+
+    private func loadAndPublishChangedCatalog() async throws -> RemoteCatalogSnapshot? {
+        let controls = try await loadNormalizedCatalog()
+        try Task.checkCancellation()
+        return publishChangedCatalog(controls)
+    }
+
+    private func publishChangedCatalog(
+        _ controls: [RemoteControlDescriptor]
+    ) -> RemoteCatalogSnapshot? {
         guard let existing = snapshot, controls != existing.controls else { return nil }
         let changed = RemoteCatalogSnapshot(
             revision: existing.revision &+ 1,
@@ -183,6 +193,7 @@ actor RemoteCatalogMonitor {
         activeRefreshTask?.cancel()
         refreshTask = nil
         activeRefreshID = nil
+        refreshFollowUpRequested = false
         await activePollingTask?.value
         for task in activeNotificationTasks { await task.value }
         await activeDebounceTask?.value

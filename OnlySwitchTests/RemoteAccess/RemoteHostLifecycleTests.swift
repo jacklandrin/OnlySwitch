@@ -542,6 +542,39 @@ struct RemoteCatalogMonitorTests {
     }
 
     @Test(.timeLimit(.minutes(1)))
+    func restartWhileOldPollerIsStoppingPreservesOnlyTheNewPoller() async throws {
+        let source = CatalogSource([])
+        let waits = PollWaitGate()
+        let monitor = RemoteCatalogMonitor(
+            provider: await source.provider,
+            observeNotifications: false,
+            pollWait: { _ in try await waits.wait() }
+        )
+        _ = try await monitor.current()
+        await monitor.setAuthenticatedSessionCount(1)
+        await waits.waitUntilStarted(1)
+
+        let stopping = Task { await monitor.setAuthenticatedSessionCount(0) }
+        await waits.waitUntilCancelled(1)
+        await monitor.setAuthenticatedSessionCount(1)
+        await waits.waitUntilStarted(2)
+
+        waits.resumeOldest()
+        await stopping.value
+        waits.resumeOldest()
+        await source.waitUntilCalls(2)
+        await waits.waitUntilStarted(3)
+
+        #expect(await source.catalogCalls == 2)
+        #expect(waits.pendingCount == 1)
+
+        let finalStop = Task { await monitor.stop() }
+        await waits.waitUntilCancelled(2)
+        waits.resumeAll()
+        await finalStop.value
+    }
+
+    @Test(.timeLimit(.minutes(1)))
     func stopAwaitsObservationTasks() async throws {
         let source = CatalogSource([])
         let started = TestSignal()
@@ -741,6 +774,75 @@ private actor SuspendedCatalogProvider {
             waiters.forEach { $0.resume() }
         }
         return try await withCheckedThrowingContinuation { continuations.append($0) }
+    }
+}
+
+private final class PollWaitGate: @unchecked Sendable {
+    private let lock = NSLock()
+    private var waits: [CheckedContinuation<Void, Never>] = []
+    private var startedCount = 0
+    private var cancelledCount = 0
+    private var startedWaiters: [(Int, CheckedContinuation<Void, Never>)] = []
+    private var cancelledWaiters: [(Int, CheckedContinuation<Void, Never>)] = []
+
+    var pendingCount: Int { lock.withLock { waits.count } }
+
+    func wait() async throws {
+        await withTaskCancellationHandler {
+            await withCheckedContinuation { continuation in
+                let ready: [CheckedContinuation<Void, Never>] = lock.withLock {
+                    waits.append(continuation)
+                    startedCount += 1
+                    let ready = startedWaiters.filter { startedCount >= $0.0 }.map(\.1)
+                    startedWaiters.removeAll { startedCount >= $0.0 }
+                    return ready
+                }
+                ready.forEach { $0.resume() }
+            }
+        } onCancel: {
+            let ready: [CheckedContinuation<Void, Never>] = self.lock.withLock {
+                self.cancelledCount += 1
+                let ready = self.cancelledWaiters.filter { self.cancelledCount >= $0.0 }.map(\.1)
+                self.cancelledWaiters.removeAll { self.cancelledCount >= $0.0 }
+                return ready
+            }
+            ready.forEach { $0.resume() }
+        }
+        try Task.checkCancellation()
+    }
+
+    func waitUntilStarted(_ count: Int) async {
+        await withCheckedContinuation { continuation in
+            let shouldResume = lock.withLock {
+                guard startedCount < count else { return true }
+                startedWaiters.append((count, continuation))
+                return false
+            }
+            if shouldResume { continuation.resume() }
+        }
+    }
+
+    func waitUntilCancelled(_ count: Int) async {
+        await withCheckedContinuation { continuation in
+            let shouldResume = lock.withLock {
+                guard cancelledCount < count else { return true }
+                cancelledWaiters.append((count, continuation))
+                return false
+            }
+            if shouldResume { continuation.resume() }
+        }
+    }
+
+    func resumeOldest() {
+        lock.withLock { waits.isEmpty ? nil : waits.removeFirst() }?.resume()
+    }
+
+    func resumeAll() {
+        let continuations = lock.withLock {
+            defer { waits.removeAll() }
+            return waits
+        }
+        continuations.forEach { $0.resume() }
     }
 }
 

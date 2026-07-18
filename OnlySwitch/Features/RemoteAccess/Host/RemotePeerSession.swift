@@ -399,6 +399,7 @@ actor RemotePeerSession {
             expiresAt: expiresAt
         )))
         try await io.send(.encrypted(protectedResult))
+        advertisedCatalogRevision = catalog.revision
         crypto = try Self.makeCrypto(
             role: .server,
             privateKey: serverKey,
@@ -643,18 +644,27 @@ actor RemotePeerSession {
             try await sendEncrypted(.pairingCommitted(command))
         }
         try requireCommitting(committed.id, transactionID: command.transactionID)
-        authenticatedCredential = committed.credential
-        state = .authenticated(committed.id)
         guard await authenticationConfirmed(id, committed.id) else {
             throw RemoteProtocolError(code: .authenticationFailed, message: "Credential was revoked")
         }
+        try requireCommitting(committed.id, transactionID: command.transactionID)
         let currentCatalog = try await catalogSnapshot()
+        try requireCommitting(committed.id, transactionID: command.transactionID)
         try await sendCatalogChangeIfNeeded(currentCatalog)
+        try requireCommitting(committed.id, transactionID: command.transactionID)
         try? await credentialStore.finalizeRepair(
             deviceID: committed.id,
             matchingCredential: committed.credential
         )
         try requireCommitting(committed.id, transactionID: command.transactionID)
+        authenticatedCredential = committed.credential
+        state = .authenticated(committed.id)
+
+        // A monitor refresh can be skipped while this peer is still committing.
+        // Re-read after the synchronous state transition so every revision is
+        // either observed here or by the normal authenticated broadcast path.
+        let authenticatedCatalog = try await catalogSnapshot()
+        try await sendCatalogChangeIfNeeded(authenticatedCatalog)
     }
 
     private func requireProvisional(_ pendingPairing: PendingPairing) throws {
