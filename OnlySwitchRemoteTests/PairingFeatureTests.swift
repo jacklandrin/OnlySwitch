@@ -103,9 +103,31 @@ struct PairingFeatureTests {
         #expect(store.state.canPair)
     }
 
-    @Test func pairingSuccessDelegatesPairedMac() async {
+    @Test func legacyMacRemainsVisibleButPairingIsDisabledWithUpgradeExplanation() async {
+        let legacy = DiscoveredMac(
+            id: macID,
+            displayName: "Studio",
+            endpoint: .hostPort(host: "studio.local", port: 9_000),
+            protocolVersion: .init(major: 1, minor: 1)
+        )
+        var state = PairingFeature.State()
+        state.discoveredMacs = [legacy]
+        state.selectedMacID = macID
+        state.code = "ABCDEFGHJKMN"
+
+        #expect(state.canPair == false)
+        #expect(state.helpText == "Update OnlySwitch on this Mac before pairing.")
+    }
+
+    @Test func preparedPairingBecomesNonDismissibleBeforeFinalizingAndDelegating() async {
         let mac = discovered()
         let paired = PairedMac(id: macID, displayName: "Studio", lastEndpointDescription: nil, lastConnectedAt: nil, requiresPairing: false)
+        let transactionID = UUID()
+        let prepared = PreparedPairing(
+            transactionID: transactionID,
+            mac: paired,
+            catalog: .init(revision: 1, controls: [])
+        )
         var state = PairingFeature.State()
         state.discoveredMacs = [mac]
         state.selectedMacID = macID
@@ -113,7 +135,11 @@ struct PairingFeatureTests {
         let store = TestStore(initialState: state) {
             PairingFeature()
         } withDependencies: {
-            $0.remoteConnection.pair = { _, _, _ in paired }
+            $0.remoteConnection.preparePairing = { _, _, _ in prepared }
+            $0.remoteConnection.finalizePairing = { id in
+                #expect(id == transactionID)
+                return paired
+            }
         }
 
         await store.send(.pairTapped) {
@@ -122,11 +148,43 @@ struct PairingFeatureTests {
             $0.issue = nil
             $0.pairingGeneration = 1
         }
-        await store.receive(.pairingResponse(1, macID, .success(paired))) {
+        await store.receive(.prepared(1, macID, .success(prepared))) {
+            $0.isFinalizing = true
+            $0.preparedTransactionID = transactionID
+            $0.finalizationAttempt = 1
+        }
+        await store.receive(.finalizeResponse(1, 1, transactionID, .success(paired))) {
             $0.isPairing = false
+            $0.isFinalizing = false
             $0.pairingTargetID = nil
+            $0.preparedTransactionID = nil
+            $0.finalizationAttempt = 0
         }
         await store.receive(.delegate(.paired(paired)))
+    }
+
+    @Test func staleFinalizationAttemptCannotPublishOrReopenRetry() async {
+        let transactionID = UUID()
+        let paired = PairedMac(
+            id: macID,
+            displayName: "Studio",
+            lastEndpointDescription: nil,
+            lastConnectedAt: nil,
+            requiresPairing: false
+        )
+        var state = PairingFeature.State()
+        state.pairingGeneration = 4
+        state.finalizationAttempt = 2
+        state.isPairing = true
+        state.isFinalizing = true
+        state.preparedTransactionID = transactionID
+        let store = TestStore(initialState: state) { PairingFeature() }
+
+        await store.send(.finalizeResponse(4, 1, transactionID, .success(paired)))
+
+        #expect(store.state.isFinalizing)
+        #expect(store.state.preparedTransactionID == transactionID)
+        #expect(store.state.issue == nil)
     }
 
     @Test func pairingExpiryHasSpecificRecoverableState() async {
@@ -138,7 +196,7 @@ struct PairingFeatureTests {
             $0.issue = nil
             $0.pairingGeneration = 1
         }
-        await store.receive(.pairingResponse(1, macID, .failure(.expired))) {
+        await store.receive(.prepared(1, macID, .failure(.expired))) {
             $0.isPairing = false
             $0.pairingTargetID = nil
             $0.issue = .expired
@@ -161,7 +219,7 @@ struct PairingFeatureTests {
             $0.issue = nil
             $0.pairingGeneration = 1
         }
-        await store.receive(.pairingResponse(1, macID, .failure(value.1))) {
+        await store.receive(.prepared(1, macID, .failure(value.1))) {
             $0.isPairing = false
             $0.pairingTargetID = nil
             $0.issue = value.1
@@ -202,7 +260,7 @@ struct PairingFeatureTests {
             $0.discoveryGeneration = 1
             $0.pairingGeneration = 8
         }
-        await store.send(.pairingResponse(7, macID, .success(paired)))
+        await store.send(.prepared(7, macID, .success(prepared(paired))))
         #expect(store.state.issue == nil)
     }
 
@@ -223,7 +281,7 @@ struct PairingFeatureTests {
         state.pairingGeneration = 7
         let store = TestStore(initialState: state) { PairingFeature() }
 
-        await store.send(.pairingResponse(7, otherID, .success(paired)))
+        await store.send(.prepared(7, otherID, .success(prepared(paired))))
 
         #expect(store.state.isPairing)
         #expect(store.state.pairingTargetID == macID)
@@ -246,11 +304,39 @@ struct PairingFeatureTests {
         state.pairingGeneration = 7
         let store = TestStore(initialState: state) { PairingFeature() }
 
-        await store.send(.pairingResponse(7, macID, .success(paired))) {
+        await store.send(.prepared(7, macID, .success(prepared(paired)))) {
             $0.isPairing = false
             $0.pairingTargetID = nil
             $0.issue = .identityMismatch
         }
+    }
+
+    @Test func preparedAfterPresentationWasInvalidatedIsAbortedWithoutPublication() async {
+        let transactionID = UUID()
+        let aborted = LockIsolated<[UUID?]>([])
+        let candidate = PairedMac(
+            id: macID,
+            displayName: "Studio",
+            lastEndpointDescription: nil,
+            lastConnectedAt: nil,
+            requiresPairing: false
+        )
+        var state = PairingFeature.State()
+        state.pairingGeneration = 8
+        let store = TestStore(initialState: state) { PairingFeature() } withDependencies: {
+            $0.remoteConnection.abortPairing = { id in aborted.withValue { $0.append(id) } }
+        }
+
+        await store.send(.prepared(7, macID, .success(.init(
+            transactionID: transactionID,
+            mac: candidate,
+            catalog: .init(revision: 1, controls: [])
+        ))))
+        await store.finish()
+
+        #expect(aborted.value == [transactionID])
+        #expect(store.state.preparedTransactionID == nil)
+        #expect(store.state.isFinalizing == false)
     }
 
     @Test func codeChangesAreIgnoredWhilePairing() async {
@@ -342,8 +428,8 @@ struct PairingFeatureTests {
         let store = TestStore(initialState: state) {
             SettingsFeature()
         } withDependencies: {
-            $0.remoteConnection.cancelPairing = { transportCancellations.withValue { $0 += 1 } }
-            $0.remoteConnection.pair = { _, _, _ in
+            $0.remoteConnection.abortPairing = { _ in transportCancellations.withValue { $0 += 1 } }
+            $0.remoteConnection.preparePairing = { _, _, _ in
                 startedContinuation.yield(())
                 for await _ in gate { break }
                 if Task.isCancelled {
@@ -373,7 +459,7 @@ struct PairingFeatureTests {
         cancelledContinuation.finish()
         await store.finish()
         #expect(store.state.pairing == nil)
-        #expect(transportCancellations.value == 1)
+        #expect(transportCancellations.value == 0)
     }
 
     @Test func interactivePairingDismissCancelsTransportTransaction() async {
@@ -381,12 +467,20 @@ struct PairingFeatureTests {
         var state = SettingsFeature.State(isSetupRequired: false)
         state.pairing = PairingFeature.State()
         let store = TestStore(initialState: state) { SettingsFeature() } withDependencies: {
-            $0.remoteConnection.cancelPairing = { transportCancellations.withValue { $0 += 1 } }
+            $0.remoteConnection.abortPairing = { _ in transportCancellations.withValue { $0 += 1 } }
         }
 
         await store.send(.pairing(.dismiss)) { $0.pairing = nil }
         await store.finish()
-        #expect(transportCancellations.value == 1)
+        #expect(transportCancellations.value == 0)
+    }
+
+    @Test func reducerAdoptionMakesPairingPresentationNonDismissible() async {
+        var pairing = PairingFeature.State()
+        pairing.isPairing = true
+        pairing.isFinalizing = true
+        pairing.preparedTransactionID = UUID()
+        #expect(pairing.isDismissDisabled)
     }
 
     private func discovered(name: String = "Studio", port: UInt16 = 9_000) -> DiscoveredMac {
@@ -406,7 +500,11 @@ struct PairingFeatureTests {
         return TestStore(initialState: state) {
             PairingFeature()
         } withDependencies: {
-            $0.remoteConnection.pair = { _, _, _ in throw error }
+            $0.remoteConnection.preparePairing = { _, _, _ in throw error }
         }
+    }
+
+    private func prepared(_ mac: PairedMac) -> PreparedPairing {
+        .init(transactionID: UUID(), mac: mac, catalog: .init(revision: 1, controls: []))
     }
 }

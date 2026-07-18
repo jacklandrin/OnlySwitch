@@ -48,6 +48,9 @@ struct PairingFeature {
         var pairingTargetID: UUID?
         var code = ""
         var isPairing = false
+        var isFinalizing = false
+        var preparedTransactionID: UUID?
+        var finalizationAttempt: UInt64 = 0
         var issue: PairingIssue?
         var isForegrounded = true
         var isDiscovering = false
@@ -57,9 +60,15 @@ struct PairingFeature {
         var canPair: Bool {
             isForegrounded
                 && isPairing == false
+                && isFinalizing == false
                 && code.count == Self.codeLength
-                && selectedMacID.flatMap { discoveredMacs[id: $0] } != nil
+                && selectedMacID.flatMap { discoveredMacs[id: $0] }.map {
+                    $0.protocolVersion.isCompatible(with: .current)
+                        && $0.protocolVersion.supportsTransactionalPairing
+                } == true
         }
+
+        var isDismissDisabled: Bool { isFinalizing }
 
         var helpText: LocalizedStringResource {
             if let issue { return issue.helpText }
@@ -67,6 +76,12 @@ struct PairingFeature {
                 return "Enable iOS Remote Access and start pairing in OnlySwitch on your Mac."
             }
             if selectedMacID == nil { return "Select a Mac to continue." }
+            if let selectedMacID,
+               let selected = discoveredMacs[id: selectedMacID],
+               selected.protocolVersion.isCompatible(with: .current) == false
+                || selected.protocolVersion.supportsTransactionalPairing == false {
+                return "Update OnlySwitch on this Mac before pairing."
+            }
             if code.count < Self.codeLength { return "Enter the 12-character code shown on your Mac." }
             return "Your code stays on this device and is used only for this pairing attempt."
         }
@@ -82,7 +97,9 @@ struct PairingFeature {
         case selectMac(UUID)
         case codeChanged(String)
         case pairTapped
-        case pairingResponse(UInt64, UUID, Result<PairedMac, PairingIssue>)
+        case retryFinalizeTapped
+        case prepared(UInt64, UUID, Result<PreparedPairing, PairingIssue>)
+        case finalizeResponse(UInt64, UInt64, UUID, Result<PairedMac, PairingIssue>)
         case foregroundChanged(Bool)
         case cancelTapped
         case delegate(Delegate)
@@ -129,6 +146,7 @@ struct PairingFeature {
                     state.discoveredMacs.updateOrAppend(mac)
                 case let .removed(id):
                     state.discoveredMacs.remove(id: id)
+                    if state.isFinalizing, state.pairingTargetID == id { return .none }
                     if state.selectedMacID == id {
                         state.selectedMacID = nil
                         state.issue = .selectedMacUnavailable
@@ -139,8 +157,7 @@ struct PairingFeature {
                         state.isPairing = false
                         state.issue = .selectedMacUnavailable
                         return .merge(
-                            .cancel(id: CancelID.pairing),
-                            .run { [connection] _ in await connection.cancelPairing() }
+                            .cancel(id: CancelID.pairing)
                         )
                     }
                 }
@@ -180,61 +197,111 @@ struct PairingFeature {
                 let code = state.code
                 let deviceName = ProcessInfo.processInfo.hostName
                 return .run { [connection] send in
+                    var transactionID: UUID?
                     do {
-                        let paired = try await connection.pair(mac, code, deviceName)
+                        let prepared = try await connection.preparePairing(mac, code, deviceName)
+                        transactionID = prepared.transactionID
                         try Task.checkCancellation()
-                        await send(.pairingResponse(generation, id, .success(paired)))
+                        await send(.prepared(generation, id, .success(prepared)))
+                        transactionID = nil
                     } catch is CancellationError {
+                        if let transactionID {
+                            await connection.abortPairing(transactionID)
+                        }
                     } catch let error as RemoteProtocolError {
-                        await send(.pairingResponse(generation, id, .failure(Self.issue(for: error))))
+                        await send(.prepared(generation, id, .failure(Self.issue(for: error))))
                     } catch {
-                        await send(.pairingResponse(generation, id, .failure(.connectionFailed)))
+                        await send(.prepared(generation, id, .failure(.connectionFailed)))
                     }
                 }
                 .cancellable(id: CancelID.pairing, cancelInFlight: true)
 
-            case let .pairingResponse(generation, targetID, result):
+            case let .prepared(generation, targetID, result):
                 guard generation == state.pairingGeneration,
                       targetID == state.pairingTargetID,
                       targetID == state.selectedMacID,
                       state.discoveredMacs[id: targetID] != nil,
                       state.isForegrounded,
                       state.isPairing
+                else {
+                    if case let .success(prepared) = result {
+                        return .run { [connection] _ in await connection.abortPairing(prepared.transactionID) }
+                    }
+                    return .none
+                }
+                switch result {
+                case let .success(prepared):
+                    guard prepared.mac.id == targetID else {
+                        state.isPairing = false
+                        state.pairingTargetID = nil
+                        state.issue = .identityMismatch
+                        return .run { [connection] _ in await connection.abortPairing(prepared.transactionID) }
+                    }
+                    state.isFinalizing = true
+                    state.preparedTransactionID = prepared.transactionID
+                    state.finalizationAttempt &+= 1
+                    return finalizeEffect(
+                        generation: generation,
+                        attempt: state.finalizationAttempt,
+                        transactionID: prepared.transactionID
+                    )
+                case let .failure(issue):
+                    state.isPairing = false
+                    state.pairingTargetID = nil
+                    state.issue = issue
+                    return .none
+                }
+
+            case let .finalizeResponse(generation, attempt, transactionID, result):
+                guard generation == state.pairingGeneration,
+                      attempt == state.finalizationAttempt,
+                      transactionID == state.preparedTransactionID,
+                      state.isFinalizing
                 else { return .none }
-                state.isPairing = false
-                state.pairingTargetID = nil
                 switch result {
                 case let .success(mac):
-                    guard mac.id == targetID else {
-                        state.issue = .identityMismatch
-                        return .none
-                    }
+                    state.isPairing = false
+                    state.isFinalizing = false
+                    state.preparedTransactionID = nil
+                    state.pairingTargetID = nil
+                    state.finalizationAttempt = 0
                     return .send(.delegate(.paired(mac)))
                 case let .failure(issue):
                     state.issue = issue
                     return .none
                 }
 
+            case .retryFinalizeTapped:
+                guard state.isFinalizing,
+                      let transactionID = state.preparedTransactionID else { return .none }
+                state.issue = nil
+                state.finalizationAttempt &+= 1
+                return finalizeEffect(
+                    generation: state.pairingGeneration,
+                    attempt: state.finalizationAttempt,
+                    transactionID: transactionID
+                )
+
             case let .foregroundChanged(isForegrounded):
                 state.isForegrounded = isForegrounded
                 guard isForegrounded else {
+                    if state.isFinalizing { return .none }
                     Self.invalidate(&state)
                     state.discoveredMacs.removeAll()
                     state.selectedMacID = nil
                     return .merge(
                         .cancel(id: CancelID.discovery),
-                        .cancel(id: CancelID.pairing),
-                        .run { [connection] _ in await connection.cancelPairing() }
+                        .cancel(id: CancelID.pairing)
                     )
                 }
                 return .send(.task)
 
             case .cancelTapped:
+                guard state.isFinalizing == false else { return .none }
                 Self.invalidate(&state)
                 return .merge(
                     .cancel(id: CancelID.discovery),
                     .cancel(id: CancelID.pairing),
-                    .run { [connection] _ in await connection.cancelPairing() },
                     .send(.delegate(.cancelled))
                 )
 
@@ -256,12 +323,29 @@ struct PairingFeature {
         return String(normalized)
     }
 
+    private func finalizeEffect(generation: UInt64, attempt: UInt64, transactionID: UUID) -> Effect<Action> {
+        .run { [connection] send in
+            do {
+                let paired = try await connection.finalizePairing(transactionID)
+                await send(.finalizeResponse(generation, attempt, transactionID, .success(paired)))
+            } catch let error as RemoteProtocolError {
+                await send(.finalizeResponse(generation, attempt, transactionID, .failure(Self.issue(for: error))))
+            } catch {
+                await send(.finalizeResponse(generation, attempt, transactionID, .failure(.connectionFailed)))
+            }
+        }
+        .cancellable(id: CancelID.pairing, cancelInFlight: false)
+    }
+
     private static func invalidate(_ state: inout State) {
         state.discoveryGeneration &+= 1
         state.pairingGeneration &+= 1
         state.pairingTargetID = nil
         state.isDiscovering = false
         state.isPairing = false
+        state.isFinalizing = false
+        state.preparedTransactionID = nil
+        state.finalizationAttempt = 0
     }
 
     private static func issue(for error: RemoteProtocolError) -> PairingIssue {

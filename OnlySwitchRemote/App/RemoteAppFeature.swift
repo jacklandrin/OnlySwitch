@@ -210,6 +210,25 @@ struct RemoteAppFeature {
             case let .connectionEvent(event):
                 state.connectionEventRevision &+= 1
                 switch event {
+                case .persistenceRestored:
+                    state.loadGeneration &+= 1
+                    state.isLoading = true
+                    let generation = state.loadGeneration
+                    return .run { [persistence, connection] send in
+                        do {
+                            async let pairedMacs = persistence.loadPairedMacs()
+                            async let selectedMacID = persistence.loadSelectedMacID()
+                            async let snapshot = connection.snapshot()
+                            await send(.launchResponse(generation, .success(.init(
+                                pairedMacs: try await pairedMacs,
+                                selectedMacID: try await selectedMacID,
+                                connectionSnapshot: await snapshot
+                            ))))
+                        } catch {
+                            await send(.launchResponse(generation, .failure))
+                        }
+                    }
+                    .cancellable(id: CancelID.load, cancelInFlight: true)
                 case let .authenticated(id):
                     state.connectedMacIDs = [id]
                     syncSettingsState(&state)

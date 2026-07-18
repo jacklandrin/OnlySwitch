@@ -133,6 +133,80 @@ struct RemoteHostIntegrationTests {
     }
 
     @Test(.timeLimit(.minutes(1)))
+    func provisionalHostRestartReconnectsWithCandidateAndCommitsIdempotently() async throws {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let host = RemoteHost.testing(catalog: [], router: router, pairingCode: "ABCDEFGH2345")
+        let endpoint = try await host.startForTesting(port: 0)
+        defer { Task { await host.stop() } }
+        let client = try await RemoteHostTestClient.connect(to: endpoint)
+        let prepared = try await client.preparePairing(code: "ABCDEFGH2345")
+        let deviceID = await client.id
+        await host.stop()
+        #expect(try await host.pairingTransactionStateForTesting(prepared.transactionID) == .prepared)
+        let restartedEndpoint = try await host.startForTesting(port: 0)
+
+        let recovery = try await RemoteHostTestClient.connect(to: restartedEndpoint, deviceID: deviceID)
+        #expect(try await recovery.authenticate(credential: prepared.credential) == .authenticated)
+        let commit = RemoteMessage.pairingCommit(.init(transactionID: prepared.transactionID))
+        try await recovery.sendTransaction(commit)
+        #expect(try await recovery.receiveTransactionStatus().state == .committed)
+        try await recovery.sendTransaction(.pairingStatusRequest(.init(transactionID: prepared.transactionID)))
+        #expect(try await recovery.receiveTransactionStatus().state == .committed)
+        #expect(try await host.pairedDevices().first?.credential == prepared.credential)
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func provisionalHostRestartReconnectsWithCandidateAndAborts() async throws {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let host = RemoteHost.testing(catalog: [], router: router, pairingCode: "ABCDEFGH2345")
+        let endpoint = try await host.startForTesting(port: 0)
+        defer { Task { await host.stop() } }
+        let client = try await RemoteHostTestClient.connect(to: endpoint)
+        let prepared = try await client.preparePairing(code: "ABCDEFGH2345")
+        let deviceID = await client.id
+        await host.stop()
+        #expect(try await host.pairingTransactionStateForTesting(prepared.transactionID) == .prepared)
+        let restartedEndpoint = try await host.startForTesting(port: 0)
+
+        let recovery = try await RemoteHostTestClient.connect(to: restartedEndpoint, deviceID: deviceID)
+        #expect(try await recovery.authenticate(credential: prepared.credential) == .authenticated)
+        try await recovery.sendTransaction(.pairingAbort(.init(transactionID: prepared.transactionID)))
+        #expect(try await recovery.receiveTransactionStatus().state == .aborted)
+        #expect(try await host.pairedDevices().isEmpty)
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func provisionalHostRestartRejectsReconnectAfterDeviceEpochChanges() async throws {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let host = RemoteHost.testing(catalog: [], router: router, pairingCode: "ABCDEFGH2345")
+        let endpoint = try await host.startForTesting(port: 0)
+        defer { Task { await host.stop() } }
+        let originalClient = try await RemoteHostTestClient.connect(to: endpoint)
+        try await originalClient.pair(code: "ABCDEFGH2345")
+        let original = try await originalClient.pairingIdentity()
+        _ = await host.startPairing()
+        let repairClient = try await RemoteHostTestClient.connect(
+            to: endpoint,
+            deviceID: original.deviceID
+        )
+        let prepared = try await repairClient.preparePairing(code: "ABCDEFGH2345")
+
+        await host.stop()
+        let restartedEndpoint = try await host.startForTesting(port: 0)
+        try await host.revokePreservingCredentialForTesting(deviceID: original.deviceID)
+        let recovery = try await RemoteHostTestClient.connect(
+            to: restartedEndpoint,
+            deviceID: original.deviceID
+        )
+
+        await #expect(throws: (any Error).self) {
+            _ = try await recovery.authenticate(credential: prepared.credential)
+        }
+        #expect(await host.isRevokedForTesting(deviceID: original.deviceID))
+        #expect(try await host.pairedDevices().first?.credential == original.credential)
+    }
+
+    @Test(.timeLimit(.minutes(1)))
     func abortRestoresPreviousCredential() async throws {
         let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
         let host = RemoteHost.testing(catalog: [], router: router, pairingCode: "ABCDEFGH2345")

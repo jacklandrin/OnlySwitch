@@ -818,6 +818,39 @@ struct RemoteAppFeatureTests {
         await store.send(.launchResponse(1, .success(.init(pairedMacs: [studio], selectedMacID: studio.id))))
     }
 
+    @Test func persistenceRestoreReloadsCanonicalMacAndReconnectsIt() async {
+        let candidate = laptop
+        let old = studio
+        let selections = SelectionRecorder()
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [old, candidate]
+        state.selectedMacID = candidate.id
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.loadPairedMacs = { [old] }
+            $0.remotePersistence.loadSelectedMacID = { old.id }
+            $0.remoteConnection.snapshot = { .init(selectedMacID: old.id) }
+            $0.remoteConnection.select = { await selections.record($0) }
+        }
+
+        await store.send(.connectionEvent(.persistenceRestored)) {
+            $0.connectionEventRevision = 1
+            $0.loadGeneration = 1
+            $0.isLoading = true
+        }
+        await store.receive(.launchResponse(1, .success(.init(
+            pairedMacs: [old],
+            selectedMacID: old.id,
+            connectionSnapshot: .init(selectedMacID: old.id)
+        )))) {
+            $0.isLoading = false
+            $0.pairedMacs = [old]
+            $0.selectedMacID = old.id
+        }
+        await store.finish()
+
+        #expect(await selections.ids == [old.id])
+    }
+
     @Test func sceneLifecycleForwardsLatestState() async {
         let recorder = ForegroundRecorder(); let store = TestStore(initialState: RemoteAppFeature.State(hasCompletedInitialSetup: true)) { RemoteAppFeature() } withDependencies: {
             $0.remoteConnection.setForegrounded = { await recorder.record($0) }

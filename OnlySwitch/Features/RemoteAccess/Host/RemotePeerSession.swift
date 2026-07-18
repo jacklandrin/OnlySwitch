@@ -176,16 +176,32 @@ actor RemotePeerSession {
         } catch {
             // Protocol and network failures intentionally close without exposing secrets.
         }
-        await rollbackPendingPairingIfNeeded()
+        if RemotePairingTeardownPolicy.action(for: teardownPhase) == .preserveDurablePreparedTransaction {
+            pendingPairing = nil
+        } else {
+            await rollbackPendingPairingIfNeeded()
+        }
         state = .closed
         await io.cancel()
         await ended(id)
     }
 
     func close() async {
+        if RemotePairingTeardownPolicy.action(for: teardownPhase) == .preserveDurablePreparedTransaction {
+            pendingPairing = nil
+        }
         state = .closed
         await io.cancel()
         await ended(id)
+    }
+
+    private var teardownPhase: RemotePairingTeardownPhase {
+        switch state {
+        case .provisional: .provisional
+        case .committing: .committing
+        case .authenticated: .authenticated
+        case .awaitingHello, .awaitingPairOrAuthentication, .closed: .other
+        }
     }
 
     func revoke(deadline: Duration = .seconds(2)) async {
@@ -252,6 +268,15 @@ actor RemotePeerSession {
                 serverKey: serverKey,
                 transcript: transcript
             )
+            return
+        }
+
+        if try await authenticateProvisionalReconnect(
+            packet: next,
+            client: client,
+            serverKey: serverKey,
+            transcript: transcript
+        ) {
             return
         }
 
@@ -335,7 +360,8 @@ actor RemotePeerSession {
         try await credentialStore.prepareReplacement(
             record,
             transactionID: transactionID,
-            expiresAt: expiresAt
+            expiresAt: expiresAt,
+            snapshot: snapshot
         )
         pendingPairing = .init(
             transactionID: transactionID,
@@ -391,6 +417,57 @@ actor RemotePeerSession {
         }
         authenticatedCredential = credential
         state = .provisional(client.deviceID, transactionID)
+    }
+
+    private func authenticateProvisionalReconnect(
+        packet: RemoteWirePacket,
+        client: ClientHello,
+        serverKey: P256.KeyAgreement.PrivateKey,
+        transcript: Data
+    ) async throws -> Bool {
+        guard packet.kind == .encrypted, let frame = packet.encrypted else {
+            return false
+        }
+        let contexts = try await credentialStore.preparedPairingContexts(deviceID: client.deviceID)
+        for context in contexts {
+            let candidateCrypto = try Self.makeCrypto(
+                role: .server,
+                privateKey: serverKey,
+                peerKey: client.ephemeralPublicKey,
+                credential: context.record.credential,
+                transcript: transcript
+            )
+            guard case let .authenticationProof(proof) = try? candidateCrypto.open(frame),
+                  proof.deviceID == client.deviceID,
+                  RemoteHandshake.verifyAuthenticationProof(
+                    proof.proof,
+                    credential: context.record.credential,
+                    transcript: transcript
+                  ) else { continue }
+            guard let currentSnapshot = await pairingSnapshot(client.deviceID),
+                  context.snapshot.deviceID == currentSnapshot.deviceID,
+                  context.snapshot.epoch == currentSnapshot.epoch,
+                  context.snapshot.wasRevoked == currentSnapshot.wasRevoked,
+                  await validatePairing(currentSnapshot) else {
+                throw RemoteProtocolError(code: .authenticationFailed, message: "Pairing was superseded")
+            }
+            crypto = candidateCrypto
+            pendingPairing = PendingPairing(
+                transactionID: context.transactionID,
+                record: context.record,
+                snapshot: currentSnapshot,
+                expiresAt: context.expiresAt
+            )
+            authenticatedCredential = context.record.credential
+            state = .provisional(client.deviceID, context.transactionID)
+            let catalog = try await catalogSnapshot()
+            try await sendEncrypted(.authenticationResult(.success(.init(
+                sessionID: id,
+                catalogRevision: catalog.revision
+            ))))
+            return true
+        }
+        return false
     }
 
     private func authenticate(

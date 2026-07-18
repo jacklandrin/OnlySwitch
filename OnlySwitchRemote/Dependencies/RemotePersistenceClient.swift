@@ -1,6 +1,7 @@
 import Dependencies
 import DependenciesMacros
 import Darwin
+import CryptoKit
 import Foundation
 import RemoteCore
 
@@ -47,11 +48,71 @@ struct RemotePairingRollbackState: Codable, Equatable, Sendable {
     let tombstonedMacIDs: Set<UUID>
 }
 
+enum PreparedPairingPhase: String, Codable, Equatable, Sendable { case prepared, adopted }
+
 struct PreparedPairingPersistenceRecord: Codable, Equatable, Sendable {
     let transactionID: UUID
     let candidate: PairedMac
-    let candidateCredentialIdentity: Data
+    let candidateCredentialVerifier: Data
+    var phase: PreparedPairingPhase
     let previous: RemotePairingRollbackState
+
+    var candidateCredentialIdentity: Data { candidateCredentialVerifier }
+
+    init(
+        transactionID: UUID,
+        candidate: PairedMac,
+        candidateCredentialVerifier: Data,
+        phase: PreparedPairingPhase = .prepared,
+        previous: RemotePairingRollbackState
+    ) {
+        self.transactionID = transactionID
+        self.candidate = candidate
+        self.candidateCredentialVerifier = candidateCredentialVerifier
+        self.phase = phase
+        self.previous = previous
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case transactionID, candidate, candidateCredentialVerifier, candidateCredentialIdentity, phase, previous
+    }
+
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        transactionID = try container.decode(UUID.self, forKey: .transactionID)
+        candidate = try container.decode(PairedMac.self, forKey: .candidate)
+        if let verifier = try container.decodeIfPresent(Data.self, forKey: .candidateCredentialVerifier) {
+            candidateCredentialVerifier = verifier
+        } else {
+            let legacyRaw = try container.decode(Data.self, forKey: .candidateCredentialIdentity)
+            candidateCredentialVerifier = Data(SHA256.hash(data: legacyRaw))
+        }
+        phase = try container.decodeIfPresent(PreparedPairingPhase.self, forKey: .phase) ?? .prepared
+        previous = try container.decode(RemotePairingRollbackState.self, forKey: .previous)
+    }
+
+    func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(transactionID, forKey: .transactionID)
+        try container.encode(candidate, forKey: .candidate)
+        try container.encode(candidateCredentialVerifier, forKey: .candidateCredentialVerifier)
+        try container.encode(phase, forKey: .phase)
+        try container.encode(previous, forKey: .previous)
+    }
+
+    init(
+        transactionID: UUID,
+        candidate: PairedMac,
+        candidateCredentialIdentity: Data,
+        previous: RemotePairingRollbackState
+    ) {
+        self.init(
+            transactionID: transactionID,
+            candidate: candidate,
+            candidateCredentialVerifier: candidateCredentialIdentity,
+            previous: previous
+        )
+    }
 }
 
 @DependencyClient
@@ -81,6 +142,8 @@ struct RemotePersistenceClient: Sendable {
     var preparePairingState: @Sendable (PairedMac, UUID, Data) async throws -> PreparedPairingPersistenceRecord = { _, _, _ in
         throw RemoteDependencyError.unimplemented
     }
+    var loadPreparedPairingState: @Sendable () async throws -> PreparedPairingPersistenceRecord? = { nil }
+    var adoptPreparedPairingState: @Sendable (UUID) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
     var finalizePairingState: @Sendable (UUID) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
     var restorePairingState: @Sendable (PreparedPairingPersistenceRecord) async throws -> Void = { _ in
         throw RemoteDependencyError.unimplemented
@@ -124,7 +187,9 @@ extension RemotePersistenceClient {
             replaceStatusSnapshot: { await store.setStatuses($1, for: $0) },
             mergeStatus: { await store.mergeStatus($1, for: $0) },
             markMacTombstoned: { await store.markTombstoned($0) },
-            preparePairingState: { try await store.preparePairingState($0, transactionID: $1, credentialIdentity: $2) },
+            preparePairingState: { try await store.preparePairingState($0, transactionID: $1, credentialVerifier: $2) },
+            loadPreparedPairingState: { await store.preparedPairingState },
+            adoptPreparedPairingState: { try await store.adoptPreparedPairingState($0) },
             finalizePairingState: { try await store.finalizePairingState($0) },
             restorePairingState: { try await store.restorePairingState($0) },
             commitPairing: { await store.commitPairing($0) },
@@ -164,7 +229,9 @@ extension RemotePersistenceClient {
             replaceStatusSnapshot: { try await store.save($1, macID: $0, name: "statuses.json") },
             mergeStatus: { try await store.mergeStatus($1, macID: $0) },
             markMacTombstoned: { try await store.markTombstoned($0) },
-            preparePairingState: { try await store.preparePairingState($0, transactionID: $1, credentialIdentity: $2) },
+            preparePairingState: { try await store.preparePairingState($0, transactionID: $1, credentialVerifier: $2) },
+            loadPreparedPairingState: { try await store.loadPreparedPairingState() },
+            adoptPreparedPairingState: { try await store.adoptPreparedPairingState($0) },
             finalizePairingState: { try await store.finalizePairingState($0) },
             restorePairingState: { try await store.restorePairingState($0) },
             commitPairing: { try await store.commitPairing($0) },
@@ -301,19 +368,19 @@ private actor InMemoryRemotePersistenceStore {
     func preparePairingState(
         _ candidate: PairedMac,
         transactionID: UUID,
-        credentialIdentity: Data
+        credentialVerifier: Data
     ) throws -> PreparedPairingPersistenceRecord {
         if let prepared = envelope.preparedPairing {
             guard prepared.transactionID == transactionID,
                   prepared.candidate == candidate,
-                  prepared.candidateCredentialIdentity == credentialIdentity
+                  prepared.candidateCredentialVerifier == credentialVerifier
             else { throw RemotePersistenceError.pairingAlreadyPrepared }
             return prepared
         }
         let record = PreparedPairingPersistenceRecord(
             transactionID: transactionID,
             candidate: candidate,
-            candidateCredentialIdentity: credentialIdentity,
+            candidateCredentialVerifier: credentialVerifier,
             previous: rollbackState
         )
         envelope.tombstonedMacIDs.remove(candidate.id)
@@ -322,6 +389,24 @@ private actor InMemoryRemotePersistenceStore {
         envelope.selectedMacID = candidate.id
         envelope.preparedPairing = record
         return record
+    }
+
+    func preparePairingState(
+        _ candidate: PairedMac,
+        transactionID: UUID,
+        credentialIdentity: Data
+    ) throws -> PreparedPairingPersistenceRecord {
+        try preparePairingState(candidate, transactionID: transactionID, credentialVerifier: credentialIdentity)
+    }
+
+    var preparedPairingState: PreparedPairingPersistenceRecord? { envelope.preparedPairing }
+
+    func adoptPreparedPairingState(_ transactionID: UUID) throws {
+        guard var prepared = envelope.preparedPairing else { throw RemotePersistenceError.transactionMismatch }
+        guard prepared.transactionID == transactionID else { throw RemotePersistenceError.transactionMismatch }
+        if prepared.phase == .adopted { return }
+        prepared.phase = .adopted
+        envelope.preparedPairing = prepared
     }
 
     func finalizePairingState(_ transactionID: UUID) throws {
@@ -588,20 +673,20 @@ actor RemoteFilePersistenceStore {
     func preparePairingState(
         _ candidate: PairedMac,
         transactionID: UUID,
-        credentialIdentity: Data
+        credentialVerifier: Data
     ) throws -> PreparedPairingPersistenceRecord {
         try mutateEnvelope { envelope in
             if let prepared = envelope.preparedPairing {
                 guard prepared.transactionID == transactionID,
                       prepared.candidate == candidate,
-                      prepared.candidateCredentialIdentity == credentialIdentity
+                      prepared.candidateCredentialVerifier == credentialVerifier
                 else { throw RemotePersistenceError.pairingAlreadyPrepared }
                 return prepared
             }
             let record = PreparedPairingPersistenceRecord(
                 transactionID: transactionID,
                 candidate: candidate,
-                candidateCredentialIdentity: credentialIdentity,
+                candidateCredentialVerifier: credentialVerifier,
                 previous: rollbackState(for: envelope)
             )
             envelope.tombstonedMacIDs.remove(candidate.id)
@@ -610,6 +695,30 @@ actor RemoteFilePersistenceStore {
             envelope.selectedMacID = candidate.id
             envelope.preparedPairing = record
             return record
+        }
+    }
+
+    func preparePairingState(
+        _ candidate: PairedMac,
+        transactionID: UUID,
+        credentialIdentity: Data
+    ) throws -> PreparedPairingPersistenceRecord {
+        try preparePairingState(candidate, transactionID: transactionID, credentialVerifier: credentialIdentity)
+    }
+
+    func loadPreparedPairingState() throws -> PreparedPairingPersistenceRecord? {
+        try loadEnvelope().preparedPairing
+    }
+
+    func adoptPreparedPairingState(_ transactionID: UUID) throws {
+        try mutateEnvelope {
+            guard var prepared = $0.preparedPairing,
+                  prepared.transactionID == transactionID else {
+                throw RemotePersistenceError.transactionMismatch
+            }
+            if prepared.phase == .adopted { return }
+            prepared.phase = .adopted
+            $0.preparedPairing = prepared
         }
     }
 
@@ -659,12 +768,16 @@ actor RemoteFilePersistenceStore {
     func loadEnvelope() throws -> RemotePersistentStateEnvelope {
         let url = envelopeURL
         if FileManager.default.fileExists(atPath: url.path) {
+            let bytes = try Data(contentsOf: url, options: .mappedIfSafe)
             let envelope = try decoder.decode(
                 RemotePersistentStateEnvelope.self,
-                from: Data(contentsOf: url, options: .mappedIfSafe)
+                from: bytes
             )
             guard envelope.version == 1 else {
                 throw RemotePersistenceError.unsupportedEnvelopeVersion(envelope.version)
+            }
+            if bytes.range(of: Data("\"candidateCredentialIdentity\"".utf8)) != nil {
+                try saveEnvelope(envelope)
             }
             if defaults.integer(forKey: Key.migratedEnvelopeVersion) < 1 {
                 try synchronizeRootParentIfNeeded()

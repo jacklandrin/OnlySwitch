@@ -30,6 +30,13 @@ struct RemoteCoreTests {
         #expect(RemoteProtocolVersion.current == .init(major: 1, minor: 2))
     }
 
+    @Test func provisionalTeardownAlonePreservesDurablePreparedTransaction() {
+        #expect(RemotePairingTeardownPolicy.action(for: .provisional) == .preserveDurablePreparedTransaction)
+        #expect(RemotePairingTeardownPolicy.action(for: .committing) == .performNormalCleanup)
+        #expect(RemotePairingTeardownPolicy.action(for: .authenticated) == .performNormalCleanup)
+        #expect(RemotePairingTeardownPolicy.action(for: .other) == .performNormalCleanup)
+    }
+
     @Test func pairingTransactionMessagesRoundTrip() throws {
         let id = UUID(uuidString: "00000000-0000-0000-0000-000000000912")!
         let prepared = PairingPrepared(

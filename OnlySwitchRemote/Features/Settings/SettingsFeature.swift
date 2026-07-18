@@ -215,8 +215,9 @@ struct SettingsFeature {
                 return .none
 
             case .pairing(.dismiss):
+                guard state.pairing?.isFinalizing != true else { return .none }
                 state.pairing = nil
-                return .run { [connection] _ in await connection.cancelPairing() }
+                return .none
 
             case let .management(.presented(.delegate(.rePair(id)))):
                 guard state.pairedMacs[id: id] != nil else { return .none }
@@ -308,8 +309,11 @@ struct SettingsFeature {
     }
 
     private func handleConnectionEvent(_ event: RemoteConnectionEvent, state: inout State) -> Effect<Action> {
+        if case .persistenceRestored = event { return .none }
         let macID: UUID
         switch event {
+        case .persistenceRestored:
+            return .none
         case let .connecting(id), let .authenticated(id), let .offline(id, _), let .revoked(id),
              let .sessionStarted(id, _), let .catalog(id, _, _), let .catalogInvalidated(id, _),
              let .statusSnapshot(id, _), let .status(id, _), let .action(id, _):
@@ -317,6 +321,8 @@ struct SettingsFeature {
         }
         guard state.pairedMacs[id: macID] != nil else { return .none }
         switch event {
+        case .persistenceRestored:
+            return .none
         case let .connecting(id):
             state.connectionStatuses[id] = .connecting
         case let .authenticated(id):

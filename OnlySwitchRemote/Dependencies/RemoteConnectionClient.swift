@@ -31,11 +31,20 @@ enum RemotePairAdoptionResult: Equatable, Sendable {
     case offline
 }
 
+struct PreparedPairing: Equatable, Sendable {
+    let transactionID: UUID
+    let mac: PairedMac
+    let catalog: RemoteCatalogCache
+}
+
 @DependencyClient
 struct RemoteConnectionClient: Sendable {
     var discover: @Sendable () -> AsyncStream<DiscoveryEvent> = { AsyncStream { $0.finish() } }
-    var pair: @Sendable (DiscoveredMac, String, String) async throws -> PairedMac = { _, _, _ in throw RemoteDependencyError.unimplemented }
-    var cancelPairing: @Sendable () async -> Void = {}
+    var preparePairing: @Sendable (DiscoveredMac, String, String) async throws -> PreparedPairing = { _, _, _ in
+        throw RemoteDependencyError.unimplemented
+    }
+    var finalizePairing: @Sendable (UUID) async throws -> PairedMac = { _ in throw RemoteDependencyError.unimplemented }
+    var abortPairing: @Sendable (UUID?) async -> Void = { _ in }
     var select: @Sendable (PairedMac?) async -> Void = { _ in }
     var events: @Sendable () -> AsyncStream<RemoteConnectionEvent> = { AsyncStream { $0.finish() } }
     var snapshot: @Sendable () async -> RemoteConnectionSnapshot = { .init() }
@@ -50,7 +59,7 @@ extension RemoteConnectionClient: DependencyKey {
     static var liveValue: Self { .live }
     static var testValue: Self {
         var value = Self()
-        value.cancelPairing = {}
+        value.abortPairing = { _ in }
         value.events = { AsyncStream { $0.finish() } }
         value.snapshot = { .init() }
         value.adoptPairedMac = { _ in .offline }

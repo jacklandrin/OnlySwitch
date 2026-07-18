@@ -1,4 +1,5 @@
 import Darwin
+import CryptoKit
 import Foundation
 import RemoteCore
 import Security
@@ -8,6 +9,91 @@ import Testing
 struct RemotePersistenceClientTests {
     private let firstMac = UUID(uuidString: "00000000-0000-0000-0000-000000000001")!
     private let secondMac = UUID(uuidString: "00000000-0000-0000-0000-000000000002")!
+
+    @Test func preparedEnvelopePersistsOnlyCredentialDigestAndDurableAdoptionPhase() async throws {
+        let harness = try AtomicEnvelopeHarness.make()
+        let candidate = mac(id: secondMac, name: "Candidate")
+        let transactionID = UUID()
+        let rawCredential = Data((0..<32).map(UInt8.init))
+        let verifier = Data(SHA256.hash(data: rawCredential))
+
+        _ = try await harness.store.preparePairingState(
+            candidate,
+            transactionID: transactionID,
+            credentialVerifier: verifier
+        )
+        var record = try #require(try await harness.store.loadPreparedPairingState())
+        #expect(record.phase == .prepared)
+        #expect(record.candidateCredentialVerifier == verifier)
+        let bytes = try Data(contentsOf: harness.envelopeURL)
+        #expect(bytes.range(of: rawCredential) == nil)
+        #expect(try JSONDecoder().decode(RemotePersistentStateEnvelope.self, from: bytes)
+            .preparedPairing?.candidateCredentialVerifier == verifier)
+
+        try await harness.store.adoptPreparedPairingState(transactionID)
+        record = try #require(try await harness.store.loadPreparedPairingState())
+        #expect(record.phase == .adopted)
+    }
+
+    @Test func loadingLegacyRawCredentialEnvelopeAtomicallyRewritesVerifierOnly() async throws {
+        let harness = try AtomicEnvelopeHarness.make()
+        let candidate = mac(id: secondMac, name: "Candidate")
+        let transactionID = UUID()
+        let rawCredential = Data((0..<32).map(UInt8.init))
+        _ = try await harness.store.preparePairingState(
+            candidate,
+            transactionID: transactionID,
+            credentialVerifier: RemoteKeychainClient.credentialVerifier(rawCredential)
+        )
+        var json = try #require(
+            JSONSerialization.jsonObject(with: Data(contentsOf: harness.envelopeURL)) as? [String: Any]
+        )
+        var prepared = try #require(json["preparedPairing"] as? [String: Any])
+        prepared.removeValue(forKey: "candidateCredentialVerifier")
+        prepared["candidateCredentialIdentity"] = rawCredential.base64EncodedString()
+        json["preparedPairing"] = prepared
+        try JSONSerialization.data(withJSONObject: json).write(to: harness.envelopeURL, options: .atomic)
+
+        let loaded = try await harness.store.loadEnvelope()
+
+        #expect(loaded.preparedPairing?.candidateCredentialVerifier == RemoteKeychainClient.credentialVerifier(rawCredential))
+        let rewritten = try Data(contentsOf: harness.envelopeURL)
+        let rewrittenText = try #require(String(data: rewritten, encoding: .utf8))
+        #expect(rewrittenText.contains("candidateCredentialIdentity") == false)
+        #expect(rewrittenText.contains(rawCredential.base64EncodedString()) == false)
+        #expect(rewrittenText.contains("candidateCredentialVerifier"))
+    }
+
+    @Test func provisionalCredentialSurvivesClientRecreationAndPromotesWithoutReplacingCommittedDuringPrepare() async throws {
+        let keychain = RemoteKeychainClient.inMemory()
+        let transactionID = UUID()
+        let old = Data(repeating: 1, count: 32)
+        let candidate = Data(repeating: 2, count: 32)
+        let verifier = Data(SHA256.hash(data: candidate))
+        try await keychain.saveCredential(firstMac, old)
+
+        try await keychain.saveProvisionalCredential(transactionID, candidate)
+        #expect(try await keychain.loadCredential(firstMac) == old)
+        #expect(try await keychain.loadProvisionalCredential(transactionID) == candidate)
+
+        #expect(try await keychain.promoteProvisionalCredential(transactionID, firstMac, verifier))
+        #expect(try await keychain.loadCredential(firstMac) == candidate)
+        #expect(try await keychain.loadProvisionalCredential(transactionID) == nil)
+        #expect(try await keychain.promoteProvisionalCredential(transactionID, firstMac, verifier))
+    }
+
+    @Test func promotionRejectsConditionalDeleteOwnershipRaceAndRetriesIdempotently() async throws {
+        let transactionID = UUID()
+        let credential = Data(repeating: 44, count: 32)
+        let verifier = RemoteKeychainClient.credentialVerifier(credential)
+        let operations = PromotionRaceOperations(transactionID: transactionID, credential: credential)
+        let keychain = RemoteKeychainClient.live(operations: operations.operations)
+
+        #expect(try await keychain.promoteProvisionalCredential(transactionID, firstMac, verifier) == false)
+        #expect(try await keychain.loadCredential(firstMac) == credential)
+        await operations.removeRacedProvisional()
+        #expect(try await keychain.promoteProvisionalCredential(transactionID, firstMac, verifier))
+    }
 
     @Test func legacyStateMigratesIntoOneEnvelope() async throws {
         let harness = try AtomicEnvelopeHarness.make()
@@ -1041,6 +1127,76 @@ private actor KeychainOperationRecorder {
         guard stored == expected else { return (errSecSuccess, false) }
         stored = nil
         deleteCount += 1
+        return (errSecSuccess, true)
+    }
+}
+
+private actor PromotionRaceOperations {
+    private let transactionID: UUID
+    private var values: [UUID: Data]
+    private var shouldRaceDelete = true
+
+    init(transactionID: UUID, credential: Data) {
+        self.transactionID = transactionID
+        values = [transactionID: credential]
+    }
+
+    nonisolated var operations: RemoteKeychainOperations {
+        RemoteKeychainOperations(
+            update: { [weak self] id, data in
+                guard let self else { return errSecNotAvailable }
+                return await self.update(id, data)
+            },
+            add: { [weak self] id, data in
+                guard let self else { return errSecNotAvailable }
+                return await self.add(id, data)
+            },
+            load: { [weak self] id in
+                guard let self else { return (errSecNotAvailable, nil) }
+                return await self.load(id)
+            },
+            delete: { [weak self] id in
+                guard let self else { return errSecNotAvailable }
+                return await self.delete(id)
+            },
+            deleteIfMatches: { [weak self] id, expected in
+                guard let self else { return (errSecNotAvailable, false) }
+                return await self.delete(id, matching: expected)
+            }
+        )
+    }
+
+    func removeRacedProvisional() { values[transactionID] = nil }
+
+    private func update(_ id: UUID, _ data: Data) -> OSStatus {
+        guard values[id] != nil else { return errSecItemNotFound }
+        values[id] = data
+        return errSecSuccess
+    }
+
+    private func add(_ id: UUID, _ data: Data) -> OSStatus {
+        guard values[id] == nil else { return errSecDuplicateItem }
+        values[id] = data
+        return errSecSuccess
+    }
+
+    private func load(_ id: UUID) -> (OSStatus, Data?) {
+        values[id].map { (errSecSuccess, $0) } ?? (errSecItemNotFound, nil)
+    }
+
+    private func delete(_ id: UUID) -> OSStatus {
+        values[id] = nil
+        return errSecSuccess
+    }
+
+    private func delete(_ id: UUID, matching expected: Data) -> (OSStatus, Bool) {
+        guard values[id] == expected else { return (errSecSuccess, false) }
+        if id == transactionID, shouldRaceDelete {
+            shouldRaceDelete = false
+            values[id] = Data(repeating: 99, count: 32)
+            return (errSecSuccess, false)
+        }
+        values[id] = nil
         return (errSecSuccess, true)
     }
 }

@@ -5,6 +5,43 @@ import Testing
 
 struct RemoteCredentialStoreTests {
     @Test
+    func preparedProvisionalContextSurvivesStoreRestart() async throws {
+        let store = RemoteCredentialStore.inMemory()
+        let device = PairedRemoteDevice(
+            id: UUID(),
+            name: "iPhone",
+            credential: Data(repeating: 10, count: 32),
+            createdAt: .now,
+            lastConnectedAt: nil
+        )
+        let transactionID = UUID()
+        let expiresAt = Date().addingTimeInterval(60)
+        let snapshot = RemotePairingSnapshot(
+            deviceID: device.id,
+            epoch: 7,
+            generation: 11,
+            wasRevoked: true
+        )
+        try await store.prepareReplacement(
+            device,
+            transactionID: transactionID,
+            expiresAt: expiresAt,
+            snapshot: snapshot
+        )
+
+        let restarted = await store.restartedInMemoryForTesting()
+        let context = try #require(try await restarted.provisionalPairingContext(
+            deviceID: device.id,
+            credential: device.credential
+        ))
+
+        #expect(context.transactionID == transactionID)
+        #expect(context.record == device)
+        #expect(context.expiresAt == expiresAt)
+        #expect(context.snapshot == snapshot)
+    }
+
+    @Test
     func revokingOneDevicePreservesOtherCredentials() async throws {
         let store = RemoteCredentialStore.inMemory()
         let firstID = UUID()

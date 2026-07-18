@@ -378,8 +378,11 @@ struct DashboardFeature {
         _ event: RemoteConnectionEvent,
         state: inout State
     ) -> Effect<Action> {
+        if case .persistenceRestored = event { return .none }
         let macID: UUID
         switch event {
+        case .persistenceRestored:
+            return .none
         case let .connecting(id), let .authenticated(id), let .offline(id, _), let .revoked(id),
              let .sessionStarted(id, _), let .catalog(id, _, _), let .catalogInvalidated(id, _),
              let .statusSnapshot(id, _), let .status(id, _), let .action(id, _):
@@ -388,6 +391,8 @@ struct DashboardFeature {
         guard macID == state.selectedMacID else { return .none }
 
         switch event {
+        case .persistenceRestored:
+            return .none
         case .connecting:
             state.connectionState = .connecting
             state.activeSessionID = nil

@@ -1,6 +1,6 @@
 import Foundation
 
-struct RemotePairingSnapshot: Equatable, Sendable {
+struct RemotePairingSnapshot: Codable, Equatable, Sendable {
     let deviceID: UUID
     let epoch: UInt64
     let generation: UInt64

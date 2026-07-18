@@ -217,6 +217,10 @@ actor RemoteHost {
         try await credentialStore.loadAll()
     }
 
+    func pairingTransactionStateForTesting(_ transactionID: UUID) async throws -> PairingTransactionState {
+        try await credentialStore.transactionStatus(transactionID)
+    }
+
     func revokePreservingCredentialForTesting(deviceID: UUID) async throws {
         guard try await credentialStore.prepareRevocation(deviceID) != nil else { return }
         let affected = lifecycle.revoke(deviceID: deviceID)

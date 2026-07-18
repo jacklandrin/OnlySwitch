@@ -11,6 +11,13 @@ struct PairedRemoteDevice: Codable, Equatable, Identifiable, Sendable {
     var lastConnectedAt: Date?
 }
 
+struct RemoteProvisionalPairingContext: Equatable, Sendable {
+    let transactionID: UUID
+    let record: PairedRemoteDevice
+    let snapshot: RemotePairingSnapshot
+    let expiresAt: Date
+}
+
 actor RemoteCredentialStore {
     enum AuthenticationRecord: Equatable, Sendable {
         case credential(PairedRemoteDevice)
@@ -41,6 +48,7 @@ actor RemoteCredentialStore {
         let candidate: PairedRemoteDevice
         var previous: PairedRemoteDevice?
         let expiresAt: Date
+        let snapshot: RemotePairingSnapshot?
         var state: State
         var updatedAt: Date
 
@@ -125,7 +133,8 @@ actor RemoteCredentialStore {
     func prepareReplacement(
         _ candidate: PairedRemoteDevice,
         transactionID: UUID,
-        expiresAt: Date
+        expiresAt: Date,
+        snapshot: RemotePairingSnapshot? = nil
     ) throws {
         guard candidate.credential.count == 32 else { throw Error.invalidCredential }
         try recoverExpiredTransactions(now: .now)
@@ -148,10 +157,37 @@ actor RemoteCredentialStore {
             candidate: candidate,
             previous: try load(candidate.id),
             expiresAt: expiresAt,
+            snapshot: snapshot,
             state: .prepared,
             updatedAt: .now
         )
         try savePreparedReplacement(record)
+    }
+
+    func provisionalPairingContext(
+        deviceID: UUID,
+        credential: Data
+    ) throws -> RemoteProvisionalPairingContext? {
+        try preparedPairingContexts(deviceID: deviceID).first {
+            Self.constantTimeEqual($0.record.credential, credential)
+        }
+    }
+
+    func preparedPairingContexts(deviceID: UUID) throws -> [RemoteProvisionalPairingContext] {
+        try recoverExpiredTransactions(now: .now)
+        return try loadPreparedReplacements().values.compactMap {
+            $0.state == .prepared
+                && $0.candidate.id == deviceID
+                && $0.expiresAt > Date()
+                && $0.snapshot != nil
+            ? RemoteProvisionalPairingContext(
+                transactionID: $0.transactionID,
+                record: $0.candidate,
+                snapshot: $0.snapshot!,
+                expiresAt: $0.expiresAt
+            )
+            : nil
+        }.sorted { $0.transactionID.uuidString < $1.transactionID.uuidString }
     }
 
     @discardableResult

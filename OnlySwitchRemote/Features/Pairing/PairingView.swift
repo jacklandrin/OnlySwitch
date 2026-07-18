@@ -84,11 +84,13 @@ struct PairingView: View {
 
                 Section {
                     Button {
-                        store.send(.pairTapped)
+                        store.send(store.isFinalizing ? .retryFinalizeTapped : .pairTapped)
                     } label: {
                         HStack {
                             Spacer()
-                            if store.isPairing {
+                            if store.isFinalizing, store.issue != nil {
+                                Text("Retry Finalization")
+                            } else if store.isPairing {
                                 ProgressView()
                                     .accessibilityLabel("Pairing in progress")
                             } else {
@@ -97,16 +99,19 @@ struct PairingView: View {
                             Spacer()
                         }
                     }
-                    .disabled(store.canPair == false)
+                    .disabled(store.isFinalizing ? store.issue == nil : store.canPair == false)
                 }
             }
             .navigationTitle("Pair a Mac")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { store.send(.cancelTapped) }
+                    if store.isFinalizing == false {
+                        Button("Cancel") { store.send(.cancelTapped) }
+                    }
                 }
             }
         }
+        .interactiveDismissDisabled(store.isDismissDisabled)
         .task { await store.send(.task).finish() }
     }
 }

@@ -41,11 +41,12 @@ struct RemoteEndToEndTests {
             actionTimeout: .milliseconds(250)
         )
         var iterator = runtime.makeConnectionEventStream().makeAsyncIterator()
-        _ = try await runtime.pair(
+        let prepared = try await runtime.preparePairing(
             .init(id: macID, displayName: "Studio", endpoint: server.endpoint, protocolVersion: .current),
             code: code,
             deviceName: "Test iPhone"
         )
+        _ = try await runtime.finalizePairing(prepared.transactionID)
         var sessionID: UUID?
         while sessionID == nil, let event = await iterator.next() {
             if case let .sessionStarted(_, id) = event { sessionID = id }
@@ -156,11 +157,12 @@ struct RemoteEndToEndTests {
         }
         store.send(.task)
 
-        _ = try await runtime.pair(
+        let prepared = try await runtime.preparePairing(
             .init(id: macID, displayName: "Studio", endpoint: server.endpoint, protocolVersion: .current),
             code: pairingCode,
             deviceName: "Test iPhone"
         )
+        _ = try await runtime.finalizePairing(prepared.transactionID)
         try await waitUntil {
             store.dashboard.descriptors[id: .darkMode] == descriptor
                 && store.dashboard.statuses[.darkMode]?.value == initialStatus
@@ -304,10 +306,14 @@ private final class DashboardLoopbackServer: @unchecked Sendable {
                     credential: Data(pairingCode.utf8),
                     transcript: transcript
                 )
-                let pairingResult = RemoteWirePacket.encrypted(try pairingCrypto.seal(.pairingResult(.success(.init(
+                let transactionID = UUID()
+                let pairingResult = RemoteWirePacket.encrypted(try pairingCrypto.seal(.pairingPrepared(.init(
+                    transactionID: transactionID,
                     macID: macID,
-                    credential: credential
-                )))))
+                    credential: credential,
+                    catalogRevision: 1,
+                    expiresAt: Date().addingTimeInterval(30)
+                ))))
                 try await send(pairingResult, io: io, recorder: recorder, sequence: 1)
 
                 let sessionCrypto = try makeCrypto(key: key, hello: hello, credential: credential, transcript: transcript)
@@ -316,16 +322,6 @@ private final class DashboardLoopbackServer: @unchecked Sendable {
                 guard case .authenticationProof = try decrypt(authentication, crypto: sessionCrypto) else {
                     throw DashboardWireError.unexpected
                 }
-                try await send(
-                    .encrypted(try sessionCrypto.seal(.authenticationResult(.success(.init(
-                        sessionID: UUID(),
-                        catalogRevision: 1
-                    ))))),
-                    io: io,
-                    recorder: recorder,
-                    sequence: 2
-                )
-
                 let catalogRequest = try await io.receive()
                 try await recorder.record(catalogRequest, sequence: 4)
                 guard try decrypt(catalogRequest, crypto: sessionCrypto) == .catalogRequest else {
@@ -336,6 +332,18 @@ private final class DashboardLoopbackServer: @unchecked Sendable {
                     io: io,
                     recorder: recorder,
                     sequence: 3
+                )
+
+                let commit = try await io.receive()
+                try await recorder.record(commit, sequence: 5)
+                guard try decrypt(commit, crypto: sessionCrypto) == .pairingCommit(.init(transactionID: transactionID)) else {
+                    throw DashboardWireError.unexpected
+                }
+                try await send(
+                    .encrypted(try sessionCrypto.seal(.pairingCommitted(.init(transactionID: transactionID)))),
+                    io: io,
+                    recorder: recorder,
+                    sequence: 4
                 )
 
                 let subscription = try await io.receive()

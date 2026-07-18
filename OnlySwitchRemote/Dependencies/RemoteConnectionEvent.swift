@@ -10,6 +10,7 @@ struct DiscoveredMac: Equatable, Identifiable, Sendable {
 }
 
 enum RemoteConnectionEvent: Equatable, Sendable {
+    case persistenceRestored
     case connecting(UUID)
     case sessionStarted(UUID, UUID)
     case authenticated(UUID)
