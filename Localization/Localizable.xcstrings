@@ -25342,6 +25342,2017 @@
           }
         }
       }
+    },
+    "Adds its own menu bar icon that opens the panel below — volume for the whole system and for each app that is playing." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přidá vlastní ikonu do řádku nabídek, která otevře panel níže — hlasitost pro celý systém i pro každou přehrávající aplikaci."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fügt ein eigenes Menüleistensymbol hinzu, das die Ansicht unten öffnet — Lautstärke für das gesamte System und für jede App, die gerade Ton ausgibt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adds its own menu bar icon that opens the panel below — volume for the whole system and for each app that is playing."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añade su propio icono en la barra de menús que abre el panel de abajo: volumen de todo el sistema y de cada app que esté reproduciendo."
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nagdaragdag ng sariling icon sa menu bar na nagbubukas ng panel sa ibaba — volume para sa buong system at sa bawat app na tumutugtog."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajoute sa propre icône dans la barre des menus qui ouvre le panneau ci-dessous — volume de tout le système et de chaque app en cours de lecture."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dodaje vlastitu ikonu u traku izbornika koja otvara ploču ispod — glasnoća za cijeli sustav i za svaku aplikaciju koja svira."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aggiunge una propria icona nella barra dei menu che apre il pannello qui sotto — volume dell'intero sistema e di ogni app in riproduzione."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "メニューバーに独自のアイコンを追加し、下のパネルを開きます — システム全体と再生中の各アプリの音量を調整できます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "메뉴 막대에 자체 아이콘을 추가하여 아래 패널을 엽니다 — 전체 시스템과 재생 중인 각 앱의 볼륨을 조절합니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voegt een eigen menubalksymbool toe dat het paneel hieronder opent — volume voor het hele systeem en voor elke app die geluid afspeelt."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dodaje własną ikonę na pasku menu, która otwiera panel poniżej — głośność całego systemu i każdej odtwarzającej aplikacji."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adiciona um ícone próprio na barra de menus que abre o painel abaixo — volume de todo o sistema e de cada app em reprodução."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Добавляет собственный значок в строку меню, открывающий панель ниже — громкость всей системы и каждого воспроизводящего приложения."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pridá vlastnú ikonu do panela s ponukami, ktorá otvorí panel nižšie — hlasitosť pre celý systém a pre každú prehrávajúcu aplikáciu."
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wuxuu ku darayaa astaan u gaar ah menu bar-ka oo furaysa golaha hoose — codka nidaamka oo dhan iyo app kasta oo ciyaaraya."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menü çubuğuna, aşağıdaki paneli açan kendi simgesini ekler — tüm sistemin ve çalan her uygulamanın ses düzeyi."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Додає власну піктограму в рядок меню, що відкриває панель нижче — гучність усієї системи та кожного застосунку, що відтворює звук."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在菜单栏中添加自己的图标以打开下方面板——可调节整个系统以及每个正在播放的 App 的音量。"
+          }
+        }
+      }
+    },
+    "App Sound" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zvuk aplikací"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App-Ton"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App Sound"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sonido de apps"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tunog ng App"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Son des apps"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zvuk aplikacija"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio app"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アプリの音量"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "앱 사운드"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App-geluid"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dźwięk aplikacji"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Som dos apps"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Звук приложений"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zvuk aplikácií"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Codka Barnaamijka"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uygulama Sesi"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Звук додатків"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "应用声音"
+          }
+        }
+      }
+    },
+    "Applications" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikace"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Programme"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Applications"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplicaciones"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mga Application"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Applications"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikacije"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Applicazioni"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アプリケーション"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "응용 프로그램"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Programma's"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikacje"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplicativos"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Программы"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikácie"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Barnaamijyada"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uygulamalar"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Програми"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "应用程序"
+          }
+        }
+      }
+    },
+    "Apps" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikace"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apps"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apps"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apps"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mga App"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apps"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikacije"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アプリ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "앱"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apps"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikacje"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apps"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Приложения"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikácie"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Barnaamijyada"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uygulamalar"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Застосунки"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "应用"
+          }
+        }
+      }
+    },
+    "Muted" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ztlumeno"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stumm"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muted"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Silenciado"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Naka-mute"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muet"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utišano"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muto"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ミュート中"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "음소거됨"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gedempt"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyciszone"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Silenciado"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Без звука"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stlmené"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La aamusiiyay"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sessiz"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Без звуку"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已静音"
+          }
+        }
+      }
+    },
+    "No controllable apps are running" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nejsou spuštěny žádné ovladatelné aplikace"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine steuerbaren Apps geöffnet"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No controllable apps are running"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay apps controlables en ejecución"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Walang tumatakbong app na makokontrol"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune app contrôlable en cours d’exécution"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nijedna upravljiva aplikacija nije pokrenuta"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nessuna app controllabile in esecuzione"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "制御可能なアプリが実行されていません"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "제어 가능한 앱이 실행 중이 아닙니다"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Er zijn geen bestuurbare apps actief"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brak uruchomionych obsługiwanych aplikacji"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nenhum app controlável em execução"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нет запущенных управляемых приложений"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie sú spustené žiadne ovládateľné aplikácie"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ma jiro app la maamuli karo oo shaqeynaya"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çalışan denetlenebilir uygulama yok"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Немає запущених керованих додатків"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "没有可控制的应用正在运行"
+          }
+        }
+      }
+    },
+    "Open Control Center Settings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otevřít nastavení Ovládacího centra"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kontrollzentrum-Einstellungen öffnen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Control Center Settings"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir ajustes del Centro de Control"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buksan ang mga setting ng Control Center"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrir les réglages du Centre de contrôle"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otvori postavke Kontrolnog centra"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apri le impostazioni di Centro di Controllo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "コントロールセンターの設定を開く"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "제어 센터 설정 열기"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instellingen Bedieningspaneel openen"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otwórz ustawienia Centrum sterowania"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir ajustes da Central de Controle"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Открыть настройки Пункта управления"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otvoriť nastavenia Ovládacieho centra"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fur Dejinta Xarunta Xakameynta"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Denetim Merkezi Ayarlarını Aç"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Відкрити параметри Пункту керування"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开控制中心设置"
+          }
+        }
+      }
+    },
+    "Open a supported app like Music or Spotify." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otevřete podporovanou aplikaci, například Music nebo Spotify."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öffne eine unterstützte App wie Music oder Spotify."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open a supported app like Music or Spotify."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abre una app compatible como Music o Spotify."
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Magbukas ng suportadong app tulad ng Music o Spotify."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrez une app compatible comme Music ou Spotify."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otvorite podržanu aplikaciju poput Musica ili Spotifyja."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apri un’app supportata come Music o Spotify."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Music や Spotify などの対応アプリを開いてください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Music이나 Spotify 같은 지원되는 앱을 여세요."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open een ondersteunde app zoals Music of Spotify."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otwórz obsługiwaną aplikację, np. Music lub Spotify."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abra um app compatível como Music ou Spotify."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Откройте поддерживаемое приложение, например Music или Spotify."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otvorte podporovanú aplikáciu ako Music alebo Spotify."
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fur app la taageeray sida Music ama Spotify."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Music veya Spotify gibi desteklenen bir uygulama açın."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Відкрийте підтримуваний додаток, наприклад Music або Spotify."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请打开受支持的应用，如 Music 或 Spotify。"
+          }
+        }
+      }
+    },
+    "Output" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Výstup"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausgabe"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Output"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salida"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Output"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sortie"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izlaz"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uscita"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "出力"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "출력"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uitgang"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyjście"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saída"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выход"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Výstup"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soo-saar"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çıkış"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вихід"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "输出"
+          }
+        }
+      }
+    },
+    "Playing" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přehrává se"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wird abgespielt"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playing"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reproduciendo"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nagpe-play"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En lecture"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reprodukcija"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In riproduzione"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再生中"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재생 중"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speelt af"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odtwarzanie"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reproduzindo"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Воспроизводится"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prehráva sa"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waa la ciyaarayaa"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çalıyor"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Відтворюється"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放中"
+          }
+        }
+      }
+    },
+    "Show sound mixer in the menu bar" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zobrazit směšovač zvuku v řádku nabídek"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tonmischer in der Menüleiste anzeigen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show sound mixer in the menu bar"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar el mezclador de sonido en la barra de menús"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ipakita ang sound mixer sa menu bar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher le mixeur audio dans la barre des menus"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prikaži mikser zvuka u traci izbornika"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostra il mixer audio nella barra dei menu"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "メニューバーにサウンドミキサーを表示"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "메뉴 막대에 사운드 믹서 표시"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geluidsmixer in de menubalk tonen"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokaż mikser dźwięku na pasku menu"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar o mixer de som na barra de menus"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Показывать микшер звука в строке меню"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zobraziť zvukový mixér v paneli s ponukami"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ku muuji isku-darka codka menu bar-ka"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ses karıştırıcısını menü çubuğunda göster"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Показувати мікшер звуку в рядку меню"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在菜单栏中显示声音混音器"
+          }
+        }
+      }
+    },
+    "Sound" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zvuk"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ton"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sound"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sonido"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tunog"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Son"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zvuk"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suono"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "サウンド"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사운드"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geluid"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dźwięk"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Som"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Звук"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zvuk"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cod"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ses"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Звук"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "声音"
+          }
+        }
+      }
+    },
+    "Sound Mixer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Směšovač zvuku"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lautstärkemixer"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sound Mixer"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mezclador de sonido"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sound Mixer"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mixeur audio"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mixer audio"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "サウンドミキサー"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사운드 믹서"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geluidsmixer"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mikser dźwięku"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mixer de som"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Микшер звука"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ses Mikseri"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Мікшер звуку"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "音量混合器"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "音量混合器"
+          }
+        }
+      }
+    },
+    "Sound Settings…" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nastavení zvuku…"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toneinstellungen …"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sound Settings…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes de sonido…"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mga Setting ng Tunog…"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réglages Son…"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Postavke zvuka…"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impostazioni Suono…"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "サウンド設定…"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사운드 설정…"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geluidsinstellingen…"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ustawienia dźwięku…"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes de Som…"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Настройки звука…"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nastavenia zvuku…"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dejinta Codka…"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ses Ayarları…"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Параметри звуку…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "声音设置…"
+          }
+        }
+      }
+    },
+    "System" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Systém"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "System"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "System"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistema"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistema"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Système"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sustav"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistema"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "システム"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "시스템"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Systeem"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "System"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistema"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Система"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Systém"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nidaamka"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistem"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Система"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "系统"
+          }
+        }
+      }
+    },
+    "This icon is now in your menu bar." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tato ikona je nyní v řádku nabídek."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieses Symbol ist jetzt in deiner Menüleiste."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This icon is now in your menu bar."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este icono ya está en la barra de menús."
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nasa menu bar mo na ang icon na ito."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette icône est maintenant dans votre barre des menus."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ova je ikona sada u vašoj traci izbornika."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Questa icona è ora nella barra dei menu."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このアイコンがメニューバーに追加されました。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 아이콘이 이제 메뉴 막대에 있습니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dit symbool staat nu in je menubalk."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ta ikona jest teraz na pasku menu."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este ícone agora está na barra de menus."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Этот значок теперь в строке меню."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Táto ikona je teraz v paneli s ponukami."
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Astaantan hadda waxay ku jirtaa menu bar-kaaga."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu simge artık menü çubuğunuzda."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ця піктограма тепер у вашому рядку меню."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "该图标现已显示在菜单栏中。"
+          }
+        }
+      }
+    },
+    "To let it replace the system sound icon, turn that one off in System Settings › Control Center › Sound." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chcete-li jí nahradit systémovou ikonu zvuku, vypněte ji v Nastavení systému › Ovládací centrum › Zvuk."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Damit es das System-Tonsymbol ersetzt, schalte dieses in Systemeinstellungen › Kontrollzentrum › Ton aus."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To let it replace the system sound icon, turn that one off in System Settings › Control Center › Sound."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para que sustituya al icono de sonido del sistema, desactívalo en Ajustes del Sistema › Centro de Control › Sonido."
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para palitan nito ang system sound icon, i-off iyon sa System Settings › Control Center › Sound."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pour qu'elle remplace l'icône Son du système, désactivez celle-ci dans Réglages Système › Centre de contrôle › Son."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Da biste njome zamijenili sistemsku ikonu zvuka, isključite je u Postavke sustava › Kontrolni centar › Zvuk."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Per sostituire l'icona Suono di sistema, disattivala in Impostazioni di Sistema › Centro di Controllo › Suono."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "システムのサウンドアイコンを置き換えるには、「システム設定」›「コントロールセンター」›「サウンド」でそちらをオフにします。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "시스템 사운드 아이콘을 대체하려면 시스템 설정 › 제어 센터 › 사운드에서 해당 항목을 끄십시오."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Om het systeemgeluidssymbool te vervangen, schakel dat uit in Systeeminstellingen › Bedieningspaneel › Geluid."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aby zastąpiła systemową ikonę dźwięku, wyłącz ją w Ustawienia systemowe › Centrum sterowania › Dźwięk."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para substituir o ícone de som do sistema, desative-o em Ajustes do Sistema › Central de Controle › Som."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Чтобы заменить системный значок звука, отключите его в «Системные настройки › Пункт управления › Звук»."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ak ňou chcete nahradiť systémovú ikonu zvuku, vypnite ju v Nastavenia systému › Ovládacie centrum › Zvuk."
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si ay u beddesho astaanta codka ee nidaamka, ka dami tan Dejinta Nidaamka › Xarunta Xakameynta › Cod."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistem ses simgesinin yerini alması için onu Sistem Ayarları › Denetim Merkezi › Ses'te kapatın."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Щоб вона замінила системну піктограму звуку, вимкніть її в «Системні параметри › Пункт керування › Звук»."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "若要用它替换系统声音图标，请在“系统设置›控制中心›声音”中将系统声音图标关闭。"
+          }
+        }
+      }
     }
   },
   "version" : "1.1"

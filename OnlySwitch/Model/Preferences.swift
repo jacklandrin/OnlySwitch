@@ -149,6 +149,15 @@ final class Preferences: @unchecked Sendable {
         autoCollapseMenubarTime != 0
     }
 
+    // MARK: - Sound Mixer
+    /// Whether the mixer gets its own menu bar item, so it can stand in for the system sound item.
+    @UserDefaultValue(key: UserDefaults.Key.soundMixerMenubarItem, defaultValue: false)
+    var soundMixerMenubarItem:Bool {
+        didSet {
+            NotificationCenter.default.post(name: .toggleSoundMixerItem, object: soundMixerMenubarItem)
+        }
+    }
+
     // MARK: - BackNoises
     @UserDefaultValue(key: UserDefaults.Key.backNoisesTrack, defaultValue: "White Noises")
     var backNoisesTrack:String

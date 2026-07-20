@@ -30,6 +30,8 @@
 		<string>SelectSwitchIntent</string>
 		<string>SetDarkModeIntent</string>
 	</array>
+	<key>NSAudioCaptureUsageDescription</key>
+	<string>Only Switch needs system audio access to mute and set the volume of individual apps</string>
 	<key>NSUserNotificationsUsageDescription</key>
 	<string>Only Switch requests Notifications usage to show radio status</string>
 	<key>SUEnableAutomaticChecks</key>
