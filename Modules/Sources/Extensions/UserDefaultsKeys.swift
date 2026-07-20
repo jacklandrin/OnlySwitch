@@ -44,6 +44,8 @@ public extension UserDefaults {
         //Sort
         public static let orderWeight = "orderWeightKey"
         public static let onlyControlOrderWeight = "onlyControlOrderWeightKey"
+        //Sound Mixer
+        public static let soundMixerMenubarItem = "soundMixerMenubarItemKey"
         //BackNoises
         public static let backNoisesTrack = "backNoisesTrackKey"
         public static let automaticallyStopPlayNoiseTime = "automaticallyStopPlayNoiseTimeKey"

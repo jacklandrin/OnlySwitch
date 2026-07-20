@@ -20,6 +20,7 @@ enum SettingsItem: String, CaseIterable {
     case Authenticator = "Authenticator"
     case PomodoroTimer = "Pomodoro Timer"
     case HideMenubarIcons = "Hide Menu Bar Icons"
+    case SoundMixer = "App Sound"
     case BackNoises = "Back Noises"
     case KeepAwake = "Keep Awake"
     case DimScreen = "Dim Screen"

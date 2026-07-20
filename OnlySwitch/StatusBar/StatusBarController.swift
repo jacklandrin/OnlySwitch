@@ -20,6 +20,8 @@ class StatusBarController {
 
     private var mainItem: NSStatusItem
     private var markItem: NSStatusItem?
+    /// Own menu bar item for the sound mixer, so it is one click away instead of buried in Settings.
+    private var mixerItem: NSStatusItem?
     private var popover: NSPopover
     private var eventMonitor : EventMonitor?
     @UserDefaultValue(key: UserDefaults.Key.isMenubarCollapse, defaultValue: false)
@@ -66,6 +68,13 @@ class StatusBarController {
             return isValid
         }
 
+        // Before the mark item on purpose: status items are added left of the existing ones, and
+        // collapsing hides everything left of the mark. Creating the mixer first keeps it on the
+        // mark's right, where it stays reachable while the menu bar is collapsed.
+        if Preferences.shared.soundMixerMenubarItem {
+            setMixerButton()
+        }
+
         if menubarCollaspable {
             setMarkButton()
             Task {
@@ -74,6 +83,67 @@ class StatusBarController {
         }
 
         observeNotifications()
+    }
+
+    // MARK: - Sound mixer item
+
+    private lazy var mixerPopover: NSPopover = {
+        let popover = NSPopover()
+        popover.behavior = .transient
+        popover.animates = false
+        let hosting = NSHostingController(rootView: SoundMixerPopoverView())
+        // Let the panel drive the popover height — the app list grows and shrinks with what plays.
+        hosting.sizingOptions = [.preferredContentSize]
+        popover.contentViewController = hosting
+        return popover
+    }()
+
+    private func setMixerButton() {
+        guard mixerItem == nil else { return }
+        let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+        item.button?.image = NSImage(systemSymbolName: "speaker.wave.2.fill",
+                                     accessibilityDescription: "Sound".localized())
+        item.button?.image?.isTemplate = true
+        item.button?.target = self
+        item.button?.action = #selector(toggleMixerPopover(sender:))
+        mixerItem = item
+    }
+
+    /// Adds or removes the mixer item at runtime.
+    ///
+    /// A freshly created item lands leftmost, which would put it *left* of the mark item and let
+    /// "hide menu bar icons" swallow it. So the mark item is rebuilt afterwards to reclaim the
+    /// leftmost spot, and expanded — a collapsed rebuild would hide the icon the user just enabled.
+    private func setMixerItemEnabled(_ enable: Bool) {
+        guard enable else {
+            if let mixerItem {
+                if mixerPopover.isShown { mixerPopover.performClose(nil) }
+                NSStatusBar.system.removeStatusItem(mixerItem)
+                self.mixerItem = nil
+            }
+            return
+        }
+
+        setMixerButton()
+
+        guard let markItem else { return }
+        NSStatusBar.system.removeStatusItem(markItem)
+        self.markItem = nil
+        setMarkButton()
+        Task {
+            try? await HideMenubarIconsSwitch.shared.operateSwitch(isOn: false)
+        }
+    }
+
+    @objc private func toggleMixerPopover(sender: AnyObject?) {
+        guard let button = mixerItem?.button else { return }
+        if mixerPopover.isShown {
+            mixerPopover.performClose(sender)
+        } else {
+            mixerPopover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
+            // Without this the popover opens behind the frontmost app and swallows the first click.
+            mixerPopover.contentViewController?.view.window?.makeKey()
+        }
     }
 
     @objc private func togglePopover(sender:AnyObject?) {
@@ -272,6 +342,18 @@ class StatusBarController {
             Task { @MainActor [weak self] in
                 guard let self, let isOn else { return }
                 self.markItem?.length = isOn ? MarkItemLength.collapse : MarkItemLength.normal
+            }
+        }
+
+        NotificationCenter.default.addObserver(
+            forName: .toggleSoundMixerItem,
+            object: nil,
+            queue: .main
+        ) { [weak self] notify in
+            let enable = notify.object as? Bool
+            Task { @MainActor [weak self] in
+                guard let self, let enable else { return }
+                self.setMixerItemEnabled(enable)
             }
         }
 

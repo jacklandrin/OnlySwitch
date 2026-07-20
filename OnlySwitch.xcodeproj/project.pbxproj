@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2B346BE56384C700F4046FC4 /* SystemAudioMixer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AD1FCF5024EAC8DC9C8E5E /* SystemAudioMixer.swift */; };
+		6EC8A6CD714CA458603A0C05 /* SoundMixerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 643A9AC4ED24AE501343396D /* SoundMixerModel.swift */; };
+		732FB599FA7E3F9BEEF45DD9 /* SoundMixerSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3552BA772DD63DAD7EE8CF2 /* SoundMixerSettingView.swift */; };
+		C2CE44CA134851106759FA13 /* SoundMixerSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = A47E483C8C562DBBD024C25A /* SoundMixerSettingVM.swift */; };
+		D418A0C2EBC2CD7CCD451615 /* SoundMixerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E43EF22E4BA4D2E63E454D7 /* SoundMixerService.swift */; };
 		0406E0222CA09F930007AFC2 /* OnlyControlClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406E0212CA09F8C0007AFC2 /* OnlyControlClient.swift */; };
 		0406E0242CA0BC460007AFC2 /* RefreshNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406E0232CA0BC460007AFC2 /* RefreshNotification.swift */; };
 		0406EDC42ACB3EE80015F4D0 /* EvolutionMarket.json in Resources */ = {isa = PBXBuildFile; fileRef = 0406EDC32ACB3EE80015F4D0 /* EvolutionMarket.json */; };
@@ -388,6 +393,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1E43EF22E4BA4D2E63E454D7 /* SoundMixerService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoundMixerService.swift; sourceTree = "<group>"; };
+		35AD1FCF5024EAC8DC9C8E5E /* SystemAudioMixer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SystemAudioMixer.swift; sourceTree = "<group>"; };
+		643A9AC4ED24AE501343396D /* SoundMixerModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoundMixerModel.swift; sourceTree = "<group>"; };
+		A47E483C8C562DBBD024C25A /* SoundMixerSettingVM.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoundMixerSettingVM.swift; sourceTree = "<group>"; };
+		B3552BA772DD63DAD7EE8CF2 /* SoundMixerSettingView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoundMixerSettingView.swift; sourceTree = "<group>"; };
 		0406E0212CA09F8C0007AFC2 /* OnlyControlClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyControlClient.swift; sourceTree = "<group>"; };
 		0406E0232CA0BC460007AFC2 /* RefreshNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshNotification.swift; sourceTree = "<group>"; };
 		0406EDC32ACB3EE80015F4D0 /* EvolutionMarket.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = EvolutionMarket.json; sourceTree = "<group>"; };
@@ -716,6 +726,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C966D21407F0E94B525D2F99 /* SoundMixer */ = {
+			isa = PBXGroup;
+			children = (
+				643A9AC4ED24AE501343396D /* SoundMixerModel.swift */,
+				1E43EF22E4BA4D2E63E454D7 /* SoundMixerService.swift */,
+				A47E483C8C562DBBD024C25A /* SoundMixerSettingVM.swift */,
+				B3552BA772DD63DAD7EE8CF2 /* SoundMixerSettingView.swift */,
+				35AD1FCF5024EAC8DC9C8E5E /* SystemAudioMixer.swift */,
+			);
+			name = SoundMixer;
+			path = SoundMixer;
+			sourceTree = "<group>";
+		};
 		0406EDC22ACB3EBE0015F4D0 /* Evolution */ = {
 			isa = PBXGroup;
 			children = (
@@ -1273,6 +1296,7 @@
 				04819CD62BBC954C00645A0C /* KeyLight */,
 				0442C53B2A40E88800BC47B3 /* NightShift */,
 				04BF977527908F0000E7C0E2 /* About */,
+				C966D21407F0E94B525D2F99 /* SoundMixer */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -1962,6 +1986,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6EC8A6CD714CA458603A0C05 /* SoundMixerModel.swift in Sources */,
+				D418A0C2EBC2CD7CCD451615 /* SoundMixerService.swift in Sources */,
+				C2CE44CA134851106759FA13 /* SoundMixerSettingVM.swift in Sources */,
+				732FB599FA7E3F9BEEF45DD9 /* SoundMixerSettingView.swift in Sources */,
+				2B346BE56384C700F4046FC4 /* SystemAudioMixer.swift in Sources */,
 				A1D0E1092F0A000100BEEF01 /* AuthenticatorSwitch.swift in Sources */,
 				0447E35F2B71746E00D07B9A /* AppleMusicSwitch.swift in Sources */,
 				04B25453283BEF3800D253E2 /* SupportedLanguage.swift in Sources */,
