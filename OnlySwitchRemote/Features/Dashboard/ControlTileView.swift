@@ -2,6 +2,8 @@ import RemoteCore
 import SwiftUI
 
 struct ControlTileView: View {
+    static let iconSize: CGFloat = 28
+
     let descriptor: RemoteControlDescriptor
     let status: DashboardFeature.TileStatus?
     let macName: String
@@ -15,7 +17,7 @@ struct ControlTileView: View {
             VStack(alignment: .leading, spacing: 12) {
                 HStack(alignment: .top) {
                     controlIcon
-                        .font(.title2)
+                        .frame(width: Self.iconSize, height: Self.iconSize)
                         .frame(width: 34, height: 34)
                         .foregroundStyle(iconColor)
                     Spacer(minLength: 8)
@@ -77,11 +79,17 @@ struct ControlTileView: View {
         switch descriptor.icon {
         case let .systemSymbol(name):
             Image(systemName: name)
+                .resizable()
+                .scaledToFit()
         case let .png(data):
             if let image = UIImage(data: data) {
-                Image(uiImage: image).resizable().scaledToFit()
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFit()
             } else {
                 Image(systemName: "switch.2")
+                    .resizable()
+                    .scaledToFit()
             }
         }
     }

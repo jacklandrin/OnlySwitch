@@ -14,6 +14,10 @@ struct DashboardFeatureTests {
         requiresPairing: false
     )
 
+    @Test func tileIconsUseFixedVisualSize() {
+        #expect(ControlTileView.iconSize == 28)
+    }
+
     @Test func macPickerPreservesFullSelectedNameForAccessibility() {
         let longName = "p200300fe5700cdb61cf16e5542f6a6bc.dip0.t-ipconnect.de"
         let selected = PairedMac(
