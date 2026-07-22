@@ -12,6 +12,9 @@ struct PairingView: View {
                         if store.isDiscovering {
                             HStack(spacing: 12) {
                                 ProgressView()
+                                    .controlSize(.regular)
+                                    .tint(.accentColor)
+                                    .accessibilityHidden(true)
                                 Text("Looking for Macs on your local network…")
                             }
                             .accessibilityElement(children: .combine)

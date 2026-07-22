@@ -96,6 +96,18 @@ actor RemoteLocalStateMutationCoordinator {
 }
 
 actor RemoteConnectionRuntime {
+    static let discoveryDescriptor = NWBrowser.Descriptor.bonjourWithTXTRecord(
+        type: "_onlyswitch._tcp",
+        domain: nil
+    )
+
+    nonisolated static func needsDiscovery(
+        subscriberCount: Int,
+        selectedMacID: UUID?
+    ) -> Bool {
+        subscriberCount > 0 || selectedMacID != nil
+    }
+
     typealias ActionDeadline = @Sendable (
         Duration,
         @escaping @Sendable () async throws -> RemoteActionResult
@@ -205,8 +217,13 @@ actor RemoteConnectionRuntime {
     }
 
     func startDiscovery() {
-        guard foregrounded, discoveryHub.subscriberCount > 0, browser == nil else { return }
-        let browser = NWBrowser(for: .bonjour(type: "_onlyswitch._tcp", domain: nil), using: .tcp)
+        guard foregrounded,
+              Self.needsDiscovery(
+                  subscriberCount: discoveryHub.subscriberCount,
+                  selectedMacID: selected?.id
+              ),
+              browser == nil else { return }
+        let browser = NWBrowser(for: Self.discoveryDescriptor, using: .tcp)
         self.browser = browser
         browser.browseResultsChangedHandler = { [weak self] results, _ in
             Task { await self?.updateDiscovery(results) }
@@ -523,6 +540,11 @@ actor RemoteConnectionRuntime {
         session = nil
         sessionToken = nil
         selected = mac
+        if mac == nil {
+            stopDiscoveryIfUnused()
+        } else {
+            startDiscovery()
+        }
         if let previousSession { await closeSession(previousSession) }
         guard generation == currentGeneration, selected?.id == mac?.id else { return }
         guard let mac, foregrounded else { return }
@@ -1137,7 +1159,10 @@ actor RemoteConnectionRuntime {
     }
 
     private func stopDiscoveryIfUnused() {
-        guard discoveryHub.subscriberCount == 0 else { return }
+        guard Self.needsDiscovery(
+            subscriberCount: discoveryHub.subscriberCount,
+            selectedMacID: selected?.id
+        ) == false else { return }
         browser?.cancel()
         browser = nil
         browserRetryTask?.cancel()

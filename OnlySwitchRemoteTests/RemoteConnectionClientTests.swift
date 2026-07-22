@@ -1605,6 +1605,34 @@ struct RemoteConnectionClientTests {
         #expect(recorder.values == (starts: 1, stops: 1))
     }
 
+    @Test func discoveryRequestsBonjourTXTRecords() {
+        guard case let .bonjourWithTXTRecord(type, domain) = RemoteConnectionRuntime.discoveryDescriptor else {
+            Issue.record("Discovery must request TXT metadata used to identify and validate Macs")
+            return
+        }
+
+        #expect(type == "_onlyswitch._tcp")
+        #expect(domain == nil)
+    }
+
+    @Test func selectedMacKeepsDiscoveryActiveWithoutPairingSubscriber() {
+        #expect(RemoteConnectionRuntime.needsDiscovery(
+            subscriberCount: 0,
+            selectedMacID: UUID()
+        ))
+    }
+
+    @Test func discoveryStopsOnlyWithoutSubscribersOrSelection() {
+        #expect(RemoteConnectionRuntime.needsDiscovery(
+            subscriberCount: 1,
+            selectedMacID: nil
+        ))
+        #expect(!RemoteConnectionRuntime.needsDiscovery(
+            subscriberCount: 0,
+            selectedMacID: nil
+        ))
+    }
+
     @Test func browserRestartBackoffIsBounded() {
         #expect(RemoteConnectionRuntime.browserRetryDelay(failureCount: 0) == .milliseconds(500))
         #expect(RemoteConnectionRuntime.browserRetryDelay(failureCount: 2) == .seconds(2))
