@@ -360,6 +360,80 @@ struct RemoteAccessSettingsFeatureTests {
 
         #expect(await recorder.revokedDeviceIDs == [deviceID])
     }
+
+    @Test
+    func copyingActivePairingCodeShowsTemporaryConfirmation() async {
+        let clock = TestClock()
+        let pasteboard = RemotePasteboardRecorder(result: true)
+        var state = RemoteAccessSettingsFeature.State(isEnabled: true)
+        state.pairingCode = "ABCDEFGH2345"
+        let store = TestStore(initialState: state) {
+            RemoteAccessSettingsFeature()
+        } withDependencies: {
+            $0.continuousClock = clock
+            $0.remotePasteboard = pasteboard.client
+        }
+
+        await store.send(.copyPairingCodeTapped)
+        await store.receive(.copyPairingCodeResponse(true)) {
+            $0.isPairingCodeCopied = true
+        }
+        #expect(await pasteboard.values == ["ABCDEFGH2345"])
+
+        await clock.advance(by: .seconds(2))
+        await store.receive(.clearPairingCodeCopied) {
+            $0.isPairingCodeCopied = false
+        }
+    }
+
+    @Test
+    func copyingWithoutActivePairingDoesNothing() async {
+        let pasteboard = RemotePasteboardRecorder(result: true)
+        let store = TestStore(initialState: RemoteAccessSettingsFeature.State()) {
+            RemoteAccessSettingsFeature()
+        } withDependencies: {
+            $0.remotePasteboard = pasteboard.client
+        }
+
+        await store.send(.copyPairingCodeTapped)
+        #expect(await pasteboard.values.isEmpty)
+    }
+
+    @Test
+    func pasteboardFailureKeepsPairingAndShowsError() async {
+        let pasteboard = RemotePasteboardRecorder(result: false)
+        var state = RemoteAccessSettingsFeature.State(isEnabled: true)
+        state.pairingCode = "ABCDEFGH2345"
+        let store = TestStore(initialState: state) {
+            RemoteAccessSettingsFeature()
+        } withDependencies: {
+            $0.remotePasteboard = pasteboard.client
+        }
+
+        await store.send(.copyPairingCodeTapped)
+        await store.receive(.copyPairingCodeResponse(false)) {
+            $0.alert = .error("The pairing code couldn’t be copied.")
+        }
+        #expect(store.state.pairingCode == "ABCDEFGH2345")
+    }
+}
+
+private actor RemotePasteboardRecorder {
+    let result: Bool
+    private(set) var values: [String] = []
+
+    init(result: Bool) { self.result = result }
+
+    nonisolated var client: RemotePasteboardClient {
+        RemotePasteboardClient { value in
+            await self.copy(value)
+        }
+    }
+
+    private func copy(_ value: String) -> Bool {
+        values.append(value)
+        return result
+    }
 }
 
 private actor RemoteAccessSettingsRecorder {

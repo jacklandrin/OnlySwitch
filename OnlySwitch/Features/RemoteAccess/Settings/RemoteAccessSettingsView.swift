@@ -24,15 +24,31 @@ struct RemoteAccessSettingsView: View {
             Section("Pairing".localized()) {
                 if let code = store.pairingCode {
                     LabeledContent("Pairing Code".localized()) {
-                        Text(code)
-                            .font(.system(.title2, design: .monospaced))
-                            .bold()
-                            .textSelection(.disabled)
-                            .accessibilityLabel(
-                                "Pairing Code %@".localizeWithFormat(
-                                    arguments: code.map(String.init).joined(separator: " ")
+                        HStack(spacing: 12) {
+                            Text(code)
+                                .font(.system(.title2, design: .monospaced))
+                                .bold()
+                                .textSelection(.disabled)
+                                .accessibilityLabel(
+                                    "Pairing Code %@".localizeWithFormat(
+                                        arguments: code.map(String.init).joined(separator: " ")
+                                    )
                                 )
+
+                            Button {
+                                store.send(.copyPairingCodeTapped)
+                            } label: {
+                                Label(
+                                    store.isPairingCodeCopied ? "Copied".localized() : "Copy".localized(),
+                                    systemImage: store.isPairingCodeCopied ? "checkmark" : "doc.on.doc"
+                                )
+                            }
+                            .accessibilityLabel(
+                                store.isPairingCodeCopied
+                                    ? Text("Pairing code copied".localized())
+                                    : Text("Copy pairing code".localized())
                             )
+                        }
                     }
                     LabeledContent(
                         "Expires In".localized(),

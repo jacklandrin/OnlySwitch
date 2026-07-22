@@ -1,3 +1,4 @@
+import AppKit
 import ComposableArchitecture
 import Extensions
 import Foundation
@@ -52,6 +53,30 @@ extension DependencyValues {
     }
 }
 
+struct RemotePasteboardClient: Sendable {
+    var copy: @Sendable (String) async -> Bool
+}
+
+extension RemotePasteboardClient: DependencyKey {
+    static var liveValue: Self {
+        Self { value in
+            await MainActor.run {
+                NSPasteboard.general.clearContents()
+                return NSPasteboard.general.setString(value, forType: .string)
+            }
+        }
+    }
+
+    static var testValue: Self { Self { _ in false } }
+}
+
+extension DependencyValues {
+    var remotePasteboard: RemotePasteboardClient {
+        get { self[RemotePasteboardClient.self] }
+        set { self[RemotePasteboardClient.self] = newValue }
+    }
+}
+
 @Reducer
 struct RemoteAccessSettingsFeature {
     @ObservableState
@@ -70,6 +95,7 @@ struct RemoteAccessSettingsFeature {
         var pairingExpiresAt: Date?
         var pairingSecondsRemaining = 0
         var isPairingRequestInFlight = false
+        var isPairingCodeCopied = false
         var pairedDevices: IdentifiedArrayOf<Device> = []
         var revokingDeviceIDs: Set<UUID> = []
         @Presents var alert: AlertState<Action.Alert>?
@@ -102,6 +128,9 @@ struct RemoteAccessSettingsFeature {
         case pairingTick(Date)
         case cancelPairingTapped
         case pairingCancelled
+        case copyPairingCodeTapped
+        case copyPairingCodeResponse(Bool)
+        case clearPairingCodeCopied
         case hostEvent(RemoteHostEvent)
         case devicesResponse(Result<[PairedRemoteDevice], RemoteAccessSettingsError>)
         case revokeTapped(UUID)
@@ -116,6 +145,7 @@ struct RemoteAccessSettingsFeature {
     @Dependency(\.continuousClock) var clock
     @Dependency(\.date.now) var now
     @Dependency(\.remoteAccessPreferences) var preferences
+    @Dependency(\.remotePasteboard) var remotePasteboard
     @Dependency(\.remoteHost) var remoteHost
 
     private enum CancelID: Hashable {
@@ -123,6 +153,7 @@ struct RemoteAccessSettingsFeature {
         case hostOperation
         case pairingRequest
         case pairingTimer
+        case pairingCodeCopied
         case displayNameRestart
     }
 
@@ -266,6 +297,30 @@ struct RemoteAccessSettingsFeature {
             case .pairingCancelled:
                 return .none
 
+            case .copyPairingCodeTapped:
+                guard let code = state.pairingCode else { return .none }
+                state.isPairingCodeCopied = false
+                return .run { send in
+                    await send(.copyPairingCodeResponse(await remotePasteboard.copy(code)))
+                }
+
+            case let .copyPairingCodeResponse(succeeded):
+                guard state.pairingCode != nil else { return .none }
+                guard succeeded else {
+                    state.alert = .error("The pairing code couldn’t be copied.".localized())
+                    return .none
+                }
+                state.isPairingCodeCopied = true
+                return .run { send in
+                    try await clock.sleep(for: .seconds(2))
+                    await send(.clearPairingCodeCopied)
+                }
+                .cancellable(id: CancelID.pairingCodeCopied, cancelInFlight: true)
+
+            case .clearPairingCodeCopied:
+                state.isPairingCodeCopied = false
+                return .none
+
             case let .hostEvent(event):
                 guard state.isEnabled else { return .none }
                 switch event {
@@ -381,6 +436,7 @@ struct RemoteAccessSettingsFeature {
         state.pairingExpiresAt = nil
         state.pairingSecondsRemaining = 0
         state.isPairingRequestInFlight = false
+        state.isPairingCodeCopied = false
     }
 
     private func deviceSummaries(_ devices: [PairedRemoteDevice]) -> IdentifiedArrayOf<State.Device> {
