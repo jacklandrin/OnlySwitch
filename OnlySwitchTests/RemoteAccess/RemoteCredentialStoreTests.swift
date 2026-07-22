@@ -5,6 +5,37 @@ import Testing
 
 struct RemoteCredentialStoreTests {
     @Test
+    func liveStoreLoadsAllDevices() async throws {
+        let store = RemoteCredentialStore.live(
+            service: "RemoteCredentialStoreTests.\(UUID().uuidString)"
+        )
+        let device = PairedRemoteDevice(
+            id: UUID(),
+            name: "iPhone",
+            credential: Data(repeating: 9, count: 32),
+            createdAt: .now,
+            lastConnectedAt: nil
+        )
+        do {
+            try await store.save(device)
+            #expect(try await store.loadAll() == [device])
+        } catch {
+            try? await store.delete(device.id)
+            throw error
+        }
+        try await store.delete(device.id)
+    }
+
+    @Test
+    func emptyLiveStoreRecoversPairingTransactions() async throws {
+        let store = RemoteCredentialStore.live(
+            service: "RemoteCredentialStoreTests.\(UUID().uuidString)"
+        )
+
+        try await store.recoverExpiredTransactions()
+    }
+
+    @Test
     func preparedProvisionalContextSurvivesStoreRestart() async throws {
         let store = RemoteCredentialStore.inMemory()
         let device = PairedRemoteDevice(

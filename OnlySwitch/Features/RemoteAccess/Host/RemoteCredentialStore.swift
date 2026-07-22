@@ -415,15 +415,9 @@ actor RemoteCredentialStore {
         case .memory:
             return records.values.sorted { $0.createdAt < $1.createdAt }
         case let .keychain(service):
-            var query = Self.baseQuery(service: service)
-            query[kSecMatchLimit] = kSecMatchLimitAll
-            query[kSecReturnData] = true
-            var result: CFTypeRef?
-            let status = SecItemCopyMatching(query as CFDictionary, &result)
-            if status == errSecItemNotFound { return [] }
-            guard status == errSecSuccess else { throw Error.keychain(status) }
-            let dataItems = (result as? [Data]) ?? (result as? Data).map { [$0] } ?? []
-            return try dataItems.map(Self.decodeRecord).sorted { $0.createdAt < $1.createdAt }
+            return try Self.loadAllData(service: service)
+                .map(Self.decodeRecord)
+                .sorted { $0.createdAt < $1.createdAt }
         }
     }
 
@@ -493,15 +487,9 @@ actor RemoteCredentialStore {
         case .memory:
             return preparedReplacements
         case let .keychain(service):
-            var query = Self.baseQuery(service: Self.transactionService(for: service))
-            query[kSecMatchLimit] = kSecMatchLimitAll
-            query[kSecReturnData] = true
-            var result: CFTypeRef?
-            let status = SecItemCopyMatching(query as CFDictionary, &result)
-            if status == errSecItemNotFound { return [:] }
-            guard status == errSecSuccess else { throw Error.keychain(status) }
-            let dataItems = (result as? [Data]) ?? (result as? Data).map { [$0] } ?? []
-            return try Dictionary(uniqueKeysWithValues: dataItems.map {
+            return try Dictionary(uniqueKeysWithValues: Self.loadAllData(
+                service: Self.transactionService(for: service)
+            ).map {
                 let record = try Self.decodePreparedReplacement($0)
                 return (record.transactionID, record)
             })
@@ -618,6 +606,32 @@ actor RemoteCredentialStore {
         guard status == errSecSuccess else { throw Error.keychain(status) }
         guard let data = result as? Data else { throw Error.invalidRecord }
         return data
+    }
+
+    private static func loadAllData(service: String) throws -> [Data] {
+        var query = baseQuery(service: service)
+        query[kSecMatchLimit] = kSecMatchLimitAll
+        query[kSecReturnAttributes] = true
+        var result: CFTypeRef?
+        let status = SecItemCopyMatching(query as CFDictionary, &result)
+        if status == errSecItemNotFound { return [] }
+        guard status == errSecSuccess else { throw Error.keychain(status) }
+
+        let attributes: [[CFString: Any]]
+        if let items = result as? [[CFString: Any]] {
+            attributes = items
+        } else if let item = result as? [CFString: Any] {
+            attributes = [item]
+        } else {
+            throw Error.invalidRecord
+        }
+        return try attributes.map { item in
+            guard let account = item[kSecAttrAccount] as? String,
+                  let data = try loadData(service: service, account: account) else {
+                throw Error.invalidRecord
+            }
+            return data
+        }
     }
 
     private static func upsert(data: Data, service: String, account: String) throws {
