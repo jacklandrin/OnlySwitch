@@ -1,6 +1,7 @@
 import ComposableArchitecture
 import Foundation
 import RemoteCore
+import SwiftUI
 import Testing
 @testable import OnlySwitchRemote
 
@@ -16,6 +17,31 @@ struct DashboardFeatureTests {
 
     @Test func tileIconsUseFixedVisualSize() {
         #expect(ControlTileView.iconSize == 28)
+    }
+
+    @Test func compactWidthPortraitKeepsTwoColumns() {
+        #expect(DashboardView.gridStrategy(
+            horizontal: .compact,
+            vertical: .regular
+        ) == .fixed(count: 2))
+    }
+
+    @Test func compactHeightUsesDenserLandscapeGrid() {
+        #expect(DashboardView.gridStrategy(
+            horizontal: .compact,
+            vertical: .compact
+        ) == .adaptive(minimum: 180))
+        #expect(DashboardView.gridStrategy(
+            horizontal: .regular,
+            vertical: .compact
+        ) == .adaptive(minimum: 180))
+    }
+
+    @Test func regularLayoutPreservesExistingAdaptiveMinimum() {
+        #expect(DashboardView.gridStrategy(
+            horizontal: .regular,
+            vertical: .regular
+        ) == .adaptive(minimum: 160))
     }
 
     @Test func macPickerPreservesFullSelectedNameForAccessibility() {

@@ -4,7 +4,31 @@ import SwiftUI
 struct DashboardView: View {
     @Bindable var store: StoreOf<DashboardFeature>
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    enum GridStrategy: Equatable {
+        case fixed(count: Int)
+        case adaptive(minimum: CGFloat)
+
+        var columns: [GridItem] {
+            switch self {
+            case let .fixed(count):
+                Array(repeating: GridItem(.flexible(), spacing: 12), count: count)
+            case let .adaptive(minimum):
+                [GridItem(.adaptive(minimum: minimum), spacing: 12)]
+            }
+        }
+    }
+
+    static func gridStrategy(
+        horizontal: UserInterfaceSizeClass?,
+        vertical: UserInterfaceSizeClass?
+    ) -> GridStrategy {
+        if vertical == .compact { return .adaptive(minimum: 180) }
+        if horizontal == .compact { return .fixed(count: 2) }
+        return .adaptive(minimum: 160)
+    }
 
     var body: some View {
         ScrollView {
@@ -74,10 +98,10 @@ struct DashboardView: View {
     }
 
     private var columns: [GridItem] {
-        if horizontalSizeClass == .compact {
-            return [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)]
-        }
-        return [GridItem(.adaptive(minimum: 160), spacing: 12)]
+        Self.gridStrategy(
+            horizontal: horizontalSizeClass,
+            vertical: verticalSizeClass
+        ).columns
     }
 
     private var connectionMessage: String? {
