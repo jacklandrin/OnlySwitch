@@ -129,7 +129,7 @@ struct RemoteAccessSettingsFeature {
         case cancelPairingTapped
         case pairingCancelled
         case copyPairingCodeTapped
-        case copyPairingCodeResponse(Bool)
+        case copyPairingCodeResponse(code: String, succeeded: Bool)
         case clearPairingCodeCopied
         case hostEvent(RemoteHostEvent)
         case devicesResponse(Result<[PairedRemoteDevice], RemoteAccessSettingsError>)
@@ -301,11 +301,14 @@ struct RemoteAccessSettingsFeature {
                 guard let code = state.pairingCode else { return .none }
                 state.isPairingCodeCopied = false
                 return .run { send in
-                    await send(.copyPairingCodeResponse(await remotePasteboard.copy(code)))
+                    await send(.copyPairingCodeResponse(
+                        code: code,
+                        succeeded: await remotePasteboard.copy(code)
+                    ))
                 }
 
-            case let .copyPairingCodeResponse(succeeded):
-                guard state.pairingCode != nil else { return .none }
+            case let .copyPairingCodeResponse(code, succeeded):
+                guard state.pairingCode == code else { return .none }
                 guard succeeded else {
                     state.alert = .error("The pairing code couldn’t be copied.".localized())
                     return .none
@@ -429,6 +432,7 @@ struct RemoteAccessSettingsFeature {
         state.pairingCode = window.code
         state.pairingExpiresAt = window.expiresAt
         state.pairingSecondsRemaining = max(0, Int(ceil(window.expiresAt.timeIntervalSince(now))))
+        state.isPairingCodeCopied = false
     }
 
     private func clearPairing(state: inout State) {

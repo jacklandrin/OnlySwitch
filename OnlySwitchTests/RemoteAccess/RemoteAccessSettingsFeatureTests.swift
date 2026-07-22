@@ -375,7 +375,7 @@ struct RemoteAccessSettingsFeatureTests {
         }
 
         await store.send(.copyPairingCodeTapped)
-        await store.receive(.copyPairingCodeResponse(true)) {
+        await store.receive(.copyPairingCodeResponse(code: "ABCDEFGH2345", succeeded: true)) {
             $0.isPairingCodeCopied = true
         }
         #expect(await pasteboard.values == ["ABCDEFGH2345"])
@@ -411,10 +411,43 @@ struct RemoteAccessSettingsFeatureTests {
         }
 
         await store.send(.copyPairingCodeTapped)
-        await store.receive(.copyPairingCodeResponse(false)) {
+        await store.receive(.copyPairingCodeResponse(code: "ABCDEFGH2345", succeeded: false)) {
             $0.alert = .error("The pairing code couldn’t be copied.")
         }
         #expect(store.state.pairingCode == "ABCDEFGH2345")
+    }
+
+    @Test
+    func staleCopyResponseDoesNotShowFeedbackOrAnErrorForReplacementPairingCode() async {
+        let now = Date(timeIntervalSince1970: 1_000)
+        let oldCode = "ABCDEFGH2345"
+        let replacementWindow = PairingWindow(
+            code: "JKLMNOPQ6789",
+            expiresAt: now.addingTimeInterval(60)
+        )
+        let pasteboard = RemotePasteboardGate()
+        var state = RemoteAccessSettingsFeature.State(isEnabled: true)
+        state.pairingCode = oldCode
+        let store = TestStore(initialState: state) {
+            RemoteAccessSettingsFeature()
+        } withDependencies: {
+            $0.continuousClock = TestClock()
+            $0.date.now = now
+            $0.remotePasteboard = pasteboard.client
+        }
+
+        await store.send(.copyPairingCodeTapped)
+        await pasteboard.waitForCopy()
+        await store.send(.pairingStarted(replacementWindow)) {
+            $0.pairingCode = replacementWindow.code
+            $0.pairingExpiresAt = replacementWindow.expiresAt
+            $0.pairingSecondsRemaining = 60
+        }
+        await pasteboard.respond(succeeded: true)
+        await store.receive(.copyPairingCodeResponse(code: oldCode, succeeded: true))
+
+        #expect(store.state.isPairingCodeCopied == false)
+        #expect(store.state.alert == nil)
     }
 }
 
@@ -433,6 +466,34 @@ private actor RemotePasteboardRecorder {
     private func copy(_ value: String) -> Bool {
         values.append(value)
         return result
+    }
+}
+
+private actor RemotePasteboardGate {
+    private var didStartCopy: CheckedContinuation<Void, Never>?
+    private var response: CheckedContinuation<Bool, Never>?
+
+    nonisolated var client: RemotePasteboardClient {
+        RemotePasteboardClient { value in
+            await self.copy(value)
+        }
+    }
+
+    func waitForCopy() async {
+        guard response == nil else { return }
+        await withCheckedContinuation { didStartCopy = $0 }
+    }
+
+    func respond(succeeded: Bool) {
+        response?.resume(returning: succeeded)
+        response = nil
+    }
+
+    private func copy(_ value: String) async -> Bool {
+        _ = value
+        didStartCopy?.resume()
+        didStartCopy = nil
+        return await withCheckedContinuation { response = $0 }
     }
 }
 

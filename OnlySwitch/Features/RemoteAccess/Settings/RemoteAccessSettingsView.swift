@@ -44,9 +44,12 @@ struct RemoteAccessSettingsView: View {
                                 )
                             }
                             .accessibilityLabel(
+                                Text("Copy pairing code".localized())
+                            )
+                            .accessibilityValue(
                                 store.isPairingCodeCopied
-                                    ? Text("Pairing code copied".localized())
-                                    : Text("Copy pairing code".localized())
+                                    ? Text("Copied".localized())
+                                    : Text("")
                             )
                         }
                     }
