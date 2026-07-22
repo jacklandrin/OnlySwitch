@@ -1158,7 +1158,7 @@ actor RemoteConnectionRuntime {
         browserRetryTask = nil
     }
 
-    private func stopDiscoveryIfUnused() {
+    func stopDiscoveryIfUnused() {
         guard Self.needsDiscovery(
             subscriberCount: discoveryHub.subscriberCount,
             selectedMacID: selected?.id

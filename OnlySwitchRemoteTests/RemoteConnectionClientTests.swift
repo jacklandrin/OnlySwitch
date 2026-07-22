@@ -1622,6 +1622,51 @@ struct RemoteConnectionClientTests {
         ))
     }
 
+    @Test func selectedMacOwnsBrowserAcrossStreamAndAppLifecycle() async {
+        let runtime = RemoteConnectionRuntime(
+            persistence: .inMemory(),
+            keychain: .inMemory(),
+            deviceID: UUID()
+        )
+        let selectedMac = PairedMac(
+            id: UUID(),
+            displayName: "Studio",
+            lastEndpointDescription: nil,
+            lastConnectedAt: nil,
+            requiresPairing: false
+        )
+
+        await runtime.select(selectedMac)
+        #expect((await runtime.lifecycleSnapshot).ownsBrowser)
+
+        let consumerGate = OperationGate()
+        let discovery = runtime.makeDiscoveryStream()
+        let consumer = Task {
+            await consumerGate.wait()
+            for await _ in discovery {}
+        }
+        await consumerGate.waitUntilEntered()
+        consumer.cancel()
+        await consumerGate.open()
+        await consumer.value
+        await runtime.stopDiscoveryIfUnused()
+
+        #expect((await runtime.lifecycleSnapshot).ownsBrowser)
+
+        await runtime.setForegrounded(false)
+        var snapshot = await runtime.lifecycleSnapshot
+        #expect(snapshot.foregrounded == false)
+        #expect(snapshot.ownsBrowser == false)
+
+        await runtime.setForegrounded(true)
+        snapshot = await runtime.lifecycleSnapshot
+        #expect(snapshot.foregrounded)
+        #expect(snapshot.ownsBrowser)
+
+        await runtime.select(nil)
+        #expect((await runtime.lifecycleSnapshot).ownsBrowser == false)
+    }
+
     @Test func discoveryStopsOnlyWithoutSubscribersOrSelection() {
         #expect(RemoteConnectionRuntime.needsDiscovery(
             subscriberCount: 1,
