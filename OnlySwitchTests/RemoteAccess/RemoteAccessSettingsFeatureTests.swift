@@ -6,6 +6,26 @@ import Testing
 @MainActor
 struct RemoteAccessSettingsFeatureTests {
     @Test
+    func defaultDisplayNamePrefersComputerName() {
+        #expect(RemoteAccessPreferencesClient.resolvedDefaultDisplayName(
+            computerName: "  Bo’s Mac Studio  ",
+            hostName: "provider.example.net"
+        ) == "Bo’s Mac Studio")
+    }
+
+    @Test
+    func defaultDisplayNameFallsBackToHostThenProductName() {
+        #expect(RemoteAccessPreferencesClient.resolvedDefaultDisplayName(
+            computerName: nil,
+            hostName: "  bos-mac-studio.local  "
+        ) == "bos-mac-studio.local")
+        #expect(RemoteAccessPreferencesClient.resolvedDefaultDisplayName(
+            computerName: "   ",
+            hostName: "   "
+        ) == "OnlySwitch Mac")
+    }
+
+    @Test
     func enablingPersistsPreferenceAndStartsHost() async {
         let recorder = RemoteAccessSettingsRecorder()
         let store = TestStore(initialState: RemoteAccessSettingsFeature.State(displayName: "Studio Mac")) {

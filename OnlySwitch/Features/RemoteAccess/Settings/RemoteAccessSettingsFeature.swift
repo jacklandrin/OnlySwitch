@@ -2,6 +2,7 @@ import AppKit
 import ComposableArchitecture
 import Extensions
 import Foundation
+import SystemConfiguration
 
 struct RemoteAccessPreferences: Equatable, Sendable {
     var isEnabled: Bool
@@ -41,8 +42,20 @@ extension RemoteAccessPreferencesClient: DependencyKey {
     }
 
     static var defaultDisplayName: String {
-        let name = ProcessInfo.processInfo.hostName.trimmingCharacters(in: .whitespacesAndNewlines)
-        return name.isEmpty ? "OnlySwitch Mac".localized() : name
+        resolvedDefaultDisplayName(
+            computerName: SCDynamicStoreCopyComputerName(nil, nil) as String?,
+            hostName: ProcessInfo.processInfo.hostName
+        )
+    }
+
+    static func resolvedDefaultDisplayName(
+        computerName: String?,
+        hostName: String
+    ) -> String {
+        let computerName = computerName?.trimmingCharacters(in: .whitespacesAndNewlines)
+        if let computerName, computerName.isEmpty == false { return computerName }
+        let hostName = hostName.trimmingCharacters(in: .whitespacesAndNewlines)
+        return hostName.isEmpty ? "OnlySwitch Mac".localized() : hostName
     }
 }
 
