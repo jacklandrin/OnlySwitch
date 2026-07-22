@@ -3,6 +3,12 @@
   "strings" : {
     "%lld of 12 characters entered" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zadáno %lld z 12 znaků"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -21,6 +27,12 @@
             "value" : "%lld caractères sur 12 saisis"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uneseno %lld od 12 znakova"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -33,16 +45,46 @@
             "value" : "%lld van de 12 tekens ingevoerd"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wprowadzono %lld z 12 znaków"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld de 12 caracteres inseridos"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Введено %lld из 12 символов"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld z 12 znakov zadaných"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Введено %lld із 12 символів"
           }
         }
       }
     },
     "12-character code" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kód o 12 znacích"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -61,6 +103,12 @@
             "value" : "code à 12 caractères"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kod od 12 znakova"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -73,16 +121,46 @@
             "value" : "Code met 12 tekens"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "kod 12-znakowy"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "código de 12 caracteres"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "12-значный код"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "12-písmenný kód"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "12-символьний код"
           }
         }
       }
     },
     "Action Failed" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Akce selhala"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -101,6 +179,12 @@
             "value" : "Échec de l'action"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Radnja nije uspjela"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -113,16 +197,46 @@
             "value" : "Actie mislukt"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Akcja nie powiodła się"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ação falhou"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Действие не выполнено"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Akcia zlyhala"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Дію не виконано"
           }
         }
       }
     },
     "Action Timed Out" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Časový limit akce vypršel"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -141,6 +255,12 @@
             "value" : "Délai d'attente dépassé pour l'action"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vrijeme za radnju je isteklo"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -153,16 +273,46 @@
             "value" : "Actie verlopen"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Przekroczono limit czasu akcji"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tempo da ação esgotou"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Тайм-аут действия"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Časový limit akcie vypršal"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Час очікування дії минув"
           }
         }
       }
     },
     "Built-ins" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vestavěné"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -181,6 +331,12 @@
             "value" : "Intégrés"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ugrađeno"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -193,16 +349,46 @@
             "value" : "Ingebouwde functies"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wbudowane"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Integrados"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Встроенные"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vstavané"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вбудовані"
           }
         }
       }
     },
     "Cancel" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zrušit"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -221,6 +407,12 @@
             "value" : "Annuler"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odustani"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -233,16 +425,46 @@
             "value" : "Annuleren"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anuluj"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cancelar"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отменить"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zrušiť"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Скасувати"
           }
         }
       }
     },
     "Changes dashboard visibility" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Změna viditelnosti přehledu"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -261,6 +483,12 @@
             "value" : "Modifie la visibilité du tableau de bord"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mijenja vidljivost nadzorne ploče"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -273,16 +501,46 @@
             "value" : "Verandert de zichtbaarheid van het dashboard"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zmienia widoczność pulpitu"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Altera a visibilidade do painel"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Изменяет видимость панели управления"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zmení viditeľnosť dashboardu"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Змінює видимість панелі приладів"
           }
         }
       }
     },
     "Changes Not Saved" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Změny nebyly uloženy"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -301,6 +559,12 @@
             "value" : "Modifications non enregistrées"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Promjene nisu spremljene"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -313,16 +577,46 @@
             "value" : "Wijzigingen niet opgeslagen"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zmiany nie zostały zapisane"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alterações não salvas"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Изменения не сохранены"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zmeny nie sú uložené"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Зміни не збережено"
           }
         }
       }
     },
     "Check the 12-character code shown in OnlySwitch on your Mac and try again." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zkontrolujte kód o 12 znacích zobrazený v aplikaci OnlySwitch na vašem Macu a zkuste to znovu."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -341,6 +635,12 @@
             "value" : "Vérifiez le code à 12 caractères affiché dans OnlySwitch sur votre Mac et réessayez."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Provjerite kod od 12 znakova prikazan u OnlySwitchu na vašem Macu i pokušajte ponovno."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -353,16 +653,46 @@
             "value" : "Controleer de code met 12 tekens die in OnlySwitch op je Mac wordt weergegeven en probeer het opnieuw."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sprawdź kod 12-znakowy wyświetlany w aplikacji OnlySwitch na komputerze Mac i spróbuj ponownie."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verifique o código de 12 caracteres exibido no OnlySwitch no seu Mac e tente novamente."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Проверьте 12-значный код, отображаемый в OnlySwitch на вашем Mac, и повторите попытку."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skontrolujte 12-písmenný kód zobrazený v OnlySwitch na vašom Mac a skúste to znova."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Перевірте 12-символьний код, показаний у OnlySwitch на вашому Mac, та спробуйте ще раз."
           }
         }
       }
     },
     "Choose controls in Settings to add them here." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vyberte ovládací prvky v Nastavení, abyste je zde přidali."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -381,6 +711,12 @@
             "value" : "Sélectionnez des contrôles dans les Paramètres pour les ajouter ici."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odaberite kontrole u Postavkama da biste ih ovdje dodali."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -393,16 +729,46 @@
             "value" : "Kies besturingselementen in Instellingen om ze hier toe te voegen."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wybierz elementy sterujące w Preferencjach, aby dodać je tutaj."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Escolha controles em Ajustes para adicioná-los aqui."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выберите элементы управления в Настройках, чтобы добавить их сюда."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vyberte ovládacie prvky v Nastaveniach, aby ste ich pridali sem."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Виберіть елементи керування в Налаштуваннях, щоб додати їх сюди."
           }
         }
       }
     },
     "Choose remote controls in Settings." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vyberte dálkové ovládání v Nastavení."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -421,6 +787,12 @@
             "value" : "Sélectionnez des télécommandes dans les Paramètres."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odaberite daljinske kontrole u Postavkama."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -433,16 +805,46 @@
             "value" : "Kies externe besturingselementen in Instellingen."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wybierz zdalne elementy sterujące w Preferencjach."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Escolha controles remotos em Ajustes."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выберите элементы удалённого управления в Настройках."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vyberte vzdialené ovládacie prvky v Nastaveniach."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Виберіть віддалені елементи керування в Налаштуваннях."
           }
         }
       }
     },
     "Connect to this Mac to use this control" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Připojte se k tomuto Macu pro použití tohoto ovládacího prvku"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -461,6 +863,12 @@
             "value" : "Connectez-vous à ce Mac pour utiliser ce contrôle"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Povežite se s ovim Macom za korištenje ove kontrole"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -473,16 +881,46 @@
             "value" : "Verbind met deze Mac om dit besturingselement te gebruiken"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Połącz się z tym komputerem Mac, aby używać tego elementu sterującego"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Conecte-se a este Mac para usar este controle"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подключитесь к этому Mac для использования этого элемента"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pripojte sa k tomuto Macu, aby ste mohli používať toto ovládanie"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Підключіться до цього Mac, щоб використовувати цей елемент керування"
           }
         }
       }
     },
     "Connect Your First Mac" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Připojte svůj první Mac"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -501,6 +939,12 @@
             "value" : "Connectez votre premier Mac"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Povežite svoj prvi Mac"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -513,16 +957,46 @@
             "value" : "Verbind je eerste Mac"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Połącz swój pierwszy komputer Mac"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Conecte seu primeiro Mac"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подключите свой первый Mac"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pripojte prvý Mac"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Підключіть свій перший Mac"
           }
         }
       }
     },
     "Connected" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Připojeno"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -541,6 +1015,12 @@
             "value" : "Connecté"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Povezano"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -553,16 +1033,46 @@
             "value" : "Verbonden"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Połączono"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Conectado"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подключено"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pripojené"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Підключено"
           }
         }
       }
     },
     "Connecting…" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Připojování…"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -581,6 +1091,12 @@
             "value" : "Connexion en cours…"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Povezivanje…"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -593,16 +1109,46 @@
             "value" : "Verbinden…"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Łączenie…"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Conectando…"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подключение…"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pripájanie…"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Підключення…"
           }
         }
       }
     },
     "Couldn’t Load Macs" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nepodařilo se načíst počítače Mac"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -621,6 +1167,12 @@
             "value" : "Impossible de charger les Mac"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nije moguće učitati Macove"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -633,16 +1185,46 @@
             "value" : "Mac-apparaten konden niet worden geladen"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie udało się załadować komputerów Mac"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Não foi possível carregar os Macs"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не удалось загрузить Mac"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nebolo možné načítať Macy"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не вдалося завантажити Mac"
           }
         }
       }
     },
     "Dashboard" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přehled"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -661,6 +1243,12 @@
             "value" : "Tableau de bord"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nadzorna ploča"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -673,16 +1261,46 @@
             "value" : "Dashboard"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pulpit"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Painel"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Панель управления"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dashboard"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Панель приладів"
           }
         }
       }
     },
     "Dashboard Tile Order" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pořadí dlaždic v přehledu"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -701,6 +1319,12 @@
             "value" : "Ordre des tuiles du tableau de bord"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Redoslijed pločica na nadzornoj ploči"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -713,16 +1337,46 @@
             "value" : "Volgorde van dashboardtegels"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kolejność kafelków na pulpicie"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ordem dos blocos do painel"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Порядок плиток панели управления"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poradie dlaždíc dashboardu"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Порядок плиток на панелі приладів"
           }
         }
       }
     },
     "Discovered Macs" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Objevené počítače Mac"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -741,6 +1395,12 @@
             "value" : "Mac découverts"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otkriveni Macovi"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -753,16 +1413,46 @@
             "value" : "Gedetecteerde Mac-apparaten"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wykryte komputery Mac"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Macs descobertos"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Обнаруженные Mac"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nájdené Macy"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Виявлені Mac"
           }
         }
       }
     },
     "Enable iOS Remote Access and start pairing in OnlySwitch on your Mac." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Povolte vzdálený přístup pro iOS a zahajte párování v aplikaci OnlySwitch na vašem Macu."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -781,6 +1471,12 @@
             "value" : "Activez l'accès à distance sur iOS et lancez l'appairage dans OnlySwitch sur votre Mac."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Omogućite daljinski pristup za iOS i započnite uparivanje u OnlySwitchu na vašem Macu."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -793,16 +1489,46 @@
             "value" : "Schakel iOS-externe toegang in en begin met koppelen in OnlySwitch op je Mac."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Włącz zdalny dostęp z iOS i rozpocznij parowanie w aplikacji OnlySwitch na komputerze Mac."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ative o Acesso Remoto no iOS e inicie o pareamento no OnlySwitch no seu Mac."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Включите удалённый доступ для iOS и начните сопряжение в OnlySwitch на вашем Mac."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Povoliť vzdialený prístup iOS a začať párovanie v OnlySwitch na vašom Macu."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Увімкніть віддалений доступ для iOS та почніть спарювання в OnlySwitch на вашому Mac."
           }
         }
       }
     },
     "Enable iOS Remote Access in OnlySwitch on your Mac, then start pairing." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Povolte vzdálený přístup pro iOS v aplikaci OnlySwitch na vašem Macu a poté zahajte párování."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -821,6 +1547,12 @@
             "value" : "Activez l'accès à distance sur iOS dans OnlySwitch sur votre Mac, puis lancez l'appairage."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Omogućite daljinski pristup za iOS u OnlySwitchu na vašem Macu, a zatim započnite uparivanje."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -833,16 +1565,46 @@
             "value" : "Schakel iOS-externe toegang in OnlySwitch op je Mac in en begin vervolgens met koppelen."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Włącz zdalny dostęp z iOS w aplikacji OnlySwitch na komputerze Mac, a następnie rozpocznij parowanie."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ative o Acesso Remoto no iOS no OnlySwitch do seu Mac e depois inicie o pareamento."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Включите удалённый доступ для iOS в OnlySwitch на вашем Mac, затем начните сопряжение."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Povoliť vzdialený prístup iOS v OnlySwitch na vašom Macu, potom začať párovanie."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Увімкніть віддалений доступ для iOS в OnlySwitch на вашому Mac, а потім почніть спарювання."
           }
         }
       }
     },
     "Enter the 12-character code shown on your Mac." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zadejte kód o 12 znacích zobrazený na vašem Macu."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -861,6 +1623,12 @@
             "value" : "Saisissez le code à 12 caractères affiché sur votre Mac."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unesite kod od 12 znakova prikazan na vašem Macu."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -873,16 +1641,46 @@
             "value" : "Voer de code met 12 tekens in die op je Mac wordt weergegeven."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wprowadź kod 12-znakowy wyświetlany na komputerze Mac."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Insira o código de 12 caracteres exibido no seu Mac."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Введите 12-значный код, отображаемый на вашем Mac."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zadajte 12-písmenný kód zobrazený na vašom Macu."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Введіть 12-символьний код, показаний на вашому Mac."
           }
         }
       }
     },
     "Evolutions" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vylepšení"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -901,6 +1699,12 @@
             "value" : "Évolutions"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nadogradnje"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -913,16 +1717,46 @@
             "value" : "Evoluties"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rozwój"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Evoluções"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Эволюции"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vývoje"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Оновлення"
           }
         }
       }
     },
     "Forget %@?" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odebrat %@?"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -941,6 +1775,12 @@
             "value" : "Oublier %@ ?"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaboraviti %@?"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -953,16 +1793,46 @@
             "value" : "%@ vergeten?"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zapomnieć o %@?"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Esquecer %@?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Забыть %@?"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zabudnúť %@?"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Забути %@?"
           }
         }
       }
     },
     "Forget Mac" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odebrat Mac"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -981,6 +1851,12 @@
             "value" : "Oublier le Mac"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaboravi Mac"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -993,16 +1869,46 @@
             "value" : "Mac vergeten"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zapomnij o komputerze Mac"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Esquecer Mac"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Забыть Mac"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zabudnúť Mac"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Забути Mac"
           }
         }
       }
     },
     "Forget This Mac" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odebrat tento Mac"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1021,6 +1927,12 @@
             "value" : "Oublier ce Mac"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaboravi ovaj Mac"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1033,16 +1945,46 @@
             "value" : "Deze Mac vergeten"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zapomnij o tym komputerze Mac"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Esquecer este Mac"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Забыть этот Mac"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zabudnúť tento Mac"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Забути цей Mac"
           }
         }
       }
     },
     "Forgetting Mac…" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odstraňování Macu…"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1061,6 +2003,12 @@
             "value" : "Oubli du Mac en cours…"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaboravljanje Maca…"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1073,16 +2021,46 @@
             "value" : "Mac vergeten…"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usuwanie komputera Mac…"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Esquecendo o Mac…"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Удаление Mac…"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zabúdanie Macu…"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Забуття Mac…"
           }
         }
       }
     },
     "Forgetting removes this Mac’s credential, cached controls, statuses, and dashboard layout from this device." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odebráním se z tohoto zařízení odstraní pověření, mezipaměť ovládacích prvků, stavy a rozložení přehledu pro tento Mac."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1101,6 +2079,12 @@
             "value" : "L'oubli supprime les identifiants de ce Mac, les contrôles mis en cache, les statuts et la disposition du tableau de bord de cet appareil."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaboravljanjem s ovog uređaja uklanjaju se vjerodajnice, predmemorirane kontrole, statusi i raspored nadzorne ploče za ovaj Mac."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1113,16 +2097,46 @@
             "value" : "Vergeten verwijdert de inloggegevens, de opgeslagen besturingselementen, statussen en het dashboardindeling van deze Mac van dit apparaat."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usunięcie powoduje usunięcie poświadczenia tego komputera Mac, pamięci podręcznej elementów sterujących, stanów i układu pulpitu z tego urządzenia."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ao esquecer, são removidas as credenciais deste Mac, os controles em cache, os status e o layout do painel deste dispositivo."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "При удалении с этого устройства будут удалены учётные данные этого Mac, кэшированные элементы управления, статусы и макет панели управления."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zabudnutím tohto Macu sa zo zariadenia odstránia jeho prihlasovacie údaje, ovládacie prvky a stavy vo vyrovnávacej pamäti aj rozloženie dashboardu."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Після забуття з цього пристрою буде видалено облікові дані, кешовані елементи керування, статуси та макет панелі приладів для цього Mac."
           }
         }
       }
     },
     "Hidden from dashboard" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skryto v přehledu"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1141,6 +2155,12 @@
             "value" : "Masqué sur le tableau de bord"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sakriveno na nadzornoj ploči"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1153,16 +2173,46 @@
             "value" : "Verborgen voor dashboard"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ukryte na pulpicie"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Oculto no painel"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Скрыто на панели управления"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skryté z dashboardu"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Приховано на панелі приладів"
           }
         }
       }
     },
     "Install a compatible OnlySwitch version on the Mac or update this app." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nainstalujte kompatibilní verzi OnlySwitch na Mac nebo aktualizujte tuto aplikaci."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1181,6 +2231,12 @@
             "value" : "Installez une version compatible d'OnlySwitch sur le Mac ou mettez à jour cette application."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instalirajte kompatibilnu verziju OnlySwitcha na Mac ili ažurirajte ovu aplikaciju."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1193,16 +2249,46 @@
             "value" : "Installeer een compatibele versie van OnlySwitch op de Mac of werk deze app bij."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zainstaluj kompatybilną wersję aplikacji OnlySwitch na komputerze Mac lub zaktualizuj tę aplikację."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Instale uma versão compatível do OnlySwitch no Mac ou atualize este aplicativo."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Установите совместимую версию OnlySwitch на Mac или обновите это приложение."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nainštalujte kompatibilnú verziu OnlySwitch na Mac alebo aktualizujte túto aplikáciu."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Встановіть сумісну версію OnlySwitch на Mac або оновіть цей додаток."
           }
         }
       }
     },
     "Last address" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poslední adresa"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1221,6 +2307,12 @@
             "value" : "Dernière adresse"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Posljednja adresa"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1233,16 +2325,46 @@
             "value" : "Laatste adres"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ostatni adres"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Último endereço"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Последний адрес"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Posledná adresa"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Остання адреса"
           }
         }
       }
     },
     "Last connected" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Naposledy připojeno"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1261,6 +2383,12 @@
             "value" : "Dernière connexion"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zadnje povezano"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1273,16 +2401,46 @@
             "value" : "Laatst verbonden"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ostatnio połączono"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Última conexão"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Последнее подключение"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Naposledy pripojené"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Останнє підключення"
           }
         }
       }
     },
     "Last connected %@" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Naposledy připojeno %@"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1301,6 +2459,12 @@
             "value" : "Dernière connexion il y a %@"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zadnje povezano %@"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1313,16 +2477,46 @@
             "value" : "Laatst verbonden %@"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ostatnio połączono %@"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Última conexão: %@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Последнее подключение: %@"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Naposledy pripojené %@"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Останнє підключення: %@"
           }
         }
       }
     },
     "Last known status" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poslední známý stav"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1341,6 +2535,12 @@
             "value" : "Dernier statut connu"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Posljednji poznati status"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1353,16 +2553,46 @@
             "value" : "Laatst bekende status"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ostatnio znany stan"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Último status conhecido"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Последний известный статус"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Posledný známy stav"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Останній відомий статус"
           }
         }
       }
     },
     "Loading Macs" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Načítání počítačů Mac"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1381,6 +2611,12 @@
             "value" : "Chargement des Mac en cours"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Učitavanje Macova"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1393,16 +2629,46 @@
             "value" : "Mac-apparaten laden…"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ładowanie komputerów Mac"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Carregando Macs"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Загрузка Mac…"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Načítavanie Macov"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Завантаження Mac…"
           }
         }
       }
     },
     "Looking for Macs on your local network…" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vyhledávání počítačů Mac ve vaší lokální síti…"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1421,6 +2687,12 @@
             "value" : "Recherche de Mac sur votre réseau local…"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pretraživanje Macova na vašoj lokalnoj mreži…"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1433,16 +2705,46 @@
             "value" : "Zoeken naar Mac-apparaten op je lokale netwerk…"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyszukiwanie komputerów Mac w sieci lokalnej…"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Procurando por Macs na sua rede local…"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поиск Mac в вашей локальной сети…"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hľadá sa Mac na vašej lokálnej sieti…"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пошук Mac у вашій локальній мережі…"
           }
         }
       }
     },
     "Mac" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1461,6 +2763,12 @@
             "value" : "Mac"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1473,7 +2781,31 @@
             "value" : "Mac"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac"
+          }
+        },
         "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac"
+          }
+        },
+        "uk" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mac"
@@ -1483,6 +2815,12 @@
     },
     "Mac Offline — controls are disabled" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac offline – ovládací prvky jsou zakázány"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1501,6 +2839,12 @@
             "value" : "Mac hors ligne — les contrôles sont désactivés"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac je offline — kontrole su onemogućene"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1513,16 +2857,46 @@
             "value" : "Mac offline – besturingselementen zijn uitgeschakeld"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Komputer Mac offline – elementy sterujące są wyłączone"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mac offline — controles desativados"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac недоступен — элементы управления отключены"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac offline — ovládania sú zakázané"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac офлайн — елементи керування вимкнено"
           }
         }
       }
     },
     "Macs" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Počítače Mac"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1541,6 +2915,12 @@
             "value" : "Mac"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Macovi"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1553,16 +2933,46 @@
             "value" : "Mac-apparaten"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Komputery Mac"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Macs"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Macy"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac"
           }
         }
       }
     },
     "Make sure both devices are on the same local network and OnlySwitch remote access is enabled." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ujistěte se, že jsou oba zařízení ve stejné lokální síti a že je povolen vzdálený přístup v aplikaci OnlySwitch."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1581,6 +2991,12 @@
             "value" : "Assurez-vous que les deux appareils sont sur le même réseau local et que l'accès à distance OnlySwitch est activé."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Provjerite jesu li oba uređaja na istoj lokalnoj mreži i omogućen je li daljinski pristup u OnlySwitchu."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1593,16 +3009,46 @@
             "value" : "Zorg ervoor dat beide apparaten op hetzelfde lokale netwerk zitten en dat de externe toegang van OnlySwitch is ingeschakeld."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upewnij się, że oba urządzenia znajdują się w tej samej sieci lokalnej i że zdalny dostęp do aplikacji OnlySwitch jest włączony."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Certifique-se de que ambos os dispositivos estão na mesma rede local e que o acesso remoto do OnlySwitch está ativado."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Убедитесь, что оба устройства находятся в одной локальной сети и удалённый доступ OnlySwitch включён."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uistite sa, že obe zariadenia sú na tej istej lokálnej sieti a v OnlySwitch je povolený vzdialený prístup."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Переконайтеся, що обидва пристрої підключені до однієї локальної мережі та увімкнено віддалений доступ OnlySwitch."
           }
         }
       }
     },
     "Make sure remote access and pairing are active in OnlySwitch on your Mac." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ujistěte se, že jsou ve vaší aplikaci OnlySwitch na Macu aktivní vzdálený přístup a párování."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1621,6 +3067,12 @@
             "value" : "Assurez-vous que l'accès à distance et l'appairage sont actifs dans OnlySwitch sur votre Mac."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Provjerite jesu li daljinski pristup i uparivanje aktivni u OnlySwitchu na vašem Macu."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1633,16 +3085,46 @@
             "value" : "Zorg ervoor dat externe toegang en koppelen actief zijn in OnlySwitch op je Mac."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upewnij się, że zdalny dostęp i parowanie są aktywne w aplikacji OnlySwitch na komputerze Mac."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verifique se o acesso remoto e o pareamento estão ativos no OnlySwitch do seu Mac."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Убедитесь, что удалённый доступ и сопряжение активны в OnlySwitch на вашем Mac."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uistite sa, že v OnlySwitch na vašom Macu sú aktivované vzdialený prístup a párovanie."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Переконайтеся, що в OnlySwitch на вашому Mac активні віддалений доступ і спарювання."
           }
         }
       }
     },
     "Manage %@" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spravovat %@"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1661,6 +3143,12 @@
             "value" : "Gérer %@"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upravljaj %@"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1673,16 +3161,46 @@
             "value" : "%@ beheren"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zarządzaj %@"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gerenciar %@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Управление %@"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spravovať %@"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Керувати %@"
           }
         }
       }
     },
     "Name" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Název"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1701,6 +3219,12 @@
             "value" : "Nom"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ime"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1713,16 +3237,46 @@
             "value" : "Name"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nazwa"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nome"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Имя"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Názov"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Імʼя"
           }
         }
       }
     },
     "No Dashboard Tiles" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Žádné dlaždice v přehledu"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1741,6 +3295,12 @@
             "value" : "Aucune tuile de tableau de bord"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nema pločica na nadzornoj ploči"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1753,16 +3313,46 @@
             "value" : "Geen dashboardtegels"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brak kafelków na pulpicie"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sem blocos no painel"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нет плиток панели управления"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Žiadne dlaždice dashboardu"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Немає плиток на панелі приладів"
           }
         }
       }
     },
     "No Mac Selected" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nebyl vybrán žádný Mac"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1781,6 +3371,12 @@
             "value" : "Aucun Mac sélectionné"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nije odabran nijedan Mac"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1793,16 +3389,46 @@
             "value" : "Geen Mac geselecteerd"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie wybrano komputera Mac"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nenhum Mac selecionado"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac не выбран"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Žiadny Mac vybraný"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac не вибрано"
           }
         }
       }
     },
     "No Macs Found" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nebyly nalezeny žádné počítače Mac"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1821,6 +3447,12 @@
             "value" : "Aucun Mac trouvé"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nisu pronađeni Macovi"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1833,16 +3465,46 @@
             "value" : "Geen Mac-apparaten gevonden"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie znaleziono komputerów Mac"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nenhum Mac encontrado"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac не найдены"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neboli nájdené Macy"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac не знайдено"
           }
         }
       }
     },
     "No paired Macs" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Žádné spárované počítače Mac"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1861,6 +3523,12 @@
             "value" : "Aucun Mac appairé"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nema uparenih Macova"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1873,16 +3541,46 @@
             "value" : "Geen gekoppelde Mac-apparaten"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brak sparowanych komputerów Mac"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nenhum Mac pareado"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нет сопряжённых Mac"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Žiadne párované Macy"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Немає спарених Mac"
           }
         }
       }
     },
     "Not connected" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nepřipojeno"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1901,6 +3599,12 @@
             "value" : "Non connecté"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nije povezano"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1913,16 +3617,46 @@
             "value" : "Niet verbonden"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niepołączony"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Não conectado"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не подключено"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nepripojené"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не підключено"
           }
         }
       }
     },
     "Off" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vypnuto"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1941,6 +3675,12 @@
             "value" : "Arrêté"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Isključeno"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1953,16 +3693,46 @@
             "value" : "Uit"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyłączone"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Desligado"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выкл."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vypnúť"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вимкнено"
           }
         }
       }
     },
     "Offline" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Offline"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1981,6 +3751,12 @@
             "value" : "Hors ligne"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Offline"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1993,16 +3769,46 @@
             "value" : "Offline"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Offline"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Offline"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Недоступен"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Offline"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Офлайн"
           }
         }
       }
     },
     "Offline, showing last known status" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Offline, zobrazen poslední známý stav"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2021,6 +3827,12 @@
             "value" : "Hors ligne, affichage du dernier statut connu"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Offline, prikazuje se posljednji poznati status"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2033,16 +3845,46 @@
             "value" : "Offline, laatst bekende status wordt weergegeven"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Offline, wyświetlanie ostatnio znanego stanu"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Offline, mostrando o último status conhecido"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Недоступен, показывается последний известный статус"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Offline, zobrazuje posledný známy stav"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Офлайн, показано останній відомий статус"
           }
         }
       }
     },
     "On" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zapnuto"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2061,6 +3903,12 @@
             "value" : "Allumé"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uključeno"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2073,16 +3921,46 @@
             "value" : "Aan"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Włączone"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ligado"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вкл."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zapnúť"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Увімкнено"
           }
         }
       }
     },
     "OnlySwitch" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2101,6 +3979,12 @@
             "value" : "OnlySwitch"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2113,7 +3997,31 @@
             "value" : "OnlySwitch"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch"
+          }
+        },
         "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch"
+          }
+        },
+        "uk" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "OnlySwitch"
@@ -2123,6 +4031,12 @@
     },
     "OnlySwitch couldn’t load saved Macs. Your current screen was kept." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikaci OnlySwitch se nepodařilo načíst uložené počítače Mac. Aktuální obrazovka byla zachována."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2141,6 +4055,12 @@
             "value" : "OnlySwitch n'a pas pu charger les Mac enregistrés. Votre écran actuel a été conservé."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch nije mogao učitati spremljene Macove. Trenutni zaslon je zadržan."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2153,16 +4073,46 @@
             "value" : "OnlySwitch kon de opgeslagen Mac-apparaten niet laden. Je huidige scherm is behouden."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikacja OnlySwitch nie mogła załadować zapisanych komputerów Mac. Aktualny ekran został zachowany."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "O OnlySwitch não pôde carregar os Macs salvos. Sua tela atual foi mantida."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Приложению OnlySwitch не удалось загрузить сохранённые Mac. Текущий экран сохранён."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch nemohol načítať uložené Macy. Vaša aktuálna obrazovka bola zachovaná."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch не вдалося завантажити збережені Mac. Поточний екран залишено."
           }
         }
       }
     },
     "OnlySwitch couldn’t remove all local data for this Mac. Retry to finish forgetting it." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikaci OnlySwitch se nepodařilo odstranit všechna lokální data pro tento Mac. Zkuste to znovu, abyste dokončili jeho odebrání."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2181,6 +4131,12 @@
             "value" : "OnlySwitch n'a pas pu supprimer toutes les données locales pour ce Mac. Réessayez pour terminer l'oubli."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch nije uspio ukloniti sve lokalne podatke za ovaj Mac. Pokušajte ponovno da biste dovršili njegovo zaboravljanje."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2193,16 +4149,46 @@
             "value" : "OnlySwitch kon alle lokale gegevens voor deze Mac niet verwijderen. Probeer het opnieuw om het vergeten te voltooien."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikacja OnlySwitch nie mogła usunąć wszystkich danych lokalnych dla tego komputera Mac. Spróbuj ponownie, aby zakończyć jego usuwanie."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "O OnlySwitch não pôde remover todos os dados locais deste Mac. Tente novamente para concluir o esquecimento."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Приложению OnlySwitch не удалось удалить все локальные данные для этого Mac. Повторите попытку, чтобы завершить удаление."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch nemohol odstrániť všetky miestne dáta tohto Macu. Skúste to znova, aby ste dokončili jeho zabudnutie."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch не вдалося видалити всі локальні дані для цього Mac. Повторіть спробу, щоб завершити забуття."
           }
         }
       }
     },
     "OnlySwitch couldn’t save the selected Mac and setup state." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikaci OnlySwitch se nepodařilo uložit vybraný Mac a stav nastavení."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2221,6 +4207,12 @@
             "value" : "OnlySwitch n'a pas pu enregistrer le Mac sélectionné et l'état de configuration."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch nije mogao spremiti odabrani Mac i stanje postave."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2233,16 +4225,46 @@
             "value" : "OnlySwitch kon de geselecteerde Mac en de configuratiestatus niet opslaan."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikacja OnlySwitch nie mogła zapisać wybranego komputera Mac i stanu konfiguracji."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "O OnlySwitch não pôde salvar o Mac selecionado e o estado de configuração."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Приложению OnlySwitch не удалось сохранить выбранный Mac и состояние настройки."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch nemohol uložiť vybraný Mac a stav nastavenia."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch не вдалося зберегти вибраний Mac та стан налаштування."
           }
         }
       }
     },
     "OnlySwitch must be updated before pairing." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Před párováním je nutné aktualizovat aplikaci OnlySwitch."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2261,6 +4283,12 @@
             "value" : "OnlySwitch doit être mis à jour avant l'appairage."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch se mora ažurirati prije uparivanja."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2273,16 +4301,46 @@
             "value" : "OnlySwitch moet worden bijgewerkt voordat je kunt koppelen."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikacja OnlySwitch musi zostać zaktualizowana przed parowaniem."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "O OnlySwitch deve ser atualizado antes do pareamento."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Перед сопряжением необходимо обновить OnlySwitch."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch musí byť aktualizovaný pred párovaním."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Перед спарюванням необхідно оновити OnlySwitch."
           }
         }
       }
     },
     "Open Settings to pair with a Mac running OnlySwitch." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otevřete Nastavení pro spárování s počítačem Mac, na kterém běží OnlySwitch."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2301,6 +4359,12 @@
             "value" : "Ouvrez les Paramètres pour vous appairer avec un Mac exécutant OnlySwitch."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otvorite Postavke za uparivanje s Macom na kojem je pokrenut OnlySwitch."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2313,16 +4377,46 @@
             "value" : "Open Instellingen om te koppelen met een Mac waarop OnlySwitch draait."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otwórz Preferencje, aby sparować się z komputerem Mac z uruchomioną aplikacją OnlySwitch."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Abra Ajustes para parear com um Mac executando o OnlySwitch."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Откройте Настройки для сопряжения с Mac, на котором запущен OnlySwitch."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otvorte Nastavenia, aby ste sa párili s Macom, ktorý beží OnlySwitch."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Відкрийте Налаштування, щоб спаруватися з Mac із запущеним OnlySwitch."
           }
         }
       }
     },
     "Opens remote control settings" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otevírá nastavení dálkového ovládání"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2341,6 +4435,12 @@
             "value" : "Ouvre les paramètres de télécommande"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otvara postavke daljinskog upravljanja"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2353,16 +4453,46 @@
             "value" : "Opent instellingen voor externe besturing"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otwiera ustawienia zdalnego sterowania"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Abre as configurações de controle remoto"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Открывает настройки удалённого управления"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otvára nastavenia vzdialeného ovládania"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Відкриває налаштування віддаленого керування"
           }
         }
       }
     },
     "Outcome Unknown" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Výsledek neznámý"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2381,6 +4511,12 @@
             "value" : "Résultat inconnu"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ishod nepoznat"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2393,16 +4529,46 @@
             "value" : "Uitkomst onbekend"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wynik nieznany"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Resultado desconhecido"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Результат неизвестен"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Výsledok neznámy"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Результат невідомий"
           }
         }
       }
     },
     "Pair a Mac" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spárovat Mac"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2421,6 +4587,12 @@
             "value" : "Apparier un Mac"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upari Mac"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2433,16 +4605,46 @@
             "value" : "Koppel een Mac"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sparuj komputer Mac"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Parear um Mac"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сопряжение с Mac"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Párovať Mac"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Спарити Mac"
           }
         }
       }
     },
     "Pair Again" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spárovat znovu"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2461,6 +4663,12 @@
             "value" : "Reappairer"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ponovno upari"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2473,16 +4681,46 @@
             "value" : "Opnieuw koppelen"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sparuj ponownie"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Parear novamente"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сопрячь снова"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Párovať znova"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Повторити спарювання"
           }
         }
       }
     },
     "Pair Another Mac" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spárovat další Mac"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2501,6 +4739,12 @@
             "value" : "Apparier un autre Mac"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upari drugi Mac"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2513,16 +4757,46 @@
             "value" : "Koppel een andere Mac"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sparuj inny komputer Mac"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Parear outro Mac"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подключить другой Mac"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Párovať ďalší Mac"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Спарити інший Mac"
           }
         }
       }
     },
     "Pair Mac" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spárovat Mac"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2541,6 +4815,12 @@
             "value" : "Apparier le Mac"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upari Mac"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2553,16 +4833,46 @@
             "value" : "Mac koppelen"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sparuj komputer Mac"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Parear Mac"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подключить Mac"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Párovať Mac"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Спарити Mac"
           }
         }
       }
     },
     "Paired Mac: %@" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spárovaný Mac: %@"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2581,6 +4891,12 @@
             "value" : "Mac appairé : %@"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upareni Mac: %@"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2593,16 +4909,46 @@
             "value" : "Gekoppelde Mac: %@"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sparowany komputer Mac: %@"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mac pareado: %@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сопряжённый Mac: %@"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Párovaný Mac: %@"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Спарений Mac: %@"
           }
         }
       }
     },
     "Paired Macs" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spárované počítače Mac"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2621,6 +4967,12 @@
             "value" : "Macs appairés"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upareni Macovi"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2633,16 +4985,46 @@
             "value" : "Gekoppelde Mac-apparaten"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sparowane komputery Mac"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Macs pareados"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сопряжённые Mac"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Párované Macy"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Спарені Mac"
           }
         }
       }
     },
     "Pairing code" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kód pro párování"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2661,6 +5043,12 @@
             "value" : "Code d'appairage"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kod za uparivanje"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2673,16 +5061,46 @@
             "value" : "Koppelcode"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kod parowania"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Código de pareamento"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Код сопряжения"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kód párovania"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Код спарювання"
           }
         }
       }
     },
     "Pairing Code" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kód pro párování"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2701,6 +5119,12 @@
             "value" : "Code d'appairage"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kod za uparivanje"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2713,16 +5137,46 @@
             "value" : "Koppelcode"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kod parowania"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Código de pareamento"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Код сопряжения"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kód párovania"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Код спарювання"
           }
         }
       }
     },
     "Pairing in progress" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Probíhá párování"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2741,6 +5195,12 @@
             "value" : "Appairage en cours"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uparivanje u tijeku"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2753,16 +5213,46 @@
             "value" : "Koppelen bezig"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trwa parowanie"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pareamento em andamento"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Идёт сопряжение"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Párovanie v priebehu"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Триває спарювання"
           }
         }
       }
     },
     "Pairing Problem" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problém s párováním"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2781,6 +5271,12 @@
             "value" : "Problème d'appairage"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problem s uparivanjem"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2793,16 +5289,46 @@
             "value" : "Probleem met koppelen"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problem z parowaniem"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Problema no pareamento"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Проблема с сопряжением"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problém s párovaním"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Проблема зі спарюванням"
           }
         }
       }
     },
     "Pairing required" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vyžadováno párování"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2821,6 +5347,12 @@
             "value" : "Appairage requis"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Potrebno je uparivanje"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2833,16 +5365,46 @@
             "value" : "Koppelen vereist"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wymagane parowanie"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pareamento necessário"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Требуется сопряжение"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vyžaduje sa párovanie"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Необхідне спарювання"
           }
         }
       }
     },
     "Pairing required — open Settings to reconnect" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vyžadováno párování – otevřete Nastavení pro opětovné připojení"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2861,6 +5423,12 @@
             "value" : "Appairage requis — ouvrez les Paramètres pour vous reconnecter"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Potrebno je uparivanje — otvorite Postavke za ponovno povezivanje"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2873,16 +5441,46 @@
             "value" : "Koppelen vereist – open Instellingen om opnieuw te verbinden"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wymagane parowanie – otwórz Preferencje, aby ponownie połączyć się"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pareamento necessário — abra Ajustes para reconectar"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Требуется сопряжение — откройте Настройки для повторного подключения"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vyžaduje sa párovanie — otvorte Nastavenia na znovupripojenie"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Необхідне спарювання — відкрийте Налаштування, щоб підключитися знову"
           }
         }
       }
     },
     "Ready" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Připraveno"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2901,6 +5499,12 @@
             "value" : "Prêt"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spremno"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2913,16 +5517,46 @@
             "value" : "Klaar"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gotowy"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pronto"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Готово"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pripravené"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Готово"
           }
         }
       }
     },
     "Remove this device from OnlySwitch on the Mac, then start a new pairing session." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odeberte toto zařízení z aplikace OnlySwitch na Macu a poté zahajte nové párování."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2941,6 +5575,12 @@
             "value" : "Supprimez cet appareil dans OnlySwitch sur le Mac, puis lancez une nouvelle session d'appairage."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uklonite ovaj uređaj iz OnlySwitcha na Macu, a zatim započnite novu sesiju uparivanja."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2953,16 +5593,46 @@
             "value" : "Verwijder dit apparaat uit OnlySwitch op de Mac en start vervolgens een nieuwe koppelingssessie."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usuń to urządzenie z aplikacji OnlySwitch na komputerze Mac, a następnie rozpocznij nową sesję parowania."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Remova este dispositivo do OnlySwitch no Mac e inicie uma nova sessão de pareamento."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Удалите это устройство из OnlySwitch на Mac, затем начните новое сеанс сопряжения."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odstráňte toto zariadenie z OnlySwitch na Macu, potom začnite novú reláciu párovania."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Видаліть цей пристрій із OnlySwitch на Mac, а потім почніть нову сесію спарювання."
           }
         }
       }
     },
     "Requires confirmation before running" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vyžaduje potvrzení před spuštěním"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2981,6 +5651,12 @@
             "value" : "Nécessite une confirmation avant exécution"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zahtijeva potvrdu prije pokretanja"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2993,16 +5669,46 @@
             "value" : "Vereist bevestiging voordat het wordt uitgevoerd"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wymaga potwierdzenia przed uruchomieniem"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Requer confirmação antes de executar"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Требует подтверждения перед запуском"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vyžaduje potvrdenie pred spustením"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Потребує підтвердження перед виконанням"
           }
         }
       }
     },
     "Retry" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zkusit znovu"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3021,6 +5727,12 @@
             "value" : "Réessayer"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokušaj ponovno"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3033,16 +5745,46 @@
             "value" : "Opnieuw proberen"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spróbuj ponownie"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tentar novamente"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Повторить"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skúsiť znova"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Спробувати ще раз"
           }
         }
       }
     },
     "Retry Discovery" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opakovat vyhledávání"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3061,6 +5803,12 @@
             "value" : "Réessayer la découverte"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ponovno pokušaj otkrivanje"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3073,16 +5821,46 @@
             "value" : "Detectie opnieuw proberen"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ponów wykrywanie"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tentar descobrir novamente"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Повторить поиск"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skúsiť znova objavenie"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Повторити пошук"
           }
         }
       }
     },
     "Retry Forgetting" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opakovat odebrání"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3101,6 +5879,12 @@
             "value" : "Réessayer l'oubli"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ponovno pokušaj zaboravljanje"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3113,16 +5897,46 @@
             "value" : "Vergeten opnieuw proberen"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ponów usuwanie"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tentar esquecer novamente"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Повторить удаление"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Znova skúsiť zabudnutie"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Повторити забуття"
           }
         }
       }
     },
     "Retry Saving Layout" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opakovat uložení rozložení"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3141,6 +5955,12 @@
             "value" : "Réessayer l'enregistrement de la disposition"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ponovno pokušaj spremanje rasporeda"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3153,16 +5973,46 @@
             "value" : "Indeling opslaan opnieuw proberen"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ponów zapisywanie układu"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tentar salvar o layout novamente"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Повторить сохранение макета"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skúsiť znova uloženie rozloženia"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Повторити збереження макету"
           }
         }
       }
     },
     "Run" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spustit"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3181,6 +6031,12 @@
             "value" : "Marche"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokreni"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3193,16 +6049,46 @@
             "value" : "Uitvoeren"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uruchom"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Executar"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Запустить"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spustiť"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Виконати"
           }
         }
       }
     },
     "Run %@?" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spustit %@?"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3221,6 +6107,12 @@
             "value" : "Exécuter %@ ?"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokrenuti %@?"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3233,16 +6125,46 @@
             "value" : "%@ uitvoeren?"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uruchomić %@?"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Executar %@?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Запустить %@?"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spustiť %@?"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Виконати %@?"
           }
         }
       }
     },
     "Runs this control on the selected Mac" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spuští tento ovládací prvek na vybraném Macu"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3261,6 +6183,12 @@
             "value" : "Exécute ce contrôle sur le Mac sélectionné"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izvršava ovu kontrolu na odabranom Macu"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3273,16 +6201,46 @@
             "value" : "Voert dit besturingselement uit op de geselecteerde Mac"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uruchamia ten element sterujący na wybranym komputerze Mac"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Executa este controle no Mac selecionado"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выполняет этот элемент управления на выбранном Mac"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spustí toto ovládanie na vybranom Macu"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Виконує цей елемент керування на вибраному Mac"
           }
         }
       }
     },
     "Select a Mac to continue." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vyberte Mac pro pokračování."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3301,6 +6259,12 @@
             "value" : "Sélectionnez un Mac pour continuer."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odaberite Mac za nastavak."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3313,16 +6277,46 @@
             "value" : "Selecteer een Mac om door te gaan."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wybierz komputer Mac, aby kontynuować."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Selecione um Mac para continuar."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выберите Mac для продолжения."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vyberte Mac, aby ste pokračovali."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Виберіть Mac, щоб продовжити."
           }
         }
       }
     },
     "Select Mac: %@" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vybrat Mac: %@"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3341,6 +6335,12 @@
             "value" : "Sélectionner le Mac : %@"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odaberi Mac: %@"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3353,16 +6353,46 @@
             "value" : "Mac selecteren: %@"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wybierz komputer Mac: %@"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Selecionar Mac: %@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выбрать Mac: %@"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vybrať Mac: %@"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вибрати Mac: %@"
           }
         }
       }
     },
     "Selected Mac: %@" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vybraný Mac: %@"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3381,6 +6411,12 @@
             "value" : "Mac sélectionné : %@"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odabrani Mac: %@"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3393,16 +6429,46 @@
             "value" : "Geselecteerde Mac: %@"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wybrany komputer Mac: %@"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mac selecionado: %@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выбранный Mac: %@"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vybraný Mac: %@"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вибрано Mac: %@"
           }
         }
       }
     },
     "Selects this Mac for pairing" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vybere tento Mac pro párování"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3421,6 +6487,12 @@
             "value" : "Sélectionne ce Mac pour l'appairage"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odabire ovaj Mac za uparivanje"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3433,16 +6505,46 @@
             "value" : "Selecteert deze Mac voor koppelen"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wybiera ten komputer Mac do sparowania"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Seleciona este Mac para pareamento"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выбирает этот Mac для сопряжения"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vyberá tento Mac na párovanie"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вибір цього Mac для спарювання"
           }
         }
       }
     },
     "Settings" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nastavení"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3461,6 +6563,12 @@
             "value" : "Paramètres"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Postavke"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3473,16 +6581,46 @@
             "value" : "Instellingen"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preferencje"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ajustes"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Настройки"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nastavenia"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Налаштування"
           }
         }
       }
     },
     "Shortcuts" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zkratky"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3501,6 +6639,12 @@
             "value" : "Raccourcis"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prečaci"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3513,16 +6657,46 @@
             "value" : "Snelkoppelingen"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skróty"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Atalhos"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Команды"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skratky"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Команди"
           }
         }
       }
     },
     "Shown on dashboard" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zobrazeno v přehledu"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3541,6 +6715,12 @@
             "value" : "Affiché sur le tableau de bord"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prikazano na nadzornoj ploči"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3553,16 +6733,46 @@
             "value" : "Weergegeven op dashboard"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyświetlane na pulpicie"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Exibido no painel"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отображается на панели управления"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zobrazené na dashboarde"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Показано на панелі приладів"
           }
         }
       }
     },
     "Start a new pairing session and verify that you selected the Mac showing the code." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zahajte nové párování a ověřte, že jste vybrali Mac zobrazující kód."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3581,6 +6791,12 @@
             "value" : "Lancez une nouvelle session d'appairage et vérifiez que vous avez sélectionné le Mac affichant le code."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Započnite novu sesiju uparivanja i provjerite jeste li odabrali Mac koji prikazuje kod."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3593,16 +6809,46 @@
             "value" : "Start een nieuwe koppelingssessie en controleer of je de Mac hebt geselecteerd waarop de code wordt weergegeven."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rozpocznij nową sesję parowania i upewnij się, że wybrano komputer Mac wyświetlający kod."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Inicie uma nova sessão de pareamento e verifique se selecionou o Mac que exibe o código."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Начните новый сеанс сопряжения и убедитесь, что вы выбрали Mac с отображаемым кодом."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Začnite novú reláciu párovania a overte, či ste vybrali Mac, ktorý zobrazuje kód."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Почніть нову сесію спарювання та переконайтеся, що ви вибрали Mac із показаним кодом."
           }
         }
       }
     },
     "Start a new pairing session in OnlySwitch on your Mac and enter its new code." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zahajte nové párování v aplikaci OnlySwitch na vašem Macu a zadejte nový kód."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3621,6 +6867,12 @@
             "value" : "Lancez une nouvelle session d'appairage dans OnlySwitch sur votre Mac et saisissez son nouveau code."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Započnite novu sesiju uparivanja u OnlySwitchu na vašem Macu i unesite njegov novi kod."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3633,16 +6885,46 @@
             "value" : "Start een nieuwe koppelingssessie in OnlySwitch op je Mac en voer de nieuwe code in."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rozpocznij nową sesję parowania w aplikacji OnlySwitch na komputerze Mac i wprowadź nowy kod."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Inicie uma nova sessão de pareamento no OnlySwitch do seu Mac e insira seu novo código."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Начните новый сеанс сопряжения в OnlySwitch на вашем Mac и введите его новый код."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Začnite novú reláciu párovania v OnlySwitch na vašom Macu a zadajte jeho nový kód."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Почніть нову сесію спарювання в OnlySwitch на вашому Mac та введіть його новий код."
           }
         }
       }
     },
     "Status" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stav"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3661,6 +6943,12 @@
             "value" : "Statut"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Status"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3673,16 +6961,46 @@
             "value" : "Status"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stan"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Status"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Статус"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stav"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Статус"
           }
         }
       }
     },
     "The dashboard layout wasn’t saved. Your latest choices are still available to retry." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rozložení přehledu nebylo uloženo. Vaše poslední volby jsou stále k dispozici pro opakování."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3701,6 +7019,12 @@
             "value" : "La disposition du tableau de bord n'a pas été enregistrée. Vos derniers choix sont toujours disponibles pour réessayer."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Raspored nadzorne ploče nije spremljen. Vaši najnoviji izbori su još uvijek dostupni za ponovni pokušaj."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3713,16 +7037,46 @@
             "value" : "De indeling van het dashboard is niet opgeslagen. Je laatste keuzes zijn nog steeds beschikbaar om opnieuw te proberen."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Układ pulpitu nie został zapisany. Twoje najnowsze wybory są nadal dostępne do ponownej próby."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "O layout do painel não foi salvo. Suas últimas escolhas ainda estão disponíveis para tentar novamente."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Макет панели управления не был сохранён. Ваши последние выборы доступны для повторной попытки."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rozloženie dashboardu nebolo uložené. Vaše najnovšie výbery sú stále dostupné na opakovanie."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Макет панелі приладів не збережено. Ваші останні вибори залишаються доступними для повторної спроби."
           }
         }
       }
     },
     "The Mac could not be reached." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nepodařilo se navázat spojení s počítačem Mac."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3741,6 +7095,12 @@
             "value" : "Impossible de joindre le Mac."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac se ne može doseći."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3753,16 +7113,46 @@
             "value" : "De Mac kon niet worden bereikt."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie można połączyć się z komputerem Mac."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Não foi possível alcançar o Mac."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Доступ к Mac невозможен."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac nebolo možné dosiahnuť."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Неможливо підключитися до Mac."
           }
         }
       }
     },
     "The Mac could not complete this action." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Počítači Mac se nepodařilo dokončit tuto akci."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3781,6 +7171,12 @@
             "value" : "Le Mac n'a pas pu exécuter cette action."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac nije mogao dovršiti ovu radnju."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3793,16 +7189,46 @@
             "value" : "De Mac kon deze actie niet voltooien."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Komputer Mac nie mógł zakończyć tej akcji."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "O Mac não pôde concluir esta ação."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac не смог выполнить это действие."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac nemohol dokončiť túto akciu."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac не зміг виконати цю дію."
           }
         }
       }
     },
     "The Mac did not respond. Retry the same request?" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Počítač Mac nereagoval. Zkusit stejný požadavek znovu?"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3821,6 +7247,12 @@
             "value" : "Le Mac n'a pas répondu. Réessayer la même demande ?"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac nije odgovorio. Ponovno pokušati isti zahtjev?"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3833,16 +7265,46 @@
             "value" : "De Mac reageerde niet. Dezelfde aanvraag opnieuw proberen?"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Komputer Mac nie odpowiedział. Spróbować ponownie wysłać to samo żądanie?"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "O Mac não respondeu. Tentar a mesma solicitação novamente?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac не ответил. Повторить тот же запрос?"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac neodpovedal. Skúsiť znova rovnaký požiadavok?"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac не відповів. Повторити той самий запит?"
           }
         }
       }
     },
     "The Mac may already have completed this action. Retrying sends the same request so OnlySwitch can safely deduplicate it." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je možné, že počítač Mac tuto akci již dokončil. Opakováním se odešle stejný požadavek, aby aplikace OnlySwitch mohla bezpečně odstranit duplikáty."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3861,6 +7323,12 @@
             "value" : "Le Mac a peut-être déjà exécuté cette action. La nouvelle tentative renvoie la même demande afin qu'OnlySwitch puisse la dédoublonner en toute sécurité."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moguće je da je Mac već izvršio ovu radnju. Ponovnim pokušajem šalje se isti zahtjev kako bi ga OnlySwitch mogao sigurno de-duplicirati."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3873,16 +7341,46 @@
             "value" : "De Mac heeft deze actie mogelijk al voltooid. Bij een nieuwe poging wordt dezelfde aanvraag verzonden, zodat OnlySwitch deze veilig kan verwijderen."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Komputer Mac mógł już zakończyć tę akcję. Ponowna próba wysyła to samo żądanie, dzięki czemu aplikacja OnlySwitch może bezpiecznie zduplikować je."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "É possível que o Mac já tenha concluído esta ação. A nova tentativa envia a mesma solicitação para que o OnlySwitch possa descartar duplicatas com segurança."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Возможно, Mac уже выполнил это действие. Повторная отправка того же запроса позволит OnlySwitch безопасно исключить дублирование."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac už môže mať túto akciu dokončenú. Opakovanie odosle rovnakú požiadavku, aby OnlySwitch mohol bezpečne deduplikovať."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Можливо, Mac вже виконав цю дію. Повторна спроба надсилає той самий запит, щоб OnlySwitch міг безпечно усунути дублікати."
           }
         }
       }
     },
     "The paired Mac did not match the selected Mac." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spárovaný Mac neodpovídá vybranému Macu."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3901,6 +7399,12 @@
             "value" : "Le Mac appairé ne correspond pas au Mac sélectionné."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upareni Mac ne odgovara odabranom Macu."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3913,16 +7417,46 @@
             "value" : "De gekoppelde Mac komt niet overeen met de geselecteerde Mac."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sparowany komputer Mac nie pasuje do wybranego komputera Mac."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "O Mac pareado não corresponde ao Mac selecionado."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сопряжённый Mac не совпадает с выбранным."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Párovaný Mac sa nezhoduje s vybraným Macom."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Спарений Mac не відповідає вибраному Mac."
           }
         }
       }
     },
     "The pairing code expired." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Platnost kódu pro párování vypršela."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3941,6 +7475,12 @@
             "value" : "Le code d'appairage a expiré."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kod za uparivanje je istekao."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3953,16 +7493,46 @@
             "value" : "De koppelcode is verlopen."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kod parowania wygasł."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "O código de pareamento expirou."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Срок действия кода сопряжения истёк."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kód párovania vypršal."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Термін дії коду спарювання минув."
           }
         }
       }
     },
     "The pairing code is invalid." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kód pro párování je neplatný."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3981,6 +7551,12 @@
             "value" : "Le code d'appairage est invalide."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kod za uparivanje nije valjan."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3993,16 +7569,46 @@
             "value" : "De koppelcode is ongeldig."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kod parowania jest nieprawidłowy."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "O código de pareamento é inválido."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Неверный код сопряжения."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kód párovania je neplatný."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Код спарювання недійсний."
           }
         }
       }
     },
     "The selected Mac is no longer available." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vybraný Mac již není dostupný."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4021,6 +7627,12 @@
             "value" : "Le Mac sélectionné n'est plus disponible."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odabrani Mac više nije dostupan."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4033,16 +7645,46 @@
             "value" : "De geselecteerde Mac is niet langer beschikbaar."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wybrany komputer Mac nie jest już dostępny."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "O Mac selecionado não está mais disponível."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выбранный Mac больше недоступен."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vybraný Mac už nie je dostupný."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вибраний Mac більше недоступний."
           }
         }
       }
     },
     "This control can be shown, but it is currently unavailable on the Mac" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tento ovládací prvek lze zobrazit, ale v současné době je na Macu nedostupný"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4061,6 +7703,12 @@
             "value" : "Ce contrôle peut être affiché, mais il est actuellement indisponible sur le Mac"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ova kontrola se može prikazati, ali trenutno nije dostupna na Macu"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4073,16 +7721,46 @@
             "value" : "Dit besturingselement kan worden weergegeven, maar is momenteel niet beschikbaar op de Mac"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ten element sterujący może być wyświetlany, ale obecnie jest niedostępny na komputerze Mac"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Este controle pode ser exibido, mas atualmente está indisponível no Mac"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Этот элемент управления может быть отображён, но в настоящее время недоступен на Mac"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toto ovládanie môže byť zobrazené, ale je momentálne nedostupné na Macu"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Цей елемент керування можна показати, але він тимчасово недоступний на цьому Mac"
           }
         }
       }
     },
     "This device was revoked by the Mac." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toto zařízení bylo zrušeno počítačem Mac."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4101,6 +7779,12 @@
             "value" : "Cet appareil a été révoqué par le Mac."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac je opozvao ovaj uređaj."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4113,16 +7797,46 @@
             "value" : "Dit apparaat is ingetrokken door de Mac."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To urządzenie zostało cofnięte przez komputer Mac."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Este dispositivo foi revogado pelo Mac."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Это устройство было отозвано Mac."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toto zariadenie bolo zrušené Macom."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Цей пристрій було скасовано на Mac."
           }
         }
       }
     },
     "This Mac no longer accepts the saved credential. Start pairing in OnlySwitch on the Mac first." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tento Mac již nepřijímá uložené pověření. Nejprve zahajte párování v aplikaci OnlySwitch na Macu."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4141,6 +7855,12 @@
             "value" : "Ce Mac n'accepte plus l'identifiant enregistré. Lancez d'abord l'appairage dans OnlySwitch sur le Mac."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ovaj Mac više ne prihvaća spremljenu vjerodajnicu. Prvo započnite uparivanje u OnlySwitchu na Macu."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4153,16 +7873,46 @@
             "value" : "Deze Mac accepteert de opgeslagen inloggegevens niet langer. Begin eerst met koppelen in OnlySwitch op de Mac."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ten komputer Mac nie akceptuje już zapisanego poświadczenia. Najpierw rozpocznij parowanie w aplikacji OnlySwitch na komputerze Mac."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Este Mac não aceita mais a credencial salva. Inicie o pareamento no OnlySwitch do Mac primeiro."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Этот Mac больше не принимает сохранённые учётные данные. Сначала начните сопряжение в OnlySwitch на Mac."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tento Mac už neprijíma uložené prihlasovacie údaje. Najskôr začnite párovanie v OnlySwitch na Macu."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Цей Mac більше не приймає збережені облікові дані. Спочатку почніть спарювання в OnlySwitch на цьому Mac."
           }
         }
       }
     },
     "This will run %@ on %@." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toto spustí %@ na %@."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4181,6 +7931,12 @@
             "value" : "Cela exécutera %@ sur %@."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ovo će pokrenuti %@ na %@."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4193,16 +7949,46 @@
             "value" : "Dit voert %@ uit op %@."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To uruchomi %@ na %@."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Isso executará %@ em %@."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Это запустит %@ на %@."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toto spustí %@ na %@."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Це виконає %@ на %@."
           }
         }
       }
     },
     "Too many pairing attempts." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Příliš mnoho pokusů o párování."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4221,6 +8007,12 @@
             "value" : "Trop de tentatives d'appairage."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Previše pokušaja uparivanja."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4233,16 +8025,46 @@
             "value" : "Te veel koppelingspogingen."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zbyt wiele prób parowania."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Muitas tentativas de pareamento."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Слишком много попыток сопряжения."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Príliš veľa pokusov o párovanie."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Забагато спроб спарювання."
           }
         }
       }
     },
     "Unavailable on this Mac" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nedostupné na tomto Macu"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4261,6 +8083,12 @@
             "value" : "Indisponible sur ce Mac"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nedostupno na ovom Macu"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4273,16 +8101,46 @@
             "value" : "Niet beschikbaar op deze Mac"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niedostępne na tym komputerze Mac"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Indisponível neste Mac"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Недоступно на этом Mac"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nedostupné na tomto Macu"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Недоступно на цьому Mac"
           }
         }
       }
     },
     "Unavailable: %@" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nedostupné: %@"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4301,6 +8159,12 @@
             "value" : "Indisponible : %@"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nedostupno: %@"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4313,16 +8177,46 @@
             "value" : "Niet beschikbaar: %@"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niedostępne: %@"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Indisponível: %@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Недоступно: %@"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nedostupné: %@"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Недоступно: %@"
           }
         }
       }
     },
     "Unselected Mac: %@" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nevybraný Mac: %@"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4341,6 +8235,12 @@
             "value" : "Mac non sélectionné : %@"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neodabrani Mac: %@"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4353,16 +8253,46 @@
             "value" : "Niet-geselecteerde Mac: %@"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie wybrany komputer Mac: %@"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mac não selecionado: %@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Невыбранный Mac: %@"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nevybraný Mac: %@"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Невибраний Mac: %@"
           }
         }
       }
     },
     "Update OnlySwitch on this Mac before pairing." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktualizujte aplikaci OnlySwitch na tomto Macu před párováním."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4381,6 +8311,12 @@
             "value" : "Mettez à jour OnlySwitch sur ce Mac avant l'appairage."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ažurirajte OnlySwitch na ovom Macu prije uparivanja."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4393,16 +8329,46 @@
             "value" : "Werk OnlySwitch op deze Mac bij voordat je koppelt."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaktualizuj aplikację OnlySwitch na tym komputerze Mac przed parowaniem."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Atualize o OnlySwitch neste Mac antes do pareamento."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Обновите OnlySwitch на этом Mac перед сопряжением."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktualizujte OnlySwitch na tomto Macu pred párovaním."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Оновіть OnlySwitch на цьому Mac перед спарюванням."
           }
         }
       }
     },
     "Wait a moment, start a new pairing session on the Mac, and try again." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Počkejte chvíli, zahajte nové párování na Macu a zkuste to znovu."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4421,6 +8387,12 @@
             "value" : "Attendez un instant, lancez une nouvelle session d'appairage sur le Mac et réessayez."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pričekajte trenutak, započnite novu sesiju uparivanja na Macu i pokušajte ponovno."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4433,16 +8405,46 @@
             "value" : "Wacht even, start een nieuwe koppelingssessie op de Mac en probeer het opnieuw."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poczekaj chwilę, rozpocznij nową sesję parowania na komputerze Mac i spróbuj ponownie."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aguarde um momento, inicie uma nova sessão de pareamento no Mac e tente novamente."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подождите немного, начните новый сеанс сопряжения на Mac и повторите попытку."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Počkajte chvíľu, začnite novú reláciu párovania na Macu a skúste to znova."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Зачекайте хвилину, почніть нову сесію спарювання на Mac та спробуйте ще раз."
           }
         }
       }
     },
     "Wait for the Mac to reappear, then select it again." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Počkejte, až se Mac znovu objeví, a poté jej vyberte znovu."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4461,6 +8463,12 @@
             "value" : "Attendez que le Mac réapparaisse, puis sélectionnez-le à nouveau."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pričekajte da se Mac ponovno pojavi, a zatim ga ponovno odaberite."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4473,16 +8481,46 @@
             "value" : "Wacht tot de Mac weer verschijnt en selecteer deze vervolgens opnieuw."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poczekaj, aż komputer Mac pojawi się ponownie, a następnie wybierz go ponownie."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aguarde o Mac reaparecer e selecione-o novamente."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Дождитесь появления Mac, затем выберите его снова."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Počkajte, kým sa Mac znovu objaví, potom ho vyberte znova."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Зачекайте, доки Mac знову з’явиться, а потім виберіть його знову."
           }
         }
       }
     },
     "Working" : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Práce"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4501,6 +8539,12 @@
             "value" : "En cours"
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "U radu"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4513,16 +8557,46 @@
             "value" : "Bezig"
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Praca"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Em execução"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Работает"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pracuje"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Виконується"
           }
         }
       }
     },
     "You’ll need a new pairing code to add this Mac again." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pro opětovné přidání tohoto Macu budete potřebovat nový kód pro párování."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4541,6 +8615,12 @@
             "value" : "Vous aurez besoin d'un nouveau code d'appairage pour ajouter à nouveau ce Mac."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Za ponovno dodavanje ovog Maca trebat će vam novi kod za uparivanje."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4553,16 +8633,46 @@
             "value" : "Je hebt een nieuwe koppelcode nodig om deze Mac opnieuw toe te voegen."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aby ponownie dodać ten komputer Mac, będziesz potrzebować nowego kodu parowania."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Você precisará de um novo código de pareamento para adicionar este Mac novamente."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Для повторного добавления этого Mac вам понадобится новый код сопряжения."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Na pridanie tohto Macu znova budete potrebovať nový kód párovania."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Для повторного додавання цього Mac вам знадобиться новий код спарювання."
           }
         }
       }
     },
     "Your code stays on this device and is used only for this pairing attempt." : {
       "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Váš kód zůstává na tomto zařízení a je použit pouze pro tento pokus o párování."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4581,6 +8691,12 @@
             "value" : "Votre code reste sur cet appareil et n'est utilisé que pour cette tentative d'appairage."
           }
         },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vaš kod ostaje na ovom uređaju i koristi se samo za ovaj pokušaj uparivanja."
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4593,10 +8709,34 @@
             "value" : "Jouw code blijft op dit apparaat en wordt alleen gebruikt voor deze koppelingspoging."
           }
         },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Twój kod pozostaje na tym urządzeniu i jest używany tylko do tej próby parowania."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Seu código permanece neste dispositivo e é usado apenas nesta tentativa de pareamento."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ваш код остаётся на этом устройстве и используется только для этой попытки сопряжения."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Váš kód zostáva na tomto zariadení a používa sa len pre toto párovanie."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ваш код залишається на цьому пристрої та використовується лише для цієї спроби спарювання."
           }
         }
       }
