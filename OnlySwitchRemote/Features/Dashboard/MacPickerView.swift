@@ -6,25 +6,39 @@ struct MacPickerView: View {
     let select: (UUID) -> Void
 
     var body: some View {
-        Picker("Selected Mac", selection: selection) {
+        Menu {
             ForEach(macs) { mac in
-                Text(mac.displayName).tag(mac.id as UUID?)
+                Button {
+                    select(mac.id)
+                } label: {
+                    if mac.id == selectedMacID {
+                        Label(mac.displayName, systemImage: "checkmark")
+                    } else {
+                        Text(mac.displayName)
+                    }
+                }
             }
+        } label: {
+            HStack(spacing: 8) {
+                Image(systemName: "desktopcomputer")
+                Text(selectedName)
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Image(systemName: "chevron.up.chevron.down")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .accessibilityHidden(true)
+            }
+            .contentShape(.rect)
         }
-        .pickerStyle(.menu)
-        .labelsHidden()
+        .buttonStyle(.plain)
         .accessibilityLabel("Selected Mac")
         .accessibilityValue(selectedName)
     }
 
-    private var selection: Binding<UUID?> {
-        Binding(
-            get: { selectedMacID },
-            set: { if let id = $0 { select(id) } }
-        )
-    }
-
-    private var selectedName: String {
-        macs.first { $0.id == selectedMacID }?.displayName ?? String(localized: "No Mac Selected")
+    var selectedName: String {
+        macs.first { $0.id == selectedMacID }?.displayName
+            ?? String(localized: "No Mac Selected")
     }
 }

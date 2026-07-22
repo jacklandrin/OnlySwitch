@@ -14,6 +14,24 @@ struct DashboardFeatureTests {
         requiresPairing: false
     )
 
+    @Test func macPickerPreservesFullSelectedNameForAccessibility() {
+        let longName = "p200300fe5700cdb61cf16e5542f6a6bc.dip0.t-ipconnect.de"
+        let selected = PairedMac(
+            id: UUID(),
+            displayName: longName,
+            lastEndpointDescription: nil,
+            lastConnectedAt: nil,
+            requiresPairing: false
+        )
+        let picker = MacPickerView(
+            macs: [selected],
+            selectedMacID: selected.id,
+            select: { _ in }
+        )
+
+        #expect(picker.selectedName == longName)
+    }
+
     @Test func serverProcessingStatusIsAnnouncedAsWorking() {
         let processing = RemoteControlStatus(
             id: .darkMode,
