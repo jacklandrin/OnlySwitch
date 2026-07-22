@@ -429,10 +429,12 @@ struct RemoteAccessSettingsFeature {
     }
 
     private func setPairing(_ window: PairingWindow, state: inout State) {
+        if state.pairingCode != window.code {
+            state.isPairingCodeCopied = false
+        }
         state.pairingCode = window.code
         state.pairingExpiresAt = window.expiresAt
         state.pairingSecondsRemaining = max(0, Int(ceil(window.expiresAt.timeIntervalSince(now))))
-        state.isPairingCodeCopied = false
     }
 
     private func clearPairing(state: inout State) {

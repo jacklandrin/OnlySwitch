@@ -425,15 +425,18 @@ struct RemoteAccessSettingsFeatureTests {
             code: "JKLMNOPQ6789",
             expiresAt: now.addingTimeInterval(60)
         )
+        let recorder = RemoteAccessSettingsRecorder()
+        let clock = TestClock()
         let pasteboard = RemotePasteboardGate()
         var state = RemoteAccessSettingsFeature.State(isEnabled: true)
         state.pairingCode = oldCode
         let store = TestStore(initialState: state) {
             RemoteAccessSettingsFeature()
         } withDependencies: {
-            $0.continuousClock = TestClock()
+            $0.continuousClock = clock
             $0.date.now = now
             $0.remotePasteboard = pasteboard.client
+            $0.remoteHost = recorder.host
         }
 
         await store.send(.copyPairingCodeTapped)
@@ -448,6 +451,91 @@ struct RemoteAccessSettingsFeatureTests {
 
         #expect(store.state.isPairingCodeCopied == false)
         #expect(store.state.alert == nil)
+
+        await store.send(.cancelPairingTapped) {
+            $0.pairingCode = nil
+            $0.pairingExpiresAt = nil
+            $0.pairingSecondsRemaining = 0
+        }
+        await store.receive(.pairingCancelled)
+        #expect(await recorder.cancelPairingCount == 1)
+    }
+
+    @Test
+    func changedCodePairingWindowRefreshClearsCopiedFeedback() async {
+        let now = Date(timeIntervalSince1970: 1_000)
+        let replacementWindow = PairingWindow(
+            code: "JKLMNOPQ6789",
+            expiresAt: now.addingTimeInterval(60)
+        )
+        let recorder = RemoteAccessSettingsRecorder()
+        let clock = TestClock()
+        var state = RemoteAccessSettingsFeature.State(isEnabled: true)
+        state.pairingCode = "ABCDEFGH2345"
+        state.pairingExpiresAt = now.addingTimeInterval(30)
+        state.pairingSecondsRemaining = 30
+        state.isPairingCodeCopied = true
+        let store = TestStore(initialState: state) {
+            RemoteAccessSettingsFeature()
+        } withDependencies: {
+            $0.continuousClock = clock
+            $0.date.now = now
+            $0.remoteHost = recorder.host
+        }
+
+        await store.send(.pairingStarted(replacementWindow)) {
+            $0.pairingCode = replacementWindow.code
+            $0.pairingExpiresAt = replacementWindow.expiresAt
+            $0.pairingSecondsRemaining = 60
+            $0.isPairingCodeCopied = false
+        }
+
+        await store.send(.cancelPairingTapped) {
+            $0.pairingCode = nil
+            $0.pairingExpiresAt = nil
+            $0.pairingSecondsRemaining = 0
+        }
+        await store.receive(.pairingCancelled)
+        #expect(await recorder.cancelPairingCount == 1)
+    }
+
+    @Test
+    func sameCodePairingWindowRefreshPreservesCopiedFeedback() async {
+        let now = Date(timeIntervalSince1970: 1_000)
+        let code = "ABCDEFGH2345"
+        let refreshedWindow = PairingWindow(
+            code: code,
+            expiresAt: now.addingTimeInterval(60)
+        )
+        let recorder = RemoteAccessSettingsRecorder()
+        let clock = TestClock()
+        var state = RemoteAccessSettingsFeature.State(isEnabled: true)
+        state.pairingCode = code
+        state.pairingExpiresAt = now.addingTimeInterval(30)
+        state.pairingSecondsRemaining = 30
+        state.isPairingCodeCopied = true
+        let store = TestStore(initialState: state) {
+            RemoteAccessSettingsFeature()
+        } withDependencies: {
+            $0.continuousClock = clock
+            $0.date.now = now
+            $0.remoteHost = recorder.host
+        }
+
+        await store.send(.pairingStarted(refreshedWindow)) {
+            $0.pairingExpiresAt = refreshedWindow.expiresAt
+            $0.pairingSecondsRemaining = 60
+        }
+        #expect(store.state.isPairingCodeCopied)
+
+        await store.send(.cancelPairingTapped) {
+            $0.pairingCode = nil
+            $0.pairingExpiresAt = nil
+            $0.pairingSecondsRemaining = 0
+            $0.isPairingCodeCopied = false
+        }
+        await store.receive(.pairingCancelled)
+        #expect(await recorder.cancelPairingCount == 1)
     }
 }
 
