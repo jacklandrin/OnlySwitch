@@ -45,6 +45,18 @@
             "value" : "%lld di 12 caratteri inseriti"
           }
         },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "12 文字中 %lld 文字入力済み"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "12자 중 %lld자 입력됨"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -92,6 +104,18 @@
             "state" : "translated",
             "value" : "Введено %lld із 12 символів"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已输入 %lld/12 个字符"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已輸入 %lld / 12 個字元"
+          }
         }
       }
     },
@@ -137,6 +161,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "codice a 12 caratteri"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "12 桁のコード"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "12자리 코드"
           }
         },
         "nl" : {
@@ -186,6 +222,18 @@
             "state" : "translated",
             "value" : "12-символьний код"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "12 位代码"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "12 位代碼"
+          }
         }
       }
     },
@@ -231,6 +279,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Azione fallita"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アクションに失敗しました"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "작업 실패"
           }
         },
         "nl" : {
@@ -280,6 +340,18 @@
             "state" : "translated",
             "value" : "Дію не виконано"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "操作失败"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "操作失敗"
+          }
         }
       }
     },
@@ -325,6 +397,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tempo scaduto per l'azione"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アクションがタイムアウトしました"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "작업 시간 초과"
           }
         },
         "nl" : {
@@ -374,6 +458,18 @@
             "state" : "translated",
             "value" : "Час очікування дії минув"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "操作超时"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "操作逾時"
+          }
         }
       }
     },
@@ -419,6 +515,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Integrati"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "内蔵機能"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "내장 기능"
           }
         },
         "nl" : {
@@ -468,6 +576,18 @@
             "state" : "translated",
             "value" : "Вбудовані"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "内置控件"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "內建項目"
+          }
         }
       }
     },
@@ -513,6 +633,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cancella"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "キャンセル"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "취소"
           }
         },
         "nl" : {
@@ -562,6 +694,18 @@
             "state" : "translated",
             "value" : "Скасувати"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消"
+          }
         }
       }
     },
@@ -607,6 +751,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Modifica la visibilità della dashboard"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ダッシュボードの表示を変更します"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "대시보드 표시 여부 변경"
           }
         },
         "nl" : {
@@ -656,6 +812,18 @@
             "state" : "translated",
             "value" : "Змінює видимість панелі приладів"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更改仪表板可见性"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "切換儀表板顯示狀態"
+          }
         }
       }
     },
@@ -701,6 +869,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Modifiche non salvate"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "変更は保存されませんでした"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "변경 사항이 저장되지 않음"
           }
         },
         "nl" : {
@@ -750,6 +930,18 @@
             "state" : "translated",
             "value" : "Зміни не збережено"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更改未保存"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "變更未儲存"
+          }
         }
       }
     },
@@ -795,6 +987,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Controlla il codice a 12 caratteri mostrato in OnlySwitch sul tuo Mac e riprova."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac の OnlySwitch に表示されている 12 桁のコードを確認して、もう一度お試しください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac의 OnlySwitch에 표시된 12자리 코드를 확인하고 다시 시도하세요."
           }
         },
         "nl" : {
@@ -844,6 +1048,18 @@
             "state" : "translated",
             "value" : "Перевірте 12-символьний код, показаний у OnlySwitch на вашому Mac, та спробуйте ще раз."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请检查 Mac 上 OnlySwitch 中显示的 12 位代码，然后重试。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "請檢查 Mac 上 OnlySwitch 顯示的 12 位代碼，然後重試。"
+          }
         }
       }
     },
@@ -889,6 +1105,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Scegli i controlli nelle Impostazioni per aggiungerli qui."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設定でコントロールを選択して、ここに追加します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "제어 항목을 추가하려면 설정에서 선택하세요."
           }
         },
         "nl" : {
@@ -938,6 +1166,18 @@
             "state" : "translated",
             "value" : "Виберіть елементи керування в Налаштуваннях, щоб додати їх сюди."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在“设置”中选择控件以将它们添加至此。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在「設定」中選擇控制項目以新增至此處。"
+          }
         }
       }
     },
@@ -983,6 +1223,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Scegli i controlli remoti nelle Impostazioni."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設定でリモートコントロールを選択してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "원격 제어를 설정에서 선택하세요."
           }
         },
         "nl" : {
@@ -1032,6 +1284,18 @@
             "state" : "translated",
             "value" : "Виберіть віддалені елементи керування в Налаштуваннях."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在“设置”中选择远程控制。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在「設定」中選擇遠端控制項目。"
+          }
         }
       }
     },
@@ -1077,6 +1341,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Connettiti a questo Mac per usare questo controllo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このコントロールを使用するには、この Mac に接続してください"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 제어를 사용하려면 이 Mac에 연결하세요"
           }
         },
         "nl" : {
@@ -1126,6 +1402,18 @@
             "state" : "translated",
             "value" : "Підключіться до цього Mac, щоб використовувати цей елемент керування"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "连接到此 Mac 以使用此控制"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "連接到此 Mac 以使用此控制項"
+          }
         }
       }
     },
@@ -1171,6 +1459,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Collega il tuo primo Mac"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最初の Mac を接続する"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "첫 번째 Mac 연결하기"
           }
         },
         "nl" : {
@@ -1220,6 +1520,18 @@
             "state" : "translated",
             "value" : "Підключіть свій перший Mac"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "连接您的第一台 Mac"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "連接您的第一台 Mac"
+          }
         }
       }
     },
@@ -1265,6 +1577,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Connesso"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "接続済み"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "연결됨"
           }
         },
         "nl" : {
@@ -1314,6 +1638,18 @@
             "state" : "translated",
             "value" : "Підключено"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已连接"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已連線"
+          }
         }
       }
     },
@@ -1359,6 +1695,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Connessione in corso…"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "接続中…"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "연결 중…"
           }
         },
         "nl" : {
@@ -1408,6 +1756,18 @@
             "state" : "translated",
             "value" : "Підключення…"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在连接…"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在連線…"
+          }
         }
       }
     },
@@ -1453,6 +1813,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Impossibile caricare i Mac"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac の読み込みに失敗しました"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac을 로드할 수 없음"
           }
         },
         "nl" : {
@@ -1502,6 +1874,18 @@
             "state" : "translated",
             "value" : "Не вдалося завантажити Mac"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法加载 Mac"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法載入 Mac"
+          }
         }
       }
     },
@@ -1547,6 +1931,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dashboard"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ダッシュボード"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "대시보드"
           }
         },
         "nl" : {
@@ -1596,6 +1992,18 @@
             "state" : "translated",
             "value" : "Панель приладів"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "仪表板"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "儀表板"
+          }
         }
       }
     },
@@ -1641,6 +2049,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ordine delle tessere della dashboard"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ダッシュボードのタイル順序"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "대시보드 타일 순서"
           }
         },
         "nl" : {
@@ -1690,6 +2110,18 @@
             "state" : "translated",
             "value" : "Порядок плиток на панелі приладів"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "仪表板磁贴顺序"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "儀表板圖塊順序"
+          }
         }
       }
     },
@@ -1735,6 +2167,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mac rilevati"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "検出された Mac"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "발견된 Mac"
           }
         },
         "nl" : {
@@ -1784,6 +2228,18 @@
             "state" : "translated",
             "value" : "Виявлені Mac"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已发现的 Mac"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已發現的 Mac"
+          }
         }
       }
     },
@@ -1829,6 +2285,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Abilita l'accesso remoto per iOS e avvia l'accoppiamento in OnlySwitch sul tuo Mac."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac の OnlySwitch で iOS リモートアクセスを有効にして、ペアリングを開始してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac의 OnlySwitch에서 iOS 원격 액세스를 활성화하고 페어링을 시작하세요."
           }
         },
         "nl" : {
@@ -1878,6 +2346,18 @@
             "state" : "translated",
             "value" : "Увімкніть віддалений доступ для iOS та почніть спарювання в OnlySwitch на вашому Mac."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在 Mac 上的 OnlySwitch 中启用 iOS 远程访问并开始配对。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在 Mac 上的 OnlySwitch 中啟用 iOS 遠端存取並開始配對。"
+          }
         }
       }
     },
@@ -1923,6 +2403,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Abilita l'accesso remoto per iOS in OnlySwitch sul tuo Mac, quindi avvia l'accoppiamento."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac の OnlySwitch で iOS リモートアクセスを有効にし、その後ペアリングを開始してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac의 OnlySwitch에서 iOS 원격 액세스를 활성화한 후 페어링을 시작하세요."
           }
         },
         "nl" : {
@@ -1972,6 +2464,18 @@
             "state" : "translated",
             "value" : "Увімкніть віддалений доступ для iOS в OnlySwitch на вашому Mac, а потім почніть спарювання."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在 Mac 上的 OnlySwitch 中启用 iOS 远程访问，然后开始配对。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "先在 Mac 上的 OnlySwitch 中啟用 iOS 遠端存取，然後開始配對。"
+          }
         }
       }
     },
@@ -2017,6 +2521,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Inserisci il codice a 12 caratteri mostrato sul tuo Mac."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac に表示されている 12 桁のコードを入力してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac에 표시된 12자리 코드를 입력하세요."
           }
         },
         "nl" : {
@@ -2066,6 +2582,18 @@
             "state" : "translated",
             "value" : "Введіть 12-символьний код, показаний на вашому Mac."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "输入您的 Mac 上显示的 12 位代码。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "輸入您的 Mac 上顯示的 12 位代碼。"
+          }
         }
       }
     },
@@ -2111,6 +2639,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Evoluzioni"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "進化"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "업데이트"
           }
         },
         "nl" : {
@@ -2160,6 +2700,18 @@
             "state" : "translated",
             "value" : "Оновлення"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "演进"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "演進"
+          }
         }
       }
     },
@@ -2205,6 +2757,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dimenticare %@?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ を削除しますか？"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@을(를) 지우시겠습니까?"
           }
         },
         "nl" : {
@@ -2254,6 +2818,18 @@
             "state" : "translated",
             "value" : "Забути %@?"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "是否忘记%@？"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "要忘記 %@ 嗎？"
+          }
         }
       }
     },
@@ -2299,6 +2875,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dimentica Mac"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac を削除"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac 지우기"
           }
         },
         "nl" : {
@@ -2348,6 +2936,18 @@
             "state" : "translated",
             "value" : "Забути Mac"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "忘记 Mac"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "忘記 Mac"
+          }
         }
       }
     },
@@ -2393,6 +2993,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dimentica questo Mac"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この Mac を削除"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 Mac 지우기"
           }
         },
         "nl" : {
@@ -2442,6 +3054,18 @@
             "state" : "translated",
             "value" : "Забути цей Mac"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "忘记此 Mac"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "忘記這台 Mac"
+          }
         }
       }
     },
@@ -2487,6 +3111,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dimenticazione del Mac in corso…"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac を削除中…"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac 지우는 중…"
           }
         },
         "nl" : {
@@ -2536,6 +3172,18 @@
             "state" : "translated",
             "value" : "Забуття Mac…"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在忘记 Mac…"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在忘記 Mac…"
+          }
         }
       }
     },
@@ -2581,6 +3229,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "La rimozione elimina le credenziali di questo Mac, i controlli memorizzati nella cache, gli stati e il layout della dashboard da questo dispositivo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "削除すると、このデバイスからこの Mac の認証情報、キャッシュされたコントロール、ステータス、およびダッシュボードレイアウトが削除されます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac을 지우면 이 기기에서 해당 Mac의 자격 증명, 캐시된 제어 항목, 상태 및 대시보드 레이아웃이 제거됩니다."
           }
         },
         "nl" : {
@@ -2630,6 +3290,18 @@
             "state" : "translated",
             "value" : "Після забуття з цього пристрою буде видалено облікові дані, кешовані елементи керування, статуси та макет панелі приладів для цього Mac."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“忘记”操作将从本设备移除该 Mac 的凭证、缓存的控制项、状态及仪表板布局。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "忘記操作將從此裝置移除該 Mac 的憑證、快取控制項、狀態及儀表板佈局。"
+          }
         }
       }
     },
@@ -2675,6 +3347,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nascosto dalla dashboard"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ダッシュボードから非表示"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "대시보드에 숨김"
           }
         },
         "nl" : {
@@ -2724,6 +3408,18 @@
             "state" : "translated",
             "value" : "Приховано на панелі приладів"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在仪表板中隐藏"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "隱藏於儀表板"
+          }
         }
       }
     },
@@ -2769,6 +3465,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Installa una versione compatibile di OnlySwitch sul Mac o aggiorna questa app."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac に互換性のある OnlySwitch バージョンをインストールするか、このアプリを更新してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac에 호환되는 OnlySwitch 버전을 설치하거나 이 앱을 업데이트하세요."
           }
         },
         "nl" : {
@@ -2818,6 +3526,18 @@
             "state" : "translated",
             "value" : "Встановіть сумісну версію OnlySwitch на Mac або оновіть цей додаток."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请在 Mac 上安装兼容版本的 OnlySwitch，或更新本应用。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "請在 Mac 上安裝相容版本的 OnlySwitch，或更新此應用程式。"
+          }
         }
       }
     },
@@ -2863,6 +3583,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ultimo indirizzo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最後のアドレス"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "마지막 주소"
           }
         },
         "nl" : {
@@ -2912,6 +3644,18 @@
             "state" : "translated",
             "value" : "Остання адреса"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上次地址"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最後位址"
+          }
         }
       }
     },
@@ -2957,6 +3701,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ultima connessione"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最終接続日時"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "마지막 연결 시간"
           }
         },
         "nl" : {
@@ -3006,6 +3762,18 @@
             "state" : "translated",
             "value" : "Останнє підключення"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上次连接时间"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上次連線時間"
+          }
         }
       }
     },
@@ -3051,6 +3819,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ultima connessione %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最終接続: %@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "마지막 연결: %@"
           }
         },
         "nl" : {
@@ -3100,6 +3880,18 @@
             "state" : "translated",
             "value" : "Останнє підключення: %@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上次连接：%@"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上次連線於 %@"
+          }
         }
       }
     },
@@ -3145,6 +3937,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ultimo stato noto"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "直前のステータス"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "마지막 알려진 상태"
           }
         },
         "nl" : {
@@ -3194,6 +3998,18 @@
             "state" : "translated",
             "value" : "Останній відомий статус"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最后已知状态"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最後已知狀態"
+          }
         }
       }
     },
@@ -3239,6 +4055,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Caricamento dei Mac in corso"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac を読み込み中"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac 로드 중"
           }
         },
         "nl" : {
@@ -3288,6 +4116,18 @@
             "state" : "translated",
             "value" : "Завантаження Mac…"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在加载 Mac…"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在載入 Mac"
+          }
         }
       }
     },
@@ -3333,6 +4173,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ricerca di Mac sulla rete locale in corso…"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ローカルネットワーク上の Mac を検索中…"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "로컬 네트워크에서 Mac을 찾는 중…"
           }
         },
         "nl" : {
@@ -3382,6 +4234,18 @@
             "state" : "translated",
             "value" : "Пошук Mac у вашій локальній мережі…"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在本地网络中查找 Mac…"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在搜尋本機網路上的 Mac…"
+          }
         }
       }
     },
@@ -3424,6 +4288,18 @@
           }
         },
         "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac"
+          }
+        },
+        "ko" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mac"
@@ -3472,6 +4348,18 @@
           }
         },
         "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mac"
@@ -3523,6 +4411,18 @@
             "value" : "Mac offline: i controlli sono disabilitati"
           }
         },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac オフライン — コントロールは無効です"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac 오프라인 — 제어 항목 사용 불가"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3570,6 +4470,18 @@
             "state" : "translated",
             "value" : "Mac офлайн — елементи керування вимкнено"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac 离线——控制功能已禁用"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac 離線 — 控制項已停用"
+          }
         }
       }
     },
@@ -3612,6 +4524,18 @@
           }
         },
         "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac"
+          }
+        },
+        "ko" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mac"
@@ -3664,6 +4588,18 @@
             "state" : "translated",
             "value" : "Mac"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac"
+          }
         }
       }
     },
@@ -3709,6 +4645,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Assicurati che entrambi i dispositivi siano sulla stessa rete locale e che l'accesso remoto di OnlySwitch sia abilitato."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "両方のデバイスが同じローカルネットワークにあり、OnlySwitch のリモートアクセスが有効になっていることを確認してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "두 장치 모두 동일한 로컬 네트워크에 있고 OnlySwitch 원격 액세스가 활성화되어 있는지 확인하세요."
           }
         },
         "nl" : {
@@ -3758,6 +4706,18 @@
             "state" : "translated",
             "value" : "Переконайтеся, що обидва пристрої підключені до однієї локальної мережі та увімкнено віддалений доступ OnlySwitch."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请确保两台设备位于同一本地网络，且已在 Mac 上启用 OnlySwitch 远程访问。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "請確認兩台裝置位於同一本機網路，且已在 Mac 上啟用 OnlySwitch 遠端存取。"
+          }
         }
       }
     },
@@ -3803,6 +4763,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Assicurati che l'accesso remoto e l'accoppiamento siano attivi in OnlySwitch sul tuo Mac."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac の OnlySwitch でリモートアクセスとペアリングがアクティブであることを確認してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac의 OnlySwitch에서 원격 액세스 및 페어링이 활성화되어 있는지 확인하세요."
           }
         },
         "nl" : {
@@ -3852,6 +4824,18 @@
             "state" : "translated",
             "value" : "Переконайтеся, що в OnlySwitch на вашому Mac активні віддалений доступ і спарювання."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请确认 Mac 上的 OnlySwitch 已激活远程访问和配对功能。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "請確認您的 Mac 上已於 OnlySwitch 中啟用遠端存取與配對功能。"
+          }
         }
       }
     },
@@ -3897,6 +4881,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gestisci %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ を管理"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 관리"
           }
         },
         "nl" : {
@@ -3946,6 +4942,18 @@
             "state" : "translated",
             "value" : "Керувати %@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "管理%@"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "管理 %@"
+          }
         }
       }
     },
@@ -3991,6 +4999,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nome"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "名前"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이름"
           }
         },
         "nl" : {
@@ -4040,6 +5060,18 @@
             "state" : "translated",
             "value" : "Імʼя"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "名称"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "名稱"
+          }
         }
       }
     },
@@ -4085,6 +5117,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nessuna tessera della dashboard"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ダッシュボードのタイルがありません"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "대시보드 타일 없음"
           }
         },
         "nl" : {
@@ -4134,6 +5178,18 @@
             "state" : "translated",
             "value" : "Немає плиток на панелі приладів"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无仪表板磁贴"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無儀表板圖塊"
+          }
         }
       }
     },
@@ -4179,6 +5235,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nessun Mac selezionato"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac が選択されていません"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "선택된 Mac 없음"
           }
         },
         "nl" : {
@@ -4228,6 +5296,18 @@
             "state" : "translated",
             "value" : "Mac не вибрано"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未选择 Mac"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未選取任何 Mac"
+          }
         }
       }
     },
@@ -4273,6 +5353,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nessun Mac trovato"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac が見つかりませんでした"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac을 찾을 수 없음"
           }
         },
         "nl" : {
@@ -4322,6 +5414,18 @@
             "state" : "translated",
             "value" : "Mac не знайдено"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未找到 Mac"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "找不到 Mac"
+          }
         }
       }
     },
@@ -4367,6 +5471,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nessun Mac accoppiato"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ペアリングされた Mac はありません"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "페어링된 Mac 없음"
           }
         },
         "nl" : {
@@ -4416,6 +5532,18 @@
             "state" : "translated",
             "value" : "Немає спарених Mac"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未配对任何 Mac"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "沒有已配對的 Mac"
+          }
         }
       }
     },
@@ -4461,6 +5589,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Non connesso"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未接続"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "연결되지 않음"
           }
         },
         "nl" : {
@@ -4510,6 +5650,18 @@
             "state" : "translated",
             "value" : "Не підключено"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未连接"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未連線"
+          }
         }
       }
     },
@@ -4555,6 +5707,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Spento"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "オフ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "꺼짐"
           }
         },
         "nl" : {
@@ -4604,6 +5768,18 @@
             "state" : "translated",
             "value" : "Вимкнено"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "關閉"
+          }
         }
       }
     },
@@ -4649,6 +5825,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Offline"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "オフライン"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "오프라인"
           }
         },
         "nl" : {
@@ -4698,6 +5886,18 @@
             "state" : "translated",
             "value" : "Офлайн"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "离线"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "離線"
+          }
         }
       }
     },
@@ -4743,6 +5943,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Offline, mostra l'ultimo stato noto"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "オフライン（直前のステータスを表示）"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "오프라인, 마지막 알려진 상태 표시 중"
           }
         },
         "nl" : {
@@ -4792,6 +6004,18 @@
             "state" : "translated",
             "value" : "Офлайн, показано останній відомий статус"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "离线，显示最后已知状态"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "離線，顯示最後已知狀態"
+          }
         }
       }
     },
@@ -4837,6 +6061,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Acceso"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "オン"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "켜짐"
           }
         },
         "nl" : {
@@ -4886,6 +6122,18 @@
             "state" : "translated",
             "value" : "Увімкнено"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "开启"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開啟"
+          }
         }
       }
     },
@@ -4928,6 +6176,18 @@
           }
         },
         "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch"
+          }
+        },
+        "ko" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "OnlySwitch"
@@ -4976,6 +6236,18 @@
           }
         },
         "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "OnlySwitch"
@@ -5027,6 +6299,18 @@
             "value" : "OnlySwitch non è riuscito a caricare i Mac salvati. La schermata corrente è stata mantenuta."
           }
         },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch で保存された Mac を読み込めませんでした。現在の画面は保持されました。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch에서 저장된 Mac을 로드할 수 없습니다. 현재 화면이 유지되었습니다."
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5074,6 +6358,18 @@
             "state" : "translated",
             "value" : "OnlySwitch не вдалося завантажити збережені Mac. Поточний екран залишено."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch 无法加载已保存的 Mac。当前屏幕已保留。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch 無法載入已儲存的 Mac。您的目前畫面已保留。"
+          }
         }
       }
     },
@@ -5119,6 +6415,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "OnlySwitch non è riuscito a rimuovere tutti i dati locali per questo Mac. Riprova per completare la rimozione."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch でこの Mac のすべてのローカルデータを削除できませんでした。削除を完了するには、もう一度お試しください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch에서 이 Mac의 모든 로컬 데이터를 제거하지 못했습니다. 지우기를 완료하려면 다시 시도하세요."
           }
         },
         "nl" : {
@@ -5168,6 +6476,18 @@
             "state" : "translated",
             "value" : "OnlySwitch не вдалося видалити всі локальні дані для цього Mac. Повторіть спробу, щоб завершити забуття."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch 无法移除该 Mac 的所有本地数据。请重试以完成解除配对。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch 無法移除此 Mac 的所有本機資料。請重試以完成解除配對。"
+          }
         }
       }
     },
@@ -5213,6 +6533,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "OnlySwitch non è riuscito a salvare il Mac selezionato e lo stato di configurazione."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch で選択された Mac とセットアップ状態を保存できませんでした。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch에서 선택된 Mac 및 설정 상태를 저장할 수 없습니다."
           }
         },
         "nl" : {
@@ -5262,6 +6594,18 @@
             "state" : "translated",
             "value" : "OnlySwitch не вдалося зберегти вибраний Mac та стан налаштування."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch 无法保存所选 Mac 和设置状态。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch 無法儲存所選的 Mac 與設定狀態。"
+          }
         }
       }
     },
@@ -5307,6 +6651,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "OnlySwitch deve essere aggiornato prima dell'accoppiamento."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ペアリング前に OnlySwitch を更新する必要があります。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "페어링 전에 OnlySwitch 를 업데이트해야 합니다."
           }
         },
         "nl" : {
@@ -5356,6 +6712,18 @@
             "state" : "translated",
             "value" : "Перед спарюванням необхідно оновити OnlySwitch."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "配对前必须先更新 OnlySwitch。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "配對前必須先更新 OnlySwitch。"
+          }
         }
       }
     },
@@ -5401,6 +6769,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Apri le Impostazioni per accoppiarti con un Mac che esegue OnlySwitch."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設定を開いて、OnlySwitch が実行されている Mac とペアリングしてください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch가 실행 중인 Mac과 페어링하려면 설정을 엽니다."
           }
         },
         "nl" : {
@@ -5450,6 +6830,18 @@
             "state" : "translated",
             "value" : "Відкрийте Налаштування, щоб спаруватися з Mac із запущеним OnlySwitch."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开“设置”以与运行 OnlySwitch 的 Mac 进行配对。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開啟「設定」以與執行 OnlySwitch 的 Mac 進行配對。"
+          }
         }
       }
     },
@@ -5495,6 +6887,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Apre le impostazioni del controllo remoto"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "リモートコントロールの設定を開きます"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "원격 제어 설정 열기"
           }
         },
         "nl" : {
@@ -5544,6 +6948,18 @@
             "state" : "translated",
             "value" : "Відкриває налаштування віддаленого керування"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开远程控制设置"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開啟遙控設定"
+          }
         }
       }
     },
@@ -5589,6 +7005,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Esito sconosciuto"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "結果不明"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "결과 알 수 없음"
           }
         },
         "nl" : {
@@ -5638,6 +7066,18 @@
             "state" : "translated",
             "value" : "Результат невідомий"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "结果未知"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "結果未知"
+          }
         }
       }
     },
@@ -5683,6 +7123,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Accoppia un Mac"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac をペアリング"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac 페어링"
           }
         },
         "nl" : {
@@ -5732,6 +7184,18 @@
             "state" : "translated",
             "value" : "Спарити Mac"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "配对新 Mac"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "配對一台 Mac"
+          }
         }
       }
     },
@@ -5777,6 +7241,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Riaccoppia"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再ペアリング"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다시 페어링"
           }
         },
         "nl" : {
@@ -5826,6 +7302,18 @@
             "state" : "translated",
             "value" : "Повторити спарювання"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重新配对"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重新配對"
+          }
         }
       }
     },
@@ -5871,6 +7359,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Accoppia un altro Mac"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "別の Mac をペアリング"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다른 Mac 페어링"
           }
         },
         "nl" : {
@@ -5920,6 +7420,18 @@
             "state" : "translated",
             "value" : "Спарити інший Mac"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "配对另一台 Mac"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "配對另一台 Mac"
+          }
         }
       }
     },
@@ -5965,6 +7477,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Accoppia Mac"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac をペアリング"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac 페어링"
           }
         },
         "nl" : {
@@ -6014,6 +7538,18 @@
             "state" : "translated",
             "value" : "Спарити Mac"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "配对 Mac"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "配對 Mac"
+          }
         }
       }
     },
@@ -6059,6 +7595,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mac accoppiato: %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ペアリング済み Mac: %@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "페어링된 Mac: %@"
           }
         },
         "nl" : {
@@ -6108,6 +7656,18 @@
             "state" : "translated",
             "value" : "Спарений Mac: %@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已配对的 Mac：%@"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已配對的 Mac：%@"
+          }
         }
       }
     },
@@ -6153,6 +7713,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mac accoppiati"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ペアリング済み Mac"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "페어링된 Mac"
           }
         },
         "nl" : {
@@ -6202,6 +7774,18 @@
             "state" : "translated",
             "value" : "Спарені Mac"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已配对的 Mac"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已配對的 Mac"
+          }
         }
       }
     },
@@ -6247,6 +7831,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Codice di accoppiamento"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ペアリングコード"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "페어링 코드"
           }
         },
         "nl" : {
@@ -6296,6 +7892,18 @@
             "state" : "translated",
             "value" : "Код спарювання"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "配对码"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "配對代碼"
+          }
         }
       }
     },
@@ -6341,6 +7949,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Codice di accoppiamento"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ペアリングコード"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "페어링 코드"
           }
         },
         "nl" : {
@@ -6390,6 +8010,18 @@
             "state" : "translated",
             "value" : "Код спарювання"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "配对码"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "配對代碼"
+          }
         }
       }
     },
@@ -6435,6 +8067,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Accoppiamento in corso"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ペアリング中"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "페어링 진행 중"
           }
         },
         "nl" : {
@@ -6484,6 +8128,18 @@
             "state" : "translated",
             "value" : "Триває спарювання"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在配对"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在進行配對"
+          }
         }
       }
     },
@@ -6529,6 +8185,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Problema di accoppiamento"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ペアリングの問題"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "페어링 문제"
           }
         },
         "nl" : {
@@ -6578,6 +8246,18 @@
             "state" : "translated",
             "value" : "Проблема зі спарюванням"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "配对问题"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "配對問題"
+          }
         }
       }
     },
@@ -6623,6 +8303,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Accoppiamento richiesto"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ペアリングが必要です"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "페어링 필요"
           }
         },
         "nl" : {
@@ -6672,6 +8364,18 @@
             "state" : "translated",
             "value" : "Необхідне спарювання"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "需要配对"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "需要配對"
+          }
         }
       }
     },
@@ -6717,6 +8421,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Accoppiamento richiesto: apri le Impostazioni per riconnetterti"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ペアリングが必要です — 再接続するには設定を開いてください"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "페어링 필요 — 연결을 다시 하려면 설정을 엽니다."
           }
         },
         "nl" : {
@@ -6766,6 +8482,18 @@
             "state" : "translated",
             "value" : "Необхідне спарювання — відкрийте Налаштування, щоб підключитися знову"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "需要配对——请打开“设置”以重新连接"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "需要配對 — 請開啟「設定」重新連線"
+          }
         }
       }
     },
@@ -6811,6 +8539,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pronto"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "準備完了"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "준비됨"
           }
         },
         "nl" : {
@@ -6860,6 +8600,18 @@
             "state" : "translated",
             "value" : "Готово"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "就绪"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "就緒"
+          }
         }
       }
     },
@@ -6905,6 +8657,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rimuovi questo dispositivo da OnlySwitch sul Mac, quindi avvia una nuova sessione di accoppiamento."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac の OnlySwitch からこのデバイスを削除し、新しいペアリングセッションを開始してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac의 OnlySwitch에서 이 장치를 제거한 후 새 페어링 세션을 시작하세요."
           }
         },
         "nl" : {
@@ -6954,6 +8718,18 @@
             "state" : "translated",
             "value" : "Видаліть цей пристрій із OnlySwitch на Mac, а потім почніть нову сесію спарювання."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请在 Mac 上的 OnlySwitch 中移除此设备，然后开始新的配对会话。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "請在 Mac 的 OnlySwitch 中移除此裝置，然後開始新的配對作業。"
+          }
         }
       }
     },
@@ -6999,6 +8775,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Richiede conferma prima dell'esecuzione"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "実行前に確認が必要です"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "실행 전 확인 필요"
           }
         },
         "nl" : {
@@ -7048,6 +8836,18 @@
             "state" : "translated",
             "value" : "Потребує підтвердження перед виконанням"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "运行前需要确认"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "執行前需確認"
+          }
         }
       }
     },
@@ -7093,6 +8893,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Riprova"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再試行"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다시 시도"
           }
         },
         "nl" : {
@@ -7142,6 +8954,18 @@
             "state" : "translated",
             "value" : "Спробувати ще раз"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重试"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重試"
+          }
         }
       }
     },
@@ -7187,6 +9011,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Riprova la rilevazione"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "検索を再試行"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "검색 다시 시도"
           }
         },
         "nl" : {
@@ -7236,6 +9072,18 @@
             "state" : "translated",
             "value" : "Повторити пошук"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重试发现"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重新搜尋"
+          }
         }
       }
     },
@@ -7281,6 +9129,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Riprova la rimozione"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "削除を再試行"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "지우기 다시 시도"
           }
         },
         "nl" : {
@@ -7330,6 +9190,18 @@
             "state" : "translated",
             "value" : "Повторити забуття"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重试取消配对"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重新解除配對"
+          }
         }
       }
     },
@@ -7375,6 +9247,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Riprova il salvataggio del layout"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レイアウトの保存を再試行"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "레이아웃 저장 다시 시도"
           }
         },
         "nl" : {
@@ -7424,6 +9308,18 @@
             "state" : "translated",
             "value" : "Повторити збереження макету"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重试保存布局"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重新儲存版面配置"
+          }
         }
       }
     },
@@ -7469,6 +9365,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Esegui"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "実行"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "실행"
           }
         },
         "nl" : {
@@ -7518,6 +9426,18 @@
             "state" : "translated",
             "value" : "Виконати"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "执行"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "執行"
+          }
         }
       }
     },
@@ -7563,6 +9483,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Eseguire %@?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ を実行しますか？"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 을(를) 실행하시겠습니까?"
           }
         },
         "nl" : {
@@ -7612,6 +9544,18 @@
             "state" : "translated",
             "value" : "Виконати %@?"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "是否运行%@？"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "要執行「%@」嗎？"
+          }
         }
       }
     },
@@ -7657,6 +9601,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Esegue questo controllo sul Mac selezionato"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選択された Mac でこのコントロールを実行します"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "선택된 Mac에서 이 제어 항목을 실행합니다."
           }
         },
         "nl" : {
@@ -7706,6 +9662,18 @@
             "state" : "translated",
             "value" : "Виконує цей елемент керування на вибраному Mac"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在所选 Mac 上执行此控制项"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在選定的 Mac 上執行此控制項"
+          }
         }
       }
     },
@@ -7751,6 +9719,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Seleziona un Mac per continuare."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "続行するには、Mac を選択してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "계속하려면 Mac을 선택하세요."
           }
         },
         "nl" : {
@@ -7800,6 +9780,18 @@
             "state" : "translated",
             "value" : "Виберіть Mac, щоб продовжити."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请选择一台 Mac 以继续。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "請選擇一台 Mac 以繼續。"
+          }
         }
       }
     },
@@ -7845,6 +9837,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Seleziona Mac: %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac の選択: %@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac 선택: %@"
           }
         },
         "nl" : {
@@ -7894,6 +9898,18 @@
             "state" : "translated",
             "value" : "Вибрати Mac: %@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择 Mac：%@"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選擇 Mac：%@"
+          }
         }
       }
     },
@@ -7939,6 +9955,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mac selezionato: %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選択中の Mac: %@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "선택된 Mac: %@"
           }
         },
         "nl" : {
@@ -7988,6 +10016,18 @@
             "state" : "translated",
             "value" : "Вибрано Mac: %@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已选 Mac：%@"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已選取的 Mac：%@"
+          }
         }
       }
     },
@@ -8033,6 +10073,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Seleziona questo Mac per l'accoppiamento"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この Mac をペアリング用に選択します"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 Mac을 페어링 대상으로 선택합니다."
           }
         },
         "nl" : {
@@ -8082,6 +10134,18 @@
             "state" : "translated",
             "value" : "Вибір цього Mac для спарювання"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择此 Mac 进行配对"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "將此 Mac 選取用於配對"
+          }
         }
       }
     },
@@ -8127,6 +10191,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Impostazioni"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設定"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "설정"
           }
         },
         "nl" : {
@@ -8176,6 +10252,18 @@
             "state" : "translated",
             "value" : "Налаштування"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "设置"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設定"
+          }
         }
       }
     },
@@ -8221,6 +10309,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Shortcuts"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ショートカット"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "단축키"
           }
         },
         "nl" : {
@@ -8270,6 +10370,18 @@
             "state" : "translated",
             "value" : "Команди"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "快捷指令"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "捷徑"
+          }
         }
       }
     },
@@ -8315,6 +10427,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mostrato sulla dashboard"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ダッシュボードに表示"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "대시보드에 표시됨"
           }
         },
         "nl" : {
@@ -8364,6 +10488,18 @@
             "state" : "translated",
             "value" : "Показано на панелі приладів"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "显示于仪表板"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "顯示於儀表板"
+          }
         }
       }
     },
@@ -8409,6 +10545,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Avvia una nuova sessione di accoppiamento e verifica di aver selezionato il Mac che mostra il codice."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新しいペアリングセッションを開始し、コードが表示されている Mac を選択したことを確認してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "새 페어링 세션을 시작하고 코드가 표시된 Mac을 선택했는지 확인하세요."
           }
         },
         "nl" : {
@@ -8458,6 +10606,18 @@
             "state" : "translated",
             "value" : "Почніть нову сесію спарювання та переконайтеся, що ви вибрали Mac із показаним кодом."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "开始新的配对会话，并确认您选择了显示代码的 Mac。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開始新的配對作業，並確認您已選取顯示配對碼的 Mac。"
+          }
         }
       }
     },
@@ -8503,6 +10663,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Avvia una nuova sessione di accoppiamento in OnlySwitch sul tuo Mac e inserisci il nuovo codice."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac の OnlySwitch で新しいペアリングセッションを開始し、新しいコードを入力してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac의 OnlySwitch에서 새 페어링 세션을 시작하고 새로운 코드를 입력하세요."
           }
         },
         "nl" : {
@@ -8552,6 +10724,18 @@
             "state" : "translated",
             "value" : "Почніть нову сесію спарювання в OnlySwitch на вашому Mac та введіть його новий код."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在您的 Mac 上的 OnlySwitch 中开始新的配对会话，并输入新代码。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在您的 Mac 上的 OnlySwitch 中開始新的配對作業，並輸入其新配對碼。"
+          }
         }
       }
     },
@@ -8597,6 +10781,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Stato"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ステータス"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "상태"
           }
         },
         "nl" : {
@@ -8646,6 +10842,18 @@
             "state" : "translated",
             "value" : "Статус"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "状态"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "狀態"
+          }
         }
       }
     },
@@ -8691,6 +10899,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Il layout della dashboard non è stato salvato. Le tue ultime scelte sono ancora disponibili per un nuovo tentativo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ダッシュボードのレイアウトは保存されませんでした。最新の選択内容は再試行可能です。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "대시보드 레이아웃이 저장되지 않았습니다. 최신 선택 항목은 다시 시도할 수 있습니다."
           }
         },
         "nl" : {
@@ -8740,6 +10960,18 @@
             "state" : "translated",
             "value" : "Макет панелі приладів не збережено. Ваші останні вибори залишаються доступними для повторної спроби."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "仪表板布局未保存。您最新的选择仍可重试。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "儀表板版面配置未儲存。您最新的選擇仍可重新嘗試。"
+          }
         }
       }
     },
@@ -8785,6 +11017,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Impossibile raggiungere il Mac."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac に接続できませんでした。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac에 연결할 수 없습니다."
           }
         },
         "nl" : {
@@ -8834,6 +11078,18 @@
             "state" : "translated",
             "value" : "Неможливо підключитися до Mac."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法连接该 Mac。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法連線至該 Mac。"
+          }
         }
       }
     },
@@ -8879,6 +11135,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Il Mac non ha potuto completare questa azione."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac でこのアクションを完了できませんでした。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac에서 이 작업을 완료하지 못했습니다."
           }
         },
         "nl" : {
@@ -8928,6 +11196,18 @@
             "state" : "translated",
             "value" : "Mac не зміг виконати цю дію."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "该 Mac 无法完成此操作。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac 無法完成此動作。"
+          }
         }
       }
     },
@@ -8973,6 +11253,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Il Mac non ha risposto. Riprovare con la stessa richiesta?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac から応答がありませんでした。同じリクエストを再試行しますか？"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac에서 응답이 없습니다. 동일한 요청을 다시 시도하시겠습니까?"
           }
         },
         "nl" : {
@@ -9022,6 +11314,18 @@
             "state" : "translated",
             "value" : "Mac не відповів. Повторити той самий запит?"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "该 Mac 无响应。是否重试相同请求？"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac 沒有回應。要重試相同的要求嗎？"
+          }
         }
       }
     },
@@ -9067,6 +11371,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "È possibile che il Mac abbia già completato questa azione. Il nuovo invio della stessa richiesta consente a OnlySwitch di eliminarne correttamente i duplicati."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このアクションは既に完了している可能性があります。再試行すると同じリクエストが送信され、OnlySwitch が安全に重複排除を行います。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac에서 이미 이 작업을 완료했을 수 있습니다. 다시 시도하면 동일한 요청이 전송되어 OnlySwitch가 안전하게 중복 제거할 수 있습니다."
           }
         },
         "nl" : {
@@ -9116,6 +11432,18 @@
             "state" : "translated",
             "value" : "Можливо, Mac вже виконав цю дію. Повторна спроба надсилає той самий запит, щоб OnlySwitch міг безпечно усунути дублікати."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "该 Mac 可能已完成此操作。重试将发送相同请求，以便 OnlySwitch 安全去重。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "該 Mac 可能已執行此動作。重試會傳送相同要求，讓 OnlySwitch 能安全地去除重複項目。"
+          }
         }
       }
     },
@@ -9161,6 +11489,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Il Mac accoppiato non corrisponde al Mac selezionato."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ペアリングされた Mac と選択された Mac が一致しませんでした。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "페어링된 Mac과 선택된 Mac이 일치하지 않습니다."
           }
         },
         "nl" : {
@@ -9210,6 +11550,18 @@
             "state" : "translated",
             "value" : "Спарений Mac не відповідає вибраному Mac."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已配对的 Mac 与所选 Mac 不匹配。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已配對的 Mac 與選取的 Mac 不符。"
+          }
         }
       }
     },
@@ -9255,6 +11607,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Scaduto il codice di accoppiamento."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ペアリングコードの有効期限が切れました。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "페어링 코드가 만료되었습니다."
           }
         },
         "nl" : {
@@ -9304,6 +11668,18 @@
             "state" : "translated",
             "value" : "Термін дії коду спарювання минув."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "配对代码已过期。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "配對碼已過期。"
+          }
         }
       }
     },
@@ -9349,6 +11725,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Codice di accoppiamento non valido."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ペアリングコードが無効です。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "페어링 코드가 유효하지 않습니다."
           }
         },
         "nl" : {
@@ -9398,6 +11786,18 @@
             "state" : "translated",
             "value" : "Код спарювання недійсний."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "配对代码无效。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "配對碼無效。"
+          }
         }
       }
     },
@@ -9443,6 +11843,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Il Mac selezionato non è più disponibile."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選択された Mac は利用できません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "선택된 Mac을 사용할 수 없습니다."
           }
         },
         "nl" : {
@@ -9492,6 +11904,18 @@
             "state" : "translated",
             "value" : "Вибраний Mac більше недоступний."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所选 Mac 已不可用。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所選的 Mac 已無法使用。"
+          }
         }
       }
     },
@@ -9537,6 +11961,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Questo controllo può essere mostrato, ma al momento non è disponibile sul Mac"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このコントロールは表示可能ですが、現在 Mac では使用できません"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 제어 항목은 표시할 수 있지만 현재 Mac에서 사용 불가합니다."
           }
         },
         "nl" : {
@@ -9586,6 +12022,18 @@
             "state" : "translated",
             "value" : "Цей елемент керування можна показати, але він тимчасово недоступний на цьому Mac"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此控件可显示，但当前在 Mac 上不可用"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此控制項可顯示，但目前於 Mac 上不可用"
+          }
         }
       }
     },
@@ -9631,6 +12079,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Questo dispositivo è stato revocato dal Mac."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このデバイスは Mac によって無効化されました。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac에서 이 장치의 권한을 취소했습니다."
           }
         },
         "nl" : {
@@ -9680,6 +12140,18 @@
             "state" : "translated",
             "value" : "Цей пристрій було скасовано на Mac."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "该设备已被 Mac 撤销。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此裝置已被 Mac 撤銷。"
+          }
         }
       }
     },
@@ -9725,6 +12197,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Questo Mac non accetta più la credenziale salvata. Avvia prima l'accoppiamento in OnlySwitch sul Mac."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この Mac は保存された認証情報を受理しなくなりました。まず Mac の OnlySwitch でペアリングを開始してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 Mac은 더 이상 저장된 자격 증명을 받지 않습니다. 먼저 Mac의 OnlySwitch에서 페어링을 시작하세요."
           }
         },
         "nl" : {
@@ -9774,6 +12258,18 @@
             "state" : "translated",
             "value" : "Цей Mac більше не приймає збережені облікові дані. Спочатку почніть спарювання в OnlySwitch на цьому Mac."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此 Mac 不再接受已保存的凭据。请先在 Mac 上的 OnlySwitch 中开始配对。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此 Mac 不再接受已儲存的憑證。請先於 Mac 上的 OnlySwitch 開始配對。"
+          }
         }
       }
     },
@@ -9819,6 +12315,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Questo eseguirà %@ su %@."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ を%@で実行します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@을(를) %@에서 실행합니다."
           }
         },
         "nl" : {
@@ -9868,6 +12376,18 @@
             "state" : "translated",
             "value" : "Це виконає %@ на %@."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 将在 %@ 上运行。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 將在 %@ 上執行。"
+          }
         }
       }
     },
@@ -9913,6 +12433,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Troppi tentativi di accoppiamento."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ペアリングの試行回数が多すぎます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "페어링 시도가 너무 많습니다."
           }
         },
         "nl" : {
@@ -9962,6 +12494,18 @@
             "state" : "translated",
             "value" : "Забагато спроб спарювання."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "配对尝试次数过多。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "配對嘗試次數過多。"
+          }
         }
       }
     },
@@ -10007,6 +12551,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Non disponibile su questo Mac"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この Mac では使用できません"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 Mac에서 사용 불가"
           }
         },
         "nl" : {
@@ -10056,6 +12612,18 @@
             "state" : "translated",
             "value" : "Недоступно на цьому Mac"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在此 Mac 上不可用"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此 Mac 上不可用"
+          }
         }
       }
     },
@@ -10101,6 +12669,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Non disponibile: %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用不可: %@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사용 불가: %@"
           }
         },
         "nl" : {
@@ -10150,6 +12730,18 @@
             "state" : "translated",
             "value" : "Недоступно: %@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不可用：%@"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不可用：%@"
+          }
         }
       }
     },
@@ -10195,6 +12787,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mac non selezionato: %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未選択の Mac: %@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "선택되지 않은 Mac: %@"
           }
         },
         "nl" : {
@@ -10244,6 +12848,18 @@
             "state" : "translated",
             "value" : "Невибраний Mac: %@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未选中的 Mac：%@"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未選取的 Mac：%@"
+          }
         }
       }
     },
@@ -10289,6 +12905,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aggiorna OnlySwitch su questo Mac prima dell'accoppiamento."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ペアリング前に、この Mac の OnlySwitch を更新してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "페어링 전에 이 Mac의 OnlySwitch 를 업데이트하세요."
           }
         },
         "nl" : {
@@ -10338,6 +12966,18 @@
             "state" : "translated",
             "value" : "Оновіть OnlySwitch на цьому Mac перед спарюванням."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请在配对前更新此 Mac 上的 OnlySwitch。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "請先於此 Mac 更新 OnlySwitch，再進行配對。"
+          }
         }
       }
     },
@@ -10383,6 +13023,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Attendi un momento, avvia una nuova sessione di accoppiamento sul Mac e riprova."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "しばらく待ってから、Mac で新しいペアリングセッションを開始し、もう一度お試しください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "잠시 기다린 후 Mac에서 새 페어링 세션을 시작하고 다시 시도하세요."
           }
         },
         "nl" : {
@@ -10432,6 +13084,18 @@
             "state" : "translated",
             "value" : "Зачекайте хвилину, почніть нову сесію спарювання на Mac та спробуйте ще раз."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请稍候，在 Mac 上启动新的配对会话，然后重试。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "請稍候，於 Mac 上啟動新的配對會話後再試一次。"
+          }
         }
       }
     },
@@ -10477,6 +13141,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Attendi che il Mac riappaia, quindi selezionalo di nuovo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac が再度表示されるまで待ち、その後再度選択してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac이 다시 나타날 때까지 기다렸다가 다시 선택하세요."
           }
         },
         "nl" : {
@@ -10526,6 +13202,18 @@
             "state" : "translated",
             "value" : "Зачекайте, доки Mac знову з’явиться, а потім виберіть його знову."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "等待 Mac 重新出现后再次选择它。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "等待 Mac 重新出現，然後再次選取它。"
+          }
         }
       }
     },
@@ -10571,6 +13259,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "In esecuzione"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "処理中"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "작업 중"
           }
         },
         "nl" : {
@@ -10620,6 +13320,18 @@
             "state" : "translated",
             "value" : "Виконується"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "工作中"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "運作中"
+          }
         }
       }
     },
@@ -10665,6 +13377,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Avrai bisogno di un nuovo codice di accoppiamento per aggiungere nuovamente questo Mac."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この Mac を再度追加するには、新しいペアリングコードが必要です。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 Mac을 다시 추가하려면 새로운 페어링 코드가 필요합니다."
           }
         },
         "nl" : {
@@ -10714,6 +13438,18 @@
             "state" : "translated",
             "value" : "Для повторного додавання цього Mac вам знадобиться новий код спарювання."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "您需要一个新的配对代码才能再次添加此 Mac。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "您需要新的配對代碼才能再次新增此 Mac。"
+          }
         }
       }
     },
@@ -10759,6 +13495,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Il tuo codice rimane su questo dispositivo ed è utilizzato solo per questo tentativo di accoppiamento."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "コードはこのデバイスに保持され、今回のペアリング試行でのみ使用されます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "코드는 이 장치에 남아 있으며 이번 페어링 시도에만 사용됩니다."
           }
         },
         "nl" : {
@@ -10807,6 +13555,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ваш код залишається на цьому пристрої та використовується лише для цієї спроби спарювання."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "您的代码保留在此设备上，仅用于本次配对尝试。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "您的代碼保留於本裝置，僅用於此次配對嘗試。"
           }
         }
       }
