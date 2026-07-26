@@ -84,6 +84,7 @@ struct ControlTileView: View {
         case let .png(data):
             if let image = UIImage(data: data) {
                 Image(uiImage: image)
+                    .renderingMode(.template)
                     .resizable()
                     .scaledToFit()
             } else {

@@ -4,6 +4,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @Bindable var store: StoreOf<SettingsFeature>
+    @State private var isHowToUsePresented = false
 
     var body: some View {
         List {
@@ -14,6 +15,12 @@ struct SettingsView: View {
                         systemImage: "desktopcomputer.and.arrow.down",
                         description: Text("Enable iOS Remote Access in OnlySwitch on your Mac, then start pairing.")
                     )
+                }
+            }
+
+            Section {
+                Button("How to Use", systemImage: "questionmark.circle") {
+                    isHowToUsePresented = true
                 }
             }
 
@@ -46,6 +53,9 @@ struct SettingsView: View {
         }
         .sheet(item: $store.scope(state: \.management, action: \.management)) { managementStore in
             NavigationStack { MacManagementView(store: managementStore) }
+        }
+        .sheet(isPresented: $isHowToUsePresented) {
+            HowToUseView()
         }
     }
 
