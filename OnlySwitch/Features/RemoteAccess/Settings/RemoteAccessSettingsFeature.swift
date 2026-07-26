@@ -186,7 +186,7 @@ struct RemoteAccessSettingsFeature {
             case .subscribeToHostEvents:
                 guard state.isEnabled else { return .cancel(id: CancelID.eventStream) }
                 return .run { send in
-                    for await event in remoteHost.events() {
+                    for await event in await remoteHost.events() {
                         await send(.hostEvent(event))
                     }
                 }

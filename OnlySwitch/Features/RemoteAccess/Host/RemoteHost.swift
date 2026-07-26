@@ -21,8 +21,10 @@ actor RemoteHost {
     private let authenticationResultSender: RemotePeerSession.AuthenticationResultSender
     private let commitStageReached: @Sendable (RemotePairingCommitStage) async -> Void
     private let authenticatedSessionObserver: @Sendable () -> Void
-    private let eventStream: AsyncStream<RemoteHostEvent>
-    private let eventContinuation: AsyncStream<RemoteHostEvent>.Continuation
+    private var eventContinuations: [
+        UUID: AsyncStream<RemoteHostEvent>.Continuation
+    ] = [:]
+    private var currentStatus: HostStatus = .stopped
     private var listener: NWListener?
     private var configuration: RemoteHostConfiguration?
     private var pairing: PairingWindow?
@@ -32,8 +34,6 @@ actor RemoteHost {
     private let statusScheduler: RemoteStatusScheduler
     private let catalogMonitor: RemoteCatalogMonitor
     private var catalogMonitorTask: Task<Void, Never>?
-
-    nonisolated var events: AsyncStream<RemoteHostEvent> { eventStream }
 
     private init(
         credentialStore: RemoteCredentialStore,
@@ -52,12 +52,6 @@ actor RemoteHost {
         commitStageReached: @escaping @Sendable (RemotePairingCommitStage) async -> Void = { _ in },
         authenticatedSessionObserver: @escaping @Sendable () -> Void = {}
     ) {
-        let (stream, continuation) = AsyncStream.makeStream(
-            of: RemoteHostEvent.self,
-            bufferingPolicy: .bufferingNewest(64)
-        )
-        self.eventStream = stream
-        self.eventContinuation = continuation
         self.credentialStore = credentialStore
         self.catalogProvider = catalogProvider
         self.router = router
@@ -76,7 +70,9 @@ actor RemoteHost {
     }
 
     deinit {
-        eventContinuation.finish()
+        for continuation in eventContinuations.values {
+            continuation.finish()
+        }
     }
 
     static func testing(
@@ -140,8 +136,22 @@ actor RemoteHost {
         let endpoint = try await startListener(configuration: configuration, advertise: false)
         pairing = PairingWindow(code: fixedPairingCode ?? PairingCode.generate(), expiresAt: Date().addingTimeInterval(300))
         pairingFailures = 0
-        eventContinuation.yield(.pairingChanged(pairing))
+        publish(.pairingChanged(pairing))
         return endpoint
+    }
+
+    func events() -> AsyncStream<RemoteHostEvent> {
+        let id = UUID()
+        let (stream, continuation) = AsyncStream.makeStream(
+            of: RemoteHostEvent.self,
+            bufferingPolicy: .bufferingNewest(64)
+        )
+        continuation.onTermination = { [weak self] _ in
+            Task { await self?.removeEventContinuation(id: id) }
+        }
+        eventContinuations[id] = continuation
+        continuation.yield(.statusChanged(currentStatus))
+        return stream
     }
 
     func stop() async {
@@ -152,8 +162,8 @@ actor RemoteHost {
         let peers = sessionIDs.compactMap { sessions[$0] }
         sessions.removeAll()
         configuration = nil
-        eventContinuation.yield(.connectionCountChanged(0))
-        eventContinuation.yield(.statusChanged(.stopped))
+        publish(.connectionCountChanged(0))
+        publish(.statusChanged(.stopped))
         for peer in peers { await peer.close() }
         await statusScheduler.stop()
         let activeCatalogMonitorTask = catalogMonitorTask
@@ -170,14 +180,14 @@ actor RemoteHost {
         )
         pairing = window
         pairingFailures = 0
-        eventContinuation.yield(.pairingChanged(window))
+        publish(.pairingChanged(window))
         return window
     }
 
     func cancelPairing() {
         pairing = nil
         pairingFailures = 0
-        eventContinuation.yield(.pairingChanged(nil))
+        publish(.pairingChanged(nil))
     }
 
     func revoke(deviceID: UUID) async throws {
@@ -189,7 +199,7 @@ actor RemoteHost {
         let peers = Dictionary(uniqueKeysWithValues: affected.compactMap { id in
             sessions.removeValue(forKey: id).map { (id, $0) }
         })
-        eventContinuation.yield(.connectionCountChanged(lifecycle.authenticatedCount))
+        publish(.connectionCountChanged(lifecycle.authenticatedCount))
         await catalogMonitor.setAuthenticatedSessionCount(lifecycle.authenticatedCount)
         let scheduler = statusScheduler
         let store = credentialStore
@@ -201,7 +211,7 @@ actor RemoteHost {
                 if let credential { try await store.delete(deviceID, matchingCredential: credential) }
             }
         )
-        eventContinuation.yield(.devicesChanged(try await credentialStore.loadAll()))
+        publish(.devicesChanged(try await credentialStore.loadAll()))
     }
 
     static func performRevocationCleanup(
@@ -264,7 +274,7 @@ actor RemoteHost {
         try await credentialStore.recoverExpiredTransactions()
         startCatalogObservationIfNeeded()
         let generation = lifecycle.beginStart()
-        eventContinuation.yield(.statusChanged(.starting))
+        publish(.statusChanged(.starting))
         do {
             let port = configuration.port == 0 ? NWEndpoint.Port.any : NWEndpoint.Port(rawValue: configuration.port)!
             let listener = try listenerFactory(port)
@@ -322,12 +332,25 @@ actor RemoteHost {
             guard let boundPort = listener.port else {
                 throw RemoteProtocolError(code: .invalidFrame, message: "Listener did not bind")
             }
-            eventContinuation.yield(.statusChanged(.listening(port: boundPort.rawValue)))
+            publish(.statusChanged(.listening(port: boundPort.rawValue)))
             return .hostPort(host: .ipv4(.loopback), port: boundPort)
         } catch {
             await listenerFailed(generation: generation)
             throw error
         }
+    }
+
+    private func publish(_ event: RemoteHostEvent) {
+        if case let .statusChanged(status) = event {
+            currentStatus = status
+        }
+        for continuation in eventContinuations.values {
+            continuation.yield(event)
+        }
+    }
+
+    private func removeEventContinuation(id: UUID) {
+        eventContinuations[id] = nil
     }
 
     private func accept(_ connection: NWConnection, macID: UUID, name: String, generation: UInt64) {
@@ -410,7 +433,7 @@ actor RemoteHost {
         guard let pairing, pairing.expiresAt > Date(), pairingFailures < 5 else {
             if self.pairing != nil {
                 self.pairing = nil
-                eventContinuation.yield(.pairingChanged(nil))
+                publish(.pairingChanged(nil))
             }
             return nil
         }
@@ -477,7 +500,7 @@ actor RemoteHost {
             deviceID: deviceID,
             generation: generation
         ) else { return false }
-        eventContinuation.yield(.connectionCountChanged(lifecycle.authenticatedCount))
+        publish(.connectionCountChanged(lifecycle.authenticatedCount))
         await catalogMonitor.setAuthenticatedSessionCount(lifecycle.authenticatedCount)
         if let devices = try? await credentialStore.loadAll() {
             guard lifecycle.isAuthorized(
@@ -485,7 +508,7 @@ actor RemoteHost {
                 deviceID: deviceID,
                 generation: generation
             ) else { return false }
-            eventContinuation.yield(.devicesChanged(devices))
+            publish(.devicesChanged(devices))
         }
         return lifecycle.isAuthorized(
             sessionID: sessionID,
@@ -513,7 +536,7 @@ actor RemoteHost {
         await statusScheduler.remove(sessionID: id)
         if lifecycle.authenticatedCount != previousCount {
             await catalogMonitor.setAuthenticatedSessionCount(lifecycle.authenticatedCount)
-            eventContinuation.yield(.connectionCountChanged(lifecycle.authenticatedCount))
+            publish(.connectionCountChanged(lifecycle.authenticatedCount))
         }
     }
 
@@ -525,7 +548,7 @@ actor RemoteHost {
         await peer?.close()
         if lifecycle.authenticatedCount != previousCount {
             await catalogMonitor.setAuthenticatedSessionCount(lifecycle.authenticatedCount)
-            eventContinuation.yield(.connectionCountChanged(lifecycle.authenticatedCount))
+            publish(.connectionCountChanged(lifecycle.authenticatedCount))
         }
     }
 
@@ -537,8 +560,8 @@ actor RemoteHost {
         listener = nil
         configuration = nil
         if pairing != nil { cancelPairing() }
-        eventContinuation.yield(.connectionCountChanged(0))
-        eventContinuation.yield(.statusChanged(.failed("Remote access could not start")))
+        publish(.connectionCountChanged(0))
+        publish(.statusChanged(.failed("Remote access could not start")))
         for peer in peers { await peer.close() }
         await statusScheduler.stop()
         await catalogMonitor.setAuthenticatedSessionCount(0)

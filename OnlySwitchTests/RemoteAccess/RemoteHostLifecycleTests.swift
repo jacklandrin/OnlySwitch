@@ -351,6 +351,56 @@ struct RemoteRevocationCleanupTests {
 
 struct RemoteHostStartFailureTests {
     @Test(.timeLimit(.minutes(1)))
+    func newEventSubscriptionReceivesLatestHostStatus() async {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let host = RemoteHost.testing(
+            catalog: [],
+            router: router,
+            pairingCode: "123456",
+            listenerFactory: { _ in throw StartTestError.listener }
+        )
+        await #expect(throws: StartTestError.listener) {
+            try await host.start(configuration: .init(displayName: "Test"))
+        }
+
+        var events = await host.events().makeAsyncIterator()
+        #expect(await events.next() == .statusChanged(.failed("Remote access could not start")))
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func cancellingEventSubscriptionDoesNotTerminateReplacementSubscription() async {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let host = RemoteHost.testing(
+            catalog: [],
+            router: router,
+            pairingCode: "123456",
+            listenerFactory: { _ in throw StartTestError.listener }
+        )
+        let originalEvents = await host.events()
+        let originalSubscriber = Task {
+            var iterator = originalEvents.makeAsyncIterator()
+            _ = await iterator.next()
+            return await iterator.next()
+        }
+        originalSubscriber.cancel()
+        _ = await originalSubscriber.value
+
+        var replacementEvents = await host.events().makeAsyncIterator()
+        await #expect(throws: StartTestError.listener) {
+            try await host.start(configuration: .init(displayName: "Test"))
+        }
+
+        var failure: HostStatus?
+        while let event = await replacementEvents.next() {
+            if case let .statusChanged(status) = event, case .failed = status {
+                failure = status
+                break
+            }
+        }
+        #expect(failure == .failed("Remote access could not start"))
+    }
+
+    @Test(.timeLimit(.minutes(1)))
     func listenerCreationFailureCleansLifecycleAndPublishesFailure() async {
         let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
         let host = RemoteHost.testing(
@@ -359,7 +409,7 @@ struct RemoteHostStartFailureTests {
             pairingCode: "123456",
             listenerFactory: { _ in throw StartTestError.listener }
         )
-        var events = host.events.makeAsyncIterator()
+        var events = await host.events().makeAsyncIterator()
 
         await #expect(throws: StartTestError.listener) {
             try await host.start(configuration: .init(displayName: "Test"))
@@ -385,7 +435,7 @@ struct RemoteHostStartFailureTests {
             pairingCode: "123456",
             installationIDProvider: { throw StartTestError.identity }
         )
-        var events = host.events.makeAsyncIterator()
+        var events = await host.events().makeAsyncIterator()
 
         await #expect(throws: StartTestError.identity) {
             try await host.start(configuration: .init(displayName: "Test"))

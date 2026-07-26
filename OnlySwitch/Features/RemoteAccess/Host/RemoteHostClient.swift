@@ -10,7 +10,7 @@ struct RemoteHostClient: Sendable {
     var cancelPairing: @Sendable () async -> Void
     var revoke: @Sendable (UUID) async throws -> Void
     var pairedDevices: @Sendable () async throws -> [PairedRemoteDevice]
-    var events: @Sendable () -> AsyncStream<RemoteHostEvent> = { .finished }
+    var events: @Sendable () async -> AsyncStream<RemoteHostEvent> = { .finished }
 }
 
 extension RemoteHostClient: DependencyKey {
@@ -46,20 +46,8 @@ extension RemoteHostClient {
                 return try await host.pairedDevices()
             },
             events: {
-                let (stream, continuation) = AsyncStream.makeStream(
-                    of: RemoteHostEvent.self,
-                    bufferingPolicy: .bufferingNewest(64)
-                )
-                let task = Task {
-                    let host = await MainActor.run { RemoteHost.shared }
-                    for await event in host.events {
-                        guard Task.isCancelled == false else { break }
-                        continuation.yield(event)
-                    }
-                    continuation.finish()
-                }
-                continuation.onTermination = { _ in task.cancel() }
-                return stream
+                let host = await MainActor.run { RemoteHost.shared }
+                return await host.events()
             }
         )
     }
