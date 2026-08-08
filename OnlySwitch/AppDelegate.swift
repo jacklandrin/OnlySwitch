@@ -174,9 +174,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     var checkUpdatePresenter = GitHubPresenter.shared
     private var desktopPetController: DesktopPetController?
+    private let remoteAccessController = RemoteAccessController()
+    private var isStoppingRemoteAccess = false
+    private var didStopRemoteAccess = false
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         FirebaseApp.configure()
+        Task { await remoteAccessController.startIfEnabled() }
         // Migrate API keys from UserDefaults to Keychain if needed
         KeychainMigration.migrateAPIKeysIfNeeded()
         //for issue #11
@@ -226,6 +230,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             name: .desktopPetVisibilityChanged,
             object: nil
         )
+    }
+
+    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+        guard !didStopRemoteAccess else { return .terminateNow }
+        guard !isStoppingRemoteAccess else { return .terminateLater }
+        isStoppingRemoteAccess = true
+        Task {
+            await remoteAccessController.stopForTermination()
+            didStopRemoteAccess = true
+            sender.reply(toApplicationShouldTerminate: true)
+        }
+        return .terminateLater
     }
 
     private func setupDesktopPet() {

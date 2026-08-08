@@ -355,10 +355,94 @@
 		A93C8BE12ECA34D700D7CE52 /* AICommanderSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93C8BE02ECA34CB00D7CE52 /* AICommanderSwitch.swift */; };
 		A93C8BE22ECA34D700D7CE52 /* AICommanderSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93C8BE02ECA34CB00D7CE52 /* AICommanderSwitch.swift */; };
 		A93C8BE42ECA376900D7CE52 /* OnlyAgent in Frameworks */ = {isa = PBXBuildFile; productRef = A93C8BE32ECA376900D7CE52 /* OnlyAgent */; };
+		A99F5CE9301140740029426A /* onlyswitch.icon in Resources */ = {isa = PBXBuildFile; fileRef = A99F5CE8301140740029426A /* onlyswitch.icon */; };
 		A9A98A412F78834500034ADB /* models.json in Resources */ = {isa = PBXBuildFile; fileRef = A9A98A402F78834500034ADB /* models.json */; };
 		A9C70D062EE490B3000A2367 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A9C70D052EE490B3000A2367 /* GoogleService-Info.plist */; };
 		A9F007CA2EC3D9BD002D9AB0 /* Design in Frameworks */ = {isa = PBXBuildFile; productRef = A9F007C92EC3D9BD002D9AB0 /* Design */; };
 		D35C00012F12000100D35C01 /* DesktopPet in Frameworks */ = {isa = PBXBuildFile; productRef = D35C00022F12000100D35C01 /* DesktopPet */; };
+		F3A300000000000000000020 /* OnlySwitchRemoteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A300000000000000000010 /* OnlySwitchRemoteApp.swift */; };
+		F3A300000000000000000021 /* RemoteAppFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A300000000000000000011 /* RemoteAppFeature.swift */; };
+		F3A300000000000000000022 /* RemoteAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A300000000000000000012 /* RemoteAppView.swift */; };
+		F3A300000000000000000023 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F3A300000000000000000015 /* Assets.xcassets */; };
+		F3A300000000000000000024 /* RemoteAppSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A300000000000000000016 /* RemoteAppSmokeTests.swift */; };
+		F3A300000000000000000025 /* RemoteTestValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A300000000000000000017 /* RemoteTestValues.swift */; };
+		F3A300000000000000000026 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = F3A300000000000000000030 /* ComposableArchitecture */; };
+		F3A300000000000000000027 /* RemoteCore in Frameworks */ = {isa = PBXBuildFile; productRef = F3A300000000000000000031 /* RemoteCore */; };
+		F3A300000000000000000028 /* RemoteTransport in Frameworks */ = {isa = PBXBuildFile; productRef = F3A300000000000000000032 /* RemoteTransport */; };
+		F3A300000000000000000029 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = F3A300000000000000000033 /* ComposableArchitecture */; };
+		F3A30000000000000000002A /* RemoteCore in Frameworks */ = {isa = PBXBuildFile; productRef = F3A300000000000000000034 /* RemoteCore */; };
+		F3A30000000000000000002B /* RemoteTransport in Frameworks */ = {isa = PBXBuildFile; productRef = F3A300000000000000000035 /* RemoteTransport */; };
+		F3A30000000000000000002C /* CasePaths in Frameworks */ = {isa = PBXBuildFile; productRef = F3A300000000000000000037 /* CasePaths */; };
+		F3A30000000000000000002E /* IssueReportingTestSupport in Frameworks */ = {isa = PBXBuildFile; productRef = F3A30000000000000000003A /* IssueReportingTestSupport */; };
+		F3A400000000000000000001 /* RemoteControlAvailability.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A400000000000000000021 /* RemoteControlAvailability.swift */; };
+		F3A400000000000000000002 /* RemoteIconAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A400000000000000000022 /* RemoteIconAdapter.swift */; };
+		F3A400000000000000000003 /* RemoteCatalogProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A400000000000000000023 /* RemoteCatalogProvider.swift */; };
+		F3A400000000000000000004 /* RemoteCatalogProvider+Live.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A400000000000000000024 /* RemoteCatalogProvider+Live.swift */; };
+		F3A400000000000000000005 /* RemoteCommandRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A400000000000000000025 /* RemoteCommandRouter.swift */; };
+		F3A400000000000000000006 /* RemoteCommandRouter+Live.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A400000000000000000026 /* RemoteCommandRouter+Live.swift */; };
+		F3A400000000000000000007 /* RecentRequestCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A400000000000000000027 /* RecentRequestCache.swift */; };
+		F3A400000000000000000008 /* RemoteCatalogProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A400000000000000000028 /* RemoteCatalogProviderTests.swift */; };
+		F3A400000000000000000009 /* RemoteCommandRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A400000000000000000029 /* RemoteCommandRouterTests.swift */; };
+		F3A40000000000000000000A /* RemoteMacTestValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A40000000000000000002A /* RemoteMacTestValues.swift */; };
+		F3A40000000000000000000B /* RemoteCore in Frameworks */ = {isa = PBXBuildFile; productRef = F3A400000000000000000030 /* RemoteCore */; };
+		F3A40000000000000000000C /* RemoteTransport in Frameworks */ = {isa = PBXBuildFile; productRef = F3A400000000000000000031 /* RemoteTransport */; };
+		F3A40000000000000000000D /* RemoteCore in Frameworks */ = {isa = PBXBuildFile; productRef = F3A400000000000000000032 /* RemoteCore */; };
+		F3A40000000000000000000E /* RemoteTransport in Frameworks */ = {isa = PBXBuildFile; productRef = F3A400000000000000000033 /* RemoteTransport */; };
+		F3A500000000000000000001 /* RemoteCredentialStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A500000000000000000021 /* RemoteCredentialStoreTests.swift */; };
+		F3A500000000000000000002 /* RemoteHostIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A500000000000000000022 /* RemoteHostIntegrationTests.swift */; };
+		F3A500000000000000000003 /* RemoteHostTestClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A500000000000000000023 /* RemoteHostTestClient.swift */; };
+		F3A500000000000000000004 /* RemoteCredentialStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A500000000000000000024 /* RemoteCredentialStore.swift */; };
+		F3A500000000000000000005 /* RemoteHostConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A500000000000000000025 /* RemoteHostConfiguration.swift */; };
+		F3A500000000000000000006 /* RemotePeerSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A500000000000000000026 /* RemotePeerSession.swift */; };
+		F3A500000000000000000007 /* RemoteStatusScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A500000000000000000027 /* RemoteStatusScheduler.swift */; };
+		F3A500000000000000000008 /* RemoteHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A500000000000000000028 /* RemoteHost.swift */; };
+		F3A500000000000000000009 /* RemoteHostClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A500000000000000000029 /* RemoteHostClient.swift */; };
+		F3A600000000000000000001 /* RemoteHostLifecycleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A600000000000000000021 /* RemoteHostLifecycleTests.swift */; };
+		F3A600000000000000000002 /* RemoteHostLifecycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A600000000000000000022 /* RemoteHostLifecycle.swift */; };
+		F3A700000000000000000001 /* RemoteAccessSettingsFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A700000000000000000021 /* RemoteAccessSettingsFeatureTests.swift */; };
+		F3A700000000000000000002 /* RemoteAccessSettingsFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A700000000000000000022 /* RemoteAccessSettingsFeature.swift */; };
+		F3A700000000000000000003 /* RemoteAccessSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A700000000000000000023 /* RemoteAccessSettingsView.swift */; };
+		F3A700000000000000000004 /* RemoteAccessController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A700000000000000000024 /* RemoteAccessController.swift */; };
+		F3A800000000000000000001 /* RemotePersistenceClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A800000000000000000021 /* RemotePersistenceClientTests.swift */; };
+		F3A800000000000000000002 /* RemoteConnectionClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A800000000000000000022 /* RemoteConnectionClientTests.swift */; };
+		F3A800000000000000000003 /* PairedMac.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A800000000000000000023 /* PairedMac.swift */; };
+		F3A800000000000000000004 /* MacDashboardLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A800000000000000000024 /* MacDashboardLayout.swift */; };
+		F3A800000000000000000005 /* RemotePersistenceClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A800000000000000000025 /* RemotePersistenceClient.swift */; };
+		F3A800000000000000000006 /* RemoteKeychainClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A800000000000000000026 /* RemoteKeychainClient.swift */; };
+		F3A800000000000000000007 /* RemoteConnectionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A800000000000000000027 /* RemoteConnectionCoordinator.swift */; };
+		F3A800000000000000000008 /* RemoteConnectionEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A800000000000000000028 /* RemoteConnectionEvent.swift */; };
+		F3A800000000000000000009 /* RemoteConnectionClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A800000000000000000029 /* RemoteConnectionClient.swift */; };
+		F3A80000000000000000000A /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = F3A800000000000000000030 /* Dependencies */; };
+		F3A80000000000000000000B /* RemoteConnectionClient+Live.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A80000000000000000002A /* RemoteConnectionClient+Live.swift */; };
+		F3A80000000000000000000C /* DependenciesMacros in Frameworks */ = {isa = PBXBuildFile; productRef = F3A800000000000000000031 /* DependenciesMacros */; };
+		F3A900000000000000000001 /* RemoteAppFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A900000000000000000021 /* RemoteAppFeatureTests.swift */; };
+		F3A900000000000000000002 /* PairingFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A900000000000000000022 /* PairingFeatureTests.swift */; };
+		F3A900000000000000000003 /* PairingFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A900000000000000000023 /* PairingFeature.swift */; };
+		F3A900000000000000000004 /* PairingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A900000000000000000024 /* PairingView.swift */; };
+		F3A900000000000000000005 /* SettingsFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A900000000000000000025 /* SettingsFeature.swift */; };
+		F3A900000000000000000006 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A900000000000000000026 /* SettingsView.swift */; };
+		F3A900000000000000000007 /* IdentifiedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = F3A900000000000000000030 /* IdentifiedCollections */; };
+		F3A900000000000000000008 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = F3A900000000000000000031 /* OrderedCollections */; };
+		F3A900000000000000000009 /* IdentifiedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = F3A900000000000000000030 /* IdentifiedCollections */; };
+		F3A90000000000000000000A /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = F3A900000000000000000031 /* OrderedCollections */; };
+		F3A90000000000000000000B /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = F3A900000000000000000027 /* Localizable.xcstrings */; };
+		F3A90000000000000000000C /* CasePaths in Frameworks */ = {isa = PBXBuildFile; productRef = F3A300000000000000000037 /* CasePaths */; };
+		F3AA00000000000000000001 /* SettingsFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AA00000000000000000021 /* SettingsFeatureTests.swift */; };
+		F3AA00000000000000000002 /* MacManagementFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AA00000000000000000022 /* MacManagementFeatureTests.swift */; };
+		F3AA00000000000000000003 /* MacManagementFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AA00000000000000000023 /* MacManagementFeature.swift */; };
+		F3AA00000000000000000004 /* MacManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AA00000000000000000024 /* MacManagementView.swift */; };
+		F3AA00000000000000000005 /* ControlSelectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AA00000000000000000025 /* ControlSelectionRow.swift */; };
+		F3AD00000000000000000001 /* HowToUseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AD00000000000000000021 /* HowToUseView.swift */; };
+		F3AB00000000000000000001 /* DashboardFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AB00000000000000000021 /* DashboardFeatureTests.swift */; };
+		F3AB00000000000000000002 /* DashboardFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AB00000000000000000022 /* DashboardFeature.swift */; };
+		F3AB00000000000000000003 /* SwiftNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = F3AB00000000000000000031 /* SwiftNavigation */; };
+		F3AB00000000000000000004 /* SwiftNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = F3AB00000000000000000032 /* SwiftNavigation */; };
+		F3AB00000000000000000005 /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = F3AB00000000000000000033 /* Dependencies */; };
+		F3AB00000000000000000006 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AB00000000000000000023 /* DashboardView.swift */; };
+		F3AB00000000000000000007 /* ControlTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AB00000000000000000024 /* ControlTileView.swift */; };
+		F3AB00000000000000000008 /* MacPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AB00000000000000000025 /* MacPickerView.swift */; };
+		F3AB00000000000000000009 /* RemoteEndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AB00000000000000000026 /* RemoteEndToEndTests.swift */; };
+		F3AC00000000000000000001 /* RemoteCatalogMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AC00000000000000000021 /* RemoteCatalogMonitor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -375,6 +459,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 04CB89FB2B703AF3006B8620;
 			remoteInfo = OnlyWidgetExtension;
+		};
+		F3A300000000000000000060 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 04447B502754F08000CD2900 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F3A300000000000000000001;
+			remoteInfo = OnlySwitchRemote;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -664,8 +755,74 @@
 		0DDC000000000000000000A4 /* BrightnessSyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrightnessSyncManager.swift; sourceTree = "<group>"; };
 		A1D0E00A2F0A000100BEEF01 /* AuthenticatorSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorSwitch.swift; sourceTree = "<group>"; };
 		A93C8BE02ECA34CB00D7CE52 /* AICommanderSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AICommanderSwitch.swift; sourceTree = "<group>"; };
+		A99F5CE8301140740029426A /* onlyswitch.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = onlyswitch.icon; sourceTree = "<group>"; };
 		A9A98A402F78834500034ADB /* models.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = models.json; sourceTree = "<group>"; };
 		A9C70D052EE490B3000A2367 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		F3A300000000000000000003 /* OnlySwitchRemote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnlySwitchRemote.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F3A300000000000000000004 /* OnlySwitchRemoteTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnlySwitchRemoteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F3A300000000000000000010 /* OnlySwitchRemoteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlySwitchRemoteApp.swift; sourceTree = "<group>"; };
+		F3A300000000000000000011 /* RemoteAppFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAppFeature.swift; sourceTree = "<group>"; };
+		F3A300000000000000000012 /* RemoteAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAppView.swift; sourceTree = "<group>"; };
+		F3A300000000000000000013 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F3A300000000000000000014 /* OnlySwitchRemote.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OnlySwitchRemote.entitlements; sourceTree = "<group>"; };
+		F3A300000000000000000015 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F3A300000000000000000016 /* RemoteAppSmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAppSmokeTests.swift; sourceTree = "<group>"; };
+		F3A300000000000000000017 /* RemoteTestValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteTestValues.swift; sourceTree = "<group>"; };
+		F3A400000000000000000021 /* RemoteControlAvailability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteControlAvailability.swift; sourceTree = "<group>"; };
+		F3A400000000000000000022 /* RemoteIconAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteIconAdapter.swift; sourceTree = "<group>"; };
+		F3A400000000000000000023 /* RemoteCatalogProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCatalogProvider.swift; sourceTree = "<group>"; };
+		F3A400000000000000000024 /* RemoteCatalogProvider+Live.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RemoteCatalogProvider+Live.swift"; sourceTree = "<group>"; };
+		F3A400000000000000000025 /* RemoteCommandRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommandRouter.swift; sourceTree = "<group>"; };
+		F3A400000000000000000026 /* RemoteCommandRouter+Live.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RemoteCommandRouter+Live.swift"; sourceTree = "<group>"; };
+		F3A400000000000000000027 /* RecentRequestCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentRequestCache.swift; sourceTree = "<group>"; };
+		F3A400000000000000000028 /* RemoteCatalogProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCatalogProviderTests.swift; sourceTree = "<group>"; };
+		F3A400000000000000000029 /* RemoteCommandRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommandRouterTests.swift; sourceTree = "<group>"; };
+		F3A40000000000000000002A /* RemoteMacTestValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteMacTestValues.swift; sourceTree = "<group>"; };
+		F3A500000000000000000021 /* RemoteCredentialStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCredentialStoreTests.swift; sourceTree = "<group>"; };
+		F3A500000000000000000022 /* RemoteHostIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteHostIntegrationTests.swift; sourceTree = "<group>"; };
+		F3A500000000000000000023 /* RemoteHostTestClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteHostTestClient.swift; sourceTree = "<group>"; };
+		F3A500000000000000000024 /* RemoteCredentialStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCredentialStore.swift; sourceTree = "<group>"; };
+		F3A500000000000000000025 /* RemoteHostConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteHostConfiguration.swift; sourceTree = "<group>"; };
+		F3A500000000000000000026 /* RemotePeerSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemotePeerSession.swift; sourceTree = "<group>"; };
+		F3A500000000000000000027 /* RemoteStatusScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteStatusScheduler.swift; sourceTree = "<group>"; };
+		F3A500000000000000000028 /* RemoteHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteHost.swift; sourceTree = "<group>"; };
+		F3A500000000000000000029 /* RemoteHostClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteHostClient.swift; sourceTree = "<group>"; };
+		F3A600000000000000000021 /* RemoteHostLifecycleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteHostLifecycleTests.swift; sourceTree = "<group>"; };
+		F3A600000000000000000022 /* RemoteHostLifecycle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteHostLifecycle.swift; sourceTree = "<group>"; };
+		F3A700000000000000000021 /* RemoteAccessSettingsFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAccessSettingsFeatureTests.swift; sourceTree = "<group>"; };
+		F3A700000000000000000022 /* RemoteAccessSettingsFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAccessSettingsFeature.swift; sourceTree = "<group>"; };
+		F3A700000000000000000023 /* RemoteAccessSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAccessSettingsView.swift; sourceTree = "<group>"; };
+		F3A700000000000000000024 /* RemoteAccessController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAccessController.swift; sourceTree = "<group>"; };
+		F3A800000000000000000021 /* RemotePersistenceClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemotePersistenceClientTests.swift; sourceTree = "<group>"; };
+		F3A800000000000000000022 /* RemoteConnectionClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConnectionClientTests.swift; sourceTree = "<group>"; };
+		F3A800000000000000000023 /* PairedMac.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairedMac.swift; sourceTree = "<group>"; };
+		F3A800000000000000000024 /* MacDashboardLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacDashboardLayout.swift; sourceTree = "<group>"; };
+		F3A800000000000000000025 /* RemotePersistenceClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemotePersistenceClient.swift; sourceTree = "<group>"; };
+		F3A800000000000000000026 /* RemoteKeychainClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteKeychainClient.swift; sourceTree = "<group>"; };
+		F3A800000000000000000027 /* RemoteConnectionCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConnectionCoordinator.swift; sourceTree = "<group>"; };
+		F3A800000000000000000028 /* RemoteConnectionEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConnectionEvent.swift; sourceTree = "<group>"; };
+		F3A800000000000000000029 /* RemoteConnectionClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConnectionClient.swift; sourceTree = "<group>"; };
+		F3A80000000000000000002A /* RemoteConnectionClient+Live.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RemoteConnectionClient+Live.swift"; sourceTree = "<group>"; };
+		F3A900000000000000000021 /* RemoteAppFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAppFeatureTests.swift; sourceTree = "<group>"; };
+		F3A900000000000000000022 /* PairingFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingFeatureTests.swift; sourceTree = "<group>"; };
+		F3A900000000000000000023 /* PairingFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingFeature.swift; sourceTree = "<group>"; };
+		F3A900000000000000000024 /* PairingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingView.swift; sourceTree = "<group>"; };
+		F3A900000000000000000025 /* SettingsFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsFeature.swift; sourceTree = "<group>"; };
+		F3A900000000000000000026 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		F3A900000000000000000027 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		F3AA00000000000000000021 /* SettingsFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsFeatureTests.swift; sourceTree = "<group>"; };
+		F3AA00000000000000000022 /* MacManagementFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacManagementFeatureTests.swift; sourceTree = "<group>"; };
+		F3AA00000000000000000023 /* MacManagementFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacManagementFeature.swift; sourceTree = "<group>"; };
+		F3AA00000000000000000024 /* MacManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacManagementView.swift; sourceTree = "<group>"; };
+		F3AA00000000000000000025 /* ControlSelectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlSelectionRow.swift; sourceTree = "<group>"; };
+		F3AD00000000000000000021 /* HowToUseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToUseView.swift; sourceTree = "<group>"; };
+		F3AB00000000000000000021 /* DashboardFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardFeatureTests.swift; sourceTree = "<group>"; };
+		F3AB00000000000000000022 /* DashboardFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardFeature.swift; sourceTree = "<group>"; };
+		F3AB00000000000000000023 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		F3AB00000000000000000024 /* ControlTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlTileView.swift; sourceTree = "<group>"; };
+		F3AB00000000000000000025 /* MacPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacPickerView.swift; sourceTree = "<group>"; };
+		F3AB00000000000000000026 /* RemoteEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteEndToEndTests.swift; sourceTree = "<group>"; };
+		F3AC00000000000000000021 /* RemoteCatalogMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCatalogMonitor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -673,6 +830,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3A40000000000000000000D /* RemoteCore in Frameworks */,
+				F3A40000000000000000000E /* RemoteTransport in Frameworks */,
 				0444D5E32838611600327D0B /* AVFoundation.framework in Frameworks */,
 				0444D5D22836D87E00327D0B /* Alamofire in Frameworks */,
 				0444D5E42838616900327D0B /* CoreBrightness.framework in Frameworks */,
@@ -683,6 +842,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3A40000000000000000000B /* RemoteCore in Frameworks */,
+				F3A40000000000000000000C /* RemoteTransport in Frameworks */,
 				A9F007CA2EC3D9BD002D9AB0 /* Design in Frameworks */,
 				046955D92C7A732300577915 /* OnlyControl in Frameworks */,
 				D35C00012F12000100D35C01 /* DesktopPet in Frameworks */,
@@ -720,6 +881,38 @@
 				047887342B82AF360064B9F5 /* Switches in Frameworks */,
 				047887522B83ECF00064B9F5 /* Utilities in Frameworks */,
 				04CB89FE2B703AF3006B8620 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F3A300000000000000000041 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F3AB00000000000000000003 /* SwiftNavigation in Frameworks */,
+				F3A300000000000000000026 /* ComposableArchitecture in Frameworks */,
+				F3A300000000000000000027 /* RemoteCore in Frameworks */,
+				F3A300000000000000000028 /* RemoteTransport in Frameworks */,
+				F3A30000000000000000002C /* CasePaths in Frameworks */,
+				F3A80000000000000000000A /* Dependencies in Frameworks */,
+				F3A80000000000000000000C /* DependenciesMacros in Frameworks */,
+				F3A900000000000000000007 /* IdentifiedCollections in Frameworks */,
+				F3A900000000000000000008 /* OrderedCollections in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F3A300000000000000000044 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F3AB00000000000000000004 /* SwiftNavigation in Frameworks */,
+				F3AB00000000000000000005 /* Dependencies in Frameworks */,
+				F3A300000000000000000029 /* ComposableArchitecture in Frameworks */,
+				F3A30000000000000000002A /* RemoteCore in Frameworks */,
+				F3A30000000000000000002B /* RemoteTransport in Frameworks */,
+				F3A30000000000000000002E /* IssueReportingTestSupport in Frameworks */,
+				F3A900000000000000000009 /* IdentifiedCollections in Frameworks */,
+				F3A90000000000000000000A /* OrderedCollections in Frameworks */,
+				F3A90000000000000000000C /* CasePaths in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -787,6 +980,7 @@
 		041D725528353A160083092D /* OnlySwitchTests */ = {
 			isa = PBXGroup;
 			children = (
+				F3A400000000000000000013 /* RemoteAccess */,
 				041D725628353A160083092D /* OnlySwitchTests.swift */,
 				0444D5EA28393FF800327D0B /* Info.plist */,
 			);
@@ -933,6 +1127,7 @@
 		043E5D672757C85500ADC004 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				F3A400000000000000000010 /* RemoteAccess */,
 				04A5AA572C39F8A2001070CA /* OnlyControl */,
 				04BF976C27908E0100E7C0E2 /* OnlySwitchList */,
 				04BF976D27908E2800E7C0E2 /* SwitchItem */,
@@ -1023,6 +1218,8 @@
 				04447B5A2754F08000CD2900 /* OnlySwitch */,
 				041D725528353A160083092D /* OnlySwitchTests */,
 				04CB8A012B703AF4006B8620 /* OnlyWidget */,
+				F3A300000000000000000005 /* OnlySwitchRemote */,
+				F3A300000000000000000007 /* OnlySwitchRemoteTests */,
 				04447B592754F08000CD2900 /* Products */,
 				043E5D6B2757DADB00ADC004 /* Frameworks */,
 			);
@@ -1034,6 +1231,8 @@
 				04447B582754F08000CD2900 /* OnlySwitch.app */,
 				041D725428353A150083092D /* OnlySwitchTests.xctest */,
 				04CB89FC2B703AF3006B8620 /* OnlyWidgetExtension.appex */,
+				F3A300000000000000000003 /* OnlySwitchRemote.app */,
+				F3A300000000000000000004 /* OnlySwitchRemoteTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1646,6 +1845,186 @@
 			path = DDC;
 			sourceTree = "<group>";
 		};
+		F3A300000000000000000005 /* OnlySwitchRemote */ = {
+			isa = PBXGroup;
+			children = (
+				F3A300000000000000000006 /* App */,
+				F3A800000000000000000010 /* Models */,
+				F3A800000000000000000011 /* Dependencies */,
+				F3A900000000000000000010 /* Features */,
+				F3A300000000000000000013 /* Info.plist */,
+				F3A300000000000000000014 /* OnlySwitchRemote.entitlements */,
+				F3A300000000000000000015 /* Assets.xcassets */,
+				A99F5CE8301140740029426A /* onlyswitch.icon */,
+				F3A900000000000000000027 /* Localizable.xcstrings */,
+			);
+			path = OnlySwitchRemote;
+			sourceTree = "<group>";
+		};
+		F3A300000000000000000006 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				F3A300000000000000000010 /* OnlySwitchRemoteApp.swift */,
+				F3A300000000000000000011 /* RemoteAppFeature.swift */,
+				F3A300000000000000000012 /* RemoteAppView.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		F3A300000000000000000007 /* OnlySwitchRemoteTests */ = {
+			isa = PBXGroup;
+			children = (
+				F3A300000000000000000016 /* RemoteAppSmokeTests.swift */,
+				F3A300000000000000000017 /* RemoteTestValues.swift */,
+				F3A800000000000000000021 /* RemotePersistenceClientTests.swift */,
+				F3A800000000000000000022 /* RemoteConnectionClientTests.swift */,
+				F3A900000000000000000021 /* RemoteAppFeatureTests.swift */,
+				F3A900000000000000000022 /* PairingFeatureTests.swift */,
+				F3AA00000000000000000021 /* SettingsFeatureTests.swift */,
+				F3AA00000000000000000022 /* MacManagementFeatureTests.swift */,
+				F3AB00000000000000000021 /* DashboardFeatureTests.swift */,
+				F3AB00000000000000000026 /* RemoteEndToEndTests.swift */,
+			);
+			path = OnlySwitchRemoteTests;
+			sourceTree = "<group>";
+		};
+		F3A400000000000000000010 /* RemoteAccess */ = {
+			isa = PBXGroup;
+			children = (
+				F3A400000000000000000011 /* Catalog */,
+				F3A400000000000000000012 /* Commands */,
+				F3A500000000000000000010 /* Host */,
+				F3A700000000000000000010 /* Settings */,
+			);
+			path = RemoteAccess;
+			sourceTree = "<group>";
+		};
+		F3A400000000000000000011 /* Catalog */ = {
+			isa = PBXGroup;
+			children = (
+				F3A400000000000000000021 /* RemoteControlAvailability.swift */,
+				F3A400000000000000000022 /* RemoteIconAdapter.swift */,
+				F3A400000000000000000023 /* RemoteCatalogProvider.swift */,
+				F3A400000000000000000024 /* RemoteCatalogProvider+Live.swift */,
+			);
+			path = Catalog;
+			sourceTree = "<group>";
+		};
+		F3A400000000000000000012 /* Commands */ = {
+			isa = PBXGroup;
+			children = (
+				F3A400000000000000000025 /* RemoteCommandRouter.swift */,
+				F3A400000000000000000026 /* RemoteCommandRouter+Live.swift */,
+				F3A400000000000000000027 /* RecentRequestCache.swift */,
+			);
+			path = Commands;
+			sourceTree = "<group>";
+		};
+		F3A400000000000000000013 /* RemoteAccess */ = {
+			isa = PBXGroup;
+			children = (
+				F3A400000000000000000028 /* RemoteCatalogProviderTests.swift */,
+				F3A400000000000000000029 /* RemoteCommandRouterTests.swift */,
+				F3A40000000000000000002A /* RemoteMacTestValues.swift */,
+				F3A500000000000000000021 /* RemoteCredentialStoreTests.swift */,
+				F3A500000000000000000022 /* RemoteHostIntegrationTests.swift */,
+				F3A500000000000000000023 /* RemoteHostTestClient.swift */,
+				F3A600000000000000000021 /* RemoteHostLifecycleTests.swift */,
+				F3A700000000000000000021 /* RemoteAccessSettingsFeatureTests.swift */,
+			);
+			path = RemoteAccess;
+			sourceTree = "<group>";
+		};
+		F3A500000000000000000010 /* Host */ = {
+			isa = PBXGroup;
+			children = (
+				F3A500000000000000000024 /* RemoteCredentialStore.swift */,
+				F3A500000000000000000025 /* RemoteHostConfiguration.swift */,
+				F3A500000000000000000026 /* RemotePeerSession.swift */,
+				F3A500000000000000000027 /* RemoteStatusScheduler.swift */,
+				F3A500000000000000000028 /* RemoteHost.swift */,
+				F3A500000000000000000029 /* RemoteHostClient.swift */,
+				F3AC00000000000000000021 /* RemoteCatalogMonitor.swift */,
+				F3A600000000000000000022 /* RemoteHostLifecycle.swift */,
+			);
+			path = Host;
+			sourceTree = "<group>";
+		};
+		F3A700000000000000000010 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				F3A700000000000000000022 /* RemoteAccessSettingsFeature.swift */,
+				F3A700000000000000000023 /* RemoteAccessSettingsView.swift */,
+				F3A700000000000000000024 /* RemoteAccessController.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		F3A800000000000000000010 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F3A800000000000000000023 /* PairedMac.swift */,
+				F3A800000000000000000024 /* MacDashboardLayout.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		F3A800000000000000000011 /* Dependencies */ = {
+			isa = PBXGroup;
+			children = (
+				F3A800000000000000000025 /* RemotePersistenceClient.swift */,
+				F3A800000000000000000026 /* RemoteKeychainClient.swift */,
+				F3A800000000000000000027 /* RemoteConnectionCoordinator.swift */,
+				F3A800000000000000000028 /* RemoteConnectionEvent.swift */,
+				F3A800000000000000000029 /* RemoteConnectionClient.swift */,
+				F3A80000000000000000002A /* RemoteConnectionClient+Live.swift */,
+			);
+			path = Dependencies;
+			sourceTree = "<group>";
+		};
+		F3A900000000000000000010 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				F3A900000000000000000011 /* Pairing */,
+				F3A900000000000000000012 /* Settings */,
+				F3AB00000000000000000010 /* Dashboard */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		F3A900000000000000000011 /* Pairing */ = {
+			isa = PBXGroup;
+			children = (
+				F3A900000000000000000023 /* PairingFeature.swift */,
+				F3A900000000000000000024 /* PairingView.swift */,
+			);
+			path = Pairing;
+			sourceTree = "<group>";
+		};
+		F3A900000000000000000012 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				F3A900000000000000000025 /* SettingsFeature.swift */,
+				F3A900000000000000000026 /* SettingsView.swift */,
+				F3AD00000000000000000021 /* HowToUseView.swift */,
+				F3AA00000000000000000023 /* MacManagementFeature.swift */,
+				F3AA00000000000000000024 /* MacManagementView.swift */,
+				F3AA00000000000000000025 /* ControlSelectionRow.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		F3AB00000000000000000010 /* Dashboard */ = {
+			isa = PBXGroup;
+			children = (
+				F3AB00000000000000000022 /* DashboardFeature.swift */,
+				F3AB00000000000000000023 /* DashboardView.swift */,
+				F3AB00000000000000000024 /* ControlTileView.swift */,
+				F3AB00000000000000000025 /* MacPickerView.swift */,
+			);
+			path = Dashboard;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1665,6 +2044,8 @@
 			name = OnlySwitchTests;
 			packageProductDependencies = (
 				0444D5D12836D87E00327D0B /* Alamofire */,
+				F3A400000000000000000032 /* RemoteCore */,
+				F3A400000000000000000033 /* RemoteTransport */,
 			);
 			productName = OnlySwitchTests;
 			productReference = 041D725428353A150083092D /* OnlySwitchTests.xctest */;
@@ -1689,6 +2070,8 @@
 			);
 			name = OnlySwitch;
 			packageProductDependencies = (
+				F3A400000000000000000030 /* RemoteCore */,
+				F3A400000000000000000031 /* RemoteTransport */,
 				0430887D275D707C00877E51 /* LaunchAtLogin */,
 				04581DB5276506B9008ADF30 /* AlertToast */,
 				04A6B54A27715F90003B2647 /* Alamofire */,
@@ -1736,6 +2119,63 @@
 			productReference = 04CB89FC2B703AF3006B8620 /* OnlyWidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		F3A300000000000000000001 /* OnlySwitchRemote */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F3A300000000000000000054 /* Build configuration list for PBXNativeTarget "OnlySwitchRemote" */;
+			buildPhases = (
+				F3A300000000000000000040 /* Sources */,
+				F3A300000000000000000041 /* Frameworks */,
+				F3A300000000000000000042 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OnlySwitchRemote;
+			packageProductDependencies = (
+				F3A300000000000000000030 /* ComposableArchitecture */,
+				F3A300000000000000000031 /* RemoteCore */,
+				F3A300000000000000000032 /* RemoteTransport */,
+				F3A300000000000000000037 /* CasePaths */,
+				F3A800000000000000000030 /* Dependencies */,
+				F3A800000000000000000031 /* DependenciesMacros */,
+				F3A900000000000000000030 /* IdentifiedCollections */,
+				F3A900000000000000000031 /* OrderedCollections */,
+				F3AB00000000000000000031 /* SwiftNavigation */,
+			);
+			productName = OnlySwitchRemote;
+			productReference = F3A300000000000000000003 /* OnlySwitchRemote.app */;
+			productType = "com.apple.product-type.application";
+		};
+		F3A300000000000000000002 /* OnlySwitchRemoteTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F3A300000000000000000055 /* Build configuration list for PBXNativeTarget "OnlySwitchRemoteTests" */;
+			buildPhases = (
+				F3A300000000000000000043 /* Sources */,
+				F3A300000000000000000044 /* Frameworks */,
+				F3A300000000000000000045 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F3A300000000000000000061 /* PBXTargetDependency */,
+			);
+			name = OnlySwitchRemoteTests;
+			packageProductDependencies = (
+				F3A300000000000000000033 /* ComposableArchitecture */,
+				F3A300000000000000000034 /* RemoteCore */,
+				F3A300000000000000000035 /* RemoteTransport */,
+				F3A30000000000000000003A /* IssueReportingTestSupport */,
+				F3A900000000000000000030 /* IdentifiedCollections */,
+				F3A900000000000000000031 /* OrderedCollections */,
+				F3A300000000000000000037 /* CasePaths */,
+				F3AB00000000000000000033 /* Dependencies */,
+				F3AB00000000000000000032 /* SwiftNavigation */,
+			);
+			productName = OnlySwitchRemoteTests;
+			productReference = F3A300000000000000000004 /* OnlySwitchRemoteTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1755,6 +2195,13 @@
 					};
 					04CB89FB2B703AF3006B8620 = {
 						CreatedOnToolsVersion = 15.2;
+					};
+					F3A300000000000000000001 = {
+						CreatedOnToolsVersion = 26.0;
+					};
+					F3A300000000000000000002 = {
+						CreatedOnToolsVersion = 26.0;
+						TestTargetID = F3A300000000000000000001;
 					};
 				};
 			};
@@ -1795,6 +2242,10 @@
 				047594932B531CB2005FC87C /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
 				04819CE02BDEB63900645A0C /* XCRemoteSwiftPackageReference "swift-custom-dump" */,
 				04DA45702E12F28A0051047B /* XCRemoteSwiftPackageReference "swift-dependencies" */,
+				F3A300000000000000000036 /* XCRemoteSwiftPackageReference "swift-case-paths" */,
+				F3A300000000000000000039 /* XCRemoteSwiftPackageReference "xctest-dynamic-overlay" */,
+				F3A900000000000000000040 /* XCRemoteSwiftPackageReference "swift-identified-collections" */,
+				F3A900000000000000000041 /* XCRemoteSwiftPackageReference "swift-collections" */,
 			);
 			productRefGroup = 04447B592754F08000CD2900 /* Products */;
 			projectDirPath = "";
@@ -1803,6 +2254,8 @@
 				04447B572754F08000CD2900 /* OnlySwitch */,
 				041D725328353A150083092D /* OnlySwitchTests */,
 				04CB89FB2B703AF3006B8620 /* OnlyWidgetExtension */,
+				F3A300000000000000000001 /* OnlySwitchRemote */,
+				F3A300000000000000000002 /* OnlySwitchRemoteTests */,
 			);
 		};
 /* End PBXProject section */
@@ -1847,6 +2300,23 @@
 			files = (
 				04CB8A072B703AF5006B8620 /* Assets.xcassets in Resources */,
 				04E562022E2467E6004E0BD0 /* Localizable.xcstrings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F3A300000000000000000042 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A99F5CE9301140740029426A /* onlyswitch.icon in Resources */,
+				F3A300000000000000000023 /* Assets.xcassets in Resources */,
+				F3A90000000000000000000B /* Localizable.xcstrings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F3A300000000000000000045 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1914,6 +2384,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3A500000000000000000001 /* RemoteCredentialStoreTests.swift in Sources */,
+				F3A500000000000000000002 /* RemoteHostIntegrationTests.swift in Sources */,
+				F3A500000000000000000003 /* RemoteHostTestClient.swift in Sources */,
+				F3A600000000000000000001 /* RemoteHostLifecycleTests.swift in Sources */,
+				F3A700000000000000000001 /* RemoteAccessSettingsFeatureTests.swift in Sources */,
+				F3A400000000000000000008 /* RemoteCatalogProviderTests.swift in Sources */,
+				F3A400000000000000000009 /* RemoteCommandRouterTests.swift in Sources */,
+				F3A40000000000000000000A /* RemoteMacTestValues.swift in Sources */,
 				0447E36A2B71746E00D07B9A /* TrueToneSwitch.swift in Sources */,
 				0444D5D0283683DF00327D0B /* GitHubReleaseModel.swift in Sources */,
 				0447E38E2B71746E00D07B9A /* TopNotchSwitch.swift in Sources */,
@@ -1991,6 +2469,24 @@
 				C2CE44CA134851106759FA13 /* SoundMixerSettingVM.swift in Sources */,
 				732FB599FA7E3F9BEEF45DD9 /* SoundMixerSettingView.swift in Sources */,
 				2B346BE56384C700F4046FC4 /* SystemAudioMixer.swift in Sources */,
+				F3A500000000000000000004 /* RemoteCredentialStore.swift in Sources */,
+				F3A500000000000000000005 /* RemoteHostConfiguration.swift in Sources */,
+				F3A500000000000000000006 /* RemotePeerSession.swift in Sources */,
+				F3A500000000000000000007 /* RemoteStatusScheduler.swift in Sources */,
+				F3A500000000000000000008 /* RemoteHost.swift in Sources */,
+				F3A500000000000000000009 /* RemoteHostClient.swift in Sources */,
+				F3AC00000000000000000001 /* RemoteCatalogMonitor.swift in Sources */,
+				F3A600000000000000000002 /* RemoteHostLifecycle.swift in Sources */,
+				F3A700000000000000000002 /* RemoteAccessSettingsFeature.swift in Sources */,
+				F3A700000000000000000003 /* RemoteAccessSettingsView.swift in Sources */,
+				F3A700000000000000000004 /* RemoteAccessController.swift in Sources */,
+				F3A400000000000000000001 /* RemoteControlAvailability.swift in Sources */,
+				F3A400000000000000000002 /* RemoteIconAdapter.swift in Sources */,
+				F3A400000000000000000003 /* RemoteCatalogProvider.swift in Sources */,
+				F3A400000000000000000004 /* RemoteCatalogProvider+Live.swift in Sources */,
+				F3A400000000000000000005 /* RemoteCommandRouter.swift in Sources */,
+				F3A400000000000000000006 /* RemoteCommandRouter+Live.swift in Sources */,
+				F3A400000000000000000007 /* RecentRequestCache.swift in Sources */,
 				A1D0E1092F0A000100BEEF01 /* AuthenticatorSwitch.swift in Sources */,
 				0447E35F2B71746E00D07B9A /* AppleMusicSwitch.swift in Sources */,
 				04B25453283BEF3800D253E2 /* SupportedLanguage.swift in Sources */,
@@ -2228,6 +2724,53 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F3A300000000000000000040 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F3A300000000000000000020 /* OnlySwitchRemoteApp.swift in Sources */,
+				F3A300000000000000000021 /* RemoteAppFeature.swift in Sources */,
+				F3A300000000000000000022 /* RemoteAppView.swift in Sources */,
+				F3A800000000000000000003 /* PairedMac.swift in Sources */,
+				F3A800000000000000000004 /* MacDashboardLayout.swift in Sources */,
+				F3A800000000000000000005 /* RemotePersistenceClient.swift in Sources */,
+				F3A800000000000000000006 /* RemoteKeychainClient.swift in Sources */,
+				F3A800000000000000000007 /* RemoteConnectionCoordinator.swift in Sources */,
+				F3A800000000000000000008 /* RemoteConnectionEvent.swift in Sources */,
+				F3A800000000000000000009 /* RemoteConnectionClient.swift in Sources */,
+				F3A80000000000000000000B /* RemoteConnectionClient+Live.swift in Sources */,
+				F3A900000000000000000003 /* PairingFeature.swift in Sources */,
+				F3A900000000000000000004 /* PairingView.swift in Sources */,
+				F3A900000000000000000005 /* SettingsFeature.swift in Sources */,
+				F3A900000000000000000006 /* SettingsView.swift in Sources */,
+				F3AD00000000000000000001 /* HowToUseView.swift in Sources */,
+				F3AA00000000000000000003 /* MacManagementFeature.swift in Sources */,
+				F3AA00000000000000000004 /* MacManagementView.swift in Sources */,
+				F3AA00000000000000000005 /* ControlSelectionRow.swift in Sources */,
+				F3AB00000000000000000002 /* DashboardFeature.swift in Sources */,
+				F3AB00000000000000000006 /* DashboardView.swift in Sources */,
+				F3AB00000000000000000007 /* ControlTileView.swift in Sources */,
+				F3AB00000000000000000008 /* MacPickerView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F3A300000000000000000043 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F3A300000000000000000024 /* RemoteAppSmokeTests.swift in Sources */,
+				F3A300000000000000000025 /* RemoteTestValues.swift in Sources */,
+				F3A800000000000000000001 /* RemotePersistenceClientTests.swift in Sources */,
+				F3A800000000000000000002 /* RemoteConnectionClientTests.swift in Sources */,
+				F3A900000000000000000001 /* RemoteAppFeatureTests.swift in Sources */,
+				F3A900000000000000000002 /* PairingFeatureTests.swift in Sources */,
+				F3AA00000000000000000001 /* SettingsFeatureTests.swift in Sources */,
+				F3AA00000000000000000002 /* MacManagementFeatureTests.swift in Sources */,
+				F3AB00000000000000000001 /* DashboardFeatureTests.swift in Sources */,
+				F3AB00000000000000000009 /* RemoteEndToEndTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -2241,6 +2784,11 @@
 			target = 04CB89FB2B703AF3006B8620 /* OnlyWidgetExtension */;
 			targetProxy = 04CB8A0A2B703AF5006B8620 /* PBXContainerItemProxy */;
 		};
+		F3A300000000000000000061 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F3A300000000000000000001 /* OnlySwitchRemote */;
+			targetProxy = F3A300000000000000000060 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
@@ -2249,7 +2797,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 259;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2275,7 +2823,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 259;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2428,7 +2976,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 259;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
@@ -2454,7 +3002,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.7.1;
+				MARKETING_VERSION = 2.7.2;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2483,7 +3031,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 259;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
@@ -2509,7 +3057,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.7.1;
+				MARKETING_VERSION = 2.7.2;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2538,7 +3086,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 259;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2555,7 +3103,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.7.1;
+				MARKETING_VERSION = 2.7.2;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = OnlySwitchWidgets;
@@ -2578,7 +3126,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 259;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2595,7 +3143,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.7.1;
+				MARKETING_VERSION = 2.7.2;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = OnlySwitchWidgets;
@@ -2603,6 +3151,124 @@
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		F3A300000000000000000050 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = onlyswitch;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = OnlySwitchRemote/OnlySwitchRemote.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = B22726TNGH;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = OnlySwitchRemote/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = OnlyRemote;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitchRemote;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F3A300000000000000000051 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = onlyswitch;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = OnlySwitchRemote/OnlySwitchRemote.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = B22726TNGH;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = OnlySwitchRemote/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = OnlyRemote;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitchRemote;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		F3A300000000000000000052 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitchRemoteTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OnlySwitchRemote.app/OnlySwitchRemote";
+			};
+			name = Debug;
+		};
+		F3A300000000000000000053 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitchRemoteTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OnlySwitchRemote.app/OnlySwitchRemote";
 			};
 			name = Release;
 		};
@@ -2641,6 +3307,24 @@
 			buildConfigurations = (
 				04CB8A0D2B703AF6006B8620 /* Debug */,
 				04CB8A0E2B703AF6006B8620 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F3A300000000000000000054 /* Build configuration list for PBXNativeTarget "OnlySwitchRemote" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F3A300000000000000000050 /* Debug */,
+				F3A300000000000000000051 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F3A300000000000000000055 /* Build configuration list for PBXNativeTarget "OnlySwitchRemoteTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F3A300000000000000000052 /* Debug */,
+				F3A300000000000000000053 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2728,6 +3412,38 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.9.2;
+			};
+		};
+		F3A300000000000000000036 /* XCRemoteSwiftPackageReference "swift-case-paths" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-case-paths";
+			requirement = {
+				kind = exactVersion;
+				version = 1.7.0;
+			};
+		};
+		F3A300000000000000000039 /* XCRemoteSwiftPackageReference "xctest-dynamic-overlay" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/xctest-dynamic-overlay";
+			requirement = {
+				kind = exactVersion;
+				version = 1.5.2;
+			};
+		};
+		F3A900000000000000000040 /* XCRemoteSwiftPackageReference "swift-identified-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-identified-collections";
+			requirement = {
+				kind = exactVersion;
+				version = 1.1.0;
+			};
+		};
+		F3A900000000000000000041 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-collections";
+			requirement = {
+				kind = exactVersion;
+				version = 1.1.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -2839,6 +3555,91 @@
 		D35C00022F12000100D35C01 /* DesktopPet */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DesktopPet;
+		};
+		F3A300000000000000000030 /* ComposableArchitecture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 047C1E4D2A22523B0061235D /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = ComposableArchitecture;
+		};
+		F3A300000000000000000031 /* RemoteCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RemoteCore;
+		};
+		F3A300000000000000000032 /* RemoteTransport */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RemoteTransport;
+		};
+		F3A300000000000000000033 /* ComposableArchitecture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 047C1E4D2A22523B0061235D /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = ComposableArchitecture;
+		};
+		F3A300000000000000000034 /* RemoteCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RemoteCore;
+		};
+		F3A300000000000000000035 /* RemoteTransport */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RemoteTransport;
+		};
+		F3A300000000000000000037 /* CasePaths */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F3A300000000000000000036 /* XCRemoteSwiftPackageReference "swift-case-paths" */;
+			productName = CasePaths;
+		};
+		F3A30000000000000000003A /* IssueReportingTestSupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F3A300000000000000000039 /* XCRemoteSwiftPackageReference "xctest-dynamic-overlay" */;
+			productName = IssueReportingTestSupport;
+		};
+		F3A400000000000000000030 /* RemoteCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RemoteCore;
+		};
+		F3A400000000000000000031 /* RemoteTransport */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RemoteTransport;
+		};
+		F3A400000000000000000032 /* RemoteCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RemoteCore;
+		};
+		F3A400000000000000000033 /* RemoteTransport */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RemoteTransport;
+		};
+		F3A800000000000000000030 /* Dependencies */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04DA45702E12F28A0051047B /* XCRemoteSwiftPackageReference "swift-dependencies" */;
+			productName = Dependencies;
+		};
+		F3A800000000000000000031 /* DependenciesMacros */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04DA45702E12F28A0051047B /* XCRemoteSwiftPackageReference "swift-dependencies" */;
+			productName = DependenciesMacros;
+		};
+		F3A900000000000000000030 /* IdentifiedCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F3A900000000000000000040 /* XCRemoteSwiftPackageReference "swift-identified-collections" */;
+			productName = IdentifiedCollections;
+		};
+		F3A900000000000000000031 /* OrderedCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F3A900000000000000000041 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = OrderedCollections;
+		};
+		F3AB00000000000000000031 /* SwiftNavigation */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SwiftNavigation;
+		};
+		F3AB00000000000000000032 /* SwiftNavigation */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SwiftNavigation;
+		};
+		F3AB00000000000000000033 /* Dependencies */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04DA45702E12F28A0051047B /* XCRemoteSwiftPackageReference "swift-dependencies" */;
+			productName = Dependencies;
 		};
 /* End XCSwiftPackageProductDependency section */
 

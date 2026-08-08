@@ -26,6 +26,7 @@ enum SettingsItem: String, CaseIterable {
     case DimScreen = "Dim Screen"
     case NightShift = "Night Shift"
     case KeyLight = "Key Light"
+    case iOSRemote = "iOS Remote"
     case About = "About"
 }
 
@@ -52,6 +53,14 @@ class SettingsVM: ObservableObject {
                 ._printChanges()
         }
 
+    var remoteAccessStore = Store(
+        initialState: RemoteAccessSettingsFeature.State(
+            preferences: RemoteAccessPreferencesClient.liveValue.load()
+        )
+    ) {
+        RemoteAccessSettingsFeature()
+    }
+
     init() {
         settingItems = SettingsItem.allCases
         if #available(macOS 26.0, *) {} else {
@@ -67,4 +76,3 @@ class SettingsVM: ObservableObject {
         }
     }
 }
-

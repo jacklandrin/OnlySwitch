@@ -1,0 +1,617 @@
+import Foundation
+import Network
+import RemoteCore
+import RemoteTransport
+
+actor RemoteHost {
+    @MainActor static let shared = RemoteHost(
+        credentialStore: .live(),
+        catalogProvider: .live,
+        router: .live
+    )
+
+    private let credentialStore: RemoteCredentialStore
+    private let catalogProvider: RemoteCatalogProvider
+    private let router: RemoteCommandRouter
+    private let fixedPairingCode: String?
+    private let peerDeadlines: RemotePeerDeadlines
+    private let listenerFactory: @Sendable (NWEndpoint.Port) throws -> NWListener
+    private let installationIDProvider: @Sendable () async throws -> UUID
+    private let revocationPrepared: @Sendable () async -> Void
+    private let authenticationResultSender: RemotePeerSession.AuthenticationResultSender
+    private let commitStageReached: @Sendable (RemotePairingCommitStage) async -> Void
+    private let authenticatedSessionObserver: @Sendable () -> Void
+    private var eventContinuations: [
+        UUID: AsyncStream<RemoteHostEvent>.Continuation
+    ] = [:]
+    private var currentStatus: HostStatus = .stopped
+    private var listener: NWListener?
+    private var configuration: RemoteHostConfiguration?
+    private var pairing: PairingWindow?
+    private var pairingFailures = 0
+    private var sessions: [UUID: RemotePeerSession] = [:]
+    private var lifecycle = RemoteHostLifecycle()
+    private let statusScheduler: RemoteStatusScheduler
+    private let catalogMonitor: RemoteCatalogMonitor
+    private var catalogMonitorTask: Task<Void, Never>?
+
+    private init(
+        credentialStore: RemoteCredentialStore,
+        catalogProvider: RemoteCatalogProvider,
+        router: RemoteCommandRouter,
+        fixedPairingCode: String? = nil,
+        peerDeadlines: RemotePeerDeadlines = .init(),
+        listenerFactory: @escaping @Sendable (NWEndpoint.Port) throws -> NWListener = {
+            try NWListener(using: .tcp, on: $0)
+        },
+        installationIDProvider: (@Sendable () async throws -> UUID)? = nil,
+        revocationPrepared: @escaping @Sendable () async -> Void = {},
+        authenticationResultSender: @escaping RemotePeerSession.AuthenticationResultSender = { operation in
+            try await operation()
+        },
+        commitStageReached: @escaping @Sendable (RemotePairingCommitStage) async -> Void = { _ in },
+        authenticatedSessionObserver: @escaping @Sendable () -> Void = {}
+    ) {
+        self.credentialStore = credentialStore
+        self.catalogProvider = catalogProvider
+        self.router = router
+        self.fixedPairingCode = fixedPairingCode
+        self.peerDeadlines = peerDeadlines
+        self.listenerFactory = listenerFactory
+        self.installationIDProvider = installationIDProvider ?? {
+            try await credentialStore.installationID()
+        }
+        self.revocationPrepared = revocationPrepared
+        self.authenticationResultSender = authenticationResultSender
+        self.commitStageReached = commitStageReached
+        self.authenticatedSessionObserver = authenticatedSessionObserver
+        self.statusScheduler = RemoteStatusScheduler(provider: catalogProvider)
+        self.catalogMonitor = RemoteCatalogMonitor(provider: catalogProvider)
+    }
+
+    deinit {
+        for continuation in eventContinuations.values {
+            continuation.finish()
+        }
+    }
+
+    static func testing(
+        catalog: [RemoteControlDescriptor],
+        catalogProvider injectedCatalogProvider: RemoteCatalogProvider? = nil,
+        router: RemoteCommandRouter,
+        pairingCode: String,
+        peerDeadlines: RemotePeerDeadlines = .init(),
+        listenerFactory: @escaping @Sendable (NWEndpoint.Port) throws -> NWListener = {
+            try NWListener(using: .tcp, on: $0)
+        },
+        installationIDProvider: (@Sendable () async throws -> UUID)? = nil,
+        revocationPrepared: @escaping @Sendable () async -> Void = {},
+        authenticationResultSender: @escaping RemotePeerSession.AuthenticationResultSender = { operation in
+            try await operation()
+        },
+        commitStageReached: @escaping @Sendable (RemotePairingCommitStage) async -> Void = { _ in },
+        authenticatedSessionObserver: @escaping @Sendable () -> Void = {},
+        finalizeRepairObserver: @escaping @Sendable (UUID) -> Void = { _ in }
+    ) -> RemoteHost {
+        let fixedProvider = RemoteCatalogProvider(
+            catalog: { catalog },
+            status: { id, revision in
+                guard let descriptor = catalog.first(where: { $0.id == id }) else {
+                    throw RemoteProtocolError(code: .controlNotFound, message: "Control not found")
+                }
+                return RemoteControlStatus(
+                    id: id,
+                    isAvailable: descriptor.isAvailable,
+                    unavailableReason: descriptor.unavailableReason,
+                    isOn: nil,
+                    secondaryInformation: nil,
+                    isProcessing: false,
+                    revision: revision,
+                    updatedAt: .now
+                )
+            }
+        )
+        let provider = injectedCatalogProvider ?? fixedProvider
+        return RemoteHost(
+            credentialStore: .inMemory(finalizeRepairObserver: finalizeRepairObserver),
+            catalogProvider: provider,
+            router: router,
+            fixedPairingCode: pairingCode,
+            peerDeadlines: peerDeadlines,
+            listenerFactory: listenerFactory,
+            installationIDProvider: installationIDProvider,
+            revocationPrepared: revocationPrepared,
+            authenticationResultSender: authenticationResultSender,
+            commitStageReached: commitStageReached,
+            authenticatedSessionObserver: authenticatedSessionObserver
+        )
+    }
+
+    func start(configuration: RemoteHostConfiguration) async throws {
+        _ = try await startListener(configuration: configuration, advertise: true)
+    }
+
+    func startForTesting(port: UInt16) async throws -> NWEndpoint {
+        let configuration = RemoteHostConfiguration(displayName: "OnlySwitch Test", port: port)
+        let endpoint = try await startListener(configuration: configuration, advertise: false)
+        pairing = PairingWindow(code: fixedPairingCode ?? PairingCode.generate(), expiresAt: Date().addingTimeInterval(300))
+        pairingFailures = 0
+        publish(.pairingChanged(pairing))
+        return endpoint
+    }
+
+    func events() -> AsyncStream<RemoteHostEvent> {
+        let id = UUID()
+        let (stream, continuation) = AsyncStream.makeStream(
+            of: RemoteHostEvent.self,
+            bufferingPolicy: .bufferingNewest(64)
+        )
+        continuation.onTermination = { [weak self] _ in
+            Task { await self?.removeEventContinuation(id: id) }
+        }
+        eventContinuations[id] = continuation
+        continuation.yield(.statusChanged(currentStatus))
+        return stream
+    }
+
+    func stop() async {
+        let sessionIDs = lifecycle.stop()
+        listener?.cancel()
+        listener = nil
+        if pairing != nil { cancelPairing() }
+        let peers = sessionIDs.compactMap { sessions[$0] }
+        sessions.removeAll()
+        configuration = nil
+        publish(.connectionCountChanged(0))
+        publish(.statusChanged(.stopped))
+        for peer in peers { await peer.close() }
+        await statusScheduler.stop()
+        let activeCatalogMonitorTask = catalogMonitorTask
+        activeCatalogMonitorTask?.cancel()
+        catalogMonitorTask = nil
+        await activeCatalogMonitorTask?.value
+        await catalogMonitor.stop()
+    }
+
+    func startPairing(expiresAt: Date = Date().addingTimeInterval(300)) -> PairingWindow {
+        let window = PairingWindow(
+            code: fixedPairingCode ?? PairingCode.generate(),
+            expiresAt: expiresAt
+        )
+        pairing = window
+        pairingFailures = 0
+        publish(.pairingChanged(window))
+        return window
+    }
+
+    func cancelPairing() {
+        pairing = nil
+        pairingFailures = 0
+        publish(.pairingChanged(nil))
+    }
+
+    func revoke(deviceID: UUID) async throws {
+        let credential = try await credentialStore.prepareAndDeleteForRevocation(deviceID)
+        if credential != nil {
+            await revocationPrepared()
+        }
+        let affected = lifecycle.revoke(deviceID: deviceID)
+        let peers = Dictionary(uniqueKeysWithValues: affected.compactMap { id in
+            sessions.removeValue(forKey: id).map { (id, $0) }
+        })
+        publish(.connectionCountChanged(lifecycle.authenticatedCount))
+        await catalogMonitor.setAuthenticatedSessionCount(lifecycle.authenticatedCount)
+        let scheduler = statusScheduler
+        let store = credentialStore
+        try await Self.performRevocationCleanup(
+            sessionIDs: affected,
+            removeSubscription: { id in await scheduler.remove(sessionID: id) },
+            closePeer: { id in await peers[id]?.revoke() },
+            deleteCredential: {
+                if let credential { try await store.delete(deviceID, matchingCredential: credential) }
+            }
+        )
+        publish(.devicesChanged(try await credentialStore.loadAll()))
+    }
+
+    static func performRevocationCleanup(
+        sessionIDs: [UUID],
+        removeSubscription: @escaping @Sendable (UUID) async -> Void,
+        closePeer: @escaping @Sendable (UUID) async -> Void,
+        deleteCredential: @escaping @Sendable () async throws -> Void
+    ) async throws {
+        for id in sessionIDs { await removeSubscription(id) }
+        for id in sessionIDs { await closePeer(id) }
+        try await deleteCredential()
+    }
+
+    func pairedDevices() async throws -> [PairedRemoteDevice] {
+        try await credentialStore.loadAll()
+    }
+
+    func pairingTransactionStateForTesting(_ transactionID: UUID) async throws -> PairingTransactionState {
+        try await credentialStore.transactionStatus(transactionID)
+    }
+
+    func revokePreservingCredentialForTesting(deviceID: UUID) async throws {
+        guard try await credentialStore.prepareRevocation(deviceID) != nil else { return }
+        let affected = lifecycle.revoke(deviceID: deviceID)
+        let peers = affected.compactMap { sessions.removeValue(forKey: $0) }
+        for peer in peers { await peer.close() }
+    }
+
+    func revocationVerifierForTesting(deviceID: UUID) async throws -> Data? {
+        try await credentialStore.loadRevocationVerifier(deviceID)
+    }
+
+    func isRevokedForTesting(deviceID: UUID) -> Bool {
+        lifecycle.isRevoked(deviceID)
+    }
+
+    func deleteCredentialForTesting(deviceID: UUID, matching credential: Data) async throws {
+        try await credentialStore.delete(deviceID, matchingCredential: credential)
+    }
+
+    @discardableResult
+    func refreshCatalogForTesting() async throws -> RemoteCatalogSnapshot? {
+        try await catalogMonitor.refresh()
+    }
+
+    func closeSessionsForTesting() async {
+        let peers = Array(sessions.values)
+        for peer in peers { await peer.close() }
+    }
+
+    func authenticatedSessionCountForTesting() -> Int {
+        lifecycle.authenticatedCount
+    }
+
+    private func startListener(
+        configuration: RemoteHostConfiguration,
+        advertise: Bool
+    ) async throws -> NWEndpoint {
+        if listener != nil { await stop() }
+        try await credentialStore.recoverExpiredTransactions()
+        startCatalogObservationIfNeeded()
+        let generation = lifecycle.beginStart()
+        publish(.statusChanged(.starting))
+        do {
+            let port = configuration.port == 0 ? NWEndpoint.Port.any : NWEndpoint.Port(rawValue: configuration.port)!
+            let listener = try listenerFactory(port)
+            self.listener = listener
+            self.configuration = configuration
+            let macID = try await installationIDProvider()
+            if advertise {
+                let txt = NWTXTRecord([
+                    "id": macID.uuidString,
+                    "version": String(RemoteProtocolVersion.current.major),
+                    "minor": String(RemoteProtocolVersion.current.minor)
+                ])
+                listener.service = NWListener.Service(
+                    name: configuration.displayName,
+                    type: configuration.serviceType,
+                    txtRecord: txt
+                )
+            }
+            listener.newConnectionHandler = { [weak self] connection in
+                Task {
+                    await self?.accept(
+                        connection,
+                        macID: macID,
+                        name: configuration.displayName,
+                        generation: generation
+                    )
+                }
+            }
+            try await withTaskCancellationHandler {
+                try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+                    let gate = HostContinuationGate(continuation)
+                    listener.stateUpdateHandler = { state in
+                        switch state {
+                        case .ready: gate.resume(returning: ())
+                        case let .failed(error):
+                            gate.resume(throwing: error)
+                            Task { await self.listenerFailed(generation: generation) }
+                        case .cancelled: gate.resume(throwing: CancellationError())
+                        default: break
+                        }
+                    }
+                    listener.start(queue: .global(qos: .userInitiated))
+                }
+            } onCancel: {
+                listener.cancel()
+            }
+            guard self.listener === listener, lifecycle.markListening(generation: generation) else {
+                listener.cancel()
+                if self.listener === listener {
+                    self.listener = nil
+                    self.configuration = nil
+                }
+                throw CancellationError()
+            }
+            guard let boundPort = listener.port else {
+                throw RemoteProtocolError(code: .invalidFrame, message: "Listener did not bind")
+            }
+            publish(.statusChanged(.listening(port: boundPort.rawValue)))
+            return .hostPort(host: .ipv4(.loopback), port: boundPort)
+        } catch {
+            await listenerFailed(generation: generation)
+            throw error
+        }
+    }
+
+    private func publish(_ event: RemoteHostEvent) {
+        if case let .statusChanged(status) = event {
+            currentStatus = status
+        }
+        for continuation in eventContinuations.values {
+            continuation.yield(event)
+        }
+    }
+
+    private func removeEventContinuation(id: UUID) {
+        eventContinuations[id] = nil
+    }
+
+    private func accept(_ connection: NWConnection, macID: UUID, name: String, generation: UInt64) {
+        let sessionID = UUID()
+        guard lifecycle.acceptPending(sessionID: sessionID, generation: generation) else {
+            connection.cancel()
+            return
+        }
+        let peer = RemotePeerSession(
+            id: sessionID,
+            connection: connection,
+            macID: macID,
+            macName: name,
+            credentialStore: credentialStore,
+            catalogSnapshot: { [catalogMonitor] in try await catalogMonitor.current() },
+            router: router,
+            pairingWindow: { [weak self] in await self?.activePairingWindow() },
+            pairingFailed: { [weak self] in await self?.recordPairingFailure() },
+            consumePairing: { [weak self] code in await self?.consumePairing(code: code) ?? false },
+            pairingEpoch: { [weak self] deviceID in
+                await self?.lifecycle.pairingEpoch(for: deviceID) ?? 0
+            },
+            pairingSnapshot: { [weak self] deviceID in
+                await self?.pairingSnapshot(deviceID: deviceID, generation: generation)
+            },
+            validatePairing: { [weak self] snapshot in
+                await self?.validatePairing(snapshot) ?? false
+            },
+            commitPairing: { [weak self] snapshot in
+                guard let self else { return false }
+                return await self.commitPairing(snapshot)
+            },
+            rollbackPairing: { [weak self] snapshot in
+                guard let self else { return false }
+                return await self.rollbackPairing(snapshot)
+            },
+            subscriptionsChanged: { [weak self] id, ids, sink in
+                guard let self else { throw CancellationError() }
+                try await self.statusScheduler.update(
+                    sessionID: id,
+                    ids: ids,
+                    sink: sink,
+                    onFailure: { [weak self] in await self?.evictSession(id) }
+                )
+            },
+            refreshRequested: { [weak self] id in
+                await self?.statusScheduler.refresh(id)
+            },
+            authenticated: { [weak self] sessionID, deviceID in
+                await self?.sessionAuthenticated(
+                    sessionID,
+                    deviceID: deviceID,
+                    generation: generation
+                ) ?? false
+            },
+            authenticationAuthorized: { [weak self] sessionID, deviceID in
+                await self?.sessionAuthenticationIsAuthorized(
+                    sessionID,
+                    deviceID: deviceID,
+                    generation: generation
+                ) ?? false
+            },
+            authenticationConfirmed: { [weak self] sessionID, deviceID in
+                await self?.sessionAuthenticationConfirmed(
+                    sessionID,
+                    deviceID: deviceID,
+                    generation: generation
+                ) ?? false
+            },
+            authenticationResultSender: authenticationResultSender,
+            commitStageReached: commitStageReached,
+            ended: { [weak self] id in await self?.sessionEnded(id) },
+            deadlines: peerDeadlines
+        )
+        sessions[sessionID] = peer
+        Task { await peer.run() }
+    }
+
+    func activePairingWindow() -> PairingWindow? {
+        guard let pairing, pairing.expiresAt > Date(), pairingFailures < 5 else {
+            if self.pairing != nil {
+                self.pairing = nil
+                publish(.pairingChanged(nil))
+            }
+            return nil
+        }
+        return pairing
+    }
+
+    private func pairingSnapshot(
+        deviceID: UUID,
+        generation: UInt64
+    ) -> RemotePairingSnapshot? {
+        lifecycle.pairingSnapshot(for: deviceID, generation: generation)
+    }
+
+    private func validatePairing(_ snapshot: RemotePairingSnapshot) -> Bool {
+        lifecycle.validateRepair(snapshot)
+    }
+
+    private func commitPairing(_ snapshot: RemotePairingSnapshot) async -> Bool {
+        await commitStageReached(.duringLifecycleCommit)
+        let committed = lifecycle.commitRepair(snapshot)
+        await commitStageReached(.afterLifecycleCommit)
+        return committed
+    }
+
+    private func rollbackPairing(_ snapshot: RemotePairingSnapshot) -> Bool {
+        lifecycle.rollbackRepair(snapshot)
+    }
+
+    func recordPairingFailure() {
+        pairingFailures += 1
+        if pairingFailures >= 5 { cancelPairing() }
+    }
+
+    func consumePairing(code: String) -> Bool {
+        guard let current = activePairingWindow(), current.code == code else { return false }
+        cancelPairing()
+        return true
+    }
+
+    private func sessionAuthenticated(_ sessionID: UUID, deviceID: UUID, generation: UInt64) async -> Bool {
+        authenticatedSessionObserver()
+        guard lifecycle.mayAuthorize(
+            sessionID: sessionID,
+            deviceID: deviceID,
+            generation: generation
+        ) else { return false }
+        let credentialExists = (try? await credentialStore.load(deviceID)) != nil
+        guard lifecycle.authorize(
+            sessionID: sessionID,
+            deviceID: deviceID,
+            generation: generation,
+            credentialExists: credentialExists
+        ) else { return false }
+        return true
+    }
+
+    private func sessionAuthenticationConfirmed(
+        _ sessionID: UUID,
+        deviceID: UUID,
+        generation: UInt64
+    ) async -> Bool {
+        guard lifecycle.isAuthorized(
+            sessionID: sessionID,
+            deviceID: deviceID,
+            generation: generation
+        ) else { return false }
+        publish(.connectionCountChanged(lifecycle.authenticatedCount))
+        await catalogMonitor.setAuthenticatedSessionCount(lifecycle.authenticatedCount)
+        if let devices = try? await credentialStore.loadAll() {
+            guard lifecycle.isAuthorized(
+                sessionID: sessionID,
+                deviceID: deviceID,
+                generation: generation
+            ) else { return false }
+            publish(.devicesChanged(devices))
+        }
+        return lifecycle.isAuthorized(
+            sessionID: sessionID,
+            deviceID: deviceID,
+            generation: generation
+        )
+    }
+
+    private func sessionAuthenticationIsAuthorized(
+        _ sessionID: UUID,
+        deviceID: UUID,
+        generation: UInt64
+    ) -> Bool {
+        lifecycle.isAuthorized(
+            sessionID: sessionID,
+            deviceID: deviceID,
+            generation: generation
+        )
+    }
+
+    private func sessionEnded(_ id: UUID) async {
+        let previousCount = lifecycle.authenticatedCount
+        _ = lifecycle.end(sessionID: id)
+        sessions.removeValue(forKey: id)
+        await statusScheduler.remove(sessionID: id)
+        if lifecycle.authenticatedCount != previousCount {
+            await catalogMonitor.setAuthenticatedSessionCount(lifecycle.authenticatedCount)
+            publish(.connectionCountChanged(lifecycle.authenticatedCount))
+        }
+    }
+
+    private func evictSession(_ id: UUID) async {
+        let previousCount = lifecycle.authenticatedCount
+        _ = lifecycle.end(sessionID: id)
+        let peer = sessions.removeValue(forKey: id)
+        await statusScheduler.remove(sessionID: id)
+        await peer?.close()
+        if lifecycle.authenticatedCount != previousCount {
+            await catalogMonitor.setAuthenticatedSessionCount(lifecycle.authenticatedCount)
+            publish(.connectionCountChanged(lifecycle.authenticatedCount))
+        }
+    }
+
+    private func listenerFailed(generation: UInt64) async {
+        guard lifecycle.isActive(generation: generation) else { return }
+        let sessionIDs = lifecycle.fail(generation: generation)
+        let peers = sessionIDs.compactMap { sessions.removeValue(forKey: $0) }
+        listener?.cancel()
+        listener = nil
+        configuration = nil
+        if pairing != nil { cancelPairing() }
+        publish(.connectionCountChanged(0))
+        publish(.statusChanged(.failed("Remote access could not start")))
+        for peer in peers { await peer.close() }
+        await statusScheduler.stop()
+        await catalogMonitor.setAuthenticatedSessionCount(0)
+    }
+
+    private func startCatalogObservationIfNeeded() {
+        guard catalogMonitorTask == nil else { return }
+        let changes = catalogMonitor.changes
+        catalogMonitorTask = Task { [weak self] in
+            for await snapshot in changes {
+                guard Task.isCancelled == false else { return }
+                await self?.broadcastCatalogChange(snapshot.revision)
+            }
+        }
+    }
+
+    private func broadcastCatalogChange(_ revision: UInt64) async {
+        for (id, peer) in Array(sessions) {
+            do {
+                try await peer.catalogDidChange(revision: revision)
+            } catch {
+                await evictSession(id)
+            }
+        }
+    }
+
+    var hasOwnedListener: Bool { listener != nil }
+
+}
+
+private final class HostContinuationGate: @unchecked Sendable {
+    private let lock = NSLock()
+    private var continuation: CheckedContinuation<Void, Swift.Error>?
+
+    init(_ continuation: CheckedContinuation<Void, Swift.Error>) {
+        self.continuation = continuation
+    }
+
+    func resume(returning value: Void) {
+        take()?.resume(returning: value)
+    }
+
+    func resume(throwing error: Swift.Error) {
+        take()?.resume(throwing: error)
+    }
+
+    private func take() -> CheckedContinuation<Void, Swift.Error>? {
+        lock.lock()
+        defer { lock.unlock() }
+        defer { continuation = nil }
+        return continuation
+    }
+}

@@ -1,0 +1,39 @@
+{
+  "name": "app-store-review",
+  "version": "1.1.0",
+  "description": "Evaluates code against Apple's App Store Review Guidelines for iOS, macOS, tvOS, watchOS, and visionOS apps.",
+  "author": {
+    "name": "safaiyeh",
+    "url": "https://github.com/safaiyeh"
+  },
+  "homepage": "https://github.com/safaiyeh/app-store-review-skill",
+  "repository": "https://github.com/safaiyeh/app-store-review-skill",
+  "license": "MIT",
+  "keywords": [
+    "apple",
+    "app-store",
+    "review",
+    "guidelines",
+    "ios",
+    "macos",
+    "swift",
+    "react-native",
+    "expo"
+  ],
+  "skills": "./",
+  "interface": {
+    "displayName": "App Store Review",
+    "shortDescription": "Audit apps for App Store review risk",
+    "longDescription": "Evaluate app code against Apple's App Store Review Guidelines before submission, with coverage for privacy, payments, safety, performance, design, and legal risks.",
+    "developerName": "safaiyeh",
+    "category": "Coding",
+    "capabilities": [
+      "Read"
+    ],
+    "websiteURL": "https://github.com/safaiyeh/app-store-review-skill",
+    "defaultPrompt": [
+      "Review this app for App Store compliance."
+    ],
+    "brandColor": "#0A84FF"
+  }
+}

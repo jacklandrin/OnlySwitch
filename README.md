@@ -277,5 +277,3 @@ Since version 2.3.10, this switch can be controlled via right-click icons.
 ## License
 MIT
 
-## Star History
-[![Star History Chart](https://api.star-history.com/svg?repos=jacklandrin/OnlySwitch&type=Date)](https://star-history.com/#jacklandrin/OnlySwitch&Date)

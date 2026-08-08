@@ -1,0 +1,10 @@
+interface:
+  display_name: "Swift Concurrency Pro"
+  short_description: "Reviews Swift concurrency code for modern best practices."
+  icon_small: "./assets/swift-concurrency-pro-icon.svg"
+  icon_large: "./assets/swift-concurrency-pro-icon.png"
+  brand_color: "#FF412E"
+  default_prompt: "Use $swift-concurrency-pro to review my project."
+
+policy:
+  allow_implicit_invocation: true

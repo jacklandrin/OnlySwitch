@@ -1,0 +1,23 @@
+{
+  "name": "app-store-review",
+  "owner": {
+    "name": "safaiyeh"
+  },
+  "metadata": {
+    "description": "Apple App Store Review Guidelines skill for Claude Code"
+  },
+  "plugins": [
+    {
+      "name": "app-store-review",
+      "source": "./",
+      "description": "Evaluates code against Apple's App Store Review Guidelines for iOS, macOS, tvOS, watchOS, and visionOS apps",
+      "version": "1.1.0",
+      "author": {
+        "name": "safaiyeh"
+      },
+      "category": "compliance",
+      "tags": ["apple", "app-store", "review", "guidelines", "ios", "swift", "react-native"],
+      "strict": true
+    }
+  ]
+}

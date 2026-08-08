@@ -1,0 +1,10 @@
+interface:
+  display_name: "Swift Testing Pro"
+  short_description: "Reviews Swift Testing code for modern best practices."
+  icon_small: "./assets/swift-testing-pro-icon.svg"
+  icon_large: "./assets/swift-testing-pro-icon.png"
+  brand_color: "#3B9025"
+  default_prompt: "Use $swift-testing-pro to review my project."
+
+policy:
+  allow_implicit_invocation: true
