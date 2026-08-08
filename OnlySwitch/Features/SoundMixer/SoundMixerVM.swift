@@ -186,7 +186,17 @@ final class SoundMixerVM: ObservableObject {
             }
         }
 
-        rows = newRows
+        // Only publish real changes. Reassigning every two seconds relaid out the whole popover
+        // under the pointer, which churned SwiftUI's focus tracking for no gain.
+        if Self.signature(of: newRows) != Self.signature(of: rows) {
+            rows = newRows
+        }
+    }
+
+    /// Everything the panel actually draws. Icons and the backing handles are left out: they follow
+    /// from the id, and `NSImage` is not comparable in any cheap way.
+    private static func signature(of rows: [AppRow]) -> [String] {
+        rows.map { "\($0.id)|\($0.name)|\(Int($0.volume))|\($0.isMuted)|\($0.processObjectIDs)" }
     }
 
     // MARK: - Interaction

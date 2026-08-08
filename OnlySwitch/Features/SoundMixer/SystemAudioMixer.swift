@@ -46,6 +46,10 @@ final class SystemAudioMixer {
         /// Set once a non-zero sample arrives. Without the audio-capture permission macOS hands
         /// out silence rather than an error, and this is the only way to tell the two apart.
         var sawAudio: Bool
+        /// Set by ``teardown(_:)`` before the device is stopped. `AudioDeviceStop` returns before
+        /// the IO thread is guaranteed to be done, so a callback can still arrive afterwards and
+        /// must then touch nothing.
+        var isRetired: Bool
     }
 
     /// A tap, the aggregate device that makes it effective, and the state its callback reads.
@@ -69,6 +73,16 @@ final class SystemAudioMixer {
     /// Active mute taps keyed by the owning app's pid.
     /// `nonisolated(unsafe)`: only mutated on the main actor; read once in `deinit`.
     nonisolated(unsafe) private var muteTaps: [pid_t: AppTap] = [:]
+
+    /// Retired tap states, kept alive for the rest of the process.
+    ///
+    /// Core Audio gives no point at which the IO thread is provably finished with the block, and
+    /// the block dereferences this pointer on every buffer. Freeing it lets a late callback write
+    /// into released memory, which corrupts the heap and takes the app down somewhere unrelated
+    /// later on. A `TapState` is 16 bytes and one is retired per tap rebuild, so holding on to
+    /// them costs less than the crash does.
+    nonisolated(unsafe) private static var retiredStates: [UnsafeMutablePointer<TapState>] = []
+    private nonisolated static let retiredStatesLock = NSLock()
 
     deinit {
         for (_, tap) in muteTaps {
@@ -150,7 +164,8 @@ final class SystemAudioMixer {
     /// Hands every app back its untouched audio. Without this, turning the mixer off would leave
     /// an app stuck at whatever gain it had, with no interface left to raise it again.
     func releaseAllTaps() {
-        for pid in muteTaps.keys {
+        // Iterate a copy: `destroyTap` mutates `muteTaps`.
+        for pid in Array(muteTaps.keys) {
             destroyTap(for: pid)
         }
     }
@@ -215,13 +230,17 @@ final class SystemAudioMixer {
         } ?? false
 
         let state = UnsafeMutablePointer<TapState>.allocate(capacity: 1)
-        state.initialize(to: TapState(targetGain: gain, currentGain: gain, canScale: canScale, sawAudio: false))
+        state.initialize(to: TapState(targetGain: gain, currentGain: gain, canScale: canScale,
+                                      sawAudio: false, isRetired: false))
 
         // The device must actually run for the tap to take effect. The callback reads the app's
         // audio, scales it, and writes it to the real output — that is the whole volume control.
         var procID: AudioDeviceIOProcID?
         let ioStatus = AudioDeviceCreateIOProcIDWithBlock(&procID, aggregateID, nil) {
             _, inInputData, _, outOutputData, _ in
+            // A callback can still arrive after the device was stopped; the state is then stale.
+            guard !state.pointee.isRetired else { return }
+
             let outputs = UnsafeMutableAudioBufferListPointer(outOutputData)
             let target = state.pointee.targetGain
 
@@ -269,14 +288,14 @@ final class SystemAudioMixer {
             if heard { state.pointee.sawAudio = true }
         }
         guard ioStatus == noErr, let procID else {
-            state.deallocate()
+            retire(state)
             AudioHardwareDestroyAggregateDevice(aggregateID)
             AudioHardwareDestroyProcessTap(tapID)
             return nil
         }
         guard AudioDeviceStart(aggregateID, procID) == noErr else {
+            retire(state)
             AudioDeviceDestroyIOProcID(aggregateID, procID)
-            state.deallocate()
             AudioHardwareDestroyAggregateDevice(aggregateID)
             AudioHardwareDestroyProcessTap(tapID)
             return nil
@@ -287,12 +306,20 @@ final class SystemAudioMixer {
 
     /// `nonisolated`: only touches Core Audio C calls, and `deinit` has to reach it.
     private nonisolated static func teardown(_ tap: AppTap) {
-        // Order matters: stop the device before the callback's state goes away.
+        // Retire first: from here on a callback that is already in flight does nothing.
+        retire(tap.state)
         AudioDeviceStop(tap.aggregateID, tap.procID)
         AudioDeviceDestroyIOProcID(tap.aggregateID, tap.procID)
         AudioHardwareDestroyAggregateDevice(tap.aggregateID)
         AudioHardwareDestroyProcessTap(tap.tapID)
-        tap.state.deallocate()
+    }
+
+    /// Marks a tap's state dead and keeps the allocation alive. See ``retiredStates``.
+    private nonisolated static func retire(_ state: UnsafeMutablePointer<TapState>) {
+        state.pointee.isRetired = true
+        retiredStatesLock.lock()
+        retiredStates.append(state)
+        retiredStatesLock.unlock()
     }
 
     // MARK: - Process ownership
