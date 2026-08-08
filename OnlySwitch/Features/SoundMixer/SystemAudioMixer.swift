@@ -147,6 +147,14 @@ final class SystemAudioMixer {
         muteTaps[pid]?.state.pointee.sawAudio ?? false
     }
 
+    /// Hands every app back its untouched audio. Without this, turning the mixer off would leave
+    /// an app stuck at whatever gain it had, with no interface left to raise it again.
+    func releaseAllTaps() {
+        for pid in muteTaps.keys {
+            destroyTap(for: pid)
+        }
+    }
+
     private func destroyTap(for pid: pid_t) {
         guard let tap = muteTaps.removeValue(forKey: pid) else { return }
         Self.teardown(tap)

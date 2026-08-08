@@ -46,6 +46,12 @@ final class SoundMixerVM: ObservableObject {
     @Published var enabled: Bool {
         didSet {
             UserDefaults.standard.set(enabled, forKey: UserDefaults.Key.soundMixerEnabled)
+            guard !enabled else { return }
+            stopAutoRefresh()
+            rows = []
+            if #available(macOS 14.4, *) {
+                systemMixer?.releaseAllTaps()
+            }
         }
     }
 
@@ -128,6 +134,9 @@ final class SoundMixerVM: ObservableObject {
     // MARK: - Refresh
 
     func refresh() async {
+        // The workspace observers fire whatever the user picked in Customize, and enumerating audio
+        // processes is what triggers the audio-capture permission prompt. Nothing runs while off.
+        guard enabled else { return }
         // Never fight an in-progress drag.
         guard !isInteracting else { return }
 

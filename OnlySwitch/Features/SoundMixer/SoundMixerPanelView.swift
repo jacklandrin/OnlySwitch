@@ -44,13 +44,18 @@ struct SoundMixerPanelView: View {
                 .foregroundColor(.accentColor)
                 .padding(.trailing, 8)
 
-            HStack(spacing: 6) {
-                Text("Sound Mixer".localized())
-                    .font(.system(size: 14))
-                Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundColor(.secondary)
+            Button {
+                withAnimation(.spring()) { isExpanded.toggle() }
+            } label: {
+                HStack(spacing: 6) {
+                    Text("Sound Mixer".localized())
+                        .font(.system(size: 14))
+                    Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundColor(.secondary)
+                }
             }
+            .buttonStyle(.plain)
 
             Text(appSummary)
                 .foregroundColor(.gray)
