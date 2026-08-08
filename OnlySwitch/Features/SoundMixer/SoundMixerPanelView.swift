@@ -75,15 +75,12 @@ struct SoundMixerPanelView: View {
 
     private var content: some View {
         VStack(alignment: .leading, spacing: 12) {
-            MixerSlider(value: $vm.systemVolume,
+            MixerSlider(value: vm.systemVolume,
                         height: 22,
                         leadingSymbol: "speaker.fill",
-                        trailingSymbol: "speaker.wave.3.fill") { editing in
-                editing ? vm.beginInteractive() : commitSystem()
-            }
-            .onChange(of: vm.systemVolume) { _, _ in
-                vm.applySystemVolumeWhileDragging()
-            }
+                        trailingSymbol: "speaker.wave.3.fill",
+                        onChange: { vm.updateSystemVolume($0, live: true) },
+                        onCommit: { vm.updateSystemVolume($0, live: false) })
             .padding(.horizontal, 15)
             .padding(.top, 10)
 
@@ -95,8 +92,10 @@ struct SoundMixerPanelView: View {
             } else {
                 sectionHeader("Apps".localized())
                 VStack(spacing: 10) {
-                    ForEach($vm.rows) { $row in
-                        appRow($row)
+                    // By value, not `ForEach($vm.rows)`: a binding into the array is written back
+                    // while SwiftUI still holds its own access to it.
+                    ForEach(vm.rows) { row in
+                        appRow(row)
                     }
                 }
                 .padding(.horizontal, 15)
@@ -130,32 +129,29 @@ struct SoundMixerPanelView: View {
 
     // MARK: Rows
 
-    private func appRow(_ row: Binding<SoundMixerVM.AppRow>) -> some View {
+    private func appRow(_ row: SoundMixerVM.AppRow) -> some View {
         HStack(spacing: 10) {
-            appIcon(row.wrappedValue.icon)
+            appIcon(row.icon)
 
             VStack(alignment: .leading, spacing: 4) {
-                Text(row.wrappedValue.name)
+                Text(row.name)
                     .font(.system(size: 11))
                     .lineLimit(1)
 
                 MixerSlider(value: row.volume,
                             height: 12,
                             leadingSymbol: nil,
-                            trailingSymbol: nil) { editing in
-                    editing ? vm.beginInteractive() : commitRow(row.wrappedValue.id)
-                }
-                .onChange(of: row.wrappedValue.volume) { _, _ in
-                    vm.applyVolumeWhileDragging(for: row.wrappedValue.id)
-                }
+                            trailingSymbol: nil,
+                            onChange: { vm.updateVolume($0, for: row.id, live: true) },
+                            onCommit: { vm.updateVolume($0, for: row.id, live: false) })
             }
 
             Button {
-                vm.toggleMute(for: row.wrappedValue.id)
+                vm.toggleMute(for: row.id)
             } label: {
-                Image(systemName: row.wrappedValue.isMuted ? "speaker.slash.fill" : "speaker.fill")
+                Image(systemName: row.isMuted ? "speaker.slash.fill" : "speaker.fill")
                     .font(.system(size: 10))
-                    .foregroundColor(row.wrappedValue.isMuted ? .secondary : .primary)
+                    .foregroundColor(row.isMuted ? .secondary : .primary)
                     .frame(width: 16, height: 16)
                     .contentShape(Rectangle())
             }
@@ -200,17 +196,6 @@ struct SoundMixerPanelView: View {
         }
     }
 
-    // MARK: Helpers
-
-    private func commitSystem() {
-        vm.endInteractive()
-        vm.commitSystemVolume()
-    }
-
-    private func commitRow(_ id: String) {
-        vm.endInteractive()
-        vm.commitVolume(for: id)
-    }
 }
 
 // MARK: - Slider
@@ -219,20 +204,25 @@ struct SoundMixerPanelView: View {
 /// thin track and a rectangular knob, which looks out of place next to Control Center.
 struct MixerSlider: View {
 
-    @Binding var value: Double          // 0...100
+    /// 0...100, owned by the view model. While a drag is in progress ``dragValue`` takes over, so
+    /// the knob follows the pointer without the slider ever writing back into the model's storage.
+    var value: Double
     var height: CGFloat = 22
     /// Glyphs drawn inside the track's ends, as the system panel does. `nil` for the compact rows.
     var leadingSymbol: String?
     var trailingSymbol: String?
-    var onEditingChanged: (Bool) -> Void = { _ in }
+    var onChange: (Double) -> Void = { _ in }
+    var onCommit: (Double) -> Void = { _ in }
 
-    @State private var isDragging = false
+    @State private var dragValue: Double?
+
+    private var shownValue: Double { dragValue ?? value }
 
     var body: some View {
         GeometryReader { geo in
             let knob = height
             let travel = max(geo.size.width - knob, 1)
-            let x = travel * CGFloat(min(max(value, 0), 100) / 100)
+            let x = travel * CGFloat(min(max(shownValue, 0), 100) / 100)
 
             ZStack(alignment: .leading) {
                 Capsule()
@@ -254,16 +244,15 @@ struct MixerSlider: View {
             .gesture(
                 DragGesture(minimumDistance: 0)
                     .onChanged { gesture in
-                        if !isDragging {
-                            isDragging = true
-                            onEditingChanged(true)
-                        }
                         let position = min(max(gesture.location.x - knob / 2, 0), travel)
-                        value = Double(position / travel) * 100
+                        let next = Double(position / travel) * 100
+                        dragValue = next
+                        onChange(next)
                     }
                     .onEnded { _ in
-                        isDragging = false
-                        onEditingChanged(false)
+                        let final = dragValue ?? value
+                        dragValue = nil
+                        onCommit(final)
                     }
             )
         }

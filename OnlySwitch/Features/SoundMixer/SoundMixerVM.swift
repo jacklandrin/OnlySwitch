@@ -131,6 +131,8 @@ final class SoundMixerVM: ObservableObject {
     func stopAutoRefresh() {
         autoRefreshTask?.cancel()
         autoRefreshTask = nil
+        // The panel can go away mid-drag; otherwise the flag would block every later refresh.
+        isInteracting = false
     }
 
     // MARK: - Refresh
@@ -210,25 +212,22 @@ final class SoundMixerVM: ObservableObject {
 
     // MARK: - Interaction
 
-    func beginInteractive() { isInteracting = true }
-    func endInteractive() { isInteracting = false }
 
-    /// Slider movement for a `.volume` row: apply right away, so the change is audible while
-    /// dragging rather than only on release. Ignored unless a drag is in progress — otherwise a
-    /// refresh replacing the rows would echo its own values back into the app.
-    func applyVolumeWhileDragging(for id: String) {
-        guard isInteracting else { return }
-        applyVolume(for: id, live: true)
-    }
-
-    /// Slider release for a `.volume` row: pin the mute state and write the final value.
-    func commitVolume(for id: String) {
+    /// The single way a slider changes a row. The view passes the value in rather than writing it
+    /// through a `Binding` into ``rows``: a binding handed out by `ForEach` is written while
+    /// SwiftUI still holds its own access to the array, and the resulting overlapping access
+    /// corrupted the rows' storage.
+    ///
+    /// `live` is true while the slider is still under the pointer.
+    func updateVolume(_ value: Double, for id: String, live: Bool) {
+        isInteracting = live
         guard let index = rows.firstIndex(where: { $0.id == id }) else { return }
-        rows[index].isMuted = rows[index].volume == 0
-        if rows[index].volume > 0 {
-            rows[index].volumeBeforeMute = rows[index].volume
+        rows[index].volume = value
+        if !live {
+            rows[index].isMuted = value == 0
+            if value > 0 { rows[index].volumeBeforeMute = value }
         }
-        applyVolume(for: id, live: false)
+        applyVolume(for: id, live: live)
     }
 
     /// `live` is true while the slider is still under the pointer. It keeps the tap path from
@@ -305,15 +304,12 @@ final class SoundMixerVM: ObservableObject {
         applyVolume(for: rows[index].id, live: false)
     }
 
-    /// Same live-while-dragging behaviour as the per-app sliders.
-    func applySystemVolumeWhileDragging() {
-        guard isInteracting else { return }
-        commitSystemVolume()
-    }
-
-    func commitSystemVolume() {
+    /// Same one-way flow as the per-app sliders.
+    func updateSystemVolume(_ value: Double, live: Bool) {
+        isInteracting = live
+        systemVolume = value
         let service = service
-        scheduleWrite(Int(systemVolume), key: Self.systemVolumeKey) { await service.setSystemVolume($0) }
+        scheduleWrite(Int(value), key: Self.systemVolumeKey) { await service.setSystemVolume($0) }
     }
 
     /// Opens the system Sound settings, so the panel can stand in for "Sound Settings…".
