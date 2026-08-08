@@ -1,99 +1,75 @@
 //
-//  SoundMixerSettingView.swift
+//  SoundMixerPanelView.swift
 //  OnlySwitch
 //
 //  Created by OnlySwitch on 2026/07/13.
 //
 
+import Defines
 import SwiftUI
-
-// MARK: - Settings page
-
-/// Settings page for the mixer: the menu bar switch plus a live preview of the panel that the
-/// menu bar item shows.
-struct SoundMixerSettingView: View {
-
-    /// Deliberately not the mixer view model: this page only flips a preference. Keeping the polling
-    /// view model — and the panel's `GeometryReader` sliders — out of the settings window keeps a
-    /// layout problem here from taking the whole split view down with it.
-    @State private var isEnabled = Preferences.shared.soundMixerMenubarItem
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Toggle(isOn: $isEnabled) {
-                Text("Show sound mixer in the menu bar".localized())
-            }
-            .toggleStyle(.switch)
-            .onChange(of: isEnabled) { _, newValue in
-                Preferences.shared.soundMixerMenubarItem = newValue
-            }
-
-            Text("Adds its own menu bar icon that opens the panel below — volume for the whole system and for each app that is playing.".localized())
-                .font(.caption)
-                .foregroundColor(.secondary)
-
-            if isEnabled {
-                menubarHint
-            }
-
-            Spacer()
-        }
-        .padding()
-    }
-
-    /// Shown once the item exists, because the icon appearing in the menu bar is easy to miss —
-    /// and because replacing the system sound item needs a manual step in System Settings.
-    /// Kept to the same plain layout as the other setting pages: no `maxWidth: .infinity` inside the
-    /// split view's detail column, which produced an unusable width and blanked the whole window.
-    private var menubarHint: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Label("This icon is now in your menu bar.".localized(),
-                  systemImage: "speaker.wave.2.fill")
-
-            Text("To let it replace the system sound icon, turn that one off in System Settings › Control Center › Sound.".localized())
-                .font(.caption)
-                .foregroundColor(.secondary)
-
-            Button("Open Control Center Settings".localized()) {
-                guard let url = URL(string: "x-apple.systempreferences:com.apple.ControlCenter-Settings.extension")
-                else { return }
-                NSWorkspace.shared.open(url)
-            }
-            .buttonStyle(.link)
-            .font(.caption)
-        }
-        .padding(.top, 4)
-    }
-}
-
-// MARK: - Popover
-
-/// What the menu bar item shows. Owns the view model so the panel keeps polling only while open.
-struct SoundMixerPopoverView: View {
-
-    @StateObject private var vm = SoundMixerSettingVM()
-
-    var body: some View {
-        SoundMixerPanel(vm: vm)
-            .padding(.vertical, 12)
-            .frame(width: 320)
-    }
-}
+import Utilities
 
 // MARK: - Panel
 
-/// The mixer itself, laid out like the system sound panel: one prominent output slider, a section
-/// per playing app, and the current output device underneath.
-struct SoundMixerPanel: View {
+/// The mixer inside the switch list popover, built like ``AuthenticatorPanelView``: a header row
+/// that expands in place. There is no menu bar item and no settings page for it, so the whole
+/// feature lives behind the one icon OnlySwitch already owns.
+struct SoundMixerPanelView: View {
 
-    @ObservedObject var vm: SoundMixerSettingVM
+    @ObservedObject private var vm = SoundMixerVM.shared
+    @ObservedObject private var languageManager = LanguageManager.sharedManager
+    @State private var isExpanded = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Sound".localized())
-                .font(.system(size: 13, weight: .bold))
-                .padding(.horizontal, 14)
+        VStack(spacing: 0) {
+            headerRow
+            Divider()
+                .opacity(0.25)
+                .frame(height: 1)
 
+            if isExpanded {
+                content
+            }
+        }
+        // Polls while the popover is open, so the header count is right before expanding too.
+        .onAppear { vm.startAutoRefresh() }
+        .onDisappear { vm.stopAutoRefresh() }
+    }
+
+    private var headerRow: some View {
+        HStack {
+            Image(systemName: "slider.horizontal.3")
+                .font(.system(size: 18))
+                .frame(width: Layout.iconSize, height: Layout.iconSize)
+                .foregroundColor(.accentColor)
+                .padding(.trailing, 8)
+
+            HStack(spacing: 6) {
+                Text("Sound Mixer".localized())
+                    .font(.system(size: 14))
+                Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundColor(.secondary)
+            }
+
+            Text(appSummary)
+                .foregroundColor(.gray)
+                .font(.system(size: 14))
+                .lineLimit(1)
+
+            Spacer()
+        }
+        .padding(.horizontal, 15)
+        .padding(.top, 8)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            withAnimation(.spring()) { isExpanded.toggle() }
+        }
+        .frame(height: 45)
+    }
+
+    private var content: some View {
+        VStack(alignment: .leading, spacing: 12) {
             MixerSlider(value: $vm.systemVolume,
                         height: 22,
                         leadingSymbol: "speaker.fill",
@@ -103,16 +79,22 @@ struct SoundMixerPanel: View {
             .onChange(of: vm.systemVolume) { _, _ in
                 vm.applySystemVolumeWhileDragging()
             }
-            .padding(.horizontal, 14)
+            .padding(.horizontal, 15)
+            .padding(.top, 10)
 
-            if !vm.rows.isEmpty {
+            if vm.rows.isEmpty {
+                Text("No controllable apps are running".localized())
+                    .font(.system(size: 12))
+                    .foregroundColor(.gray)
+                    .padding(.horizontal, 15)
+            } else {
                 sectionHeader("Apps".localized())
                 VStack(spacing: 10) {
                     ForEach($vm.rows) { $row in
                         appRow($row)
                     }
                 }
-                .padding(.horizontal, 14)
+                .padding(.horizontal, 15)
             }
 
             if let device = vm.outputDevice {
@@ -120,26 +102,30 @@ struct SoundMixerPanel: View {
                 outputRow(device)
             }
 
-            Divider()
-                .padding(.top, 2)
-
             Button {
                 vm.openSoundSettings()
             } label: {
                 Text("Sound Settings…".localized())
+                    .font(.system(size: 12))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .padding(.horizontal, 14)
+            .padding(.horizontal, 15)
+            .padding(.bottom, 10)
         }
-        .onAppear { vm.startAutoRefresh() }
-        .onDisappear { vm.stopAutoRefresh() }
+    }
+
+    private var appSummary: String {
+        let count = vm.rows.count
+        if count == 0 { return "" }
+        if count == 1 { return "1 app".localized() }
+        return String(format: "%lld apps".localized(), count)
     }
 
     // MARK: Rows
 
-    private func appRow(_ row: Binding<SoundMixerSettingVM.AppRow>) -> some View {
+    private func appRow(_ row: Binding<SoundMixerVM.AppRow>) -> some View {
         HStack(spacing: 10) {
             appIcon(row.wrappedValue.icon)
 
@@ -186,14 +172,14 @@ struct SoundMixerPanel: View {
 
             Spacer(minLength: 0)
         }
-        .padding(.horizontal, 14)
+        .padding(.horizontal, 15)
     }
 
     private func sectionHeader(_ title: String) -> some View {
         Text(title)
             .font(.system(size: 11, weight: .semibold))
             .foregroundColor(.secondary)
-            .padding(.horizontal, 14)
+            .padding(.horizontal, 15)
             .padding(.top, 2)
     }
 
@@ -303,9 +289,10 @@ struct MixerSlider: View {
 }
 
 #if DEBUG
-struct SoundMixerSettingView_Previews: PreviewProvider {
+struct SoundMixerPanelView_Previews: PreviewProvider {
     static var previews: some View {
-        SoundMixerSettingView()
+        SoundMixerPanelView()
+            .frame(width: Layout.popoverWidth)
     }
 }
 #endif

@@ -96,9 +96,6 @@ struct SettingsView: View {
             case .HideMenubarIcons:
                 HideMenubarIconsSettingView()
 
-            case .SoundMixer:
-                SoundMixerSettingView()
-
             case .BackNoises:
                 BackNoisesSettingView()
 

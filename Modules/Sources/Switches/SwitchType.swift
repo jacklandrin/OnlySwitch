@@ -68,7 +68,8 @@ public enum SwitchType: UInt64, CaseIterable, Sendable {
     case keyLight = 34_359_738_368 // 1 << 35
     case aiCommender = 68_719_476_736 // 1 << 36
     case authenticator = 137_438_953_472 // 1 << 37
-    
+    case soundMixer = 274_877_906_944 // 1 << 38
+
     public func barInfo() -> SwitchBarInfo {
         switch self {
         case .hiddeDesktop:
@@ -325,6 +326,13 @@ public enum SwitchType: UInt64, CaseIterable, Sendable {
                 onImage: NSImage(systemSymbolName: "key.fill"),
                 offImage: NSImage(systemSymbolName: "key"),
                 category: .tool
+            )
+        case .soundMixer:
+            return SwitchBarInfo(
+                title: "Sound Mixer",
+                onImage: NSImage(systemSymbolName: "slider.horizontal.3"),
+                offImage: NSImage(systemSymbolName: "slider.horizontal.3"),
+                category: .audio
             )
         }
     }

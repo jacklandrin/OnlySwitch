@@ -1,5 +1,5 @@
 //
-//  SoundMixerSettingVM.swift
+//  SoundMixerVM.swift
 //  OnlySwitch
 //
 //  Created by OnlySwitch on 2026/07/13.
@@ -7,10 +7,15 @@
 
 import AppKit
 import CoreAudio
+import Extensions
 import SwiftUI
 
+/// Shared on purpose: the process tap is a system-wide resource, and a second instance would set
+/// up a competing aggregate device for the same apps.
 @MainActor
-final class SoundMixerSettingVM: ObservableObject {
+final class SoundMixerVM: ObservableObject {
+
+    static let shared = SoundMixerVM()
 
     /// How a row's volume is applied. Both offer a slider; only the mechanism differs.
     enum Control {
@@ -34,6 +39,14 @@ final class SoundMixerSettingVM: ObservableObject {
         var pid: pid_t?
         /// Every audio process of a `.muteOnly` app — browsers play through one helper per tab.
         var processObjectIDs: [AudioObjectID] = []
+    }
+
+    /// Whether the panel is shown in the switch list. Owned here rather than in `Preferences`, so
+    /// the mixer is turned on and off like every other switch instead of through its own setting.
+    @Published var enabled: Bool {
+        didSet {
+            UserDefaults.standard.set(enabled, forKey: UserDefaults.Key.soundMixerEnabled)
+        }
     }
 
     @Published var rows: [AppRow] = []
@@ -61,7 +74,8 @@ final class SoundMixerSettingVM: ObservableObject {
     @available(macOS 14.4, *)
     private var systemMixer: SystemAudioMixer? { systemMixerBox as? SystemAudioMixer }
 
-    init() {
+    private init() {
+        enabled = UserDefaults.standard.bool(forKey: UserDefaults.Key.soundMixerEnabled)
         if #available(macOS 14.4, *) {
             systemMixerBox = SystemAudioMixer()
         }
@@ -271,29 +285,10 @@ final class SoundMixerSettingVM: ObservableObject {
         scheduleWrite(Int(systemVolume), key: Self.systemVolumeKey) { await service.setSystemVolume($0) }
     }
 
-    // MARK: - Menu bar item
-
-    /// Mirrors ``Preferences/soundMixerMenubarItem``; toggling it adds or removes the item.
-    var menubarItemEnabled: Bool {
-        get { Preferences.shared.soundMixerMenubarItem }
-        set {
-            objectWillChange.send()
-            Preferences.shared.soundMixerMenubarItem = newValue
-        }
-    }
-
     /// Opens the system Sound settings, so the panel can stand in for "Sound Settings…".
     func openSoundSettings() {
-        open("x-apple.systempreferences:com.apple.Sound-Settings.extension")
-    }
-
-    /// Where the system's own sound menu bar item is turned off, so this one can take its place.
-    func openControlCenterSettings() {
-        open("x-apple.systempreferences:com.apple.ControlCenter-Settings.extension")
-    }
-
-    private func open(_ urlString: String) {
-        guard let url = URL(string: urlString) else { return }
+        guard let url = URL(string: "x-apple.systempreferences:com.apple.Sound-Settings.extension")
+        else { return }
         NSWorkspace.shared.open(url)
     }
 }
