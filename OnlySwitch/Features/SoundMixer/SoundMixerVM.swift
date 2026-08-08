@@ -68,6 +68,8 @@ final class SoundMixerVM: ObservableObject {
     private var autoRefreshTask: Task<Void, Never>?
     /// While the user drags a slider we must not rebuild rows underneath them.
     private var isInteracting = false
+    /// Guards ``refresh()`` against overlapping itself across its suspension points.
+    private var isRefreshing = false
     /// Latest value still to be written, keyed by row id (or ``systemVolumeKey``), plus the task
     /// draining it. A drag emits far more updates than an AppleScript round-trip can keep up with,
     /// so only the newest value survives and writes are rate-limited.
@@ -139,6 +141,13 @@ final class SoundMixerVM: ObservableObject {
         guard enabled else { return }
         // Never fight an in-progress drag.
         guard !isInteracting else { return }
+        // Not re-entrant. Every AppleScript round-trip below suspends, and a browser spawns and
+        // kills a helper process per tab, so the workspace observers fire constantly — without this
+        // several refreshes interleave at those suspension points and take turns enumerating and
+        // tearing down the same taps.
+        guard !isRefreshing else { return }
+        isRefreshing = true
+        defer { isRefreshing = false }
 
         if let sys = await service.systemVolume() {
             systemVolume = Double(sys)
