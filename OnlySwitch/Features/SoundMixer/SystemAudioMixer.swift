@@ -65,9 +65,27 @@ final class SystemAudioMixer {
         let aggregateID: AudioObjectID
         let procID: AudioDeviceIOProcID
         let state: UnsafeMutablePointer<TapState>
-        /// The processes this tap was built to cover. A tap only reaches the processes named at
-        /// creation, so when the app's set changes (a new browser tab) the tap must be rebuilt.
-        let processObjectIDs: [AudioObjectID]
+        /// Order-independent fingerprint of the processes this tap was built to cover. A tap only
+        /// reaches the processes named at creation, so when the app's set changes (a new browser
+        /// tab) the tap must be rebuilt — comparing fingerprints is all that takes.
+        ///
+        /// A fingerprint rather than the `[AudioObjectID]` itself, because an Array is a
+        /// reference-counted buffer and this struct must stay free of those: it is copied around
+        /// a `nonisolated(unsafe)` dictionary and handed to `nonisolated` teardown code. Holding
+        /// the array here is what crashed the app while releasing a tap.
+        let processSignature: UInt64
+    }
+
+    /// Order-independent fingerprint of a set of audio process ids.
+    private nonisolated static func signature(of ids: [AudioObjectID]) -> UInt64 {
+        var sum: UInt64 = 0
+        var xor: UInt64 = 0
+        for id in ids {
+            let mixed = UInt64(id) &* 0x9E37_79B9_7F4A_7C15
+            sum = sum &+ mixed
+            xor ^= mixed
+        }
+        return sum ^ (xor &* 31) ^ UInt64(ids.count)
     }
 
     /// Active mute taps keyed by the owning app's pid.
@@ -150,7 +168,7 @@ final class SystemAudioMixer {
                 tap.state.pointee.targetGain = gain
                 return
             }
-            if gain < 1, Set(tap.processObjectIDs) == Set(processObjectIDs) {
+            if gain < 1, tap.processSignature == Self.signature(of: processObjectIDs) {
                 tap.state.pointee.targetGain = gain
                 return
             }
@@ -193,7 +211,9 @@ final class SystemAudioMixer {
     /// check traps (`SIGTRAP`) on the very first audio callback.
     private nonisolated static func makeAppTap(pid: pid_t, processObjectIDs: [AudioObjectID],
                                               gain: Float) -> AppTap? {
-        let description = CATapDescription(stereoMixdownOfProcesses: processObjectIDs)
+        // Its own array, built here: whatever CATapDescription does with what it is handed, it
+        // must not be able to reach a buffer the caller still holds in its rows.
+        let description = CATapDescription(stereoMixdownOfProcesses: processObjectIDs.map { $0 })
         description.muteBehavior = .muted
         description.name = "OnlySwitch-mute-\(pid)"
         description.isPrivate = true
@@ -310,7 +330,7 @@ final class SystemAudioMixer {
             return nil
         }
         return AppTap(tapID: tapID, aggregateID: aggregateID, procID: procID, state: state,
-                      processObjectIDs: processObjectIDs)
+                      processSignature: signature(of: processObjectIDs))
     }
 
     /// `nonisolated`: only touches Core Audio C calls, and `deinit` has to reach it.
