@@ -92,17 +92,18 @@ final class SystemAudioMixer {
     /// `nonisolated(unsafe)`: only mutated on the main actor; read once in `deinit`.
     nonisolated(unsafe) private var muteTaps: [pid_t: AppTap] = [:]
 
-    /// Recently retired tap states, kept alive past their tap.
+    /// Retired tap states, deliberately never freed.
     ///
     /// Core Audio gives no point at which the IO thread is provably finished with the block, and
-    /// the block dereferences this pointer on every buffer. Freeing it right away lets a late
-    /// callback write into released memory. Freeing it once ``retiredStateGraceCount`` further
-    /// taps have been torn down puts many device teardowns and seconds of wall clock between the
-    /// last possible callback and the free, while keeping the memory bounded — a browser rebuilds
-    /// its tap often enough that holding every state for the life of the app would not be.
+    /// the block dereferences this pointer on every buffer. Freeing it lets a late callback write
+    /// into released memory, which is what took the app down while a slider was being dragged.
+    ///
+    /// The cost is a `TapState` per tap teardown. A tap is built once per app and rebuilt only
+    /// when that app's set of audio processes changes, so this is a handful of 16-byte
+    /// allocations in a long session — cheap enough that no reclamation scheme is worth the risk
+    /// of getting the timing wrong again.
     nonisolated(unsafe) private static var retiredStates: [UnsafeMutablePointer<TapState>] = []
     private nonisolated static let retiredStatesLock = NSLock()
-    private nonisolated static let retiredStateGraceCount = 32
 
     deinit {
         for (_, tap) in muteTaps {
@@ -349,19 +350,12 @@ final class SystemAudioMixer {
         AudioHardwareDestroyProcessTap(tap.tapID)
     }
 
-    /// Marks a tap's state dead and defers freeing it. See ``retiredStates``.
+    /// Marks a tap's state dead and keeps the allocation. See ``retiredStates``.
     private nonisolated static func retire(_ state: UnsafeMutablePointer<TapState>) {
         state.pointee.isRetired = true
         retiredStatesLock.lock()
         retiredStates.append(state)
-        let excess = max(0, retiredStates.count - retiredStateGraceCount)
-        let overdue = Array(retiredStates.prefix(excess))
-        retiredStates.removeFirst(excess)
         retiredStatesLock.unlock()
-        for old in overdue {
-            old.deinitialize(count: 1)
-            old.deallocate()
-        }
     }
 
     // MARK: - Process ownership
