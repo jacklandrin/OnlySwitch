@@ -209,7 +209,7 @@ final class SoundMixerVM: ObservableObject {
     /// refresh replacing the rows would echo its own values back into the app.
     func applyVolumeWhileDragging(for id: String) {
         guard isInteracting else { return }
-        applyVolume(for: id)
+        applyVolume(for: id, live: true)
     }
 
     /// Slider release for a `.volume` row: pin the mute state and write the final value.
@@ -219,10 +219,12 @@ final class SoundMixerVM: ObservableObject {
         if rows[index].volume > 0 {
             rows[index].volumeBeforeMute = rows[index].volume
         }
-        applyVolume(for: id)
+        applyVolume(for: id, live: false)
     }
 
-    private func applyVolume(for id: String) {
+    /// `live` is true while the slider is still under the pointer. It keeps the tap path from
+    /// rebuilding its Core Audio device on every movement.
+    private func applyVolume(for id: String, live: Bool) {
         guard let index = rows.firstIndex(where: { $0.id == id }) else { return }
         switch rows[index].control {
         case .scriptable:
@@ -232,7 +234,8 @@ final class SoundMixerVM: ObservableObject {
         case .systemTap:
             // The tap's own callback applies the gain, so there is no round-trip to rate-limit.
             guard #available(macOS 14.4, *), let mixer = systemMixer, let pid = rows[index].pid else { return }
-            mixer.setVolume(rows[index].volume / 100, pid: pid, processObjectIDs: rows[index].processObjectIDs)
+            mixer.setVolume(rows[index].volume / 100, pid: pid,
+                            processObjectIDs: rows[index].processObjectIDs, live: live)
         }
     }
 
@@ -290,7 +293,7 @@ final class SoundMixerVM: ObservableObject {
             rows[index].volume = 0
             rows[index].isMuted = true
         }
-        applyVolume(for: rows[index].id)
+        applyVolume(for: rows[index].id, live: false)
     }
 
     /// Same live-while-dragging behaviour as the per-app sliders.

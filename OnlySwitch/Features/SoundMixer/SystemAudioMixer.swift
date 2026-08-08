@@ -132,26 +132,35 @@ final class SystemAudioMixer {
 
     // MARK: - Volume
 
-    /// Sets `volume` (0...1) for every given process. At full volume the tap is torn down again:
-    /// leaving the audio untouched is both cheaper and safer than routing it through us for nothing.
-    func setVolume(_ volume: Double, pid: pid_t, processObjectIDs: [AudioObjectID]) {
+    /// Sets `volume` (0...1) for every given process.
+    ///
+    /// Pass `live: true` while a slider is being dragged. Building or tearing down a tap creates or
+    /// destroys a private aggregate device, which takes long enough to stall the main thread, so on
+    /// the live path an existing tap only ever gets a new target: one Core Audio setup per app
+    /// instead of one per mouse movement.
+    ///
+    /// Once the user lets go, full volume tears the tap down again — leaving the audio untouched is
+    /// both cheaper and safer than routing it through us for nothing.
+    func setVolume(_ volume: Double, pid: pid_t, processObjectIDs: [AudioObjectID], live: Bool) {
         let gain = Float(min(1, max(0, volume)))
-        guard gain < 1 else {
-            destroyTap(for: pid)
-            return
-        }
+
         if let tap = muteTaps[pid] {
-            // The same set of processes just gets the new gain — the callback ramps to it.
-            if Set(tap.processObjectIDs) == Set(processObjectIDs) {
+            // Hot path. No allocation and no Core Audio call: the callback ramps to the new target.
+            if live {
                 tap.state.pointee.targetGain = gain
                 return
             }
-            // The app gained or lost an audio process (e.g. a new browser tab) since the tap was
-            // built. A tap only covers the processes it was created with, so rebuild it — otherwise
-            // the new process would keep playing at full volume while the row shows it turned down.
+            if gain < 1, Set(tap.processObjectIDs) == Set(processObjectIDs) {
+                tap.state.pointee.targetGain = gain
+                return
+            }
+            // Settled at full volume, or the app gained or lost an audio process (a new browser
+            // tab) so the tap no longer covers it. A tap only reaches the processes named at
+            // creation, so in both cases it has to go.
             destroyTap(for: pid)
         }
-        guard !processObjectIDs.isEmpty else { return }
+
+        guard gain < 1, !processObjectIDs.isEmpty else { return }
         muteTaps[pid] = Self.makeAppTap(pid: pid, processObjectIDs: processObjectIDs, gain: gain)
     }
 
