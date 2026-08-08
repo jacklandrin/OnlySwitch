@@ -92,15 +92,17 @@ final class SystemAudioMixer {
     /// `nonisolated(unsafe)`: only mutated on the main actor; read once in `deinit`.
     nonisolated(unsafe) private var muteTaps: [pid_t: AppTap] = [:]
 
-    /// Retired tap states, kept alive for the rest of the process.
+    /// Recently retired tap states, kept alive past their tap.
     ///
     /// Core Audio gives no point at which the IO thread is provably finished with the block, and
-    /// the block dereferences this pointer on every buffer. Freeing it lets a late callback write
-    /// into released memory, which corrupts the heap and takes the app down somewhere unrelated
-    /// later on. A `TapState` is 16 bytes and one is retired per tap rebuild, so holding on to
-    /// them costs less than the crash does.
+    /// the block dereferences this pointer on every buffer. Freeing it right away lets a late
+    /// callback write into released memory. Freeing it once ``retiredStateGraceCount`` further
+    /// taps have been torn down puts many device teardowns and seconds of wall clock between the
+    /// last possible callback and the free, while keeping the memory bounded — a browser rebuilds
+    /// its tap often enough that holding every state for the life of the app would not be.
     nonisolated(unsafe) private static var retiredStates: [UnsafeMutablePointer<TapState>] = []
     private nonisolated static let retiredStatesLock = NSLock()
+    private nonisolated static let retiredStateGraceCount = 32
 
     deinit {
         for (_, tap) in muteTaps {
@@ -284,7 +286,11 @@ final class SystemAudioMixer {
             }
 
             let inputs = UnsafeMutableAudioBufferListPointer(UnsafeMutablePointer(mutating: inInputData))
-            var gainCursor = state.pointee.currentGain
+            // Every buffer is one channel of the *same* frames, so each has to ramp over the same
+            // span. Carrying the cursor from one buffer into the next left the second channel at
+            // the target value from its first sample, which is audible as the image jumping sides.
+            let startGain = state.pointee.currentGain
+            var endGain = startGain
             var heard = false
 
             for index in 0..<outputs.count {
@@ -299,21 +305,21 @@ final class SystemAudioMixer {
                 let src = source.assumingMemoryBound(to: Float.self)
                 let dst = destination.assumingMemoryBound(to: Float.self)
                 // Ramp across the buffer instead of jumping: a hard gain change clicks audibly.
-                let step = count > 0 ? (target - gainCursor) / Float(count) : 0
-                var g = gainCursor
+                let step = count > 0 ? (target - startGain) / Float(count) : 0
+                var g = startGain
                 for frame in 0..<count {
                     g += step
                     let sample = src[frame]
                     if sample != 0 { heard = true }
                     dst[frame] = sample * g
                 }
-                gainCursor = g
+                endGain = g
                 // Never leave the remainder of an output buffer stale.
                 if outBytes > bytes {
                     memset(destination.advanced(by: bytes), 0, outBytes - bytes)
                 }
             }
-            state.pointee.currentGain = gainCursor
+            state.pointee.currentGain = endGain
             if heard { state.pointee.sawAudio = true }
         }
         guard ioStatus == noErr, let procID else {
@@ -343,12 +349,19 @@ final class SystemAudioMixer {
         AudioHardwareDestroyProcessTap(tap.tapID)
     }
 
-    /// Marks a tap's state dead and keeps the allocation alive. See ``retiredStates``.
+    /// Marks a tap's state dead and defers freeing it. See ``retiredStates``.
     private nonisolated static func retire(_ state: UnsafeMutablePointer<TapState>) {
         state.pointee.isRetired = true
         retiredStatesLock.lock()
         retiredStates.append(state)
+        let excess = max(0, retiredStates.count - retiredStateGraceCount)
+        let overdue = Array(retiredStates.prefix(excess))
+        retiredStates.removeFirst(excess)
         retiredStatesLock.unlock()
+        for old in overdue {
+            old.deinitialize(count: 1)
+            old.deallocate()
+        }
     }
 
     // MARK: - Process ownership

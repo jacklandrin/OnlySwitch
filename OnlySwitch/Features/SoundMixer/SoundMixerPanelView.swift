@@ -79,6 +79,7 @@ struct SoundMixerPanelView: View {
                         height: 22,
                         leadingSymbol: "speaker.fill",
                         trailingSymbol: "speaker.wave.3.fill",
+                        label: "Sound".localized(),
                         onChange: { vm.updateSystemVolume($0, live: true) },
                         onCommit: { vm.updateSystemVolume($0, live: false) })
             .padding(.horizontal, 15)
@@ -142,6 +143,7 @@ struct SoundMixerPanelView: View {
                             height: 12,
                             leadingSymbol: nil,
                             trailingSymbol: nil,
+                            label: row.name,
                             onChange: { vm.updateVolume($0, for: row.id, live: true) },
                             onCommit: { vm.updateVolume($0, for: row.id, live: false) })
             }
@@ -156,6 +158,7 @@ struct SoundMixerPanelView: View {
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            .accessibilityLabel(Text(row.isMuted ? "Unmute".localized() : "Mute".localized()))
         }
     }
 
@@ -211,6 +214,8 @@ struct MixerSlider: View {
     /// Glyphs drawn inside the track's ends, as the system panel does. `nil` for the compact rows.
     var leadingSymbol: String?
     var trailingSymbol: String?
+    /// Spoken name of what this slider controls.
+    var label: String = ""
     var onChange: (Double) -> Void = { _ in }
     var onCommit: (Double) -> Void = { _ in }
 
@@ -257,6 +262,17 @@ struct MixerSlider: View {
             )
         }
         .frame(height: height)
+        // The knob is a custom shape, so VoiceOver and the keyboard need the value spelled out
+        // and an explicit way to change it.
+        .accessibilityElement()
+        .accessibilityLabel(Text(label))
+        .accessibilityValue(Text("\(Int(shownValue.rounded()))%"))
+        .accessibilityAddTraits(.isButton)
+        .accessibilityAdjustableAction { direction in
+            let step: Double = direction == .increment ? 5 : -5
+            let next = min(max(shownValue + step, 0), 100)
+            onCommit(next)
+        }
     }
 
     @ViewBuilder
