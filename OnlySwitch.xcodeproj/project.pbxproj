@@ -427,7 +427,6 @@
 		F3AA00000000000000000003 /* MacManagementFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AA00000000000000000023 /* MacManagementFeature.swift */; };
 		F3AA00000000000000000004 /* MacManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AA00000000000000000024 /* MacManagementView.swift */; };
 		F3AA00000000000000000005 /* ControlSelectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AA00000000000000000025 /* ControlSelectionRow.swift */; };
-		F3AD00000000000000000001 /* HowToUseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AD00000000000000000021 /* HowToUseView.swift */; };
 		F3AB00000000000000000001 /* DashboardFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AB00000000000000000021 /* DashboardFeatureTests.swift */; };
 		F3AB00000000000000000002 /* DashboardFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AB00000000000000000022 /* DashboardFeature.swift */; };
 		F3AB00000000000000000003 /* SwiftNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = F3AB00000000000000000031 /* SwiftNavigation */; };
@@ -438,6 +437,7 @@
 		F3AB00000000000000000008 /* MacPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AB00000000000000000025 /* MacPickerView.swift */; };
 		F3AB00000000000000000009 /* RemoteEndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AB00000000000000000026 /* RemoteEndToEndTests.swift */; };
 		F3AC00000000000000000001 /* RemoteCatalogMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AC00000000000000000021 /* RemoteCatalogMonitor.swift */; };
+		F3AD00000000000000000001 /* HowToUseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AD00000000000000000021 /* HowToUseView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -805,7 +805,6 @@
 		F3AA00000000000000000023 /* MacManagementFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacManagementFeature.swift; sourceTree = "<group>"; };
 		F3AA00000000000000000024 /* MacManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacManagementView.swift; sourceTree = "<group>"; };
 		F3AA00000000000000000025 /* ControlSelectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlSelectionRow.swift; sourceTree = "<group>"; };
-		F3AD00000000000000000021 /* HowToUseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToUseView.swift; sourceTree = "<group>"; };
 		F3AB00000000000000000021 /* DashboardFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardFeatureTests.swift; sourceTree = "<group>"; };
 		F3AB00000000000000000022 /* DashboardFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardFeature.swift; sourceTree = "<group>"; };
 		F3AB00000000000000000023 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
@@ -813,6 +812,7 @@
 		F3AB00000000000000000025 /* MacPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacPickerView.swift; sourceTree = "<group>"; };
 		F3AB00000000000000000026 /* RemoteEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteEndToEndTests.swift; sourceTree = "<group>"; };
 		F3AC00000000000000000021 /* RemoteCatalogMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCatalogMonitor.swift; sourceTree = "<group>"; };
+		F3AD00000000000000000021 /* HowToUseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToUseView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2973,7 +2973,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.7.2;
+				MARKETING_VERSION = 2.7.3;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3028,7 +3028,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.7.2;
+				MARKETING_VERSION = 2.7.3;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3074,7 +3074,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.7.2;
+				MARKETING_VERSION = 2.7.3;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = OnlySwitchWidgets;
@@ -3114,7 +3114,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.7.2;
+				MARKETING_VERSION = 2.7.3;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = OnlySwitchWidgets;
