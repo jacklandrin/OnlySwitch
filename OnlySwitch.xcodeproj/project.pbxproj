@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A1D0E10A2F0A000100BEEF01 /* SoundMixerSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E00B2F0A000100BEEF01 /* SoundMixerSwitch.swift */; };
+		2B346BE56384C700F4046FC4 /* SystemAudioMixer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AD1FCF5024EAC8DC9C8E5E /* SystemAudioMixer.swift */; };
+		6EC8A6CD714CA458603A0C05 /* SoundMixerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 643A9AC4ED24AE501343396D /* SoundMixerModel.swift */; };
+		732FB599FA7E3F9BEEF45DD9 /* SoundMixerPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3552BA772DD63DAD7EE8CF2 /* SoundMixerPanelView.swift */; };
+		C2CE44CA134851106759FA13 /* SoundMixerVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = A47E483C8C562DBBD024C25A /* SoundMixerVM.swift */; };
+		D418A0C2EBC2CD7CCD451615 /* SoundMixerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E43EF22E4BA4D2E63E454D7 /* SoundMixerService.swift */; };
 		0406E0222CA09F930007AFC2 /* OnlyControlClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406E0212CA09F8C0007AFC2 /* OnlyControlClient.swift */; };
 		0406E0242CA0BC460007AFC2 /* RefreshNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406E0232CA0BC460007AFC2 /* RefreshNotification.swift */; };
 		0406EDC42ACB3EE80015F4D0 /* EvolutionMarket.json in Resources */ = {isa = PBXBuildFile; fileRef = 0406EDC32ACB3EE80015F4D0 /* EvolutionMarket.json */; };
@@ -479,6 +485,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A1D0E00B2F0A000100BEEF01 /* SoundMixerSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundMixerSwitch.swift; sourceTree = "<group>"; };
+		1E43EF22E4BA4D2E63E454D7 /* SoundMixerService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoundMixerService.swift; sourceTree = "<group>"; };
+		35AD1FCF5024EAC8DC9C8E5E /* SystemAudioMixer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SystemAudioMixer.swift; sourceTree = "<group>"; };
+		643A9AC4ED24AE501343396D /* SoundMixerModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoundMixerModel.swift; sourceTree = "<group>"; };
+		A47E483C8C562DBBD024C25A /* SoundMixerVM.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoundMixerVM.swift; sourceTree = "<group>"; };
+		B3552BA772DD63DAD7EE8CF2 /* SoundMixerPanelView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoundMixerPanelView.swift; sourceTree = "<group>"; };
 		0406E0212CA09F8C0007AFC2 /* OnlyControlClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyControlClient.swift; sourceTree = "<group>"; };
 		0406E0232CA0BC460007AFC2 /* RefreshNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshNotification.swift; sourceTree = "<group>"; };
 		0406EDC32ACB3EE80015F4D0 /* EvolutionMarket.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = EvolutionMarket.json; sourceTree = "<group>"; };
@@ -909,6 +921,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C966D21407F0E94B525D2F99 /* SoundMixer */ = {
+			isa = PBXGroup;
+			children = (
+				643A9AC4ED24AE501343396D /* SoundMixerModel.swift */,
+				1E43EF22E4BA4D2E63E454D7 /* SoundMixerService.swift */,
+				A47E483C8C562DBBD024C25A /* SoundMixerVM.swift */,
+				B3552BA772DD63DAD7EE8CF2 /* SoundMixerPanelView.swift */,
+				35AD1FCF5024EAC8DC9C8E5E /* SystemAudioMixer.swift */,
+			);
+			name = SoundMixer;
+			path = SoundMixer;
+			sourceTree = "<group>";
+		};
 		0406EDC22ACB3EBE0015F4D0 /* Evolution */ = {
 			isa = PBXGroup;
 			children = (
@@ -970,6 +995,7 @@
 				0447E39A2B7174F000D07B9A /* SwitchType++.swift */,
 				A93C8BE02ECA34CB00D7CE52 /* AICommanderSwitch.swift */,
 				A1D0E00A2F0A000100BEEF01 /* AuthenticatorSwitch.swift */,
+				A1D0E00B2F0A000100BEEF01 /* SoundMixerSwitch.swift */,
 				0447E33F2B71746C00D07B9A /* AirPodsSwitch.swift */,
 				0447E3382B71746C00D07B9A /* AppleMusicSwitch.swift */,
 				0447E3492B71746D00D07B9A /* AutohideDockSwitch.swift */,
@@ -1108,6 +1134,7 @@
 				04A5AA572C39F8A2001070CA /* OnlyControl */,
 				04BF976C27908E0100E7C0E2 /* OnlySwitchList */,
 				04BF976D27908E2800E7C0E2 /* SwitchItem */,
+				C966D21407F0E94B525D2F99 /* SoundMixer */,
 				04BF977927908FB900E7C0E2 /* SoundWave */,
 				049337952762C05200AE779A /* Settings */,
 				04DC6C5A28A2D02000888BF9 /* Update */,
@@ -2440,6 +2467,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6EC8A6CD714CA458603A0C05 /* SoundMixerModel.swift in Sources */,
+				D418A0C2EBC2CD7CCD451615 /* SoundMixerService.swift in Sources */,
+				C2CE44CA134851106759FA13 /* SoundMixerVM.swift in Sources */,
+				732FB599FA7E3F9BEEF45DD9 /* SoundMixerPanelView.swift in Sources */,
+				2B346BE56384C700F4046FC4 /* SystemAudioMixer.swift in Sources */,
 				F3A500000000000000000004 /* RemoteCredentialStore.swift in Sources */,
 				F3A500000000000000000005 /* RemoteHostConfiguration.swift in Sources */,
 				F3A500000000000000000006 /* RemotePeerSession.swift in Sources */,
@@ -2459,6 +2491,7 @@
 				F3A400000000000000000006 /* RemoteCommandRouter+Live.swift in Sources */,
 				F3A400000000000000000007 /* RecentRequestCache.swift in Sources */,
 				A1D0E1092F0A000100BEEF01 /* AuthenticatorSwitch.swift in Sources */,
+				A1D0E10A2F0A000100BEEF01 /* SoundMixerSwitch.swift in Sources */,
 				0447E35F2B71746E00D07B9A /* AppleMusicSwitch.swift in Sources */,
 				04B25453283BEF3800D253E2 /* SupportedLanguage.swift in Sources */,
 				04DC6C8228A5A8C300888BF9 /* BackNoisesSettingView.swift in Sources */,

@@ -85,6 +85,7 @@ enum RemoteIconAdapter {
         case .hideWindows: "macwindow"
         case .keyLight: "light.min"
         case .authenticator: "key"
+        case .soundMixer: "slider.horizontal.3"
         }
     }
 }
