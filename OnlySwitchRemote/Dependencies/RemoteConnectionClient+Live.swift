@@ -108,6 +108,24 @@ actor RemoteConnectionRuntime {
         subscriberCount > 0 || selectedMacID != nil
     }
 
+    nonisolated static func discoveryFailure(for error: NWError) -> DiscoveryFailure {
+        switch error {
+        case let .posix(code):
+            switch code {
+            case .EPERM, .EACCES:
+                return .localNetworkAccessNeeded
+            case .ENETDOWN, .ENETUNREACH, .EHOSTDOWN, .EHOSTUNREACH, .ENOTCONN:
+                return .networkUnavailable
+            default:
+                return .browserUnavailable
+            }
+        case .dns, .tls:
+            return .browserUnavailable
+        @unknown default:
+            return .browserUnavailable
+        }
+    }
+
     typealias ActionDeadline = @Sendable (
         Duration,
         @escaping @Sendable () async throws -> RemoteActionResult
@@ -224,17 +242,24 @@ actor RemoteConnectionRuntime {
               ),
               browser == nil else { return }
         let browser = NWBrowser(for: Self.discoveryDescriptor, using: .tcp)
+        let expectedGeneration = browserGeneration
         self.browser = browser
         browser.browseResultsChangedHandler = { [weak self] results, _ in
-            Task { await self?.updateDiscovery(results) }
+            Task { await self?.updateDiscovery(results, generation: expectedGeneration) }
         }
         browser.stateUpdateHandler = { [weak self] state in
             switch state {
-            case .ready: Task { await self?.browserBecameReady() }
-            case .failed: Task { await self?.scheduleBrowserRestart() }
-            default: break
+            case .ready:
+                Task { await self?.browserBecameReady(generation: expectedGeneration) }
+            case let .waiting(error):
+                Task { await self?.publishWaiting(error, generation: expectedGeneration) }
+            case let .failed(error):
+                Task { await self?.publishFailureAndRestart(error, generation: expectedGeneration) }
+            default:
+                break
             }
         }
+        discoveryHub.yield(.started)
         browser.start(queue: .global(qos: .userInitiated))
     }
 
@@ -1106,7 +1131,13 @@ actor RemoteConnectionRuntime {
         throw lastError
     }
 
-    private func updateDiscovery(_ results: Set<NWBrowser.Result>) async {
+    private func updateDiscovery(
+        _ results: Set<NWBrowser.Result>,
+        generation expectedGeneration: UInt64
+    ) async {
+        guard foregrounded,
+              browser != nil,
+              browserGeneration == expectedGeneration else { return }
         var candidates: [DiscoveredMac] = []
         for result in results {
             guard case let .bonjour(txtRecord) = result.metadata,
@@ -1152,10 +1183,28 @@ actor RemoteConnectionRuntime {
         }
     }
 
-    private func browserBecameReady() {
+    private func browserBecameReady(generation expectedGeneration: UInt64) {
+        guard foregrounded,
+              browser != nil,
+              browserGeneration == expectedGeneration else { return }
         browserFailureCount = 0
         browserRetryTask?.cancel()
         browserRetryTask = nil
+    }
+
+    private func publishWaiting(_ error: NWError, generation expectedGeneration: UInt64) {
+        guard foregrounded,
+              browser != nil,
+              browserGeneration == expectedGeneration else { return }
+        discoveryHub.yield(.waiting(Self.discoveryFailure(for: error)))
+    }
+
+    private func publishFailureAndRestart(_ error: NWError, generation expectedGeneration: UInt64) {
+        guard foregrounded,
+              browser != nil,
+              browserGeneration == expectedGeneration else { return }
+        discoveryHub.yield(.failed(Self.discoveryFailure(for: error)))
+        scheduleBrowserRestart(generation: expectedGeneration)
     }
 
     func stopDiscoveryIfUnused() {
@@ -1171,7 +1220,10 @@ actor RemoteConnectionRuntime {
         discovered.removeAll()
     }
 
-    private func scheduleBrowserRestart() {
+    private func scheduleBrowserRestart(generation expectedGeneration: UInt64) {
+        guard foregrounded,
+              browser != nil,
+              browserGeneration == expectedGeneration else { return }
         browser?.cancel()
         browser = nil
         browserRetryTask?.cancel()

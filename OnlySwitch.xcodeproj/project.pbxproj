@@ -412,6 +412,13 @@
 		F3A800000000000000000006 /* RemoteKeychainClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A800000000000000000026 /* RemoteKeychainClient.swift */; };
 		F3A800000000000000000007 /* RemoteConnectionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A800000000000000000027 /* RemoteConnectionCoordinator.swift */; };
 		F3A800000000000000000008 /* RemoteConnectionEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A800000000000000000028 /* RemoteConnectionEvent.swift */; };
+		B210A0000000000000000001 /* RemoteSystemSettingsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B210A0000000000000000021 /* RemoteSystemSettingsClient.swift */; };
+		B220A0000000000000000001 /* RemoteReviewDemoClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B220A0000000000000000021 /* RemoteReviewDemoClient.swift */; };
+		B220A0000000000000000002 /* RemoteAppShellFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = B220A0000000000000000022 /* RemoteAppShellFeature.swift */; };
+		B220A0000000000000000003 /* RemoteAppShellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B220A0000000000000000023 /* RemoteAppShellView.swift */; };
+		B220A0000000000000000004 /* ReviewDemoFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = B220A0000000000000000024 /* ReviewDemoFeature.swift */; };
+		B220A0000000000000000005 /* ReviewDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B220A0000000000000000025 /* ReviewDemoView.swift */; };
+		B220A0000000000000000006 /* ReviewDemoScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B220A0000000000000000026 /* ReviewDemoScreen.swift */; };
 		F3A800000000000000000009 /* RemoteConnectionClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A800000000000000000029 /* RemoteConnectionClient.swift */; };
 		F3A80000000000000000000A /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = F3A800000000000000000030 /* Dependencies */; };
 		F3A80000000000000000000B /* RemoteConnectionClient+Live.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A80000000000000000002A /* RemoteConnectionClient+Live.swift */; };
@@ -438,6 +445,7 @@
 		F3AB00000000000000000003 /* SwiftNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = F3AB00000000000000000031 /* SwiftNavigation */; };
 		F3AB00000000000000000004 /* SwiftNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = F3AB00000000000000000032 /* SwiftNavigation */; };
 		F3AB00000000000000000005 /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = F3AB00000000000000000033 /* Dependencies */; };
+		F3AE00000000000000000001 /* Clocks in Frameworks */ = {isa = PBXBuildFile; productRef = F3AE00000000000000000003 /* Clocks */; };
 		F3AB00000000000000000006 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AB00000000000000000023 /* DashboardView.swift */; };
 		F3AB00000000000000000007 /* ControlTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AB00000000000000000024 /* ControlTileView.swift */; };
 		F3AB00000000000000000008 /* MacPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AB00000000000000000025 /* MacPickerView.swift */; };
@@ -805,6 +813,13 @@
 		F3A800000000000000000028 /* RemoteConnectionEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConnectionEvent.swift; sourceTree = "<group>"; };
 		F3A800000000000000000029 /* RemoteConnectionClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConnectionClient.swift; sourceTree = "<group>"; };
 		F3A80000000000000000002A /* RemoteConnectionClient+Live.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RemoteConnectionClient+Live.swift"; sourceTree = "<group>"; };
+		B210A0000000000000000021 /* RemoteSystemSettingsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemSettingsClient.swift; sourceTree = "<group>"; };
+		B220A0000000000000000021 /* RemoteReviewDemoClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteReviewDemoClient.swift; sourceTree = "<group>"; };
+		B220A0000000000000000022 /* RemoteAppShellFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAppShellFeature.swift; sourceTree = "<group>"; };
+		B220A0000000000000000023 /* RemoteAppShellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAppShellView.swift; sourceTree = "<group>"; };
+		B220A0000000000000000024 /* ReviewDemoFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewDemoFeature.swift; sourceTree = "<group>"; };
+		B220A0000000000000000025 /* ReviewDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewDemoView.swift; sourceTree = "<group>"; };
+		B220A0000000000000000026 /* ReviewDemoScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewDemoScreen.swift; sourceTree = "<group>"; };
 		F3A900000000000000000021 /* RemoteAppFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAppFeatureTests.swift; sourceTree = "<group>"; };
 		F3A900000000000000000022 /* PairingFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingFeatureTests.swift; sourceTree = "<group>"; };
 		F3A900000000000000000023 /* PairingFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingFeature.swift; sourceTree = "<group>"; };
@@ -906,6 +921,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3AE00000000000000000001 /* Clocks in Frameworks */,
 				F3AB00000000000000000004 /* SwiftNavigation in Frameworks */,
 				F3AB00000000000000000005 /* Dependencies in Frameworks */,
 				F3A300000000000000000029 /* ComposableArchitecture in Frameworks */,
@@ -1870,6 +1886,11 @@
 				F3A300000000000000000010 /* OnlySwitchRemoteApp.swift */,
 				F3A300000000000000000011 /* RemoteAppFeature.swift */,
 				F3A300000000000000000012 /* RemoteAppView.swift */,
+				B220A0000000000000000022 /* RemoteAppShellFeature.swift */,
+				B220A0000000000000000023 /* RemoteAppShellView.swift */,
+				B220A0000000000000000024 /* ReviewDemoFeature.swift */,
+				B220A0000000000000000025 /* ReviewDemoView.swift */,
+				B220A0000000000000000026 /* ReviewDemoScreen.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -1981,6 +2002,8 @@
 				F3A800000000000000000028 /* RemoteConnectionEvent.swift */,
 				F3A800000000000000000029 /* RemoteConnectionClient.swift */,
 				F3A80000000000000000002A /* RemoteConnectionClient+Live.swift */,
+				B210A0000000000000000021 /* RemoteSystemSettingsClient.swift */,
+				B220A0000000000000000021 /* RemoteReviewDemoClient.swift */,
 			);
 			path = Dependencies;
 			sourceTree = "<group>";
@@ -2165,6 +2188,7 @@
 			);
 			name = OnlySwitchRemoteTests;
 			packageProductDependencies = (
+				F3AE00000000000000000003 /* Clocks */,
 				F3A300000000000000000033 /* ComposableArchitecture */,
 				F3A300000000000000000034 /* RemoteCore */,
 				F3A300000000000000000035 /* RemoteTransport */,
@@ -2235,6 +2259,7 @@
 			);
 			mainGroup = 04447B4F2754F08000CD2900;
 			packageReferences = (
+				F3AE00000000000000000002 /* XCRemoteSwiftPackageReference "swift-clocks" */,
 				0430887C275D707C00877E51 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */,
 				04581DB4276506B9008ADF30 /* XCRemoteSwiftPackageReference "AlertToast" */,
 				04A6B54927715F90003B2647 /* XCRemoteSwiftPackageReference "Alamofire" */,
@@ -2735,6 +2760,11 @@
 				F3A300000000000000000020 /* OnlySwitchRemoteApp.swift in Sources */,
 				F3A300000000000000000021 /* RemoteAppFeature.swift in Sources */,
 				F3A300000000000000000022 /* RemoteAppView.swift in Sources */,
+				B220A0000000000000000002 /* RemoteAppShellFeature.swift in Sources */,
+				B220A0000000000000000003 /* RemoteAppShellView.swift in Sources */,
+				B220A0000000000000000004 /* ReviewDemoFeature.swift in Sources */,
+				B220A0000000000000000005 /* ReviewDemoView.swift in Sources */,
+				B220A0000000000000000006 /* ReviewDemoScreen.swift in Sources */,
 				F3A800000000000000000003 /* PairedMac.swift in Sources */,
 				F3A800000000000000000004 /* MacDashboardLayout.swift in Sources */,
 				F3A800000000000000000005 /* RemotePersistenceClient.swift in Sources */,
@@ -2743,6 +2773,8 @@
 				F3A800000000000000000008 /* RemoteConnectionEvent.swift in Sources */,
 				F3A800000000000000000009 /* RemoteConnectionClient.swift in Sources */,
 				F3A80000000000000000000B /* RemoteConnectionClient+Live.swift in Sources */,
+				B210A0000000000000000001 /* RemoteSystemSettingsClient.swift in Sources */,
+				B220A0000000000000000001 /* RemoteReviewDemoClient.swift in Sources */,
 				F3A900000000000000000003 /* PairingFeature.swift in Sources */,
 				F3A900000000000000000004 /* PairingView.swift in Sources */,
 				F3A900000000000000000005 /* SettingsFeature.swift in Sources */,
@@ -3336,6 +3368,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		F3AE00000000000000000002 /* XCRemoteSwiftPackageReference "swift-clocks" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-clocks";
+			requirement = {
+				kind = exactVersion;
+				version = 1.0.5;
+			};
+		};
 		041B17872AD841EE0032919B /* XCRemoteSwiftPackageReference "Sparkle" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sparkle-project/Sparkle";
@@ -3453,6 +3493,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		F3AE00000000000000000003 /* Clocks */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F3AE00000000000000000002 /* XCRemoteSwiftPackageReference "swift-clocks" */;
+			productName = Clocks;
+		};
 		041B17882AD841EE0032919B /* Sparkle */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 041B17872AD841EE0032919B /* XCRemoteSwiftPackageReference "Sparkle" */;

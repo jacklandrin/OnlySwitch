@@ -3,15 +3,17 @@ import SwiftUI
 
 @main
 struct OnlySwitchRemoteApp: App {
-    let store = Store(initialState: RemoteAppFeature.State(
-        hasCompletedInitialSetup: RemotePersistenceClient.initialSetupSeed()
+    let store = Store(initialState: RemoteAppShellFeature.State(
+        production: .init(
+            hasCompletedInitialSetup: RemotePersistenceClient.initialSetupSeed()
+        )
     )) {
-        RemoteAppFeature()
+        RemoteAppShellFeature()
     }
 
     var body: some Scene {
         WindowGroup {
-            RemoteAppView(store: store)
+            RemoteAppShellView(store: store)
         }
     }
 }

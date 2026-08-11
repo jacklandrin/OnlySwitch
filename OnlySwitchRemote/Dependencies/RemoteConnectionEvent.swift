@@ -23,7 +23,16 @@ enum RemoteConnectionEvent: Equatable, Sendable {
     case action(UUID, RemoteActionResult)
 }
 
+enum DiscoveryFailure: Equatable, Sendable {
+    case localNetworkAccessNeeded
+    case networkUnavailable
+    case browserUnavailable
+}
+
 enum DiscoveryEvent: Equatable, Sendable {
+    case started
     case added(DiscoveredMac)
     case removed(UUID)
+    case waiting(DiscoveryFailure)
+    case failed(DiscoveryFailure)
 }

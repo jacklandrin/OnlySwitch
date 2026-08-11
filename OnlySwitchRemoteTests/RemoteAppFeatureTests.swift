@@ -1219,6 +1219,68 @@ struct RemoteAppFeatureTests {
         #expect(try await backing.loadSelectedMacID() == laptop.id)
         #expect(try await backing.loadInitialSetupCompleted())
     }
+
+    @Test func appShellPresentsExploreDemoWithoutStartingProductionDependencies() async {
+        let liveCalls = LockIsolated(0)
+        let store = TestStore(
+            initialState: RemoteAppShellFeature.State(
+                production: .init(hasCompletedInitialSetup: false)
+            )
+        ) {
+            RemoteAppShellFeature()
+        } withDependencies: {
+            $0.remoteConnection.snapshot = {
+                liveCalls.withValue { $0 += 1 }
+                return .init()
+            }
+            $0.remoteConnection.events = {
+                liveCalls.withValue { $0 += 1 }
+                return AsyncStream { $0.finish() }
+            }
+            $0.remotePersistence.loadPairedMacs = {
+                liveCalls.withValue { $0 += 1 }
+                return []
+            }
+            $0.remotePersistence.loadSelectedMacID = {
+                liveCalls.withValue { $0 += 1 }
+                return nil
+            }
+            $0.remotePersistence.saveAppState = { _ in
+                liveCalls.withValue { $0 += 1 }
+            }
+        }
+        await store.send(.exploreDemoTapped)
+        await store.receive(.reviewDemoReady) {
+            $0.reviewDemo = .init()
+        }
+        store.exhaustivity = .off(showSkippedAssertions: false)
+        await store.send(.reviewDemo(.presented(.app(.task))))
+        await store.receive(\.reviewDemo)
+
+        #expect(store.state.reviewDemo != nil)
+        #expect(liveCalls.value == 0)
+        await store.send(.reviewDemo(.presented(.exitTapped)))
+        await store.finish()
+    }
+
+    @Test func exitingDemoDismissesOnlyThePresentationAndKeepsProductionStateUntouched() async {
+        var production = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        production.pairedMacs = [studio, laptop]
+        production.selectedMacID = studio.id
+        production.nextPersistenceSequence = 7
+        let originalProduction = production
+        var initialState = RemoteAppShellFeature.State(production: production)
+        initialState.reviewDemo = .init()
+        let store = TestStore(initialState: initialState) {
+            RemoteAppShellFeature()
+        }
+
+        await store.send(.reviewDemo(.presented(.exitTapped))) {
+            $0.reviewDemo = nil
+        }
+
+        #expect(store.state.production == originalProduction)
+    }
 }
 
 private actor SelectionRecorder { private(set) var ids: [UUID?] = []; func record(_ mac: PairedMac?) { ids.append(mac?.id) }; func recordID(_ id: UUID?) { ids.append(id) } }

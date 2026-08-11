@@ -933,6 +933,45 @@ struct RemotePersistenceClientTests {
         #expect(try await secondClient.loadInitialSetupCompleted() == false)
     }
 
+    @Test func reviewDemoPersistenceStartsPopulatedAndKeepsChangesOnlyInItsRuntime() async throws {
+        let runtime = RemoteReviewDemoRuntime()
+        let persistence = RemotePersistenceClient.reviewDemo(runtime: runtime)
+
+        #expect(try await persistence.loadInitialSetupCompleted())
+        let pairedMacs = try await persistence.loadPairedMacs()
+        #expect(pairedMacs.map(\.id) == [
+            RemoteReviewDemoRuntime.studioMacID,
+            RemoteReviewDemoRuntime.travelMacID,
+        ])
+        #expect(try await persistence.loadSelectedMacID() == RemoteReviewDemoRuntime.studioMacID)
+
+        let layout = try #require(try await persistence.loadLayout(RemoteReviewDemoRuntime.studioMacID))
+        let catalog = try #require(try await persistence.loadCatalog(RemoteReviewDemoRuntime.studioMacID))
+        let statuses = try #require(try await persistence.loadStatuses(RemoteReviewDemoRuntime.studioMacID))
+        #expect(layout.macID == RemoteReviewDemoRuntime.studioMacID)
+        #expect(layout.selectedControlIDs.contains(.darkMode))
+        #expect(Set(catalog.controls.map(\.id.kind)) == [.builtIn, .shortcut, .evolution])
+        #expect(statuses.contains(where: { $0.id == .darkMode }))
+
+        let updatedDarkMode = RemoteControlStatus(
+            id: .darkMode,
+            isAvailable: true,
+            unavailableReason: nil,
+            isOn: true,
+            secondaryInformation: "On",
+            isProcessing: false,
+            revision: 999,
+            updatedAt: Date(timeIntervalSince1970: 999)
+        )
+        try await persistence.mergeStatus(RemoteReviewDemoRuntime.studioMacID, updatedDarkMode)
+        #expect(try await persistence.loadStatuses(RemoteReviewDemoRuntime.studioMacID)?
+            .first(where: { $0.id == .darkMode }) == updatedDarkMode)
+
+        await runtime.reset()
+        #expect(try await persistence.loadStatuses(RemoteReviewDemoRuntime.studioMacID)?
+            .first(where: { $0.id == .darkMode }) != updatedDarkMode)
+    }
+
     private func status(id: RemoteControlID, isOn: Bool, revision: UInt64) -> RemoteControlStatus {
         .init(
             id: id,

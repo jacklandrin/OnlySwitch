@@ -485,6 +485,12 @@
         }
       }
     },
+    "Allow Local Network Access" : {
+
+    },
+    "Allow OnlyRemote to find devices in Settings, then return and retry." : {
+
+    },
     "Built-ins" : {
       "localizations" : {
         "cs" : {
@@ -1074,6 +1080,9 @@
           }
         }
       }
+    },
+    "Check your network connection, then retry." : {
+
     },
     "Choose controls in Settings to add them here." : {
       "localizations" : {
@@ -2138,6 +2147,9 @@
         }
       }
     },
+    "Demo Mode — sample Macs and controls" : {
+
+    },
     "Discovered Macs" : {
       "localizations" : {
         "cs" : {
@@ -2845,6 +2857,12 @@
           }
         }
       }
+    },
+    "Exit Demo" : {
+
+    },
+    "Explore Demo" : {
+
     },
     "Forget %@?" : {
       "localizations" : {
@@ -4381,6 +4399,7 @@
       }
     },
     "Looking for Macs on your local network…" : {
+      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -4615,6 +4634,9 @@
           }
         }
       }
+    },
+    "Mac Discovery Is Temporarily Unavailable" : {
+
     },
     "Mac Offline — controls are disabled" : {
       "localizations" : {
@@ -6980,6 +7002,9 @@
         }
       }
     },
+    "Open Settings" : {
+
+    },
     "Open Settings to pair with a Mac running OnlySwitch." : {
       "localizations" : {
         "cs" : {
@@ -7097,6 +7122,9 @@
           }
         }
       }
+    },
+    "Opens OnlyRemote settings so you can allow local network access" : {
+
     },
     "Opens remote control settings" : {
       "localizations" : {
@@ -9225,6 +9253,7 @@
       }
     },
     "Retry Discovery" : {
+      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -9464,6 +9493,9 @@
         }
       }
     },
+    "Retry Mac discovery" : {
+
+    },
     "Retry Saving Layout" : {
       "localizations" : {
         "cs" : {
@@ -9581,6 +9613,9 @@
           }
         }
       }
+    },
+    "Returns to normal Mac pairing" : {
+
     },
     "Run" : {
       "localizations" : {
@@ -9935,6 +9970,12 @@
           }
         }
       }
+    },
+    "Searches your local network for OnlySwitch Macs again" : {
+
+    },
+    "Searching your local network…" : {
+
     },
     "Select a Mac to continue." : {
       "localizations" : {
@@ -13361,6 +13402,9 @@
           }
         }
       }
+    },
+    "View sample Macs and remote controls without connecting to a Mac." : {
+
     },
     "Wait a moment, start a new pairing session on the Mac, and try again." : {
       "localizations" : {

@@ -23,7 +23,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>OnlySwitch Remote connects to your paired Macs on your local network.</string>
+	<string>OnlyRemote finds and connects to your OnlySwitch Macs on your local network.</string>
 	<key>NSBonjourServices</key>
 	<array>
 		<string>_onlyswitch._tcp</string>

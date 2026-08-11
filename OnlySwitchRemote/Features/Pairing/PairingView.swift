@@ -9,24 +9,61 @@ struct PairingView: View {
             List {
                 Section("Discovered Macs") {
                     if store.discoveredMacs.isEmpty {
-                        if store.isDiscovering {
+                        switch store.discoveryPhase {
+                        case .idle, .searching:
                             HStack(spacing: 12) {
                                 ProgressView()
                                     .controlSize(.regular)
                                     .tint(.accentColor)
                                     .accessibilityHidden(true)
-                                Text("Looking for Macs on your local network…")
+                                Text("Searching your local network…")
                             }
                             .accessibilityElement(children: .combine)
-                        } else {
+                            .accessibilityLabel("Searching your local network…")
+
+                        case .empty, .found:
                             ContentUnavailableView(
                                 "No Macs Found",
                                 systemImage: "desktopcomputer.trianglebadge.exclamationmark",
                                 description: Text("Make sure remote access and pairing are active in OnlySwitch on your Mac.")
                             )
-                            Button("Retry Discovery", systemImage: "arrow.clockwise") {
+                            .accessibilityElement(children: .combine)
+                            Button("Retry", systemImage: "arrow.clockwise") {
                                 store.send(.retryDiscoveryTapped)
                             }
+                            .accessibilityLabel("Retry Mac discovery")
+                            .accessibilityHint("Searches your local network for OnlySwitch Macs again")
+
+                        case .needsLocalNetworkAccess:
+                            ContentUnavailableView(
+                                "Allow Local Network Access",
+                                systemImage: "network.badge.shield.half.filled",
+                                description: Text("Allow OnlyRemote to find devices in Settings, then return and retry.")
+                            )
+                            .accessibilityElement(children: .combine)
+                            Button("Open Settings", systemImage: "gear") {
+                                store.send(.openAppSettingsTapped)
+                            }
+                            .accessibilityLabel("Open Settings")
+                            .accessibilityHint("Opens OnlyRemote settings so you can allow local network access")
+                            Button("Retry", systemImage: "arrow.clockwise") {
+                                store.send(.retryDiscoveryTapped)
+                            }
+                            .accessibilityLabel("Retry Mac discovery")
+                            .accessibilityHint("Searches your local network for OnlySwitch Macs again")
+
+                        case .temporarilyUnavailable:
+                            ContentUnavailableView(
+                                "Mac Discovery Is Temporarily Unavailable",
+                                systemImage: "wifi.exclamationmark",
+                                description: Text("Check your network connection, then retry.")
+                            )
+                            .accessibilityElement(children: .combine)
+                            Button("Retry", systemImage: "arrow.clockwise") {
+                                store.send(.retryDiscoveryTapped)
+                            }
+                            .accessibilityLabel("Retry Mac discovery")
+                            .accessibilityHint("Searches your local network for OnlySwitch Macs again")
                         }
                     } else {
                         ForEach(store.discoveredMacs) { mac in

@@ -43,26 +43,269 @@ struct PairingFeatureTests {
     }
 
     @Test func completedDiscoveryOffersAWorkingRetry() async {
+        let clock = TestClock()
         let store = TestStore(initialState: PairingFeature.State()) {
             PairingFeature()
         } withDependencies: {
+            $0.continuousClock = clock
             $0.remoteConnection.discover = { AsyncStream { $0.finish() } }
         }
 
         await store.send(.task) {
             $0.discoveryGeneration = 1
             $0.isDiscovering = true
+            $0.discoveryPhase = .searching
         }
         await store.receive(.discoveryFinished(1)) {
             $0.isDiscovering = false
+            $0.discoveryPhase = .empty
         }
-        await store.send(.retryDiscoveryTapped)
+        await store.send(.retryDiscoveryTapped) {
+            $0.discoveryPhase = .idle
+        }
         await store.receive(.task) {
             $0.discoveryGeneration = 2
             $0.isDiscovering = true
+            $0.discoveryPhase = .searching
         }
         await store.receive(.discoveryFinished(2)) {
             $0.isDiscovering = false
+            $0.discoveryPhase = .empty
+        }
+    }
+
+    @Test func discoveryPresentationTimesOutAfterEightSecondsWithoutStoppingTheStream() async {
+        let clock = TestClock()
+        let stream = AsyncStream<DiscoveryEvent> { _ in }
+        let store = TestStore(initialState: PairingFeature.State()) {
+            PairingFeature()
+        } withDependencies: {
+            $0.continuousClock = clock
+            $0.remoteConnection.discover = { stream }
+        }
+
+        await store.send(.task) {
+            $0.discoveryGeneration = 1
+            $0.isDiscovering = true
+            $0.discoveryPhase = .searching
+        }
+        await clock.advance(by: .seconds(8))
+        await store.receive(.discoveryTimedOut(1)) {
+            $0.isDiscovering = false
+            $0.discoveryPhase = .empty
+        }
+        await store.send(.foregroundChanged(false)) {
+            $0.isForegrounded = false
+            $0.discoveryGeneration = 2
+            $0.pairingGeneration = 1
+            $0.discoveryPhase = .idle
+        }
+        await store.finish()
+    }
+
+    @Test func discoveredMacBeforeDeadlinePreventsEmptyPresentation() async {
+        let clock = TestClock()
+        let (stream, continuation) = AsyncStream.makeStream(of: DiscoveryEvent.self)
+        let mac = discovered()
+        let store = TestStore(initialState: PairingFeature.State()) {
+            PairingFeature()
+        } withDependencies: {
+            $0.continuousClock = clock
+            $0.remoteConnection.discover = { stream }
+        }
+
+        await store.send(.task) {
+            $0.discoveryGeneration = 1
+            $0.isDiscovering = true
+            $0.discoveryPhase = .searching
+        }
+        continuation.yield(.added(mac))
+        await store.receive(.discovery(1, .added(mac))) {
+            $0.discoveredMacs = [mac]
+            $0.discoveryPhase = .found
+        }
+        await clock.advance(by: .seconds(8))
+        #expect(store.state.discoveryPhase == .found)
+        #expect(store.state.isDiscovering)
+
+        await store.send(.foregroundChanged(false)) {
+            $0.isForegrounded = false
+            $0.discoveredMacs = []
+            $0.isDiscovering = false
+            $0.discoveryGeneration = 2
+            $0.pairingGeneration = 1
+            $0.discoveryPhase = .idle
+        }
+        continuation.finish()
+        await store.finish()
+    }
+
+    @Test func retryInvalidatesTheEarlierDeadlineAndOnlyLatestGenerationCanTimeOut() async {
+        let clock = TestClock()
+        let firstDiscovery = AsyncStream.makeStream(of: DiscoveryEvent.self)
+        let secondDiscovery = AsyncStream.makeStream(of: DiscoveryEvent.self)
+        let discoveryCount = LockIsolated(0)
+        let mac = discovered()
+        var state = PairingFeature.State()
+        state.discoveredMacs = [mac]
+        state.selectedMacID = macID
+        let store = TestStore(initialState: state) {
+            PairingFeature()
+        } withDependencies: {
+            $0.continuousClock = clock
+            $0.remoteConnection.discover = {
+                discoveryCount.withValue { count in
+                    defer { count += 1 }
+                    return count == 0 ? firstDiscovery.stream : secondDiscovery.stream
+                }
+            }
+        }
+
+        await store.send(.task) {
+            $0.discoveryGeneration = 1
+            $0.isDiscovering = true
+            $0.discoveryPhase = .searching
+        }
+        await store.send(.retryDiscoveryTapped) {
+            $0.discoveredMacs = []
+            $0.selectedMacID = nil
+            $0.isDiscovering = false
+            $0.discoveryPhase = .idle
+        }
+        await store.receive(.task) {
+            $0.discoveryGeneration = 2
+            $0.isDiscovering = true
+            $0.discoveryPhase = .searching
+        }
+        await store.send(.discoveryTimedOut(1))
+        #expect(store.state.discoveryPhase == .searching)
+        await clock.advance(by: .seconds(8))
+        await store.receive(.discoveryTimedOut(2)) {
+            $0.isDiscovering = false
+            $0.discoveryPhase = .empty
+        }
+        await store.send(.foregroundChanged(false)) {
+            $0.isForegrounded = false
+            $0.discoveryGeneration = 3
+            $0.pairingGeneration = 1
+            $0.discoveryPhase = .idle
+        }
+        firstDiscovery.continuation.finish()
+        secondDiscovery.continuation.finish()
+        await store.finish()
+    }
+
+    @Test func backgroundedPairingCancelsDiscoveryPresentationAndRejectsOldEvents() async {
+        let clock = TestClock()
+        let stream = AsyncStream<DiscoveryEvent> { _ in }
+        let mac = discovered()
+        let store = TestStore(initialState: PairingFeature.State()) {
+            PairingFeature()
+        } withDependencies: {
+            $0.continuousClock = clock
+            $0.remoteConnection.discover = { stream }
+        }
+
+        await store.send(.task) {
+            $0.discoveryGeneration = 1
+            $0.isDiscovering = true
+            $0.discoveryPhase = .searching
+        }
+        await store.send(.foregroundChanged(false)) {
+            $0.isForegrounded = false
+            $0.isDiscovering = false
+            $0.discoveryGeneration = 2
+            $0.pairingGeneration = 1
+            $0.discoveryPhase = .idle
+        }
+        await store.send(.discovery(1, .added(mac)))
+        #expect(store.state.discoveredMacs.isEmpty)
+        await store.finish()
+    }
+
+    @Test func cancellingPairingCancelsDiscoveryPresentationAndRejectsOldEvents() async {
+        let clock = TestClock()
+        let stream = AsyncStream<DiscoveryEvent> { _ in }
+        let mac = discovered()
+        let store = TestStore(initialState: PairingFeature.State()) {
+            PairingFeature()
+        } withDependencies: {
+            $0.continuousClock = clock
+            $0.remoteConnection.discover = { stream }
+        }
+
+        await store.send(.task) {
+            $0.discoveryGeneration = 1
+            $0.isDiscovering = true
+            $0.discoveryPhase = .searching
+        }
+        await store.send(.cancelTapped) {
+            $0.isDiscovering = false
+            $0.discoveryGeneration = 2
+            $0.pairingGeneration = 1
+            $0.discoveryPhase = .idle
+        }
+        await store.receive(.delegate(.cancelled))
+        await store.send(.discovery(1, .added(mac)))
+        #expect(store.state.discoveredMacs.isEmpty)
+        await store.finish()
+    }
+
+    @Test func waitingAndFailureEventsMapToActionableDiscoveryPhases() async {
+        var state = PairingFeature.State()
+        state.discoveryGeneration = 1
+        state.isDiscovering = true
+        state.discoveryPhase = .searching
+        let localNetworkStore = TestStore(initialState: state) { PairingFeature() }
+
+        await localNetworkStore.send(.discovery(1, .waiting(.localNetworkAccessNeeded))) {
+            $0.isDiscovering = false
+            $0.discoveryPhase = .needsLocalNetworkAccess
+        }
+
+        let unavailableStore = TestStore(initialState: state) { PairingFeature() }
+        await unavailableStore.send(.discovery(1, .waiting(.networkUnavailable))) {
+            $0.isDiscovering = false
+            $0.discoveryPhase = .temporarilyUnavailable
+        }
+        await unavailableStore.send(.discovery(1, .failed(.browserUnavailable)))
+    }
+
+    @Test func openSettingsIsInvokedOnlyForLocalNetworkAccessRecovery() async {
+        let calls = LockIsolated(0)
+        var state = PairingFeature.State()
+        state.discoveryPhase = .needsLocalNetworkAccess
+        let store = TestStore(initialState: state) { PairingFeature() } withDependencies: {
+            $0.remoteSystemSettings.openAppSettings = {
+                calls.withValue { $0 += 1 }
+            }
+        }
+
+        await store.send(.openAppSettingsTapped)
+        await store.finish()
+        #expect(calls.value == 1)
+    }
+
+    @Test func openSettingsIsIgnoredOutsideLocalNetworkAccessRecovery() async {
+        for phase in [
+            DiscoveryPhase.idle,
+            .searching,
+            .found,
+            .empty,
+            .temporarilyUnavailable,
+        ] {
+            let calls = LockIsolated(0)
+            var state = PairingFeature.State()
+            state.discoveryPhase = phase
+            let store = TestStore(initialState: state) { PairingFeature() } withDependencies: {
+                $0.remoteSystemSettings.openAppSettings = {
+                    calls.withValue { $0 += 1 }
+                }
+            }
+
+            await store.send(.openAppSettingsTapped)
+            await store.finish()
+            #expect(calls.value == 0)
         }
     }
 
@@ -361,6 +604,7 @@ struct PairingFeatureTests {
     }
 
     @Test func presentationDismissalStopsDiscoveryWithoutAbsentChildAction() async throws {
+        let clock = TestClock()
         let (stream, continuation) = AsyncStream.makeStream(of: DiscoveryEvent.self)
         let (terminations, terminationContinuation) = AsyncStream.makeStream(of: Void.self, bufferingPolicy: .bufferingOldest(1))
         continuation.onTermination = { _ in terminationContinuation.yield(()) }
@@ -368,6 +612,7 @@ struct PairingFeatureTests {
         let store = TestStore(initialState: state) {
             SettingsFeature()
         } withDependencies: {
+            $0.continuousClock = clock
             $0.remoteConnection.discover = { stream }
             $0.remotePersistence.loadLayout = { _ in nil }
             $0.remotePersistence.loadCatalog = { _ in nil }
@@ -376,6 +621,7 @@ struct PairingFeatureTests {
         await store.send(.pairing(.presented(.task))) {
             $0.pairing?.discoveryGeneration = 1
             $0.pairing?.isDiscovering = true
+            $0.pairing?.discoveryPhase = .searching
         }
         await store.send(.pairing(.dismiss)) { $0.pairing = nil }
         var iterator = terminations.makeAsyncIterator()
@@ -385,6 +631,7 @@ struct PairingFeatureTests {
     }
 
     @Test func successfulPairingDismissesAndStopsDiscovery() async throws {
+        let clock = TestClock()
         let paired = PairedMac(
             id: macID,
             displayName: "Studio",
@@ -403,6 +650,7 @@ struct PairingFeatureTests {
         let store = TestStore(initialState: state) {
             SettingsFeature()
         } withDependencies: {
+            $0.continuousClock = clock
             $0.remoteConnection.discover = { stream }
             $0.remotePersistence.loadLayout = { _ in nil }
             $0.remotePersistence.loadCatalog = { _ in nil }
@@ -411,6 +659,7 @@ struct PairingFeatureTests {
         await store.send(.pairing(.presented(.task))) {
             $0.pairing?.discoveryGeneration = 1
             $0.pairing?.isDiscovering = true
+            $0.pairing?.discoveryPhase = .searching
         }
         await store.send(.pairing(.presented(.delegate(.paired(paired))))) {
             $0.pairing = nil
@@ -490,6 +739,40 @@ struct PairingFeatureTests {
         pairing.isFinalizing = true
         pairing.preparedTransactionID = UUID()
         #expect(pairing.isDismissDisabled)
+    }
+
+    @Test func reviewDemoPairsStudioThroughTheNormalPairingReducerWithItsPublishedCode() async {
+        let clock = TestClock()
+        let runtime = RemoteReviewDemoRuntime()
+        let connection = RemoteConnectionClient.reviewDemo(runtime: runtime)
+        let store = TestStore(initialState: PairingFeature.State()) {
+            PairingFeature()
+        } withDependencies: {
+            $0.continuousClock = clock
+            $0.remoteConnection = connection
+        }
+        store.exhaustivity = .off(showSkippedAssertions: false)
+
+        await store.send(.task)
+        await store.receive(\.discovery)
+        await store.receive(\.discovery)
+        await store.receive(\.discoveryFinished)
+        #expect(store.state.discoveredMacs.map(\.id) == [
+            RemoteReviewDemoRuntime.studioMacID,
+            RemoteReviewDemoRuntime.travelMacID,
+        ])
+
+        await store.send(.selectMac(RemoteReviewDemoRuntime.studioMacID))
+        await store.send(.codeChanged(RemoteReviewDemoRuntime.pairingCode))
+        #expect(store.state.code == RemoteReviewDemoRuntime.pairingCode)
+        #expect(store.state.canPair)
+        await store.send(.pairTapped)
+        await store.receive(\.prepared)
+        await store.receive(\.finalizeResponse)
+        await store.receive(\.delegate)
+        #expect(store.state.isPairing == false)
+        #expect(store.state.isFinalizing == false)
+        await store.finish()
     }
 
     private func discovered(name: String = "Studio", port: UInt16 = 9_000) -> DiscoveredMac {

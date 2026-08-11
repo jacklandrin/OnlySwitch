@@ -39,6 +39,15 @@ enum PairingIssue: Error, Equatable, Sendable {
     }
 }
 
+enum DiscoveryPhase: Equatable, Sendable {
+    case idle
+    case searching
+    case found
+    case empty
+    case needsLocalNetworkAccess
+    case temporarilyUnavailable
+}
+
 @Reducer
 struct PairingFeature {
     @ObservableState
@@ -54,6 +63,7 @@ struct PairingFeature {
         var issue: PairingIssue?
         var isForegrounded = true
         var isDiscovering = false
+        var discoveryPhase: DiscoveryPhase = .idle
         var discoveryGeneration: UInt64 = 0
         var pairingGeneration: UInt64 = 0
 
@@ -98,7 +108,9 @@ struct PairingFeature {
         case task
         case discovery(UInt64, DiscoveryEvent)
         case discoveryFinished(UInt64)
+        case discoveryTimedOut(UInt64)
         case retryDiscoveryTapped
+        case openAppSettingsTapped
         case selectMac(UUID)
         case codeChanged(String)
         case pairTapped
@@ -116,8 +128,10 @@ struct PairingFeature {
     }
 
     @Dependency(\.remoteConnection) var connection
+    @Dependency(\.remoteSystemSettings) var systemSettings
+    @Dependency(\.continuousClock) var clock
 
-    private enum CancelID { case discovery, pairing }
+    private enum CancelID { case discovery, discoveryDeadline, pairing }
     private static let allowedCodeScalars = Set("23456789ABCDEFGHJKMNPQRSTUVWXYZ".unicodeScalars.map(\.value))
 
     var body: some ReducerOf<Self> {
@@ -127,8 +141,9 @@ struct PairingFeature {
                 guard state.isForegrounded else { return .none }
                 state.discoveryGeneration &+= 1
                 state.isDiscovering = true
+                state.discoveryPhase = .searching
                 let generation = state.discoveryGeneration
-                return .run { [connection] send in
+                let discovery: Effect<Action> = .run { [connection] send in
                     do {
                         for await event in connection.discover() {
                             try Task.checkCancellation()
@@ -141,17 +156,37 @@ struct PairingFeature {
                     await send(.discoveryFinished(generation))
                 }
                 .cancellable(id: CancelID.discovery, cancelInFlight: true)
+                let deadline: Effect<Action> = .run { [clock] send in
+                    try await clock.sleep(for: .seconds(8))
+                    await send(.discoveryTimedOut(generation))
+                }
+                .cancellable(id: CancelID.discoveryDeadline, cancelInFlight: true)
+                return .merge(discovery, deadline)
 
             case let .discovery(generation, event):
                 guard generation == state.discoveryGeneration, state.isForegrounded else {
                     return .none
                 }
                 switch event {
+                case .started:
+                    return .none
                 case let .added(mac):
                     state.discoveredMacs.updateOrAppend(mac)
+                    if state.discoveryPhase != .idle {
+                        state.discoveryPhase = .found
+                        return .cancel(id: CancelID.discoveryDeadline)
+                    }
                 case let .removed(id):
                     state.discoveredMacs.remove(id: id)
-                    if state.isFinalizing, state.pairingTargetID == id { return .none }
+                    var effects: [Effect<Action>] = []
+                    if state.discoveredMacs.isEmpty, state.discoveryPhase != .idle {
+                        state.isDiscovering = false
+                        state.discoveryPhase = .empty
+                        effects.append(.cancel(id: CancelID.discoveryDeadline))
+                    }
+                    if state.isFinalizing, state.pairingTargetID == id {
+                        return .merge(effects)
+                    }
                     if state.selectedMacID == id {
                         state.selectedMacID = nil
                         state.issue = .selectedMacUnavailable
@@ -161,20 +196,52 @@ struct PairingFeature {
                         state.pairingTargetID = nil
                         state.isPairing = false
                         state.issue = .selectedMacUnavailable
-                        return .merge(
-                            .cancel(id: CancelID.pairing)
-                        )
+                        effects.append(.cancel(id: CancelID.pairing))
                     }
+                    return .merge(effects)
+                case let .waiting(failure), let .failed(failure):
+                    state.isDiscovering = false
+                    state.discoveryPhase = failure == .localNetworkAccessNeeded
+                        ? .needsLocalNetworkAccess
+                        : .temporarilyUnavailable
+                    return .cancel(id: CancelID.discoveryDeadline)
                 }
                 return .none
 
             case let .discoveryFinished(generation):
                 guard generation == state.discoveryGeneration else { return .none }
                 state.isDiscovering = false
+                if state.discoveredMacs.isEmpty, state.discoveryPhase == .searching {
+                    state.discoveryPhase = .empty
+                }
+                return .cancel(id: CancelID.discoveryDeadline)
+
+            case let .discoveryTimedOut(generation):
+                guard generation == state.discoveryGeneration,
+                      state.isForegrounded,
+                      state.discoveredMacs.isEmpty,
+                      state.discoveryPhase == .searching else { return .none }
+                state.isDiscovering = false
+                state.discoveryPhase = .empty
                 return .none
 
             case .retryDiscoveryTapped:
-                return .send(.task)
+                state.discoveredMacs.removeAll()
+                state.selectedMacID = nil
+                state.issue = nil
+                state.isDiscovering = false
+                state.discoveryPhase = .idle
+                return .merge(
+                    .cancel(id: CancelID.discovery),
+                    .cancel(id: CancelID.discoveryDeadline),
+                    .send(.task)
+                )
+
+            case .openAppSettingsTapped:
+                guard state.discoveryPhase == .needsLocalNetworkAccess else { return .none }
+                return .run { [systemSettings] _ in
+                    await systemSettings.openAppSettings()
+                }
 
             case let .selectMac(id):
                 guard state.isPairing == false else { return .none }
@@ -290,12 +357,21 @@ struct PairingFeature {
             case let .foregroundChanged(isForegrounded):
                 state.isForegrounded = isForegrounded
                 guard isForegrounded else {
-                    if state.isFinalizing { return .none }
+                    if state.isFinalizing {
+                        state.discoveryGeneration &+= 1
+                        state.isDiscovering = false
+                        state.discoveryPhase = .idle
+                        return .merge(
+                            .cancel(id: CancelID.discovery),
+                            .cancel(id: CancelID.discoveryDeadline)
+                        )
+                    }
                     Self.invalidate(&state)
                     state.discoveredMacs.removeAll()
                     state.selectedMacID = nil
                     return .merge(
                         .cancel(id: CancelID.discovery),
+                        .cancel(id: CancelID.discoveryDeadline),
                         .cancel(id: CancelID.pairing)
                     )
                 }
@@ -306,6 +382,7 @@ struct PairingFeature {
                 Self.invalidate(&state)
                 return .merge(
                     .cancel(id: CancelID.discovery),
+                    .cancel(id: CancelID.discoveryDeadline),
                     .cancel(id: CancelID.pairing),
                     .send(.delegate(.cancelled))
                 )
@@ -347,6 +424,7 @@ struct PairingFeature {
         state.pairingGeneration &+= 1
         state.pairingTargetID = nil
         state.isDiscovering = false
+        state.discoveryPhase = .idle
         state.isPairing = false
         state.isFinalizing = false
         state.preparedTransactionID = nil

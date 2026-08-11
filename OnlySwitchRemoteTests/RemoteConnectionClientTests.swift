@@ -12,6 +12,121 @@ struct RemoteConnectionClientTests {
     private let firstMac = UUID(uuidString: "00000000-0000-0000-0000-000000000001")!
     private let secondMac = UUID(uuidString: "00000000-0000-0000-0000-000000000002")!
 
+    @Test func discoveryLifecycleFailuresAreSanitizedValues() {
+        #expect(
+            DiscoveryEvent.waiting(.localNetworkAccessNeeded)
+                == .waiting(.localNetworkAccessNeeded)
+        )
+        #expect(
+            DiscoveryEvent.failed(.browserUnavailable)
+                != .failed(.networkUnavailable)
+        )
+    }
+
+    @Test func localNetworkPolicyDenialIsClassifiedWithoutExposingNWError() {
+        #expect(
+            RemoteConnectionRuntime.discoveryFailure(for: .posix(.EPERM))
+                == .localNetworkAccessNeeded
+        )
+    }
+
+    @Test func offlineDiscoveryErrorIsClassifiedAsNetworkUnavailable() {
+        #expect(
+            RemoteConnectionRuntime.discoveryFailure(for: .posix(.ENETDOWN))
+                == .networkUnavailable
+        )
+    }
+
+    @Test func unknownBrowserErrorIsClassifiedWithoutExposingNWError() {
+        #expect(
+            RemoteConnectionRuntime.discoveryFailure(for: .posix(.EIO))
+                == .browserUnavailable
+        )
+    }
+
+    @Test func reviewDemoUsesCanonicalMacsAuthenticatedStudioAndDemoOnlyEvents() async throws {
+        let runtime = RemoteReviewDemoRuntime()
+        let connection = RemoteConnectionClient.reviewDemo(runtime: runtime)
+
+        var discovery = connection.discover().makeAsyncIterator()
+        let studioEvent = try #require(await discovery.next())
+        let travelEvent = try #require(await discovery.next())
+        guard case let .added(studio) = studioEvent,
+              case let .added(travel) = travelEvent else {
+            Issue.record("Demo discovery must emit the two synthetic Macs as discovery events.")
+            return
+        }
+        #expect(studio.id == RemoteReviewDemoRuntime.studioMacID)
+        #expect(studio.displayName == "Studio")
+        #expect(travel.id == RemoteReviewDemoRuntime.travelMacID)
+        #expect(travel.displayName == "Travel")
+
+        let snapshot = await connection.snapshot()
+        let sessionID = try #require(snapshot.authenticatedSessionID)
+        #expect(snapshot.selectedMacID == RemoteReviewDemoRuntime.studioMacID)
+        #expect(snapshot.authenticatedMacID == RemoteReviewDemoRuntime.studioMacID)
+
+        let eventTask = Task { () -> [RemoteConnectionEvent?] in
+            var events = connection.events().makeAsyncIterator()
+            return [await events.next(), await events.next()]
+        }
+        await Task.yield()
+
+        let request = RemoteActionRequest(
+            requestID: UUID(uuidString: "00000000-0000-0000-0000-00000000D101")!,
+            controlID: .darkMode,
+            action: .setState(true)
+        )
+        let result = try await connection.send(.init(
+            macID: RemoteReviewDemoRuntime.studioMacID,
+            sessionID: sessionID,
+            request: request
+        ))
+        let received = await eventTask.value
+        guard case let .success(updatedStatus?) = result.result else {
+            Issue.record("Demo Dark Mode action must return its authoritative updated status.")
+            return
+        }
+
+        #expect(result.requestID == request.requestID)
+        #expect(updatedStatus.id == .darkMode)
+        #expect(updatedStatus.isOn == true)
+        #expect(received == [
+            .action(RemoteReviewDemoRuntime.studioMacID, result),
+            .status(RemoteReviewDemoRuntime.studioMacID, updatedStatus)
+        ])
+    }
+
+    @Test func reviewDemoResetRestoresTheCanonicalPairingPath() async throws {
+        let runtime = RemoteReviewDemoRuntime()
+        let connection = RemoteConnectionClient.reviewDemo(runtime: runtime)
+        var discovery = connection.discover().makeAsyncIterator()
+        let studioEvent = try #require(await discovery.next())
+        guard case let .added(studio) = studioEvent else {
+            Issue.record("Demo discovery must emit Studio as an added event.")
+            return
+        }
+
+        let prepared = try await connection.preparePairing(
+            studio,
+            RemoteReviewDemoRuntime.pairingCode,
+            "App Review"
+        )
+        #expect(prepared.mac.id == RemoteReviewDemoRuntime.studioMacID)
+        #expect(try await connection.finalizePairing(prepared.transactionID).id == RemoteReviewDemoRuntime.studioMacID)
+
+        await runtime.reset()
+        await #expect(throws: RemoteProtocolError.self) {
+            try await connection.preparePairing(studio, "WRONG-CODE", "App Review")
+        }
+        let resetPrepared = try await connection.preparePairing(
+            studio,
+            RemoteReviewDemoRuntime.pairingCode,
+            "App Review"
+        )
+        #expect(resetPrepared.mac.id == RemoteReviewDemoRuntime.studioMacID)
+    }
+
     @Test func catalogRejectsEmptyControlIdentifier() {
         let descriptor = RemoteControlDescriptor(
             id: .init(kind: .builtIn, value: ""),

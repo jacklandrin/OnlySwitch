@@ -631,6 +631,63 @@ struct DashboardFeatureTests {
         #expect(store.state.alert == nil)
     }
 
+    @Test func reviewDemoDashboardDarkModeActionChangesOnlyTheDemoTileState() async throws {
+        let runtime = RemoteReviewDemoRuntime()
+        let connection = RemoteConnectionClient.reviewDemo(runtime: runtime)
+        let persistence = RemotePersistenceClient.reviewDemo(runtime: runtime)
+        let macID = RemoteReviewDemoRuntime.studioMacID
+        let snapshot = await connection.snapshot()
+        let sessionID = try #require(snapshot.authenticatedSessionID)
+        let layout = try #require(try await persistence.loadLayout(macID))
+        let catalog = try #require(try await persistence.loadCatalog(macID))
+        let savedStatuses = try #require(try await persistence.loadStatuses(macID))
+        let initialDarkMode = try #require(savedStatuses.first(where: { $0.id == .darkMode }))
+        let requestID = UUID(uuidString: "00000000-0000-0000-0000-00000000D102")!
+        let studio = try #require((try await persistence.loadPairedMacs()).first(where: { $0.id == macID }))
+        var state = DashboardFeature.State(
+            pairedMacs: [studio],
+            selectedMacID: macID,
+            descriptors: .init(uniqueElements: catalog.controls),
+            catalogRevision: catalog.revision,
+            statuses: Dictionary(uniqueKeysWithValues: savedStatuses.map { ($0.id, .init(value: $0, isStale: false)) }),
+            orderedSelectedIDs: layout.order,
+            connectionState: .authenticated,
+            isActive: true
+        )
+        state.activeSessionID = sessionID
+        state.liveStatusControlIDs = Set(savedStatuses.map(\.id))
+        let store = TestStore(initialState: state) { DashboardFeature() } withDependencies: {
+            $0.remoteConnection = connection
+            $0.remotePersistence = persistence
+            $0.uuid = UUIDGenerator { requestID }
+        }
+
+        await store.send(.tileTapped(.darkMode)) {
+            $0.requestsInFlight = [.darkMode]
+            $0.requestIDs = [.darkMode: requestID]
+        }
+        let updatedDarkMode = RemoteControlStatus(
+            id: .darkMode,
+            isAvailable: true,
+            unavailableReason: nil,
+            isOn: true,
+            secondaryInformation: "On",
+            isProcessing: false,
+            revision: initialDarkMode.revision + 1,
+            updatedAt: initialDarkMode.updatedAt
+        )
+        let result = RemoteActionResult(requestID: requestID, result: .success(updatedDarkMode))
+        await store.receive(.actionResponse(.darkMode, requestID, .success(result))) {
+            $0.requestsInFlight = []
+            $0.requestIDs = [:]
+            $0.statuses[.darkMode] = .init(value: updatedDarkMode, isStale: false)
+        }
+
+        #expect(store.state.requestsInFlight.isEmpty)
+        #expect(store.state.statuses[.darkMode]?.value.isOn != initialDarkMode.isOn)
+        #expect(store.state.statuses[.darkMode]?.value.isOn == true)
+    }
+
     private func makeState(
         descriptor: RemoteControlDescriptor,
         status: RemoteControlStatus
