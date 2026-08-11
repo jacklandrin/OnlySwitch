@@ -9,6 +9,6 @@ import AppKit
 
 public extension NSEvent {
     var isRightClicked: Bool {
-        type == .rightMouseDown || modifierFlags.contains(.control)
+        type == .rightMouseDown || (type == .leftMouseDown && modifierFlags.contains(.control))
     }
 }
