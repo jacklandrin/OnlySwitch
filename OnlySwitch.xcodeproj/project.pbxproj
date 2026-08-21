@@ -7,12 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A1D0E10A2F0A000100BEEF01 /* SoundMixerSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E00B2F0A000100BEEF01 /* SoundMixerSwitch.swift */; };
-		2B346BE56384C700F4046FC4 /* SystemAudioMixer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AD1FCF5024EAC8DC9C8E5E /* SystemAudioMixer.swift */; };
-		6EC8A6CD714CA458603A0C05 /* SoundMixerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 643A9AC4ED24AE501343396D /* SoundMixerModel.swift */; };
-		732FB599FA7E3F9BEEF45DD9 /* SoundMixerPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3552BA772DD63DAD7EE8CF2 /* SoundMixerPanelView.swift */; };
-		C2CE44CA134851106759FA13 /* SoundMixerVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = A47E483C8C562DBBD024C25A /* SoundMixerVM.swift */; };
-		D418A0C2EBC2CD7CCD451615 /* SoundMixerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E43EF22E4BA4D2E63E454D7 /* SoundMixerService.swift */; };
 		0406E0222CA09F930007AFC2 /* OnlyControlClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406E0212CA09F8C0007AFC2 /* OnlyControlClient.swift */; };
 		0406E0242CA0BC460007AFC2 /* RefreshNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406E0232CA0BC460007AFC2 /* RefreshNotification.swift */; };
 		0406EDC42ACB3EE80015F4D0 /* EvolutionMarket.json in Resources */ = {isa = PBXBuildFile; fileRef = 0406EDC32ACB3EE80015F4D0 /* EvolutionMarket.json */; };
@@ -349,7 +343,11 @@
 		0DDC000000000000000000B2 /* DDCControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC000000000000000000A2 /* DDCControl.m */; };
 		0DDC000000000000000000B3 /* ExternalDisplayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC000000000000000000A3 /* ExternalDisplayManager.swift */; };
 		0DDC000000000000000000B4 /* BrightnessSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC000000000000000000A4 /* BrightnessSyncManager.swift */; };
+		2B346BE56384C700F4046FC4 /* SystemAudioMixer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AD1FCF5024EAC8DC9C8E5E /* SystemAudioMixer.swift */; };
+		6EC8A6CD714CA458603A0C05 /* SoundMixerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 643A9AC4ED24AE501343396D /* SoundMixerModel.swift */; };
+		732FB599FA7E3F9BEEF45DD9 /* SoundMixerPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3552BA772DD63DAD7EE8CF2 /* SoundMixerPanelView.swift */; };
 		A1D0E1092F0A000100BEEF01 /* AuthenticatorSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E00A2F0A000100BEEF01 /* AuthenticatorSwitch.swift */; };
+		A1D0E10A2F0A000100BEEF01 /* SoundMixerSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E00B2F0A000100BEEF01 /* SoundMixerSwitch.swift */; };
 		A1D200012F0B000200BEEF01 /* PureColorView in Frameworks */ = {isa = PBXBuildFile; productRef = A1D201012F0B000200BEEF01 /* PureColorView */; };
 		A1D200022F0B000200BEEF01 /* StickerView in Frameworks */ = {isa = PBXBuildFile; productRef = A1D201022F0B000200BEEF01 /* StickerView */; };
 		A1D200032F0B000200BEEF01 /* Authenticator in Frameworks */ = {isa = PBXBuildFile; productRef = A1D201032F0B000200BEEF01 /* Authenticator */; };
@@ -360,7 +358,16 @@
 		A9A98A412F78834500034ADB /* models.json in Resources */ = {isa = PBXBuildFile; fileRef = A9A98A402F78834500034ADB /* models.json */; };
 		A9C70D062EE490B3000A2367 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A9C70D052EE490B3000A2367 /* GoogleService-Info.plist */; };
 		A9F007CA2EC3D9BD002D9AB0 /* Design in Frameworks */ = {isa = PBXBuildFile; productRef = A9F007C92EC3D9BD002D9AB0 /* Design */; };
+		B210A0000000000000000001 /* RemoteSystemSettingsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B210A0000000000000000021 /* RemoteSystemSettingsClient.swift */; };
+		B220A0000000000000000001 /* RemoteReviewDemoClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B220A0000000000000000021 /* RemoteReviewDemoClient.swift */; };
+		B220A0000000000000000002 /* RemoteAppShellFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = B220A0000000000000000022 /* RemoteAppShellFeature.swift */; };
+		B220A0000000000000000003 /* RemoteAppShellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B220A0000000000000000023 /* RemoteAppShellView.swift */; };
+		B220A0000000000000000004 /* ReviewDemoFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = B220A0000000000000000024 /* ReviewDemoFeature.swift */; };
+		B220A0000000000000000005 /* ReviewDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B220A0000000000000000025 /* ReviewDemoView.swift */; };
+		B220A0000000000000000006 /* ReviewDemoScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B220A0000000000000000026 /* ReviewDemoScreen.swift */; };
+		C2CE44CA134851106759FA13 /* SoundMixerVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = A47E483C8C562DBBD024C25A /* SoundMixerVM.swift */; };
 		D35C00012F12000100D35C01 /* DesktopPet in Frameworks */ = {isa = PBXBuildFile; productRef = D35C00022F12000100D35C01 /* DesktopPet */; };
+		D418A0C2EBC2CD7CCD451615 /* SoundMixerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E43EF22E4BA4D2E63E454D7 /* SoundMixerService.swift */; };
 		F3A300000000000000000020 /* OnlySwitchRemoteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A300000000000000000010 /* OnlySwitchRemoteApp.swift */; };
 		F3A300000000000000000021 /* RemoteAppFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A300000000000000000011 /* RemoteAppFeature.swift */; };
 		F3A300000000000000000022 /* RemoteAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A300000000000000000012 /* RemoteAppView.swift */; };
@@ -412,13 +419,6 @@
 		F3A800000000000000000006 /* RemoteKeychainClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A800000000000000000026 /* RemoteKeychainClient.swift */; };
 		F3A800000000000000000007 /* RemoteConnectionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A800000000000000000027 /* RemoteConnectionCoordinator.swift */; };
 		F3A800000000000000000008 /* RemoteConnectionEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A800000000000000000028 /* RemoteConnectionEvent.swift */; };
-		B210A0000000000000000001 /* RemoteSystemSettingsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B210A0000000000000000021 /* RemoteSystemSettingsClient.swift */; };
-		B220A0000000000000000001 /* RemoteReviewDemoClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B220A0000000000000000021 /* RemoteReviewDemoClient.swift */; };
-		B220A0000000000000000002 /* RemoteAppShellFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = B220A0000000000000000022 /* RemoteAppShellFeature.swift */; };
-		B220A0000000000000000003 /* RemoteAppShellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B220A0000000000000000023 /* RemoteAppShellView.swift */; };
-		B220A0000000000000000004 /* ReviewDemoFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = B220A0000000000000000024 /* ReviewDemoFeature.swift */; };
-		B220A0000000000000000005 /* ReviewDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B220A0000000000000000025 /* ReviewDemoView.swift */; };
-		B220A0000000000000000006 /* ReviewDemoScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B220A0000000000000000026 /* ReviewDemoScreen.swift */; };
 		F3A800000000000000000009 /* RemoteConnectionClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A800000000000000000029 /* RemoteConnectionClient.swift */; };
 		F3A80000000000000000000A /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = F3A800000000000000000030 /* Dependencies */; };
 		F3A80000000000000000000B /* RemoteConnectionClient+Live.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A80000000000000000002A /* RemoteConnectionClient+Live.swift */; };
@@ -445,13 +445,13 @@
 		F3AB00000000000000000003 /* SwiftNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = F3AB00000000000000000031 /* SwiftNavigation */; };
 		F3AB00000000000000000004 /* SwiftNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = F3AB00000000000000000032 /* SwiftNavigation */; };
 		F3AB00000000000000000005 /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = F3AB00000000000000000033 /* Dependencies */; };
-		F3AE00000000000000000001 /* Clocks in Frameworks */ = {isa = PBXBuildFile; productRef = F3AE00000000000000000003 /* Clocks */; };
 		F3AB00000000000000000006 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AB00000000000000000023 /* DashboardView.swift */; };
 		F3AB00000000000000000007 /* ControlTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AB00000000000000000024 /* ControlTileView.swift */; };
 		F3AB00000000000000000008 /* MacPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AB00000000000000000025 /* MacPickerView.swift */; };
 		F3AB00000000000000000009 /* RemoteEndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AB00000000000000000026 /* RemoteEndToEndTests.swift */; };
 		F3AC00000000000000000001 /* RemoteCatalogMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AC00000000000000000021 /* RemoteCatalogMonitor.swift */; };
 		F3AD00000000000000000001 /* HowToUseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AD00000000000000000021 /* HowToUseView.swift */; };
+		F3AE00000000000000000001 /* Clocks in Frameworks */ = {isa = PBXBuildFile; productRef = F3AE00000000000000000003 /* Clocks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -493,12 +493,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		A1D0E00B2F0A000100BEEF01 /* SoundMixerSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundMixerSwitch.swift; sourceTree = "<group>"; };
-		1E43EF22E4BA4D2E63E454D7 /* SoundMixerService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoundMixerService.swift; sourceTree = "<group>"; };
-		35AD1FCF5024EAC8DC9C8E5E /* SystemAudioMixer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SystemAudioMixer.swift; sourceTree = "<group>"; };
-		643A9AC4ED24AE501343396D /* SoundMixerModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoundMixerModel.swift; sourceTree = "<group>"; };
-		A47E483C8C562DBBD024C25A /* SoundMixerVM.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoundMixerVM.swift; sourceTree = "<group>"; };
-		B3552BA772DD63DAD7EE8CF2 /* SoundMixerPanelView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoundMixerPanelView.swift; sourceTree = "<group>"; };
 		0406E0212CA09F8C0007AFC2 /* OnlyControlClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyControlClient.swift; sourceTree = "<group>"; };
 		0406E0232CA0BC460007AFC2 /* RefreshNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshNotification.swift; sourceTree = "<group>"; };
 		0406EDC32ACB3EE80015F4D0 /* EvolutionMarket.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = EvolutionMarket.json; sourceTree = "<group>"; };
@@ -763,11 +757,24 @@
 		0DDC000000000000000000A2 /* DDCControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDCControl.m; sourceTree = "<group>"; };
 		0DDC000000000000000000A3 /* ExternalDisplayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalDisplayManager.swift; sourceTree = "<group>"; };
 		0DDC000000000000000000A4 /* BrightnessSyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrightnessSyncManager.swift; sourceTree = "<group>"; };
+		1E43EF22E4BA4D2E63E454D7 /* SoundMixerService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoundMixerService.swift; sourceTree = "<group>"; };
+		35AD1FCF5024EAC8DC9C8E5E /* SystemAudioMixer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SystemAudioMixer.swift; sourceTree = "<group>"; };
+		643A9AC4ED24AE501343396D /* SoundMixerModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoundMixerModel.swift; sourceTree = "<group>"; };
 		A1D0E00A2F0A000100BEEF01 /* AuthenticatorSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorSwitch.swift; sourceTree = "<group>"; };
+		A1D0E00B2F0A000100BEEF01 /* SoundMixerSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundMixerSwitch.swift; sourceTree = "<group>"; };
+		A47E483C8C562DBBD024C25A /* SoundMixerVM.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoundMixerVM.swift; sourceTree = "<group>"; };
 		A93C8BE02ECA34CB00D7CE52 /* AICommanderSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AICommanderSwitch.swift; sourceTree = "<group>"; };
 		A99F5CE8301140740029426A /* onlyswitch.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = onlyswitch.icon; sourceTree = "<group>"; };
 		A9A98A402F78834500034ADB /* models.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = models.json; sourceTree = "<group>"; };
 		A9C70D052EE490B3000A2367 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		B210A0000000000000000021 /* RemoteSystemSettingsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemSettingsClient.swift; sourceTree = "<group>"; };
+		B220A0000000000000000021 /* RemoteReviewDemoClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteReviewDemoClient.swift; sourceTree = "<group>"; };
+		B220A0000000000000000022 /* RemoteAppShellFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAppShellFeature.swift; sourceTree = "<group>"; };
+		B220A0000000000000000023 /* RemoteAppShellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAppShellView.swift; sourceTree = "<group>"; };
+		B220A0000000000000000024 /* ReviewDemoFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewDemoFeature.swift; sourceTree = "<group>"; };
+		B220A0000000000000000025 /* ReviewDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewDemoView.swift; sourceTree = "<group>"; };
+		B220A0000000000000000026 /* ReviewDemoScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewDemoScreen.swift; sourceTree = "<group>"; };
+		B3552BA772DD63DAD7EE8CF2 /* SoundMixerPanelView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoundMixerPanelView.swift; sourceTree = "<group>"; };
 		F3A300000000000000000003 /* OnlySwitchRemote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnlySwitchRemote.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3A300000000000000000004 /* OnlySwitchRemoteTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnlySwitchRemoteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3A300000000000000000010 /* OnlySwitchRemoteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlySwitchRemoteApp.swift; sourceTree = "<group>"; };
@@ -813,13 +820,6 @@
 		F3A800000000000000000028 /* RemoteConnectionEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConnectionEvent.swift; sourceTree = "<group>"; };
 		F3A800000000000000000029 /* RemoteConnectionClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConnectionClient.swift; sourceTree = "<group>"; };
 		F3A80000000000000000002A /* RemoteConnectionClient+Live.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RemoteConnectionClient+Live.swift"; sourceTree = "<group>"; };
-		B210A0000000000000000021 /* RemoteSystemSettingsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemSettingsClient.swift; sourceTree = "<group>"; };
-		B220A0000000000000000021 /* RemoteReviewDemoClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteReviewDemoClient.swift; sourceTree = "<group>"; };
-		B220A0000000000000000022 /* RemoteAppShellFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAppShellFeature.swift; sourceTree = "<group>"; };
-		B220A0000000000000000023 /* RemoteAppShellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAppShellView.swift; sourceTree = "<group>"; };
-		B220A0000000000000000024 /* ReviewDemoFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewDemoFeature.swift; sourceTree = "<group>"; };
-		B220A0000000000000000025 /* ReviewDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewDemoView.swift; sourceTree = "<group>"; };
-		B220A0000000000000000026 /* ReviewDemoScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewDemoScreen.swift; sourceTree = "<group>"; };
 		F3A900000000000000000021 /* RemoteAppFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAppFeatureTests.swift; sourceTree = "<group>"; };
 		F3A900000000000000000022 /* PairingFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingFeatureTests.swift; sourceTree = "<group>"; };
 		F3A900000000000000000023 /* PairingFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingFeature.swift; sourceTree = "<group>"; };
@@ -937,19 +937,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		C966D21407F0E94B525D2F99 /* SoundMixer */ = {
-			isa = PBXGroup;
-			children = (
-				643A9AC4ED24AE501343396D /* SoundMixerModel.swift */,
-				1E43EF22E4BA4D2E63E454D7 /* SoundMixerService.swift */,
-				A47E483C8C562DBBD024C25A /* SoundMixerVM.swift */,
-				B3552BA772DD63DAD7EE8CF2 /* SoundMixerPanelView.swift */,
-				35AD1FCF5024EAC8DC9C8E5E /* SystemAudioMixer.swift */,
-			);
-			name = SoundMixer;
-			path = SoundMixer;
-			sourceTree = "<group>";
-		};
 		0406EDC22ACB3EBE0015F4D0 /* Evolution */ = {
 			isa = PBXGroup;
 			children = (
@@ -1862,6 +1849,18 @@
 				0DDC000000000000000000A4 /* BrightnessSyncManager.swift */,
 			);
 			path = DDC;
+			sourceTree = "<group>";
+		};
+		C966D21407F0E94B525D2F99 /* SoundMixer */ = {
+			isa = PBXGroup;
+			children = (
+				643A9AC4ED24AE501343396D /* SoundMixerModel.swift */,
+				1E43EF22E4BA4D2E63E454D7 /* SoundMixerService.swift */,
+				A47E483C8C562DBBD024C25A /* SoundMixerVM.swift */,
+				B3552BA772DD63DAD7EE8CF2 /* SoundMixerPanelView.swift */,
+				35AD1FCF5024EAC8DC9C8E5E /* SystemAudioMixer.swift */,
+			);
+			path = SoundMixer;
 			sourceTree = "<group>";
 		};
 		F3A300000000000000000005 /* OnlySwitchRemote */ = {
@@ -2833,7 +2832,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 262;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -2859,7 +2858,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 262;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
@@ -3012,7 +3011,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 262;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
@@ -3067,7 +3066,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 262;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
@@ -3122,7 +3121,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 262;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -3162,7 +3161,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 262;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -3197,7 +3196,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = OnlySwitchRemote/OnlySwitchRemote.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 262;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchRemote/Info.plist;
@@ -3228,7 +3227,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = OnlySwitchRemote/OnlySwitchRemote.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 262;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchRemote/Info.plist;
@@ -3256,7 +3255,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 262;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
@@ -3285,7 +3284,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 262;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
@@ -3368,14 +3367,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		F3AE00000000000000000002 /* XCRemoteSwiftPackageReference "swift-clocks" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/pointfreeco/swift-clocks";
-			requirement = {
-				kind = exactVersion;
-				version = 1.0.5;
-			};
-		};
 		041B17872AD841EE0032919B /* XCRemoteSwiftPackageReference "Sparkle" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sparkle-project/Sparkle";
@@ -3490,14 +3481,17 @@
 				version = 1.1.1;
 			};
 		};
+		F3AE00000000000000000002 /* XCRemoteSwiftPackageReference "swift-clocks" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-clocks";
+			requirement = {
+				kind = exactVersion;
+				version = 1.0.5;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		F3AE00000000000000000003 /* Clocks */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F3AE00000000000000000002 /* XCRemoteSwiftPackageReference "swift-clocks" */;
-			productName = Clocks;
-		};
 		041B17882AD841EE0032919B /* Sparkle */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 041B17872AD841EE0032919B /* XCRemoteSwiftPackageReference "Sparkle" */;
@@ -3689,6 +3683,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 04DA45702E12F28A0051047B /* XCRemoteSwiftPackageReference "swift-dependencies" */;
 			productName = Dependencies;
+		};
+		F3AE00000000000000000003 /* Clocks */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F3AE00000000000000000002 /* XCRemoteSwiftPackageReference "swift-clocks" */;
+			productName = Clocks;
 		};
 /* End XCSwiftPackageProductDependency section */
 

@@ -83,6 +83,7 @@ Everyone can contribute macOS Shortcuts for OnlySwitch now. Please read [How to 
 | Hide Windows        | partly finished | True Tone                | finished          |
 | Top Sticker         | partly finished | Key Light                | finished          |
 | Only Agent          | finished        | Authenticator            | finished          |
+| Sound Mixer         | finished        |                          |                   |
 
 Since Version 1.3, switches can be added to or removed from the list.
 
@@ -271,7 +272,7 @@ Since version 2.3.10, this switch can be controlled via right-click icons.
 
 @Ryderwe for Authenticator
 
-@lou1s19 for Claud models of OnlyAgent and dim mode for the external monitor
+@lou1s19 for Claud models of OnlyAgent, Sound Mixer and dim mode for the external monitor
 
 
 ## License
