@@ -53,10 +53,7 @@ struct SettingsView: View {
         NavigationSplitView(sidebar: {
             List(selection:$settingVM.selection) {
                 ForEach(settingVM.settingItems, id:\.self ) { item in
-                    NavigationLink{
-                        page(item: item)
-                            .navigationTitle(item.rawValue.localized())
-                    } label:{
+                    NavigationLink(value: item) {
                         Text(item.rawValue.localized())
                             .frame(minWidth: 190, alignment:.leading)
                             .lineLimit(2)
@@ -65,7 +62,9 @@ struct SettingsView: View {
             }
             .listStyle(.sidebar)
         }, detail: {
-            GeneralView()
+            let selection = settingVM.selection ?? .General
+            page(item: selection)
+                .navigationTitle(selection.rawValue.localized())
         })
     }
 

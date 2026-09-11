@@ -5,7 +5,10 @@
 //  Created by Jacklandrin on 2022/5/18.
 //
 
+import AppKit
+import SwiftUI
 import XCTest
+import Testing
 import Combine
 @testable import OnlySwitch
 
@@ -123,4 +126,62 @@ class OnlySwitchTests: XCTestCase {
         }
     }
 
+}
+
+@MainActor
+struct SettingsViewTests {
+    @Test("The split-view detail renders the restored sidebar destination", .serialized)
+    func splitViewDetailRendersRestoredSelection() {
+        let originalSelection = SettingsVM.shared.selection
+        defer { SettingsVM.shared.selection = originalSelection }
+        SettingsVM.shared.selection = .Customize
+
+        let window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 900, height: 650),
+            styleMask: [.titled],
+            backing: .buffered,
+            defer: false
+        )
+        let hostingView = NSHostingView(rootView: SettingsView())
+        window.contentView = hostingView
+        window.orderFrontRegardless()
+        hostingView.layoutSubtreeIfNeeded()
+        defer { window.close() }
+
+        #expect(
+            waitForAccessibilityValue(
+                "To add or remove any switches on list".localized(),
+                in: hostingView
+            ),
+            "Settings should display the restored Customize page instead of General."
+        )
+    }
+
+    private func waitForAccessibilityValue(
+        _ value: String,
+        in element: any NSAccessibilityProtocol
+    ) -> Bool {
+        let deadline = Date().addingTimeInterval(1)
+
+        repeat {
+            if accessibilityTree(of: element).contains(value) {
+                return true
+            }
+            RunLoop.main.run(until: Date().addingTimeInterval(0.01))
+        } while Date() < deadline
+
+        return accessibilityTree(of: element).contains(value)
+    }
+
+    private func accessibilityTree(of element: any NSAccessibilityProtocol) -> [String] {
+        let children = element.accessibilityChildren() as? [any NSAccessibilityProtocol] ?? []
+
+        return [
+            element.accessibilityLabel(),
+            element.accessibilityValueDescription(),
+            element.accessibilityValue() as? String
+        ]
+            .compactMap { $0 }
+            + children.flatMap { accessibilityTree(of: $0) }
+    }
 }
