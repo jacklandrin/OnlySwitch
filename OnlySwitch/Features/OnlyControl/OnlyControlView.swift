@@ -134,6 +134,9 @@ struct OnlyControlView: View {
 final class OnlyControlWindow: NSWindow, NSWindowDelegate {
     static let shared = OnlyControlWindow()
 
+    private static let contentSize = NSSize(width: 820, height: 520)
+    private static let frameAutosaveName = "OnlyControlWindow"
+
     private(set) var isShowing = false
     var onVisibilityChanged: ((Bool) -> Void)?
     var outsideClickExclusionWindowNumbers = Set<Int>()
@@ -161,8 +164,8 @@ final class OnlyControlWindow: NSWindow, NSWindowDelegate {
 
     private func setupWindow() {
         let view = NSHostingView(rootView: OnlyControlView(store: onlyControlStore))
-        let contentRect = contentRect(forFrameRect: frame)
-        view.frame = contentRect
+        setContentSize(Self.contentSize)
+        view.frame = contentRect(forFrameRect: frame)
         view.canDrawSubviewsIntoLayer = true
         contentView = view
 
@@ -185,9 +188,8 @@ final class OnlyControlWindow: NSWindow, NSWindowDelegate {
     func show(monitorsOutsideClicks: Bool = false) {
         hideTask?.cancel()
         hideTask = nil
+        restoreFrame()
         makeKeyAndOrderFront(nil)
-        setFrameUsingName("OnlyControlWindow")
-        setFrameAutosaveName("OnlyControlWindow")
         setShowing(true)
         if monitorsOutsideClicks {
             startOutsideClickMonitoring()
@@ -229,6 +231,29 @@ final class OnlyControlWindow: NSWindow, NSWindowDelegate {
         guard isShowing != newValue else { return }
         isShowing = newValue
         onVisibilityChanged?(newValue)
+    }
+
+    private func restoreFrame() {
+        let restoredSavedFrame = setFrameUsingName(Self.frameAutosaveName)
+        setContentSize(Self.contentSize)
+
+        guard let screen = screenContainingWindow ?? NSScreen.main else {
+            center()
+            setFrameAutosaveName(Self.frameAutosaveName)
+            return
+        }
+
+        if restoredSavedFrame {
+            setFrame(constrainFrameRect(frame, to: screen), display: false)
+        } else {
+            center()
+        }
+
+        setFrameAutosaveName(Self.frameAutosaveName)
+    }
+
+    private var screenContainingWindow: NSScreen? {
+        NSScreen.screens.first { $0.visibleFrame.intersects(frame) }
     }
 
     private func startOutsideClickMonitoring() {
