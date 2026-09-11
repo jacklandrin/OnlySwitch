@@ -185,3 +185,21 @@ struct SettingsViewTests {
             + children.flatMap { accessibilityTree(of: $0) }
     }
 }
+
+struct LocalNetworkPermissionMetadataTests {
+    @Test("The host app declares its local-network and Bonjour pairing metadata")
+    func hostAppDeclaresLocalNetworkPairingMetadata() throws {
+        let hostAppBundle = Bundle(for: AppDelegate.self)
+        let localNetworkPurpose = try #require(
+            hostAppBundle.object(forInfoDictionaryKey: "NSLocalNetworkUsageDescription") as? String
+        )
+        let bonjourServices = try #require(
+            hostAppBundle.object(forInfoDictionaryKey: "NSBonjourServices") as? [String]
+        )
+
+        #expect(
+            localNetworkPurpose == "Only Switch uses your local network to let OnlyRemote on your iPhone or iPad discover and control this Mac."
+        )
+        #expect(bonjourServices.contains("_onlyswitch._tcp"))
+    }
+}

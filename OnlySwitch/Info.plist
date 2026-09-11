@@ -6,6 +6,8 @@
 	<array>
 		<string>_onlyswitch._tcp</string>
 	</array>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Only Switch uses your local network to let OnlyRemote on your iPhone or iPad discover and control this Mac.</string>
 	<key>AppIdentifierPrefix</key>
 	<string>$(AppIdentifierPrefix)</string>
 	<key>CFBundleURLTypes</key>
