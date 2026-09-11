@@ -5,6 +5,7 @@
 //  Created by OpenAI on 2026/7/5.
 //
 
+import Extensions
 import SwiftUI
 
 struct StickerCollapsedTitle: View {
@@ -15,8 +16,7 @@ struct StickerCollapsedTitle: View {
 
     var body: some View {
         ZStack {
-            Rectangle()
-                .foregroundStyle(.clear)
+            WindowDragView(onDoubleClick: doubleTapAction)
 
             if isCollapsed {
                 Text(Self.firstLine(in: content))
@@ -26,11 +26,10 @@ struct StickerCollapsedTitle: View {
                     .foregroundStyle(strokeColor)
                     .padding(.horizontal, 4)
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .allowsHitTesting(false)
             }
         }
         .frame(maxWidth: .infinity, minHeight: 20, maxHeight: 20)
-        .contentShape(Rectangle())
-        .onTapGesture(count: 2, perform: doubleTapAction)
     }
 
     static func firstLine(in content: String) -> String {
