@@ -10,6 +10,7 @@ import SwiftUI
 import XCTest
 import Testing
 import Combine
+import DesktopPet
 @testable import OnlySwitch
 
 class OnlySwitchTests: XCTestCase {
@@ -117,6 +118,47 @@ class OnlySwitchTests: XCTestCase {
         XCTAssertEqual(observed, true)
     }
 
+    func testPomodoroDesktopPetStateParsesFocusCountdown() {
+        let state = PomodoroTimerSwitch.desktopPetState(from: "w-24:59")
+
+        XCTAssertEqual(state, .init(phase: .focus, remainingTime: "24:59"))
+    }
+
+    func testPomodoroDesktopPetStateParsesBreakCountdown() {
+        let state = PomodoroTimerSwitch.desktopPetState(from: "r-04:59")
+
+        XCTAssertEqual(state, .init(phase: .breakTime, remainingTime: "04:59"))
+    }
+
+    func testPomodoroDesktopPetStateRejectsStoppedAndMalformedValues() {
+        for value in ["", "n-25:00", "w-", "w-25", "w-25:99", "x-05:00", "w-05:00-extra"] {
+            XCTAssertNil(PomodoroTimerSwitch.desktopPetState(from: value), value)
+        }
+    }
+
+    @MainActor
+    func testHiddenDesktopPetDoesNotRetainPomodoroPresentation() {
+        let appDelegate = AppDelegate()
+        let controller = TestDesktopPetPomodoroPresenter()
+        let focus = DesktopPetPomodoroState(phase: .focus, remainingTime: "24:59")
+
+        appDelegate.applyDesktopPetPomodoroState(focus, to: controller)
+
+        XCTAssertNil(controller.pomodoroState)
+    }
+
+    @MainActor
+    func testVisibleDesktopPetReceivesPomodoroPresentation() {
+        let appDelegate = AppDelegate()
+        let controller = TestDesktopPetPomodoroPresenter()
+        controller.isVisible = true
+        let breakState = DesktopPetPomodoroState(phase: .breakTime, remainingTime: "04:59")
+
+        appDelegate.applyDesktopPetPomodoroState(breakState, to: controller)
+
+        XCTAssertEqual(controller.pomodoroState, breakState)
+    }
+
     
     
     func testPerformanceExample() throws {
@@ -126,6 +168,16 @@ class OnlySwitchTests: XCTestCase {
         }
     }
 
+}
+
+@MainActor
+private final class TestDesktopPetPomodoroPresenter: DesktopPetPomodoroPresenting {
+    var isVisible = false
+    private(set) var pomodoroState: DesktopPetPomodoroState?
+
+    func setPomodoroState(_ state: DesktopPetPomodoroState?) {
+        pomodoroState = state
+    }
 }
 
 @MainActor

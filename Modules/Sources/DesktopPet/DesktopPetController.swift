@@ -4,8 +4,12 @@ import SwiftUI
 @MainActor
 public final class DesktopPetController: NSObject {
     public private(set) var isVisible = false
+    public private(set) var pomodoroState: DesktopPetPomodoroState?
     public var isControlPresented: Bool {
         presentation.isControlPresented
+    }
+    public var contentSize: CGSize {
+        panel.frame.size
     }
     public var windowNumber: Int {
         panel.windowNumber
@@ -50,6 +54,13 @@ public final class DesktopPetController: NSObject {
 
     public func show() {
         restoreFrameIfNeeded()
+        panel.setFrame(
+            DesktopPetLayout.resizedFramePreservingCenter(
+                panel.frame,
+                to: DesktopPetMetrics.canvasSize(for: pomodoroState)
+            ),
+            display: false
+        )
         constrainPanelToVisibleScreen()
         saveFrame()
         presentation.isActive = true
@@ -67,6 +78,22 @@ public final class DesktopPetController: NSObject {
 
     public func setControlPresented(_ isPresented: Bool) {
         presentation.isControlPresented = isPresented
+    }
+
+    public func setPomodoroState(_ state: DesktopPetPomodoroState?) {
+        guard pomodoroState != state else { return }
+
+        pomodoroState = state
+        presentation.pomodoroState = state
+        panel.setFrame(
+            DesktopPetLayout.resizedFramePreservingCenter(
+                panel.frame,
+                to: DesktopPetMetrics.canvasSize(for: state)
+            ),
+            display: isVisible
+        )
+        constrainPanelToVisibleScreen()
+        saveFrame()
     }
 
     func close() {

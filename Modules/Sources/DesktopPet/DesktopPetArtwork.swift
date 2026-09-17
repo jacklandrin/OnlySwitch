@@ -1,15 +1,19 @@
 import SwiftUI
 
 struct DesktopPetArtwork: View {
-    let verticalOffset: Double
-    let eyeScale: Double
-    let sliderOffset: Double
+    let motion: MotionValues
+    let pomodoroPhase: DesktopPetPomodoroPhase?
     let isControlPresented: Bool
     let isDragging: Bool
     let reduceMotion: Bool
 
     var body: some View {
         ZStack {
+            RoundedRectangle(cornerRadius: 38)
+                .stroke(haloColor.opacity(haloOpacity), lineWidth: 4)
+                .frame(width: 116, height: 96)
+                .blur(radius: 5)
+
             Ellipse()
                 .fill(.black.opacity(0.18))
                 .frame(width: 72, height: 12)
@@ -75,7 +79,10 @@ struct DesktopPetArtwork: View {
                 ))
                 .frame(width: 38, height: 38)
                 .shadow(color: .cyan.opacity(0.6), radius: 5)
-                .offset(x: (isControlPresented ? 20 : -20) + sliderOffset)
+                .offset(
+                    x: (isControlPresented ? 20 : -20)
+                        + (isControlPresented ? 0 : motion.sliderOffset)
+                )
 
             HStack(spacing: 5) {
                 Capsule()
@@ -85,8 +92,11 @@ struct DesktopPetArtwork: View {
                     .fill(Color(red: 0.04, green: 0.17, blue: 0.32))
                     .frame(width: 4, height: 10)
             }
-            .scaleEffect(x: 1, y: eyeScale)
-            .offset(x: (isControlPresented ? 20 : -20) + sliderOffset)
+            .scaleEffect(x: 1, y: motion.eyeScale)
+            .offset(
+                x: (isControlPresented ? 20 : -20)
+                    + (isControlPresented ? 0 : motion.sliderOffset)
+            )
 
             Circle()
                 .stroke(.mint, lineWidth: 3)
@@ -107,8 +117,25 @@ struct DesktopPetArtwork: View {
                 .offset(x: -31, y: -29)
         }
         .scaleEffect(isDragging ? 1.04 : 1)
-        .offset(y: verticalOffset)
+        .rotationEffect(.degrees(motion.rotationDegrees))
+        .offset(x: motion.horizontalOffset, y: motion.verticalOffset)
         .animation(reduceMotion ? nil : .snappy(duration: 0.18), value: isDragging)
         .animation(reduceMotion ? nil : .snappy(duration: 0.28), value: isControlPresented)
+    }
+
+    private var haloColor: Color {
+        switch pomodoroPhase {
+        case .focus:
+            .blue
+        case .breakTime:
+            .mint
+        case nil:
+            .clear
+        }
+    }
+
+    private var haloOpacity: Double {
+        guard pomodoroPhase != nil else { return 0 }
+        return 0.2 + motion.badgeGlowOpacity * 0.45
     }
 }

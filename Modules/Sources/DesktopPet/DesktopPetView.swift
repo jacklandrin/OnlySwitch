@@ -6,61 +6,82 @@ public struct DesktopPetView: View {
     private let isActive: Bool
     private let isDragging: Bool
     private let isControlPresented: Bool
+    private let pomodoroState: DesktopPetPomodoroState?
 
     public init(
         isActive: Bool = true,
         isDragging: Bool = false,
-        isControlPresented: Bool = false
+        isControlPresented: Bool = false,
+        pomodoroState: DesktopPetPomodoroState? = nil
     ) {
         self.isActive = isActive
         self.isDragging = isDragging
         self.isControlPresented = isControlPresented
+        self.pomodoroState = pomodoroState
     }
 
     public var body: some View {
-        TimelineView(
-            .animation(
-                minimumInterval: 1.0 / 30.0,
-                paused: !isActive || isDragging || reduceMotion
+        ZStack(alignment: .top) {
+            TimelineView(
+                .animation(
+                    minimumInterval: 1.0 / 30.0,
+                    paused: !isActive || isDragging || reduceMotion
+                )
+            ) { context in
+                DesktopPetArtwork(
+                    motion: DesktopPetMotion.values(
+                        at: context.date,
+                        pomodoroState: pomodoroState,
+                        isActive: isActive,
+                        isDragging: isDragging,
+                        reduceMotion: reduceMotion
+                    ),
+                    pomodoroPhase: pomodoroState?.phase,
+                    isControlPresented: isControlPresented,
+                    isDragging: isDragging,
+                    reduceMotion: reduceMotion
+                )
+                .frame(
+                    width: DesktopPetMetrics.artworkSize.width,
+                    height: DesktopPetMetrics.artworkSize.height
+                )
+            }
+            .offset(
+                y: DesktopPetMetrics.artworkOffsetY(for: pomodoroState)
             )
-        ) { context in
-            let motion = motionValues(at: context.date)
-            DesktopPetArtwork(
-                verticalOffset: motion.verticalOffset,
-                eyeScale: motion.eyeScale,
-                sliderOffset: isControlPresented ? 0 : motion.sliderOffset,
-                isControlPresented: isControlPresented,
-                isDragging: isDragging,
-                reduceMotion: reduceMotion
-            )
-            .frame(
-                width: DesktopPetMetrics.artworkSize.width,
-                height: DesktopPetMetrics.artworkSize.height
-            )
+
+            if let pomodoroState {
+                DesktopPetPomodoroBadge(
+                    state: pomodoroState,
+                    isActive: isActive,
+                    isDragging: isDragging,
+                    reduceMotion: reduceMotion
+                )
+                .frame(height: DesktopPetMetrics.pomodoroTimerLane.height)
+            }
         }
         .frame(
-            width: DesktopPetMetrics.canvasSize.width,
-            height: DesktopPetMetrics.canvasSize.height
+            width: DesktopPetMetrics.canvasSize(for: pomodoroState).width,
+            height: DesktopPetMetrics.canvasSize(for: pomodoroState).height,
+            alignment: .top
         )
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(isControlPresented ? "Hide Only Control" : "Show Only Control")
+        .accessibilityLabel(accessibilityLabel)
+        .accessibilityValue(pomodoroState?.remainingTime ?? "")
         .accessibilityHint("Click to toggle Only Control. Drag to move.")
         .accessibilityAddTraits(.isButton)
     }
 
-    private func motionValues(at date: Date) -> MotionValues {
-        guard isActive, !isDragging, !reduceMotion else { return .still }
+    private var accessibilityLabel: Text {
+        guard let pomodoroState else {
+            return Text(isControlPresented ? "Hide Only Control" : "Show Only Control")
+        }
 
-        let seconds = date.timeIntervalSinceReferenceDate
-        let breathing = sin(seconds * .pi * 2 / 3.2)
-        let blinkProgress = seconds.truncatingRemainder(dividingBy: 5.4)
-        let isBlinking = blinkProgress < 0.13
-        let switchWave = sin(seconds * .pi * 2 / 7.0)
-
-        return MotionValues(
-            verticalOffset: breathing * 1.5,
-            eyeScale: isBlinking ? 0.12 : 1,
-            sliderOffset: switchWave > 0.9 ? 2.5 : 0
-        )
+        switch pomodoroState.phase {
+        case .focus:
+            return Text(String(localized: "Desktop pet focus timer", bundle: .main))
+        case .breakTime:
+            return Text(String(localized: "Desktop pet break timer", bundle: .main))
+        }
     }
 }

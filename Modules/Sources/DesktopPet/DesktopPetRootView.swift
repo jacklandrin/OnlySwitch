@@ -10,11 +10,14 @@ struct DesktopPetRootView: View {
         DesktopPetView(
             isActive: presentation.isActive,
             isDragging: presentation.isDragging,
-            isControlPresented: presentation.isControlPresented
+            isControlPresented: presentation.isControlPresented,
+            pomodoroState: presentation.pomodoroState
         )
         .contentShape(
             .interaction,
-            DesktopPetInteractionShape(size: DesktopPetMetrics.artworkSize)
+            DesktopPetInteractionShape(
+                size: DesktopPetMetrics.interactionSize(for: presentation.pomodoroState)
+            )
         )
         .gesture(
             DragGesture(minimumDistance: 0, coordinateSpace: .global)

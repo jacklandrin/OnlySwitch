@@ -161,6 +161,14 @@ extension NSApplication {
 }
 
 @MainActor
+protocol DesktopPetPomodoroPresenting: AnyObject {
+    var isVisible: Bool { get }
+    func setPomodoroState(_ state: DesktopPetPomodoroState?)
+}
+
+extension DesktopPetController: DesktopPetPomodoroPresenting {}
+
+@MainActor
 class AppDelegate: NSObject, NSApplicationDelegate {
     var statusBar: StatusBarController?
     var popover = NSPopover()
@@ -174,6 +182,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     var checkUpdatePresenter = GitHubPresenter.shared
     private var desktopPetController: DesktopPetController?
+    private var desktopPetPomodoroRefreshTask: Task<Void, Never>?
     private let remoteAccessController = RemoteAccessController()
     private lazy var onlyRemoteCampaignController = OnlyRemoteCampaignWindowController()
     private var isStoppingRemoteAccess = false
@@ -230,6 +239,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationWillTerminate(_ notification: Notification) {
+        stopDesktopPetPomodoroRefresh()
         OnlyControlWindow.shared.onVisibilityChanged = nil
         NotificationCenter.default.removeObserver(
             self,
@@ -269,6 +279,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         if Preferences.shared.showDesktopPet {
             controller.show()
+            startDesktopPetPomodoroRefreshIfNeeded()
         }
 
         NotificationCenter.default.addObserver(
@@ -284,9 +295,71 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         if Preferences.shared.showDesktopPet {
             desktopPetController.show()
+            startDesktopPetPomodoroRefreshIfNeeded()
         } else {
+            stopDesktopPetPomodoroRefresh()
             desktopPetController.hide()
         }
+    }
+
+    private func startDesktopPetPomodoroRefreshIfNeeded() {
+        guard desktopPetController?.isVisible == true,
+              desktopPetPomodoroRefreshTask == nil
+        else { return }
+
+        desktopPetPomodoroRefreshTask = Task { @MainActor [weak self] in
+            while !Task.isCancelled {
+                do {
+                    guard let owner = self else { return }
+                    await owner.refreshDesktopPetPomodoroState()
+                }
+
+                do {
+                    try await Task.sleep(for: .seconds(1))
+                } catch is CancellationError {
+                    return
+                } catch {
+                    return
+                }
+            }
+        }
+    }
+
+    private func stopDesktopPetPomodoroRefresh() {
+        desktopPetPomodoroRefreshTask?.cancel()
+        desktopPetPomodoroRefreshTask = nil
+
+        if let desktopPetController {
+            applyDesktopPetPomodoroState(nil, to: desktopPetController)
+        }
+    }
+
+    private func refreshDesktopPetPomodoroState() async {
+        guard !Task.isCancelled,
+              let controller = desktopPetController,
+              controller.isVisible
+        else { return }
+
+        let state = await PomodoroTimerSwitch.shared.desktopPetState()
+
+        guard !Task.isCancelled,
+              desktopPetController === controller,
+              controller.isVisible
+        else { return }
+
+        applyDesktopPetPomodoroState(state, to: controller)
+    }
+
+    func applyDesktopPetPomodoroState(
+        _ state: DesktopPetPomodoroState?,
+        to controller: any DesktopPetPomodoroPresenting
+    ) {
+        guard controller.isVisible else {
+            controller.setPomodoroState(nil)
+            return
+        }
+
+        controller.setPomodoroState(state)
     }
 
     func checkUpdate() {

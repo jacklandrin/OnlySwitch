@@ -1,8 +1,128 @@
 import CoreGraphics
+import Foundation
 import Testing
 @testable import DesktopPet
 
 struct DesktopPetLayoutTests {
+    @Test func pomodoroStatePreservesPhaseAndCountdown() {
+        let state = DesktopPetPomodoroState(phase: .focus, remainingTime: "24:59")
+
+        #expect(state.phase == .focus)
+        #expect(state.remainingTime == "24:59")
+        #expect(
+            state != DesktopPetPomodoroState(
+                phase: .breakTime,
+                remainingTime: "24:59"
+            )
+        )
+    }
+
+    @Test func focusMotionPulsesWithoutSway() {
+        let values = DesktopPetMotion.values(
+            at: Date(timeIntervalSinceReferenceDate: 0.6),
+            pomodoroState: .init(phase: .focus, remainingTime: "24:59"),
+            isActive: true,
+            isDragging: false,
+            reduceMotion: false
+        )
+
+        #expect(values.badgeScale > 1)
+        #expect(values.badgeGlowOpacity > 0)
+        #expect(values.horizontalOffset == 0)
+        #expect(values.rotationDegrees == 0)
+    }
+
+    @Test func breakMotionSwaysAndBounces() {
+        let values = DesktopPetMotion.values(
+            at: Date(timeIntervalSinceReferenceDate: 0.45),
+            pomodoroState: .init(phase: .breakTime, remainingTime: "04:59"),
+            isActive: true,
+            isDragging: false,
+            reduceMotion: false
+        )
+
+        #expect(values.verticalOffset != 0)
+        #expect(values.horizontalOffset != 0)
+        #expect(values.rotationDegrees != 0)
+    }
+
+    @Test func reducedMotionFreezesBothPomodoroAnimations() {
+        for phase in [DesktopPetPomodoroPhase.focus, .breakTime] {
+            let values = DesktopPetMotion.values(
+                at: Date(timeIntervalSinceReferenceDate: 1),
+                pomodoroState: .init(phase: phase, remainingTime: "10:00"),
+                isActive: true,
+                isDragging: false,
+                reduceMotion: true
+            )
+
+            #expect(values == .still)
+        }
+    }
+
+    @Test func inactivePomodoroPetIsStill() {
+        let values = DesktopPetMotion.values(
+            at: Date(timeIntervalSinceReferenceDate: 1),
+            pomodoroState: .init(phase: .focus, remainingTime: "10:00"),
+            isActive: false,
+            isDragging: false,
+            reduceMotion: false
+        )
+
+        #expect(values == .still)
+    }
+
+    @Test func draggedPomodoroPetIsStill() {
+        let values = DesktopPetMotion.values(
+            at: Date(timeIntervalSinceReferenceDate: 1),
+            pomodoroState: .init(phase: .breakTime, remainingTime: "04:59"),
+            isActive: true,
+            isDragging: true,
+            reduceMotion: false
+        )
+
+        #expect(values == .still)
+    }
+
+    @Test func pomodoroCanvasMakesTheTimerBadgeInteractive() {
+        let state = DesktopPetPomodoroState(phase: .focus, remainingTime: "25:00")
+        let size = DesktopPetMetrics.interactionSize(for: state)
+        let bounds = DesktopPetInteractionShape(size: size)
+            .path(in: CGRect(origin: .zero, size: DesktopPetMetrics.canvasSize(for: state)))
+            .boundingRect
+        let canvas = DesktopPetMetrics.canvasSize(for: state)
+        let artworkMinY = DesktopPetMetrics.artworkFrame.minY
+            + DesktopPetMetrics.artworkVerticalOffset(for: state)
+
+        #expect(bounds.minY <= DesktopPetMetrics.pomodoroTimerLane.minY)
+        #expect(bounds.maxY >= artworkMinY + DesktopPetMetrics.artworkSize.height)
+        #expect(
+            bounds.contains(
+                CGPoint(x: bounds.midX, y: DesktopPetMetrics.pomodoroTimerLane.midY)
+            )
+        )
+        #expect(bounds.contains(CGPoint(x: bounds.midX, y: artworkMinY + 4)))
+        #expect(bounds.maxY <= canvas.height)
+    }
+
+    @Test func pomodoroBadgeStartsAtCanvasTopAndArtworkUsesLayoutOffset() {
+        let activeState = DesktopPetPomodoroState(
+            phase: .focus,
+            remainingTime: "25:00"
+        )
+        let idleArtworkOffsetY = DesktopPetMetrics.artworkOffsetY(for: nil)
+        let activeArtworkOffsetY = DesktopPetMetrics.artworkOffsetY(for: activeState)
+
+        #expect(DesktopPetMetrics.pomodoroTimerLane.minY == 0)
+        #expect(idleArtworkOffsetY == DesktopPetMetrics.artworkFrame.minY)
+        #expect(activeArtworkOffsetY >= DesktopPetMetrics.pomodoroTimerLane.maxY)
+        #expect(
+            activeArtworkOffsetY
+                == DesktopPetMetrics.artworkFrame.minY
+                + DesktopPetMetrics.artworkVerticalOffset(for: activeState)
+        )
+    }
+
     @Test func expandedCanvasKeepsArtworkBoundaryAtRequestedInset() {
         let frame = DesktopPetLayout.defaultFrame(
             size: DesktopPetMetrics.canvasSize,
@@ -113,6 +233,26 @@ struct DesktopPetLayoutTests {
         controller.close()
 
         #expect(didClose)
+    }
+
+    @Test @MainActor func controllerPublishesPomodoroState() {
+        let controller = DesktopPetController(onActivate: {})
+        let state = DesktopPetPomodoroState(phase: .focus, remainingTime: "24:59")
+
+        controller.setPomodoroState(state)
+
+        #expect(controller.pomodoroState == state)
+    }
+
+    @Test @MainActor func clearingPomodoroStateRestoresNormalPanelSize() {
+        let controller = DesktopPetController(onActivate: {})
+        controller.setPomodoroState(.init(phase: .breakTime, remainingTime: "04:59"))
+
+        #expect(controller.contentSize == DesktopPetMetrics.pomodoroCanvasSize)
+
+        controller.setPomodoroState(nil)
+
+        #expect(controller.contentSize == DesktopPetMetrics.canvasSize)
     }
 
     @Test func visibilityDefaultsToHidden() {

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import DesktopPet
 import Switches
 
 final class PomodoroTimerSwitch: SwitchProvider, @unchecked Sendable {
@@ -96,6 +97,59 @@ final class PomodoroTimerSwitch: SwitchProvider, @unchecked Sendable {
             status = .none
             return ""
         }
+    }
+
+    @MainActor
+    func desktopPetState() async -> DesktopPetPomodoroState? {
+        Self.desktopPetState(from: await currentInfo())
+    }
+
+    static func desktopPetState(from info: String) -> DesktopPetPomodoroState? {
+        let components = info.split(
+            separator: "-",
+            maxSplits: 1,
+            omittingEmptySubsequences: false
+        )
+        guard components.count == 2 else { return nil }
+
+        let phase: DesktopPetPomodoroPhase
+        switch String(components[0]) {
+        case Status.work.rawValue:
+            phase = .focus
+        case Status.rest.rawValue:
+            phase = .breakTime
+        default:
+            return nil
+        }
+
+        let countdown = components[1]
+        let timeComponents = countdown.split(
+            separator: ":",
+            maxSplits: 1,
+            omittingEmptySubsequences: false
+        )
+        guard timeComponents.count == 2 else { return nil }
+
+        let minutes = timeComponents[0]
+        let seconds = timeComponents[1]
+        guard !minutes.isEmpty,
+              minutes.utf8.allSatisfy(Self.isASCIIDigit),
+              seconds.utf8.count == 2,
+              seconds.utf8.allSatisfy(Self.isASCIIDigit),
+              let secondValue = Int(seconds),
+              (0...59).contains(secondValue)
+        else {
+            return nil
+        }
+
+        return DesktopPetPomodoroState(
+            phase: phase,
+            remainingTime: String(countdown)
+        )
+    }
+
+    private static func isASCIIDigit(_ byte: UInt8) -> Bool {
+        (48...57).contains(byte)
     }
 
     @MainActor

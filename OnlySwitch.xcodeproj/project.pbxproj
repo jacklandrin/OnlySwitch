@@ -372,6 +372,7 @@
 		B82710312700000000C0DE01 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B82710322700000000C0DE01 /* Security.framework */; };
 		C2CE44CA134851106759FA13 /* SoundMixerVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = A47E483C8C562DBBD024C25A /* SoundMixerVM.swift */; };
 		D35C00012F12000100D35C01 /* DesktopPet in Frameworks */ = {isa = PBXBuildFile; productRef = D35C00022F12000100D35C01 /* DesktopPet */; };
+		D35C00042F12000100D35C01 /* DesktopPet in Frameworks */ = {isa = PBXBuildFile; productRef = D35C00032F12000100D35C01 /* DesktopPet */; };
 		D418A0C2EBC2CD7CCD451615 /* SoundMixerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E43EF22E4BA4D2E63E454D7 /* SoundMixerService.swift */; };
 		F3A300000000000000000020 /* OnlySwitchRemoteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A300000000000000000010 /* OnlySwitchRemoteApp.swift */; };
 		F3A300000000000000000021 /* RemoteAppFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A300000000000000000011 /* RemoteAppFeature.swift */; };
@@ -867,6 +868,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D35C00042F12000100D35C01 /* DesktopPet in Frameworks */,
 				F3A40000000000000000000D /* RemoteCore in Frameworks */,
 				F3A40000000000000000000E /* RemoteTransport in Frameworks */,
 				0444D5E32838611600327D0B /* AVFoundation.framework in Frameworks */,
@@ -2107,6 +2109,7 @@
 			);
 			name = OnlySwitchTests;
 			packageProductDependencies = (
+				D35C00032F12000100D35C01 /* DesktopPet */,
 				0444D5D12836D87E00327D0B /* Alamofire */,
 				F3A400000000000000000032 /* RemoteCore */,
 				F3A400000000000000000033 /* RemoteTransport */,
@@ -3645,6 +3648,10 @@
 			productName = Design;
 		};
 		D35C00022F12000100D35C01 /* DesktopPet */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DesktopPet;
+		};
+		D35C00032F12000100D35C01 /* DesktopPet */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DesktopPet;
 		};
