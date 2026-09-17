@@ -5,6 +5,7 @@
             "provider": "openai",
             "family": "gpt",
             "items": [
+                "gpt-6-astra",
                 "gpt-5.6",
                 "gpt-5.6-sol",
                 "gpt-5.6-terra",
@@ -35,6 +36,7 @@
             "provider": "openai",
             "family": "codex",
             "items": [
+                "gpt-6-astra",
                 "gpt-5.6",
                 "gpt-5.6-sol",
                 "gpt-5.6-terra",
@@ -53,6 +55,9 @@
             "provider": "anthropic",
             "family": "claude",
             "items": [
+                "claude-fable-5-1",
+                "claude-sonnet-5",
+                "claude-opus-5",
                 "claude-opus-4-8",
                 "claude-sonnet-4-6",
                 "claude-haiku-4-5-20251001"
