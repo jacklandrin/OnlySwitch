@@ -224,6 +224,14 @@ When the switch is on, items on the left of the split(arrow-pointing) icon are h
 
 Since version 2.3.10, this switch can be controlled via right-click icons.
 
+On macOS 27 or later, OnlySwitch uses the system's native menu-bar visibility mechanism. The first collapse asks for Accessibility permission so OnlySwitch can keep the icons to the right of its divider visible. If permission is denied or a macOS update makes the native integration not available, OnlySwitch leaves the menu bar unchanged and the switch stays off. This macOS 27 implementation relies on a private API and is not suitable for Mac App Store distribution; future macOS updates can disable it.
+
+On macOS 27 or later, this feature uses the system’s native menu-bar hiding mechanism. While it is active, macOS also hides Now Playing and can hide Camera, AirDrop, Focus, and Timer. These are system-level collateral items that OnlySwitch cannot exempt or keep visible.
+
+For development testing on macOS 27, run the signed build from `/Applications`, not Xcode's `DerivedData` directory. The system's visibility matcher can fail to recognize a DerivedData-launched app even when its bundle identifier is explicitly allowed, hiding OnlySwitch's own icons. Quit the Xcode-run instance before launching the Applications copy. This was verified with the same build: both OnlySwitch icons remained visible with the switch enabled from Applications.
+
+If both OnlySwitch menu-bar icons disappear after command-dragging the divider, re-enable OnlySwitch under System Settings → Menu Bar → Allow in the Menu Bar. macOS 27 can disable the entire app there when an older, non-removable status item is dragged; current builds mark both OnlySwitch items as removable to prevent that system-wide disable.
+
 ## They talk about it
 
 |                                                                                                                                 |                                                                                                                                            |                                                                                                                                  |                                                                                                                        |
@@ -291,4 +299,3 @@ Since version 2.3.10, this switch can be controlled via right-click icons.
 
 ## License
 MIT
-

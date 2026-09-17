@@ -10,6 +10,7 @@
 #import "BrightnessControl.h"
 #import "KeyboardManager.h"
 #import "DDCControl.h"
+#import "MenuBarClientCoreBridge.h"
 #import <Foundation/Foundation.h>
 #import <IOKit/i2c/IOI2CInterface.h>
 #import <CoreGraphics/CoreGraphics.h>
@@ -25,4 +26,3 @@ extern int DisplayServicesGetLinearBrightness(CGDirectDisplayID display, float *
 extern int DisplayServicesSetLinearBrightness(CGDirectDisplayID display, float brightness);
 
 extern void CGSServiceForDisplayNumber(CGDirectDisplayID display, io_service_t* service);
-

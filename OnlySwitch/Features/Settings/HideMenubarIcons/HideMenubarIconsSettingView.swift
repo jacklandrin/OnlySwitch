@@ -20,6 +20,16 @@ struct HideMenubarIconsSettingView: View {
             Text("The feature can be triggered when right clicking the arrow-pointing icon, and disabled by right clicking the App icon.".localized())
                 .padding(.horizontal, 5)
                 .padding(.vertical)
+
+            if vm.showsNativeVisibilityLimitation {
+                Text("On macOS 27, hiding icons requires Accessibility permission and may be unavailable after a macOS update.".localized())
+                    .padding(.horizontal, 5)
+                    .padding(.bottom)
+
+                Text("On macOS 27, hiding menu bar icons also hides Now Playing and may hide Camera, AirDrop, Focus, and Timer. macOS does not allow OnlySwitch to keep these items visible while hiding is active.".localized())
+                    .padding(.horizontal, 5)
+                    .padding(.bottom)
+            }
             Divider()
             Spacer()
             Group {

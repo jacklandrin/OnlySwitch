@@ -37,7 +37,7 @@ public struct RollingText : View {
                         }
                         .fixedSize(horizontal: true, vertical: false)
                         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
-                        .onChange(of: self.text) { _ in
+                        .onChange(of: self.text) {
                             print("\(geometry.size.width)  \(stringWidth)")
                             if geometry.size.width - leftFade - rightFade < stringWidth {
                                 withAnimation() {

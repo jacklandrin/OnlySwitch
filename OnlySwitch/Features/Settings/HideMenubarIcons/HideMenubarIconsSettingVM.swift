@@ -13,8 +13,13 @@ import Combine
 class HideMenubarIconsSettingVM:ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     private var preferencesPublisher = PreferencesObserver.shared
+    private let operatingSystemMajorVersion: @Sendable () -> Int
     @Published private var preferences = PreferencesObserver.shared.preferences
     var durationSet = [0, 5, 10, 15, 30, 60]
+    var showsNativeVisibilityLimitation: Bool {
+        operatingSystemMajorVersion() >= 27
+    }
+
     var isEnable:Bool {
         get {
             return preferences.menubarCollaspable
@@ -34,7 +39,10 @@ class HideMenubarIconsSettingVM:ObservableObject {
     }
     
     
-    init() {
+    init(operatingSystemMajorVersion: @escaping @Sendable () -> Int = {
+        ProcessInfo.processInfo.operatingSystemVersion.majorVersion
+    }) {
+        self.operatingSystemMajorVersion = operatingSystemMajorVersion
         preferencesPublisher.$preferences.sink{_ in
             self.objectWillChange.send()
         }.store(in: &cancellables)

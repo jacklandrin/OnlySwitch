@@ -6,6 +6,7 @@
 //
 
 import AppKit
+import CoreGraphics
 import Defines
 import SwiftUI
 import Foundation
@@ -18,10 +19,20 @@ class StatusBarController {
         static let normal:CGFloat = NSStatusItem.squareLength
     }
 
+    @MainActor
+    static func configureStatusItem(_ item: NSStatusItem) {
+        item.behavior.insert(.removalAllowed)
+        item.isVisible = true
+    }
+
     private var mainItem: NSStatusItem
     private var markItem: NSStatusItem?
     private var popover: NSPopover
     private var eventMonitor : EventMonitor?
+    private let menuBarTransitionOwner = UUID()
+    private let privateMenuBarBridge = MenuBarClientCoreBridgeAdapter()
+    private var nativeVisibilityApplier: MenuBarClientCoreVisibilityApplier!
+    private var menuBarIconHidingCoordinator: MenuBarIconHidingCoordinator!
     @UserDefaultValue(key: UserDefaults.Key.isMenubarCollapse, defaultValue: false)
     private var isMenubarCollapse:Bool
     private var hasOtherPopover = false
@@ -46,6 +57,7 @@ class StatusBarController {
         self.popover = popover
 
         mainItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+        Self.configureStatusItem(mainItem)
         
         // macOS 26 Tahoe: Button might not be immediately available, retry if needed
         setupMainItemButtonWithRetry(image: currentMenubarIcon)
@@ -53,6 +65,8 @@ class StatusBarController {
         eventMonitor = EventMonitor(mask: [.leftMouseDown, .rightMouseDown]) { [weak self] event in
             self?.mouseEventHandler(event)
         }
+
+        configureMenuBarIconHiding()
 
         HideMenubarIconsSwitch.shared.isButtonPositionValid = {
             var isValid:Bool!
@@ -68,8 +82,9 @@ class StatusBarController {
 
         if menubarCollaspable {
             setMarkButton()
-            Task {
-                try? await HideMenubarIconsSwitch.shared.operateSwitch(isOn: isMenubarCollapse)
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                await self.restoreMenuBarIconHidingState()
             }
         }
 
@@ -112,7 +127,7 @@ class StatusBarController {
             guard menubarCollaspable else {return}
 
             Task {
-                if markItem?.length == MarkItemLength.collapse {
+                if isMenubarCollapse {
                     try? await HideMenubarIconsSwitch.shared.operateSwitch(isOn: false)
                 }
             }
@@ -141,17 +156,86 @@ class StatusBarController {
         
         guard let event = NSApp.currentEvent, event.isRightClicked else {return}
         Task {
-            if markItem?.length == MarkItemLength.normal {
+            if isMenubarCollapse == false {
                 try? await HideMenubarIconsSwitch.shared.operateSwitch(isOn: true)
             }
         }
     }
 
+    private func configureMenuBarIconHiding() {
+        let legacyApplier = LegacyMarkerVisibilityApplier { [weak self] isCollapsed in
+            guard let self else { return }
+            self.markItem?.length = isCollapsed ? MarkItemLength.collapse : MarkItemLength.normal
+        }
+        let resolver = AXMenuBarVisibleItemResolver(
+            markerScreenX: { [weak self] in self?.screenMidX(of: self?.markItem) },
+            mainItemScreenX: { [weak self] in self?.screenMidX(of: self?.mainItem) },
+            ownBundleIdentifier: { Bundle.main.bundleIdentifier },
+            source: SystemAXMenuBarSource(preferredDisplayBounds: { [weak self] in
+                guard let self else { return .null }
+                return self.displayBounds(of: self.markItem) ?? .null
+            })
+        )
+        let nativeApplier = MenuBarClientCoreVisibilityApplier(bridge: privateMenuBarBridge)
+        nativeVisibilityApplier = nativeApplier
+        menuBarIconHidingCoordinator = MenuBarIconHidingCoordinator(
+            nativeApplier: nativeApplier,
+            legacyApplier: legacyApplier,
+            visibleItemResolver: resolver
+        )
+
+        let owner = menuBarTransitionOwner
+        HideMenubarIconsSwitch.shared.installTransition(owner: owner) { [weak self] isCollapsed in
+            guard let self else { throw MenuBarIconHidingError.nativeOperationFailed }
+            try await self.menuBarIconHidingCoordinator.setCollapsed(isCollapsed)
+        }
+    }
+
+    private func screenMidX(of item: NSStatusItem?) -> CGFloat? {
+        guard let button = item?.button, let window = button.window else { return nil }
+        return window.convertToScreen(button.convert(button.bounds, to: nil)).midX
+    }
+
+    private func displayBounds(of item: NSStatusItem?) -> CGRect? {
+        guard let screen = item?.button?.window?.screen,
+              let screenNumber = screen.deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as? NSNumber
+        else { return nil }
+        return CGDisplayBounds(CGDirectDisplayID(screenNumber.uint32Value))
+    }
+
     private var isMarkItemValidPosition:Bool {
-        guard let mainItemX = self.mainItem.button?.getOrigin?.x,
-              let markItemX = self.markItem?.button?.getOrigin?.x
-        else {return false}
+        guard let mainItemX = screenMidX(of: mainItem), mainItemX.isFinite,
+              let markItemX = screenMidX(of: markItem), markItemX.isFinite
+        else { return false }
         return mainItemX >= markItemX
+    }
+
+    private func restoreMenuBarIconHidingState() async {
+        if isMenubarCollapse {
+            for attempt in 0..<10 {
+                guard isMarkItemValidPosition == false else { break }
+                guard attempt < 9 else {
+                    await recoverFromFailedMenuBarStartup()
+                    return
+                }
+                do {
+                    try await Task.sleep(for: .milliseconds(100))
+                } catch {
+                    return
+                }
+            }
+        }
+
+        do {
+            try await HideMenubarIconsSwitch.shared.operateSwitch(isOn: isMenubarCollapse)
+        } catch {
+            await recoverFromFailedMenuBarStartup()
+        }
+    }
+
+    private func recoverFromFailedMenuBarStartup() async {
+        try? await menuBarIconHidingCoordinator.setCollapsed(false)
+        HideMenubarIconsSwitch.shared.resetPersistedStateAfterFailedStartup()
     }
 
     /// Setup main item button with retry mechanism for macOS 26 compatibility
@@ -198,6 +282,9 @@ class StatusBarController {
     private func setMarkButton(attempt: Int = 0) {
         if markItem == nil {
             markItem = NSStatusBar.system.statusItem(withLength: MarkItemLength.normal)
+            if let markItem {
+                Self.configureStatusItem(markItem)
+            }
         }
         
         guard let markItemButton = markItem?.button else {
@@ -264,18 +351,6 @@ class StatusBarController {
         }
 
         NotificationCenter.default.addObserver(
-            forName: .toggleMenubarCollapse,
-            object: nil,
-            queue: .main
-        ) { [weak self] notify in
-            let isOn = notify.object as? Bool
-            Task { @MainActor [weak self] in
-                guard let self, let isOn else { return }
-                self.markItem?.length = isOn ? MarkItemLength.collapse : MarkItemLength.normal
-            }
-        }
-
-        NotificationCenter.default.addObserver(
             forName: .menubarCollapsable,
             object: nil,
             queue: .main
@@ -285,16 +360,23 @@ class StatusBarController {
                 guard let self, let enable else { return }
                 if enable {
                     self.setMarkButton()
-                    Task {
-                        try? await HideMenubarIconsSwitch.shared.operateSwitch(isOn: false)
-                    }
+                    try? await HideMenubarIconsSwitch.shared.operateSwitch(isOn: false)
                 } else if let markItem = self.markItem {
+                    try? await HideMenubarIconsSwitch.shared.operateSwitch(isOn: false)
                     // macOS 26 Tahoe: Safely remove status item
                     NSStatusBar.system.removeStatusItem(markItem)
                     self.markItem = nil
                     print("✅ Mark button removed successfully")
                 }
             }
+        }
+    }
+
+    isolated deinit {
+        nativeVisibilityApplier?.invalidateSynchronously()
+        HideMenubarIconsSwitch.shared.clearTransition(owner: menuBarTransitionOwner)
+        if let markItem {
+            NSStatusBar.system.removeStatusItem(markItem)
         }
     }
 

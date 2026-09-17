@@ -26430,7 +26430,55 @@
     "Starting…" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Starting…" } } } },
     "Status" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Status" } } } },
     "Stopped" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Stopped" } } } },
-    "This device will need to pair with this Mac again." : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "This device will need to pair with this Mac again." } } } }
+    "This device will need to pair with this Mac again." : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "This device will need to pair with this Mac again." } } } },
+    "On macOS 27, hiding icons requires Accessibility permission and may be unavailable after a macOS update." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : { "stringUnit" : { "state" : "translated", "value" : "V macOS 27 vyžaduje skrývání ikon oprávnění Zpřístupnění a po aktualizaci macOS nemusí být dostupné." } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Unter macOS 27 erfordert das Ausblenden von Symbolen die Bedienungshilfen-Berechtigung und ist nach einem macOS-Update möglicherweise nicht verfügbar." } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "On macOS 27, hiding icons requires Accessibility permission and may be unavailable after a macOS update." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "En macOS 27, ocultar iconos requiere permiso de Accesibilidad y puede dejar de estar disponible después de una actualización de macOS." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Sous macOS 27, le masquage des icônes nécessite l’autorisation Accessibilité et peut ne plus être disponible après une mise à jour de macOS." } },
+        "hr" : { "stringUnit" : { "state" : "translated", "value" : "U sustavu macOS 27 skrivanje ikona zahtijeva dopuštenje za pristupačnost i možda neće biti dostupno nakon ažuriranja sustava macOS." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Su macOS 27, per nascondere le icone è necessaria l’autorizzazione Accessibilità e la funzione potrebbe non essere disponibile dopo un aggiornamento di macOS." } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "macOS 27でアイコンを非表示にするにはアクセシビリティの許可が必要で、macOSのアップデート後に利用できなくなる場合があります。" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "macOS 27에서 아이콘을 숨기려면 손쉬운 사용 권한이 필요하며 macOS 업데이트 후 사용하지 못할 수 있습니다." } },
+        "nl" : { "stringUnit" : { "state" : "translated", "value" : "In macOS 27 is voor het verbergen van symbolen toestemming voor Toegankelijkheid vereist en is de functie mogelijk niet beschikbaar na een macOS-update." } },
+        "pl" : { "stringUnit" : { "state" : "translated", "value" : "W systemie macOS 27 ukrywanie ikon wymaga uprawnienia Dostępność i może być niedostępne po aktualizacji systemu macOS." } },
+        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "No macOS 27, ocultar ícones requer permissão de Acessibilidade e pode ficar indisponível após uma atualização do macOS." } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "В macOS 27 для скрытия значков требуется разрешение «Универсальный доступ», а после обновления macOS функция может стать недоступной." } },
+        "sk" : { "stringUnit" : { "state" : "translated", "value" : "V macOS 27 vyžaduje skrývanie ikon povolenie Prístupnosť a po aktualizácii macOS nemusí byť dostupné." } },
+        "so" : { "stringUnit" : { "state" : "translated", "value" : "macOS 27, qarinta astaamaha waxay u baahan tahay oggolaanshaha Helitaanka, waxaana dhici karta inaan la heli karin kadib cusboonaysiinta macOS." } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "macOS 27’de simgeleri gizlemek Erişilebilirlik izni gerektirir ve bir macOS güncellemesinden sonra kullanılamayabilir." } },
+        "uk" : { "stringUnit" : { "state" : "translated", "value" : "У macOS 27 для приховування іконок потрібен дозвіл «Універсальний доступ», а після оновлення macOS функція може стати недоступною." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "在 macOS 27 中，隐藏图标需要辅助功能权限，并且在 macOS 更新后可能无法使用。" } }
+      }
+    },
+    "On macOS 27, hiding menu bar icons also hides Now Playing and may hide Camera, AirDrop, Focus, and Timer. macOS does not allow OnlySwitch to keep these items visible while hiding is active." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : { "stringUnit" : { "state" : "translated", "value" : "V macOS 27 skrytí ikon na řádku nabídek skryje také položku Právě hraje a může skrýt Fotoaparát, AirDrop, Soustředění a Časovač. macOS neumožňuje aplikaci OnlySwitch ponechat tyto položky viditelné, když je skrývání aktivní." } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Unter macOS 27 blendet das Ausblenden von Menüleistensymbolen auch „Jetzt läuft“ aus und kann Kamera, AirDrop, Fokus und Timer ausblenden. macOS erlaubt OnlySwitch nicht, diese Elemente sichtbar zu halten, während das Ausblenden aktiv ist." } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "On macOS 27, hiding menu bar icons also hides Now Playing and may hide Camera, AirDrop, Focus, and Timer. macOS does not allow OnlySwitch to keep these items visible while hiding is active." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "En macOS 27, ocultar los iconos de la barra de menús también oculta Ahora suena y puede ocultar Cámara, AirDrop, Concentración y Temporizador. macOS no permite que OnlySwitch mantenga visibles estos elementos mientras la ocultación está activa." } },
+        "fil" : { "stringUnit" : { "state" : "translated", "value" : "Sa macOS 27, ang pagtatago ng mga icon sa menu bar ay nagtatago rin sa Now Playing at maaaring magtago sa Camera, AirDrop, Focus, at Timer. Hindi pinapayagan ng macOS ang OnlySwitch na panatilihing nakikita ang mga item na ito habang aktibo ang pagtatago." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Sous macOS 27, le masquage des icônes de la barre des menus masque également À l’écoute et peut masquer Appareil photo, AirDrop, Concentration et Minuteur. macOS ne permet pas à OnlySwitch de garder ces éléments visibles lorsque le masquage est actif." } },
+        "hr" : { "stringUnit" : { "state" : "translated", "value" : "U sustavu macOS 27 skrivanje ikona na traci izbornika skriva i stavku Trenutačno se reproducira, a može sakriti Kameru, AirDrop, Fokus i Brojač vremena. macOS ne dopušta aplikaciji OnlySwitch da te stavke zadrži vidljivima dok je skrivanje aktivno." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Su macOS 27, nascondere le icone della barra dei menu nasconde anche In riproduzione e può nascondere Fotocamera, AirDrop, Full immersion e Timer. macOS non consente a OnlySwitch di mantenere visibili questi elementi mentre la funzione è attiva." } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "macOS 27では、メニューバーのアイコンを非表示にすると「再生中」も非表示になり、カメラ、AirDrop、集中モード、タイマーも非表示になる場合があります。非表示機能が有効な間、OnlySwitchがこれらの項目を表示したままにすることはmacOSで許可されていません。" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "macOS 27에서 메뉴 막대 아이콘을 가리면 지금 재생 중도 가려지며 카메라, AirDrop, 집중 모드 및 타이머도 가려질 수 있습니다. 가리기가 활성화된 동안 macOS는 OnlySwitch가 이러한 항목을 계속 표시하도록 허용하지 않습니다." } },
+        "nl" : { "stringUnit" : { "state" : "translated", "value" : "In macOS 27 verbergt het verbergen van menubalksymbolen ook Nu afspelen en kan het Camera, AirDrop, Focus en Timer verbergen. macOS staat OnlySwitch niet toe deze onderdelen zichtbaar te houden terwijl verbergen actief is." } },
+        "pl" : { "stringUnit" : { "state" : "translated", "value" : "W systemie macOS 27 ukrywanie ikon paska menu ukrywa także odtwarzanie oraz może ukrywać aparat, AirDrop, tryb skupienia i minutnik. macOS nie pozwala aplikacji OnlySwitch utrzymywać tych elementów jako widocznych, gdy ukrywanie jest aktywne." } },
+        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "No macOS 27, ocultar os ícones da barra de menus também oculta Reproduzindo Agora e pode ocultar Câmera, AirDrop, Foco e Timer. O macOS não permite que o OnlySwitch mantenha esses itens visíveis enquanto a ocultação estiver ativa." } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "В macOS 27 при скрытии значков строки меню также скрывается элемент «Исполняется», а также могут скрываться Камера, AirDrop, Фокусирование и Таймер. macOS не позволяет OnlySwitch оставлять эти элементы видимыми, пока скрытие включено." } },
+        "sk" : { "stringUnit" : { "state" : "translated", "value" : "V macOS 27 skrytie ikon na paneli s ponukami skryje aj položku Práve hrá a môže skryť Kameru, AirDrop, Sústredenie a Časovač. macOS neumožňuje aplikácii OnlySwitch ponechať tieto položky viditeľné, keď je skrývanie aktívne." } },
+        "so" : { "stringUnit" : { "state" : "translated", "value" : "macOS 27, qarinta astaamaha barta menu-ga waxay sidoo kale qarisaa Hadda Ciyaaraya, waxayna qarin kartaa Kaamirada, AirDrop, Focus, iyo Timer. macOS uma oggola OnlySwitch inay walxahan muuqdaan inta qarintu shaqaynayso." } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "macOS 27'de menü çubuğu simgelerini gizlemek Şu An Çalınan'ı da gizler ve Kamera, AirDrop, Odak ve Sayaç'ı gizleyebilir. macOS, gizleme etkinken OnlySwitch'in bu öğeleri görünür tutmasına izin vermez." } },
+        "uk" : { "stringUnit" : { "state" : "translated", "value" : "У macOS 27 приховування іконок смуги меню також приховує «Зараз грає» та може приховати Камеру, AirDrop, Фокусування й Таймер. macOS не дозволяє OnlySwitch залишати ці елементи видимими, коли приховування активне." } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "在 macOS 27 中，隱藏選單列圖示也會隱藏「正在播放」，並可能隱藏相機、AirDrop、專注模式和計時器。啟用隱藏功能時，macOS 不允許 OnlySwitch 讓這些項目保持可見。" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "在 macOS 27 中，隐藏菜单栏图标也会隐藏“正在播放”，并可能隐藏相机、AirDrop、专注模式和计时器。隐藏功能启用时，macOS 不允许 OnlySwitch 让这些项目保持可见。" } }
+      }
+    }
   },
   "version" : "1.1"
 }
