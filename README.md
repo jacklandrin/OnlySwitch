@@ -44,6 +44,10 @@ Discord: https://discord.gg/UzSNpYdPZj
 ## OnlyRemote for iPhone and iPad
 
 Control OnlySwitch from your iPhone or iPad over your local network. Download [OnlyRemote on the App Store](https://apps.apple.com/us/app/onlyremote/id6793657946), then open **iOS Remote** in OnlySwitch settings to enable remote access and pair your device.
+<p align="center">
+<img width="301" height="655" alt="IMG_2195" src="https://github.com/user-attachments/assets/522eedc0-983e-4aee-82ca-c4624b6229c5" />
+</p>
+
 
 ## What's the OnlySwitch?
 OnlySwitch provides a series of toggle switches to simplify your routine work, such as Hidden desktop icons, dark mode, and hide notch of the new Macbook Pro. The switches show on your status bar, you can control them effortlessly. Switch and Shortcuts items can be customized (remove/add or sort) to show on the list. These functionalities even can be put on your desktop as Widgets.
