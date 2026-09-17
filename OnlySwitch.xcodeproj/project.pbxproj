@@ -415,6 +415,11 @@
 		F3A700000000000000000002 /* RemoteAccessSettingsFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A700000000000000000022 /* RemoteAccessSettingsFeature.swift */; };
 		F3A700000000000000000003 /* RemoteAccessSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A700000000000000000023 /* RemoteAccessSettingsView.swift */; };
 		F3A700000000000000000004 /* RemoteAccessController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A700000000000000000024 /* RemoteAccessController.swift */; };
+		F3AF000000000000000000001 /* OnlyRemoteCampaignFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AF000000000000000000021 /* OnlyRemoteCampaignFeatureTests.swift */; };
+		F3AF000000000000000000002 /* OnlyRemoteCampaignClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AF000000000000000000022 /* OnlyRemoteCampaignClient.swift */; };
+		F3AF000000000000000000003 /* OnlyRemoteCampaignFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AF000000000000000000023 /* OnlyRemoteCampaignFeature.swift */; };
+		F3AF000000000000000000004 /* OnlyRemoteCampaignView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AF000000000000000000024 /* OnlyRemoteCampaignView.swift */; };
+		F3AF000000000000000000005 /* OnlyRemoteCampaignWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AF000000000000000000025 /* OnlyRemoteCampaignWindowController.swift */; };
 		F3A800000000000000000001 /* RemotePersistenceClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A800000000000000000021 /* RemotePersistenceClientTests.swift */; };
 		F3A800000000000000000002 /* RemoteConnectionClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A800000000000000000022 /* RemoteConnectionClientTests.swift */; };
 		F3A800000000000000000003 /* PairedMac.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A800000000000000000023 /* PairedMac.swift */; };
@@ -820,6 +825,11 @@
 		F3A700000000000000000022 /* RemoteAccessSettingsFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAccessSettingsFeature.swift; sourceTree = "<group>"; };
 		F3A700000000000000000023 /* RemoteAccessSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAccessSettingsView.swift; sourceTree = "<group>"; };
 		F3A700000000000000000024 /* RemoteAccessController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAccessController.swift; sourceTree = "<group>"; };
+		F3AF000000000000000000021 /* OnlyRemoteCampaignFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyRemoteCampaignFeatureTests.swift; sourceTree = "<group>"; };
+		F3AF000000000000000000022 /* OnlyRemoteCampaignClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyRemoteCampaignClient.swift; sourceTree = "<group>"; };
+		F3AF000000000000000000023 /* OnlyRemoteCampaignFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyRemoteCampaignFeature.swift; sourceTree = "<group>"; };
+		F3AF000000000000000000024 /* OnlyRemoteCampaignView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyRemoteCampaignView.swift; sourceTree = "<group>"; };
+		F3AF000000000000000000025 /* OnlyRemoteCampaignWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyRemoteCampaignWindowController.swift; sourceTree = "<group>"; };
 		F3A800000000000000000021 /* RemotePersistenceClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemotePersistenceClientTests.swift; sourceTree = "<group>"; };
 		F3A800000000000000000022 /* RemoteConnectionClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConnectionClientTests.swift; sourceTree = "<group>"; };
 		F3A800000000000000000023 /* PairedMac.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairedMac.swift; sourceTree = "<group>"; };
@@ -1930,6 +1940,7 @@
 		F3A400000000000000000010 /* RemoteAccess */ = {
 			isa = PBXGroup;
 			children = (
+				F3AF000000000000000000010 /* Campaign */,
 				F3A400000000000000000011 /* Catalog */,
 				F3A400000000000000000012 /* Commands */,
 				F3A500000000000000000010 /* Host */,
@@ -1970,6 +1981,7 @@
 				F3A500000000000000000023 /* RemoteHostTestClient.swift */,
 				F3A600000000000000000021 /* RemoteHostLifecycleTests.swift */,
 				F3A700000000000000000021 /* RemoteAccessSettingsFeatureTests.swift */,
+				F3AF000000000000000000021 /* OnlyRemoteCampaignFeatureTests.swift */,
 			);
 			path = RemoteAccess;
 			sourceTree = "<group>";
@@ -1997,6 +2009,17 @@
 				F3A700000000000000000024 /* RemoteAccessController.swift */,
 			);
 			path = Settings;
+			sourceTree = "<group>";
+		};
+		F3AF000000000000000000010 /* Campaign */ = {
+			isa = PBXGroup;
+			children = (
+				F3AF000000000000000000022 /* OnlyRemoteCampaignClient.swift */,
+				F3AF000000000000000000023 /* OnlyRemoteCampaignFeature.swift */,
+				F3AF000000000000000000024 /* OnlyRemoteCampaignView.swift */,
+				F3AF000000000000000000025 /* OnlyRemoteCampaignWindowController.swift */,
+			);
+			path = Campaign;
 			sourceTree = "<group>";
 		};
 		F3A800000000000000000010 /* Models */ = {
@@ -2432,6 +2455,7 @@
 				F3A500000000000000000003 /* RemoteHostTestClient.swift in Sources */,
 				F3A600000000000000000001 /* RemoteHostLifecycleTests.swift in Sources */,
 				F3A700000000000000000001 /* RemoteAccessSettingsFeatureTests.swift in Sources */,
+				F3AF000000000000000000001 /* OnlyRemoteCampaignFeatureTests.swift in Sources */,
 				F3A400000000000000000008 /* RemoteCatalogProviderTests.swift in Sources */,
 				F3A400000000000000000009 /* RemoteCommandRouterTests.swift in Sources */,
 				F3A40000000000000000000A /* RemoteMacTestValues.swift in Sources */,
@@ -2526,6 +2550,10 @@
 				F3A700000000000000000002 /* RemoteAccessSettingsFeature.swift in Sources */,
 				F3A700000000000000000003 /* RemoteAccessSettingsView.swift in Sources */,
 				F3A700000000000000000004 /* RemoteAccessController.swift in Sources */,
+				F3AF000000000000000000002 /* OnlyRemoteCampaignClient.swift in Sources */,
+				F3AF000000000000000000003 /* OnlyRemoteCampaignFeature.swift in Sources */,
+				F3AF000000000000000000004 /* OnlyRemoteCampaignView.swift in Sources */,
+				F3AF000000000000000000005 /* OnlyRemoteCampaignWindowController.swift in Sources */,
 				F3A400000000000000000001 /* RemoteControlAvailability.swift in Sources */,
 				F3A400000000000000000002 /* RemoteIconAdapter.swift in Sources */,
 				F3A400000000000000000003 /* RemoteCatalogProvider.swift in Sources */,

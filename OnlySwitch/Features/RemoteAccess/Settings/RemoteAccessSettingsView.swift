@@ -5,8 +5,27 @@ import SwiftUI
 struct RemoteAccessSettingsView: View {
     @Bindable var store: StoreOf<RemoteAccessSettingsFeature>
 
+    private let onlyRemoteAppStoreURL = URL(
+        string: "https://apps.apple.com/us/app/onlyremote/id6793657946"
+    )!
+
     var body: some View {
         Form {
+            Section("OnlyRemote for iPhone and iPad".localized()) {
+                Text(
+                    "Control OnlySwitch from your iPhone or iPad when both devices are on the same local network."
+                        .localized()
+                )
+                .foregroundStyle(.secondary)
+
+                Link(destination: onlyRemoteAppStoreURL) {
+                    Label("Download OnlyRemote on the App Store".localized(), systemImage: "apple.logo")
+                }
+                .accessibilityHint(
+                    Text("Opens the OnlyRemote App Store page.".localized())
+                )
+            }
+
             Section("Remote Access".localized()) {
                 Toggle(
                     "Enable Remote Access".localized(),

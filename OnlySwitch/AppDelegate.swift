@@ -175,6 +175,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var checkUpdatePresenter = GitHubPresenter.shared
     private var desktopPetController: DesktopPetController?
     private let remoteAccessController = RemoteAccessController()
+    private lazy var onlyRemoteCampaignController = OnlyRemoteCampaignWindowController()
     private var isStoppingRemoteAccess = false
     private var didStopRemoteAccess = false
 
@@ -221,6 +222,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         // Workaround for issue [#147](https://github.com/jacklandrin/OnlySwitch/issues/147)
         NSApp.setActivationPolicy(.accessory)
+
+        Task { @MainActor [weak self] in
+            await Task.yield()
+            self?.onlyRemoteCampaignController.presentIfNeeded()
+        }
     }
 
     func applicationWillTerminate(_ notification: Notification) {
