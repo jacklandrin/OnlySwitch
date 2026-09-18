@@ -418,11 +418,6 @@
 		F3A700000000000000000002 /* RemoteAccessSettingsFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A700000000000000000022 /* RemoteAccessSettingsFeature.swift */; };
 		F3A700000000000000000003 /* RemoteAccessSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A700000000000000000023 /* RemoteAccessSettingsView.swift */; };
 		F3A700000000000000000004 /* RemoteAccessController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A700000000000000000024 /* RemoteAccessController.swift */; };
-		F3AF000000000000000000001 /* OnlyRemoteCampaignFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AF000000000000000000021 /* OnlyRemoteCampaignFeatureTests.swift */; };
-		F3AF000000000000000000002 /* OnlyRemoteCampaignClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AF000000000000000000022 /* OnlyRemoteCampaignClient.swift */; };
-		F3AF000000000000000000003 /* OnlyRemoteCampaignFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AF000000000000000000023 /* OnlyRemoteCampaignFeature.swift */; };
-		F3AF000000000000000000004 /* OnlyRemoteCampaignView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AF000000000000000000024 /* OnlyRemoteCampaignView.swift */; };
-		F3AF000000000000000000005 /* OnlyRemoteCampaignWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AF000000000000000000025 /* OnlyRemoteCampaignWindowController.swift */; };
 		F3A800000000000000000001 /* RemotePersistenceClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A800000000000000000021 /* RemotePersistenceClientTests.swift */; };
 		F3A800000000000000000002 /* RemoteConnectionClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A800000000000000000022 /* RemoteConnectionClientTests.swift */; };
 		F3A800000000000000000003 /* PairedMac.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A800000000000000000023 /* PairedMac.swift */; };
@@ -464,6 +459,11 @@
 		F3AC00000000000000000001 /* RemoteCatalogMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AC00000000000000000021 /* RemoteCatalogMonitor.swift */; };
 		F3AD00000000000000000001 /* HowToUseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AD00000000000000000021 /* HowToUseView.swift */; };
 		F3AE00000000000000000001 /* Clocks in Frameworks */ = {isa = PBXBuildFile; productRef = F3AE00000000000000000003 /* Clocks */; };
+		F3AF000000000000000000001 /* OnlyRemoteCampaignFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AF000000000000000000021 /* OnlyRemoteCampaignFeatureTests.swift */; };
+		F3AF000000000000000000002 /* OnlyRemoteCampaignClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AF000000000000000000022 /* OnlyRemoteCampaignClient.swift */; };
+		F3AF000000000000000000003 /* OnlyRemoteCampaignFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AF000000000000000000023 /* OnlyRemoteCampaignFeature.swift */; };
+		F3AF000000000000000000004 /* OnlyRemoteCampaignView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AF000000000000000000024 /* OnlyRemoteCampaignView.swift */; };
+		F3AF000000000000000000005 /* OnlyRemoteCampaignWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AF000000000000000000025 /* OnlyRemoteCampaignWindowController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -829,11 +829,6 @@
 		F3A700000000000000000022 /* RemoteAccessSettingsFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAccessSettingsFeature.swift; sourceTree = "<group>"; };
 		F3A700000000000000000023 /* RemoteAccessSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAccessSettingsView.swift; sourceTree = "<group>"; };
 		F3A700000000000000000024 /* RemoteAccessController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAccessController.swift; sourceTree = "<group>"; };
-		F3AF000000000000000000021 /* OnlyRemoteCampaignFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyRemoteCampaignFeatureTests.swift; sourceTree = "<group>"; };
-		F3AF000000000000000000022 /* OnlyRemoteCampaignClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyRemoteCampaignClient.swift; sourceTree = "<group>"; };
-		F3AF000000000000000000023 /* OnlyRemoteCampaignFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyRemoteCampaignFeature.swift; sourceTree = "<group>"; };
-		F3AF000000000000000000024 /* OnlyRemoteCampaignView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyRemoteCampaignView.swift; sourceTree = "<group>"; };
-		F3AF000000000000000000025 /* OnlyRemoteCampaignWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyRemoteCampaignWindowController.swift; sourceTree = "<group>"; };
 		F3A800000000000000000021 /* RemotePersistenceClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemotePersistenceClientTests.swift; sourceTree = "<group>"; };
 		F3A800000000000000000022 /* RemoteConnectionClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConnectionClientTests.swift; sourceTree = "<group>"; };
 		F3A800000000000000000023 /* PairedMac.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairedMac.swift; sourceTree = "<group>"; };
@@ -864,6 +859,11 @@
 		F3AB00000000000000000026 /* RemoteEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteEndToEndTests.swift; sourceTree = "<group>"; };
 		F3AC00000000000000000021 /* RemoteCatalogMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCatalogMonitor.swift; sourceTree = "<group>"; };
 		F3AD00000000000000000021 /* HowToUseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToUseView.swift; sourceTree = "<group>"; };
+		F3AF000000000000000000021 /* OnlyRemoteCampaignFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyRemoteCampaignFeatureTests.swift; sourceTree = "<group>"; };
+		F3AF000000000000000000022 /* OnlyRemoteCampaignClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyRemoteCampaignClient.swift; sourceTree = "<group>"; };
+		F3AF000000000000000000023 /* OnlyRemoteCampaignFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyRemoteCampaignFeature.swift; sourceTree = "<group>"; };
+		F3AF000000000000000000024 /* OnlyRemoteCampaignView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyRemoteCampaignView.swift; sourceTree = "<group>"; };
+		F3AF000000000000000000025 /* OnlyRemoteCampaignWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyRemoteCampaignWindowController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2017,17 +2017,6 @@
 			path = Settings;
 			sourceTree = "<group>";
 		};
-		F3AF000000000000000000010 /* Campaign */ = {
-			isa = PBXGroup;
-			children = (
-				F3AF000000000000000000022 /* OnlyRemoteCampaignClient.swift */,
-				F3AF000000000000000000023 /* OnlyRemoteCampaignFeature.swift */,
-				F3AF000000000000000000024 /* OnlyRemoteCampaignView.swift */,
-				F3AF000000000000000000025 /* OnlyRemoteCampaignWindowController.swift */,
-			);
-			path = Campaign;
-			sourceTree = "<group>";
-		};
 		F3A800000000000000000010 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -2093,6 +2082,17 @@
 				F3AB00000000000000000025 /* MacPickerView.swift */,
 			);
 			path = Dashboard;
+			sourceTree = "<group>";
+		};
+		F3AF000000000000000000010 /* Campaign */ = {
+			isa = PBXGroup;
+			children = (
+				F3AF000000000000000000022 /* OnlyRemoteCampaignClient.swift */,
+				F3AF000000000000000000023 /* OnlyRemoteCampaignFeature.swift */,
+				F3AF000000000000000000024 /* OnlyRemoteCampaignView.swift */,
+				F3AF000000000000000000025 /* OnlyRemoteCampaignWindowController.swift */,
+			);
+			path = Campaign;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -3093,7 +3093,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.7.5;
+				MARKETING_VERSION = 2.7.6;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3148,7 +3148,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.7.5;
+				MARKETING_VERSION = 2.7.6;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3194,7 +3194,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.7.5;
+				MARKETING_VERSION = 2.7.6;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = OnlySwitchWidgets;
@@ -3234,7 +3234,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.7.5;
+				MARKETING_VERSION = 2.7.6;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = OnlySwitchWidgets;
@@ -3252,7 +3252,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = OnlySwitchRemote/OnlySwitchRemote.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 269;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchRemote/Info.plist;
@@ -3283,7 +3283,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = OnlySwitchRemote/OnlySwitchRemote.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 269;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchRemote/Info.plist;
