@@ -19,6 +19,7 @@ struct RemoteAppView: View {
                                     .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
                             }
                         }
+                        .toolbarTitleDisplayMode(.inline)
                 } destination: { destinationStore in
                     switch destinationStore.case {
                     case let .settings(settingsStore):
