@@ -65,5 +65,5 @@ enum PrivilegedOperationError: Int, Error, Sendable, Equatable {
 
 /// The Objective-C-compatible XPC surface shared by the app and root helper.
 @objc protocol PrivilegedOperationXPC {
-    func setOperation(_ name: String, enabled: Bool, reply: @escaping (NSError?) -> Void)
+    func setOperation(_ name: String, enabled: Bool, reply: @escaping @Sendable (NSError?) -> Void)
 }
