@@ -34,6 +34,9 @@
 		C1A0C00618E9202600000001 /* com.jacklandrin.OnlySwitch.PrivilegedHelper.plist in Copy Privileged Helper Daemon Plist */ = {isa = PBXBuildFile; fileRef = C1A0C10718E9202600000001 /* com.jacklandrin.OnlySwitch.PrivilegedHelper.plist */; };
 		C1A0C00718E9202600000001 /* OnlySwitchPrivilegedHelper in Embed Privileged Helper */ = {isa = PBXBuildFile; fileRef = C1A0C10618E9202600000001 /* OnlySwitchPrivilegedHelper */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		C1A0C00918E9202600000001 /* PrivilegedHelperExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0C10418E9202600000001 /* PrivilegedHelperExecutor.swift */; };
+		C1A0D00118E9202600000001 /* PrivilegedOperationClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0D00318E9202600000001 /* PrivilegedOperationClient.swift */; };
+		C1A0D00218E9202600000001 /* PrivilegedHelperStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0D00418E9202600000001 /* PrivilegedHelperStatus.swift */; };
+		C1A0D00518E9202600000001 /* PrivilegedOperationClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0D00618E9202600000001 /* PrivilegedOperationClientTests.swift */; };
 		041D725728353A160083092D /* OnlySwitchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041D725628353A160083092D /* OnlySwitchTests.swift */; };
 		0427364827C1A5430068108F /* SpotifyScripting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0427364427C1A5430068108F /* SpotifyScripting.swift */; };
 		0427364927C1A5430068108F /* SpotifyBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0427364527C1A5430068108F /* SpotifyBridge.swift */; };
@@ -573,6 +576,9 @@
 		C1A0C10618E9202600000001 /* OnlySwitchPrivilegedHelper */ = {isa = PBXFileReference; explicitFileType = compiled.mach-o.executable; includeInIndex = 0; path = OnlySwitchPrivilegedHelper; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1A0C10718E9202600000001 /* com.jacklandrin.OnlySwitch.PrivilegedHelper.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = com.jacklandrin.OnlySwitch.PrivilegedHelper.plist; sourceTree = "<group>"; };
 		C1A0C10818E9202600000001 /* PrivilegedHelperExecutorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedHelperExecutorTests.swift; sourceTree = "<group>"; };
+		C1A0D00318E9202600000001 /* PrivilegedOperationClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedOperationClient.swift; sourceTree = "<group>"; };
+		C1A0D00418E9202600000001 /* PrivilegedHelperStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedHelperStatus.swift; sourceTree = "<group>"; };
+		C1A0D00618E9202600000001 /* PrivilegedOperationClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedOperationClientTests.swift; sourceTree = "<group>"; };
 		042661402780C147005DF2B9 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
 		0427364427C1A5430068108F /* SpotifyScripting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotifyScripting.swift; sourceTree = "<group>"; };
 		0427364527C1A5430068108F /* SpotifyBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotifyBridge.swift; sourceTree = "<group>"; };
@@ -2164,6 +2170,7 @@
 			children = (
 				C1A0B00418E9202600000001 /* PrivilegedOperationTests.swift */,
 				C1A0C10818E9202600000001 /* PrivilegedHelperExecutorTests.swift */,
+				C1A0D00618E9202600000001 /* PrivilegedOperationClientTests.swift */,
 			);
 			path = PrivilegedOperations;
 			sourceTree = "<group>";
@@ -2172,6 +2179,8 @@
 			isa = PBXGroup;
 			children = (
 				C1A0B00318E9202600000001 /* PrivilegedOperation.swift */,
+				C1A0D00318E9202600000001 /* PrivilegedOperationClient.swift */,
+				C1A0D00418E9202600000001 /* PrivilegedHelperStatus.swift */,
 				C1A0C10718E9202600000001 /* com.jacklandrin.OnlySwitch.PrivilegedHelper.plist */,
 			);
 			path = PrivilegedOperations;
@@ -2558,6 +2567,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C1A0C00518E9202600000001 /* PrivilegedHelperExecutorTests.swift in Sources */,
+				C1A0D00518E9202600000001 /* PrivilegedOperationClientTests.swift in Sources */,
 				C1A0B00218E9202600000001 /* PrivilegedOperationTests.swift in Sources */,
 				B82700012700000000C0DE01 /* MenuBarIconHidingTests.swift in Sources */,
 				F3A500000000000000000001 /* RemoteCredentialStoreTests.swift in Sources */,
@@ -2653,6 +2663,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				C1A0B00118E9202600000001 /* PrivilegedOperation.swift in Sources */,
+				C1A0D00118E9202600000001 /* PrivilegedOperationClient.swift in Sources */,
+				C1A0D00218E9202600000001 /* PrivilegedHelperStatus.swift in Sources */,
 				C1A0C00918E9202600000001 /* PrivilegedHelperExecutor.swift in Sources */,
 				B82710022700000000C0DE01 /* MenuBarIconHiding.swift in Sources */,
 				B82710042700000000C0DE01 /* MenuBarAccessibilityItemResolver.swift in Sources */,
