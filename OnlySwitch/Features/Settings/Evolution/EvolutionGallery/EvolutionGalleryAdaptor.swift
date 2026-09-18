@@ -9,22 +9,17 @@ import Foundation
 import Switches
 
 struct EvolutionGalleryAdaptor {
-    /// A catalogue response is not sufficient authority to add a root operation.
-    /// Bind each permitted operation to its stable, shipped gallery item identifier.
-    private static let curatedOperations: [UUID: PrivilegedOperation] = [
-        UUID(uuidString: "0AD2A1A8-E0BA-4F6A-9E28-2E2B06143C8D")!: .clamshellSleepDisabled
-    ]
-
     static func convertToGalleryItem(from model: EvolutionGalleryModel) -> EvolutionGalleryItem {
         var evolutionItem = EvolutionItem()
         evolutionItem.id = UUID(uuidString: model.id) ?? UUID()
         evolutionItem.name = model.name
         evolutionItem.iconName = model.icon_name
         evolutionItem.controlType = ControlType(rawValue: model.type) ?? .Switch
-        if let expectedOperation = curatedOperations[evolutionItem.id],
-           model.privileged_operation == expectedOperation.rawValue {
-            evolutionItem.privilegedOperation = expectedOperation
-        }
+        evolutionItem.privilegedOperation = EvolutionItem.trustedPrivilegedOperation(
+            id: evolutionItem.id,
+            controlType: evolutionItem.controlType,
+            requestedOperation: model.privileged_operation.flatMap(PrivilegedOperation.init(rawValue:))
+        )
 
         if evolutionItem.controlType == .Switch {
             if let on_command = model.on_command {

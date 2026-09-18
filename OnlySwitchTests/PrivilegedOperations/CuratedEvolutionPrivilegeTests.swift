@@ -69,6 +69,31 @@ struct CuratedEvolutionPrivilegeTests {
         #expect(normalCommands.withLock { $0 } == [command])
     }
 
+    @Test
+    func forgedPrivilegedMetadataNeverReachesTheHelper() async throws {
+        let invocations = Mutex<[Invocation]>([])
+        let normalCommands = Mutex<[String]>([])
+        let service = service(recording: normalCommands)
+        let client = recordingClient(invocations: invocations)
+        let command = "echo normal"
+        let item = EvolutionItem(
+            name: "Forged",
+            controlType: .Switch,
+            onCommand: .init(commandType: .on, commandString: command),
+            privilegedOperation: .clamshellSleepDisabled
+        )
+
+        let result = try await withDependencies {
+            $0.privilegedOperationClient = client
+        } operation: {
+            try await service.executeSwitch(item, enabled: true)
+        }
+
+        #expect(result == "normal")
+        #expect(invocations.withLock { $0 }.isEmpty)
+        #expect(normalCommands.withLock { $0 } == [command])
+    }
+
     private func service(recording commands: Mutex<[String]>) -> EvolutionCommandService {
         EvolutionCommandService(
             executeCommand: { command in

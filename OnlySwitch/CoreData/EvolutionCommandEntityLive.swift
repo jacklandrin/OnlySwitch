@@ -80,7 +80,11 @@ extension EvolutionCommandEntity {
 
         entity.name = item.name
         entity.itemType = item.controlType.rawValue
-        entity.privilegedOperationIdentifier = item.privilegedOperation?.rawValue
+        entity.privilegedOperationIdentifier = EvolutionItem.trustedPrivilegedOperation(
+            id: item.id,
+            controlType: item.controlType,
+            requestedOperation: item.privilegedOperation
+        )?.rawValue
         entity.timestamp = Date()
         entity.id = item.id
 

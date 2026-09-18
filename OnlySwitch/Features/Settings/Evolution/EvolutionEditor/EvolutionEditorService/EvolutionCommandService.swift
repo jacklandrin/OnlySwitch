@@ -18,7 +18,11 @@ extension EvolutionCommandService {
     /// Executes a switch Evolution without deriving privilege from its command text.
     /// Only a previously validated, curated operation identifier may use the helper.
     func executeSwitch(_ item: EvolutionItem, enabled: Bool) async throws -> String {
-        if let operation = item.privilegedOperation {
+        if let operation = EvolutionItem.trustedPrivilegedOperation(
+            id: item.id,
+            controlType: item.controlType,
+            requestedOperation: item.privilegedOperation
+        ) {
             @Dependency(\.privilegedOperationClient) var privilegedOperationClient
             try await privilegedOperationClient.perform(operation, enabled)
             return ""

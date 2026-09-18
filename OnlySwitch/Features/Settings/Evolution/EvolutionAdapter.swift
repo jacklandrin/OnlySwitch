@@ -31,9 +31,13 @@ struct EvolutionAdapter {
             controlType: controlType
         )
 
-        // Persisted data is untrusted at this boundary. Unknown identifiers are
-        // intentionally treated as ordinary Evolutions, never helper requests.
-        item.privilegedOperation = entity.privilegedOperationIdentifier.flatMap(PrivilegedOperation.init(rawValue:))
+        // Persisted data is untrusted at this boundary. It must match the
+        // compiled catalogue allowlist before it can request a helper operation.
+        item.privilegedOperation = EvolutionItem.trustedPrivilegedOperation(
+            id: id,
+            controlType: controlType,
+            requestedOperation: entity.privilegedOperationIdentifier.flatMap(PrivilegedOperation.init(rawValue:))
+        )
 
         if
             let onCommandStr = entity.turnOnCommand,

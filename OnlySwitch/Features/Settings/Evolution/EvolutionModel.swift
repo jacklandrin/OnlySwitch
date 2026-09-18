@@ -10,6 +10,13 @@ import Foundation
 import Switches
 
 struct EvolutionItem: Equatable, Identifiable {
+    /// Operations that an Evolution is permitted to request from the privileged
+    /// helper. This allowlist is deliberately compiled into the app rather than
+    /// derived from a gallery response or a persisted command.
+    private static let curatedPrivilegedOperations: [UUID: PrivilegedOperation] = [
+        UUID(uuidString: "0AD2A1A8-E0BA-4F6A-9E28-2E2B06143C8D")!: .clamshellSleepDisabled
+    ]
+
     var id = UUID()
     var name = ""
     var active = false
@@ -22,6 +29,23 @@ struct EvolutionItem: Equatable, Identifiable {
     /// Present only for a small, catalogue-curated operation.  User-authored
     /// Evolution commands never populate this value.
     var privilegedOperation: PrivilegedOperation?
+
+    /// Returns an operation only when both its stable, shipped Evolution ID and
+    /// its requested operation match the compiled allowlist. Call this at every
+    /// trust boundary; `privilegedOperation` itself may originate in Core Data.
+    static func trustedPrivilegedOperation(
+        id: UUID,
+        controlType: ControlType,
+        requestedOperation: PrivilegedOperation?
+    ) -> PrivilegedOperation? {
+        guard controlType == .Switch,
+              let expectedOperation = curatedPrivilegedOperations[id],
+              requestedOperation == expectedOperation else {
+            return nil
+        }
+
+        return expectedOperation
+    }
 
     func doSwitch() {
         @Dependency(\.evolutionCommandService) var evolutionCommandService
@@ -106,4 +130,3 @@ enum EvolutionError: Error, Equatable {
     case deleteFailed
     case noneEntity
 }
-
