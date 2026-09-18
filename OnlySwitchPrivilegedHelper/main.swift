@@ -6,7 +6,7 @@
 import Foundation
 
 private let helperMachService = "com.jacklandrin.OnlySwitch.PrivilegedHelper"
-private let permittedCallerRequirement = "identifier \\\"jacklandrin.OnlySwitch\\\" and certificate leaf[subject.OU] = \\\"B22726TNGH\\\""
+private let permittedCallerRequirement = "identifier \\\"jacklandrin.OnlySwitch\\\" and anchor apple generic and certificate leaf[subject.OU] = \\\"B22726TNGH\\\""
 
 final class PrivilegedHelperDelegate: NSObject, NSXPCListenerDelegate {
     private let executor = PrivilegedHelperExecutor()
@@ -29,7 +29,7 @@ private final class PrivilegedHelperService: NSObject, PrivilegedOperationXPC {
         self.executor = executor
     }
 
-    func setOperation(_ name: String, enabled: Bool, reply: @escaping (NSError?) -> Void) {
+    func setOperation(_ name: String, enabled: Bool, reply: @escaping @Sendable (NSError?) -> Void) {
         let request: PrivilegedOperationRequest
         do {
             request = try .init(requestName: name, enabled: enabled)

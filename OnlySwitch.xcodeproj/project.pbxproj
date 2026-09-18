@@ -2214,9 +2214,9 @@
 				0430887F275D709C00877E51 /* Launch at Login Helper */,
 				042661862780CBDE005DF2B9 /* Embed App Extensions */,
 				0456C9332ACCA79500DB7898 /* ShellScript */,
-				04A1B2C3D4E5F6789012345A /* Code Sign */,
 				C1A0C20218E9202600000001 /* Embed Privileged Helper */,
 				C1A0C20318E9202600000001 /* Copy Privileged Helper Daemon Plist */,
+				04A1B2C3D4E5F6789012345A /* Code Sign */,
 			);
 			buildRules = (
 			);
