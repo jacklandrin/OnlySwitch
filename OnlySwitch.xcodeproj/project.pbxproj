@@ -348,6 +348,8 @@
 		732FB599FA7E3F9BEEF45DD9 /* SoundMixerPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3552BA772DD63DAD7EE8CF2 /* SoundMixerPanelView.swift */; };
 		A1D0E1092F0A000100BEEF01 /* AuthenticatorSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E00A2F0A000100BEEF01 /* AuthenticatorSwitch.swift */; };
 		A1D0E10A2F0A000100BEEF01 /* SoundMixerSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E00B2F0A000100BEEF01 /* SoundMixerSwitch.swift */; };
+		A1D0E10C2F0A000100BEEF01 /* DesktopPetSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E00C2F0A000100BEEF01 /* DesktopPetSwitch.swift */; };
+		A1D0E10D2F0A000100BEEF01 /* DesktopPetSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E00C2F0A000100BEEF01 /* DesktopPetSwitch.swift */; };
 		A1D200012F0B000200BEEF01 /* PureColorView in Frameworks */ = {isa = PBXBuildFile; productRef = A1D201012F0B000200BEEF01 /* PureColorView */; };
 		A1D200022F0B000200BEEF01 /* StickerView in Frameworks */ = {isa = PBXBuildFile; productRef = A1D201022F0B000200BEEF01 /* StickerView */; };
 		A1D200032F0B000200BEEF01 /* Authenticator in Frameworks */ = {isa = PBXBuildFile; productRef = A1D201032F0B000200BEEF01 /* Authenticator */; };
@@ -772,6 +774,7 @@
 		643A9AC4ED24AE501343396D /* SoundMixerModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoundMixerModel.swift; sourceTree = "<group>"; };
 		A1D0E00A2F0A000100BEEF01 /* AuthenticatorSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorSwitch.swift; sourceTree = "<group>"; };
 		A1D0E00B2F0A000100BEEF01 /* SoundMixerSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundMixerSwitch.swift; sourceTree = "<group>"; };
+		A1D0E00C2F0A000100BEEF01 /* DesktopPetSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesktopPetSwitch.swift; sourceTree = "<group>"; };
 		A47E483C8C562DBBD024C25A /* SoundMixerVM.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoundMixerVM.swift; sourceTree = "<group>"; };
 		A93C8BE02ECA34CB00D7CE52 /* AICommanderSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AICommanderSwitch.swift; sourceTree = "<group>"; };
 		A99F5CE8301140740029426A /* onlyswitch.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = onlyswitch.icon; sourceTree = "<group>"; };
@@ -1022,6 +1025,7 @@
 				A93C8BE02ECA34CB00D7CE52 /* AICommanderSwitch.swift */,
 				A1D0E00A2F0A000100BEEF01 /* AuthenticatorSwitch.swift */,
 				A1D0E00B2F0A000100BEEF01 /* SoundMixerSwitch.swift */,
+				A1D0E00C2F0A000100BEEF01 /* DesktopPetSwitch.swift */,
 				0447E33F2B71746C00D07B9A /* AirPodsSwitch.swift */,
 				0447E3382B71746C00D07B9A /* AppleMusicSwitch.swift */,
 				0447E3492B71746D00D07B9A /* AutohideDockSwitch.swift */,
@@ -2469,6 +2473,7 @@
 				0447E3962B71746E00D07B9A /* HideMenubarIconsSwitch.swift in Sources */,
 				04E89D5F289B054C00667710 /* IOService.swift in Sources */,
 				0447E3862B71746E00D07B9A /* HiddenDesktopSwitch.swift in Sources */,
+				A1D0E10C2F0A000100BEEF01 /* DesktopPetSwitch.swift in Sources */,
 				04FC161728402E5200D4A4AC /* ShortcutOnMarket.swift in Sources */,
 				0447E35E2B71746E00D07B9A /* AppleMusicSwitch.swift in Sources */,
 				0447E3942B71746E00D07B9A /* LowPowerModeSwitch.swift in Sources */,
@@ -2723,6 +2728,7 @@
 				04B25455283C06C700D253E2 /* SwitchListModel.swift in Sources */,
 				047C1E6A2A2298AB0061235D /* EvolutionListService+Test.swift in Sources */,
 				0447E3872B71746E00D07B9A /* HiddenDesktopSwitch.swift in Sources */,
+				A1D0E10D2F0A000100BEEF01 /* DesktopPetSwitch.swift in Sources */,
 				04819CD52BBC8A6700645A0C /* KeyLightSwitch.swift in Sources */,
 				04581DB02764CBCF008ADF30 /* SettingsVM.swift in Sources */,
 				04E03B06275FEBE200EA5FB9 /* AirPodsBatteryView.swift in Sources */,

@@ -69,6 +69,7 @@ public enum SwitchType: UInt64, CaseIterable, Sendable {
     case aiCommender = 68_719_476_736 // 1 << 36
     case authenticator = 137_438_953_472 // 1 << 37
     case soundMixer = 274_877_906_944 // 1 << 38
+    case desktopPet = 549_755_813_888 // 1 << 39
 
     public func barInfo() -> SwitchBarInfo {
         switch self {
@@ -333,6 +334,12 @@ public enum SwitchType: UInt64, CaseIterable, Sendable {
                 onImage: NSImage(systemSymbolName: "slider.horizontal.3"),
                 offImage: NSImage(systemSymbolName: "slider.horizontal.3"),
                 category: .audio
+            )
+        case .desktopPet:
+            return SwitchBarInfo(
+                title: "Show Desktop Pet",
+                onImage: NSImage(systemSymbolName: "pawprint"),
+                offImage: NSImage(systemSymbolName: "pawprint")
             )
         }
     }

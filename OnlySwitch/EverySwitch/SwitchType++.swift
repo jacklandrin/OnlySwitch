@@ -91,6 +91,8 @@ extension SwitchType {
             return AuthenticatorSwitch.shared
         case .soundMixer:
             return SoundMixerSwitch.shared
+        case .desktopPet:
+            return DesktopPetSwitch()
         }
     }
     

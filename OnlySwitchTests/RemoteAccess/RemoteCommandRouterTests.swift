@@ -1,5 +1,6 @@
 import RemoteCore
 import Switches
+import Testing
 import XCTest
 @testable import OnlySwitch
 
@@ -195,6 +196,30 @@ final class RemoteCommandRouterTests: XCTestCase {
         XCTAssertNotNil(second)
         XCTAssertNotNil(third)
     }
+}
+
+@MainActor
+@Test func desktopPetBuiltInActionUsesStandardSwitchRouting() async throws {
+    let control = FakeSwitch(type: .desktopPet, visible: true)
+    let router = RemoteCommandRouter(resolveBuiltIn: { _ in control })
+    let id = RemoteControlID(kind: .builtIn, value: "549755813888")
+
+    let result = await router.perform(.init(
+        requestID: UUID(), controlID: id, action: .setState(true)
+    ))
+    let status: RemoteControlStatus? = if case let .success(status) = result.result { status } else { nil }
+
+    #expect(result.error == nil)
+    #expect(status?.id == id)
+    #expect(status?.isOn == true)
+    #expect(control.operationCount == 1)
+    #expect(await control.currentStatus() == true)
+
+    let trigger = await router.perform(.init(
+        requestID: UUID(), controlID: id, action: .trigger
+    ))
+    #expect(trigger.error?.code == .actionNotSupported)
+    #expect(control.operationCount == 1)
 }
 
 private struct TestFailure: Error {}

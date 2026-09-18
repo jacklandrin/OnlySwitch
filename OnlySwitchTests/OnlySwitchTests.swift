@@ -11,6 +11,7 @@ import XCTest
 import Testing
 import Combine
 import DesktopPet
+import Switches
 @testable import OnlySwitch
 
 class OnlySwitchTests: XCTestCase {
@@ -168,6 +169,34 @@ class OnlySwitchTests: XCTestCase {
         }
     }
 
+}
+
+@MainActor
+@Test func desktopPetBuiltInSwitchMapsVisibilityWithoutAdditionalEffects() async throws {
+    var isVisible = false
+    var writes: [Bool] = []
+    let control = DesktopPetSwitch(
+        visibility: { isVisible },
+        setVisibility: { value in
+            writes.append(value)
+            isVisible = value
+        }
+    )
+
+    #expect(control.type == .desktopPet)
+    #expect(SwitchType.desktopPet.barInfo().title == "Show Desktop Pet")
+    #expect(SwitchType.desktopPet.barInfo().controlType == .Switch)
+    #expect(control.isVisible())
+    #expect(await control.currentStatus() == false)
+    #expect(await control.currentInfo() == "")
+
+    try await control.operateSwitch(isOn: true)
+    #expect(await control.currentStatus() == true)
+    #expect(writes == [true])
+
+    try await control.operateSwitch(isOn: false)
+    #expect(await control.currentStatus() == false)
+    #expect(writes == [true, false])
 }
 
 @MainActor

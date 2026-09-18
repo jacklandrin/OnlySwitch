@@ -86,6 +86,7 @@ enum RemoteIconAdapter {
         case .keyLight: "light.min"
         case .authenticator: "key"
         case .soundMixer: "slider.horizontal.3"
+        case .desktopPet: "pawprint"
         }
     }
 }

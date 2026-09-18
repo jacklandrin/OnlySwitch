@@ -1,5 +1,6 @@
 import RemoteCore
 import Switches
+import Testing
 import XCTest
 @testable import OnlySwitch
 
@@ -151,4 +152,21 @@ final class RemoteCatalogProviderTests: XCTestCase {
         XCTAssertEqual(status.isOn, true)
         XCTAssertEqual(status.revision, 4)
     }
+}
+
+@MainActor
+@Test func desktopPetBuiltInCatalogDescriptorUsesStandardSwitchBehavior() async throws {
+    let provider = RemoteCatalogProvider(
+        builtIns: { [.desktopPet] },
+        makeBuiltIn: { FakeSwitch(type: $0, visible: true) },
+        shortcutNames: { [] },
+        evolutions: { [] }
+    )
+
+    let descriptor = try #require(try await provider.catalog().first)
+    #expect(descriptor.id == .init(kind: .builtIn, value: "549755813888"))
+    #expect(descriptor.title == "Show Desktop Pet")
+    #expect(descriptor.behavior == .switch)
+    #expect(descriptor.supportsStatus)
+    #expect(descriptor.isAvailable)
 }
