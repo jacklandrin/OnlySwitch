@@ -16,6 +16,11 @@ struct AdsModel:Identifiable{
 
 let Ads:[AdsModel] = [
     AdsModel(
+        imageName: "OnlyRemote",
+        link: "https://apps.apple.com/app/id6793657946",
+        hint: "Download OnlyRemote"
+    ),
+    AdsModel(
         imageName: "QRCobot",
         link: "https://apps.apple.com/us/app/id1590006394",
         hint: "Download QRCobot"
