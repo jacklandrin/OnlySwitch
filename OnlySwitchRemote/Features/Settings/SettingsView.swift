@@ -34,17 +34,16 @@ struct SettingsView: View {
                 controlsSection(title: "Evolutions", kind: .evolution)
             }
 
-            Section {
-                Button("Pair Another Mac", systemImage: "plus.circle") {
-                    store.send(.pairAnotherTapped)
-                }
-            }
         }
         .navigationTitle("Settings")
         .navigationBarBackButtonHidden(store.isSetupRequired)
         .interactiveDismissDisabled(store.isSetupRequired)
         .toolbar {
-            if store.orderedVisibleSelectedControlIDs.count > 1 { EditButton() }
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("Pair Another Mac", systemImage: "plus.circle") {
+                    store.send(.pairAnotherTapped)
+                }
+            }
         }
         .task { await store.send(.task).finish() }
         .onDisappear { store.send(.foregroundChanged(false)) }
@@ -106,14 +105,23 @@ struct SettingsView: View {
     @ViewBuilder
     private var selectedOrderSection: some View {
         let ids = store.orderedVisibleSelectedControlIDs
-        if ids.isEmpty == false {
-            Section("Dashboard Tile Order") {
+        Section("On Dashboard") {
+            if ids.isEmpty {
+                Text("Add controls below to show them on your dashboard.")
+                    .foregroundStyle(.secondary)
+            } else {
                 ForEach(ids, id: \.self) { id in
                     if let descriptor = store.catalog[id: id] {
-                        Label(descriptor.title, systemImage: "line.3.horizontal")
+                        ControlSelectionRow(
+                            descriptor: descriptor,
+                            isSelected: true,
+                            showsReorderHandle: true,
+                            selectionChanged: { store.send(.toggleControl(descriptor.id, $0)) }
+                        )
                     }
                 }
                 .onMove { store.send(.move($0, $1)) }
+                .environment(\.editMode, .constant(.active))
             }
         }
     }
@@ -132,13 +140,16 @@ struct SettingsView: View {
 
     @ViewBuilder
     private func controlsSection(title: LocalizedStringKey, kind: RemoteControlID.Kind) -> some View {
-        let controls = store.catalog.filter { $0.id.kind == kind }
+        let controls = store.catalog.filter {
+            $0.id.kind == kind && store.selectedControlIDs.contains($0.id) == false
+        }
         if controls.isEmpty == false {
             Section(title) {
                 ForEach(controls) { descriptor in
                     ControlSelectionRow(
                         descriptor: descriptor,
                         isSelected: store.selectedControlIDs.contains(descriptor.id),
+                        showsReorderHandle: false,
                         selectionChanged: { store.send(.toggleControl(descriptor.id, $0)) }
                     )
                 }

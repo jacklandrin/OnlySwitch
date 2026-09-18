@@ -4,22 +4,21 @@ import SwiftUI
 struct ControlSelectionRow: View {
     let descriptor: RemoteControlDescriptor
     let isSelected: Bool
+    let showsReorderHandle: Bool
     let selectionChanged: (Bool) -> Void
-    @State private var isOn: Bool
-
-    init(
-        descriptor: RemoteControlDescriptor,
-        isSelected: Bool,
-        selectionChanged: @escaping (Bool) -> Void
-    ) {
-        self.descriptor = descriptor
-        self.isSelected = isSelected
-        self.selectionChanged = selectionChanged
-        _isOn = State(initialValue: isSelected)
-    }
 
     var body: some View {
-        Toggle(isOn: $isOn) {
+        HStack(spacing: 12) {
+            Button(isSelected ? "Remove \(descriptor.title) from Dashboard" : "Add \(descriptor.title) to Dashboard", systemImage: isSelected ? "minus.circle.fill" : "plus.circle.fill") {
+                selectionChanged(isSelected == false)
+            }
+            .labelStyle(.iconOnly)
+            .font(.title2)
+            .foregroundStyle(isSelected ? .red : .green)
+            .frame(minWidth: 44, minHeight: 44)
+            .buttonStyle(.borderless)
+            .accessibilityHint(Text(accessibilityHint))
+
             HStack(spacing: 12) {
                 icon
                     .frame(width: 28, height: 28)
@@ -34,16 +33,16 @@ struct ControlSelectionRow: View {
                     }
                 }
             }
+            Spacer()
+            if showsReorderHandle {
+                Image(systemName: "line.3.horizontal")
+                    .font(.title3)
+                    .foregroundStyle(.secondary)
+                    .frame(minWidth: 44, minHeight: 44)
+                    .accessibilityHidden(true)
+                    .allowsHitTesting(false)
+            }
         }
-        .onChange(of: isSelected) { _, newValue in
-            if isOn != newValue { isOn = newValue }
-        }
-        .onChange(of: isOn) { _, newValue in
-            if newValue != isSelected { selectionChanged(newValue) }
-        }
-        .accessibilityLabel(Text(descriptor.title))
-        .accessibilityValue(Text(isSelected ? "Shown on dashboard" : "Hidden from dashboard"))
-        .accessibilityHint(Text(accessibilityHint))
     }
 
     @ViewBuilder

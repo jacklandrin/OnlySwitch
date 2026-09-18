@@ -49,9 +49,15 @@ struct SettingsFeature {
             catalog.filter { $0.id.kind == kind }
         }
 
+        func availableControls(kind: RemoteControlID.Kind) -> [RemoteControlDescriptor] {
+            controls(kind: kind).filter { selectedControlIDs.contains($0.id) == false }
+        }
+
         var orderedVisibleSelectedControlIDs: [RemoteControlID] {
             let descriptors = Set(catalog.ids)
-            return order.filter { selectedControlIDs.contains($0) && descriptors.contains($0) }
+            let ordered = order.filter { selectedControlIDs.contains($0) && descriptors.contains($0) }
+            let unordered = catalog.ids.filter { selectedControlIDs.contains($0) && ordered.contains($0) == false }
+            return ordered + unordered
         }
     }
 
@@ -157,6 +163,7 @@ struct SettingsFeature {
                 guard let macID = state.selectedMacID else { return .none }
                 let visible = state.orderedVisibleSelectedControlIDs
                 guard source.allSatisfy(visible.indices.contains), destination >= 0, destination <= visible.count else { return .none }
+                state.order.append(contentsOf: visible.filter { state.order.contains($0) == false })
                 let reordered = moving(visible, from: source, to: destination)
                 let visibleSet = Set(visible)
                 var iterator = reordered.makeIterator()

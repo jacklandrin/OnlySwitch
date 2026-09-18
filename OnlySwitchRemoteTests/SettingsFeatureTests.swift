@@ -132,6 +132,60 @@ struct SettingsFeatureTests {
         #expect(state.order == [missing, evolution, mute, shortcut])
     }
 
+    @Test func availableControlsExcludeItemsAlreadyOnTheDashboard() {
+        let state = SettingsFeature.State(
+            isSetupRequired: false,
+            pairedMacs: [studio],
+            selectedMacID: studio.id,
+            catalog: [descriptor(mute), descriptor(shortcut), descriptor(evolution)],
+            selectedControlIDs: [mute, evolution],
+            order: [mute, evolution]
+        )
+
+        #expect(state.availableControls(kind: .builtIn).map(\.id).isEmpty)
+        #expect(state.availableControls(kind: .shortcut).map(\.id) == [shortcut])
+        #expect(state.availableControls(kind: .evolution).map(\.id).isEmpty)
+    }
+
+    @Test func selectedControlsMissingFromSavedOrderRemainVisibleForRemoval() {
+        let state = SettingsFeature.State(
+            isSetupRequired: false,
+            pairedMacs: [studio],
+            selectedMacID: studio.id,
+            catalog: [descriptor(mute), descriptor(shortcut)],
+            selectedControlIDs: [mute, shortcut],
+            order: [mute]
+        )
+
+        #expect(state.orderedVisibleSelectedControlIDs == [mute, shortcut])
+    }
+
+    @Test func movingSelectedControlMissingFromSavedOrderPersistsItsNewPosition() async {
+        let store = TestStore(initialState: SettingsFeature.State(
+            isSetupRequired: false,
+            pairedMacs: [studio],
+            selectedMacID: studio.id,
+            catalog: [descriptor(mute), descriptor(shortcut)],
+            selectedControlIDs: [mute, shortcut],
+            order: [mute]
+        )) { SettingsFeature() } withDependencies: {
+            $0.remotePersistence.saveLayout = { _ in }
+        }
+
+        await store.send(.move(IndexSet(integer: 1), 0)) {
+            $0.order = [shortcut, mute]
+            $0.pendingLayoutSaves[studio.id] = .init(macID: studio.id, selectedControlIDs: [mute, shortcut], order: [shortcut, mute])
+            $0.layoutSaveGenerations[studio.id] = 1
+            $0.layoutSaveInFlight.insert(studio.id)
+        }
+        let layout = MacDashboardLayout(macID: studio.id, selectedControlIDs: [mute, shortcut], order: [shortcut, mute])
+        await store.receive(.delegate(.layoutChanged(layout)))
+        await store.receive(.layoutSaveResponse(studio.id, 1, layout, .success)) {
+            $0.pendingLayoutSaves[studio.id] = nil
+            $0.layoutSaveInFlight.remove(studio.id)
+        }
+    }
+
     @Test func movingFilteredSelectedRowsProjectsBackWithoutDroppingMissingIDs() async {
         let recorder = LayoutSaveRecorder()
         let store = TestStore(initialState: SettingsFeature.State(
