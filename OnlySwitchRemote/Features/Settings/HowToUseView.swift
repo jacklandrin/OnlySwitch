@@ -7,6 +7,10 @@ struct HowToUseView: View {
         NavigationStack {
             List {
                 Section {
+                    Link("OnlySwitch Index", destination: URL(string: "https://onlyswitch.click")!)
+                }
+
+                Section {
                     Label("Mac", systemImage: "desktopcomputer")
                         .font(.headline)
                     Text("Enable iOS Remote Access and start pairing in OnlySwitch on your Mac.")

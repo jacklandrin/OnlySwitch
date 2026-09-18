@@ -5,6 +5,7 @@ import SwiftUI
 struct SettingsView: View {
     @Bindable var store: StoreOf<SettingsFeature>
     @State private var isHowToUsePresented = false
+    @State private var isAboutPresented = false
 
     var body: some View {
         List {
@@ -21,6 +22,10 @@ struct SettingsView: View {
             Section {
                 Button("How to Use", systemImage: "questionmark.circle") {
                     isHowToUsePresented = true
+                }
+
+                Button("About", systemImage: "info.circle") {
+                    isAboutPresented = true
                 }
             }
 
@@ -55,6 +60,9 @@ struct SettingsView: View {
         }
         .sheet(isPresented: $isHowToUsePresented) {
             HowToUseView()
+        }
+        .sheet(isPresented: $isAboutPresented) {
+            AboutView()
         }
     }
 

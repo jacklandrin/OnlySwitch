@@ -458,6 +458,7 @@
 		F3AB00000000000000000009 /* RemoteEndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AB00000000000000000026 /* RemoteEndToEndTests.swift */; };
 		F3AC00000000000000000001 /* RemoteCatalogMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AC00000000000000000021 /* RemoteCatalogMonitor.swift */; };
 		F3AD00000000000000000001 /* HowToUseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AD00000000000000000021 /* HowToUseView.swift */; };
+		F3AD00000000000000000002 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AD00000000000000000022 /* AboutView.swift */; };
 		F3AE00000000000000000001 /* Clocks in Frameworks */ = {isa = PBXBuildFile; productRef = F3AE00000000000000000003 /* Clocks */; };
 		F3AF000000000000000000001 /* OnlyRemoteCampaignFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AF000000000000000000021 /* OnlyRemoteCampaignFeatureTests.swift */; };
 		F3AF000000000000000000002 /* OnlyRemoteCampaignClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AF000000000000000000022 /* OnlyRemoteCampaignClient.swift */; };
@@ -859,6 +860,7 @@
 		F3AB00000000000000000026 /* RemoteEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteEndToEndTests.swift; sourceTree = "<group>"; };
 		F3AC00000000000000000021 /* RemoteCatalogMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCatalogMonitor.swift; sourceTree = "<group>"; };
 		F3AD00000000000000000021 /* HowToUseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToUseView.swift; sourceTree = "<group>"; };
+		F3AD00000000000000000022 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		F3AF000000000000000000021 /* OnlyRemoteCampaignFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyRemoteCampaignFeatureTests.swift; sourceTree = "<group>"; };
 		F3AF000000000000000000022 /* OnlyRemoteCampaignClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyRemoteCampaignClient.swift; sourceTree = "<group>"; };
 		F3AF000000000000000000023 /* OnlyRemoteCampaignFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyRemoteCampaignFeature.swift; sourceTree = "<group>"; };
@@ -2066,6 +2068,7 @@
 				F3A900000000000000000025 /* SettingsFeature.swift */,
 				F3A900000000000000000026 /* SettingsView.swift */,
 				F3AD00000000000000000021 /* HowToUseView.swift */,
+				F3AD00000000000000000022 /* AboutView.swift */,
 				F3AA00000000000000000023 /* MacManagementFeature.swift */,
 				F3AA00000000000000000024 /* MacManagementView.swift */,
 				F3AA00000000000000000025 /* ControlSelectionRow.swift */,
@@ -2835,6 +2838,7 @@
 				F3A900000000000000000005 /* SettingsFeature.swift in Sources */,
 				F3A900000000000000000006 /* SettingsView.swift in Sources */,
 				F3AD00000000000000000001 /* HowToUseView.swift in Sources */,
+				F3AD00000000000000000002 /* AboutView.swift in Sources */,
 				F3AA00000000000000000003 /* MacManagementFeature.swift in Sources */,
 				F3AA00000000000000000004 /* MacManagementView.swift in Sources */,
 				F3AA00000000000000000005 /* ControlSelectionRow.swift in Sources */,
