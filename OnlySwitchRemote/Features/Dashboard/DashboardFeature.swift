@@ -210,7 +210,7 @@ struct DashboardFeature {
                 if descriptor.isDestructive {
                     state.alert = .confirmDestructive(
                         controlID: id,
-                        controlTitle: descriptor.title,
+                        controlTitle: descriptor.localizedTitle,
                         macName: state.selectedMac?.displayName ?? String(localized: "Mac")
                     )
                     return .none

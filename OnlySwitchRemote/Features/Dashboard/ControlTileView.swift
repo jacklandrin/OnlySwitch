@@ -33,7 +33,7 @@ struct ControlTileView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(descriptor.title)
+                    Text(descriptor.localizedTitle)
                         .font(.headline)
                         .foregroundStyle(.primary)
                         .multilineTextAlignment(.leading)
@@ -69,7 +69,7 @@ struct ControlTileView: View {
         .disabled(!isEnabled)
         .opacity(isEnabled || unavailableReason != nil ? 1 : 0.65)
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.18), value: isRequestInFlight)
-        .accessibilityLabel("\(macName), \(descriptor.title)")
+        .accessibilityLabel("\(macName), \(descriptor.localizedTitle)")
         .accessibilityValue(accessibilityValue)
         .accessibilityHint(accessibilityHint)
     }
@@ -97,10 +97,13 @@ struct ControlTileView: View {
 
     private var unavailableReason: String? {
         if descriptor.isAvailable == false {
-            return descriptor.unavailableReason ?? String(localized: "Unavailable on this Mac")
+            return descriptor.localizedUnavailableReason ?? String(localized: "Unavailable on this Mac")
         }
         if status?.value.isAvailable == false {
-            return status?.value.unavailableReason ?? String(localized: "Unavailable on this Mac")
+            if let reason = status?.value.unavailableReason {
+                return descriptor.localizedUnavailableReason(reason)
+            }
+            return String(localized: "Unavailable on this Mac")
         }
         return nil
     }

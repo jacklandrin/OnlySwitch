@@ -147,6 +147,18 @@ struct SettingsFeatureTests {
         #expect(state.availableControls(kind: .evolution).map(\.id).isEmpty)
     }
 
+    @Test func onlyBuiltInControlsUseCatalogLocalizationKeys() {
+        let builtIn = descriptor(mute)
+        let userShortcut = descriptor(shortcut)
+        let evolutionReason = "This Evolution is missing its command"
+        let unavailableEvolution = descriptor(evolution, available: false, reason: evolutionReason)
+
+        #expect(builtIn.titleLocalizationKey == mute.value)
+        #expect(userShortcut.titleLocalizationKey == nil)
+        #expect(unavailableEvolution.titleLocalizationKey == nil)
+        #expect(unavailableEvolution.unavailableReasonLocalizationKey == evolutionReason)
+    }
+
     @Test func selectedControlsMissingFromSavedOrderRemainVisibleForRemoval() {
         let state = SettingsFeature.State(
             isSetupRequired: false,
