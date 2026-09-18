@@ -53,14 +53,19 @@ struct ControlSelectionRow: View {
             Image(systemName: name)
                 .resizable()
                 .scaledToFit()
+                .foregroundStyle(.primary)
         case let .png(data):
             if let image = UIImage(data: data) {
                 Image(uiImage: image)
-                    .renderingMode(.template)
+                    .renderingMode(descriptor.id.kind == .shortcut ? .original : .template)
                     .resizable()
                     .scaledToFit()
+                    .foregroundStyle(descriptor.id.kind == .shortcut ? .primary : .primary)
             } else {
                 Image(systemName: "switch.2")
+                    .resizable()
+                    .scaledToFit()
+                    .foregroundStyle(.primary)
             }
         }
     }

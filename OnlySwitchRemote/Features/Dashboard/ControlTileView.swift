@@ -84,9 +84,10 @@ struct ControlTileView: View {
         case let .png(data):
             if let image = UIImage(data: data) {
                 Image(uiImage: image)
-                    .renderingMode(.original)
+                    .renderingMode(descriptor.id.kind == .shortcut ? .original : .template)
                     .resizable()
                     .scaledToFit()
+                    .foregroundStyle(descriptor.id.kind == .shortcut ? .primary : iconColor)
             } else {
                 Image(systemName: "switch.2")
                     .resizable()
