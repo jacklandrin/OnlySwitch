@@ -1,4 +1,5 @@
 import RemoteCore
+import Synchronization
 import Switches
 import Testing
 import XCTest
@@ -35,6 +36,27 @@ final class RemoteCommandRouterTests: XCTestCase {
 
         XCTAssertEqual(result.error?.code, .controlUnavailable)
         XCTAssertEqual(control.operationCount, 0)
+    }
+
+    func testPrivilegedSwitchFailureIsReportedWithoutInstallingHelper() async {
+        let registrations = Mutex(0)
+        let control = LowPowerModeSwitch(client: .init(
+            status: { .notInstalled },
+            installFromInteractiveUI: { registrations.withLock { $0 += 1 } },
+            removeFromInteractiveUI: {},
+            perform: { _, _ in throw PrivilegedOperationClientError.notInstalled },
+            openSystemSettings: {}
+        ))
+        let router = RemoteCommandRouter(resolveBuiltIn: { _ in control })
+
+        let result = await router.perform(.init(
+            requestID: UUID(),
+            controlID: .init(kind: .builtIn, value: String(SwitchType.lowpowerMode.rawValue)),
+            action: .setState(true)
+        ))
+
+        XCTAssertEqual(result.error?.code, .executionFailed)
+        XCTAssertEqual(registrations.withLock { $0 }, 0)
     }
 
     func testValidatesExactBuiltInIdentityAndActionCompatibility() async {

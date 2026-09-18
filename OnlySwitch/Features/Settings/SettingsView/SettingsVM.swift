@@ -25,6 +25,7 @@ enum SettingsItem: String, CaseIterable {
     case DimScreen = "Dim Screen"
     case NightShift = "Night Shift"
     case KeyLight = "Key Light"
+    case PrivilegedAccess = "Privileged Switch Access"
     case iOSRemote = "iOS Remote"
     case About = "About"
 }

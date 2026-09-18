@@ -26728,7 +26728,34 @@
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "在 macOS 27 中，隱藏選單列圖示也會隱藏「正在播放」，並可能隱藏相機、AirDrop、專注模式和計時器。啟用隱藏功能時，macOS 不允許 OnlySwitch 讓這些項目保持可見。" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "在 macOS 27 中，隐藏菜单栏图标也会隐藏“正在播放”，并可能隐藏相机、AirDrop、专注模式和计时器。隐藏功能启用时，macOS 不允许 OnlySwitch 让这些项目保持可见。" } }
       }
-    }
+    },
+    "Privileged Switch Access" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Privileged Switch Access" } } } },
+    "Privileged access enabled" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Privileged access enabled" } } } },
+    "One-time authorization required" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "One-time authorization required" } } } },
+    "Authorization approval needed" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Authorization approval needed" } } } },
+    "Privileged access disabled" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Privileged access disabled" } } } },
+    "Privileged helper unavailable" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Privileged helper unavailable" } } } },
+    "OnlySwitch can change supported switches without asking for your password again." : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "OnlySwitch can change supported switches without asking for your password again." } } } },
+    "Authorize OnlySwitch once to use supported switches without repeated password prompts." : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Authorize OnlySwitch once to use supported switches without repeated password prompts." } } } },
+    "Approve OnlySwitch's privileged helper in System Settings to continue." : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Approve OnlySwitch's privileged helper in System Settings to continue." } } } },
+    "The privileged helper is disabled. Repair it or enable it in System Settings." : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "The privileged helper is disabled. Repair it or enable it in System Settings." } } } },
+    "OnlySwitch could not find its privileged helper. Repair privileged access to continue." : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "OnlySwitch could not find its privileged helper. Repair privileged access to continue." } } } },
+    "Install & Authorize" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Install & Authorize" } } } },
+    "Repair Privileged Access" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Repair Privileged Access" } } } },
+    "Remove Privileged Access" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Remove Privileged Access" } } } },
+    "Open System Settings" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Open System Settings" } } } },
+    "Privileged access authorized" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Privileged access authorized" } } } },
+    "Privileged access removed" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Privileged access removed" } } } },
+    "Privileged operation failed" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Privileged operation failed" } } } },
+    "Privileged access could not be changed" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Privileged access could not be changed" } } } },
+    "Remove privileged access?" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Remove privileged access?" } } } },
+    "Supported switches will ask for authorization again if you set them after removal." : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Supported switches will ask for authorization again if you set them after removal." } } } },
+    "Install and authorize privileged switch access" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Install and authorize privileged switch access" } } } },
+    "Repair privileged switch access" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Repair privileged switch access" } } } },
+    "Remove privileged switch access" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Remove privileged switch access" } } } },
+    "Open System Settings to manage privileged access" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Open System Settings to manage privileged access" } } } },
+    "Open System Settings to approve privileged access" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Open System Settings to approve privileged access" } } } },
+    "Updating privileged switch access" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Updating privileged switch access" } } } }
   },
   "version" : "1.1"
 }
