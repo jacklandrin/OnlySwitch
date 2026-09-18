@@ -19,6 +19,9 @@ struct EvolutionItem: Equatable, Identifiable {
     var offCommand: EvolutionCommand?
     var singleCommand: EvolutionCommand?
     var statusCommand: EvolutionCommand?
+    /// Present only for a small, catalogue-curated operation.  User-authored
+    /// Evolution commands never populate this value.
+    var privilegedOperation: PrivilegedOperation?
 
     func doSwitch() {
         @Dependency(\.evolutionCommandService) var evolutionCommandService
@@ -44,10 +47,10 @@ struct EvolutionItem: Equatable, Identifiable {
                 let isOn = trueCondition == statusResult
                 let shouldTurnOn = !isOn
                 if shouldTurnOn {
-                    _ = try? await evolutionCommandService.executeCommand(onCommand)
+                    _ = try? await evolutionCommandService.executeSwitch(self, enabled: true)
                 } else {
                     guard let offCommand else { return }
-                    _ = try? await evolutionCommandService.executeCommand(offCommand)
+                    _ = try? await evolutionCommandService.executeSwitch(self, enabled: false)
                 }
                 _ = try? await displayNotificationCMD(
                     title: name,
@@ -103,5 +106,4 @@ enum EvolutionError: Error, Equatable {
     case deleteFailed
     case noneEntity
 }
-
 

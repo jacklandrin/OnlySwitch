@@ -62,11 +62,11 @@ final class EvolutionBarVM: BarProvider, ObservableObject, @unchecked Sendable {
                         NotificationCenter.default.post(name: .shouldHidePopover, object: nil)
                     }
                 } else {
-                    _ = try? await self.evolutionCommandService.executeCommand(self.onCommand)
+                    _ = try? await self.evolutionCommandService.executeSwitch(self.evolutionItem, enabled: true)
                     self.isOn = true
                 }
             } else {
-                _ = try? await self.evolutionCommandService.executeCommand(self.offCommand)
+                _ = try? await self.evolutionCommandService.executeSwitch(self.evolutionItem, enabled: false)
                 self.isOn = false
             }
             processing = false

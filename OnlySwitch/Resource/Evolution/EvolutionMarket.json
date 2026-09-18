@@ -79,15 +79,16 @@
         "name": "Clamshell",
         "icon_name": "lightbulb.circle",
         "type": "Switch",
-        "description": "Prevent sleeping when lid is closed. Required password or add *password \"xxxx\"* after on and off commands (use your mac password to replace xxxx and keep quotation mark)",
-        "author": "jacklandrin",
-        "on_command": {
-            "type": "applescript",
-            "command": "do shell script \"sudo pmset -a disablesleep 1\" with prompt \"OnlySwitch\" with administrator privileges"
-        },
-        "off_command": {
-            "type": "applescript",
-            "command": "do shell script \"sudo pmset -a disablesleep 0\" with prompt \"OnlySwitch\" with administrator privileges"
+  "description": "Prevent sleeping when lid is closed. OnlySwitch requests one-time privileged access before this switch can run.",
+  "author": "jacklandrin",
+  "privileged_operation": "clamshellSleepDisabled",
+  "on_command": {
+    "type": "shell",
+    "command": "true"
+  },
+  "off_command": {
+    "type": "shell",
+    "command": "true"
         },
         "check_command": {
             "type": "shell",

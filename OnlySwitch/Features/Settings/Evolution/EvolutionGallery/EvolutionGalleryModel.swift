@@ -19,6 +19,7 @@ struct EvolutionGalleryModel: Codable {
         case off_command
         case check_command
         case single_command
+        case privileged_operation
     }
     var id: String
     var name: String
@@ -30,6 +31,7 @@ struct EvolutionGalleryModel: Codable {
     var off_command: EvolutionGalleryCommand?
     var check_command: EvolutionGalleryCommand?
     var single_command: EvolutionGalleryCommand?
+    var privileged_operation: String?
 }
 
 struct EvolutionGalleryCommand: Codable {

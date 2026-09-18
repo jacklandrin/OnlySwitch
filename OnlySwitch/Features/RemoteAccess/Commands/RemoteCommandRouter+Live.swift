@@ -55,7 +55,7 @@ extension RemoteCommandRouter {
                 let service = EvolutionCommandService.liveValue
                 switch action {
                 case let .setState(isOn):
-                    _ = try await service.executeCommand(isOn ? evolution.onCommand : evolution.offCommand)
+                    _ = try await service.executeSwitch(evolution, enabled: isOn)
                 case .trigger:
                     _ = try await service.executeCommand(evolution.singleCommand)
                 }

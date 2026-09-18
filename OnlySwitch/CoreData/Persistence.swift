@@ -29,6 +29,13 @@ struct PersistenceController {
             container.persistentStoreDescriptions = [NSPersistentStoreDescription(url: storeURL)]
         }
 
+        // Adding optional Evolution metadata must not require users to recreate
+        // their existing store. Core Data can infer this lightweight migration.
+        container.persistentStoreDescriptions.forEach {
+            $0.shouldMigrateStoreAutomatically = true
+            $0.shouldInferMappingModelAutomatically = true
+        }
+
         if inMemory {
             container.persistentStoreDescriptions.first!.url = storeURL
             container.persistentStoreDescriptions.first!.shouldAddStoreAsynchronously = false

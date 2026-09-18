@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22758" systemVersion="23F79" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+    <entity name="EvolutionCommandEntity" representedClassName="EvolutionCommandEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="iconName" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="itemType" optional="YES" attributeType="String"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="privilegedOperationIdentifier" optional="YES" attributeType="String"/>
+        <attribute name="singleCommand" optional="YES" attributeType="String"/>
+        <attribute name="singleCommandType" optional="YES" attributeType="String"/>
+        <attribute name="statusCommand" optional="YES" attributeType="String"/>
+        <attribute name="statusCommandType" optional="YES" attributeType="String"/>
+        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="trueCondition" optional="YES" attributeType="String"/>
+        <attribute name="turnOffCommand" optional="YES" attributeType="String"/>
+        <attribute name="turnOffCommandType" optional="YES" attributeType="String"/>
+        <attribute name="turnOnCommand" optional="YES" attributeType="String"/>
+        <attribute name="turnOnCommandType" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="RadioStations" representedClassName="RadioStations" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <attribute name="url" optional="YES" attributeType="String"/>
+    </entity>
+</model>
