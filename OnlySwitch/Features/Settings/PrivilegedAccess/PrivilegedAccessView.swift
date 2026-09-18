@@ -24,13 +24,14 @@ struct PrivilegedAccessView: View {
                     primaryActionButton(action)
                 }
 
-                if viewModel.status == .enabled || viewModel.status == .disabled {
+                if viewModel.status == .enabled {
                     Button("Repair Privileged Access".localized(), action: repair)
                         .disabled(viewModel.isWorking)
                         .accessibilityLabel(Text("Repair privileged switch access".localized()))
                 }
 
-                if viewModel.status != .enabled {
+                if viewModel.status != .enabled,
+                   viewModel.presentation.primaryAction != .openSystemSettings {
                     Button("Open System Settings".localized(), action: openSystemSettings)
                         .disabled(viewModel.isWorking)
                         .accessibilityLabel(Text("Open System Settings to manage privileged access".localized()))

@@ -49,12 +49,26 @@ final class PrivilegedAccessViewModel: ObservableObject {
         messageKey = nil
         do {
             try await client.installFromInteractiveUI()
-            messageKey = "Privileged access authorized"
+            await refresh()
+            messageKey = message(for: status)
         } catch {
             messageKey = message(for: error)
         }
         isWorking = false
         await refresh()
+    }
+
+    private func message(for status: PrivilegedHelperStatus) -> String {
+        switch status {
+        case .enabled:
+            "Privileged access authorized"
+        case .requiresApproval:
+            "Authorization approval needed"
+        case .disabled:
+            "Privileged access disabled"
+        case .notInstalled, .unavailable:
+            "Privileged helper unavailable"
+        }
     }
 
     private func message(for error: Error) -> String {

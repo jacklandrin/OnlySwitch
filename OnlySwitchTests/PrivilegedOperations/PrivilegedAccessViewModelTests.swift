@@ -45,6 +45,23 @@ struct PrivilegedAccessViewModelTests {
     }
 
     @Test
+    func registrationReportsApprovalNeededWhenMacOSHasNotEnabledTheHelperYet() async {
+        let status = Mutex(PrivilegedHelperStatus.notInstalled)
+        let model = PrivilegedAccessViewModel(client: PrivilegedOperationClient(
+            status: { status.withLock { $0 } },
+            installFromInteractiveUI: { status.withLock { $0 = .requiresApproval } },
+            removeFromInteractiveUI: {},
+            perform: { _, _ in },
+            openSystemSettings: {}
+        ))
+
+        await model.installOrRepair()
+
+        #expect(model.status == .requiresApproval)
+        #expect(model.messageKey == "Authorization approval needed")
+    }
+
+    @Test
     func removalOnlyUsesTheLocalRemovalAction() async {
         let removals = Mutex(0)
         let model = PrivilegedAccessViewModel(client: client(
