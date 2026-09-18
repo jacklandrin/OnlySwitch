@@ -96,12 +96,12 @@
    <ArchiveAction
       buildConfiguration = "Release"
       revealArchiveInOrganizer = "YES">
-      <PostActions>
+      <PreActions>
          <ExecutionAction
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
                title = "Run Script"
-               scriptText = "cd &quot;${PROJECT_DIR}&quot; ; agvtool bump&#10;">
+               scriptText = "/bin/zsh &quot;${PROJECT_DIR}/Scripts/bump-build-version.sh&quot; &quot;${PROJECT_DIR}/Config/Versions/OnlySwitch.xcconfig&quot;&#10;">
                <EnvironmentBuildable>
                   <BuildableReference
                      BuildableIdentifier = "primary"
@@ -113,6 +113,6 @@
                </EnvironmentBuildable>
             </ActionContent>
          </ExecutionAction>
-      </PostActions>
+      </PreActions>
    </ArchiveAction>
 </Scheme>

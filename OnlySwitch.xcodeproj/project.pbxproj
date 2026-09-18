@@ -828,6 +828,8 @@
 		A99F5CE8301140740029426A /* onlyswitch.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = onlyswitch.icon; sourceTree = "<group>"; };
 		A9A98A402F78834500034ADB /* models.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = models.json; sourceTree = "<group>"; };
 		A9C70D052EE490B3000A2367 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		B01000000000000000000001 /* OnlySwitch.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = OnlySwitch.xcconfig; sourceTree = "<group>"; };
+		B01000000000000000000002 /* OnlySwitchRemote.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = OnlySwitchRemote.xcconfig; sourceTree = "<group>"; };
 		B210A0000000000000000021 /* RemoteSystemSettingsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemSettingsClient.swift; sourceTree = "<group>"; };
 		B220A0000000000000000021 /* RemoteReviewDemoClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteReviewDemoClient.swift; sourceTree = "<group>"; };
 		B220A0000000000000000022 /* RemoteAppShellFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAppShellFeature.swift; sourceTree = "<group>"; };
@@ -1316,6 +1318,7 @@
 		04447B4F2754F08000CD2900 = {
 			isa = PBXGroup;
 			children = (
+				B01000000000000000000003 /* Versions */,
 				C1A0C10918E9202600000001 /* OnlySwitchPrivilegedHelper */,
 				043316DC2B7168170078B867 /* Modules */,
 				04F118C927B1CC87005DA861 /* Localization */,
@@ -1955,6 +1958,16 @@
 			path = DDC;
 			sourceTree = "<group>";
 		};
+		B01000000000000000000003 /* Versions */ = {
+			isa = PBXGroup;
+			children = (
+				B01000000000000000000001 /* OnlySwitch.xcconfig */,
+				B01000000000000000000002 /* OnlySwitchRemote.xcconfig */,
+			);
+			name = Versions;
+			path = Config/Versions;
+			sourceTree = "<group>";
+		};
 		C1A0B00518E9202600000001 /* PrivilegedOperations */ = {
 			isa = PBXGroup;
 			children = (
@@ -2249,9 +2262,9 @@
 				0430887F275D709C00877E51 /* Launch at Login Helper */,
 				042661862780CBDE005DF2B9 /* Embed App Extensions */,
 				0456C9332ACCA79500DB7898 /* ShellScript */,
-			C1A0C20218E9202600000001 /* Embed Privileged Helper */,
-			C1A0C20318E9202600000001 /* Copy Privileged Helper Daemon Plist */,
-		);
+				C1A0C20218E9202600000001 /* Embed Privileged Helper */,
+				C1A0C20318E9202600000001 /* Copy Privileged Helper Daemon Plist */,
+			);
 			buildRules = (
 			);
 			dependencies = (
@@ -2564,25 +2577,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${BUILT_PRODUCTS_DIR}/LaunchAtLogin_LaunchAtLogin.bundle/Contents/Resources/copy-helper-swiftpm.sh\"\n\n";
-		};
-		04A1B2C3D4E5F6789012345A /* Code Sign */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Code Sign";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Code Sign script\n# Only run for Release builds with Developer ID signing\nif [[ \"${CODE_SIGN_IDENTITY}\" == *\"Developer ID\"* ]] || [[ \"${CONFIGURATION}\" == \"Release\" ]]; then\n    APP_PATH=\"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app\"\n    SIGN_IDENTITY=\"Developer ID Application: Bo Liu (B22726TNGH)\"\n    \n    if [ ! -d \"${APP_PATH}\" ]; then\n        echo \"Error: App bundle not found at ${APP_PATH}\"\n        exit 1\n    fi\n    \n    echo \"Code signing ${APP_PATH}\"\n    \n    # Sign main app bundle\n    codesign --preserve-metadata=entitlements --force --verbose --options=runtime --sign \"${SIGN_IDENTITY}\" \"${APP_PATH}\"\n    \n    # Sign LaunchAtLoginHelper.app if it exists\n    if [ -d \"${APP_PATH}/Contents/Library/LoginItems/LaunchAtLoginHelper.app\" ]; then\n        codesign --preserve-metadata=entitlements --force --verbose --options=runtime --sign \"${SIGN_IDENTITY}\" \"${APP_PATH}/Contents/Library/LoginItems/LaunchAtLoginHelper.app\"\n    fi\n    \n    # Sign OnlyWidgetExtension.appex if it exists\n    if [ -d \"${APP_PATH}/Contents/PlugIns/OnlyWidgetExtension.appex\" ]; then\n        codesign --preserve-metadata=entitlements --force --verbose --options=runtime --sign \"${SIGN_IDENTITY}\" \"${APP_PATH}/Contents/PlugIns/OnlyWidgetExtension.appex\"\n    fi\n    \n    # Sign Sparkle.framework if it exists\n    if [ -d \"${APP_PATH}/Contents/Frameworks/Sparkle.framework\" ]; then\n        codesign --verbose --force --timestamp --deep -o runtime --sign \"${SIGN_IDENTITY}\" \"${APP_PATH}/Contents/Frameworks/Sparkle.framework\"\n    fi\n    \n    echo \"Code signing completed\"\nelse\n    echo \"Skipping code signing (not a Release build or Developer ID signing)\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -3052,9 +3046,9 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
-			CURRENT_PROJECT_VERSION = 271;
-			CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
-			DEVELOPMENT_TEAM = B22726TNGH;
+				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
+				CURRENT_PROJECT_VERSION = 271;
+				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Only Switch requests Bluetooth usage to switch Airpods connection";
@@ -3079,9 +3073,9 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
-			CURRENT_PROJECT_VERSION = 271;
-			CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
-			DEVELOPMENT_TEAM = B22726TNGH;
+				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
+				CURRENT_PROJECT_VERSION = 271;
+				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchTests/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Only Switch requests Bluetooth usage to switch Airpods connection";
@@ -3224,6 +3218,7 @@
 		};
 		04447B6D2754F08100CD2900 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B01000000000000000000001 /* OnlySwitch.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -3233,7 +3228,6 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 271;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
@@ -3279,6 +3273,7 @@
 		};
 		04447B6E2754F08100CD2900 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B01000000000000000000001 /* OnlySwitch.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -3288,7 +3283,6 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 271;
 				DEVELOPMENT_ASSET_PATHS = "\"OnlySwitch/Preview Content\"";
 				DEVELOPMENT_TEAM = B22726TNGH;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
@@ -3334,6 +3328,7 @@
 		};
 		04CB8A0D2B703AF6006B8620 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B01000000000000000000001 /* OnlySwitch.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -3343,7 +3338,6 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 271;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -3374,6 +3368,7 @@
 		};
 		04CB8A0E2B703AF6006B8620 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B01000000000000000000001 /* OnlySwitch.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -3383,7 +3378,6 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 271;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -3413,12 +3407,12 @@
 		};
 		C1A0C50118E9202600000001 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B01000000000000000000001 /* OnlySwitch.xcconfig */;
 			buildSettings = {
-				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 271;
+				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -3434,12 +3428,12 @@
 		};
 		C1A0C50218E9202600000001 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B01000000000000000000001 /* OnlySwitch.xcconfig */;
 			buildSettings = {
-				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 271;
+				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -3455,12 +3449,12 @@
 		};
 		F3A300000000000000000050 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B01000000000000000000002 /* OnlySwitchRemote.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = onlyswitch;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = OnlySwitchRemote/OnlySwitchRemote.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 271;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchRemote/Info.plist;
@@ -3486,12 +3480,12 @@
 		};
 		F3A300000000000000000051 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B01000000000000000000002 /* OnlySwitchRemote.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = onlyswitch;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = OnlySwitchRemote/OnlySwitchRemote.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 271;
 				DEVELOPMENT_TEAM = B22726TNGH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = OnlySwitchRemote/Info.plist;
