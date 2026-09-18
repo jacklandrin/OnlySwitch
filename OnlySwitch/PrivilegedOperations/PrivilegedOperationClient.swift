@@ -186,6 +186,7 @@ private actor PrivilegedOperationXPCRequest {
         }
 
         self.continuation = continuation
+        connection.remoteObjectInterface = NSXPCInterface(with: PrivilegedOperationXPC.self)
         connection.interruptionHandler = { [weak self] in
             Task { await self?.fail(PrivilegedOperationClientError.connectionInterrupted) }
         }
