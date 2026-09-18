@@ -117,10 +117,8 @@ public struct SmallLaunchpadCMD:SwitchCMD {
                     """
 }
 
-public struct LowpowerModeCMD:SwitchCMD {
+public struct LowpowerModeCMD {
     public static let status: String = "pmset -g | grep lowpowermode"
-    public static let on = "sudo pmset -a lowpowermode 1"
-    public static let off = "sudo pmset -a lowpowermode 0"
 }
 
 
