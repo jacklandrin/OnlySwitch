@@ -53,7 +53,7 @@ struct PrivilegedAccessView: View {
                 if let messageKey = viewModel.messageKey {
                     Text(messageKey.localized())
                         .foregroundStyle(.secondary)
-                        .accessibilityLiveRegion(.assertive)
+                        .accessibilityLabel(Text(messageKey.localized()))
                 }
             }
         }

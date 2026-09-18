@@ -53,6 +53,16 @@ final class LowPowerModeSwitch: SwitchProvider, @unchecked Sendable {
     }
 
     @MainActor
+    func installHelperFromInteractiveUI() async throws {
+        try await client.installFromInteractiveUI()
+    }
+
+    @MainActor
+    func openPrivilegedHelperSettings() async {
+        await client.openSystemSettings()
+    }
+
+    @MainActor
     private static func readUnprivilegedStatus() async -> Bool {
         do {
             let result = try await LowpowerModeCMD.status.runAppleScript(isShellCMD: true)

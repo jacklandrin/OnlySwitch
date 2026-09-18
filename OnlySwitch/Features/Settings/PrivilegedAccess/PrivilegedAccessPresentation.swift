@@ -13,6 +13,16 @@ struct PrivilegedAccessPresentation: Equatable, Sendable {
     let detailKey: String
     let primaryAction: PrivilegedAccessAction?
 
+    private init(
+        titleKey: String,
+        detailKey: String,
+        primaryAction: PrivilegedAccessAction?
+    ) {
+        self.titleKey = titleKey
+        self.detailKey = detailKey
+        self.primaryAction = primaryAction
+    }
+
     init(status: PrivilegedHelperStatus) {
         switch status {
         case .enabled:

@@ -99,6 +99,32 @@ struct SwitchBarView: View {
             }
         }
         .isHidden(switchOption.isHidden, remove: true)
+        .alert(item: $switchOption.privilegedHelperRecovery) { recovery in
+            switch recovery {
+            case .install:
+                Alert(
+                    title: Text("One-time authorization required".localized()),
+                    message: Text("Install OnlySwitch's privileged helper once to change Low Power Mode without repeated password prompts.".localized()),
+                    primaryButton: .default(Text("Install & Authorize".localized())) {
+                        Task { @MainActor [switchOption] in
+                            await switchOption.installPrivilegedHelper()
+                        }
+                    },
+                    secondaryButton: .cancel()
+                )
+            case .openSystemSettings:
+                Alert(
+                    title: Text("Authorization approval needed".localized()),
+                    message: Text("Approve OnlySwitch's privileged helper in System Settings to continue.".localized()),
+                    primaryButton: .default(Text("Open System Settings".localized())) {
+                        Task { @MainActor [switchOption] in
+                            await switchOption.openPrivilegedHelperSettings()
+                        }
+                    },
+                    secondaryButton: .cancel()
+                )
+            }
+        }
     }
     
     func buttonTitle(category:SwitchCategory) -> String {

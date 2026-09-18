@@ -6,7 +6,7 @@
 import Foundation
 
 private let helperMachService = "com.jacklandrin.OnlySwitch.PrivilegedHelper"
-private let permittedCallerRequirement = "identifier \\\"jacklandrin.OnlySwitch\\\" and anchor apple generic and certificate leaf[subject.OU] = \\\"B22726TNGH\\\""
+private let permittedCallerRequirement = "identifier \"jacklandrin.OnlySwitch\" and anchor apple generic and certificate leaf[subject.OU] = \"B22726TNGH\""
 
 final class PrivilegedHelperDelegate: NSObject, NSXPCListenerDelegate {
     private let executor = PrivilegedHelperExecutor()

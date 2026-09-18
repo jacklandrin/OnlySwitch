@@ -10,6 +10,13 @@ import Switches
 import Sharing
 
 class SwitchBarVM : BarProvider, ObservableObject, @MainActor SwitchDelegate {
+    enum PrivilegedHelperRecovery: Hashable, Identifiable {
+        case install
+        case openSystemSettings
+
+        var id: Self { self }
+    }
+
     @Shared(.appStorage(UserDefaults.Key.hideMenuAfterRunning)) var hideMenuAfterRunningShared: Bool = false
     let refreshSwitchQueue = DispatchQueue(label: "jacklandrin.onlyswitch.refreshswitch",attributes: .concurrent)
     
@@ -77,6 +84,7 @@ class SwitchBarVM : BarProvider, ObservableObject, @MainActor SwitchDelegate {
 
     @Published private var model = SwitchBarModel()
     @Published private(set) var switchOperator:SwitchProvider
+    @Published var privilegedHelperRecovery: PrivilegedHelperRecovery?
     
     @MainActor
     init(switchOperator: SwitchProvider) {
@@ -135,7 +143,35 @@ class SwitchBarVM : BarProvider, ObservableObject, @MainActor SwitchDelegate {
             }
         } catch {
             model.processing = false
+            guard switchType == .lowpowerMode,
+                  let error = error as? PrivilegedOperationClientError else { return }
+            switch error {
+            case .notInstalled, .unavailable:
+                privilegedHelperRecovery = .install
+            case .requiresApproval, .disabled:
+                privilegedHelperRecovery = .openSystemSettings
+            default:
+                break
+            }
         }
+    }
+
+    @MainActor
+    func installPrivilegedHelper() async {
+        guard let lowPowerMode = switchOperator as? LowPowerModeSwitch else { return }
+        do {
+            try await lowPowerMode.installHelperFromInteractiveUI()
+        } catch {
+            privilegedHelperRecovery = .openSystemSettings
+        }
+        refreshAsync()
+    }
+
+    @MainActor
+    func openPrivilegedHelperSettings() async {
+        guard let lowPowerMode = switchOperator as? LowPowerModeSwitch else { return }
+        await lowPowerMode.openPrivilegedHelperSettings()
+        privilegedHelperRecovery = nil
     }
     
     @MainActor

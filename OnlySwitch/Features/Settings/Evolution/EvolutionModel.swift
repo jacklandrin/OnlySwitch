@@ -38,13 +38,29 @@ struct EvolutionItem: Equatable, Identifiable {
         controlType: ControlType,
         requestedOperation: PrivilegedOperation?
     ) -> PrivilegedOperation? {
-        guard controlType == .Switch,
-              let expectedOperation = curatedPrivilegedOperations[id],
+        guard let expectedOperation = curatedPrivilegedOperation(
+            id: id,
+            controlType: controlType
+        ),
               requestedOperation == expectedOperation else {
             return nil
         }
 
         return expectedOperation
+    }
+
+    /// Returns the compiled operation associated with a shipped Evolution.
+    /// This is used solely to migrate a record created before the operation
+    /// identifier was introduced; it does not inspect user-authored commands.
+    static func curatedPrivilegedOperation(
+        id: UUID,
+        controlType: ControlType
+    ) -> PrivilegedOperation? {
+        guard controlType == .Switch else {
+            return nil
+        }
+
+        return curatedPrivilegedOperations[id]
     }
 
     func doSwitch() {

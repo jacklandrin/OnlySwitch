@@ -7,6 +7,7 @@
 
 import Dependencies
 import Extensions
+import Switches
 
 extension EvolutionListService: DependencyKey {
     static let liveValue = Self(
@@ -23,6 +24,29 @@ extension EvolutionListService: DependencyKey {
                 }
                 unneededEntities.forEach { entity in
                     context.delete(entity)
+                }
+
+                // Clamshell existed before privileged operation IDs were
+                // persisted. Upgrade only the exact compiled gallery item so
+                // an existing installation stops executing its legacy sudo
+                // command. User-created Evolutions never receive helper access.
+                uniqueEntities.forEach { entity in
+                    guard
+                        // Older Core Data records may represent an unset
+                        // optional text value as either nil or an empty string.
+                        entity.privilegedOperationIdentifier?.isEmpty != false,
+                        let id = entity.id,
+                        let itemType = entity.itemType,
+                        let controlType = ControlType(rawValue: itemType),
+                        let operation = EvolutionItem.curatedPrivilegedOperation(
+                            id: id,
+                            controlType: controlType
+                        )
+                    else {
+                        return
+                    }
+
+                    entity.privilegedOperationIdentifier = operation.rawValue
                 }
                 try context.save()
                 return EvolutionAdapter.evolutionItems(uniqueEntities)
