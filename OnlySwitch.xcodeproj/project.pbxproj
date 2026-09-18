@@ -24,6 +24,8 @@
 		0419276D2AEC3BDB0041185B /* FocusModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0419276C2AEC3BDB0041185B /* FocusModifier.swift */; };
 		041B17892AD841EE0032919B /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 041B17882AD841EE0032919B /* Sparkle */; };
 		041B178B2AD842470032919B /* Updater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041B178A2AD842470032919B /* Updater.swift */; };
+		C1A0B00118E9202600000001 /* PrivilegedOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0B00318E9202600000001 /* PrivilegedOperation.swift */; };
+		C1A0B00218E9202600000001 /* PrivilegedOperationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0B00418E9202600000001 /* PrivilegedOperationTests.swift */; };
 		041D725728353A160083092D /* OnlySwitchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041D725628353A160083092D /* OnlySwitchTests.swift */; };
 		0427364827C1A5430068108F /* SpotifyScripting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0427364427C1A5430068108F /* SpotifyScripting.swift */; };
 		0427364927C1A5430068108F /* SpotifyBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0427364527C1A5430068108F /* SpotifyBridge.swift */; };
@@ -526,6 +528,8 @@
 		041B178A2AD842470032919B /* Updater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Updater.swift; sourceTree = "<group>"; };
 		041D725428353A150083092D /* OnlySwitchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnlySwitchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		041D725628353A160083092D /* OnlySwitchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlySwitchTests.swift; sourceTree = "<group>"; };
+		C1A0B00318E9202600000001 /* PrivilegedOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedOperation.swift; sourceTree = "<group>"; };
+		C1A0B00418E9202600000001 /* PrivilegedOperationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedOperationTests.swift; sourceTree = "<group>"; };
 		042661402780C147005DF2B9 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
 		0427364427C1A5430068108F /* SpotifyScripting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotifyScripting.swift; sourceTree = "<group>"; };
 		0427364527C1A5430068108F /* SpotifyBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotifyBridge.swift; sourceTree = "<group>"; };
@@ -1012,6 +1016,7 @@
 		041D725528353A160083092D /* OnlySwitchTests */ = {
 			isa = PBXGroup;
 			children = (
+				C1A0B00518E9202600000001 /* PrivilegedOperations */,
 				F3A400000000000000000013 /* RemoteAccess */,
 				B82700022700000000C0DE01 /* MenuBarIconHidingTests.swift */,
 				041D725628353A160083092D /* OnlySwitchTests.swift */,
@@ -1280,6 +1285,7 @@
 		04447B5A2754F08000CD2900 /* OnlySwitch */ = {
 			isa = PBXGroup;
 			children = (
+				C1A0B00618E9202600000001 /* PrivilegedOperations */,
 				A9C70D052EE490B3000A2367 /* GoogleService-Info.plist */,
 				04447B5B2754F08000CD2900 /* AppDelegate.swift */,
 				04E238612A2C831F00CDD1FA /* CoreData */,
@@ -2098,6 +2104,22 @@
 			path = Campaign;
 			sourceTree = "<group>";
 		};
+		C1A0B00518E9202600000001 /* PrivilegedOperations */ = {
+			isa = PBXGroup;
+			children = (
+				C1A0B00418E9202600000001 /* PrivilegedOperationTests.swift */,
+			);
+			path = PrivilegedOperations;
+			sourceTree = "<group>";
+		};
+		C1A0B00618E9202600000001 /* PrivilegedOperations */ = {
+			isa = PBXGroup;
+			children = (
+				C1A0B00318E9202600000001 /* PrivilegedOperation.swift */,
+			);
+			path = PrivilegedOperations;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -2459,6 +2481,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C1A0B00218E9202600000001 /* PrivilegedOperationTests.swift in Sources */,
 				B82700012700000000C0DE01 /* MenuBarIconHidingTests.swift in Sources */,
 				F3A500000000000000000001 /* RemoteCredentialStoreTests.swift in Sources */,
 				F3A500000000000000000002 /* RemoteHostIntegrationTests.swift in Sources */,
@@ -2542,6 +2565,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C1A0B00118E9202600000001 /* PrivilegedOperation.swift in Sources */,
 				B82710022700000000C0DE01 /* MenuBarIconHiding.swift in Sources */,
 				B82710042700000000C0DE01 /* MenuBarAccessibilityItemResolver.swift in Sources */,
 				B82710062700000000C0DE01 /* MenuBarClientCoreBridge.m in Sources */,
