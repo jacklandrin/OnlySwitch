@@ -26,6 +26,14 @@
 		041B178B2AD842470032919B /* Updater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041B178A2AD842470032919B /* Updater.swift */; };
 		C1A0B00118E9202600000001 /* PrivilegedOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0B00318E9202600000001 /* PrivilegedOperation.swift */; };
 		C1A0B00218E9202600000001 /* PrivilegedOperationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0B00418E9202600000001 /* PrivilegedOperationTests.swift */; };
+		C1A0C00118E9202600000001 /* PrivilegedOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0B00318E9202600000001 /* PrivilegedOperation.swift */; };
+		C1A0C00218E9202600000001 /* PrivilegedHelperExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0C10418E9202600000001 /* PrivilegedHelperExecutor.swift */; };
+		C1A0C00318E9202600000001 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0C10318E9202600000001 /* main.swift */; };
+		C1A0C00418E9202600000001 /* PrivilegedHelperExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0C10418E9202600000001 /* PrivilegedHelperExecutor.swift */; };
+		C1A0C00518E9202600000001 /* PrivilegedHelperExecutorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0C10818E9202600000001 /* PrivilegedHelperExecutorTests.swift */; };
+		C1A0C00618E9202600000001 /* com.jacklandrin.OnlySwitch.PrivilegedHelper.plist in Copy Privileged Helper Daemon Plist */ = {isa = PBXBuildFile; fileRef = C1A0C10718E9202600000001 /* com.jacklandrin.OnlySwitch.PrivilegedHelper.plist */; };
+		C1A0C00718E9202600000001 /* OnlySwitchPrivilegedHelper in Embed Privileged Helper */ = {isa = PBXBuildFile; fileRef = C1A0C10618E9202600000001 /* OnlySwitchPrivilegedHelper */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		C1A0C00918E9202600000001 /* PrivilegedHelperExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0C10418E9202600000001 /* PrivilegedHelperExecutor.swift */; };
 		041D725728353A160083092D /* OnlySwitchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041D725628353A160083092D /* OnlySwitchTests.swift */; };
 		0427364827C1A5430068108F /* SpotifyScripting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0427364427C1A5430068108F /* SpotifyScripting.swift */; };
 		0427364927C1A5430068108F /* SpotifyBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0427364527C1A5430068108F /* SpotifyBridge.swift */; };
@@ -491,6 +499,13 @@
 			remoteGlobalIDString = F3A300000000000000000001;
 			remoteInfo = OnlySwitchRemote;
 		};
+		C1A0C40118E9202600000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 04447B502754F08000CD2900 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C1A0C30118E9202600000001;
+			remoteInfo = OnlySwitchPrivilegedHelper;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -503,6 +518,28 @@
 				04CB8A0C2B703AF5006B8620 /* OnlyWidgetExtension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1A0C20218E9202600000001 /* Embed Privileged Helper */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "Contents/MacOS";
+			dstSubfolderSpec = 1;
+			files = (
+				C1A0C00718E9202600000001 /* OnlySwitchPrivilegedHelper in Embed Privileged Helper */,
+			);
+			name = "Embed Privileged Helper";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1A0C20318E9202600000001 /* Copy Privileged Helper Daemon Plist */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "Contents/Library/LaunchDaemons";
+			dstSubfolderSpec = 1;
+			files = (
+				C1A0C00618E9202600000001 /* com.jacklandrin.OnlySwitch.PrivilegedHelper.plist in Copy Privileged Helper Daemon Plist */,
+			);
+			name = "Copy Privileged Helper Daemon Plist";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -530,6 +567,12 @@
 		041D725628353A160083092D /* OnlySwitchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlySwitchTests.swift; sourceTree = "<group>"; };
 		C1A0B00318E9202600000001 /* PrivilegedOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedOperation.swift; sourceTree = "<group>"; };
 		C1A0B00418E9202600000001 /* PrivilegedOperationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedOperationTests.swift; sourceTree = "<group>"; };
+		C1A0C10318E9202600000001 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		C1A0C10418E9202600000001 /* PrivilegedHelperExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedHelperExecutor.swift; sourceTree = "<group>"; };
+		C1A0C10518E9202600000001 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C1A0C10618E9202600000001 /* OnlySwitchPrivilegedHelper */ = {isa = PBXFileReference; explicitFileType = compiled.mach-o.executable; includeInIndex = 0; path = OnlySwitchPrivilegedHelper; sourceTree = BUILT_PRODUCTS_DIR; };
+		C1A0C10718E9202600000001 /* com.jacklandrin.OnlySwitch.PrivilegedHelper.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = com.jacklandrin.OnlySwitch.PrivilegedHelper.plist; sourceTree = "<group>"; };
+		C1A0C10818E9202600000001 /* PrivilegedHelperExecutorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedHelperExecutorTests.swift; sourceTree = "<group>"; };
 		042661402780C147005DF2B9 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
 		0427364427C1A5430068108F /* SpotifyScripting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotifyScripting.swift; sourceTree = "<group>"; };
 		0427364527C1A5430068108F /* SpotifyBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotifyBridge.swift; sourceTree = "<group>"; };
@@ -1025,6 +1068,16 @@
 			path = OnlySwitchTests;
 			sourceTree = "<group>";
 		};
+		C1A0C10918E9202600000001 /* OnlySwitchPrivilegedHelper */ = {
+			isa = PBXGroup;
+			children = (
+				C1A0C10318E9202600000001 /* main.swift */,
+				C1A0C10418E9202600000001 /* PrivilegedHelperExecutor.swift */,
+				C1A0C10518E9202600000001 /* Info.plist */,
+			);
+			path = OnlySwitchPrivilegedHelper;
+			sourceTree = "<group>";
+		};
 		04243485275641890044D0AD /* EverySwitch */ = {
 			isa = PBXGroup;
 			children = (
@@ -1255,6 +1308,7 @@
 		04447B4F2754F08000CD2900 = {
 			isa = PBXGroup;
 			children = (
+				C1A0C10918E9202600000001 /* OnlySwitchPrivilegedHelper */,
 				043316DC2B7168170078B867 /* Modules */,
 				04F118C927B1CC87005DA861 /* Localization */,
 				0443A6B527599AAC00A3BCFD /* README.md */,
@@ -1278,6 +1332,7 @@
 				04CB89FC2B703AF3006B8620 /* OnlyWidgetExtension.appex */,
 				F3A300000000000000000003 /* OnlySwitchRemote.app */,
 				F3A300000000000000000004 /* OnlySwitchRemoteTests.xctest */,
+				C1A0C10618E9202600000001 /* OnlySwitchPrivilegedHelper */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2108,6 +2163,7 @@
 			isa = PBXGroup;
 			children = (
 				C1A0B00418E9202600000001 /* PrivilegedOperationTests.swift */,
+				C1A0C10818E9202600000001 /* PrivilegedHelperExecutorTests.swift */,
 			);
 			path = PrivilegedOperations;
 			sourceTree = "<group>";
@@ -2116,6 +2172,7 @@
 			isa = PBXGroup;
 			children = (
 				C1A0B00318E9202600000001 /* PrivilegedOperation.swift */,
+				C1A0C10718E9202600000001 /* com.jacklandrin.OnlySwitch.PrivilegedHelper.plist */,
 			);
 			path = PrivilegedOperations;
 			sourceTree = "<group>";
@@ -2158,11 +2215,14 @@
 				042661862780CBDE005DF2B9 /* Embed App Extensions */,
 				0456C9332ACCA79500DB7898 /* ShellScript */,
 				04A1B2C3D4E5F6789012345A /* Code Sign */,
+				C1A0C20218E9202600000001 /* Embed Privileged Helper */,
+				C1A0C20318E9202600000001 /* Copy Privileged Helper Daemon Plist */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				04CB8A0B2B703AF5006B8620 /* PBXTargetDependency */,
+				C1A0C40218E9202600000001 /* PBXTargetDependency */,
 			);
 			name = OnlySwitch;
 			packageProductDependencies = (
@@ -2192,6 +2252,21 @@
 			productName = OnlySwitch;
 			productReference = 04447B582754F08000CD2900 /* OnlySwitch.app */;
 			productType = "com.apple.product-type.application";
+		};
+		C1A0C30118E9202600000001 /* OnlySwitchPrivilegedHelper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C1A0C50318E9202600000001 /* Build configuration list for PBXNativeTarget "OnlySwitchPrivilegedHelper" */;
+			buildPhases = (
+				C1A0C20118E9202600000001 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OnlySwitchPrivilegedHelper;
+			productName = OnlySwitchPrivilegedHelper;
+			productReference = C1A0C10618E9202600000001 /* OnlySwitchPrivilegedHelper */;
+			productType = "com.apple.product-type.tool";
 		};
 		04CB89FB2B703AF3006B8620 /* OnlyWidgetExtension */ = {
 			isa = PBXNativeTarget;
@@ -2353,6 +2428,7 @@
 				04CB89FB2B703AF3006B8620 /* OnlyWidgetExtension */,
 				F3A300000000000000000001 /* OnlySwitchRemote */,
 				F3A300000000000000000002 /* OnlySwitchRemoteTests */,
+				C1A0C30118E9202600000001 /* OnlySwitchPrivilegedHelper */,
 			);
 		};
 /* End PBXProject section */
@@ -2481,6 +2557,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C1A0C00518E9202600000001 /* PrivilegedHelperExecutorTests.swift in Sources */,
 				C1A0B00218E9202600000001 /* PrivilegedOperationTests.swift in Sources */,
 				B82700012700000000C0DE01 /* MenuBarIconHidingTests.swift in Sources */,
 				F3A500000000000000000001 /* RemoteCredentialStoreTests.swift in Sources */,
@@ -2561,11 +2638,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C1A0C20118E9202600000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C1A0C00118E9202600000001 /* PrivilegedOperation.swift in Sources */,
+				C1A0C00218E9202600000001 /* PrivilegedHelperExecutor.swift in Sources */,
+				C1A0C00318E9202600000001 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		04447B542754F08000CD2900 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				C1A0B00118E9202600000001 /* PrivilegedOperation.swift in Sources */,
+				C1A0C00918E9202600000001 /* PrivilegedHelperExecutor.swift in Sources */,
 				B82710022700000000C0DE01 /* MenuBarIconHiding.swift in Sources */,
 				B82710042700000000C0DE01 /* MenuBarAccessibilityItemResolver.swift in Sources */,
 				B82710062700000000C0DE01 /* MenuBarClientCoreBridge.m in Sources */,
@@ -2903,6 +2991,11 @@
 			target = 04CB89FB2B703AF3006B8620 /* OnlyWidgetExtension */;
 			targetProxy = 04CB8A0A2B703AF5006B8620 /* PBXContainerItemProxy */;
 		};
+		C1A0C40218E9202600000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C1A0C30118E9202600000001 /* OnlySwitchPrivilegedHelper */;
+			targetProxy = C1A0C40118E9202600000001 /* PBXContainerItemProxy */;
+		};
 		F3A300000000000000000061 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = F3A300000000000000000001 /* OnlySwitchRemote */;
@@ -3194,6 +3287,46 @@
 			};
 			name = Release;
 		};
+		C1A0C50118E9202600000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 270;
+				DEVELOPMENT_TEAM = B22726TNGH;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = OnlySwitchPrivilegedHelper/Info.plist;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 2.7.6;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jacklandrin.OnlySwitch.PrivilegedHelper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = NO;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		C1A0C50218E9202600000001 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 270;
+				DEVELOPMENT_TEAM = B22726TNGH;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = OnlySwitchPrivilegedHelper/Info.plist;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 2.7.6;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jacklandrin.OnlySwitch.PrivilegedHelper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = NO;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
 		04CB8A0D2B703AF6006B8620 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3419,6 +3552,15 @@
 			buildConfigurations = (
 				04447B6D2754F08100CD2900 /* Debug */,
 				04447B6E2754F08100CD2900 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C1A0C50318E9202600000001 /* Build configuration list for PBXNativeTarget "OnlySwitchPrivilegedHelper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C1A0C50118E9202600000001 /* Debug */,
+				C1A0C50218E9202600000001 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
