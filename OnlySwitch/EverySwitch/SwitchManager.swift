@@ -60,7 +60,7 @@ final class SwitchManager: @unchecked Sendable {
         
         for (name, toggle) in sortedDic {
             if toggle {
-                list.append(ShortcutsBarVM(name: name))
+                list.append(ShortcutsBarVM(name: name, iconPNGData: ShortcutAppearanceCache.appearance(named: name)?.iconPNGData))
             }
         }
         

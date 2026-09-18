@@ -19,7 +19,6 @@ struct ControlTileView: View {
                     controlIcon
                         .frame(width: Self.iconSize, height: Self.iconSize)
                         .frame(width: 34, height: 34)
-                        .foregroundStyle(iconColor)
                     Spacer(minLength: 8)
                     if isRequestInFlight || status?.value.isProcessing == true {
                         ProgressView()
@@ -81,10 +80,11 @@ struct ControlTileView: View {
             Image(systemName: name)
                 .resizable()
                 .scaledToFit()
+                .foregroundStyle(iconColor)
         case let .png(data):
             if let image = UIImage(data: data) {
                 Image(uiImage: image)
-                    .renderingMode(.template)
+                    .renderingMode(.original)
                     .resizable()
                     .scaledToFit()
             } else {

@@ -108,11 +108,16 @@ extension RemoteCatalogProvider {
     }
 
     private static func descriptor(forShortcut name: String) -> RemoteControlDescriptor {
-        RemoteControlDescriptor(
+        let icon: RemoteControlDescriptor.Icon = if let data = ShortcutAppearanceCache.appearance(named: name)?.iconPNGData {
+            .png(data)
+        } else {
+            .systemSymbol("command")
+        }
+        return RemoteControlDescriptor(
             id: .init(kind: .shortcut, value: name),
             title: name,
             behavior: .button,
-            icon: .systemSymbol("command"),
+            icon: icon,
             isAvailable: true,
             unavailableReason: nil,
             isDestructive: false,

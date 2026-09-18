@@ -8,6 +8,7 @@
 import Foundation
 struct ShortcutsBarModel {
     var name:String = ""
+    var iconPNGData: Data?
     var processing:Bool = false
     var isHidden: Bool = false
     var weight: Int = 0

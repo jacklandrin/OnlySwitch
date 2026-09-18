@@ -5,6 +5,7 @@
 //  Created by Jacklandrin on 2022/1/1.
 //
 
+import AppKit
 import Foundation
 import KeyboardShortcuts
 import Alamofire
@@ -131,7 +132,38 @@ final class ShortcutsSettingVM:ObservableObject, @unchecked Sendable {
             }
 
             Preferences.shared.shortcutsDic = newShortcutsDic
+            refreshShortcutAppearances(for: newShortcutsDic.compactMap { $0.value ? $0.key : nil })
         }
+    }
+
+    private func refreshShortcutAppearances(for names: [String]) {
+        guard !names.isEmpty else {
+            ShortcutAppearanceCache.replace([])
+            return
+        }
+
+        let appearances = names.compactMap { name -> ShortcutAppearance? in
+                let escapedName = name
+                    .replacingOccurrences(of: "\\", with: "\\\\")
+                    .replacingOccurrences(of: "\"", with: "\\\"")
+                let source = "tell application id \"com.apple.shortcuts\" to get icon of shortcut \"\(escapedName)\""
+                var error: NSDictionary?
+                guard let script = NSAppleScript(source: source) else { return nil }
+                let descriptor = script.executeAndReturnError(&error)
+                let tiffData = descriptor.data
+                guard
+                      let image = NSImage(data: tiffData),
+                      let resized = image.resizeMaintainingAspectRatio(withSize: NSSize(width: 64, height: 64)),
+                      let pngData = resized.pngData,
+                      pngData.count <= 64 * 1024
+                else {
+                    if let error { print("Unable to read Shortcuts icon for \(name): \(error)") }
+                    return nil
+                }
+                return ShortcutAppearance(id: name, name: name, iconPNGData: pngData)
+            }
+        ShortcutAppearanceCache.replace(appearances)
+        NotificationCenter.default.post(name: .changeSettings, object: nil)
     }
 
     func addItem(name: String, toggle: Bool) {

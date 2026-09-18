@@ -269,7 +269,7 @@ struct OnlyControlReducer {
 
                     let key = "shortcuts-" + shortcutVM.id
                     let weight = orderDic[key] ?? shortcutVM.weight
-                    let image = NSImage(named: "shortcuts_icon")!
+                    let image = shortcutVM.iconPNGData.flatMap(NSImage.init(data:)) ?? NSImage(named: "shortcuts_icon")!
 
                     return ControlItemViewState(
                         id: shortcutVM.id,

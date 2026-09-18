@@ -13,12 +13,22 @@ struct ShortcutsBarView: View {
     @EnvironmentObject var shortcutsBarVM: ShortcutsBarVM
     var body: some View {
         HStack {
-            Image("shortcuts_icon")
-                .renderingMode(.template)
-                .resizable()
-                .scaledToFit()
-                .frame(width: Layout.iconSize, height: Layout.iconSize)
-                .padding(.trailing, 8)
+            if let data = shortcutsBarVM.iconPNGData, let image = NSImage(data: data) {
+                Image(nsImage: image)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: Layout.iconSize, height: Layout.iconSize)
+                    .accessibilityHidden(true)
+                    .padding(.trailing, 8)
+            } else {
+                Image("shortcuts_icon")
+                    .renderingMode(.template)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: Layout.iconSize, height: Layout.iconSize)
+                    .accessibilityHidden(true)
+                    .padding(.trailing, 8)
+            }
             
             Text(shortcutsBarVM.barName)
                 .font(.system(size: 14))

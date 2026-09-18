@@ -39,8 +39,13 @@ final class ShortcutsBarVM: BarProvider, ObservableObject, @unchecked Sendable {
         return model.name
     }
 
-    init(name: String) {
+    var iconPNGData: Data? {
+        model.iconPNGData
+    }
+
+    init(name: String, iconPNGData: Data? = nil) {
         self.model.name = name
+        self.model.iconPNGData = iconPNGData
     }
     
     func runShortCut() {
