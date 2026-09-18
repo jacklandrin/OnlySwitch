@@ -88,15 +88,19 @@ struct DashboardFeatureTests {
 
     @Test func taskSubscribesOnlyToSelectedTiles() async {
         let subscriptions = DashboardSubscriptionRecorder()
-        let state = DashboardFeature.State(
+        var state = DashboardFeature.State(
             pairedMacs: [],
             selectedMacID: nil,
-            descriptors: [],
+            descriptors: [
+                descriptor(id: .darkMode, title: "Dark Mode", behavior: .switch),
+                descriptor(id: .mute, title: "Mute", behavior: .switch),
+            ],
             statuses: [:],
             orderedSelectedIDs: [.darkMode, .mute],
             requestsInFlight: [],
             connectionState: .authenticated
         )
+        state.hasAcceptedLiveCatalog = true
         let store = TestStore(initialState: state) { DashboardFeature() } withDependencies: {
             $0.remoteConnection.subscribe = { await subscriptions.record($0) }
         }
@@ -105,6 +109,48 @@ struct DashboardFeatureTests {
         await store.receive(.subscriptionStarted([.darkMode, .mute]))
         await store.finish()
         #expect(await subscriptions.values == [[.darkMode, .mute]])
+    }
+
+    @Test func initialLiveCatalogFiltersStaleSelectedControlsBeforeSubscription() async {
+        let subscriptions = DashboardSubscriptionRecorder()
+        let desktopPet = RemoteControlID(kind: .builtIn, value: "549755813888")
+        let state = DashboardFeature.State(
+            pairedMacs: [mac],
+            selectedMacID: mac.id,
+            descriptors: [
+                descriptor(id: .darkMode, title: "Dark Mode", behavior: .switch),
+                descriptor(id: desktopPet, title: "Desktop Pet", behavior: .switch),
+            ],
+            statuses: [:],
+            orderedSelectedIDs: [.darkMode, desktopPet],
+            requestsInFlight: [],
+            connectionState: .connecting
+        )
+        let store = TestStore(initialState: state) { DashboardFeature() } withDependencies: {
+            $0.remoteConnection.subscribe = { await subscriptions.record($0) }
+        }
+
+        let sessionID = UUID()
+        await store.send(.connectionEvent(.sessionStarted(mac.id, sessionID))) {
+            $0.activeSessionID = sessionID
+            $0.awaitingInitialCatalog = true
+        }
+        await store.send(.connectionEvent(.authenticated(mac.id))) {
+            $0.connectionState = .authenticated
+        }
+        await store.send(.connectionEvent(.catalog(
+            mac.id,
+            1,
+            [self.descriptor(id: .darkMode, title: "Dark Mode", behavior: .switch)]
+        ))) {
+            $0.descriptors = [self.descriptor(id: .darkMode, title: "Dark Mode", behavior: .switch)]
+            $0.catalogRevision = 1
+            $0.awaitingInitialCatalog = false
+            $0.hasAcceptedLiveCatalog = true
+        }
+        await store.receive(.subscriptionStarted([.darkMode]))
+        await store.finish()
+        #expect(await subscriptions.values == [[.darkMode]])
     }
 
     @Test func disconnectMarksStatusStaleAndDisablesActions() async {

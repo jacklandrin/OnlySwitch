@@ -75,6 +75,10 @@ struct DashboardFeature {
             orderedSelectedIDs.compactMap { descriptors[id: $0] }
         }
 
+        var subscriptionControlIDs: Set<RemoteControlID> {
+            Set(visibleDescriptors.map(\.id))
+        }
+
         var actionableControlIDs: Set<RemoteControlID> {
             Set(visibleDescriptors.lazy.map(\.id).filter(canTrigger))
         }
@@ -136,7 +140,7 @@ struct DashboardFeature {
             switch action {
             case .task:
                 state.isActive = true
-                var effects = [subscribe(state.orderedSelectedIDs)]
+                var effects = [subscribe(state)]
                 if let id = state.selectedMacID {
                     state.selectionGeneration &+= 1
                     effects.append(loadSelectedMac(id: id, generation: state.selectionGeneration))
@@ -157,11 +161,11 @@ struct DashboardFeature {
                     existing: state.statuses,
                     stale: true
                 )
-                return subscribe(state.orderedSelectedIDs)
+                return subscribe(state)
 
             case let .selectedDataLoaded(generation, id, .failure):
                 guard generation == state.selectionGeneration, id == state.selectedMacID else { return .none }
-                return subscribe(state.orderedSelectedIDs)
+                return subscribe(state)
 
             case .subscriptionStarted:
                 return .none
@@ -192,7 +196,7 @@ struct DashboardFeature {
             case let .layoutChanged(layout):
                 guard layout.macID == state.selectedMacID else { return .none }
                 state.orderedSelectedIDs = orderedIDs(from: layout)
-                return subscribe(state.orderedSelectedIDs)
+                return subscribe(state)
 
             case let .macSelected(id):
                 guard let mac = state.pairedMacs[id: id], id != state.selectedMacID else { return .none }
@@ -282,8 +286,12 @@ struct DashboardFeature {
         .cancellable(id: CancelID.selectedData, cancelInFlight: true)
     }
 
-    private func subscribe(_ ids: [RemoteControlID]) -> Effect<Action> {
-        let selection = Set(ids)
+    private func subscribe(_ state: State) -> Effect<Action> {
+        guard state.hasAcceptedLiveCatalog else { return .none }
+        return subscribe(state.subscriptionControlIDs)
+    }
+
+    private func subscribe(_ selection: Set<RemoteControlID>) -> Effect<Action> {
         return .run { [connection] send in
             do {
                 try await connection.subscribe(selection)
@@ -408,7 +416,7 @@ struct DashboardFeature {
             return cancelActiveActions(&state)
         case .authenticated:
             state.connectionState = .authenticated
-            return subscribe(state.orderedSelectedIDs)
+            return subscribe(state)
         case let .offline(_, reason):
             state.connectionState = .offline(reason)
             state.activeSessionID = nil
@@ -429,6 +437,8 @@ struct DashboardFeature {
             state.awaitingInitialCatalog = false
             state.pendingCatalogRevision = nil
             state.hasAcceptedLiveCatalog = true
+            guard state.connectionState == .authenticated else { return .none }
+            return subscribe(state)
         case let .catalogInvalidated(_, revision):
             guard state.awaitingInitialCatalog || revision > state.catalogRevision else { return .none }
             state.pendingCatalogRevision = revision
