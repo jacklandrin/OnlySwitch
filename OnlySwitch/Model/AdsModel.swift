@@ -18,7 +18,7 @@ let Ads:[AdsModel] = [
     AdsModel(
         imageName: "OnlyRemote",
         link: "https://apps.apple.com/app/id6793657946",
-        hint: "Download OnlyRemote"
+        hint: "Download OnlyRemote on the App Store"
     ),
     AdsModel(
         imageName: "QRCobot",

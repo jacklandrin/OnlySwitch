@@ -1,2 +1,2 @@
 // Shared build number for the macOS app and its embedded components.
-CURRENT_PROJECT_VERSION = 271
+CURRENT_PROJECT_VERSION = 272

@@ -2264,6 +2264,7 @@
 				0456C9332ACCA79500DB7898 /* ShellScript */,
 				C1A0C20218E9202600000001 /* Embed Privileged Helper */,
 				C1A0C20318E9202600000001 /* Copy Privileged Helper Daemon Plist */,
+				C1A0C20418E9202600000001 /* Sign Sparkle for Distribution */,
 			);
 			buildRules = (
 			);
@@ -2577,6 +2578,25 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${BUILT_PRODUCTS_DIR}/LaunchAtLogin_LaunchAtLogin.bundle/Contents/Resources/copy-helper-swiftpm.sh\"\n\n";
+		};
+		C1A0C20418E9202600000001 /* Sign Sparkle for Distribution */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(TARGET_BUILD_DIR)/$(WRAPPER_NAME)/Contents/Frameworks/Sparkle.framework",
+			);
+			name = "Sign Sparkle for Distribution";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Scripts/sign-sparkle-for-distribution.sh\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
