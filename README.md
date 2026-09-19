@@ -68,8 +68,10 @@ Since Version 2.5.0, OnlySwitch has started to support **Apple Widgets** (Sonoma
 Since Version 2.5.4, OnlySwitch has Only Control appearance.
 
 Since Version 2.7.0, OnlySwitch includes an optional **Desktop Pet**: a small, always-on-top desktop companion. Enable it in General settings, drag it anywhere on screen, and click it to show or dismiss Only Control.
-<img width="193" height="150" alt="desktop pet" src="https://github.com/user-attachments/assets/1c5dd631-b163-4ec2-a289-65890282a81c" />
 
+<p align="center">
+<img width="152" height="188" alt="desktop pet" src="https://github.com/user-attachments/assets/f45e4b4f-932e-4768-8bfd-845e22fdfff3" />
+</p>
 
 ## Shortcuts Gallery
 
