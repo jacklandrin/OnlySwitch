@@ -22,20 +22,6 @@ brew install only-switch
 ## Manually Download
 [**Download the app**](https://github.com/jacklandrin/OnlySwitch/releases/latest/download/OnlySwitch.dmg)
 
-**Installed OnlySwitch but cannot see its icon?** See [OnlySwitch icon missing from the menu bar](#onlyswitch-icon-missing-from-the-menu-bar).
-
-## OnlySwitch icon missing from the menu bar
-
-OnlySwitch is accessed through its menu bar icon. On macOS 26.2, users have reported that the app appears not to open when OnlySwitch is disabled in the system's menu bar settings.
-
-1. Open **System Settings → Menu Bar**.
-2. Find **OnlySwitch** in the list and enable it.
-3. Click the OnlySwitch icon in the menu bar to open its controls.
-
-If OnlySwitch is already enabled but its icon is still missing, check whether other menu bar items are taking up the available space. Try removing some other items to make room. If you use OnlySwitch's own collapsing feature, see [Hide Menu Bar Icons](#hide-menu-bar-icons) for how its hidden section works.
-
-If these checks do not restore access, add your macOS version, OnlySwitch version, and whether OnlySwitch is enabled in System Settings → Menu Bar to [issue #188](https://github.com/jacklandrin/OnlySwitch/issues/188).
-
 ## Communities
 Telegram group: https://t.me/OnlySwitchforMac
 
@@ -50,6 +36,8 @@ Control OnlySwitch from your iPhone or iPad over your local network. Download [O
 
 ## What's the OnlySwitch?
 OnlySwitch provides a series of toggle switches to simplify your routine work, such as Hidden desktop icons, dark mode, and hide notch of the new Macbook Pro. The switches show on your status bar, you can control them effortlessly. Switch and Shortcuts items can be customized (remove/add or sort) to show on the list. These functionalities even can be put on your desktop as Widgets.
+
+## Milestones
 
 Since Version 1.7, **Shortcuts** can be imported into OnlySwitch.
 
@@ -72,6 +60,23 @@ Since Version 2.7.0, OnlySwitch includes an optional **Desktop Pet**: a small, a
 <p align="center">
 <img width="152" height="188" alt="desktop pet" src="https://github.com/user-attachments/assets/f45e4b4f-932e-4768-8bfd-845e22fdfff3" />
 </p>
+
+Since Version 2.7.5, OnlySwitch supports to be controlled via OnlyRemote
+
+**Installed OnlySwitch but cannot see its icon?** See [OnlySwitch icon missing from the menu bar](#onlyswitch-icon-missing-from-the-menu-bar).
+
+## OnlySwitch icon missing from the menu bar
+
+OnlySwitch is accessed through its menu bar icon. On macOS 26.2, users have reported that the app appears not to open when OnlySwitch is disabled in the system's menu bar settings.
+
+1. Open **System Settings → Menu Bar**.
+2. Find **OnlySwitch** in the list and enable it.
+3. Click the OnlySwitch icon in the menu bar to open its controls.
+
+If OnlySwitch is already enabled but its icon is still missing, check whether other menu bar items are taking up the available space. Try removing some other items to make room. If you use OnlySwitch's own collapsing feature, see [Hide Menu Bar Icons](#hide-menu-bar-icons) for how its hidden section works.
+
+If these checks do not restore access, add your macOS version, OnlySwitch version, and whether OnlySwitch is enabled in System Settings → Menu Bar to [issue #188](https://github.com/jacklandrin/OnlySwitch/issues/188).
+
 
 ## Shortcuts Gallery
 
