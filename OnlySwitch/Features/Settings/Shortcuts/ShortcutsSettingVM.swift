@@ -142,6 +142,13 @@ final class ShortcutsSettingVM:ObservableObject, @unchecked Sendable {
             return
         }
 
+        // Apple Events launch their target application by default. Keep the
+        // cached artwork when Shortcuts is closed so opening OnlySwitch never
+        // opens the Shortcuts app as a side effect.
+        guard NSRunningApplication.runningApplications(withBundleIdentifier: "com.apple.shortcuts").isEmpty == false else {
+            return
+        }
+
         let appearances = names.compactMap { name -> ShortcutAppearance? in
                 let escapedName = name
                     .replacingOccurrences(of: "\\", with: "\\\\")
