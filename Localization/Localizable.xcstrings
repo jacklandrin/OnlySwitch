@@ -26755,7 +26755,20 @@
     "Remove privileged switch access" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Remove privileged switch access" } } } },
     "Open System Settings to manage privileged access" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Open System Settings to manage privileged access" } } } },
     "Open System Settings to approve privileged access" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Open System Settings to approve privileged access" } } } },
-    "Updating privileged switch access" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Updating privileged switch access" } } } }
+    "Updating privileged switch access" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Updating privileged switch access" } } } },
+    "Backup" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Backup" } } } },
+    "Export Settings" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Export Settings" } } } },
+    "Import Settings" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Import Settings" } } } },
+    "Share your settings with a backup file, or restore them on another Mac" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Share your settings with a backup file, or restore them on another Mac" } } } },
+    "Settings exported successfully" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Settings exported successfully" } } } },
+    "Settings imported. Restart Only Switch to apply all changes" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Settings imported. Restart Only Switch to apply all changes" } } } },
+    "Invalid Settings Backup File" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Invalid Settings Backup File" } } } },
+    "This backup was made by a newer version of Only Switch" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "This backup was made by a newer version of Only Switch" } } } },
+    "Import custom Evolution commands?" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Import custom Evolution commands?" } } } },
+    "This backup contains shell commands that Only Switch will run on this Mac, some of them automatically. Only import them if you trust whoever created this file." : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "This backup contains shell commands that Only Switch will run on this Mac, some of them automatically. Only import them if you trust whoever created this file." } } } },
+    "Pre-execution:" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Pre-execution:" } } } },
+    "Skip Commands" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Skip Commands" } } } },
+    "Import Commands" : { "extractionState" : "manual", "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Import Commands" } } } }
   },
   "version" : "1.1"
 }
