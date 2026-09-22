@@ -184,6 +184,7 @@ let package = Package(
         .testTarget(
             name: "ModulesTests",
             dependencies: [
+                "Extensions",
                 "Authenticator",
                 "DesktopPet",
                 "OnlyControl",

@@ -92,6 +92,36 @@ public extension UserDefaults {
         public static let AppLanguage = "app_lang"
         public static let checkUpdateOnLaunch = "checkUpdateOnLaunchKey"
         public static let hideMenuAfterRunning = "hideMenuAfterRunningKey"
+        public static let canPlayEffectSound = "canPlayESKey"
         public static let onlyRemoteCampaignAcknowledgedVersion = "onlyRemoteCampaignAcknowledgedVersionKey"
+
+        /// `UserDefaults.standard` keys included in a settings backup.
+        /// Deliberately excludes: API keys and authenticator secrets (never leave the device),
+        /// hardware identifiers (AirPodsAddress), and internal/runtime state that isn't a
+        /// user-facing setting (hasRunRadio, radioStation, window session state, caches,
+        /// version-check bookkeeping, live volume mirrors).
+        public static let exportableKeys: [String] = [
+            menubarIcon, appearanceColumnCount, showAds, showDesktopPet,
+            evolutionIDs,
+            WorkDuration, RestDuration, RestAlert, WorkAlert, AllowNotificationAlert, PTimerCycleCount,
+            soundWaveEffectDisplay, volume, allowNotificationChangingStation, allowNotificationTrack, radioEnable,
+            isMenubarCollapse, autoCollapseMenubarTime, menubarCollapsable,
+            SwitchState,
+            shortcutsDic,
+            orderWeight, onlyControlOrderWeight,
+            soundMixerEnabled,
+            backNoisesTrack, automaticallyStopPlayNoiseTime,
+            autoStopKeepAwakeMode, autoStopKeepAwakeTime, autoStopKeepAwakeStartDate, autoStopKeepAwakeEndDate, KeepAwakeKey,
+            autoDimScreenTime, dimScreenPercent, syncExternalBrightness,
+            nightShiftStrength, nightShiftStartDate, nightShiftEndDate, isNightShiftScheduleOn,
+            sticker,
+            currentAIModel, ollamaUrl, openAIHost,
+            keyLightBrightness,
+            authenticatorEnabled,
+            ScreenSaverInterval, checkUpdateOnLaunch, hideMenuAfterRunning, canPlayEffectSound,
+        ]
+
+        /// Keys stored in the shared app-group suite (`<TeamPrefix>OnlySwitch.shared`), not in `.standard`.
+        public static let sharedExportableKeys: [String] = [AppLanguage, systemLangPriority]
     }
 }
