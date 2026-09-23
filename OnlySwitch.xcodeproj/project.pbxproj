@@ -474,6 +474,9 @@
 		F3AB00000000000000000007 /* ControlTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AB00000000000000000024 /* ControlTileView.swift */; };
 		F3AB00000000000000000008 /* MacPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AB00000000000000000025 /* MacPickerView.swift */; };
 		F3AB00000000000000000009 /* RemoteEndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AB00000000000000000026 /* RemoteEndToEndTests.swift */; };
+		B23000000000000000000002 /* ControlTilePresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23000000000000000000001 /* ControlTilePresentation.swift */; };
+		B23000000000000000000004 /* ControlTileStatusBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23000000000000000000003 /* ControlTileStatusBadge.swift */; };
+		B23000000000000000000006 /* ControlTileIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23000000000000000000005 /* ControlTileIconView.swift */; };
 		F3AC00000000000000000001 /* RemoteCatalogMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AC00000000000000000021 /* RemoteCatalogMonitor.swift */; };
 		F3AD00000000000000000001 /* HowToUseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AD00000000000000000021 /* HowToUseView.swift */; };
 		F3AD00000000000000000002 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AD00000000000000000022 /* AboutView.swift */; };
@@ -924,6 +927,9 @@
 		F3AB00000000000000000024 /* ControlTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlTileView.swift; sourceTree = "<group>"; };
 		F3AB00000000000000000025 /* MacPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacPickerView.swift; sourceTree = "<group>"; };
 		F3AB00000000000000000026 /* RemoteEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteEndToEndTests.swift; sourceTree = "<group>"; };
+		B23000000000000000000001 /* ControlTilePresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlTilePresentation.swift; sourceTree = "<group>"; };
+		B23000000000000000000003 /* ControlTileStatusBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlTileStatusBadge.swift; sourceTree = "<group>"; };
+		B23000000000000000000005 /* ControlTileIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlTileIconView.swift; sourceTree = "<group>"; };
 		F3AC00000000000000000021 /* RemoteCatalogMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCatalogMonitor.swift; sourceTree = "<group>"; };
 		F3AD00000000000000000021 /* HowToUseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToUseView.swift; sourceTree = "<group>"; };
 		F3AD00000000000000000022 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
@@ -2209,6 +2215,9 @@
 				F3AB00000000000000000022 /* DashboardFeature.swift */,
 				F3AB00000000000000000023 /* DashboardView.swift */,
 				F3AB00000000000000000024 /* ControlTileView.swift */,
+				B23000000000000000000001 /* ControlTilePresentation.swift */,
+				B23000000000000000000003 /* ControlTileStatusBadge.swift */,
+				B23000000000000000000005 /* ControlTileIconView.swift */,
 				F3AB00000000000000000025 /* MacPickerView.swift */,
 			);
 			path = Dashboard;
@@ -3014,6 +3023,9 @@
 				F3AB00000000000000000002 /* DashboardFeature.swift in Sources */,
 				F3AB00000000000000000006 /* DashboardView.swift in Sources */,
 				F3AB00000000000000000007 /* ControlTileView.swift in Sources */,
+				B23000000000000000000002 /* ControlTilePresentation.swift in Sources */,
+				B23000000000000000000004 /* ControlTileStatusBadge.swift in Sources */,
+				B23000000000000000000006 /* ControlTileIconView.swift in Sources */,
 				F3AB00000000000000000008 /* MacPickerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

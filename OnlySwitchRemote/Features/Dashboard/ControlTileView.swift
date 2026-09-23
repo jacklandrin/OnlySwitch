@@ -4,10 +4,11 @@ import SwiftUI
 struct ControlTileView: View {
     static let iconSize: CGFloat = 28
 
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     let descriptor: RemoteControlDescriptor
-    let status: DashboardFeature.TileStatus?
+    let presentation: ControlTilePresentation
     let macName: String
-    let isRequestInFlight: Bool
     let isEnabled: Bool
     let reduceMotion: Bool
     let action: () -> Void
@@ -15,20 +16,17 @@ struct ControlTileView: View {
     var body: some View {
         Button(action: action) {
             VStack(alignment: .leading, spacing: 12) {
-                HStack(alignment: .top) {
-                    controlIcon
-                        .frame(width: Self.iconSize, height: Self.iconSize)
-                        .frame(width: 34, height: 34)
-                    Spacer(minLength: 8)
-                    if isRequestInFlight || status?.value.isProcessing == true {
-                        ProgressView()
-                            .controlSize(.small)
-                            .accessibilityLabel("Working")
-                    } else if descriptor.behavior != .button, let isOn = status?.value.isOn {
-                        Image(systemName: isOn ? "checkmark.circle.fill" : "circle")
-                            .foregroundStyle(isOn ? Color.accentColor : .secondary)
-                            .accessibilityHidden(true)
-                    }
+                headerLayout {
+                    ControlTileIconView(
+                        icon: descriptor.icon,
+                        isShortcut: descriptor.id.kind == .shortcut,
+                        tint: iconColor
+                    )
+                    ControlTileStatusBadge(
+                        presentation: presentation,
+                        reduceMotion: reduceMotion
+                    )
+                    .frame(maxWidth: .infinity, alignment: headerBadgeAlignment)
                 }
 
                 VStack(alignment: .leading, spacing: 4) {
@@ -36,104 +34,145 @@ struct ControlTileView: View {
                         .font(.headline)
                         .foregroundStyle(.primary)
                         .multilineTextAlignment(.leading)
-                    if let information = status?.value.secondaryInformation, information.isEmpty == false {
+                    if let information = presentation.secondaryInformation,
+                       information.isEmpty == false {
                         Text(information)
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                             .lineLimit(2)
                     }
-                    if let reason = unavailableReason {
+                    if let reason = presentation.unavailableReason {
                         Label(reason, systemImage: "exclamationmark.circle")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                             .lineLimit(3)
-                    } else if status?.isStale == true {
-                        Text("Last known status")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
                     }
                 }
                 Spacer(minLength: 0)
             }
-            .frame(maxWidth: .infinity, minHeight: 116, alignment: .topLeading)
-            .padding(16)
-            .background(backgroundStyle, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-            .overlay {
-                RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .strokeBorder(borderColor, lineWidth: 1)
-            }
-            .contentShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .padding(18)
+            .frame(maxWidth: .infinity, minHeight: 148, alignment: .topLeading)
+            .contentShape(RoundedRectangle(cornerRadius: 22))
+            .modifier(
+                ControlTileSurface(
+                    tint: surfaceTint,
+                    borderColor: borderColor,
+                    isInteractive: isEnabled
+                )
+            )
         }
         .buttonStyle(.plain)
+        .contentShape(RoundedRectangle(cornerRadius: 22))
+        .frame(maxWidth: .infinity, minHeight: 148, alignment: .topLeading)
+        .hoverEffect(.highlight)
+        .focusable(isEnabled)
         .disabled(!isEnabled)
-        .opacity(isEnabled || unavailableReason != nil ? 1 : 0.65)
-        .animation(reduceMotion ? nil : .easeInOut(duration: 0.18), value: isRequestInFlight)
+        .animation(presentationAnimation, value: presentation.visualState)
         .accessibilityLabel("\(macName), \(descriptor.localizedTitle)")
-        .accessibilityValue(accessibilityValue)
+        .accessibilityValue(presentation.accessibilityValue)
         .accessibilityHint(accessibilityHint)
-    }
-
-    @ViewBuilder
-    private var controlIcon: some View {
-        switch descriptor.icon {
-        case let .systemSymbol(name):
-            Image(systemName: name)
-                .resizable()
-                .scaledToFit()
-                .foregroundStyle(iconColor)
-        case let .png(data):
-            if let image = UIImage(data: data) {
-                Image(uiImage: image)
-                    .renderingMode(descriptor.id.kind == .shortcut ? .original : .template)
-                    .resizable()
-                    .scaledToFit()
-                    .foregroundStyle(descriptor.id.kind == .shortcut ? .primary : iconColor)
-            } else {
-                Image(systemName: "switch.2")
-                    .resizable()
-                    .scaledToFit()
-            }
-        }
-    }
-
-    private var unavailableReason: String? {
-        if descriptor.isAvailable == false {
-            return descriptor.localizedUnavailableReason ?? String(localized: "Unavailable on this Mac")
-        }
-        if status?.value.isAvailable == false {
-            if let reason = status?.value.unavailableReason {
-                return descriptor.localizedUnavailableReason(reason)
-            }
-            return String(localized: "Unavailable on this Mac")
-        }
-        return nil
-    }
-
-    var accessibilityValue: String {
-        if let unavailableReason { return String(localized: "Unavailable: \(unavailableReason)") }
-        if status?.isStale == true { return String(localized: "Offline, showing last known status") }
-        if isRequestInFlight || status?.value.isProcessing == true { return String(localized: "Working") }
-        if let isOn = status?.value.isOn { return isOn ? String(localized: "On") : String(localized: "Off") }
-        return String(localized: "Ready")
+        .accessibilityInputLabels([LocalizedStringKey(descriptor.localizedTitle)])
     }
 
     private var accessibilityHint: String {
-        if let unavailableReason { return unavailableReason }
+        if let unavailableReason = presentation.unavailableReason { return unavailableReason }
+        if presentation.visualState == .pending { return String(localized: "Working") }
         if isEnabled == false { return String(localized: "Connect to this Mac to use this control") }
         return descriptor.isDestructive
             ? String(localized: "Requires confirmation before running")
             : String(localized: "Runs this control on the selected Mac")
     }
 
-    private var iconColor: Color {
-        status?.value.isOn == true ? .accentColor : .primary
+    private var headerLayout: AnyLayout {
+        if dynamicTypeSize.isAccessibilitySize {
+            AnyLayout(VStackLayout(alignment: .leading, spacing: 8))
+        } else {
+            AnyLayout(HStackLayout(alignment: .top, spacing: 8))
+        }
     }
 
-    private var backgroundStyle: Color {
-        status?.value.isOn == true ? Color.accentColor.opacity(0.12) : Color(.secondarySystemGroupedBackground)
+    private var headerBadgeAlignment: Alignment {
+        dynamicTypeSize.isAccessibilitySize ? .leading : .trailing
+    }
+
+    private var iconColor: Color {
+        presentation.lastKnownIsOn == true ? .accentColor : .primary
+    }
+
+    private var presentationAnimation: Animation? {
+        guard reduceMotion == false else { return nil }
+        switch presentation.visualState {
+        case .on, .off, .ready:
+            return .snappy(duration: 0.28)
+        case .pending, .stale, .offline, .unavailable, .failed:
+            return nil
+        }
+    }
+
+    private var surfaceTint: Color {
+        switch presentation.visualState {
+        case .on, .pending:
+            .accentColor
+        case .off, .ready, .stale:
+            .secondary
+        case .offline:
+            .orange
+        case .unavailable, .failed:
+            .red
+        }
     }
 
     private var borderColor: Color {
-        status?.value.isOn == true ? Color.accentColor.opacity(0.35) : Color.secondary.opacity(0.18)
+        surfaceTint.opacity(presentation.visualState == .on ? 0.38 : 0.24)
+    }
+}
+
+private struct ControlTileSurface: ViewModifier {
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.colorSchemeContrast) private var colorSchemeContrast
+
+    let tint: Color
+    let borderColor: Color
+    let isInteractive: Bool
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if reduceTransparency {
+            content
+                .background(tint.opacity(0.10), in: tileShape)
+                .background(opaqueSurfaceColor, in: tileShape)
+                .overlay { border }
+        } else if #available(iOS 26, *) {
+            content
+                .background(tint.opacity(0.06), in: tileShape)
+                .overlay { border }
+                .glassEffect(
+                    .regular.tint(tint.opacity(0.18)).interactive(isInteractive),
+                    in: .rect(cornerRadius: 22)
+                )
+        } else {
+            content
+                .background(tint.opacity(0.10), in: tileShape)
+                .background(.thinMaterial, in: tileShape)
+                .overlay { border }
+        }
+    }
+
+    private var tileShape: RoundedRectangle {
+        RoundedRectangle(cornerRadius: 22)
+    }
+
+    private var border: some View {
+        tileShape.strokeBorder(
+            colorSchemeContrast == .increased ? Color.primary.opacity(0.42) : borderColor,
+            lineWidth: colorSchemeContrast == .increased ? 2 : 1
+        )
+    }
+
+    private var opaqueSurfaceColor: Color {
+        colorScheme == .dark
+            ? Color(red: 0.12, green: 0.12, blue: 0.13)
+            : .white
     }
 }

@@ -165,6 +165,7 @@ struct RemoteAppFeatureTests {
             connectionState: .authenticated,
             isActive: true
         )
+        state.dashboard.actionFailures = [.darkMode: "The Mac could not complete this action."]
         let persistence = PersistenceAttemptRecorder(shouldFail: false)
         let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
             $0.remotePersistence.saveAppState = { try await persistence.save($0) }
@@ -191,6 +192,7 @@ struct RemoteAppFeatureTests {
             $0.dashboard.selectionGeneration = 1
             $0.dashboard.statuses = [:]
             $0.dashboard.orderedSelectedIDs = []
+            $0.dashboard.actionFailures = [:]
             $0.nextPersistenceSequence = 1
             $0.pendingPersistenceIntent = intent
             $0.isPersisting = true

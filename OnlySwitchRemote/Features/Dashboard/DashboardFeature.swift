@@ -27,6 +27,7 @@ struct DashboardFeature {
         var orderedSelectedIDs: [RemoteControlID]
         var requestsInFlight: Set<RemoteControlID>
         var requestIDs: [RemoteControlID: UUID]
+        var actionFailures: [RemoteControlID: String] = [:]
         var retryInvocations: [RemoteControlID: RemoteActionInvocation] = [:]
         var connectionState: ConnectionState
         var isActive: Bool
@@ -90,7 +91,9 @@ struct DashboardFeature {
                   descriptor.isAvailable
             else { return false }
             if let status = statuses[id] {
-                return status.isStale == false && status.value.isAvailable
+                return status.isStale == false
+                    && status.value.isAvailable
+                    && status.value.isProcessing == false
             }
             return descriptor.supportsStatus == false
         }
@@ -308,6 +311,7 @@ struct DashboardFeature {
         descriptor: RemoteControlDescriptor,
         state: inout State
     ) -> Effect<Action> {
+        state.actionFailures[id] = nil
         let action: RemoteControlAction
         switch descriptor.behavior {
         case .button:
@@ -329,6 +333,7 @@ struct DashboardFeature {
         invocation: RemoteActionInvocation,
         state: inout State
     ) -> Effect<Action> {
+        state.actionFailures[id] = nil
         state.requestsInFlight.insert(id)
         state.requestIDs[id] = invocation.request.requestID
         return .run { [connection] send in
@@ -367,6 +372,7 @@ struct DashboardFeature {
         case let .failure(error):
             state.requestsInFlight.remove(id)
             state.requestIDs[id] = nil
+            state.actionFailures[id] = error.message
             state.alert = .actionFailed(message: error.message)
         case let .success(result):
             guard result.requestID == requestID else { return .none }
@@ -374,6 +380,7 @@ struct DashboardFeature {
             state.requestIDs[id] = nil
             switch result.result {
             case let .failure(error):
+                state.actionFailures[id] = error.message
                 state.alert = .actionFailed(message: error.message)
             case let .success(status):
                 if let status { apply(status, to: &state) }
@@ -446,6 +453,7 @@ struct DashboardFeature {
             for status in statuses {
                 if state.liveStatusControlIDs.insert(status.id).inserted {
                     state.statuses[status.id] = .init(value: status, isStale: false)
+                    state.actionFailures[status.id] = nil
                 } else {
                     apply(status, to: &state)
                 }
@@ -453,6 +461,7 @@ struct DashboardFeature {
         case let .status(_, status):
             if state.liveStatusControlIDs.insert(status.id).inserted {
                 state.statuses[status.id] = .init(value: status, isStale: false)
+                state.actionFailures[status.id] = nil
             } else {
                 apply(status, to: &state)
             }
@@ -470,6 +479,7 @@ struct DashboardFeature {
 
     private func apply(_ status: RemoteControlStatus, to state: inout State) {
         guard status.revision > (state.statuses[status.id]?.value.revision ?? 0) else { return }
+        state.actionFailures[status.id] = nil
         state.statuses[status.id] = .init(value: status, isStale: false)
     }
 
@@ -484,6 +494,7 @@ struct DashboardFeature {
         state.catalogRevision = 0
         state.statuses = [:]
         state.orderedSelectedIDs = []
+        state.actionFailures.removeAll()
         clearRequests(&state)
         state.retryInvocations.removeAll()
         state.alert = nil

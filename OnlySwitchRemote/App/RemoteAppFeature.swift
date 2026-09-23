@@ -602,6 +602,7 @@ struct RemoteAppFeature {
             state.dashboard.orderedSelectedIDs = []
             state.dashboard.requestsInFlight = []
             state.dashboard.requestIDs = [:]
+            state.dashboard.actionFailures = [:]
             state.dashboard.retryInvocations = [:]
             state.dashboard.activeSessionID = nil
             state.dashboard.awaitingInitialCatalog = false

@@ -19,29 +19,33 @@ struct DashboardFeatureTests {
         #expect(ControlTileView.iconSize == 28)
     }
 
-    @Test func compactWidthPortraitKeepsTwoColumns() {
+    @Test func accessibilityDynamicTypeUsesOneColumnForReadableControls() {
         #expect(DashboardView.gridStrategy(
             horizontal: .compact,
-            vertical: .regular
+            vertical: .regular,
+            dynamicTypeSize: .accessibility3
+        ) == .fixed(count: 1))
+    }
+
+    @Test func compactPortraitKeepsTwoReachableColumnsAtStandardType() {
+        #expect(DashboardView.gridStrategy(
+            horizontal: .compact,
+            vertical: .regular,
+            dynamicTypeSize: .large
         ) == .fixed(count: 2))
     }
 
-    @Test func compactHeightUsesDenserLandscapeGrid() {
+    @Test func iPadAndLandscapeUseSpaciousPointerSafeTiles() {
+        #expect(DashboardView.gridStrategy(
+            horizontal: .regular,
+            vertical: .regular,
+            dynamicTypeSize: .large
+        ) == .adaptive(minimum: 240))
         #expect(DashboardView.gridStrategy(
             horizontal: .compact,
-            vertical: .compact
-        ) == .adaptive(minimum: 180))
-        #expect(DashboardView.gridStrategy(
-            horizontal: .regular,
-            vertical: .compact
-        ) == .adaptive(minimum: 180))
-    }
-
-    @Test func regularLayoutPreservesExistingAdaptiveMinimum() {
-        #expect(DashboardView.gridStrategy(
-            horizontal: .regular,
-            vertical: .regular
-        ) == .adaptive(minimum: 160))
+            vertical: .compact,
+            dynamicTypeSize: .large
+        ) == .adaptive(minimum: 220))
     }
 
     @Test func macPickerPreservesFullSelectedNameForAccessibility() {
@@ -62,28 +66,121 @@ struct DashboardFeatureTests {
         #expect(picker.selectedName == longName)
     }
 
-    @Test func serverProcessingStatusIsAnnouncedAsWorking() {
-        let processing = RemoteControlStatus(
-            id: .darkMode,
-            isAvailable: true,
-            unavailableReason: nil,
-            isOn: false,
-            secondaryInformation: nil,
-            isProcessing: true,
-            revision: 1,
-            updatedAt: .now
-        )
-        let tile = ControlTileView(
+    @Test func serverProcessingStatusDisablesNewActionUntilAuthoritativeUpdateArrives() async {
+        let state = makeState(
             descriptor: descriptor(id: .darkMode, title: "Dark Mode", behavior: .switch),
-            status: .init(value: processing, isStale: false),
-            macName: "Studio",
+            status: .init(
+                id: .darkMode,
+                isAvailable: true,
+                unavailableReason: nil,
+                isOn: false,
+                secondaryInformation: nil,
+                isProcessing: true,
+                revision: 1,
+                updatedAt: .now
+            )
+        )
+        let store = TestStore(initialState: state) { DashboardFeature() }
+
+        #expect(store.state.canTrigger(.darkMode) == false)
+        await store.send(.tileTapped(.darkMode))
+        #expect(store.state.requestsInFlight.isEmpty)
+    }
+
+    @Test func tilePresentationMakesFreshOnAndOffUnambiguous() {
+        let on = ControlTilePresentation(
+            descriptor: descriptor(id: .darkMode, title: "Dark Mode", behavior: .switch),
+            status: .init(value: status(id: .darkMode, isOn: true, revision: 1), isStale: false),
+            connectionState: .authenticated,
             isRequestInFlight: false,
-            isEnabled: false,
-            reduceMotion: true,
-            action: {}
+            actionFailure: nil
+        )
+        let off = ControlTilePresentation(
+            descriptor: descriptor(id: .darkMode, title: "Dark Mode", behavior: .switch),
+            status: .init(value: status(id: .darkMode, isOn: false, revision: 2), isStale: false),
+            connectionState: .authenticated,
+            isRequestInFlight: false,
+            actionFailure: nil
         )
 
-        #expect(tile.accessibilityValue == "Working")
+        #expect(on.visualState == .on)
+        #expect(on.lastKnownIsOn == true)
+        #expect(on.accessibilityValue == "On")
+        #expect(off.visualState == .off)
+        #expect(off.lastKnownIsOn == false)
+        #expect(off.accessibilityValue == "Off")
+    }
+
+    @Test func tilePresentationPrioritizesPendingThenConnectionSafetyOverLastKnownState() {
+        let staleStatus = DashboardFeature.TileStatus(
+            value: status(id: .darkMode, isOn: false, revision: 3),
+            isStale: true
+        )
+        let pending = ControlTilePresentation(
+            descriptor: descriptor(id: .darkMode, title: "Dark Mode", behavior: .switch),
+            status: staleStatus,
+            connectionState: .authenticated,
+            isRequestInFlight: true,
+            actionFailure: nil
+        )
+        let stale = ControlTilePresentation(
+            descriptor: descriptor(id: .darkMode, title: "Dark Mode", behavior: .switch),
+            status: staleStatus,
+            connectionState: .connecting,
+            isRequestInFlight: false,
+            actionFailure: nil
+        )
+        let offline = ControlTilePresentation(
+            descriptor: descriptor(id: .darkMode, title: "Dark Mode", behavior: .switch),
+            status: staleStatus,
+            connectionState: .offline(nil),
+            isRequestInFlight: false,
+            actionFailure: nil
+        )
+
+        #expect(pending.visualState == .pending)
+        #expect(pending.lastKnownIsOn == false)
+        #expect(stale.visualState == .stale)
+        #expect(stale.accessibilityValue == "Offline, showing last known status")
+        #expect(offline.visualState == .offline)
+        #expect(offline.lastKnownIsOn == false)
+    }
+
+    @Test func tilePresentationRetainsLastKnownValueForFailureAndUnavailableStates() {
+        let current = DashboardFeature.TileStatus(
+            value: status(id: .darkMode, isOn: true, revision: 4),
+            isStale: false
+        )
+        let failed = ControlTilePresentation(
+            descriptor: descriptor(id: .darkMode, title: "Dark Mode", behavior: .switch),
+            status: current,
+            connectionState: .authenticated,
+            isRequestInFlight: false,
+            actionFailure: "The Mac could not complete this action."
+        )
+        let unavailable = ControlTilePresentation(
+            descriptor: .init(
+                id: .darkMode,
+                title: "Dark Mode",
+                behavior: .switch,
+                icon: .systemSymbol("moon"),
+                isAvailable: false,
+                unavailableReason: "This Mac does not support Dark Mode",
+                isDestructive: false,
+                supportsStatus: true,
+                supportsSecondaryInformation: false
+            ),
+            status: current,
+            connectionState: .authenticated,
+            isRequestInFlight: false,
+            actionFailure: nil
+        )
+
+        #expect(failed.visualState == .failed)
+        #expect(failed.lastKnownIsOn == true)
+        #expect(failed.accessibilityValue == "Action Failed")
+        #expect(unavailable.visualState == .unavailable)
+        #expect(unavailable.unavailableReason == "This Mac does not support Dark Mode")
     }
 
     @Test func taskSubscribesOnlyToSelectedTiles() async {
@@ -368,9 +465,58 @@ struct DashboardFeatureTests {
         await store.receive(.actionResponse(.darkMode, requestID, .failure(failure))) {
             $0.requestsInFlight = []
             $0.requestIDs = [:]
+            $0.actionFailures[.darkMode] = failure.message
             $0.alert = .actionFailed(message: failure.message)
         }
         #expect(store.state.statuses[.darkMode]?.value.isOn == false)
+    }
+
+    @Test func retryingAControlClearsItsPreviousFailureBeforeSending() async {
+        let requestID = UUID(uuidString: "00000000-0000-0000-0000-000000000306")!
+        let sent = DashboardActionRecorder()
+        var state = makeState(
+            descriptor: descriptor(id: .darkMode, title: "Dark Mode", behavior: .switch),
+            status: status(id: .darkMode, isOn: false, revision: 2)
+        )
+        state.actionFailures = [.darkMode: "The Mac could not complete this action."]
+        let store = TestStore(initialState: state) { DashboardFeature() } withDependencies: {
+            $0.uuid = UUIDGenerator { requestID }
+            $0.remoteConnection.send = { try await sent.send($0) }
+        }
+
+        await store.send(.tileTapped(.darkMode)) {
+            $0.requestsInFlight = [.darkMode]
+            $0.requestIDs = [.darkMode: requestID]
+            $0.actionFailures = [:]
+        }
+        await store.receive(.actionResponse(
+            .darkMode,
+            requestID,
+            .success(.init(requestID: requestID, result: .success(nil)))
+        )) {
+            $0.requestsInFlight = []
+            $0.requestIDs = [:]
+        }
+        #expect(await sent.requests == [.init(
+            requestID: requestID,
+            controlID: .darkMode,
+            action: .setState(true)
+        )])
+    }
+
+    @Test func authoritativePushedStatusClearsOnlyThatTilesActionFailure() async {
+        var state = makeState(
+            descriptor: descriptor(id: .darkMode, title: "Dark Mode", behavior: .switch),
+            status: status(id: .darkMode, isOn: false, revision: 2)
+        )
+        state.actionFailures = [.darkMode: "The Mac could not complete this action."]
+        let updated = status(id: .darkMode, isOn: true, revision: 3)
+        let store = TestStore(initialState: state) { DashboardFeature() }
+
+        await store.send(.connectionEvent(.status(mac.id, updated))) {
+            $0.statuses[.darkMode] = .init(value: updated, isStale: false)
+            $0.actionFailures = [:]
+        }
     }
 
     @Test func timedOutActionRetriesOnlyAfterConfirmationWithSameRequestIdentity() async {
