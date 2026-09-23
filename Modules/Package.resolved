@@ -1,5 +1,5 @@
 {
-  "originHash" : "2602ed000c1cab534452f159468280d7c4b79870d2add500e7dcab80019124da",
+  "originHash" : "58c2dfbaba2fe91d8d0c3806d2538da86b83e80ee70d28ad456aa93dda630225",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -211,8 +211,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-composable-architecture",
       "state" : {
-        "revision" : "d5d2e0258fa2e80df761c2b73353422d42f4b98e",
-        "version" : "1.25.3"
+        "revision" : "377da4061db10d26337a71bb279c506bb951f50f",
+        "version" : "1.26.2"
       }
     },
     {
@@ -249,6 +249,15 @@
       "state" : {
         "revision" : "322d9ffeeba85c9f7c4984b39422ec7cc3c56597",
         "version" : "1.1.1"
+      }
+    },
+    {
+      "identity" : "swift-issue-reporting",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/pointfreeco/swift-issue-reporting",
+      "state" : {
+        "revision" : "71c7c9a761d1ca6ed4ccb6ced040fe1c1a39e8e7",
+        "version" : "2.1.0"
       }
     },
     {
@@ -292,8 +301,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-sharing",
       "state" : {
-        "revision" : "bc27f8322bc30f6ce7d864d137dc77a6de8b57eb",
-        "version" : "2.8.0"
+        "revision" : "4dfe1b9751bb6cd1a34b363310f43b634f8b5645",
+        "version" : "2.10.0"
       }
     },
     {

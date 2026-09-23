@@ -427,6 +427,7 @@ extension RemoteConnectionClient {
             forgetMac: { await runtime.forget($0) },
             subscribe: { try await runtime.subscribe($0) },
             send: { try await runtime.send($0) },
+            sendSoundMixer: { _ in },
             setForegrounded: { _ in }
         )
     }

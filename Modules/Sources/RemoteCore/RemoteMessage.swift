@@ -140,6 +140,9 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
     case statusChanged(RemoteControlStatus)
     case actionRequest(RemoteActionRequest)
     case actionResult(RemoteActionResult)
+    case soundMixerSnapshotRequest
+    case soundMixerSnapshot(RemoteSoundMixerSnapshot)
+    case soundMixerCommand(RemoteSoundMixerCommand)
     case ping(UInt64)
     case pong(UInt64)
     case credentialRevoked
@@ -177,6 +180,9 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
         case statusChanged
         case actionRequest
         case actionResult
+        case soundMixerSnapshotRequest
+        case soundMixerSnapshot
+        case soundMixerCommand
         case ping
         case pong
         case credentialRevoked
@@ -232,6 +238,12 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
             self = .actionRequest(try container.decode(RemoteActionRequest.self, forKey: .payload))
         case .actionResult:
             self = .actionResult(try container.decode(RemoteActionResult.self, forKey: .payload))
+        case .soundMixerSnapshotRequest:
+            self = .soundMixerSnapshotRequest
+        case .soundMixerSnapshot:
+            self = .soundMixerSnapshot(try container.decode(RemoteSoundMixerSnapshot.self, forKey: .payload))
+        case .soundMixerCommand:
+            self = .soundMixerCommand(try container.decode(RemoteSoundMixerCommand.self, forKey: .payload))
         case .ping:
             self = .ping(try container.decode(UInt64.self, forKey: .payload))
         case .pong:
@@ -310,6 +322,14 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
         case let .actionResult(result):
             try container.encode(Kind.actionResult, forKey: .type)
             try container.encode(result, forKey: .payload)
+        case .soundMixerSnapshotRequest:
+            try container.encode(Kind.soundMixerSnapshotRequest, forKey: .type)
+        case let .soundMixerSnapshot(snapshot):
+            try container.encode(Kind.soundMixerSnapshot, forKey: .type)
+            try container.encode(snapshot, forKey: .payload)
+        case let .soundMixerCommand(command):
+            try container.encode(Kind.soundMixerCommand, forKey: .type)
+            try container.encode(command, forKey: .payload)
         case let .ping(nonce):
             try container.encode(Kind.ping, forKey: .type)
             try container.encode(nonce, forKey: .payload)

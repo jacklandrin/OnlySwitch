@@ -734,6 +734,24 @@ actor RemotePeerSession {
             let result = await router.perform(request)
             try await sendEncrypted(.actionResult(result))
             await refreshRequested(request.controlID)
+            // The dashboard tile enables/disables the mixer after the session is already
+            // authenticated. Publish its new state immediately so the iOS surface can appear
+            // (or disappear) without reconnecting.
+            if request.controlID.kind == .builtIn,
+               request.controlID.value == "274877906944",
+               negotiatedVersion?.supportsSoundMixerRemote == true {
+                try await sendEncrypted(.soundMixerSnapshot(await SoundMixerVM.shared.remoteSnapshot()))
+            }
+        case .soundMixerSnapshotRequest:
+            guard negotiatedVersion?.supportsSoundMixerRemote == true else {
+                throw RemoteProtocolError(code: .actionNotSupported, message: "Sound Mixer remote control requires a newer OnlySwitch")
+            }
+            try await sendEncrypted(.soundMixerSnapshot(await SoundMixerVM.shared.remoteSnapshot()))
+        case let .soundMixerCommand(command):
+            guard negotiatedVersion?.supportsSoundMixerRemote == true else {
+                throw RemoteProtocolError(code: .actionNotSupported, message: "Sound Mixer remote control requires a newer OnlySwitch")
+            }
+            try await sendEncrypted(.soundMixerSnapshot(try await SoundMixerVM.shared.performRemoteCommand(command)))
         case let .pairingCommit(command):
             let status = try await credentialStore.transactionStatus(
                 command.transactionID,

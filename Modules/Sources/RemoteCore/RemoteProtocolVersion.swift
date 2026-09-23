@@ -1,5 +1,5 @@
 public struct RemoteProtocolVersion: Codable, Equatable, Sendable {
-    public static let current = Self(major: 1, minor: 2)
+    public static let current = Self(major: 1, minor: 3)
 
     public let major: UInt16
     public let minor: UInt16
@@ -20,4 +20,6 @@ public struct RemoteProtocolVersion: Codable, Equatable, Sendable {
 
     public var supportsAuthenticatedRevocation: Bool { minor >= 1 }
     public var supportsTransactionalPairing: Bool { minor >= 2 }
+    /// Mixer messages are only valid after both peers negotiated this capability.
+    public var supportsSoundMixerRemote: Bool { minor >= 3 }
 }

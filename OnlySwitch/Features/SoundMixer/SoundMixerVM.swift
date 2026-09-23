@@ -8,6 +8,7 @@
 import AppKit
 import CoreAudio
 import Extensions
+import RemoteCore
 import SwiftUI
 
 /// Shared on purpose: the process tap is a system-wide resource, and a second instance would set
@@ -133,6 +134,37 @@ final class SoundMixerVM: ObservableObject {
         autoRefreshTask = nil
         // The panel can go away mid-drag; otherwise the flag would block every later refresh.
         isInteracting = false
+    }
+
+    /// The remote representation intentionally excludes Core Audio and scripting handles.
+    func remoteSnapshot() async -> RemoteSoundMixerSnapshot {
+        if enabled { await refresh() }
+        return RemoteSoundMixerSnapshot(
+            revision: UInt64(Date().timeIntervalSince1970 * 1_000),
+            isEnabled: enabled,
+            systemVolume: systemVolume,
+            output: outputDevice.map { .init(name: $0.name, symbolName: $0.symbolName) },
+            apps: enabled ? rows.map { .init(id: $0.id, name: $0.name, volume: $0.volume, isMuted: $0.isMuted) } : []
+        )
+    }
+
+    func performRemoteCommand(_ command: RemoteSoundMixerCommand) async throws -> RemoteSoundMixerSnapshot {
+        guard enabled else { return await remoteSnapshot() }
+        switch command {
+        case let .setSystemVolume(value):
+            updateSystemVolume(min(100, max(0, value)), live: false)
+        case let .setAppVolume(id, value):
+            guard rows.contains(where: { $0.id == id }) else {
+                throw RemoteProtocolError(code: .controlNotFound, message: "Sound source is no longer available")
+            }
+            updateVolume(min(100, max(0, value)), for: id, live: false)
+        case let .setAppMuted(id, isMuted):
+            guard let row = rows.first(where: { $0.id == id }) else {
+                throw RemoteProtocolError(code: .controlNotFound, message: "Sound source is no longer available")
+            }
+            if row.isMuted != isMuted { toggleMute(for: id) }
+        }
+        return await remoteSnapshot()
     }
 
     // MARK: - Refresh

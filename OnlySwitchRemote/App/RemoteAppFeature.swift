@@ -258,7 +258,7 @@ struct RemoteAppFeature {
                 case let .sessionStarted(_, sessionID):
                     state.activeSessionID = sessionID
                     return forwardToDashboard(event, state: state)
-                case .catalog, .catalogInvalidated, .statusSnapshot, .status, .action:
+                case .catalog, .catalogInvalidated, .statusSnapshot, .status, .action, .soundMixer:
                     return forwardToDashboard(event, state: state)
                 }
 

@@ -37,6 +37,8 @@ struct DashboardFeature {
         var pendingCatalogRevision: UInt64?
         var hasAcceptedLiveCatalog = false
         var liveStatusControlIDs: Set<RemoteControlID> = []
+        var soundMixerSnapshot: RemoteSoundMixerSnapshot?
+        var isSoundMixerCollapsed = false
         @Presents var alert: AlertState<Action.Alert>?
 
         init(
@@ -116,6 +118,9 @@ struct DashboardFeature {
         case tileTapped(RemoteControlID)
         case actionResponse(RemoteControlID, UUID, Result<RemoteActionResult, RemoteProtocolError>)
         case actionCompleted(RemoteControlID, RemoteActionInvocation, Result<RemoteActionResult, RemoteProtocolError>)
+        case soundMixerCollapsed(Bool)
+        case soundMixerCommand(RemoteSoundMixerCommand)
+        case soundMixerCommandFinished(RemoteProtocolError?)
         case menuTapped
         case alert(PresentationAction<Alert>)
         case delegate(Delegate)
@@ -261,6 +266,30 @@ struct DashboardFeature {
                     state: &state
                 )
 
+            case let .soundMixerCollapsed(isCollapsed):
+                state.isSoundMixerCollapsed = isCollapsed
+                return .none
+
+            case let .soundMixerCommand(command):
+                guard state.soundMixerSnapshot?.isEnabled == true, state.canSendActions else { return .none }
+                return .run { [connection] send in
+                    do {
+                        try await connection.sendSoundMixer(command)
+                        await send(.soundMixerCommandFinished(nil))
+                    } catch let error as RemoteProtocolError {
+                        await send(.soundMixerCommandFinished(error))
+                    } catch {
+                        await send(.soundMixerCommandFinished(.init(code: .executionFailed, message: String(localized: "The Mac could not update sound."))))
+                    }
+                }
+
+            case let .soundMixerCommandFinished(.some(error)):
+                state.alert = .actionFailed(message: error.message)
+                return .none
+
+            case .soundMixerCommandFinished:
+                return .none
+
             case .menuTapped:
                 return .send(.delegate(.openSettings))
 
@@ -400,7 +429,7 @@ struct DashboardFeature {
             return .none
         case let .connecting(id), let .authenticated(id), let .offline(id, _), let .revoked(id),
              let .sessionStarted(id, _), let .catalog(id, _, _), let .catalogInvalidated(id, _),
-             let .statusSnapshot(id, _), let .status(id, _), let .action(id, _):
+             let .statusSnapshot(id, _), let .status(id, _), let .action(id, _), let .soundMixer(id, _):
             macID = id
         }
         guard macID == state.selectedMacID else { return .none }
@@ -473,6 +502,12 @@ struct DashboardFeature {
                 response: .success(result),
                 state: &state
             )
+        case let .soundMixer(_, snapshot):
+            guard state.canSendActions else { return .none }
+            guard snapshot.revision >= (state.soundMixerSnapshot?.revision ?? 0) else { return .none }
+            state.soundMixerSnapshot = snapshot
+            if snapshot.isEnabled == false { state.isSoundMixerCollapsed = false }
+            return .none
         }
         return .none
     }
@@ -498,6 +533,8 @@ struct DashboardFeature {
         clearRequests(&state)
         state.retryInvocations.removeAll()
         state.alert = nil
+        state.soundMixerSnapshot = nil
+        state.isSoundMixerCollapsed = false
     }
 
     private func clearRequests(_ state: inout State) {

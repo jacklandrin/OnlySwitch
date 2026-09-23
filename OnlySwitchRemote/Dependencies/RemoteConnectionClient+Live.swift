@@ -22,6 +22,7 @@ extension RemoteConnectionClient {
             forgetMac: { try await runtime.forgetMac($0) },
             subscribe: { try await runtime.subscribe($0) },
             send: { try await runtime.send($0) },
+            sendSoundMixer: { try await runtime.sendSoundMixer($0) },
             setForegrounded: { await runtime.setForegrounded($0) }
         )
     }
@@ -490,6 +491,7 @@ actor RemoteConnectionRuntime {
         eventHub.yield(.catalog(pending.macID, pending.catalog.revision, pending.catalog.controls))
         try? await persistence.saveCatalog(pending.macID, pending.catalog.revision, pending.catalog.controls)
         pending.session.startReceiving()
+        try? await pending.session.requestSoundMixerIfSupported()
         if let previousSession { await closeSession(previousSession) }
         if foregrounded == false { await setForegrounded(false) }
         finalizingTransactionID = nil
@@ -664,6 +666,11 @@ actor RemoteConnectionRuntime {
         return result
     }
 
+    func sendSoundMixer(_ command: RemoteSoundMixerCommand) async throws {
+        guard let session else { throw RemoteProtocolError(code: .authenticationFailed, message: "Mac is offline") }
+        try await session.sendSoundMixer(command)
+    }
+
     func setForegrounded(_ value: Bool) async {
         foregroundLifecycleGeneration &+= 1
         let lifecycleGeneration = foregroundLifecycleGeneration
@@ -800,6 +807,7 @@ actor RemoteConnectionRuntime {
                 eventHub.yield(.sessionStarted(mac.id, newSessionToken))
                 eventHub.yield(.authenticated(mac.id))
                 connected.startReceiving()
+                try? await connected.requestSoundMixerIfSupported()
                 do {
                     try await catalogRequest(connected)
                 } catch {
@@ -911,6 +919,7 @@ actor RemoteConnectionRuntime {
                 eventHub.yield(.catalog(mac.id, catalog.revision, catalog.controls))
                 try? await persistence.saveCatalog(mac.id, catalog.revision, catalog.controls)
                 recovered.startReceiving()
+                try? await recovered.requestSoundMixerIfSupported()
                 finalizingTransactionID = nil
                 return true
             } catch {
@@ -1003,6 +1012,8 @@ actor RemoteConnectionRuntime {
             eventHub.yield(.status(macID, status))
         case let .actionResult(result):
             eventHub.yield(.action(macID, result))
+        case let .soundMixerSnapshot(snapshot):
+            eventHub.yield(.soundMixer(macID, snapshot))
         case let .catalogChanged(revision):
             eventHub.yield(.catalogInvalidated(macID, revision))
             guard let activeSession = session else { return }
@@ -1423,6 +1434,7 @@ actor RemoteClientSession {
 
     nonisolated let token: UUID
     nonisolated let credentialIdentity: Data
+    nonisolated let protocolVersion: RemoteProtocolVersion
     private let io: RemoteConnectionIO
     private let crypto: RemoteSessionCrypto
     private let event: @Sendable (RemoteMessage) async -> Void
@@ -1435,6 +1447,7 @@ actor RemoteClientSession {
         io: RemoteConnectionIO,
         crypto: RemoteSessionCrypto,
         credentialIdentity: Data,
+        protocolVersion: RemoteProtocolVersion,
         token: UUID,
         event: @escaping @Sendable (RemoteMessage) async -> Void,
         disconnected: @escaping @Sendable (Swift.Error) async -> Void
@@ -1443,6 +1456,7 @@ actor RemoteClientSession {
         self.io = io
         self.crypto = crypto
         self.credentialIdentity = credentialIdentity
+        self.protocolVersion = protocolVersion
         self.event = event
         self.disconnected = disconnected
     }
@@ -1487,6 +1501,7 @@ actor RemoteClientSession {
                     io: handshake.io,
                     crypto: sessionCrypto,
                     credentialIdentity: prepared.credential,
+                    protocolVersion: handshake.server.version,
                     token: sessionToken,
                     event: event,
                     disconnected: disconnected
@@ -1547,6 +1562,7 @@ actor RemoteClientSession {
                 io: handshake.io,
                 crypto: crypto,
                 credentialIdentity: credential,
+                protocolVersion: handshake.server.version,
                 token: sessionToken,
                 event: event,
                 disconnected: disconnected
@@ -1562,6 +1578,16 @@ actor RemoteClientSession {
     }
 
     func requestCatalog() async throws { try await sendMessage(.catalogRequest) }
+    func requestSoundMixerIfSupported() async throws {
+        guard protocolVersion.supportsSoundMixerRemote else { return }
+        try await sendMessage(.soundMixerSnapshotRequest)
+    }
+    func sendSoundMixer(_ command: RemoteSoundMixerCommand) async throws {
+        guard protocolVersion.supportsSoundMixerRemote else {
+            throw RemoteProtocolError(code: .actionNotSupported, message: "Sound Mixer remote control is unavailable on this Mac")
+        }
+        try await sendMessage(.soundMixerCommand(command))
+    }
     func receiveCatalog() async throws -> RemoteCatalogCache {
         try await sendMessage(.catalogRequest)
         guard case let .catalogSnapshot(revision, controls) = try await receiveMessage() else {

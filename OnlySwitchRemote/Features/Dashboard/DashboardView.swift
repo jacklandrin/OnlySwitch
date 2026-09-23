@@ -1,4 +1,5 @@
 import ComposableArchitecture
+import RemoteCore
 import SwiftUI
 
 struct DashboardView: View {
@@ -115,6 +116,20 @@ struct DashboardView: View {
                 }
                 .padding(20)
             }
+
+            if let snapshot = store.soundMixerSnapshot, snapshot.isEnabled {
+                SoundMixerBottomSurface(
+                    snapshot: snapshot,
+                    isCollapsed: store.isSoundMixerCollapsed,
+                    reduceMotion: reduceMotion,
+                    collapse: { animateMixer { store.send(.soundMixerCollapsed(true)) } },
+                    expand: { animateMixer { store.send(.soundMixerCollapsed(false)) } },
+                    command: { store.send(.soundMixerCommand($0)) }
+                )
+                .padding(.horizontal, 16)
+                .padding(.bottom, 10)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+            }
         }
         .navigationTitle("OnlySwitch")
         .toolbar {
@@ -166,7 +181,158 @@ struct DashboardView: View {
             ? Color(red: 0.12, green: 0.12, blue: 0.13)
             : .white
     }
+
+    private func animateMixer(_ action: () -> Void) {
+        if reduceMotion {
+            withAnimation(.easeOut(duration: 0.18)) { action() }
+        } else {
+            withAnimation(.snappy(duration: 0.42, extraBounce: 0.08)) { action() }
+        }
+    }
 }
+
+private struct SoundMixerBottomSurface: View {
+    let snapshot: RemoteSoundMixerSnapshot
+    let isCollapsed: Bool
+    let reduceMotion: Bool
+    let collapse: () -> Void
+    let expand: () -> Void
+    let command: (RemoteSoundMixerCommand) -> Void
+
+    var body: some View {
+        Group {
+            if isCollapsed {
+                Button("Expand Sound Mixer", systemImage: "speaker.wave.2.fill", action: expand)
+                    .labelStyle(.titleAndIcon)
+                    .frame(maxWidth: 300)
+                    .padding(.horizontal, 18)
+                    .padding(.vertical, 14)
+                    .modifier(SoundMixerGlass(shape: .capsule, interactive: true))
+                    .transition(surfaceTransition)
+            } else {
+                VStack(alignment: .leading, spacing: 16) {
+                    Capsule().fill(.secondary).frame(width: 36, height: 5).frame(maxWidth: .infinity)
+                    HStack {
+                        Label("Sound Mixer", systemImage: "slider.horizontal.3")
+                            .font(.headline)
+                        Spacer()
+                        Button("Collapse Sound Mixer", systemImage: "chevron.down", action: collapse)
+                            .labelStyle(.iconOnly)
+                            .accessibilityLabel("Collapse Sound Mixer")
+                    }
+                    if let output = snapshot.output {
+                        Label(output.name, systemImage: output.symbolName)
+                            .foregroundStyle(.secondary)
+                    }
+                    SoundMixerSlider(label: "System Volume", value: snapshot.systemVolume) {
+                        command(.setSystemVolume($0))
+                    }
+                    if snapshot.apps.isEmpty {
+                        ContentUnavailableView("No controllable apps are running", systemImage: "speaker.slash")
+                    } else {
+                        ScrollView {
+                            VStack(spacing: 14) {
+                                ForEach(snapshot.apps) { app in
+                                    HStack {
+                                        SoundMixerSlider(label: app.name, value: app.volume) {
+                                            command(.setAppVolume(id: app.id, volume: $0))
+                                        }
+                                        Button(app.isMuted ? "Unmute \(app.name)" : "Mute \(app.name)", systemImage: app.isMuted ? "speaker.slash.fill" : "speaker.fill") {
+                                            command(.setAppMuted(id: app.id, isMuted: !app.isMuted))
+                                        }
+                                        .labelStyle(.iconOnly)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                .padding(20)
+                .frame(maxHeight: 380)
+                .modifier(SoundMixerGlass(shape: .rect(cornerRadius: 30), interactive: false))
+                .gesture(DragGesture().onEnded { if $0.translation.height > 80 { collapse() } })
+                .transition(surfaceTransition)
+            }
+        }
+        .animation(reduceMotion ? nil : .snappy, value: isCollapsed)
+    }
+
+    private var surfaceTransition: AnyTransition {
+        if reduceMotion { return .opacity }
+        return .asymmetric(
+            insertion: .scale(scale: 0.82, anchor: .bottom).combined(with: .opacity),
+            removal: .scale(scale: 0.82, anchor: .bottom).combined(with: .opacity)
+        )
+    }
+}
+
+private struct SoundMixerSlider: View {
+    let label: String
+    let value: Double
+    let changed: (Double) -> Void
+    @State private var localValue: Double
+    @State private var isEditing = false
+    @State private var debounceTask: Task<Void, Never>?
+
+    init(label: String, value: Double, changed: @escaping (Double) -> Void) {
+        self.label = label
+        self.value = value
+        self.changed = changed
+        _localValue = State(initialValue: value)
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(label).font(.subheadline)
+            Slider(value: $localValue, in: 0...100, onEditingChanged: editingChanged)
+                .accessibilityLabel(label)
+                .accessibilityValue("\(Int(localValue.rounded()))%")
+        }
+        .onChange(of: value) { _, newValue in
+            if isEditing == false { localValue = newValue }
+        }
+        .onChange(of: localValue) { _, newValue in
+            guard isEditing else { return }
+            scheduleDebouncedChange(newValue)
+        }
+        .onDisappear { debounceTask?.cancel() }
+    }
+
+    private func editingChanged(_ editing: Bool) {
+        isEditing = editing
+        guard editing == false else { return }
+        debounceTask?.cancel()
+        debounceTask = nil
+        changed(localValue)
+    }
+
+    private func scheduleDebouncedChange(_ newValue: Double) {
+        debounceTask?.cancel()
+        debounceTask = Task { @MainActor in
+            do {
+                try await Task.sleep(for: .milliseconds(120))
+                guard Task.isCancelled == false else { return }
+                changed(newValue)
+            } catch is CancellationError {
+                return
+            } catch {
+                return
+            }
+        }
+    }
+}
+
+private struct SoundMixerGlass<S: Shape>: ViewModifier {
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+    let shape: S
+    let interactive: Bool
+    func body(content: Content) -> some View {
+        if reduceTransparency { content.background(Color.primary.opacity(0.12), in: shape) }
+        else if #available(iOS 26, *) { content.glassEffect(.regular.interactive(interactive), in: shape) }
+        else { content.background(.thinMaterial, in: shape) }
+    }
+}
+
 
 private struct DashboardGlassContainer<Content: View>: View {
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
