@@ -477,6 +477,7 @@
 		B23000000000000000000002 /* ControlTilePresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23000000000000000000001 /* ControlTilePresentation.swift */; };
 		B23000000000000000000004 /* ControlTileStatusBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23000000000000000000003 /* ControlTileStatusBadge.swift */; };
 		B23000000000000000000006 /* ControlTileIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23000000000000000000005 /* ControlTileIconView.swift */; };
+		B23000000000000000000008 /* DashboardBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23000000000000000000007 /* DashboardBackground.swift */; };
 		F3AC00000000000000000001 /* RemoteCatalogMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AC00000000000000000021 /* RemoteCatalogMonitor.swift */; };
 		F3AD00000000000000000001 /* HowToUseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AD00000000000000000021 /* HowToUseView.swift */; };
 		F3AD00000000000000000002 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AD00000000000000000022 /* AboutView.swift */; };
@@ -930,6 +931,7 @@
 		B23000000000000000000001 /* ControlTilePresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlTilePresentation.swift; sourceTree = "<group>"; };
 		B23000000000000000000003 /* ControlTileStatusBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlTileStatusBadge.swift; sourceTree = "<group>"; };
 		B23000000000000000000005 /* ControlTileIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlTileIconView.swift; sourceTree = "<group>"; };
+		B23000000000000000000007 /* DashboardBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardBackground.swift; sourceTree = "<group>"; };
 		F3AC00000000000000000021 /* RemoteCatalogMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCatalogMonitor.swift; sourceTree = "<group>"; };
 		F3AD00000000000000000021 /* HowToUseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToUseView.swift; sourceTree = "<group>"; };
 		F3AD00000000000000000022 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
@@ -2214,6 +2216,7 @@
 			children = (
 				F3AB00000000000000000022 /* DashboardFeature.swift */,
 				F3AB00000000000000000023 /* DashboardView.swift */,
+				B23000000000000000000007 /* DashboardBackground.swift */,
 				F3AB00000000000000000024 /* ControlTileView.swift */,
 				B23000000000000000000001 /* ControlTilePresentation.swift */,
 				B23000000000000000000003 /* ControlTileStatusBadge.swift */,
@@ -3022,6 +3025,7 @@
 				F3AA00000000000000000005 /* ControlSelectionRow.swift in Sources */,
 				F3AB00000000000000000002 /* DashboardFeature.swift in Sources */,
 				F3AB00000000000000000006 /* DashboardView.swift in Sources */,
+				B23000000000000000000008 /* DashboardBackground.swift in Sources */,
 				F3AB00000000000000000007 /* ControlTileView.swift in Sources */,
 				B23000000000000000000002 /* ControlTilePresentation.swift in Sources */,
 				B23000000000000000000004 /* ControlTileStatusBadge.swift in Sources */,

@@ -37,82 +37,85 @@ struct DashboardView: View {
     }
 
     var body: some View {
-        ScrollView {
-            DashboardGlassContainer(spacing: 16) {
-                VStack(spacing: 16) {
-                    MacPickerView(
-                        macs: Array(store.pairedMacs),
-                        selectedMacID: store.selectedMacID,
-                        select: { store.send(.macSelected($0)) }
-                    )
-                    .frame(maxWidth: 280)
+        ZStack {
+            DashboardBackground()
 
-                    if let connectionMessage {
-                        Label(connectionMessage, systemImage: connectionSymbol)
-                            .font(.subheadline)
-                            .foregroundStyle(connectionColor)
-                            .frame(maxWidth: .infinity)
-                            .padding(.horizontal, 14)
-                            .padding(.vertical, 10)
-                            .background {
-                                if reduceTransparency {
-                                    RoundedRectangle(cornerRadius: 14)
-                                        .fill(opaqueSurfaceColor)
-                                } else {
-                                    RoundedRectangle(cornerRadius: 14)
-                                        .fill(.thinMaterial)
+            ScrollView {
+                DashboardGlassContainer(spacing: 16) {
+                    VStack(spacing: 16) {
+                        MacPickerView(
+                            macs: Array(store.pairedMacs),
+                            selectedMacID: store.selectedMacID,
+                            select: { store.send(.macSelected($0)) }
+                        )
+                        .frame(maxWidth: 280)
+
+                        if let connectionMessage {
+                            Label(connectionMessage, systemImage: connectionSymbol)
+                                .font(.subheadline)
+                                .foregroundStyle(connectionColor)
+                                .frame(maxWidth: .infinity)
+                                .padding(.horizontal, 14)
+                                .padding(.vertical, 10)
+                                .background {
+                                    if reduceTransparency {
+                                        RoundedRectangle(cornerRadius: 14)
+                                            .fill(opaqueSurfaceColor)
+                                    } else {
+                                        RoundedRectangle(cornerRadius: 14)
+                                            .fill(.thinMaterial)
+                                    }
                                 }
-                            }
-                            .overlay {
-                                RoundedRectangle(cornerRadius: 14)
-                                    .strokeBorder(
-                                        Color.primary.opacity(colorSchemeContrast == .increased ? 0.42 : 0.10),
-                                        lineWidth: colorSchemeContrast == .increased ? 2 : 1
-                                    )
-                            }
-                            .accessibilityLabel(connectionMessage)
-                    }
+                                .overlay {
+                                    RoundedRectangle(cornerRadius: 14)
+                                        .strokeBorder(
+                                            Color.primary.opacity(colorSchemeContrast == .increased ? 0.42 : 0.10),
+                                            lineWidth: colorSchemeContrast == .increased ? 2 : 1
+                                        )
+                                }
+                                .accessibilityLabel(connectionMessage)
+                        }
 
-                    if store.selectedMacID == nil {
-                        ContentUnavailableView(
-                            "No Mac Selected",
-                            systemImage: "desktopcomputer",
-                            description: Text("Open Settings to pair with a Mac running OnlySwitch.")
-                        )
-                        .frame(minHeight: 260)
-                    } else if store.visibleDescriptors.isEmpty {
-                        ContentUnavailableView(
-                            "No Dashboard Tiles",
-                            systemImage: "square.grid.2x2",
-                            description: Text("Choose controls in Settings to add them here.")
-                        )
-                        .frame(minHeight: 260)
-                    } else {
-                        LazyVGrid(columns: columns, spacing: 16) {
-                            ForEach(store.visibleDescriptors) { descriptor in
-                                let presentation = ControlTilePresentation(
-                                    descriptor: descriptor,
-                                    status: store.statuses[descriptor.id],
-                                    connectionState: store.connectionState,
-                                    isRequestInFlight: store.requestsInFlight.contains(descriptor.id),
-                                    actionFailure: store.actionFailures[descriptor.id]
-                                )
-                                ControlTileView(
-                                    descriptor: descriptor,
-                                    presentation: presentation,
-                                    macName: store.selectedMac?.displayName ?? String(localized: "Mac"),
-                                    isEnabled: store.actionableControlIDs.contains(descriptor.id),
-                                    reduceMotion: reduceMotion,
-                                    action: { store.send(.tileTapped(descriptor.id)) }
-                                )
+                        if store.selectedMacID == nil {
+                            ContentUnavailableView(
+                                "No Mac Selected",
+                                systemImage: "desktopcomputer",
+                                description: Text("Open Settings to pair with a Mac running OnlySwitch.")
+                            )
+                            .frame(minHeight: 260)
+                        } else if store.visibleDescriptors.isEmpty {
+                            ContentUnavailableView(
+                                "No Dashboard Tiles",
+                                systemImage: "square.grid.2x2",
+                                description: Text("Choose controls in Settings to add them here.")
+                            )
+                            .frame(minHeight: 260)
+                        } else {
+                            LazyVGrid(columns: columns, spacing: 16) {
+                                ForEach(store.visibleDescriptors) { descriptor in
+                                    let presentation = ControlTilePresentation(
+                                        descriptor: descriptor,
+                                        status: store.statuses[descriptor.id],
+                                        connectionState: store.connectionState,
+                                        isRequestInFlight: store.requestsInFlight.contains(descriptor.id),
+                                        actionFailure: store.actionFailures[descriptor.id]
+                                    )
+                                    ControlTileView(
+                                        descriptor: descriptor,
+                                        presentation: presentation,
+                                        macName: store.selectedMac?.displayName ?? String(localized: "Mac"),
+                                        isEnabled: store.actionableControlIDs.contains(descriptor.id),
+                                        reduceMotion: reduceMotion,
+                                        action: { store.send(.tileTapped(descriptor.id)) }
+                                    )
+                                }
                             }
                         }
                     }
                 }
+                .padding(20)
             }
-            .padding(20)
         }
-        .background(Color(.systemGroupedBackground))
         .navigationTitle("OnlySwitch")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
