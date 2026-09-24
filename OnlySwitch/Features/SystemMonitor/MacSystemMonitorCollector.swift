@@ -295,6 +295,17 @@ enum NetworkDetailsSampler {
     }
 
     private static func numericAddress(_ address: UnsafePointer<sockaddr>) -> String? {
+        let minimumLength: Int
+        switch Int32(address.pointee.sa_family) {
+        case AF_INET:
+            minimumLength = MemoryLayout<sockaddr_in>.size
+        case AF_INET6:
+            minimumLength = MemoryLayout<sockaddr_in6>.size
+        default:
+            return nil
+        }
+        guard Int(address.pointee.sa_len) >= minimumLength else { return nil }
+
         var host = Array(repeating: CChar(0), count: Int(NI_MAXHOST))
         let result = getnameinfo(
             address,
@@ -313,12 +324,16 @@ enum NetworkDetailsSampler {
     private static func macAddress(_ address: UnsafePointer<sockaddr>) -> String? {
         let linkAddress = UnsafeRawPointer(address).assumingMemoryBound(to: sockaddr_dl.self)
         let length = Int(linkAddress.pointee.sdl_alen)
+        let nameLength = Int(linkAddress.pointee.sdl_nlen)
         guard length > 0,
-              let dataOffset = MemoryLayout<sockaddr_dl>.offset(of: \sockaddr_dl.sdl_data)
+              let dataOffset = MemoryLayout<sockaddr_dl>.offset(of: \sockaddr_dl.sdl_data),
+              Int(address.pointee.sa_len) >= dataOffset,
+              nameLength <= Int(address.pointee.sa_len) - dataOffset,
+              length <= Int(address.pointee.sa_len) - dataOffset - nameLength
         else { return nil }
 
         let bytes = UnsafeRawPointer(linkAddress)
-            .advanced(by: dataOffset + Int(linkAddress.pointee.sdl_nlen))
+            .advanced(by: dataOffset + nameLength)
             .assumingMemoryBound(to: UInt8.self)
         return (0 ..< length)
             .map { String(format: "%02X", bytes[$0]) }
