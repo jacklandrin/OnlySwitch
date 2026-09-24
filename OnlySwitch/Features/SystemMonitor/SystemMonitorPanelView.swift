@@ -54,31 +54,54 @@ struct SystemMonitorSectionBar: View {
     @Binding var selection: SectionBar.Section
 
     var body: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: 6) {
             ForEach(sections, id: \.self) { section in
                 Button {
                     selection = section
                 } label: {
-                    Label(section.title, systemImage: section.symbolName)
-                        .labelStyle(.iconOnly)
-                        .font(.system(size: 14, weight: .semibold))
-                        .frame(maxWidth: .infinity, minHeight: 32)
-                        .contentShape(Rectangle())
+                    Group {
+                        if sections.count <= 3 {
+                            Label(section.title, systemImage: section.symbolName)
+                                .labelStyle(.titleAndIcon)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.75)
+                        } else {
+                            Label(section.title, systemImage: section.symbolName)
+                                .labelStyle(.iconOnly)
+                        }
+                    }
+                    .font(.subheadline.weight(.medium))
+                    .frame(maxWidth: .infinity, minHeight: 38)
+                    .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                .foregroundStyle(selection == section ? Color.accentColor : .secondary)
+                .foregroundStyle(selection == section ? .primary : .secondary)
                 .background {
                     Capsule()
                         .fill(selection == section ? Color.accentColor.opacity(0.18) : .clear)
+                        .overlay {
+                            Capsule()
+                                .strokeBorder(
+                                    selection == section ? Color.accentColor.opacity(0.32) : .clear,
+                                    lineWidth: 1
+                                )
+                        }
                 }
                 .accessibilityLabel(Text(section.title))
                 .accessibilityAddTraits(selection == section ? .isSelected : [])
+                .accessibilityHint(Text("Shows the \(section.title) section".localized()))
             }
         }
-        .padding(4)
-        .background(.quaternary, in: RoundedRectangle(cornerRadius: 10))
+        .padding(6)
+        .background(.regularMaterial, in: Capsule())
+        .overlay {
+            Capsule()
+                .strokeBorder(.primary.opacity(0.08), lineWidth: 1)
+        }
+        .shadow(color: .black.opacity(0.10), radius: 10, y: 3)
         .padding(.horizontal, 15)
-        .padding(.top, 8)
+        .padding(.top, 16)
+        .padding(.bottom, 4)
         .accessibilityElement(children: .contain)
     }
 }
@@ -190,8 +213,7 @@ struct SystemMonitorPanelView: View {
         @ViewBuilder content: (Double) -> Content
     ) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            Label(title, systemImage: symbolName)
-                .font(.headline)
+            metricHeader(title, symbolName: symbolName, tint: .accentColor)
             switch availability {
             case let .available(value):
                 content(value)
@@ -203,14 +225,18 @@ struct SystemMonitorPanelView: View {
                 temperatureLabel(temperature)
             }
         }
-        .padding(12)
-        .background(.quinary, in: RoundedRectangle(cornerRadius: 12))
+        .metricCardSurface()
     }
 
     private func metricSummary(_ usage: Double, history: [Double]) -> some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(SystemMonitorFormatter.percentage(usage))
-                .font(.title2.weight(.semibold))
+            HStack(alignment: .firstTextBaseline) {
+                Text(SystemMonitorFormatter.percentage(usage))
+                    .font(.title2.bold())
+                Text("Current usage".localized())
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
             ProgressView(value: usage)
                 .tint(.accentColor)
             SystemMonitorChartView(
@@ -239,15 +265,19 @@ struct SystemMonitorPanelView: View {
         store: Bindable<StoreOf<SystemMonitorReducer>>
     ) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            Label("Memory".localized(), systemImage: "memorychip")
-                .font(.headline)
+            metricHeader("Memory".localized(), symbolName: "memorychip", tint: .mint)
             switch snapshot.memory {
             case let .available(memory):
-                Text("%@ / %@".localizedFormat(
-                    SystemMonitorFormatter.bytes(bytes: Double(memory.usedBytes)),
-                    SystemMonitorFormatter.bytes(bytes: Double(memory.totalBytes))
-                ))
-                .font(.title3.weight(.semibold))
+                HStack(alignment: .firstTextBaseline) {
+                    Text(SystemMonitorFormatter.percentage(memory.usage))
+                        .font(.title2.bold())
+                    Text("%@ / %@".localizedFormat(
+                        SystemMonitorFormatter.bytes(bytes: Double(memory.usedBytes)),
+                        SystemMonitorFormatter.bytes(bytes: Double(memory.totalBytes))
+                    ))
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                }
                 ProgressView(value: memory.usage)
                     .tint(.mint)
                 SystemMonitorChartView(
@@ -266,14 +296,12 @@ struct SystemMonitorPanelView: View {
                 Text("Unavailable".localized()).foregroundStyle(.secondary)
             }
         }
-        .padding(12)
-        .background(.quinary, in: RoundedRectangle(cornerRadius: 12))
+        .metricCardSurface()
     }
 
     private func diskCard(_ disks: [SystemMonitorDisk]) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            Label("Disk".localized(), systemImage: "internaldrive")
-                .font(.headline)
+            metricHeader("Disk".localized(), symbolName: "internaldrive", tint: .orange)
             if disks.isEmpty {
                 Text("Unavailable".localized()).foregroundStyle(.secondary)
             } else {
@@ -297,8 +325,7 @@ struct SystemMonitorPanelView: View {
                 }
             }
         }
-        .padding(12)
-        .background(.quinary, in: RoundedRectangle(cornerRadius: 12))
+        .metricCardSurface()
     }
 
     private func networkCard(
@@ -306,8 +333,7 @@ struct SystemMonitorPanelView: View {
         store: Bindable<StoreOf<SystemMonitorReducer>>
     ) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            Label("Network".localized(), systemImage: "network")
-                .font(.headline)
+            metricHeader("Network".localized(), symbolName: "network", tint: .blue)
             switch snapshot.network {
             case let .available(network):
                 HStack {
@@ -335,8 +361,7 @@ struct SystemMonitorPanelView: View {
                 Text("Unavailable".localized()).foregroundStyle(.secondary)
             }
         }
-        .padding(12)
-        .background(.quinary, in: RoundedRectangle(cornerRadius: 12))
+        .metricCardSurface()
     }
 
     private func rateSummary(_ title: String, rate: Double, tint: Color) -> some View {
@@ -346,6 +371,20 @@ struct SystemMonitorPanelView: View {
             Label(title, systemImage: "circle.fill")
                 .font(.caption)
                 .foregroundStyle(tint)
+        }
+    }
+
+    private func metricHeader(_ title: String, symbolName: String, tint: Color) -> some View {
+        Label {
+            Text(title)
+                .font(.headline)
+        } icon: {
+            Image(systemName: symbolName)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(tint)
+                .frame(width: 28, height: 28)
+                .background(tint.opacity(0.14), in: RoundedRectangle(cornerRadius: 8))
+                .accessibilityHidden(true)
         }
     }
 
@@ -397,5 +436,26 @@ struct SystemMonitorPanelView: View {
 private extension String {
     func localizedFormat(_ arguments: CVarArg...) -> String {
         String(format: localized(), locale: Locale.current, arguments: arguments)
+    }
+}
+
+private extension View {
+    func metricCardSurface() -> some View {
+        self
+            .padding(14)
+            .background {
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(
+                        LinearGradient(
+                            colors: [.primary.opacity(0.065), .primary.opacity(0.025)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+            }
+            .overlay {
+                RoundedRectangle(cornerRadius: 16)
+                    .strokeBorder(.primary.opacity(0.09), lineWidth: 1)
+            }
     }
 }
