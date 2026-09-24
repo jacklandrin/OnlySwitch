@@ -31,6 +31,7 @@ struct OnlyControlView: View {
         WithPerceptionTracking {
             ZStack {
                 VisualEffectView(material: .popover, blendingMode: .behindWindow)
+                    .allowsHitTesting(false)
 
                 VStack {
                     Spacer()
@@ -40,27 +41,31 @@ struct OnlyControlView: View {
                         .isHidden(!store.soundWaveEffectDisplay || !playerItem.isPlaying, remove: true)
                 }
 
-                TabView(selection: selectedSection) {
-                    controlsPage
-                        .tabItem {
-                            Label("Controls".localized(), systemImage: "switch.2")
-                        }
-                        .tag(SectionBar.Section.controls)
+                VStack(spacing: 0) {
+                    // Keep a deliberate, non-interactive drag area for this borderless
+                    // window. The TabView consumes its own full surface, so a background
+                    // drag view cannot receive empty-space mouse events reliably.
+                    WindowDragView()
+                        .frame(height: 14)
 
-                    systemMonitorPage
-                        .tabItem {
-                            Label("System Monitor".localized(), systemImage: "waveform.path.ecg")
-                        }
-                        .tag(SectionBar.Section.systemMonitor)
+                    TabView(selection: selectedSection) {
+                        controlsPage
+                            .tabItem {
+                                Label("Controls".localized(), systemImage: "switch.2")
+                            }
+                            .tag(SectionBar.Section.controls)
+
+                        systemMonitorPage
+                            .tabItem {
+                                Label("System Monitor".localized(), systemImage: "waveform.path.ecg")
+                            }
+                            .tag(SectionBar.Section.systemMonitor)
+                    }
+                    .tabViewStyle(.automatic)
+                    .padding(.top, 4)
                 }
-                .tabViewStyle(.automatic)
-                .padding(.top, 4)
             }
             .cornerRadius(15)
-            // The borderless window can only begin a drag from unhandled areas. Keep this
-            // behind the TabView so native controls, dashboard tiles, and scrolling retain
-            // their normal mouse handling.
-            .appKitWindowDrag()
             .blur(radius: store.blurRadius)
             .opacity(store.opacity)
             .animation(.interactiveSpring(duration: 0.5), value: store.blurRadius)
