@@ -1,6 +1,7 @@
 import Darwin
 import Dispatch
 import Foundation
+import IOKit
 import Metal
 import SystemMonitor
 
@@ -58,11 +59,260 @@ enum MemoryPressureSampler {
     }
 }
 
-/// A public-API-only sampler for macOS system metrics.
+/// Reads Apple Silicon GPU counters exposed through undocumented IOKit services.
+///
+/// `AGXAccelerator`'s `PerformanceStatistics`, `gpu-core-count`, and the AppleSMC user client
+/// are implementation details rather than supported macOS APIs. They are intentionally confined
+/// to this type, only used on Apple Silicon, and treated as optional so an OS or hardware change
+/// cannot affect monitor availability or process stability. This path is unsuitable for Mac App
+/// Store distribution without separately validating Apple's current review policy.
+private struct PrivateAppleSiliconGPUReader {
+    struct Reading {
+        let usage: Double?
+        let temperatureCelsius: Double?
+    }
+
+    private static let maximumSensorKeys = 4_096
+    private var smcConnection: io_connect_t = IO_OBJECT_NULL
+    private var gpuTemperatureKeys: [UInt32]?
+
+    mutating func sample() -> Reading {
+        guard Self.isAppleSilicon else { return Reading(usage: nil, temperatureCelsius: nil) }
+        return Reading(
+            usage: Self.readUsage(),
+            temperatureCelsius: readTemperature()
+        )
+    }
+
+    mutating func close() {
+        guard smcConnection != IO_OBJECT_NULL else { return }
+        IOServiceClose(smcConnection)
+        smcConnection = IO_OBJECT_NULL
+        gpuTemperatureKeys = nil
+    }
+
+    static func coreCount() -> Int? {
+        guard isAppleSilicon else { return nil }
+        let coreCount: NSNumber? = withAccelerator { entry in
+            guard let property = IORegistryEntryCreateCFProperty(
+                entry,
+                "gpu-core-count" as CFString,
+                kCFAllocatorDefault,
+                0
+            ) else { return nil }
+            return property.takeRetainedValue() as? NSNumber
+        }
+        guard let coreCount = coreCount?.intValue, coreCount > 0 else { return nil }
+        return coreCount
+    }
+
+    private static var isAppleSilicon: Bool {
+        var value: Int32 = 0
+        var size = MemoryLayout<Int32>.size
+        return sysctlbyname("hw.optional.arm64", &value, &size, nil, 0) == 0 && value == 1
+    }
+
+    private static func readUsage() -> Double? {
+        withAccelerator { entry in
+            guard let property = IORegistryEntryCreateCFProperty(
+                entry,
+                "PerformanceStatistics" as CFString,
+                kCFAllocatorDefault,
+                0
+            ), let statistics = property.takeRetainedValue() as? [String: Any],
+            let utilization = statistics["Device Utilization %"] as? NSNumber
+            else { return nil }
+
+            let value = utilization.doubleValue / 100
+            return value.isFinite ? min(max(value, 0), 1) : nil
+        }
+    }
+
+    private static func withAccelerator<Value>(
+        _ body: (io_registry_entry_t) -> Value?
+    ) -> Value? {
+        guard let matching = IOServiceMatching("AGXAccelerator") else { return nil }
+        var iterator: io_iterator_t = IO_OBJECT_NULL
+        guard IOServiceGetMatchingServices(kIOMainPortDefault, matching, &iterator) == KERN_SUCCESS else {
+            return nil
+        }
+        defer { IOObjectRelease(iterator) }
+
+        var entry = IOIteratorNext(iterator)
+        while entry != IO_OBJECT_NULL {
+            defer {
+                IOObjectRelease(entry)
+                entry = IOIteratorNext(iterator)
+            }
+            if let value = body(entry) { return value }
+        }
+        return nil
+    }
+
+    private mutating func readTemperature() -> Double? {
+        guard openSMCIfNeeded() else { return nil }
+        if gpuTemperatureKeys == nil {
+            gpuTemperatureKeys = discoverGPUTemperatureKeys()
+        }
+        guard let gpuTemperatureKeys else { return nil }
+        return gpuTemperatureKeys
+            .compactMap { readTemperature(key: $0) }
+            .filter { $0 > 1 && $0 < 125 }
+            .max()
+    }
+
+    private mutating func openSMCIfNeeded() -> Bool {
+        if smcConnection != IO_OBJECT_NULL { return true }
+        let service = IOServiceGetMatchingService(kIOMainPortDefault, IOServiceMatching("AppleSMC"))
+        guard service != IO_OBJECT_NULL else { return false }
+        defer { IOObjectRelease(service) }
+        return IOServiceOpen(service, mach_task_self_, 0, &smcConnection) == KERN_SUCCESS
+    }
+
+    private func discoverGPUTemperatureKeys() -> [UInt32] {
+        guard let keyCount = readUnsignedInteger(key: Self.fourCharacterCode("#KEY")),
+              keyCount > 0, keyCount <= Self.maximumSensorKeys
+        else { return [] }
+
+        return (0 ..< keyCount).compactMap { index in
+            guard let key = key(at: index), Self.string(for: key).hasPrefix("Tg") else { return nil }
+            return readTemperature(key: key) == nil ? nil : key
+        }
+    }
+
+    private func key(at index: Int) -> UInt32? {
+        var input = SMCParameter()
+        input.data8 = SMCCommand.keyFromIndex.rawValue
+        input.data32 = UInt32(index)
+        guard let output = callSMC(&input), output.result == 0, output.key != 0 else { return nil }
+        return output.key
+    }
+
+    private func readUnsignedInteger(key: UInt32) -> Int? {
+        guard let data = readData(key: key), !data.isEmpty else { return nil }
+        let value = data.prefix(4).reduce(UInt32(0)) { ($0 << 8) | UInt32($1) }
+        return Int(value)
+    }
+
+    private func readTemperature(key: UInt32) -> Double? {
+        guard let data = readData(key: key), data.count >= 2 else { return nil }
+        // Apple Silicon temperature SMC keys are normally `sp78`; the first two bytes are a
+        // signed 8.8 fixed-point Celsius reading. Reject implausible values at the caller.
+        let raw = Int16(bitPattern: (UInt16(data[0]) << 8) | UInt16(data[1]))
+        return Double(raw) / 256
+    }
+
+    private func readData(key: UInt32) -> [UInt8]? {
+        var infoRequest = SMCParameter()
+        infoRequest.key = key
+        infoRequest.data8 = SMCCommand.keyInfo.rawValue
+        guard let info = callSMC(&infoRequest), info.result == 0,
+              info.keyInfo.dataSize > 0, info.keyInfo.dataSize <= 32
+        else { return nil }
+
+        var readRequest = SMCParameter()
+        readRequest.key = key
+        readRequest.keyInfo.dataSize = info.keyInfo.dataSize
+        readRequest.data8 = SMCCommand.readKey.rawValue
+        guard let value = callSMC(&readRequest), value.result == 0 else { return nil }
+
+        return Array(value.bytes.prefix(Int(info.keyInfo.dataSize)))
+    }
+
+    private func callSMC(_ input: inout SMCParameter) -> SMCParameter? {
+        guard smcConnection != IO_OBJECT_NULL,
+              MemoryLayout<SMCParameter>.stride == 80
+        else { return nil }
+        var output = SMCParameter()
+        var outputSize = MemoryLayout<SMCParameter>.stride
+        let result = IOConnectCallStructMethod(
+            smcConnection,
+            UInt32(SMCCommand.handleEvent.rawValue),
+            &input,
+            MemoryLayout<SMCParameter>.stride,
+            &output,
+            &outputSize
+        )
+        guard result == KERN_SUCCESS, outputSize == MemoryLayout<SMCParameter>.stride else { return nil }
+        return output
+    }
+
+    private static func fourCharacterCode(_ value: String) -> UInt32 {
+        value.utf8.reduce(UInt32(0)) { ($0 << 8) | UInt32($1) }
+    }
+
+    private static func string(for value: UInt32) -> String {
+        let bytes = [
+            UInt8((value >> 24) & 0xFF), UInt8((value >> 16) & 0xFF),
+            UInt8((value >> 8) & 0xFF), UInt8(value & 0xFF)
+        ]
+        return String(decoding: bytes, as: UTF8.self)
+    }
+
+    private enum SMCCommand: UInt8 {
+        case handleEvent = 2
+        case readKey = 5
+        case keyFromIndex = 8
+        case keyInfo = 9
+    }
+
+    private struct SMCVersion {
+        var major: UInt8 = 0
+        var minor: UInt8 = 0
+        var build: UInt8 = 0
+        var reserved: UInt8 = 0
+        var release: UInt16 = 0
+    }
+
+    private struct SMCPowerLimit {
+        var version: UInt16 = 0
+        var length: UInt16 = 0
+        var cpu: UInt32 = 0
+        var gpu: UInt32 = 0
+        var memory: UInt32 = 0
+    }
+
+    private struct SMCKeyInfo {
+        var dataSize: UInt32 = 0
+        var dataType: UInt32 = 0
+        var attributes: UInt8 = 0
+    }
+
+    /// This memory layout is the private AppleSMC user-client ABI. The explicit two-byte field
+    /// is required to retain its 80-byte C layout before passing it across the IOKit boundary.
+    private struct SMCParameter {
+        var key: UInt32 = 0
+        var version = SMCVersion()
+        var powerLimit = SMCPowerLimit()
+        var keyInfo = SMCKeyInfo()
+        var padding: UInt16 = 0
+        var result: UInt8 = 0
+        var status: UInt8 = 0
+        var data8: UInt8 = 0
+        var data32: UInt32 = 0
+        var byte0: UInt8 = 0, byte1: UInt8 = 0, byte2: UInt8 = 0, byte3: UInt8 = 0
+        var byte4: UInt8 = 0, byte5: UInt8 = 0, byte6: UInt8 = 0, byte7: UInt8 = 0
+        var byte8: UInt8 = 0, byte9: UInt8 = 0, byte10: UInt8 = 0, byte11: UInt8 = 0
+        var byte12: UInt8 = 0, byte13: UInt8 = 0, byte14: UInt8 = 0, byte15: UInt8 = 0
+        var byte16: UInt8 = 0, byte17: UInt8 = 0, byte18: UInt8 = 0, byte19: UInt8 = 0
+        var byte20: UInt8 = 0, byte21: UInt8 = 0, byte22: UInt8 = 0, byte23: UInt8 = 0
+        var byte24: UInt8 = 0, byte25: UInt8 = 0, byte26: UInt8 = 0, byte27: UInt8 = 0
+        var byte28: UInt8 = 0, byte29: UInt8 = 0, byte30: UInt8 = 0, byte31: UInt8 = 0
+
+        var bytes: [UInt8] {
+            withUnsafeBytes(of: self) { rawBuffer in
+                Array(rawBuffer.suffix(32))
+            }
+        }
+    }
+}
+
+/// Samples macOS system metrics.
 ///
 /// This actor owns all mutable counters so rates cannot be computed from interleaved samples.
-/// GPU usage and all temperatures have no supported public API, and are always represented as
-/// unavailable rather than obtained through private frameworks, shell commands, or a helper.
+/// It uses a deliberately isolated, opt-in-by-platform private IOKit path for Apple Silicon GPU
+/// metrics. If that path is absent or changes on a future macOS release, the affected values stay
+/// explicitly unavailable.
 actor MacSystemMonitorCollector {
     private struct CPUTicks {
         let busy: UInt64
@@ -87,11 +337,12 @@ actor MacSystemMonitorCollector {
     private var lastCollectedUptime: TimeInterval?
     private var latestSnapshot: SystemMonitorSnapshot?
     private var memoryPressure: SystemMonitorMemoryPressure = .normal
+    private var privateGPUReader = PrivateAppleSiliconGPUReader()
     private let memoryPressureSource: any DispatchSourceMemoryPressure
     private let hardware: SystemMonitorHardware
 
     init() {
-        hardware = Self.readHardware()
+        hardware = Self.readHardware(gpuCoreCount: PrivateAppleSiliconGPUReader.coreCount())
         let source = DispatchSource.makeMemoryPressureSource(eventMask: .all, queue: .global(qos: .utility))
         memoryPressureSource = source
         source.setEventHandler { [weak self, weak source] in
@@ -106,6 +357,7 @@ actor MacSystemMonitorCollector {
 
     deinit {
         memoryPressureSource.cancel()
+        privateGPUReader.close()
     }
 
     nonisolated static func liveClient(
@@ -183,12 +435,13 @@ actor MacSystemMonitorCollector {
 
         let processes = readProcesses(elapsed: elapsed ?? 0)
 
+        let privateGPU = privateGPUReader.sample()
         let snapshot = SystemMonitorSnapshot(
             timestamp: now,
             cpuUsage: cpuUsage.map(MetricAvailability.available) ?? .unavailable,
             cpuTemperatureCelsius: .unavailable,
-            gpuUsage: .unavailable,
-            gpuTemperatureCelsius: .unavailable,
+            gpuUsage: privateGPU.usage.map(MetricAvailability.available) ?? .unavailable,
+            gpuTemperatureCelsius: privateGPU.temperatureCelsius.map(MetricAvailability.available) ?? .unavailable,
             hardware: hardware,
             memory: readMemory().map(MetricAvailability.available) ?? .unavailable,
             disks: readDisks(),
@@ -203,7 +456,7 @@ actor MacSystemMonitorCollector {
 }
 
 private extension MacSystemMonitorCollector {
-    static func readHardware() -> SystemMonitorHardware {
+    static func readHardware(gpuCoreCount: Int?) -> SystemMonitorHardware {
         let gpuName = MTLCreateSystemDefaultDevice()?.name
         let cpuModel = readSysctlString("machdep.cpu.brand_string")
             ?? gpuName.flatMap { $0.hasPrefix("Apple ") ? $0 : nil }
@@ -216,8 +469,10 @@ private extension MacSystemMonitorCollector {
             ),
             gpu: SystemMonitorProcessor(
                 model: gpuName.map(MetricAvailability.available) ?? .unavailable,
-                // Metal intentionally does not publish a GPU core-count property.
-                physicalCoreCount: .unavailable,
+                // `gpu-core-count` is an undocumented IORegistry property on Apple Silicon.
+                // Do not infer a count from the chip name: unavailable is more honest on
+                // unsupported hardware and future macOS releases.
+                physicalCoreCount: gpuCoreCount.map(MetricAvailability.available) ?? .unavailable,
                 logicalCoreCount: .unavailable
             )
         )

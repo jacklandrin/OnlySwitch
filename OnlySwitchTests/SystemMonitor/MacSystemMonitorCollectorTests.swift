@@ -76,22 +76,22 @@ struct MacSystemMonitorCollectorTests {
     }
 
     @Test
-    func unavailableMetricsRemainExplicitlyUnavailable() async {
+    func privateGPUReadingsAreEitherUnavailableOrSane() async {
         let collector = MacSystemMonitorCollector()
         let snapshot = await collector.sample()
 
-        #expect(snapshot.gpuUsage == .unavailable)
-        #expect(snapshot.gpuTemperatureCelsius == .unavailable)
+        #expect(snapshot.gpuUsage.value.map { $0 >= 0 && $0 <= 1 } ?? true)
+        #expect(snapshot.gpuTemperatureCelsius.value.map { $0 > 1 && $0 < 125 } ?? true)
         #expect(snapshot.cpuTemperatureCelsius == .unavailable)
         #expect(snapshot.disks.allSatisfy { $0.temperatureCelsius == .unavailable })
     }
 
     @Test
-    func hardwareIdentityDistinguishesUnavailableGPUCoreCountFromZero() async {
+    func hardwareIdentityKeepsUnavailableGPUCoreCountDistinctFromZero() async {
         let collector = MacSystemMonitorCollector()
         let snapshot = await collector.sample()
 
-        #expect(snapshot.hardware.gpu.physicalCoreCount == .unavailable)
+        #expect(snapshot.hardware.gpu.physicalCoreCount.value.map { $0 > 0 } ?? true)
         #expect(snapshot.hardware.gpu.logicalCoreCount == .unavailable)
         #expect(snapshot.hardware.cpu.physicalCoreCount.value.map { $0 > 0 } ?? true)
         #expect(snapshot.memory.value.map { $0.usage >= 0 && $0.usage <= 1 } ?? true)
