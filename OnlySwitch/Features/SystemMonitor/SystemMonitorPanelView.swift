@@ -70,55 +70,33 @@ enum SystemMonitorMemoryPressurePresentation {
 }
 
 struct SystemMonitorSectionBar: View {
-    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     let sections: [SectionBar.Section]
     @Binding var selection: SectionBar.Section
 
-    private var selectedForeground: Color {
-        colorScheme == .dark ? .white : .primary
-    }
-
-    private var selectedFill: Color {
-        colorScheme == .dark
-            ? Color(red: 0.05, green: 0.38, blue: 0.76).opacity(0.82)
-            : Color.accentColor.opacity(0.18)
-    }
-
-    private var selectedStroke: Color {
-        colorScheme == .dark ? .white.opacity(0.34) : Color.accentColor.opacity(0.38)
-    }
-
     var body: some View {
-        HStack(spacing: 4) {
-            ForEach(sections, id: \.self) { section in
-                Button {
-                    selection = section
-                } label: {
-                    Label(section.title, systemImage: section.symbolName)
-                        .labelStyle(.iconOnly)
-                        .font(.body.weight(.semibold))
-                        .frame(maxWidth: .infinity, minHeight: 30)
-                    .contentShape(Rectangle())
+        GeometryReader { proxy in
+            let spacing: CGFloat = 4
+            let spacingWidth = spacing * CGFloat(max(0, sections.count - 1))
+            let segmentWidth = max(0, (proxy.size.width - spacingWidth) / CGFloat(max(1, sections.count)))
+            let selectedIndex = sections.firstIndex(of: selection) ?? 0
+
+            ZStack(alignment: .leading) {
+                selectionIndicator
+                    .frame(width: segmentWidth, height: 30)
+                    .offset(x: CGFloat(selectedIndex) * (segmentWidth + spacing))
+                    .allowsHitTesting(false)
+                    .accessibilityHidden(true)
+
+                HStack(spacing: spacing) {
+                    ForEach(sections, id: \.self) { section in
+                        sectionButton(section)
+                    }
                 }
-                .buttonStyle(.plain)
-                .foregroundStyle(selection == section ? selectedForeground : .secondary)
-                .background {
-                    Capsule()
-                        .fill(selection == section ? selectedFill : .clear)
-                        .overlay {
-                            Capsule()
-                                .strokeBorder(
-                                    selection == section ? selectedStroke : .clear,
-                                    lineWidth: 1
-                                )
-                        }
-                }
-                .accessibilityLabel(Text(section.title))
-                .accessibilityAddTraits(selection == section ? .isSelected : [])
-                .accessibilityHint(Text("Shows the %@ section".localizedFormat(section.title)))
-                .help(Text(section.title))
             }
+            .animation(reduceMotion ? nil : .smooth(duration: 0.28), value: selection)
         }
+        .frame(height: 30)
         .padding(3)
         .background(.regularMaterial, in: Capsule())
         .overlay {
@@ -128,6 +106,43 @@ struct SystemMonitorSectionBar: View {
         .shadow(color: .black.opacity(0.10), radius: 10, y: 3)
         .padding(.horizontal, 15)
         .accessibilityElement(children: .contain)
+    }
+
+    private func sectionButton(_ section: SectionBar.Section) -> some View {
+        Button {
+            let animation: Animation? = reduceMotion ? nil : .smooth(duration: 0.32)
+            withAnimation(animation) {
+                selection = section
+            }
+        } label: {
+            Label(section.title, systemImage: section.symbolName)
+                .labelStyle(.iconOnly)
+                .font(.body.weight(.semibold))
+                .foregroundStyle(selection == section ? .primary : .secondary)
+                .frame(maxWidth: .infinity, minHeight: 30)
+                .contentShape(Capsule())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text(section.title))
+        .accessibilityAddTraits(selection == section ? .isSelected : [])
+        .accessibilityHint(Text("Shows the %@ section".localizedFormat(section.title)))
+        .help(Text(section.title))
+    }
+
+    @ViewBuilder
+    private var selectionIndicator: some View {
+        if #available(macOS 26.0, *) {
+            Capsule()
+                .fill(.clear)
+                .glassEffect(.regular.tint(Color.accentColor.opacity(0.16)), in: Capsule())
+        } else {
+            Capsule()
+                .fill(.thinMaterial)
+                .overlay {
+                    Capsule()
+                        .stroke(Color.accentColor.opacity(0.45), lineWidth: 1)
+                }
+        }
     }
 }
 
@@ -375,12 +390,26 @@ struct SystemMonitorPanelView: View {
             metricHeader("Network".localized(), symbolName: "network", tint: .blue)
             switch snapshot.network {
             case let .available(network):
-                HStack {
-                    rateSummary("Download".localized(), rate: network.downloadBytesPerSecond, tint: .blue)
-                    Spacer()
-                    rateSummary("Upload".localized(), rate: network.uploadBytesPerSecond, tint: .pink)
+                HStack(alignment: .top, spacing: 10) {
+                    networkRateColumn(
+                        title: "Download".localized(),
+                        historyTitle: "Download history".localized(),
+                        rate: network.downloadBytesPerSecond,
+                        points: store.wrappedValue.history.snapshots.map {
+                            $0.network.value?.downloadBytesPerSecond ?? 0
+                        },
+                        tint: .blue
+                    )
+                    networkRateColumn(
+                        title: "Upload".localized(),
+                        historyTitle: "Upload history".localized(),
+                        rate: network.uploadBytesPerSecond,
+                        points: store.wrappedValue.history.snapshots.map {
+                            $0.network.value?.uploadBytesPerSecond ?? 0
+                        },
+                        tint: .pink
+                    )
                 }
-                networkHistory(store.wrappedValue.history.snapshots)
                 DisclosureGroup(
                     "Network Details".localized(),
                     isExpanded: expansionBinding(for: .network, store: store)
@@ -507,19 +536,18 @@ struct SystemMonitorPanelView: View {
         }
     }
 
-    private func networkHistory(_ snapshots: [SystemMonitorSnapshot]) -> some View {
-        HStack(alignment: .top, spacing: 10) {
-            networkHistorySeries(
-                title: "Download history".localized(),
-                points: snapshots.map { $0.network.value?.downloadBytesPerSecond ?? 0 },
-                tint: .blue
-            )
-            networkHistorySeries(
-                title: "Upload history".localized(),
-                points: snapshots.map { $0.network.value?.uploadBytesPerSecond ?? 0 },
-                tint: .pink
-            )
+    private func networkRateColumn(
+        title: String,
+        historyTitle: String,
+        rate: Double,
+        points: [Double],
+        tint: Color
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            rateSummary(title, rate: rate, tint: tint)
+            networkHistorySeries(title: historyTitle, points: points, tint: tint)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private func networkHistorySeries(title: String, points: [Double], tint: Color) -> some View {

@@ -201,9 +201,9 @@ private extension SystemMonitorStatusItemController {
             return .init(
                 symbolName: "network",
                 title: "↑ \(upload)\n↓ \(download)",
-                accessibilityLabel: "Network upload %@, download %@".localizeWithFormat(
-                    arguments: upload,
-                    download
+                accessibilityLabel: "Network download %@, upload %@".localizeWithFormat(
+                    arguments: download,
+                    upload
                 ),
                 visualStyle: .network
             )

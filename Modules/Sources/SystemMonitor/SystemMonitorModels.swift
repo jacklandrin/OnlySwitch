@@ -19,6 +19,16 @@ public enum SystemMonitorMetric: String, CaseIterable, Codable, Hashable, Sendab
     case disk
     case network
 
+    public var displayTitleKey: String {
+        switch self {
+        case .cpu: "CPU"
+        case .gpu: "GPU"
+        case .memory: "Memory"
+        case .disk: "Disk"
+        case .network: "Network"
+        }
+    }
+
     public var supportsDisclosure: Bool {
         switch self {
         case .cpu, .memory, .network:

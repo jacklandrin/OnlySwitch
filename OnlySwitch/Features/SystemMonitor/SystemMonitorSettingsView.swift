@@ -8,7 +8,7 @@ struct SystemMonitorSettingsView: View {
         Form {
             Section {
                 ForEach(SystemMonitorMetric.allCases, id: \.self) { metric in
-                    Toggle(metric.rawValue.uppercased().localized(), isOn: viewModel.panelMetricBinding(for: metric))
+                    Toggle(metric.displayTitleKey.localized(), isOn: viewModel.panelMetricBinding(for: metric))
                 }
                 Text("GPU readings use undocumented macOS interfaces and may stop working after a system update.".localized())
                     .font(.caption)
@@ -21,7 +21,7 @@ struct SystemMonitorSettingsView: View {
 
             Section {
                 ForEach(SystemMonitorMetric.allCases, id: \.self) { metric in
-                    Toggle(metric.rawValue.uppercased().localized(), isOn: viewModel.menuBarMetricBinding(for: metric))
+                    Toggle(metric.displayTitleKey.localized(), isOn: viewModel.menuBarMetricBinding(for: metric))
                 }
             } header: {
                 Text("Menu Bar Indicators".localized())
