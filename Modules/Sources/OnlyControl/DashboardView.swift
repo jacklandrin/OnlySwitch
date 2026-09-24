@@ -26,37 +26,46 @@ public struct DashboardView: View {
 
     public var body: some View {
         WithPerceptionTracking {
-            ScrollView(.vertical) {
-                LazyVGrid(columns: columns, spacing: 20) {
-                    ReorderableForeach(store.items.elements, active: $active) { item in
-                        ControlItemView(viewState: item)
-                            .onTapGesture {
-                                handleTap(item)
-                            }
-                            .popover(isPresented: detailBinding(for: item)) {
-                                AuthenticatorControlPopover {
-                                    presentedDetailID = nil
-                                }
-                            }
-                            .opacity(item.opacity)
-                    } preview: { item in
-                        ControlItemView(viewState: item)
-                            .frame(width: 100, height: 100)
-                            .scaleEffect(1.1)
-                    } moveAction: { from, to in
-                        store.send(.moveLocation(from, to))
-                    } onEnded: {
-                        store.send(.onEndedMove)
-                    }
+            ViewThatFits(in: .vertical) {
+                grid
+                    .fixedSize(horizontal: false, vertical: true)
+
+                ScrollView(.vertical) {
+                    grid
                 }
-                .padding()
-                .animation(.default, value: store.items)
             }
             .reorderableForEachContainer(active: $active) {
                 store.send(.onEndedMove)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         }
+    }
+
+    private var grid: some View {
+        LazyVGrid(columns: columns, spacing: 20) {
+            ReorderableForeach(store.items.elements, active: $active) { item in
+                ControlItemView(viewState: item)
+                    .onTapGesture {
+                        handleTap(item)
+                    }
+                    .popover(isPresented: detailBinding(for: item)) {
+                        AuthenticatorControlPopover {
+                            presentedDetailID = nil
+                        }
+                    }
+                    .opacity(item.opacity)
+            } preview: { item in
+                ControlItemView(viewState: item)
+                    .frame(width: 100, height: 100)
+                    .scaleEffect(1.1)
+            } moveAction: { from, to in
+                store.send(.moveLocation(from, to))
+            } onEnded: {
+                store.send(.onEndedMove)
+            }
+        }
+        .padding()
+        .animation(.default, value: store.items)
     }
 
     private var shape: some Shape {

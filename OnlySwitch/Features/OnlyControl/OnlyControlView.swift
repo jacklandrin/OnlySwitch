@@ -239,18 +239,6 @@ final class OnlyControlWindow: NSWindow, NSWindowDelegate {
         true
     }
 
-    /// `NSScrollView` owns its clip and document views, including visual gaps
-    /// between dashboard tiles. Route a click in that otherwise unused canvas
-    /// to AppKit's normal window drag handling, without intercepting controls,
-    /// text, or gesture-driven content inside the scroll view.
-    override func sendEvent(_ event: NSEvent) {
-        if event.type == .leftMouseDown, isBlankScrollCanvasClick(event) {
-            performDrag(with: event)
-            return
-        }
-        super.sendEvent(event)
-    }
-
     private init() {
         super.init(
             contentRect: .zero,
@@ -353,34 +341,6 @@ final class OnlyControlWindow: NSWindow, NSWindowDelegate {
 
     private var screenContainingWindow: NSScreen? {
         NSScreen.screens.first { $0.visibleFrame.intersects(frame) }
-    }
-
-    private func isBlankScrollCanvasClick(_ event: NSEvent) -> Bool {
-        guard let contentView else { return false }
-        let point = contentView.convert(event.locationInWindow, from: nil)
-        guard let hitView = contentView.hitTest(point) else { return false }
-
-        let hierarchy = Array(sequence(first: hitView, next: \.superview))
-        guard let scrollView = hierarchy.compactMap({ $0 as? NSScrollView }).first else {
-            return false
-        }
-
-        // SwiftUI can attach a recognizer to the document hosting view itself.
-        // That recognizer covers the full document bounds, including whitespace,
-        // so only inspect the descendants between the hit view and that root.
-        var view: NSView? = hitView
-        while let candidate = view, candidate !== scrollView.documentView {
-            if candidate is NSControl ||
-                candidate is NSTextView ||
-                candidate is NSTableView ||
-                candidate is NSCollectionView ||
-                !candidate.gestureRecognizers.isEmpty {
-                return false
-            }
-            view = candidate.superview
-        }
-
-        return true
     }
 
     private func startOutsideClickMonitoring() {
