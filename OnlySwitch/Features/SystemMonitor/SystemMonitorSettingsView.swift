@@ -10,7 +10,7 @@ struct SystemMonitorSettingsView: View {
                 ForEach(SystemMonitorMetric.allCases, id: \.self) { metric in
                     Toggle(metric.rawValue.uppercased().localized(), isOn: viewModel.panelMetricBinding(for: metric))
                 }
-                Text("GPU readings depend on Mac hardware and macOS version.".localized())
+                Text("GPU readings use undocumented macOS interfaces and may stop working after a system update.".localized())
                     .font(.caption)
                     .foregroundStyle(.secondary)
             } header: {

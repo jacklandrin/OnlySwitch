@@ -49,6 +49,26 @@ enum SystemMonitorTemperaturePresentation {
     }
 }
 
+enum SystemMonitorMemoryPressurePresentation {
+    static func description(_ pressure: MetricAvailability<SystemMonitorMemoryPressure>) -> String {
+        let value: String
+        switch pressure {
+        case let .available(status):
+            switch status {
+            case .normal:
+                value = "Normal".localized()
+            case .warning:
+                value = "Warning".localized()
+            case .critical:
+                value = "Critical".localized()
+            }
+        case .unavailable:
+            value = "Unavailable".localized()
+        }
+        return "Memory pressure: %@".localizedFormat(value)
+    }
+}
+
 struct SystemMonitorSectionBar: View {
     let sections: [SectionBar.Section]
     @Binding var selection: SectionBar.Section
@@ -80,7 +100,7 @@ struct SystemMonitorSectionBar: View {
                 }
                 .accessibilityLabel(Text(section.title))
                 .accessibilityAddTraits(selection == section ? .isSelected : [])
-                .accessibilityHint(Text("Shows the \(section.title) section".localized()))
+                .accessibilityHint(Text("Shows the %@ section".localizedFormat(section.title)))
                 .help(Text(section.title))
             }
         }
@@ -278,6 +298,12 @@ struct SystemMonitorPanelView: View {
                     accessibilityLabel: "Memory usage history".localized(),
                     valueDescription: SystemMonitorFormatter.percentage
                 )
+                Label(
+                    SystemMonitorMemoryPressurePresentation.description(memory.pressure),
+                    systemImage: memoryPressureSymbol(memory.pressure)
+                )
+                .font(.caption)
+                .foregroundStyle(.secondary)
                 DisclosureGroup(
                     "Top Processes".localized(),
                     isExpanded: expansionBinding(for: .memory, store: store)
@@ -412,18 +438,33 @@ struct SystemMonitorPanelView: View {
                 .foregroundStyle(.secondary)
                 .lineLimit(2)
         } else {
-            Text("\(metricName) model unavailable".localized())
+            Text("%@ model unavailable".localizedFormat(metricName))
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
         }
 
         if processor.physicalCoreCount.value == nil, processor.logicalCoreCount.value == nil {
-            processorFact("\(metricName) core count unavailable".localized())
+            processorFact("%@ core count unavailable".localizedFormat(metricName))
         } else {
             HStack(spacing: 6) {
-                processorFact(processor.physicalCoreCount.value.map { "\($0) physical cores".localized() } ?? "Physical cores unavailable".localized())
-                processorFact(processor.logicalCoreCount.value.map { "\($0) logical cores".localized() } ?? "Logical cores unavailable".localized())
+                processorFact(processor.physicalCoreCount.value.map { "%d physical cores".localizedFormat($0) } ?? "Physical cores unavailable".localized())
+                processorFact(processor.logicalCoreCount.value.map { "%d logical cores".localizedFormat($0) } ?? "Logical cores unavailable".localized())
             }
+        }
+    }
+
+    private func memoryPressureSymbol(
+        _ pressure: MetricAvailability<SystemMonitorMemoryPressure>
+    ) -> String {
+        switch pressure {
+        case .available(.normal):
+            "checkmark.circle"
+        case .available(.warning):
+            "exclamationmark.triangle"
+        case .available(.critical):
+            "exclamationmark.octagon"
+        case .unavailable:
+            "questionmark.circle"
         }
     }
 

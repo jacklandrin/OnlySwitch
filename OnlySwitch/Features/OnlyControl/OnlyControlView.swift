@@ -257,7 +257,7 @@ private struct OnlyControlSectionBar: View {
         }
         .buttonStyle(.plain)
         .accessibilityAddTraits(selection == section ? .isSelected : [])
-        .accessibilityHint("Shows the \(section.title) section".localized())
+        .accessibilityHint("Shows the %@ section".localizeWithFormat(arguments: section.title))
         .help(Text(section.title))
     }
 

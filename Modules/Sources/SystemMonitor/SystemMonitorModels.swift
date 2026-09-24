@@ -94,10 +94,10 @@ public enum SystemMonitorMemoryPressure: String, Codable, Equatable, Sendable {
 
 /// Static hardware facts captured when a monitor sampler is created.
 ///
-/// The operating system does not expose every fact on every Mac. In
-/// particular, the public graphics APIs expose the GPU name but not its core
-/// count, so consumers must retain the distinction between an unavailable
-/// value and a zero value.
+/// The operating system does not expose every fact on every Mac. GPU core
+/// count is supplied by an optional, undocumented app-side collector, so
+/// consumers must retain the distinction between an unavailable value and a
+/// zero value.
 public struct SystemMonitorHardware: Codable, Equatable, Sendable {
     public let cpu: SystemMonitorProcessor
     public let gpu: SystemMonitorProcessor

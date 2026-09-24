@@ -16,6 +16,14 @@ struct SystemMonitorSectionTests {
         #expect(SystemMonitorTemperaturePresentation.description(.unavailable) == "Temperature unavailable")
     }
 
+    @Test
+    func memoryPressurePresentationIsExplicitWithoutRelyingOnColor() {
+        #expect(SystemMonitorMemoryPressurePresentation.description(.available(.normal)) == "Memory pressure: Normal")
+        #expect(SystemMonitorMemoryPressurePresentation.description(.available(.warning)) == "Memory pressure: Warning")
+        #expect(SystemMonitorMemoryPressurePresentation.description(.available(.critical)) == "Memory pressure: Critical")
+        #expect(SystemMonitorMemoryPressurePresentation.description(.unavailable) == "Memory pressure: Unavailable")
+    }
+
     @Test(arguments: [
         (false, false, [SectionBar.Section.controls, .systemMonitor]),
         (true, false, [.controls, .authenticator, .systemMonitor]),

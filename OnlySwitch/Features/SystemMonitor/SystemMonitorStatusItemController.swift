@@ -1,4 +1,5 @@
 import AppKit
+import Extensions
 import SystemMonitor
 
 struct SystemMonitorStatusItemPresentation: Equatable {
@@ -143,23 +144,39 @@ private extension SystemMonitorStatusItemController {
         switch metric {
         case .cpu:
             let value = snapshot?.cpuUsage.value.map(SystemMonitorFormatter.percentage) ?? "—"
-            return .init(symbolName: "cpu", title: value, accessibilityLabel: "CPU \(value)")
+            return .init(
+                symbolName: "cpu",
+                title: value,
+                accessibilityLabel: "CPU %@".localizeWithFormat(arguments: value)
+            )
 
         case .gpu:
             let value = snapshot?.gpuUsage.value.map(SystemMonitorFormatter.percentage) ?? "—"
-            return .init(symbolName: "rectangle.3.group", title: value, accessibilityLabel: "GPU \(value)")
+            return .init(
+                symbolName: "rectangle.3.group",
+                title: value,
+                accessibilityLabel: "GPU %@".localizeWithFormat(arguments: value)
+            )
 
         case .memory:
             let value = snapshot?.memory.value.map {
                 SystemMonitorFormatter.bytes(bytes: Double($0.usedBytes))
             } ?? "—"
-            return .init(symbolName: "memorychip", title: value, accessibilityLabel: "Memory \(value) used")
+            return .init(
+                symbolName: "memorychip",
+                title: value,
+                accessibilityLabel: "Memory %@ used".localizeWithFormat(arguments: value)
+            )
 
         case .disk:
             let value = snapshot?.disks.first.map {
                 SystemMonitorFormatter.percentage($0.usage)
             } ?? "—"
-            return .init(symbolName: "internaldrive", title: value, accessibilityLabel: "Disk \(value) used")
+            return .init(
+                symbolName: "internaldrive",
+                title: value,
+                accessibilityLabel: "Disk %@ used".localizeWithFormat(arguments: value)
+            )
 
         case .network:
             let download = snapshot?.network.value.map {
@@ -171,7 +188,10 @@ private extension SystemMonitorStatusItemController {
             return .init(
                 symbolName: "network",
                 title: "↓ \(download)  ↑ \(upload)",
-                accessibilityLabel: "Network download \(download), upload \(upload)"
+                accessibilityLabel: "Network download %@, upload %@".localizeWithFormat(
+                    arguments: download,
+                    upload
+                )
             )
         }
     }
