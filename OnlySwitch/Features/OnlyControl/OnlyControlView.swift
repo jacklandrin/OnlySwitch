@@ -6,6 +6,7 @@
 //
 
 import AppKit
+import Authenticator
 import Combine
 import ComposableArchitecture
 import SwiftUI
@@ -19,6 +20,8 @@ struct OnlyControlView: View {
     @Environment(\.colorScheme) private var colorScheme
     let store: StoreOf<OnlyControlReducer>
     @ObservedObject private var playerItem = RadioStationSwitch.shared.playerItem
+    @ObservedObject private var authenticatorStore = AuthenticatorStore.shared
+    @ObservedObject private var soundMixerVM = SoundMixerVM.shared
     @State private var currentDate = Date()
     
     private let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
@@ -42,7 +45,10 @@ struct OnlyControlView: View {
                 }
 
                 VStack(spacing: 0) {
-                    OnlyControlSectionBar(selection: selectedSection)
+                    OnlyControlSectionBar(
+                        sections: sections,
+                        selection: selectedSection
+                    )
                         .padding(.horizontal, 20)
                         .padding(.top, 8)
                         .padding(.bottom, 4)
@@ -60,6 +66,9 @@ struct OnlyControlView: View {
             .task {
                 store.send(.task)
             }
+            .onChange(of: sections) { availableSections in
+                store.send(.availableSectionsChanged(availableSections))
+            }
         }
     }
 
@@ -68,10 +77,36 @@ struct OnlyControlView: View {
         switch store.selectedSection {
             case .controls:
                 controlsPage
+            case .authenticator:
+                authenticatorPage
+            case .soundMixer:
+                soundMixerPage
             case .systemMonitor:
                 systemMonitorPage
-            default:
-                EmptyView()
+        }
+    }
+
+    private var authenticatorPage: some View {
+        VStack(spacing: 0) {
+            ScrollView {
+                AuthenticatorPanelView(initiallyExpanded: true)
+                    .padding(.vertical, 8)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+            footer
+        }
+    }
+
+    private var soundMixerPage: some View {
+        VStack(spacing: 0) {
+            ScrollView {
+                SoundMixerPanelView(initiallyExpanded: true)
+                    .padding(.vertical, 8)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+            footer
         }
     }
 
@@ -160,78 +195,70 @@ struct OnlyControlView: View {
             set: { store.send(.selectedSectionChanged($0)) }
         )
     }
+
+    private var sections: [SectionBar.Section] {
+        SectionBar.sections(
+            authenticator: authenticatorStore.enabled,
+            soundMixer: soundMixerVM.enabled
+        )
+    }
 }
 
 private struct OnlyControlSectionBar: View {
+    let sections: [SectionBar.Section]
     @Binding var selection: SectionBar.Section
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @Namespace private var selectionGlassNamespace
 
     var body: some View {
-        tabBar
+        tabButtons
             .padding(2)
             .background(.black.opacity(0.08), in: Capsule())
             .accessibilityElement(children: .contain)
             .accessibilityLabel("Only Control sections".localized())
     }
 
-    @ViewBuilder
-    private var tabBar: some View {
-        if #available(macOS 26.0, *) {
-            GlassEffectContainer(spacing: 2) {
-                tabButtons
-            }
-        } else {
-            tabButtons
-        }
-    }
-
     private var tabButtons: some View {
-        HStack(spacing: 4) {
-            sectionButton(.controls, title: "Controls".localized(), icon: "switch.2")
-            sectionButton(.systemMonitor, title: "System Monitor".localized(), icon: "waveform.path.ecg")
+        GeometryReader { proxy in
+            let spacing: CGFloat = 4
+            let spacingWidth = spacing * CGFloat(max(0, sections.count - 1))
+            let segmentWidth = max(0, (proxy.size.width - spacingWidth) / CGFloat(max(1, sections.count)))
+            let selectedIndex = sections.firstIndex(of: selection) ?? 0
+
+            ZStack(alignment: .leading) {
+                selectionIndicator
+                    .frame(width: segmentWidth, height: 20)
+                    .offset(x: CGFloat(selectedIndex) * (segmentWidth + spacing))
+                    .allowsHitTesting(false)
+                    .accessibilityHidden(true)
+
+                HStack(spacing: spacing) {
+                    ForEach(sections, id: \.self) { section in
+                        sectionButton(section)
+                    }
+                }
+            }
+            .animation(reduceMotion ? nil : .smooth(duration: 0.28), value: selection)
         }
-        // The indicator is a single matched view that moves between the buttons.
-        // Keeping this animation here also makes a programmatic section change
-        // animate the same way as a click.
-        .animation(reduceMotion ? nil : .smooth(duration: 0.32), value: selection)
+        .frame(height: 20)
     }
 
-    private func sectionButton(
-        _ section: SectionBar.Section,
-        title: String,
-        icon: String
-    ) -> some View {
+    private func sectionButton(_ section: SectionBar.Section) -> some View {
         Button {
             let animation: Animation? = reduceMotion ? nil : .smooth(duration: 0.32)
             withAnimation(animation) {
                 selection = section
             }
         } label: {
-            ZStack {
-                if selection == section {
-                    selectionIndicator
-                        .allowsHitTesting(false)
-                        .accessibilityHidden(true)
-                        .zIndex(0)
-                }
-
-                Label(title, systemImage: icon)
-                    .font(.caption2.weight(.medium))
-                    .foregroundStyle(selection == section ? Color.accentColor : .secondary)
-                    // The glass indicator is intentionally below this label.
-                    // Without an explicit stacking order, the macOS 26 glass
-                    // compositor may render it over the selected tab content.
-                    .zIndex(1)
-            }
-                .frame(maxWidth: .infinity)
-                .frame(minHeight: 20)
+            Label(section.title, systemImage: section.symbolName)
+                .font(.caption2.weight(.medium))
+                .foregroundStyle(selection == section ? Color.accentColor : .secondary)
+                .frame(maxWidth: .infinity, minHeight: 20)
                 .contentShape(Capsule())
         }
         .buttonStyle(.plain)
         .accessibilityAddTraits(selection == section ? .isSelected : [])
-        .accessibilityHint("Shows the \(title) section".localized())
-        .help(Text(title))
+        .accessibilityHint("Shows the \(section.title) section".localized())
+        .help(Text(section.title))
     }
 
     @ViewBuilder
@@ -240,8 +267,6 @@ private struct OnlyControlSectionBar: View {
             Capsule()
                 .fill(.clear)
                 .glassEffect(.regular.tint(Color.accentColor.opacity(0.16)), in: Capsule())
-                .glassEffectID("only-control-selected-section", in: selectionGlassNamespace)
-                .matchedGeometryEffect(id: "only-control-selected-section-frame", in: selectionGlassNamespace)
         } else {
             Capsule()
                 .fill(.thinMaterial)
@@ -249,7 +274,6 @@ private struct OnlyControlSectionBar: View {
                     Capsule()
                         .stroke(Color.accentColor.opacity(0.45), lineWidth: 1)
                 }
-                .matchedGeometryEffect(id: "only-control-selected-section", in: selectionGlassNamespace)
         }
     }
 }

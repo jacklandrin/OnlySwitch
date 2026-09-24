@@ -52,4 +52,16 @@ struct OnlyControlSystemMonitorTests {
         }
         await store.finish()
     }
+
+    @MainActor
+    @Test
+    func disablingSelectedOptionalSectionReturnsToControls() async {
+        let store = TestStore(initialState: .init(selectedSection: .authenticator)) {
+            OnlyControlReducer()
+        }
+
+        await store.send(.availableSectionsChanged([.controls, .systemMonitor])) {
+            $0.selectedSection = .controls
+        }
+    }
 }

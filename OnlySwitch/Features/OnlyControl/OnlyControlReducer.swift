@@ -81,6 +81,7 @@ struct OnlyControlReducer {
         case refreshAirPodsBattery
         case updateAirPodsBattery(isConnected: Bool, batteryValues: [Float])
         case selectedSectionChanged(SectionBar.Section)
+        case availableSectionsChanged([SectionBar.Section])
         case systemMonitor(SystemMonitorReducer.Action)
     }
 
@@ -140,6 +141,14 @@ struct OnlyControlReducer {
                     guard state.selectedSection != section else { return .none }
                     state.selectedSection = section
                     return .send(.systemMonitor(.visibilityChanged(section == .systemMonitor)))
+
+                case let .availableSectionsChanged(sections):
+                    guard !sections.contains(state.selectedSection) else { return .none }
+                    let wasShowingMonitor = state.selectedSection == .systemMonitor
+                    state.selectedSection = .controls
+                    return wasShowingMonitor
+                        ? .send(.systemMonitor(.visibilityChanged(false)))
+                        : .none
 
                 case let .updateItems(units, items, switches):
                     let items = items.sorted { $0.weight < $1.weight }

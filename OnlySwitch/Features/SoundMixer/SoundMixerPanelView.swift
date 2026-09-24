@@ -18,7 +18,11 @@ struct SoundMixerPanelView: View {
 
     @ObservedObject private var vm = SoundMixerVM.shared
     @ObservedObject private var languageManager = LanguageManager.sharedManager
-    @State private var isExpanded = false
+    @State private var isExpanded: Bool
+
+    init(initiallyExpanded: Bool = false) {
+        _isExpanded = State(initialValue: initiallyExpanded)
+    }
 
     var body: some View {
         VStack(spacing: 0) {
