@@ -59,28 +59,110 @@ enum MemoryPressureSampler {
     }
 }
 
-/// Reads Apple Silicon GPU counters exposed through undocumented IOKit services.
+/// Decodes the SMC temperature payload formats used by Apple Silicon Macs.
+///
+/// Keeping byte decoding and key classification separate from the private IOKit transport makes
+/// the most failure-prone part of the integration deterministic and testable.
+enum SMCTemperatureCodec {
+    private static let sp78 = fourCharacterCode("sp78")
+    private static let floatingPoint = fourCharacterCode("flt ")
+
+    static func decode(dataType: UInt32, bytes: [UInt8]) -> Double? {
+        switch dataType {
+        case sp78:
+            guard bytes.count >= 2 else { return nil }
+            let raw = Int16(bitPattern: (UInt16(bytes[0]) << 8) | UInt16(bytes[1]))
+            return Double(raw) / 256
+        case floatingPoint:
+            guard bytes.count >= 4 else { return nil }
+            let bitPattern = UInt32(bytes[0])
+                | (UInt32(bytes[1]) << 8)
+                | (UInt32(bytes[2]) << 16)
+                | (UInt32(bytes[3]) << 24)
+            let value = Double(Float(bitPattern: bitPattern))
+            return value.isFinite ? value : nil
+        default:
+            return nil
+        }
+    }
+
+    static func isPlausible(_ celsius: Double) -> Bool {
+        celsius.isFinite && (10 ..< 125).contains(celsius)
+    }
+
+    static func isCPUKey(_ key: String, chipModel: String?) -> Bool {
+        if key.hasPrefix("Tp") || key.hasPrefix("Te") { return true }
+        guard key.hasPrefix("Tf"), let chipModel else { return false }
+        return chipModel.range(of: #"\bM3(?:\s|$)"#, options: .regularExpression) != nil
+    }
+
+    static func isGPUKey(_ key: String) -> Bool {
+        key.hasPrefix("Tg")
+    }
+
+    static func isCPUKey(_ key: UInt32, chipModel: String?) -> Bool {
+        isCPUKey(string(for: key), chipModel: chipModel)
+    }
+
+    static func isGPUKey(_ key: UInt32) -> Bool {
+        isGPUKey(string(for: key))
+    }
+
+    private static func fourCharacterCode(_ value: String) -> UInt32 {
+        value.utf8.reduce(UInt32(0)) { ($0 << 8) | UInt32($1) }
+    }
+
+    private static func string(for value: UInt32) -> String {
+        String(decoding: [
+            UInt8((value >> 24) & 0xFF), UInt8((value >> 16) & 0xFF),
+            UInt8((value >> 8) & 0xFF), UInt8(value & 0xFF)
+        ], as: UTF8.self)
+    }
+}
+
+/// Reads Apple Silicon GPU counters and CPU/GPU sensors exposed through undocumented IOKit services.
 ///
 /// `AGXAccelerator`'s `PerformanceStatistics`, `gpu-core-count`, and the AppleSMC user client
 /// are implementation details rather than supported macOS APIs. They are intentionally confined
 /// to this type, only used on Apple Silicon, and treated as optional so an OS or hardware change
 /// cannot affect monitor availability or process stability. This path is unsuitable for Mac App
 /// Store distribution without separately validating Apple's current review policy.
-private struct PrivateAppleSiliconGPUReader {
+private struct PrivateAppleSiliconMetricsReader {
     struct Reading {
         let usage: Double?
-        let temperatureCelsius: Double?
+        let cpuTemperatureCelsius: Double?
+        let gpuTemperatureCelsius: Double?
+    }
+
+    private struct TemperatureSensor {
+        let key: UInt32
+        let name: String
+        let dataType: UInt32
+        let dataSize: UInt32
+    }
+
+    private struct TemperatureSensors {
+        let cpu: [TemperatureSensor]
+        let gpu: [TemperatureSensor]
     }
 
     private static let maximumSensorKeys = 4_096
     private var smcConnection: io_connect_t = IO_OBJECT_NULL
-    private var gpuTemperatureKeys: [UInt32]?
+    private var temperatureSensors: TemperatureSensors?
 
-    mutating func sample() -> Reading {
-        guard Self.isAppleSilicon else { return Reading(usage: nil, temperatureCelsius: nil) }
+    mutating func sample(chipModel: String?) -> Reading {
+        guard Self.isAppleSilicon else {
+            return Reading(
+                usage: nil,
+                cpuTemperatureCelsius: nil,
+                gpuTemperatureCelsius: nil
+            )
+        }
+        let temperatures = readTemperatures(chipModel: chipModel)
         return Reading(
             usage: Self.readUsage(),
-            temperatureCelsius: readTemperature()
+            cpuTemperatureCelsius: temperatures.cpu,
+            gpuTemperatureCelsius: temperatures.gpu
         )
     }
 
@@ -88,7 +170,7 @@ private struct PrivateAppleSiliconGPUReader {
         guard smcConnection != IO_OBJECT_NULL else { return }
         IOServiceClose(smcConnection)
         smcConnection = IO_OBJECT_NULL
-        gpuTemperatureKeys = nil
+        temperatureSensors = nil
     }
 
     static func coreCount() -> Int? {
@@ -149,16 +231,22 @@ private struct PrivateAppleSiliconGPUReader {
         return nil
     }
 
-    private mutating func readTemperature() -> Double? {
-        guard openSMCIfNeeded() else { return nil }
-        if gpuTemperatureKeys == nil {
-            gpuTemperatureKeys = discoverGPUTemperatureKeys()
+    private mutating func readTemperatures(
+        chipModel: String?
+    ) -> (cpu: Double?, gpu: Double?) {
+        guard openSMCIfNeeded() else { return (nil, nil) }
+        if temperatureSensors == nil {
+            let discovered = discoverTemperatureSensors(chipModel: chipModel)
+            // An empty response can be transient while the private service is waking up.
+            if discovered.cpu.isEmpty == false, discovered.gpu.isEmpty == false {
+                temperatureSensors = discovered
+            }
         }
-        guard let gpuTemperatureKeys else { return nil }
-        return gpuTemperatureKeys
-            .compactMap { readTemperature(key: $0) }
-            .filter { $0 > 1 && $0 < 125 }
-            .max()
+        let sensors = temperatureSensors ?? discoverTemperatureSensors(chipModel: chipModel)
+        return (
+            hottestTemperature(from: sensors.cpu),
+            hottestTemperature(from: sensors.gpu)
+        )
     }
 
     private mutating func openSMCIfNeeded() -> Bool {
@@ -169,15 +257,45 @@ private struct PrivateAppleSiliconGPUReader {
         return IOServiceOpen(service, mach_task_self_, 0, &smcConnection) == KERN_SUCCESS
     }
 
-    private func discoverGPUTemperatureKeys() -> [UInt32] {
+    private func discoverTemperatureSensors(chipModel: String?) -> TemperatureSensors {
         guard let keyCount = readUnsignedInteger(key: Self.fourCharacterCode("#KEY")),
               keyCount > 0, keyCount <= Self.maximumSensorKeys
-        else { return [] }
+        else { return TemperatureSensors(cpu: [], gpu: []) }
 
-        return (0 ..< keyCount).compactMap { index in
-            guard let key = key(at: index), Self.string(for: key).hasPrefix("Tg") else { return nil }
-            return readTemperature(key: key) == nil ? nil : key
+        var cpu: [TemperatureSensor] = []
+        var gpu: [TemperatureSensor] = []
+        for index in 0 ..< keyCount {
+            guard let key = key(at: index) else { continue }
+            let name = Self.string(for: key)
+            let isCPU = SMCTemperatureCodec.isCPUKey(name, chipModel: chipModel)
+            let isGPU = SMCTemperatureCodec.isGPUKey(name)
+            guard isCPU || isGPU, let keyInfo = readKeyInfo(key: key) else { continue }
+
+            let sensor = TemperatureSensor(
+                key: key,
+                name: name,
+                dataType: keyInfo.dataType,
+                dataSize: keyInfo.dataSize
+            )
+            guard let celsius = readTemperature(sensor: sensor),
+                  SMCTemperatureCodec.isPlausible(celsius)
+            else { continue }
+            if isCPU { cpu.append(sensor) }
+            if isGPU { gpu.append(sensor) }
         }
+
+        // M4 exposes several other Tp/Te values that are not CPU core sensors. Prefer the
+        // observed core-die set used by hardware monitors, while retaining classified fallback
+        // keys for future variants whose suffixes differ.
+        if chipModel?.contains("M4") == true {
+            let m4CoreKeys: Set<String> = [
+                "Te05", "Te0S", "Te09", "Te0H",
+                "Tp01", "Tp05", "Tp09", "Tp0D", "Tp0V", "Tp0Y", "Tp0b", "Tp0e"
+            ]
+            let preferredCPU = cpu.filter { m4CoreKeys.contains($0.name) }
+            if preferredCPU.isEmpty == false { cpu = preferredCPU }
+        }
+        return TemperatureSensors(cpu: cpu, gpu: gpu)
     }
 
     private func key(at index: Int) -> UInt32? {
@@ -189,34 +307,48 @@ private struct PrivateAppleSiliconGPUReader {
     }
 
     private func readUnsignedInteger(key: UInt32) -> Int? {
-        guard let data = readData(key: key), !data.isEmpty else { return nil }
-        let value = data.prefix(4).reduce(UInt32(0)) { ($0 << 8) | UInt32($1) }
-        return Int(value)
+        guard let value = readValue(key: key), value.bytes.isEmpty == false else { return nil }
+        let unsignedValue = value.bytes.prefix(4).reduce(UInt32(0)) { ($0 << 8) | UInt32($1) }
+        return Int(unsignedValue)
     }
 
-    private func readTemperature(key: UInt32) -> Double? {
-        guard let data = readData(key: key), data.count >= 2 else { return nil }
-        // Apple Silicon temperature SMC keys are normally `sp78`; the first two bytes are a
-        // signed 8.8 fixed-point Celsius reading. Reject implausible values at the caller.
-        let raw = Int16(bitPattern: (UInt16(data[0]) << 8) | UInt16(data[1]))
-        return Double(raw) / 256
+    private func hottestTemperature(from sensors: [TemperatureSensor]) -> Double? {
+        sensors
+            .compactMap { readTemperature(sensor: $0) }
+            .filter(SMCTemperatureCodec.isPlausible)
+            .max()
     }
 
-    private func readData(key: UInt32) -> [UInt8]? {
+    private func readTemperature(sensor: TemperatureSensor) -> Double? {
+        guard let bytes = readBytes(key: sensor.key, dataSize: sensor.dataSize) else { return nil }
+        return SMCTemperatureCodec.decode(dataType: sensor.dataType, bytes: bytes)
+    }
+
+    private func readKeyInfo(key: UInt32) -> SMCKeyInfo? {
         var infoRequest = SMCParameter()
         infoRequest.key = key
         infoRequest.data8 = SMCCommand.keyInfo.rawValue
         guard let info = callSMC(&infoRequest), info.result == 0,
               info.keyInfo.dataSize > 0, info.keyInfo.dataSize <= 32
         else { return nil }
+        return info.keyInfo
+    }
 
+    private func readValue(key: UInt32) -> (dataType: UInt32, bytes: [UInt8])? {
+        guard let keyInfo = readKeyInfo(key: key),
+              let bytes = readBytes(key: key, dataSize: keyInfo.dataSize)
+        else { return nil }
+        return (keyInfo.dataType, bytes)
+    }
+
+    private func readBytes(key: UInt32, dataSize: UInt32) -> [UInt8]? {
         var readRequest = SMCParameter()
         readRequest.key = key
-        readRequest.keyInfo.dataSize = info.keyInfo.dataSize
+        readRequest.keyInfo.dataSize = dataSize
         readRequest.data8 = SMCCommand.readKey.rawValue
         guard let value = callSMC(&readRequest), value.result == 0 else { return nil }
 
-        return Array(value.bytes.prefix(Int(info.keyInfo.dataSize)))
+        return Array(value.bytes.prefix(Int(dataSize)))
     }
 
     private func callSMC(_ input: inout SMCParameter) -> SMCParameter? {
@@ -276,16 +408,20 @@ private struct PrivateAppleSiliconGPUReader {
         var dataSize: UInt32 = 0
         var dataType: UInt32 = 0
         var attributes: UInt8 = 0
+        // C gives this nested structure a 12-byte size. Swift otherwise packs the next outer
+        // property immediately after byte 9, so model the ABI's trailing alignment explicitly.
+        var reserved0: UInt8 = 0
+        var reserved1: UInt8 = 0
+        var reserved2: UInt8 = 0
     }
 
-    /// This memory layout is the private AppleSMC user-client ABI. The explicit two-byte field
-    /// is required to retain its 80-byte C layout before passing it across the IOKit boundary.
+    /// This mirrors the private 80-byte C ABI. Alignment belongs to the nested key-info record;
+    /// adding a standalone field between it and `result` would shift the response fields.
     private struct SMCParameter {
         var key: UInt32 = 0
         var version = SMCVersion()
         var powerLimit = SMCPowerLimit()
         var keyInfo = SMCKeyInfo()
-        var padding: UInt16 = 0
         var result: UInt8 = 0
         var status: UInt8 = 0
         var data8: UInt8 = 0
@@ -337,12 +473,12 @@ actor MacSystemMonitorCollector {
     private var lastCollectedUptime: TimeInterval?
     private var latestSnapshot: SystemMonitorSnapshot?
     private var memoryPressure: SystemMonitorMemoryPressure = .normal
-    private var privateGPUReader = PrivateAppleSiliconGPUReader()
+    private var privateMetricsReader = PrivateAppleSiliconMetricsReader()
     private let memoryPressureSource: any DispatchSourceMemoryPressure
     private let hardware: SystemMonitorHardware
 
     init() {
-        hardware = Self.readHardware(gpuCoreCount: PrivateAppleSiliconGPUReader.coreCount())
+        hardware = Self.readHardware(gpuCoreCount: PrivateAppleSiliconMetricsReader.coreCount())
         let source = DispatchSource.makeMemoryPressureSource(eventMask: .all, queue: .global(qos: .utility))
         memoryPressureSource = source
         source.setEventHandler { [weak self, weak source] in
@@ -357,7 +493,7 @@ actor MacSystemMonitorCollector {
 
     deinit {
         memoryPressureSource.cancel()
-        privateGPUReader.close()
+        privateMetricsReader.close()
     }
 
     nonisolated static func liveClient(
@@ -435,13 +571,13 @@ actor MacSystemMonitorCollector {
 
         let processes = readProcesses(elapsed: elapsed ?? 0)
 
-        let privateGPU = privateGPUReader.sample()
+        let privateMetrics = privateMetricsReader.sample(chipModel: hardware.cpu.model.value)
         let snapshot = SystemMonitorSnapshot(
             timestamp: now,
             cpuUsage: cpuUsage.map(MetricAvailability.available) ?? .unavailable,
-            cpuTemperatureCelsius: .unavailable,
-            gpuUsage: privateGPU.usage.map(MetricAvailability.available) ?? .unavailable,
-            gpuTemperatureCelsius: privateGPU.temperatureCelsius.map(MetricAvailability.available) ?? .unavailable,
+            cpuTemperatureCelsius: privateMetrics.cpuTemperatureCelsius.map(MetricAvailability.available) ?? .unavailable,
+            gpuUsage: privateMetrics.usage.map(MetricAvailability.available) ?? .unavailable,
+            gpuTemperatureCelsius: privateMetrics.gpuTemperatureCelsius.map(MetricAvailability.available) ?? .unavailable,
             hardware: hardware,
             memory: readMemory().map(MetricAvailability.available) ?? .unavailable,
             disks: readDisks(),

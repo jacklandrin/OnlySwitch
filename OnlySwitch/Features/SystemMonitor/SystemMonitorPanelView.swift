@@ -70,8 +70,23 @@ enum SystemMonitorMemoryPressurePresentation {
 }
 
 struct SystemMonitorSectionBar: View {
+    @Environment(\.colorScheme) private var colorScheme
     let sections: [SectionBar.Section]
     @Binding var selection: SectionBar.Section
+
+    private var selectedForeground: Color {
+        colorScheme == .dark ? .white : .primary
+    }
+
+    private var selectedFill: Color {
+        colorScheme == .dark
+            ? Color(red: 0.05, green: 0.38, blue: 0.76).opacity(0.82)
+            : Color.accentColor.opacity(0.18)
+    }
+
+    private var selectedStroke: Color {
+        colorScheme == .dark ? .white.opacity(0.34) : Color.accentColor.opacity(0.38)
+    }
 
     var body: some View {
         HStack(spacing: 4) {
@@ -86,14 +101,14 @@ struct SystemMonitorSectionBar: View {
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                .foregroundStyle(selection == section ? .primary : .secondary)
+                .foregroundStyle(selection == section ? selectedForeground : .secondary)
                 .background {
                     Capsule()
-                        .fill(selection == section ? Color.accentColor.opacity(0.18) : .clear)
+                        .fill(selection == section ? selectedFill : .clear)
                         .overlay {
                             Capsule()
                                 .strokeBorder(
-                                    selection == section ? Color.accentColor.opacity(0.32) : .clear,
+                                    selection == section ? selectedStroke : .clear,
                                     lineWidth: 1
                                 )
                         }
@@ -133,6 +148,7 @@ struct SystemMonitorPanelContainer: View {
 }
 
 struct SystemMonitorPanelView: View {
+    @Environment(\.colorScheme) private var colorScheme
     let store: StoreOf<SystemMonitorReducer>
     @State private var preferences = Preferences.shared.systemMonitorPreferences
 
@@ -173,6 +189,12 @@ struct SystemMonitorPanelView: View {
 
     private var visibleMetrics: [SystemMonitorMetric] {
         SystemMonitorMetric.allCases.filter(preferences.enabledPanelMetrics.contains)
+    }
+
+    private var processorAccent: Color {
+        colorScheme == .dark
+            ? Color(red: 0.20, green: 0.68, blue: 1)
+            : .accentColor
     }
 
     @ViewBuilder
@@ -224,7 +246,7 @@ struct SystemMonitorPanelView: View {
         @ViewBuilder content: (Double) -> Content
     ) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            metricHeader(title, symbolName: symbolName, tint: .accentColor)
+            metricHeader(title, symbolName: symbolName, tint: processorAccent)
             processorDetails(processor, metricName: title)
             switch availability {
             case let .available(value):
@@ -250,10 +272,10 @@ struct SystemMonitorPanelView: View {
                     .foregroundStyle(.secondary)
             }
             ProgressView(value: usage)
-                .tint(.accentColor)
+                .tint(processorAccent)
             SystemMonitorChartView(
                 points: history,
-                tint: .accentColor,
+                tint: processorAccent,
                 accessibilityLabel: "Usage history".localized(),
                 valueDescription: SystemMonitorFormatter.percentage
             )
