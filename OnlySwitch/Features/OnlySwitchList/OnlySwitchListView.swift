@@ -28,6 +28,7 @@ struct OnlySwitchListView: View {
     @ObservedObject private var soundMixerVM = SoundMixerVM.shared
     @ObservedObject private var languageManager = LanguageManager.sharedManager
     @FocusState var focusedBar: Focusable?
+    @State private var selectedSection: SectionBar.Section = .controls
 
     let columns = [
         GridItem(.fixed(Layout.popoverWidth - 40)),
@@ -40,7 +41,10 @@ struct OnlySwitchListView: View {
                 Spacer()
                 BluredSoundWave(width: listWidth, height: soundWaveHeight)
                     .rotation3DEffect(.degrees(180), axis: (x: 1, y: 0, z: 0))
-                    .isHidden(!switchVM.soundWaveEffectDisplay || !playerItem.isPlaying, remove: true)
+                    .isHidden(
+                        selectedSection != .controls || !switchVM.soundWaveEffectDisplay || !playerItem.isPlaying,
+                        remove: true
+                    )
             }
             VStack {
                 bottomBar
@@ -48,21 +52,28 @@ struct OnlySwitchListView: View {
                     .opacity(0.7)
                     .isHidden(SwitchListAppearance(rawValue: switchVM.currentAppearance) == .single, remove: true)
                 
+                SystemMonitorSectionBar(
+                    sections: sections,
+                    selection: $selectedSection
+                )
+
                 ScrollView {
-                    VStack(spacing: 0) {
-                        AuthenticatorPanelView()
-                            .isHidden(!shouldShowAuthenticatorPanel, remove: true)
-
-                        SoundMixerPanelView()
-                            .isHidden(!soundMixerVM.enabled, remove: true)
-
-                        if switchVM.currentAppearance == SwitchListAppearance.single.rawValue {
-                            singleSwitchList
-                        } else {
-                            dualcolumnList
+                    Group {
+                        switch selectedSection {
+                        case .controls:
+                            if switchVM.currentAppearance == SwitchListAppearance.single.rawValue {
+                                singleSwitchList
+                            } else {
+                                dualcolumnList
+                            }
+                        case .authenticator:
+                            AuthenticatorPanelView()
+                        case .soundMixer:
+                            SoundMixerPanelView()
+                        case .systemMonitor:
+                            SystemMonitorPanelView()
                         }
                     }
-                    
                 }
                 .frame(height: scrollViewHeight)
                 .padding(.vertical,15)
@@ -95,7 +106,10 @@ struct OnlySwitchListView: View {
         .onReceive(NotificationCenter.default.publisher(for: .toggleMenubarCollapse, object: nil)) { _ in
             switchVM.refreshSingleSwitchStatus(type: .hideMenubarIcons)
         }
-        .frame(width: listWidth , height: scrollViewHeight + (switchVM.showAds ? 130 : 90))
+        .onChange(of: sections) { _ in
+            reconcileSectionSelection()
+        }
+        .frame(width: listWidth , height: scrollViewHeight + (switchVM.showAds ? 172 : 132))
     }
     
     var singleSwitchList: some View {
@@ -426,9 +440,6 @@ struct OnlySwitchListView: View {
     var scrollViewHeight: CGFloat {
         let switchCount = visableSwitchCount + switchVM.shortcutsList.count + switchVM.evolutionList.count
         var totalHeight = CGFloat(switchCount) * (Layout.singleSwitchHeight + 17)
-        if shouldShowAuthenticatorPanel {
-            totalHeight += 45.0
-        }
         //two columns
         if switchVM.currentAppearance == SwitchListAppearance.dual.rawValue {
             totalHeight = categoryHeight(count: switchVM.uncategoryItemList.count)
@@ -440,13 +451,9 @@ struct OnlySwitchListView: View {
             totalHeight -= 30.0
         }
 
-        // After the two-column branch, which recomputes `totalHeight` from the categories: the
-        // mixer panel sits above both layouts and needs its header row's height in either.
-        if soundMixerVM.enabled {
-            totalHeight += 45.0
-        }
-
-        let height = min(totalHeight, switchVM.maxHeight - 150)
+        // The section picker is outside the scroll view. Reserve its height before capping the
+        // scroll area so long monitor/process lists stay inside the popover.
+        let height = min(totalHeight, switchVM.maxHeight - 192)
         guard height > 0 else { return 300 }
         return height
     }
@@ -481,6 +488,19 @@ struct OnlySwitchListView: View {
 
     var shouldShowAuthenticatorPanel: Bool {
         authenticatorStore.enabled
+    }
+
+    var sections: [SectionBar.Section] {
+        SectionBar.sections(
+            authenticator: shouldShowAuthenticatorPanel,
+            soundMixer: soundMixerVM.enabled
+        )
+    }
+
+    func reconcileSectionSelection() {
+        if !sections.contains(selectedSection) {
+            selectedSection = .controls
+        }
     }
     
     func itemOffsetY(index:Int) -> CGFloat {

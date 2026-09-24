@@ -25,14 +25,6 @@
 		041B17892AD841EE0032919B /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 041B17882AD841EE0032919B /* Sparkle */; };
 		041B178B2AD842470032919B /* Updater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041B178A2AD842470032919B /* Updater.swift */; };
 		041D725728353A160083092D /* OnlySwitchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041D725628353A160083092D /* OnlySwitchTests.swift */; };
-		B90000000000000000000002 /* MacSystemMonitorCollectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90000000000000000000001 /* MacSystemMonitorCollectorTests.swift */; };
-		B90100000000000000000002 /* SystemMonitorPreferencesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90100000000000000000001 /* SystemMonitorPreferencesTests.swift */; };
-		B90000000000000000000005 /* MacSystemMonitorCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90000000000000000000004 /* MacSystemMonitorCollector.swift */; };
-		B90100000000000000000005 /* SystemMonitorSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90100000000000000000004 /* SystemMonitorSettingsView.swift */; };
-		B90100000000000000000007 /* SystemMonitorSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90100000000000000000006 /* SystemMonitorSettingsViewModel.swift */; };
-		B90100000000000000000009 /* StoredSystemMonitorPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90100000000000000000008 /* StoredSystemMonitorPreferences.swift */; };
-		B90000000000000000000006 /* SystemMonitor in Frameworks */ = {isa = PBXBuildFile; productRef = B90000000000000000000009 /* SystemMonitor */; };
-		B90000000000000000000007 /* SystemMonitor in Frameworks */ = {isa = PBXBuildFile; productRef = B90000000000000000000008 /* SystemMonitor */; };
 		0427364827C1A5430068108F /* SpotifyScripting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0427364427C1A5430068108F /* SpotifyScripting.swift */; };
 		0427364927C1A5430068108F /* SpotifyBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0427364527C1A5430068108F /* SpotifyBridge.swift */; };
 		0427364B27C1A55B0068108F /* SBProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0427364A27C1A55B0068108F /* SBProtocols.swift */; };
@@ -384,6 +376,17 @@
 		B82710042700000000C0DE01 /* MenuBarAccessibilityItemResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B82710122700000000C0DE01 /* MenuBarAccessibilityItemResolver.swift */; };
 		B82710062700000000C0DE01 /* MenuBarClientCoreBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = B82710142700000000C0DE01 /* MenuBarClientCoreBridge.m */; };
 		B82710312700000000C0DE01 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B82710322700000000C0DE01 /* Security.framework */; };
+		B90000000000000000000002 /* MacSystemMonitorCollectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90000000000000000000001 /* MacSystemMonitorCollectorTests.swift */; };
+		B90100000000000000000002 /* SystemMonitorPreferencesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90100000000000000000001 /* SystemMonitorPreferencesTests.swift */; };
+		B90200000000000000000002 /* SystemMonitorSectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90200000000000000000001 /* SystemMonitorSectionTests.swift */; };
+		B90200000000000000000005 /* SystemMonitorPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90200000000000000000004 /* SystemMonitorPanelView.swift */; };
+		B90200000000000000000007 /* SystemMonitorChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90200000000000000000006 /* SystemMonitorChartView.swift */; };
+		B90000000000000000000005 /* MacSystemMonitorCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90000000000000000000004 /* MacSystemMonitorCollector.swift */; };
+		B90100000000000000000005 /* SystemMonitorSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90100000000000000000004 /* SystemMonitorSettingsView.swift */; };
+		B90100000000000000000007 /* SystemMonitorSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90100000000000000000006 /* SystemMonitorSettingsViewModel.swift */; };
+		B90100000000000000000009 /* StoredSystemMonitorPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90100000000000000000008 /* StoredSystemMonitorPreferences.swift */; };
+		B90000000000000000000006 /* SystemMonitor in Frameworks */ = {isa = PBXBuildFile; productRef = B90000000000000000000009 /* SystemMonitor */; };
+		B90000000000000000000007 /* SystemMonitor in Frameworks */ = {isa = PBXBuildFile; productRef = B90000000000000000000008 /* SystemMonitor */; };
 		C1A0B00118E9202600000001 /* PrivilegedOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0B00318E9202600000001 /* PrivilegedOperation.swift */; };
 		C1A0B00218E9202600000001 /* PrivilegedOperationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0B00418E9202600000001 /* PrivilegedOperationTests.swift */; };
 		C1A0C00118E9202600000001 /* PrivilegedOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0B00318E9202600000001 /* PrivilegedOperation.swift */; };
@@ -585,12 +588,6 @@
 		041B178A2AD842470032919B /* Updater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Updater.swift; sourceTree = "<group>"; };
 		041D725428353A150083092D /* OnlySwitchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnlySwitchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		041D725628353A160083092D /* OnlySwitchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlySwitchTests.swift; sourceTree = "<group>"; };
-		B90000000000000000000001 /* MacSystemMonitorCollectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacSystemMonitorCollectorTests.swift; sourceTree = "<group>"; };
-		B90100000000000000000001 /* SystemMonitorPreferencesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorPreferencesTests.swift; sourceTree = "<group>"; };
-		B90000000000000000000004 /* MacSystemMonitorCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacSystemMonitorCollector.swift; sourceTree = "<group>"; };
-		B90100000000000000000004 /* SystemMonitorSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorSettingsView.swift; sourceTree = "<group>"; };
-		B90100000000000000000006 /* SystemMonitorSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorSettingsViewModel.swift; sourceTree = "<group>"; };
-		B90100000000000000000008 /* StoredSystemMonitorPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredSystemMonitorPreferences.swift; sourceTree = "<group>"; };
 		042661402780C147005DF2B9 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
 		0427364427C1A5430068108F /* SpotifyScripting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotifyScripting.swift; sourceTree = "<group>"; };
 		0427364527C1A5430068108F /* SpotifyBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotifyBridge.swift; sourceTree = "<group>"; };
@@ -866,6 +863,15 @@
 		B82710132700000000C0DE01 /* MenuBarClientCoreBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MenuBarClientCoreBridge.h; sourceTree = "<group>"; };
 		B82710142700000000C0DE01 /* MenuBarClientCoreBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MenuBarClientCoreBridge.m; sourceTree = "<group>"; };
 		B82710322700000000C0DE01 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		B90000000000000000000001 /* MacSystemMonitorCollectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacSystemMonitorCollectorTests.swift; sourceTree = "<group>"; };
+		B90100000000000000000001 /* SystemMonitorPreferencesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorPreferencesTests.swift; sourceTree = "<group>"; };
+		B90200000000000000000001 /* SystemMonitorSectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorSectionTests.swift; sourceTree = "<group>"; };
+		B90200000000000000000004 /* SystemMonitorPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorPanelView.swift; sourceTree = "<group>"; };
+		B90200000000000000000006 /* SystemMonitorChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorChartView.swift; sourceTree = "<group>"; };
+		B90000000000000000000004 /* MacSystemMonitorCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacSystemMonitorCollector.swift; sourceTree = "<group>"; };
+		B90100000000000000000004 /* SystemMonitorSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorSettingsView.swift; sourceTree = "<group>"; };
+		B90100000000000000000006 /* SystemMonitorSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorSettingsViewModel.swift; sourceTree = "<group>"; };
+		B90100000000000000000008 /* StoredSystemMonitorPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredSystemMonitorPreferences.swift; sourceTree = "<group>"; };
 		C1A0B00318E9202600000001 /* PrivilegedOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedOperation.swift; sourceTree = "<group>"; };
 		C1A0B00418E9202600000001 /* PrivilegedOperationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedOperationTests.swift; sourceTree = "<group>"; };
 		C1A0C10318E9202600000001 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -1113,15 +1119,6 @@
 			path = OnlySwitchTests;
 			sourceTree = "<group>";
 		};
-		B90000000000000000000003 /* SystemMonitor */ = {
-			isa = PBXGroup;
-			children = (
-				B90000000000000000000001 /* MacSystemMonitorCollectorTests.swift */,
-				B90100000000000000000001 /* SystemMonitorPreferencesTests.swift */,
-			);
-			path = SystemMonitor;
-			sourceTree = "<group>";
-		};
 		04243485275641890044D0AD /* EverySwitch */ = {
 			isa = PBXGroup;
 			children = (
@@ -1277,16 +1274,6 @@
 				0434B4D02876325B00F06AB9 /* HostWindowFinder.swift */,
 			);
 			path = Features;
-			sourceTree = "<group>";
-		};
-		B90000000000000000000010 /* SystemMonitor */ = {
-			isa = PBXGroup;
-			children = (
-				B90000000000000000000004 /* MacSystemMonitorCollector.swift */,
-				B90100000000000000000004 /* SystemMonitorSettingsView.swift */,
-				B90100000000000000000006 /* SystemMonitorSettingsViewModel.swift */,
-			);
-			path = SystemMonitor;
 			sourceTree = "<group>";
 		};
 		043E5D682757C86400ADC004 /* ViewModel */ = {
@@ -2014,6 +2001,28 @@
 			path = Config/Versions;
 			sourceTree = "<group>";
 		};
+		B90000000000000000000003 /* SystemMonitor */ = {
+			isa = PBXGroup;
+			children = (
+				B90000000000000000000001 /* MacSystemMonitorCollectorTests.swift */,
+				B90100000000000000000001 /* SystemMonitorPreferencesTests.swift */,
+				B90200000000000000000001 /* SystemMonitorSectionTests.swift */,
+			);
+			path = SystemMonitor;
+			sourceTree = "<group>";
+		};
+		B90000000000000000000010 /* SystemMonitor */ = {
+			isa = PBXGroup;
+			children = (
+				B90000000000000000000004 /* MacSystemMonitorCollector.swift */,
+				B90100000000000000000004 /* SystemMonitorSettingsView.swift */,
+				B90100000000000000000006 /* SystemMonitorSettingsViewModel.swift */,
+				B90200000000000000000004 /* SystemMonitorPanelView.swift */,
+				B90200000000000000000006 /* SystemMonitorChartView.swift */,
+			);
+			path = SystemMonitor;
+			sourceTree = "<group>";
+		};
 		C1A0B00518E9202600000001 /* PrivilegedOperations */ = {
 			isa = PBXGroup;
 			children = (
@@ -2659,6 +2668,7 @@
 			files = (
 				B90000000000000000000002 /* MacSystemMonitorCollectorTests.swift in Sources */,
 				B90100000000000000000002 /* SystemMonitorPreferencesTests.swift in Sources */,
+				B90200000000000000000002 /* SystemMonitorSectionTests.swift in Sources */,
 				C1A0C00518E9202600000001 /* PrivilegedHelperExecutorTests.swift in Sources */,
 				C1A0D00518E9202600000001 /* PrivilegedOperationClientTests.swift in Sources */,
 				C1A0F00718E9202600000001 /* PrivilegedAccessViewModelTests.swift in Sources */,
@@ -2752,6 +2762,8 @@
 				B90100000000000000000005 /* SystemMonitorSettingsView.swift in Sources */,
 				B90100000000000000000007 /* SystemMonitorSettingsViewModel.swift in Sources */,
 				B90100000000000000000009 /* StoredSystemMonitorPreferences.swift in Sources */,
+				B90200000000000000000005 /* SystemMonitorPanelView.swift in Sources */,
+				B90200000000000000000007 /* SystemMonitorChartView.swift in Sources */,
 				C1A0B00118E9202600000001 /* PrivilegedOperation.swift in Sources */,
 				C1A0D00118E9202600000001 /* PrivilegedOperationClient.swift in Sources */,
 				C1A0D00218E9202600000001 /* PrivilegedHelperStatus.swift in Sources */,
@@ -3335,7 +3347,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.7.7;
+				MARKETING_VERSION = 2.7.8;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3390,7 +3402,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.7.7;
+				MARKETING_VERSION = 2.7.8;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3436,7 +3448,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.7.7;
+				MARKETING_VERSION = 2.7.8;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = OnlySwitchWidgets;
@@ -3476,7 +3488,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.7.7;
+				MARKETING_VERSION = 2.7.8;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = OnlySwitchWidgets;
@@ -3946,6 +3958,14 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = Design;
 		};
+		B90000000000000000000008 /* SystemMonitor */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SystemMonitor;
+		};
+		B90000000000000000000009 /* SystemMonitor */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SystemMonitor;
+		};
 		D35C00022F12000100D35C01 /* DesktopPet */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DesktopPet;
@@ -4000,14 +4020,6 @@
 		F3A400000000000000000033 /* RemoteTransport */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = RemoteTransport;
-		};
-		B90000000000000000000008 /* SystemMonitor */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SystemMonitor;
-		};
-		B90000000000000000000009 /* SystemMonitor */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SystemMonitor;
 		};
 		F3A800000000000000000030 /* Dependencies */ = {
 			isa = XCSwiftPackageProductDependency;
