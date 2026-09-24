@@ -17,7 +17,7 @@ struct SystemMonitorStatusItemControllerTests {
 
         #expect(factory.createdMetrics == [.cpu, .network])
         #expect(factory.items[.cpu]?.presentation?.title == "—")
-        #expect(factory.items[.network]?.presentation?.title == "↓ —\n↑ —")
+        #expect(factory.items[.network]?.presentation?.title == "↑ —\n↓ —")
         #expect(factory.items[.network]?.presentation?.visualStyle == .network)
     }
 
@@ -76,7 +76,40 @@ struct SystemMonitorStatusItemControllerTests {
         #expect(factory.items[.gpu]?.presentation?.title == "25%")
         #expect(factory.items[.memory]?.presentation?.title == "8 GB")
         #expect(factory.items[.disk]?.presentation?.title == "75%")
-        #expect(factory.items[.network]?.presentation?.title == "↓ 1.5 KB/s\n↑ 2 KB/s")
+        #expect(factory.items[.network]?.presentation?.title == "↑ 2 KB/s\n↓ 2 KB/s")
+    }
+
+    @Test
+    func menuBarValuesUseWholeNumbersWithoutChangingThePanelFormatter() {
+        let factory = RecordingSystemMonitorStatusItemFactory()
+        let controller = SystemMonitorStatusItemController(
+            factory: factory,
+            client: .finished
+        )
+        controller.apply(.init(menuBarMetrics: Set(SystemMonitorMetric.allCases)))
+
+        controller.receive(
+            SystemMonitorSnapshot(
+                timestamp: Date(timeIntervalSince1970: 1),
+                cpuUsage: .available(0.179),
+                gpuUsage: .available(0.006),
+                memory: .available(.init(totalBytes: 10_000, usedBytes: 1_536)),
+                disks: [.init(id: "disk", name: "Macintosh HD", totalBytes: 100, usedBytes: 666)],
+                network: .available(.init(
+                    totalDownloadedBytes: 0,
+                    totalUploadedBytes: 0,
+                    downloadBytesPerSecond: 1_536,
+                    uploadBytesPerSecond: 4_710
+                ))
+            )
+        )
+
+        #expect(factory.items[.cpu]?.presentation?.title == "18%")
+        #expect(factory.items[.gpu]?.presentation?.title == "1%")
+        #expect(factory.items[.memory]?.presentation?.title == "2 KB")
+        #expect(factory.items[.disk]?.presentation?.title == "100%")
+        #expect(factory.items[.network]?.presentation?.title == "↑ 5 KB/s\n↓ 2 KB/s")
+        #expect(SystemMonitorFormatter.rate(bytesPerSecond: 1_536) == "1.5 KB/s")
     }
 
     @Test

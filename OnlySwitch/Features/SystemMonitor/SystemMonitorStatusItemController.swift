@@ -149,7 +149,7 @@ private extension SystemMonitorStatusItemController {
     ) -> SystemMonitorStatusItemPresentation {
         switch metric {
         case .cpu:
-            let value = snapshot?.cpuUsage.value.map(SystemMonitorFormatter.percentage) ?? "—"
+            let value = snapshot?.cpuUsage.value.map(SystemMonitorStatusItemFormatter.percentage) ?? "—"
             return .init(
                 symbolName: "cpu",
                 title: value,
@@ -158,7 +158,7 @@ private extension SystemMonitorStatusItemController {
             )
 
         case .gpu:
-            let value = snapshot?.gpuUsage.value.map(SystemMonitorFormatter.percentage) ?? "—"
+            let value = snapshot?.gpuUsage.value.map(SystemMonitorStatusItemFormatter.percentage) ?? "—"
             return .init(
                 symbolName: "rectangle.3.group",
                 title: value,
@@ -168,7 +168,7 @@ private extension SystemMonitorStatusItemController {
 
         case .memory:
             let value = snapshot?.memory.value.map {
-                SystemMonitorFormatter.bytes(bytes: Double($0.usedBytes))
+                SystemMonitorStatusItemFormatter.bytes(bytes: Double($0.usedBytes))
             } ?? "—"
             return .init(
                 symbolName: "memorychip",
@@ -179,7 +179,7 @@ private extension SystemMonitorStatusItemController {
 
         case .disk:
             let value = snapshot?.disks.first.map {
-                SystemMonitorFormatter.percentage($0.usage)
+                SystemMonitorStatusItemFormatter.percentage($0.usage)
             } ?? "—"
             return .init(
                 symbolName: "internaldrive",
@@ -190,21 +190,165 @@ private extension SystemMonitorStatusItemController {
 
         case .network:
             let download = snapshot?.network.value.map {
-                SystemMonitorFormatter.rate(bytesPerSecond: $0.downloadBytesPerSecond)
+                SystemMonitorStatusItemFormatter.rate(bytesPerSecond: $0.downloadBytesPerSecond)
             } ?? "—"
             let upload = snapshot?.network.value.map {
-                SystemMonitorFormatter.rate(bytesPerSecond: $0.uploadBytesPerSecond)
+                SystemMonitorStatusItemFormatter.rate(bytesPerSecond: $0.uploadBytesPerSecond)
             } ?? "—"
             return .init(
                 symbolName: "network",
-                title: "↓ \(download)\n↑ \(upload)",
-                accessibilityLabel: "Network download %@, upload %@".localizeWithFormat(
-                    arguments: download,
-                    upload
+                title: "↑ \(upload)\n↓ \(download)",
+                accessibilityLabel: "Network upload %@, download %@".localizeWithFormat(
+                    arguments: upload,
+                    download
                 ),
                 visualStyle: .network
             )
         }
+    }
+}
+
+/// Compact, whole-number values for fixed-width menu-bar indicators.
+///
+/// The richer monitor panel deliberately continues to use `SystemMonitorFormatter`,
+/// which retains its existing precision.
+private enum SystemMonitorStatusItemFormatter {
+    static func rate(bytesPerSecond: Double) -> String {
+        "\(bytes(bytes: bytesPerSecond))/s"
+    }
+
+    static func bytes(bytes: Double) -> String {
+        let units = ["B", "KB", "MB", "GB", "TB", "PB"]
+        var value = max(bytes, 0)
+        var unitIndex = 0
+
+        while value >= 1_024, unitIndex < units.count - 1 {
+            value /= 1_024
+            unitIndex += 1
+        }
+
+        let roundedValue = value.rounded()
+        return "\(Int(roundedValue)) \(units[unitIndex])"
+    }
+
+    static func percentage(_ value: Double) -> String {
+        let percentage = min(max(value, 0), 1) * 100
+        return "\(Int(percentage.rounded()))%"
+    }
+}
+
+@MainActor
+private final class StatusItemContentView: NSView {
+    private let metric: SystemMonitorMetric
+    private let imageView = NSImageView()
+    private let valueLabel = NSTextField(labelWithString: "")
+    private let topDot = NSTextField(labelWithString: "●")
+    private let bottomDot = NSTextField(labelWithString: "●")
+    private let topValueLabel = NSTextField(labelWithString: "")
+    private let bottomValueLabel = NSTextField(labelWithString: "")
+
+    init(metric: SystemMonitorMetric) {
+        self.metric = metric
+        super.init(frame: .zero)
+
+        wantsLayer = false
+        configureStandardContent()
+        configureNetworkContent()
+        let isNetwork = metric == .network
+        imageView.isHidden = isNetwork
+        valueLabel.isHidden = isNetwork
+        topDot.isHidden = !isNetwork
+        bottomDot.isHidden = !isNetwork
+        topValueLabel.isHidden = !isNetwork
+        bottomValueLabel.isHidden = !isNetwork
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        nil
+    }
+
+    override func layout() {
+        super.layout()
+        guard metric == .network else {
+            let iconSide: CGFloat = 16
+            let leading: CGFloat = 5
+            imageView.frame = CGRect(
+                x: leading,
+                y: (bounds.height - iconSide) / 2,
+                width: iconSide,
+                height: iconSide
+            )
+            valueLabel.frame = CGRect(
+                x: leading + iconSide + 3,
+                y: 0,
+                width: max(0, bounds.width - (leading + iconSide + 3) - 4),
+                height: bounds.height
+            )
+            return
+        }
+
+        let lineHeight: CGFloat = 10
+        let totalHeight = lineHeight * 2
+        let topY = (bounds.height + totalHeight) / 2 - lineHeight
+        let bottomY = topY - lineHeight
+        let dotLeading: CGFloat = 4
+        let valueLeading: CGFloat = 16
+        let valueWidth = max(0, bounds.width - valueLeading - 4)
+
+        topDot.frame = CGRect(x: dotLeading, y: topY, width: 9, height: lineHeight)
+        bottomDot.frame = CGRect(x: dotLeading, y: bottomY, width: 9, height: lineHeight)
+        topValueLabel.frame = CGRect(x: valueLeading, y: topY, width: valueWidth, height: lineHeight)
+        bottomValueLabel.frame = CGRect(x: valueLeading, y: bottomY, width: valueWidth, height: lineHeight)
+    }
+
+    // The status-bar button remains the single click target; this view is visual only.
+    override func hitTest(_ point: NSPoint) -> NSView? {
+        nil
+    }
+
+    func update(_ presentation: SystemMonitorStatusItemPresentation) {
+        switch presentation.visualStyle {
+        case .standard:
+            let image = NSImage(systemSymbolName: presentation.symbolName, accessibilityDescription: nil)
+            image?.isTemplate = true
+            imageView.image = image
+            valueLabel.stringValue = presentation.title
+
+        case .network:
+            let lines = presentation.title.split(separator: "\n", maxSplits: 1, omittingEmptySubsequences: false)
+            topValueLabel.stringValue = lines.indices.contains(0) ? String(lines[0].dropFirst(2)) : "—"
+            bottomValueLabel.stringValue = lines.indices.contains(1) ? String(lines[1].dropFirst(2)) : "—"
+        }
+    }
+
+    private func configureStandardContent() {
+        imageView.imageScaling = .scaleProportionallyDown
+        imageView.contentTintColor = .labelColor
+        valueLabel.font = NSFont.monospacedDigitSystemFont(ofSize: NSFont.systemFontSize, weight: .medium)
+        valueLabel.textColor = .labelColor
+        valueLabel.alignment = .right
+        valueLabel.lineBreakMode = .byClipping
+        addSubview(imageView)
+        addSubview(valueLabel)
+    }
+
+    private func configureNetworkContent() {
+        let valueFont = NSFont.monospacedDigitSystemFont(ofSize: 9, weight: .medium)
+        for valueLabel in [topValueLabel, bottomValueLabel] {
+            valueLabel.font = valueFont
+            valueLabel.textColor = .labelColor
+            valueLabel.alignment = .right
+            valueLabel.lineBreakMode = .byClipping
+            addSubview(valueLabel)
+        }
+
+        topDot.font = NSFont.systemFont(ofSize: 10, weight: .bold)
+        topDot.textColor = .systemRed
+        bottomDot.font = NSFont.systemFont(ofSize: 10, weight: .bold)
+        bottomDot.textColor = .systemBlue
+        addSubview(topDot)
+        addSubview(bottomDot)
     }
 }
 
@@ -219,15 +363,25 @@ private final class AppKitSystemMonitorStatusItemFactory: SystemMonitorStatusIte
 private final class AppKitSystemMonitorStatusItem: SystemMonitorStatusItemHandle {
     private let item: NSStatusItem
     private let actionTarget = ActionTarget()
+    private let contentView: StatusItemContentView
     private var isRemoved = false
 
     init(metric: SystemMonitorMetric, statusBar: NSStatusBar = .system) {
         item = statusBar.statusItem(withLength: Self.width(for: metric))
+        contentView = StatusItemContentView(metric: metric)
         StatusBarController.configureStatusItem(item)
 
         guard let button = item.button else { return }
-        button.imagePosition = .imageLeading
-        button.imageHugsTitle = true
+        button.image = nil
+        button.title = ""
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        button.addSubview(contentView)
+        NSLayoutConstraint.activate([
+            contentView.leadingAnchor.constraint(equalTo: button.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: button.trailingAnchor),
+            contentView.topAnchor.constraint(equalTo: button.topAnchor),
+            contentView.bottomAnchor.constraint(equalTo: button.bottomAnchor)
+        ])
         button.sendAction(on: [.leftMouseUp])
         button.target = actionTarget
         button.action = #selector(ActionTarget.performAction)
@@ -235,25 +389,7 @@ private final class AppKitSystemMonitorStatusItem: SystemMonitorStatusItemHandle
 
     func update(_ presentation: SystemMonitorStatusItemPresentation) {
         guard let button = item.button else { return }
-        switch presentation.visualStyle {
-        case .standard:
-            let image = NSImage(systemSymbolName: presentation.symbolName, accessibilityDescription: nil)
-            image?.isTemplate = true
-            button.image = image
-            button.imagePosition = .imageLeading
-            button.attributedTitle = NSAttributedString(
-                string: presentation.title,
-                attributes: [
-                    .font: NSFont.monospacedDigitSystemFont(ofSize: NSFont.systemFontSize, weight: .medium),
-                    .foregroundColor: NSColor.labelColor
-                ]
-            )
-
-        case .network:
-            button.image = nil
-            button.imagePosition = .noImage
-            button.attributedTitle = Self.networkTitle(presentation.title)
-        }
+        contentView.update(presentation)
         button.toolTip = presentation.accessibilityLabel
         button.setAccessibilityLabel(presentation.accessibilityLabel)
     }
@@ -272,39 +408,12 @@ private final class AppKitSystemMonitorStatusItem: SystemMonitorStatusItemHandle
     private static func width(for metric: SystemMonitorMetric) -> CGFloat {
         switch metric {
         case .cpu, .gpu, .disk:
-            52
-        case .memory:
-            72
-        case .network:
             64
+        case .memory:
+            92
+        case .network:
+            76
         }
-    }
-
-    private static func networkTitle(_ title: String) -> NSAttributedString {
-        let lines = title.split(separator: "\n", maxSplits: 1, omittingEmptySubsequences: false)
-        let download = lines.indices.contains(0) ? String(lines[0].dropFirst(2)) : "—"
-        let upload = lines.indices.contains(1) ? String(lines[1].dropFirst(2)) : "—"
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.minimumLineHeight = 9
-        paragraphStyle.maximumLineHeight = 9
-        paragraphStyle.alignment = .left
-        let result = NSMutableAttributedString()
-        let valueAttributes: [NSAttributedString.Key: Any] = [
-            .font: NSFont.monospacedDigitSystemFont(ofSize: 9, weight: .medium),
-            .foregroundColor: NSColor.labelColor,
-            .paragraphStyle: paragraphStyle
-        ]
-        var markerAttributes: [NSAttributedString.Key: Any] = [
-            .font: NSFont.systemFont(ofSize: 9, weight: .bold),
-            .foregroundColor: NSColor.systemBlue,
-            .paragraphStyle: paragraphStyle
-        ]
-        result.append(NSAttributedString(string: "● ", attributes: markerAttributes))
-        result.append(NSAttributedString(string: "\(download)\n", attributes: valueAttributes))
-        markerAttributes[.foregroundColor] = NSColor.systemRed
-        result.append(NSAttributedString(string: "● ", attributes: markerAttributes))
-        result.append(NSAttributedString(string: upload, attributes: valueAttributes))
-        return result
     }
 
     @MainActor
