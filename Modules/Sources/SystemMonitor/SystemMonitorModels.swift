@@ -161,17 +161,81 @@ public struct SystemMonitorNetwork: Codable, Equatable, Sendable {
     public let totalUploadedBytes: UInt64
     public let downloadBytesPerSecond: Double
     public let uploadBytesPerSecond: Double
+    public let details: SystemMonitorNetworkDetails?
 
     public init(
         totalDownloadedBytes: UInt64,
         totalUploadedBytes: UInt64,
         downloadBytesPerSecond: Double,
-        uploadBytesPerSecond: Double
+        uploadBytesPerSecond: Double,
+        details: SystemMonitorNetworkDetails? = nil
     ) {
         self.totalDownloadedBytes = totalDownloadedBytes
         self.totalUploadedBytes = totalUploadedBytes
         self.downloadBytesPerSecond = max(downloadBytesPerSecond, 0)
         self.uploadBytesPerSecond = max(uploadBytesPerSecond, 0)
+        self.details = details
+    }
+}
+
+public struct SystemMonitorNetworkDetails: Codable, Equatable, Sendable {
+    public let interfaces: [SystemMonitorNetworkInterface]
+    public let publicIPv4Address: String?
+    public let publicIPv6Address: String?
+
+    public init(
+        interfaces: [SystemMonitorNetworkInterface] = [],
+        publicIPv4Address: String? = nil,
+        publicIPv6Address: String? = nil
+    ) {
+        self.interfaces = interfaces
+        self.publicIPv4Address = publicIPv4Address
+        self.publicIPv6Address = publicIPv6Address
+    }
+}
+
+public struct SystemMonitorNetworkInterface: Codable, Equatable, Identifiable, Sendable {
+    public enum Kind: String, Codable, Equatable, Sendable {
+        case wifi
+        case ethernet
+        case other
+    }
+
+    public var id: String { name }
+
+    public let name: String
+    public let displayName: String
+    public let kind: Kind
+    public let isActive: Bool
+    public let macAddress: String?
+    public let localIPv4Addresses: [String]
+    public let localIPv6Addresses: [String]
+    public let ssid: String?
+    public let signalStrength: Int?
+    public let transmitRateMbps: Double?
+
+    public init(
+        name: String,
+        displayName: String,
+        kind: Kind,
+        isActive: Bool,
+        macAddress: String? = nil,
+        localIPv4Addresses: [String] = [],
+        localIPv6Addresses: [String] = [],
+        ssid: String? = nil,
+        signalStrength: Int? = nil,
+        transmitRateMbps: Double? = nil
+    ) {
+        self.name = name
+        self.displayName = displayName
+        self.kind = kind
+        self.isActive = isActive
+        self.macAddress = macAddress
+        self.localIPv4Addresses = localIPv4Addresses
+        self.localIPv6Addresses = localIPv6Addresses
+        self.ssid = ssid
+        self.signalStrength = signalStrength
+        self.transmitRateMbps = transmitRateMbps
     }
 }
 
