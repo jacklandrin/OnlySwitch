@@ -449,12 +449,12 @@ struct SystemMonitorPanelView: View {
                 networkDetailRow("Network".localized(), value: ssid)
             }
             if let signalStrength = interface.signalStrength {
-                networkDetailRow("Signal".localized(), value: "\(signalStrength) dBm")
+                networkDetailRow("Signal".localized(), value: "%d dBm".localizedFormat(signalStrength))
             }
             if let transmitRate = interface.transmitRateMbps, transmitRate > 0 {
                 networkDetailRow(
                     "Transmit rate".localized(),
-                    value: String(format: "%.0f Mbps", transmitRate)
+                    value: "%.0f Mbps".localizedFormat(transmitRate)
                 )
             }
             if let macAddress = interface.macAddress {
