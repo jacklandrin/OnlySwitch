@@ -17,4 +17,6 @@ struct GeneralModel {
     var menubarIcons = ["menubar_0", "menubar_1", "menubar_2", "menubar_3"]
     var showErrorToast = false
     var errorInfo = ""
+    var showSuccessToast = false
+    var successInfo = ""
 }

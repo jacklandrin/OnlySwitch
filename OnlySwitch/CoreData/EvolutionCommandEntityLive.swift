@@ -5,9 +5,53 @@
 //  Created by Jacklandrin on 2024/6/9.
 //
 
+import Extensions
 import Foundation
+import Switches
 
 extension EvolutionCommandEntity {
+    @MainActor static func backupCommands() throws -> [[String: String]] {
+        try fetchResult().map { entity in
+            var command: [String: String] = [:]
+            for key in EvolutionBackup.commandKeys {
+                switch entity.value(forKey: key) {
+                case let uuid as UUID: command[key] = uuid.uuidString
+                case let string as String: command[key] = string
+                default: break
+                }
+            }
+            return command
+        }
+    }
+
+    /// Stores commands without running them. The privileged operation is re-derived from the
+    /// compiled allowlist, so an imported file can't grant itself privileged-helper access.
+    static func restore(_ commands: [[String: String]]) throws {
+        for command in commands {
+            guard
+                let id = command["id"].flatMap(UUID.init(uuidString:)),
+                let name = command["name"], !name.isEmpty,
+                let controlType = command["itemType"].flatMap(ControlType.init(rawValue:))
+            else {
+                continue
+            }
+            let entity = try fetchRequest(by: id) ?? EvolutionCommandEntity(context: context)
+            for key in EvolutionBackup.commandKeys where key != "id" && key != "privilegedOperationIdentifier" {
+                entity.setValue(command[key], forKey: key)
+            }
+            entity.id = id
+            entity.privilegedOperationIdentifier = EvolutionItem.trustedPrivilegedOperation(
+                id: id,
+                controlType: controlType,
+                requestedOperation: command["privilegedOperationIdentifier"].flatMap(PrivilegedOperation.init(rawValue:))
+            )?.rawValue
+            entity.timestamp = Date()
+        }
+        if context.hasChanges {
+            try context.save()
+        }
+    }
+
     static func addItem(item: EvolutionItem) throws {
         let entity = try EvolutionCommandEntity.fetchRequest(by: item.id) ?? EvolutionCommandEntity(context: context)
 

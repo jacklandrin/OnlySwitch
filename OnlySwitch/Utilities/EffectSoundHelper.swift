@@ -6,13 +6,14 @@
 //
 
 import AVFoundation
+import Extensions
 
 final class EffectSoundHelper:ObservableObject, @unchecked Sendable {
     var player = AVAudioPlayer()
     
     static let shared = EffectSoundHelper()
     
-    @UserDefaultValue(key: "canPlayESKey", defaultValue: true)
+    @UserDefaultValue(key: UserDefaults.Key.canPlayEffectSound, defaultValue: true)
     var canPlayEffectSound:Bool
     {
         didSet {

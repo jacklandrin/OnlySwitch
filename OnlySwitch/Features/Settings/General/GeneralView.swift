@@ -157,6 +157,25 @@ struct GeneralView: View, EmailProvider {
                 Text("Cache".localized())
             }
             
+            // MARK: - Backup Section
+            Section {
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        Button("Export Settings".localized()) {
+                            generalVM.exportSettings()
+                        }
+                        Button("Import Settings".localized()) {
+                            generalVM.importSettings()
+                        }
+                    }
+                    Text("Share your settings with a backup file, or restore them on another Mac".localized())
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+            } header: {
+                Text("Backup".localized())
+            }
+
             // MARK: - About Section
             Section {
                 Button("Send Email to Jacklandrin".localized()) {
@@ -179,6 +198,11 @@ struct GeneralView: View, EmailProvider {
             AlertToast(displayMode: .alert,
                        type: .error(.red),
                        title: generalVM.errorInfo.localized())
+        }
+        .toast(isPresenting: $generalVM.showSuccessToast) {
+            AlertToast(displayMode: .alert,
+                       type: .complete(.green),
+                       title: generalVM.successInfo)
         }
     }
         
