@@ -18,6 +18,7 @@ enum SettingsItem: String, CaseIterable {
     case AirPods = "AirPods"
     case Radio = "Radio"
     case Authenticator = "Authenticator"
+    case SystemMonitor = "System Monitor"
     case PomodoroTimer = "Pomodoro Timer"
     case HideMenubarIcons = "Hide Menu Bar Icons"
     case BackNoises = "Back Noises"

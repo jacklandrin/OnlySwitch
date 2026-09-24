@@ -80,6 +80,9 @@ struct SettingsView: View {
             case .Authenticator:
                 AuthenticatorSettingsView()
 
+            case .SystemMonitor:
+                SystemMonitorSettingsView()
+
             case .PomodoroTimer:
                 PomodoroTimerSettingView()
 

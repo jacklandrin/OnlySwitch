@@ -8,11 +8,57 @@
 import Foundation
 import SwiftUI
 import Switches
+import SystemMonitor
 
 final class Preferences: @unchecked Sendable {
     static let shared = Preferences()
 
     private init() {}
+
+    // MARK: - System Monitor
+
+    /// Monitor configuration is stored separately from live samples. The envelope makes
+    /// future preference migrations explicit and lets malformed values self-heal.
+    var systemMonitorPreferences: SystemMonitorPreferences {
+        get {
+            let defaults = UserDefaults.standard
+            guard
+                let data = defaults.data(forKey: UserDefaults.Key.systemMonitorPreferences),
+                let stored = try? JSONDecoder().decode(StoredSystemMonitorPreferences.self, from: data),
+                stored.version == StoredSystemMonitorPreferences.currentVersion,
+                stored.historyPointCount == SystemMonitorHistory.maximumSampleCount
+            else {
+                let preferences = SystemMonitorPreferences()
+                storeSystemMonitorPreferences(preferences, in: defaults)
+                return preferences
+            }
+
+            let repaired = SystemMonitorPreferences(
+                enabledPanelMetrics: stored.preferences.enabledPanelMetrics,
+                menuBarMetrics: stored.preferences.menuBarMetrics,
+                refreshInterval: stored.preferences.refreshInterval
+            )
+            if repaired != stored.preferences {
+                storeSystemMonitorPreferences(repaired, in: defaults)
+            }
+            return repaired
+        }
+        set {
+            let repaired = SystemMonitorPreferences(
+                enabledPanelMetrics: newValue.enabledPanelMetrics,
+                menuBarMetrics: newValue.menuBarMetrics,
+                refreshInterval: newValue.refreshInterval
+            )
+            storeSystemMonitorPreferences(repaired, in: .standard)
+            NotificationCenter.default.post(name: .systemMonitorPreferencesChanged, object: repaired)
+        }
+    }
+
+    private func storeSystemMonitorPreferences(_ preferences: SystemMonitorPreferences, in defaults: UserDefaults) {
+        let stored = StoredSystemMonitorPreferences(preferences: preferences)
+        guard let data = try? JSONEncoder().encode(stored) else { return }
+        defaults.set(data, forKey: UserDefaults.Key.systemMonitorPreferences)
+    }
 
     // MARK: - Pomodoro Timer
     @UserDefaultValue(key: UserDefaults.Key.WorkDuration, defaultValue: 25 * 60)

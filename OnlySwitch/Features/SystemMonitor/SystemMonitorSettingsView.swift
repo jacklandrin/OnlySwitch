@@ -1,0 +1,39 @@
+import SwiftUI
+import SystemMonitor
+
+struct SystemMonitorSettingsView: View {
+    @StateObject private var viewModel = SystemMonitorSettingsViewModel()
+
+    var body: some View {
+        Form {
+            Section {
+                ForEach(SystemMonitorMetric.allCases, id: \.self) { metric in
+                    Toggle(metric.rawValue.uppercased().localized(), isOn: viewModel.panelMetricBinding(for: metric))
+                }
+                Text("GPU monitoring is unavailable because macOS provides no public GPU-usage API.".localized())
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            } header: {
+                Text("Dashboard".localized())
+            } footer: {
+                Text("Choose the system information shown in the System Monitor dashboard.".localized())
+            }
+
+            Section {
+                ForEach(SystemMonitorMetric.allCases, id: \.self) { metric in
+                    Toggle(metric.rawValue.uppercased().localized(), isOn: viewModel.menuBarMetricBinding(for: metric))
+                        .disabled(metric == .gpu)
+                }
+                Text("GPU indicators are unavailable on this Mac because macOS has no public GPU-usage API.".localized())
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            } header: {
+                Text("Menu Bar Indicators".localized())
+            } footer: {
+                Text("Enabled indicators keep the monitor sampling while the popover is closed.".localized())
+            }
+        }
+        .formStyle(.grouped)
+        .frame(minWidth: 500)
+    }
+}

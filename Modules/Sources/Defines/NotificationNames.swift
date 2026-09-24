@@ -31,5 +31,6 @@ public extension Notification.Name {
     static let changeDimScreenSetting = Notification.Name(rawValue: "changeDimScreenSetting")
     static let changeSyncExternalBrightnessSetting = Notification.Name(rawValue: "changeSyncExternalBrightnessSetting")
     static let changeNightShiftSetting = Notification.Name(rawValue: "changeNightShiftSetting")
+    static let systemMonitorPreferencesChanged = Notification.Name(rawValue: "systemMonitorPreferencesChanged")
     static let toggleSplitSettingsWindow = Notification.Name(rawValue: "toggleSplitSettingsWindow")
 }

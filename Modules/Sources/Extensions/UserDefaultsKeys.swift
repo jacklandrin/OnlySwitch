@@ -46,6 +46,8 @@ public extension UserDefaults {
         public static let onlyControlOrderWeight = "onlyControlOrderWeightKey"
         //Sound Mixer
         public static let soundMixerEnabled = "soundMixerEnabledKey"
+        // System Monitor
+        public static let systemMonitorPreferences = "systemMonitorPreferencesKey"
         //BackNoises
         public static let backNoisesTrack = "backNoisesTrackKey"
         public static let automaticallyStopPlayNoiseTime = "automaticallyStopPlayNoiseTimeKey"
@@ -110,6 +112,7 @@ public extension UserDefaults {
             shortcutsDic,
             orderWeight, onlyControlOrderWeight,
             soundMixerEnabled,
+            systemMonitorPreferences,
             backNoisesTrack, automaticallyStopPlayNoiseTime,
             autoStopKeepAwakeMode, autoStopKeepAwakeTime, autoStopKeepAwakeStartDate, autoStopKeepAwakeEndDate, KeepAwakeKey,
             autoDimScreenTime, dimScreenPercent, syncExternalBrightness,
