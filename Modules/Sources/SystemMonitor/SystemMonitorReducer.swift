@@ -10,6 +10,7 @@ public struct SystemMonitorReducer {
         public var snapshot: SystemMonitorSnapshot?
         public var history = SystemMonitorHistory()
         public var lastFailure: String?
+        public var isSampling = false
 
         public init(
             isVisible: Bool = false,
@@ -17,7 +18,8 @@ public struct SystemMonitorReducer {
             expandedMetrics: Set<SystemMonitorMetric> = [],
             snapshot: SystemMonitorSnapshot? = nil,
             history: SystemMonitorHistory = SystemMonitorHistory(),
-            lastFailure: String? = nil
+            lastFailure: String? = nil,
+            isSampling: Bool = false
         ) {
             self.isVisible = isVisible
             self.enabledMenuBarMetrics = enabledMenuBarMetrics
@@ -25,6 +27,7 @@ public struct SystemMonitorReducer {
             self.snapshot = snapshot
             self.history = history
             self.lastFailure = lastFailure
+            self.isSampling = isSampling
         }
 
         var requiresSampling: Bool {
@@ -38,9 +41,12 @@ public struct SystemMonitorReducer {
         case toggleExpandedMetric(SystemMonitorMetric)
         case snapshotReceived(SystemMonitorSnapshot)
         case streamFailed(String)
+        case streamEnded
+        case restartRequested
     }
 
     @Dependency(\.systemMonitor) private var systemMonitor
+    @Dependency(\.continuousClock) private var continuousClock
 
     public init() {}
 
@@ -50,12 +56,12 @@ public struct SystemMonitorReducer {
             case let .visibilityChanged(isVisible):
                 let wasSampling = state.requiresSampling
                 state.isVisible = isVisible
-                return samplingEffect(wasSampling: wasSampling, state: state)
+                return samplingEffect(wasSampling: wasSampling, state: &state)
 
             case let .menuBarMetricsChanged(metrics):
                 let wasSampling = state.requiresSampling
                 state.enabledMenuBarMetrics = metrics
-                return samplingEffect(wasSampling: wasSampling, state: state)
+                return samplingEffect(wasSampling: wasSampling, state: &state)
 
             case let .toggleExpandedMetric(metric):
                 guard metric.supportsDisclosure else { return .none }
@@ -76,17 +82,35 @@ public struct SystemMonitorReducer {
             case let .streamFailed(message):
                 state.lastFailure = message
                 return .none
+
+            case .streamEnded:
+                state.isSampling = false
+                guard state.requiresSampling else { return .none }
+                return scheduleRestart()
+
+            case .restartRequested:
+                guard state.requiresSampling, !state.isSampling else { return .none }
+                state.isSampling = true
+                return samplingStream()
             }
         }
     }
 
-    private func samplingEffect(wasSampling: Bool, state: State) -> Effect<Action> {
-        guard wasSampling != state.requiresSampling else { return .none }
-
-        guard state.requiresSampling else {
-            return .cancel(id: CancelID.sampling)
+    private func samplingEffect(wasSampling: Bool, state: inout State) -> Effect<Action> {
+        if wasSampling, !state.requiresSampling {
+            state.isSampling = false
+            return .merge(
+                .cancel(id: CancelID.sampling),
+                .cancel(id: CancelID.restart)
+            )
         }
 
+        guard !wasSampling, state.requiresSampling, !state.isSampling else { return .none }
+        state.isSampling = true
+        return samplingStream()
+    }
+
+    private func samplingStream() -> Effect<Action> {
         let systemMonitor = systemMonitor
         return .run { send in
             do {
@@ -96,14 +120,32 @@ public struct SystemMonitorReducer {
                 }
             } catch is CancellationError {
                 // Stopping observation is a normal lifecycle event.
+                return
             } catch {
                 await send(.streamFailed(error.localizedDescription))
             }
+            await send(.streamEnded)
         }
         .cancellable(id: CancelID.sampling, cancelInFlight: true)
     }
 
+    private func scheduleRestart() -> Effect<Action> {
+        let continuousClock = continuousClock
+        return .run { send in
+            do {
+                try await continuousClock.sleep(for: .seconds(1))
+                await send(.restartRequested)
+            } catch is CancellationError {
+                // Stopping observation is a normal lifecycle event.
+            } catch {
+                // Clock failures do not invalidate the last successful snapshot.
+            }
+        }
+        .cancellable(id: CancelID.restart, cancelInFlight: true)
+    }
+
     private enum CancelID {
         case sampling
+        case restart
     }
 }
