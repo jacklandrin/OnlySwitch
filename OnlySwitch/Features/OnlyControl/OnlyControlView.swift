@@ -44,8 +44,8 @@ struct OnlyControlView: View {
                 VStack(spacing: 0) {
                     OnlyControlSectionBar(selection: selectedSection)
                         .padding(.horizontal, 20)
-                        .padding(.top, 14)
-                        .padding(.bottom, 8)
+                        .padding(.top, 8)
+                        .padding(.bottom, 4)
 
                     sectionContent
                 }
@@ -170,7 +170,7 @@ private struct OnlyControlSectionBar: View {
             sectionButton(.controls, title: "Controls".localized(), icon: "switch.2")
             sectionButton(.systemMonitor, title: "System Monitor".localized(), icon: "waveform.path.ecg")
         }
-        .padding(4)
+        .padding(2)
         .background(.black.opacity(0.08), in: Capsule())
         .accessibilityElement(children: .contain)
         .accessibilityLabel("Only Control sections".localized())
@@ -185,10 +185,9 @@ private struct OnlyControlSectionBar: View {
             selection = section
         } label: {
             Label(title, systemImage: icon)
-                .font(.subheadline.weight(.semibold))
+                .font(.caption.weight(.medium))
                 .frame(maxWidth: .infinity)
-                .frame(minHeight: 44)
-                .padding(.vertical, 8)
+                .frame(minHeight: 26)
                 .contentShape(Capsule())
         }
         .buttonStyle(.plain)
