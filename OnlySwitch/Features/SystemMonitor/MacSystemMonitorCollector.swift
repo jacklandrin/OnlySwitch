@@ -682,16 +682,37 @@ private extension MacSystemMonitorCollector {
         }
 
         var nameBuffer = Array(repeating: CChar(0), count: Int(MAXCOMLEN) + 1)
-        let nameLength = proc_name(pid, &nameBuffer, UInt32(nameBuffer.count))
-        guard nameLength > 0 else { return nil }
+        let nameLength = nameBuffer.withUnsafeMutableBufferPointer { buffer in
+            guard let baseAddress = buffer.baseAddress else { return Int32(0) }
+            return proc_name(pid, baseAddress, UInt32(buffer.count))
+        }
+
+        let name: String
+        if nameLength > 0 {
+            name = String(
+                decoding: nameBuffer.prefix(Int(nameLength)).map { UInt8(bitPattern: $0) },
+                as: UTF8.self
+            )
+        } else {
+            var pathBuffer = Array(repeating: CChar(0), count: Int(MAXPATHLEN) * 4)
+            let pathLength = pathBuffer.withUnsafeMutableBufferPointer { buffer in
+                guard let baseAddress = buffer.baseAddress else { return Int32(0) }
+                return proc_pidpath(pid, baseAddress, UInt32(buffer.count))
+            }
+            if pathLength > 0 {
+                let executableName = URL(fileURLWithPath: String(cString: pathBuffer)).lastPathComponent
+                name = executableName.isEmpty ? "Process \(pid)" : executableName
+            } else {
+                // Keep otherwise valid resource counters visible even when macOS withholds the
+                // process name and path for a protected process.
+                name = "Process \(pid)"
+            }
+        }
 
         return ProcessCounters(
             cpuNanoseconds: values.cpuNanoseconds,
             residentBytes: values.residentBytes,
-            name: String(
-                decoding: nameBuffer.prefix(Int(nameLength)).map { UInt8(bitPattern: $0) },
-                as: UTF8.self
-            )
+            name: name
         )
     }
 }
