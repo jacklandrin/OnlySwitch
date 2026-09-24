@@ -168,7 +168,10 @@ private extension SystemMonitorStatusItemController {
 
         case .memory:
             let value = snapshot?.memory.value.map {
-                SystemMonitorStatusItemFormatter.bytes(bytes: Double($0.usedBytes))
+                guard $0.totalBytes > 0 else { return "—" }
+                return SystemMonitorStatusItemFormatter.percentage(
+                    Double($0.usedBytes) / Double($0.totalBytes)
+                )
             } ?? "—"
             return .init(
                 symbolName: "memorychip",
@@ -273,6 +276,7 @@ private final class StatusItemContentView: NSView {
         guard metric == .network else {
             let iconSide: CGFloat = 16
             let leading: CGFloat = 5
+            let labelHeight = ceil(valueLabel.font?.boundingRectForFont.height ?? 13)
             imageView.frame = CGRect(
                 x: leading,
                 y: (bounds.height - iconSide) / 2,
@@ -281,9 +285,9 @@ private final class StatusItemContentView: NSView {
             )
             valueLabel.frame = CGRect(
                 x: leading + iconSide + 3,
-                y: 0,
+                y: floor((bounds.height - labelHeight) / 2),
                 width: max(0, bounds.width - (leading + iconSide + 3) - 4),
-                height: bounds.height
+                height: labelHeight
             )
             return
         }
@@ -292,12 +296,15 @@ private final class StatusItemContentView: NSView {
         let totalHeight = lineHeight * 2
         let topY = (bounds.height + totalHeight) / 2 - lineHeight
         let bottomY = topY - lineHeight
-        let dotLeading: CGFloat = 4
-        let valueLeading: CGFloat = 16
-        let valueWidth = max(0, bounds.width - valueLeading - 4)
+        // `NSTextField` can draw the dot glyph slightly outside its frame. Keep
+        // a generous inset so status-bar clipping never cuts the circular mark.
+        let dotLeading: CGFloat = 7
+        let dotWidth: CGFloat = 11
+        let valueLeading: CGFloat = 21
+        let valueWidth = max(0, bounds.width - valueLeading - 5)
 
-        topDot.frame = CGRect(x: dotLeading, y: topY, width: 9, height: lineHeight)
-        bottomDot.frame = CGRect(x: dotLeading, y: bottomY, width: 9, height: lineHeight)
+        topDot.frame = CGRect(x: dotLeading, y: topY, width: dotWidth, height: lineHeight)
+        bottomDot.frame = CGRect(x: dotLeading, y: bottomY, width: dotWidth, height: lineHeight)
         topValueLabel.frame = CGRect(x: valueLeading, y: topY, width: valueWidth, height: lineHeight)
         bottomValueLabel.frame = CGRect(x: valueLeading, y: bottomY, width: valueWidth, height: lineHeight)
     }
@@ -345,8 +352,10 @@ private final class StatusItemContentView: NSView {
 
         topDot.font = NSFont.systemFont(ofSize: 10, weight: .bold)
         topDot.textColor = .systemRed
+        topDot.alignment = .center
         bottomDot.font = NSFont.systemFont(ofSize: 10, weight: .bold)
         bottomDot.textColor = .systemBlue
+        bottomDot.alignment = .center
         addSubview(topDot)
         addSubview(bottomDot)
     }
@@ -407,12 +416,10 @@ private final class AppKitSystemMonitorStatusItem: SystemMonitorStatusItemHandle
 
     private static func width(for metric: SystemMonitorMetric) -> CGFloat {
         switch metric {
-        case .cpu, .gpu, .disk:
+        case .cpu, .gpu, .memory, .disk:
             64
-        case .memory:
-            92
         case .network:
-            76
+            80
         }
     }
 

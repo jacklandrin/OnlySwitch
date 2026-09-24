@@ -74,7 +74,7 @@ struct SystemMonitorStatusItemControllerTests {
 
         #expect(factory.items[.cpu]?.presentation?.title == "42%")
         #expect(factory.items[.gpu]?.presentation?.title == "25%")
-        #expect(factory.items[.memory]?.presentation?.title == "8 GB")
+        #expect(factory.items[.memory]?.presentation?.title == "50%")
         #expect(factory.items[.disk]?.presentation?.title == "75%")
         #expect(factory.items[.network]?.presentation?.title == "↑ 2 KB/s\n↓ 2 KB/s")
     }
@@ -106,7 +106,7 @@ struct SystemMonitorStatusItemControllerTests {
 
         #expect(factory.items[.cpu]?.presentation?.title == "18%")
         #expect(factory.items[.gpu]?.presentation?.title == "1%")
-        #expect(factory.items[.memory]?.presentation?.title == "2 KB")
+        #expect(factory.items[.memory]?.presentation?.title == "15%")
         #expect(factory.items[.disk]?.presentation?.title == "100%")
         #expect(factory.items[.network]?.presentation?.title == "↑ 5 KB/s\n↓ 2 KB/s")
         #expect(SystemMonitorFormatter.rate(bytesPerSecond: 1_536) == "1.5 KB/s")
