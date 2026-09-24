@@ -21,21 +21,29 @@ struct SystemMonitorStatusItemControllerTests {
     }
 
     @Test
-    func applyingNewPreferencesRemovesDeselectedItemsAndKeepsExistingItems() {
-        let factory = RecordingSystemMonitorStatusItemFactory()
+    func incrementalPreferenceChangesRebuildTheSameCanonicalOrderAsColdLaunch() {
+        let incrementalFactory = RecordingSystemMonitorStatusItemFactory()
         let controller = SystemMonitorStatusItemController(
-            factory: factory,
+            factory: incrementalFactory,
             client: .finished
         )
         controller.apply(.init(menuBarMetrics: [.cpu, .network]))
-        let originalNetworkItem = factory.items[.network]
+        let originalCPUItem = incrementalFactory.items[.cpu]
+        let originalNetworkItem = incrementalFactory.items[.network]
 
         controller.apply(.init(menuBarMetrics: [.memory, .network]))
 
-        #expect(factory.createdMetrics == [.cpu, .network, .memory])
-        #expect(factory.items[.cpu]?.removeCount == 1)
-        #expect(factory.items[.network] === originalNetworkItem)
-        #expect(factory.items[.network]?.removeCount == 0)
+        let coldFactory = RecordingSystemMonitorStatusItemFactory()
+        let coldController = SystemMonitorStatusItemController(
+            factory: coldFactory,
+            client: .finished
+        )
+        coldController.apply(.init(menuBarMetrics: [.memory, .network]))
+
+        #expect(originalCPUItem?.removeCount == 1)
+        #expect(originalNetworkItem?.removeCount == 1)
+        #expect(Array(incrementalFactory.createdMetrics.suffix(2)) == coldFactory.createdMetrics)
+        #expect(coldFactory.createdMetrics == [.memory, .network])
     }
 
     @Test
@@ -100,6 +108,51 @@ struct SystemMonitorStatusItemControllerTests {
         #expect(factory.items[.cpu]?.removeCount == 1)
         #expect(factory.items[.disk]?.removeCount == 1)
     }
+
+    @Test
+    func metricChangesKeepOneUpstreamAndDisablingTheLastItemCancelsIt() async {
+        let factory = RecordingSystemMonitorStatusItemFactory()
+        let clients = RecordingMonitorClientFactory()
+        let controller = SystemMonitorStatusItemController(
+            factory: factory,
+            clientFactory: clients.makeClient(refreshInterval:)
+        )
+
+        controller.apply(.init(menuBarMetrics: [.cpu]))
+        await Task.yield()
+        controller.apply(.init(menuBarMetrics: [.cpu, .network]))
+        await Task.yield()
+
+        #expect(clients.streamStartCount == 1)
+
+        controller.apply(.init(menuBarMetrics: []))
+        for _ in 0..<10 where clients.terminationCount == 0 {
+            await Task.yield()
+        }
+
+        #expect(clients.terminationCount == 1)
+    }
+
+    @Test
+    func changingRefreshIntervalRestartsTheUpstreamWithTheNewInterval() async {
+        let factory = RecordingSystemMonitorStatusItemFactory()
+        let clients = RecordingMonitorClientFactory()
+        let controller = SystemMonitorStatusItemController(
+            factory: factory,
+            clientFactory: clients.makeClient(refreshInterval:)
+        )
+
+        controller.apply(.init(menuBarMetrics: [.cpu], refreshInterval: 1))
+        await Task.yield()
+        controller.apply(.init(menuBarMetrics: [.cpu], refreshInterval: 2))
+        for _ in 0..<10 where clients.streamStartCount < 2 {
+            await Task.yield()
+        }
+
+        #expect(clients.requestedIntervals == [1, 2])
+        #expect(clients.streamStartCount == 2)
+        #expect(clients.terminationCount == 1)
+    }
 }
 
 @MainActor
@@ -142,6 +195,41 @@ private extension SystemMonitorClient {
     static let finished = Self {
         AsyncThrowingStream { continuation in
             continuation.finish()
+        }
+    }
+}
+
+private final class RecordingMonitorClientFactory: @unchecked Sendable {
+    private let lock = NSLock()
+    private var intervals: [TimeInterval] = []
+    private var starts = 0
+    private var terminations = 0
+
+    var requestedIntervals: [TimeInterval] {
+        lock.withLock { intervals }
+    }
+
+    var streamStartCount: Int {
+        lock.withLock { starts }
+    }
+
+    var terminationCount: Int {
+        lock.withLock { terminations }
+    }
+
+    func makeClient(refreshInterval: TimeInterval) -> SystemMonitorClient {
+        lock.withLock { intervals.append(refreshInterval) }
+        return SystemMonitorClient { [weak self] in
+            guard let self else {
+                return AsyncThrowingStream { $0.finish() }
+            }
+            self.lock.withLock { self.starts += 1 }
+            return AsyncThrowingStream { continuation in
+                continuation.onTermination = { [weak self] _ in
+                    guard let self else { return }
+                    self.lock.withLock { self.terminations += 1 }
+                }
+            }
         }
     }
 }

@@ -93,9 +93,6 @@ class StatusBarController {
 
         let monitorPreferences = Preferences.shared.systemMonitorPreferences
         systemMonitorStatusItems = SystemMonitorStatusItemController(
-            client: MacSystemMonitorCollector.liveClient(
-                refreshInterval: monitorPreferences.refreshInterval
-            ),
             onClick: { [weak self] in
                 self?.togglePopover(sender: nil)
             }

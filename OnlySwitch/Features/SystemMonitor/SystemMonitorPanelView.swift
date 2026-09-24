@@ -140,7 +140,6 @@ struct SystemMonitorPanelView: View {
         }
         .padding(15)
         .onAppear {
-            store.send(.menuBarMetricsChanged(preferences.menuBarMetrics))
             store.send(.visibilityChanged(true))
         }
         .onDisappear {
@@ -149,7 +148,6 @@ struct SystemMonitorPanelView: View {
         .onReceive(NotificationCenter.default.publisher(for: .systemMonitorPreferencesChanged)) { notification in
             guard let updated = notification.object as? SystemMonitorPreferences else { return }
             preferences = updated
-            store.send(.menuBarMetricsChanged(updated.menuBarMetrics))
         }
     }
 

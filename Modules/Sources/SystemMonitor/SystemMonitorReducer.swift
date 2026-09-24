@@ -5,7 +5,6 @@ public struct SystemMonitorReducer {
     @ObservableState
     public struct State: Equatable {
         public var isVisible = false
-        public var enabledMenuBarMetrics: Set<SystemMonitorMetric> = []
         public var expandedMetrics: Set<SystemMonitorMetric> = []
         public var snapshot: SystemMonitorSnapshot?
         public var history = SystemMonitorHistory()
@@ -14,7 +13,6 @@ public struct SystemMonitorReducer {
 
         public init(
             isVisible: Bool = false,
-            enabledMenuBarMetrics: Set<SystemMonitorMetric> = [],
             expandedMetrics: Set<SystemMonitorMetric> = [],
             snapshot: SystemMonitorSnapshot? = nil,
             history: SystemMonitorHistory = SystemMonitorHistory(),
@@ -22,7 +20,6 @@ public struct SystemMonitorReducer {
             isSampling: Bool = false
         ) {
             self.isVisible = isVisible
-            self.enabledMenuBarMetrics = enabledMenuBarMetrics
             self.expandedMetrics = expandedMetrics
             self.snapshot = snapshot
             self.history = history
@@ -31,13 +28,12 @@ public struct SystemMonitorReducer {
         }
 
         var requiresSampling: Bool {
-            isVisible || enabledMenuBarMetrics.isEmpty == false
+            isVisible
         }
     }
 
     public enum Action: Equatable {
         case visibilityChanged(Bool)
-        case menuBarMetricsChanged(Set<SystemMonitorMetric>)
         case toggleExpandedMetric(SystemMonitorMetric)
         case snapshotReceived(SystemMonitorSnapshot)
         case streamFailed(String)
@@ -56,11 +52,6 @@ public struct SystemMonitorReducer {
             case let .visibilityChanged(isVisible):
                 let wasSampling = state.requiresSampling
                 state.isVisible = isVisible
-                return samplingEffect(wasSampling: wasSampling, state: &state)
-
-            case let .menuBarMetricsChanged(metrics):
-                let wasSampling = state.requiresSampling
-                state.enabledMenuBarMetrics = metrics
                 return samplingEffect(wasSampling: wasSampling, state: &state)
 
             case let .toggleExpandedMetric(metric):

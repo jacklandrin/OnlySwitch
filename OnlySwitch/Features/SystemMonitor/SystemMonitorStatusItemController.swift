@@ -22,42 +22,52 @@ protocol SystemMonitorStatusItemFactory: AnyObject {
 @MainActor
 final class SystemMonitorStatusItemController {
     private let factory: any SystemMonitorStatusItemFactory
-    private let client: SystemMonitorClient
+    private let clientFactory: @Sendable (TimeInterval) -> SystemMonitorClient
     private let onClick: @MainActor () -> Void
     private var items: [SystemMonitorMetric: any SystemMonitorStatusItemHandle] = [:]
+    private var enabledMetrics: Set<SystemMonitorMetric> = []
+    private var refreshInterval: TimeInterval?
     private var latestSnapshot: SystemMonitorSnapshot?
     private var samplingTask: Task<Void, Never>?
     private var samplingGeneration = 0
 
     init(
         factory: any SystemMonitorStatusItemFactory = AppKitSystemMonitorStatusItemFactory(),
-        client: SystemMonitorClient = MacSystemMonitorCollector.liveClient(),
+        clientFactory: @escaping @Sendable (TimeInterval) -> SystemMonitorClient = {
+            MacSystemMonitorCollector.liveClient(refreshInterval: $0)
+        },
         onClick: @escaping @MainActor () -> Void = {}
     ) {
         self.factory = factory
-        self.client = client
+        self.clientFactory = clientFactory
         self.onClick = onClick
+    }
+
+    convenience init(
+        factory: any SystemMonitorStatusItemFactory,
+        client: SystemMonitorClient,
+        onClick: @escaping @MainActor () -> Void = {}
+    ) {
+        self.init(factory: factory, clientFactory: { _ in client }, onClick: onClick)
     }
 
     func apply(_ preferences: SystemMonitorPreferences) {
         let selectedMetrics = preferences.menuBarMetrics
+        let metricsChanged = selectedMetrics != enabledMetrics
+        let intervalChanged = refreshInterval != preferences.refreshInterval
+        enabledMetrics = selectedMetrics
+        refreshInterval = preferences.refreshInterval
 
-        for metric in SystemMonitorMetric.allCases where !selectedMetrics.contains(metric) {
-            guard let item = items.removeValue(forKey: metric) else { continue }
-            item.remove()
-        }
-
-        for metric in SystemMonitorMetric.allCases where selectedMetrics.contains(metric) {
-            guard items[metric] == nil else { continue }
-            let item = factory.makeStatusItem(for: metric)
-            item.setAction(onClick)
-            item.update(Self.presentation(for: metric, snapshot: latestSnapshot))
-            items[metric] = item
+        if metricsChanged {
+            rebuildItems(for: selectedMetrics)
         }
 
         if items.isEmpty {
             stopSampling()
         } else {
+            if intervalChanged {
+                stopSampling()
+            }
             startSamplingIfNeeded()
         }
     }
@@ -78,11 +88,26 @@ final class SystemMonitorStatusItemController {
 }
 
 private extension SystemMonitorStatusItemController {
+    func rebuildItems(for selectedMetrics: Set<SystemMonitorMetric>) {
+        for item in items.values {
+            item.remove()
+        }
+        items.removeAll(keepingCapacity: true)
+
+        for metric in SystemMonitorMetric.allCases where selectedMetrics.contains(metric) {
+            let item = factory.makeStatusItem(for: metric)
+            item.setAction(onClick)
+            item.update(Self.presentation(for: metric, snapshot: latestSnapshot))
+            items[metric] = item
+        }
+    }
+
     func startSamplingIfNeeded() {
         guard samplingTask == nil else { return }
+        guard let refreshInterval else { return }
         samplingGeneration += 1
         let generation = samplingGeneration
-        let client = client
+        let client = clientFactory(refreshInterval)
 
         samplingTask = Task { @MainActor [weak self] in
             do {
