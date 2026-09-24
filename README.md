@@ -310,6 +310,6 @@ If both OnlySwitch menu-bar icons disappear after command-dragging the divider, 
 
 @lou1s19 for Claud models of OnlyAgent, Sound Mixer and dim mode for the external monitor
 
-
+@oecer for settings backup
 ## License
 MIT
