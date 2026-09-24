@@ -164,16 +164,33 @@ struct OnlyControlView: View {
 
 private struct OnlyControlSectionBar: View {
     @Binding var selection: SectionBar.Section
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Namespace private var selectionGlassNamespace
 
     var body: some View {
+        tabBar
+            .padding(2)
+            .background(.black.opacity(0.08), in: Capsule())
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("Only Control sections".localized())
+    }
+
+    @ViewBuilder
+    private var tabBar: some View {
+        if #available(macOS 26.0, *) {
+            GlassEffectContainer(spacing: 2) {
+                tabButtons
+            }
+        } else {
+            tabButtons
+        }
+    }
+
+    private var tabButtons: some View {
         HStack(spacing: 4) {
             sectionButton(.controls, title: "Controls".localized(), icon: "switch.2")
             sectionButton(.systemMonitor, title: "System Monitor".localized(), icon: "waveform.path.ecg")
         }
-        .padding(2)
-        .background(.black.opacity(0.08), in: Capsule())
-        .accessibilityElement(children: .contain)
-        .accessibilityLabel("Only Control sections".localized())
     }
 
     private func sectionButton(
@@ -182,29 +199,46 @@ private struct OnlyControlSectionBar: View {
         icon: String
     ) -> some View {
         Button {
-            selection = section
+            let animation: Animation? = reduceMotion ? nil : .smooth(duration: 0.24)
+            withAnimation(animation) {
+                selection = section
+            }
         } label: {
             Label(title, systemImage: icon)
-                .font(.caption.weight(.medium))
+                .font(.caption2.weight(.medium))
                 .frame(maxWidth: .infinity)
-                .frame(minHeight: 26)
+                .frame(minHeight: 20)
                 .contentShape(Capsule())
         }
         .buttonStyle(.plain)
         .foregroundStyle(selection == section ? Color.accentColor : .secondary)
         .background {
             if selection == section {
-                Capsule()
-                    .fill(.thinMaterial)
-                    .overlay {
-                        Capsule()
-                            .stroke(Color.accentColor.opacity(0.45), lineWidth: 1)
-                    }
+                selectionIndicator
+                    .allowsHitTesting(false)
             }
         }
         .accessibilityAddTraits(selection == section ? .isSelected : [])
         .accessibilityHint("Shows the \(title) section".localized())
         .help(Text(title))
+    }
+
+    @ViewBuilder
+    private var selectionIndicator: some View {
+        if #available(macOS 26.0, *) {
+            Capsule()
+                .fill(.clear)
+                .glassEffect(.regular.tint(Color.accentColor.opacity(0.16)), in: Capsule())
+                .glassEffectID("only-control-selected-section", in: selectionGlassNamespace)
+        } else {
+            Capsule()
+                .fill(.thinMaterial)
+                .overlay {
+                    Capsule()
+                        .stroke(Color.accentColor.opacity(0.45), lineWidth: 1)
+                }
+                .matchedGeometryEffect(id: "only-control-selected-section", in: selectionGlassNamespace)
+        }
     }
 }
 
