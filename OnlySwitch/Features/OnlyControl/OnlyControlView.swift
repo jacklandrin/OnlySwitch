@@ -46,6 +46,7 @@ struct OnlyControlView: View {
                     // window. The TabView consumes its own full surface, so a background
                     // drag view cannot receive empty-space mouse events reliably.
                     WindowDragView()
+                        .frame(maxWidth: .infinity)
                         .frame(height: 14)
 
                     TabView(selection: selectedSection) {
