@@ -65,6 +65,17 @@ struct MacSystemMonitorCollectorTests {
     }
 
     @Test
+    func firstSampleIncludesRealProcessRows() async {
+        let collector = MacSystemMonitorCollector()
+        let snapshot = await collector.sample()
+
+        #expect(snapshot.processes.isEmpty == false)
+        #expect(snapshot.processes.allSatisfy { process in
+            process.pid > 0 && process.name.isEmpty == false && process.memoryBytes.value != nil
+        })
+    }
+
+    @Test
     func unavailableMetricsRemainExplicitlyUnavailable() async {
         let collector = MacSystemMonitorCollector()
         let snapshot = await collector.sample()

@@ -397,16 +397,42 @@ private extension MacSystemMonitorCollector {
 
     private func processCounters(for pid: pid_t) -> ProcessCounters? {
         var usage = rusage_info_v2()
-        let result = OnlySwitchProcessRusageV2(pid, &usage)
-        guard result == 0 else { return nil }
+        let resourceUsageResult = OnlySwitchProcessRusageV2(pid, &usage)
+
+        // `proc_pid_rusage` can be denied for individual processes (and has differed between
+        // macOS releases for sandboxed callers). Use the documented task-info query as a
+        // per-process fallback rather than dropping every row when that happens. Both sources
+        // report cumulative CPU time and resident memory, so downstream rate calculations stay
+        // identical.
+        let values: (cpuNanoseconds: UInt64, residentBytes: UInt64)
+        if resourceUsageResult == 0 {
+            values = (
+                cpuNanoseconds: usage.ri_user_time + usage.ri_system_time,
+                residentBytes: usage.ri_resident_size
+            )
+        } else {
+            var taskInfo = proc_taskinfo()
+            let returnedByteCount = proc_pidinfo(
+                pid,
+                PROC_PIDTASKINFO,
+                0,
+                &taskInfo,
+                Int32(MemoryLayout<proc_taskinfo>.size)
+            )
+            guard returnedByteCount == MemoryLayout<proc_taskinfo>.size else { return nil }
+            values = (
+                cpuNanoseconds: taskInfo.pti_total_user + taskInfo.pti_total_system,
+                residentBytes: taskInfo.pti_resident_size
+            )
+        }
 
         var nameBuffer = Array(repeating: CChar(0), count: Int(MAXCOMLEN) + 1)
         let nameLength = proc_name(pid, &nameBuffer, UInt32(nameBuffer.count))
         guard nameLength > 0 else { return nil }
 
         return ProcessCounters(
-            cpuNanoseconds: usage.ri_user_time + usage.ri_system_time,
-            residentBytes: usage.ri_resident_size,
+            cpuNanoseconds: values.cpuNanoseconds,
+            residentBytes: values.residentBytes,
             name: String(
                 decoding: nameBuffer.prefix(Int(nameLength)).map { UInt8(bitPattern: $0) },
                 as: UTF8.self
