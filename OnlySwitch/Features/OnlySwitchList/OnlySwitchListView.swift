@@ -114,7 +114,7 @@ struct OnlySwitchListView: View {
         .onChange(of: sections) { _ in
             reconcileSectionSelection()
         }
-        .frame(width: listWidth , height: scrollViewHeight + (switchVM.showAds ? 172 : 132))
+        .frame(width: listWidth , height: scrollViewHeight + (switchVM.showAds ? 184 : 144))
     }
     
     var singleSwitchList: some View {
