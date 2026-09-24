@@ -191,6 +191,10 @@ private struct OnlyControlSectionBar: View {
             sectionButton(.controls, title: "Controls".localized(), icon: "switch.2")
             sectionButton(.systemMonitor, title: "System Monitor".localized(), icon: "waveform.path.ecg")
         }
+        // The indicator is a single matched view that moves between the buttons.
+        // Keeping this animation here also makes a programmatic section change
+        // animate the same way as a click.
+        .animation(reduceMotion ? nil : .smooth(duration: 0.32), value: selection)
     }
 
     private func sectionButton(
@@ -199,25 +203,32 @@ private struct OnlyControlSectionBar: View {
         icon: String
     ) -> some View {
         Button {
-            let animation: Animation? = reduceMotion ? nil : .smooth(duration: 0.24)
+            let animation: Animation? = reduceMotion ? nil : .smooth(duration: 0.32)
             withAnimation(animation) {
                 selection = section
             }
         } label: {
-            Label(title, systemImage: icon)
-                .font(.caption2.weight(.medium))
+            ZStack {
+                if selection == section {
+                    selectionIndicator
+                        .allowsHitTesting(false)
+                        .accessibilityHidden(true)
+                        .zIndex(0)
+                }
+
+                Label(title, systemImage: icon)
+                    .font(.caption2.weight(.medium))
+                    .foregroundStyle(selection == section ? Color.accentColor : .secondary)
+                    // The glass indicator is intentionally below this label.
+                    // Without an explicit stacking order, the macOS 26 glass
+                    // compositor may render it over the selected tab content.
+                    .zIndex(1)
+            }
                 .frame(maxWidth: .infinity)
                 .frame(minHeight: 20)
                 .contentShape(Capsule())
         }
         .buttonStyle(.plain)
-        .foregroundStyle(selection == section ? Color.accentColor : .secondary)
-        .background {
-            if selection == section {
-                selectionIndicator
-                    .allowsHitTesting(false)
-            }
-        }
         .accessibilityAddTraits(selection == section ? .isSelected : [])
         .accessibilityHint("Shows the \(title) section".localized())
         .help(Text(title))
@@ -230,6 +241,7 @@ private struct OnlyControlSectionBar: View {
                 .fill(.clear)
                 .glassEffect(.regular.tint(Color.accentColor.opacity(0.16)), in: Capsule())
                 .glassEffectID("only-control-selected-section", in: selectionGlassNamespace)
+                .matchedGeometryEffect(id: "only-control-selected-section-frame", in: selectionGlassNamespace)
         } else {
             Capsule()
                 .fill(.thinMaterial)
