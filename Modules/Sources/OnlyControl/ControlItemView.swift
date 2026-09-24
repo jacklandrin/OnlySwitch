@@ -31,7 +31,7 @@ public struct ControlItemView: View {
             .overlay {
                 VStack(spacing: 3) {
                     Image(nsImage: NSImage(data: viewState.iconData)!)
-                        .renderingMode(.template)
+                        .renderingMode(viewState.usesTemplateIconRendering ? .template : .original)
                         .resizable()
                         .scaledToFit()
                         .frame(

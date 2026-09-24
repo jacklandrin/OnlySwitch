@@ -67,4 +67,27 @@ struct ControlItemSecondaryInformationTests {
 
         #expect(item.interaction == .performControl)
     }
+
+    @Test func shortcutTilesPreserveTheirOriginalIconColors() {
+        let item = ControlItemViewState(
+            id: "shortcut",
+            title: "My Shortcut",
+            iconData: Data(),
+            controlType: .Button,
+            unitType: .shortcuts
+        )
+
+        #expect(item.usesTemplateIconRendering == false)
+    }
+
+    @Test func builtInTilesUseTemplateIconRendering() {
+        let item = ControlItemViewState(
+            id: "dark-mode",
+            title: "Dark Mode",
+            iconData: Data(),
+            controlType: .Switch
+        )
+
+        #expect(item.usesTemplateIconRendering)
+    }
 }

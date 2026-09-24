@@ -47,6 +47,12 @@ public struct ControlItemViewState: Equatable, Hashable, Identifiable {
     public var interaction: ControlItemInteraction {
         detail.map(ControlItemInteraction.presentDetail) ?? .performControl
     }
+
+    /// Shortcut icons are user-provided artwork, rather than glyphs. Preserve their
+    /// original colors instead of applying the tile tint as a template image.
+    public var usesTemplateIconRendering: Bool {
+        unitType != .shortcuts
+    }
 }
 
 public extension ControlItemViewState {
