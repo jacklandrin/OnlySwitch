@@ -6,6 +6,7 @@
 //
 
 import AppKit
+import Combine
 import ComposableArchitecture
 import SwiftUI
 import OnlyControl
@@ -38,108 +39,119 @@ struct OnlyControlView: View {
                         .isHidden(!store.soundWaveEffectDisplay || !playerItem.isPlaying, remove: true)
                 }
 
-                VStack(spacing: 0) {
-                    SystemMonitorSectionBar(
-                        sections: [.controls, .systemMonitor],
-                        selection: selectedSection
-                    )
-                    .padding(.top, 16)
-
-                    Spacer()
-                    HStack(alignment: .bottom) {
-                        Text(currentDate, style: .time)
-                            .font(.system(size: 60, weight: .bold, design: .rounded))
-                            .foregroundColor(colorScheme == .dark ? .white : .black)
-                            .padding(.top, 30)
-                            .padding(.horizontal, 30)
-                            .onReceive(timer) { _ in
-                                currentDate = Date()
-                            }
-
-                        if store.isAirPodsConnected && !store.airPodsBatteryValues.isEmpty {
-                            AirPodsBatteryView(batteryValues: store.airPodsBatteryValues)
-                                .padding(.bottom, 16)
-                                .padding(.leading, 40)
+                TabView(selection: selectedSection) {
+                    controlsPage
+                        .tabItem {
+                            Label("Controls".localized(), systemImage: "switch.2")
                         }
+                        .tag(SectionBar.Section.controls)
 
-                        Spacer()
-                        
-                        TimerCountDownView(ptswitch: PomodoroTimerSwitch.shared, showImage: true)
-                            .font(.system(size: 20, weight: .bold, design: .rounded))
-                            .padding(.bottom, 12)
-                            .padding(.trailing, 50)
-                    }
-                    Spacer()
-                    switch store.selectedSection {
-                    case .controls:
-                        DashboardView(store: store.scope(state: \.dashboard, action: \.dashboardAction))
-                            .background(
-                                // A tricky approach to prevent dragging window
-                                Button{} label: {
-                                    Color.clear
-                                }
-                                .buttonStyle(.plain)
-                            )
-                    case .systemMonitor:
-                        ScrollView {
-                            SystemMonitorPanelView(
-                                store: store.scope(state: \.systemMonitor, action: \.systemMonitor)
-                            )
+                    systemMonitorPage
+                        .tabItem {
+                            Label("System Monitor".localized(), systemImage: "waveform.path.ecg")
                         }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    case .authenticator, .soundMixer:
-                        EmptyView()
-                    }
-
-                    HStack {
-                        Spacer()
-                        if playerItem.streamInfo == "" {
-                            HStack {
-                                Text("Only Switch")
-                                    .fontWeight(.bold)
-                                    .padding(10)
-
-                                Text("v\(SystemInfo.majorVersion as! String)")
-                                    .offset(x:-10)
-                            }
-                            .transition(.move(edge: .bottom))
-
-                        } else {
-                            RollingText(
-                                text: playerItem.streamInfo,
-                                leftFade: 16,
-                                rightFade: 16,
-                                startDelay: 3
-                            )
-                            .frame(height:20)
-                            .padding(10)
-                            .transition(.move(edge: .bottom))
-                        }
-
-                        Spacer()
-                        Button{
-                            store.send(.openSettings)
-                        } label: {
-                            Image(systemName: "gear")
-                                .font(.system(size: 18))
-                        }
-                        .buttonStyle(.plain)
-                        .padding(10)
-                        .help(Text("Settings".localized()))
-                    }
+                        .tag(SectionBar.Section.systemMonitor)
                 }
+                .tabViewStyle(.automatic)
+                .padding(.top, 4)
             }
             .cornerRadius(15)
             .blur(radius: store.blurRadius)
             .opacity(store.opacity)
             .animation(.interactiveSpring(duration: 0.5), value: store.blurRadius)
-            .frame(width: 800, height: 500)
+            .frame(width: 800, height: 600)
             .ignoresSafeArea()
             .padding(10)
             .task {
                 store.send(.task)
             }
         }
+    }
+
+    private var controlsPage: some View {
+        VStack(spacing: 0) {
+            controlHeader
+                .padding(.horizontal, 30)
+                .padding(.top, 12)
+
+            DashboardView(store: store.scope(state: \.dashboard, action: \.dashboardAction))
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background {
+                    // Keeps dashboard interactions from initiating a window drag.
+                    Button(action: {}) {
+                        Color.clear
+                    }
+                    .buttonStyle(.plain)
+                }
+
+            footer
+        }
+    }
+
+    private var systemMonitorPage: some View {
+        VStack(spacing: 0) {
+            ScrollView {
+                SystemMonitorPanelView(
+                    store: store.scope(state: \.systemMonitor, action: \.systemMonitor)
+                )
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+            footer
+        }
+    }
+
+    private var controlHeader: some View {
+        HStack(alignment: .bottom) {
+            Text(currentDate, style: .time)
+                .font(.system(size: 60, weight: .bold, design: .rounded))
+                .foregroundStyle(colorScheme == .dark ? .white : .black)
+                .onReceive(timer) { _ in
+                    currentDate = Date()
+                }
+
+            if store.isAirPodsConnected && !store.airPodsBatteryValues.isEmpty {
+                AirPodsBatteryView(batteryValues: store.airPodsBatteryValues)
+                    .padding(.bottom, 8)
+                    .padding(.leading, 24)
+            }
+
+            Spacer(minLength: 16)
+
+            TimerCountDownView(ptswitch: PomodoroTimerSwitch.shared, showImage: true)
+                .font(.system(size: 20, weight: .bold, design: .rounded))
+                .padding(.bottom, 8)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var footer: some View {
+        HStack {
+            Spacer()
+            if playerItem.streamInfo.isEmpty {
+                Text("Only Switch".localized())
+                    .bold()
+                Text("v\(SystemInfo.majorVersion as! String)")
+                    .foregroundStyle(.secondary)
+            } else {
+                RollingText(
+                    text: playerItem.streamInfo,
+                    leftFade: 16,
+                    rightFade: 16,
+                    startDelay: 3
+                )
+                .frame(height: 20)
+            }
+            Spacer()
+            Button("Settings".localized(), systemImage: "gear") {
+                store.send(.openSettings)
+            }
+            .labelStyle(.iconOnly)
+            .buttonStyle(.plain)
+            .help(Text("Settings".localized()))
+            .padding(.trailing, 12)
+        }
+        .padding(.vertical, 8)
     }
 
     private var selectedSection: Binding<SectionBar.Section> {
@@ -160,7 +172,7 @@ struct OnlyControlView: View {
 final class OnlyControlWindow: NSWindow, NSWindowDelegate {
     static let shared = OnlyControlWindow()
 
-    private static let contentSize = NSSize(width: 820, height: 520)
+    private static let contentSize = NSSize(width: 820, height: 620)
     private static let frameAutosaveName = "OnlyControlWindow"
 
     private(set) var isShowing = false

@@ -55,7 +55,7 @@ public struct DashboardView: View {
             .reorderableForEachContainer(active: $active) {
                 store.send(.onEndedMove)
             }
-            .frame(width: 760, height: 340)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 
