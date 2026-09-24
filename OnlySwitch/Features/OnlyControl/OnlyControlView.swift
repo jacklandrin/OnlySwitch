@@ -304,9 +304,10 @@ final class OnlyControlWindow: NSWindow, NSWindowDelegate {
         NSScreen.screens.first { $0.visibleFrame.intersects(frame) }
     }
 
-    /// Controls and scrolling containers must always receive their own events.
-    /// Everything else is decorative SwiftUI hosting content and can safely act
-    /// as window background, including the otherwise-unused dashboard canvas.
+    /// Controls and gesture-bearing content must always receive their own
+    /// events. A scroll view by itself is not interactive at a blank viewport
+    /// point: wheel/trackpad scrolling arrives as `.scrollWheel`, while a click
+    /// in that unused canvas should still move this borderless window.
     private func isEmptyCanvasClick(_ event: NSEvent) -> Bool {
         guard let contentView else { return false }
         let point = contentView.convert(event.locationInWindow, from: nil)
@@ -364,10 +365,10 @@ private extension NSView {
     var hasInteractiveAncestor: Bool {
         sequence(first: self, next: \.superview).contains { view in
             view is NSControl ||
-            view is NSScrollView ||
             view is NSTextView ||
             view is NSTableView ||
-            view is NSCollectionView
+            view is NSCollectionView ||
+            !view.gestureRecognizers.isEmpty
         }
     }
 }
