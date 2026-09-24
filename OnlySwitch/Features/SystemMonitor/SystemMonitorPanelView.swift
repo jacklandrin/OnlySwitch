@@ -62,7 +62,7 @@ struct SystemMonitorSectionBar: View {
                     Label(section.title, systemImage: section.symbolName)
                         .labelStyle(.iconOnly)
                         .font(.body.weight(.semibold))
-                        .frame(maxWidth: .infinity, minHeight: 36)
+                        .frame(maxWidth: .infinity, minHeight: 30)
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
@@ -84,7 +84,7 @@ struct SystemMonitorSectionBar: View {
                 .help(Text(section.title))
             }
         }
-        .padding(4)
+        .padding(3)
         .background(.regularMaterial, in: Capsule())
         .overlay {
             Capsule()
