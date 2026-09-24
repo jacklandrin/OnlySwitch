@@ -42,20 +42,12 @@ struct OnlyControlView: View {
                 }
 
                 VStack(spacing: 0) {
-                    TabView(selection: selectedSection) {
-                        controlsPage
-                            .tabItem {
-                                Label("Controls".localized(), systemImage: "switch.2")
-                            }
-                            .tag(SectionBar.Section.controls)
+                    OnlyControlSectionBar(selection: selectedSection)
+                        .padding(.horizontal, 20)
+                        .padding(.top, 14)
+                        .padding(.bottom, 8)
 
-                        systemMonitorPage
-                            .tabItem {
-                                Label("System Monitor".localized(), systemImage: "waveform.path.ecg")
-                            }
-                            .tag(SectionBar.Section.systemMonitor)
-                    }
-                    .tabViewStyle(.automatic)
+                    sectionContent
                 }
             }
             .cornerRadius(15)
@@ -68,6 +60,18 @@ struct OnlyControlView: View {
             .task {
                 store.send(.task)
             }
+        }
+    }
+
+    @ViewBuilder
+    private var sectionContent: some View {
+        switch store.selectedSection {
+            case .controls:
+                controlsPage
+            case .systemMonitor:
+                systemMonitorPage
+            default:
+                EmptyView()
         }
     }
 
@@ -158,6 +162,53 @@ struct OnlyControlView: View {
     }
 }
 
+private struct OnlyControlSectionBar: View {
+    @Binding var selection: SectionBar.Section
+
+    var body: some View {
+        HStack(spacing: 4) {
+            sectionButton(.controls, title: "Controls".localized(), icon: "switch.2")
+            sectionButton(.systemMonitor, title: "System Monitor".localized(), icon: "waveform.path.ecg")
+        }
+        .padding(4)
+        .background(.black.opacity(0.08), in: Capsule())
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("Only Control sections".localized())
+    }
+
+    private func sectionButton(
+        _ section: SectionBar.Section,
+        title: String,
+        icon: String
+    ) -> some View {
+        Button {
+            selection = section
+        } label: {
+            Label(title, systemImage: icon)
+                .font(.subheadline.weight(.semibold))
+                .frame(maxWidth: .infinity)
+                .frame(minHeight: 44)
+                .padding(.vertical, 8)
+                .contentShape(Capsule())
+        }
+        .buttonStyle(.plain)
+        .foregroundStyle(selection == section ? Color.accentColor : .secondary)
+        .background {
+            if selection == section {
+                Capsule()
+                    .fill(.thinMaterial)
+                    .overlay {
+                        Capsule()
+                            .stroke(Color.accentColor.opacity(0.45), lineWidth: 1)
+                    }
+            }
+        }
+        .accessibilityAddTraits(selection == section ? .isSelected : [])
+        .accessibilityHint("Shows the \(title) section".localized())
+        .help(Text(title))
+    }
+}
+
 #Preview {
     OnlyControlView(store: .init(initialState: .init()) {
         OnlyControlReducer()
@@ -188,18 +239,6 @@ final class OnlyControlWindow: NSWindow, NSWindowDelegate {
         true
     }
 
-    /// A borderless `NSWindow` has no title bar for AppKit to drag. SwiftUI's
-    /// `TabView` and `ScrollView` also cover the complete hosting surface, so
-    /// simply placing a drag view behind them cannot receive clicks in their
-    /// visual gaps. Route only canvas clicks here, before normal dispatch.
-    override func sendEvent(_ event: NSEvent) {
-        if event.type == .leftMouseDown, isEmptyCanvasClick(event) {
-            performDrag(with: event)
-            return
-        }
-        super.sendEvent(event)
-    }
-
     private init() {
         super.init(
             contentRect: .zero,
@@ -211,7 +250,7 @@ final class OnlyControlWindow: NSWindow, NSWindowDelegate {
     }
 
     private func setupWindow() {
-        let view = NSHostingView(rootView: OnlyControlView(store: onlyControlStore))
+        let view = OnlyControlHostingView(rootView: OnlyControlView(store: onlyControlStore))
         setContentSize(Self.contentSize)
         view.frame = contentRect(forFrameRect: frame)
         view.canDrawSubviewsIntoLayer = true
@@ -304,18 +343,6 @@ final class OnlyControlWindow: NSWindow, NSWindowDelegate {
         NSScreen.screens.first { $0.visibleFrame.intersects(frame) }
     }
 
-    /// Controls and gesture-bearing content must always receive their own
-    /// events. A scroll view by itself is not interactive at a blank viewport
-    /// point: wheel/trackpad scrolling arrives as `.scrollWheel`, while a click
-    /// in that unused canvas should still move this borderless window.
-    private func isEmptyCanvasClick(_ event: NSEvent) -> Bool {
-        guard let contentView else { return false }
-        let point = contentView.convert(event.locationInWindow, from: nil)
-        guard let hitView = contentView.hitTest(point) else { return true }
-
-        return !hitView.hasInteractiveAncestor
-    }
-
     private func startOutsideClickMonitoring() {
         guard globalMouseMonitor == nil, localMouseMonitor == nil else { return }
 
@@ -361,14 +388,9 @@ final class OnlyControlWindow: NSWindow, NSWindowDelegate {
     }
 }
 
-private extension NSView {
-    var hasInteractiveAncestor: Bool {
-        sequence(first: self, next: \.superview).contains { view in
-            view is NSControl ||
-            view is NSTextView ||
-            view is NSTableView ||
-            view is NSCollectionView ||
-            !view.gestureRecognizers.isEmpty
-        }
-    }
+/// Lets AppKit handle window movement for every non-control portion of the
+/// hosting hierarchy. Native controls and scroll views still receive their
+/// normal events before the background drag behavior applies.
+private final class OnlyControlHostingView: NSHostingView<OnlyControlView> {
+    override var mouseDownCanMoveWindow: Bool { true }
 }
