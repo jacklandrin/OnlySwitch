@@ -211,6 +211,7 @@ private struct OnlyControlSectionBar: View {
     let sections: [SectionBar.Section]
     @Binding var selection: SectionBar.Section
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         tabButtons
@@ -254,7 +255,7 @@ private struct OnlyControlSectionBar: View {
         } label: {
             Label(section.title, systemImage: section.symbolName)
                 .font(.caption2.weight(.medium))
-                .foregroundStyle(selection == section ? Color.accentColor : .secondary)
+                .foregroundStyle(selection == section ? selectedForegroundStyle : .secondary)
                 .frame(maxWidth: .infinity, minHeight: 20)
                 .contentShape(Capsule())
         }
@@ -262,6 +263,10 @@ private struct OnlyControlSectionBar: View {
         .accessibilityAddTraits(selection == section ? .isSelected : [])
         .accessibilityHint("Shows the %@ section".localizeWithFormat(arguments: section.title))
         .help(Text(section.title))
+    }
+
+    private var selectedForegroundStyle: Color {
+        colorScheme == .dark ? .white : .primary
     }
 
     @ViewBuilder
