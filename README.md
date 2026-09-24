@@ -31,7 +31,7 @@ Discord: https://discord.gg/UzSNpYdPZj
 
 Control OnlySwitch from your iPhone or iPad over your local network. Download [OnlyRemote on the App Store](https://apps.apple.com/us/app/onlyremote/id6793657946), then open **iOS Remote** in OnlySwitch settings to enable remote access and pair your device.
 <p align="center">
-<img alt="05-organized-controls-ipad-13" src="https://github.com/user-attachments/assets/b0137463-62ae-409f-b1d4-0736d2cc7210"  width="70%" align="center" />
+<img alt="05-organized-controls-ipad-13" src="https://github.com/user-attachments/assets/8cbba2ca-ff02-4600-9c6f-265fd91d1d67"  width="70%" align="center" />
 </p>
 
 ## What's the OnlySwitch?
