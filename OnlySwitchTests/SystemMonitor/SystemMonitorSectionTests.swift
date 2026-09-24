@@ -10,6 +10,12 @@ struct SystemMonitorSectionTests {
         )
     }
 
+    @Test
+    func temperaturePresentationKeepsUnavailableValuesExplicit() {
+        #expect(SystemMonitorTemperaturePresentation.description(.available(42.4)) == "Temperature 42 °C")
+        #expect(SystemMonitorTemperaturePresentation.description(.unavailable) == "Temperature unavailable")
+    }
+
     @Test(arguments: [
         (false, false, [SectionBar.Section.controls, .systemMonitor]),
         (true, false, [.controls, .authenticator, .systemMonitor]),

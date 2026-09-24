@@ -38,6 +38,17 @@ enum SectionBar {
     }
 }
 
+enum SystemMonitorTemperaturePresentation {
+    static func description(_ temperature: MetricAvailability<Double>) -> String {
+        switch temperature {
+        case let .available(celsius):
+            String(format: "Temperature %.0f °C".localized(), celsius)
+        case .unavailable:
+            "Temperature unavailable".localized()
+        }
+    }
+}
+
 struct SystemMonitorSectionBar: View {
     let sections: [SectionBar.Section]
     @Binding var selection: SectionBar.Section
@@ -137,6 +148,7 @@ struct SystemMonitorPanelView: View {
                 title: "CPU".localized(),
                 symbolName: "cpu",
                 availability: snapshot.cpuUsage,
+                temperature: snapshot.cpuTemperatureCelsius,
                 detail: { cpuDetails(snapshot, store: store) }
             ) { usage in
                 metricSummary(usage, history: store.wrappedValue.history.snapshots.map { $0.cpuUsage.value ?? 0 })
@@ -146,6 +158,7 @@ struct SystemMonitorPanelView: View {
                 title: "GPU".localized(),
                 symbolName: "rectangle.3.group",
                 availability: snapshot.gpuUsage,
+                temperature: snapshot.gpuTemperatureCelsius,
                 detail: { EmptyView() }
             ) { usage in
                 metricSummary(usage, history: store.wrappedValue.history.snapshots.map { $0.gpuUsage.value ?? 0 })
@@ -164,6 +177,7 @@ struct SystemMonitorPanelView: View {
         title: String,
         symbolName: String,
         availability: MetricAvailability<Double>,
+        temperature: MetricAvailability<Double>,
         @ViewBuilder detail: () -> Detail,
         @ViewBuilder content: (Double) -> Content
     ) -> some View {
@@ -173,10 +187,12 @@ struct SystemMonitorPanelView: View {
             switch availability {
             case let .available(value):
                 content(value)
+                temperatureLabel(temperature)
                 detail()
             case .unavailable:
                 Text("Unavailable".localized())
                     .foregroundStyle(.secondary)
+                temperatureLabel(temperature)
             }
         }
         .padding(12)
@@ -268,6 +284,7 @@ struct SystemMonitorPanelView: View {
                         ))
                         .font(.caption)
                         .foregroundStyle(.secondary)
+                        temperatureLabel(disk.temperatureCelsius)
                     }
                 }
             }
@@ -322,6 +339,12 @@ struct SystemMonitorPanelView: View {
                 .font(.caption)
                 .foregroundStyle(tint)
         }
+    }
+
+    private func temperatureLabel(_ temperature: MetricAvailability<Double>) -> some View {
+        Text(SystemMonitorTemperaturePresentation.description(temperature))
+            .font(.caption)
+            .foregroundStyle(.secondary)
     }
 
     @ViewBuilder
