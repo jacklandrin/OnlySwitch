@@ -1,5 +1,6 @@
 import Darwin
 import Dispatch
+import Foundation
 import SystemMonitor
 import Testing
 @testable import OnlySwitch
@@ -168,6 +169,117 @@ struct MacSystemMonitorCollectorTests {
         #expect(snapshot.hardware.gpu.logicalCoreCount == .unavailable)
         #expect(snapshot.hardware.cpu.physicalCoreCount.value.map { $0 > 0 } ?? true)
         #expect(snapshot.memory.value.map { $0.usage >= 0 && $0.usage <= 1 } ?? true)
+    }
+
+    @Test
+    func networkWithoutDetailsKeepsExistingCallSitesAndLegacySnapshotsCompatible() throws {
+        let createdWithoutDetails = SystemMonitorNetwork(
+            totalDownloadedBytes: 120,
+            totalUploadedBytes: 60,
+            downloadBytesPerSecond: 12,
+            uploadBytesPerSecond: 6
+        )
+        #expect(createdWithoutDetails.details == nil)
+
+        let legacyJSON = """
+        {
+          "totalDownloadedBytes": 120,
+          "totalUploadedBytes": 60,
+          "downloadBytesPerSecond": 12,
+          "uploadBytesPerSecond": 6
+        }
+        """
+        let decoded = try JSONDecoder().decode(
+            SystemMonitorNetwork.self,
+            from: Data(legacyJSON.utf8)
+        )
+
+        #expect(decoded == createdWithoutDetails)
+        #expect(decoded.details == nil)
+    }
+
+    @Test(arguments: [
+        ("192.168.1.42", true),
+        ("2001:db8::42", true),
+        ("fe80::1%en0", true),
+        ("999.1.1.1", false),
+        ("not-an-address", false),
+        ("", false)
+    ])
+    func IPAddressValidationAcceptsIPv4AndIPv6LiteralsOnly(
+        address: String,
+        isValid: Bool
+    ) {
+        #expect(NetworkAddressParser.isValidIPLiteral(address) == isValid)
+    }
+
+    @Test
+    func addressGroupingKeepsValidNonLoopbackAddressesByFamily() {
+        let grouped = NetworkAddressParser.group(
+            addresses: [
+                "192.168.1.42",
+                "2001:db8::42",
+                "192.168.1.42",
+                "127.0.0.1",
+                "::1",
+                "not-an-address",
+                "fe80::1%en0"
+            ]
+        )
+
+        #expect(grouped.ipv4 == ["192.168.1.42"])
+        #expect(grouped.ipv6 == ["2001:db8::42", "fe80::1%en0"])
+    }
+
+    @Test(arguments: [
+        ("en0", "IEEE80211", SystemMonitorNetworkInterface.Kind.wifi),
+        ("en5", "Ethernet", SystemMonitorNetworkInterface.Kind.ethernet),
+        ("bridge0", "Bridge", SystemMonitorNetworkInterface.Kind.other),
+        ("utun4", nil, SystemMonitorNetworkInterface.Kind.other)
+    ])
+    func interfaceClassificationUsesHardwareTypeRatherThanBsdName(
+        name: String,
+        hardwareType: String?,
+        expected: SystemMonitorNetworkInterface.Kind
+    ) {
+        #expect(
+            NetworkInterfaceClassifier.kind(
+                interfaceName: name,
+                hardwareType: hardwareType
+            ) == expected
+        )
+    }
+
+    @Test
+    func networkDetailsCarryWiFiAndAddressMetadata() {
+        let wifi = SystemMonitorNetworkInterface(
+            name: "en0",
+            displayName: "Wi-Fi",
+            kind: .wifi,
+            isActive: true,
+            macAddress: "AA:BB:CC:DD:EE:FF",
+            localIPv4Addresses: ["192.168.1.42"],
+            localIPv6Addresses: ["2001:db8::42"],
+            ssid: "OnlySwitch Wi-Fi",
+            signalStrength: -47,
+            transmitRateMbps: 1_200
+        )
+        let details = SystemMonitorNetworkDetails(
+            interfaces: [wifi],
+            publicIPv4Address: "203.0.113.42",
+            publicIPv6Address: "2001:db8:abcd::42"
+        )
+        let network = SystemMonitorNetwork(
+            totalDownloadedBytes: 120,
+            totalUploadedBytes: 60,
+            downloadBytesPerSecond: 12,
+            uploadBytesPerSecond: 6,
+            details: details
+        )
+
+        #expect(network.details?.interfaces == [wifi])
+        #expect(network.details?.publicIPv4Address == "203.0.113.42")
+        #expect(network.details?.publicIPv6Address == "2001:db8:abcd::42")
     }
 
     private func fourCharacterCode(_ value: String) -> UInt32 {
