@@ -30,14 +30,6 @@ struct OnlyControlView: View {
     var body: some View {
         WithPerceptionTracking {
             ZStack {
-                // The drag view deliberately sits *behind* all SwiftUI content.  AppKit
-                // chooses buttons, tiles, tabs, disclosure controls and scroll views first;
-                // clicks in the unused canvas then fall through to this view and move the
-                // borderless window.  This makes the window feel draggable everywhere
-                // without turning monitor scrolling or dashboard controls into drag zones.
-                WindowDragView()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-
                 VisualEffectView(material: .popover, blendingMode: .behindWindow)
                     .allowsHitTesting(false)
 
@@ -196,6 +188,18 @@ final class OnlyControlWindow: NSWindow, NSWindowDelegate {
         true
     }
 
+    /// A borderless `NSWindow` has no title bar for AppKit to drag. SwiftUI's
+    /// `TabView` and `ScrollView` also cover the complete hosting surface, so
+    /// simply placing a drag view behind them cannot receive clicks in their
+    /// visual gaps. Route only canvas clicks here, before normal dispatch.
+    override func sendEvent(_ event: NSEvent) {
+        if event.type == .leftMouseDown, isEmptyCanvasClick(event) {
+            performDrag(with: event)
+            return
+        }
+        super.sendEvent(event)
+    }
+
     private init() {
         super.init(
             contentRect: .zero,
@@ -207,7 +211,7 @@ final class OnlyControlWindow: NSWindow, NSWindowDelegate {
     }
 
     private func setupWindow() {
-        let view = DraggableHostingView(rootView: OnlyControlView(store: onlyControlStore))
+        let view = NSHostingView(rootView: OnlyControlView(store: onlyControlStore))
         setContentSize(Self.contentSize)
         view.frame = contentRect(forFrameRect: frame)
         view.canDrawSubviewsIntoLayer = true
@@ -300,6 +304,17 @@ final class OnlyControlWindow: NSWindow, NSWindowDelegate {
         NSScreen.screens.first { $0.visibleFrame.intersects(frame) }
     }
 
+    /// Controls and scrolling containers must always receive their own events.
+    /// Everything else is decorative SwiftUI hosting content and can safely act
+    /// as window background, including the otherwise-unused dashboard canvas.
+    private func isEmptyCanvasClick(_ event: NSEvent) -> Bool {
+        guard let contentView else { return false }
+        let point = contentView.convert(event.locationInWindow, from: nil)
+        guard let hitView = contentView.hitTest(point) else { return true }
+
+        return !hitView.hasInteractiveAncestor
+    }
+
     private func startOutsideClickMonitoring() {
         guard globalMouseMonitor == nil, localMouseMonitor == nil else { return }
 
@@ -345,10 +360,14 @@ final class OnlyControlWindow: NSWindow, NSWindowDelegate {
     }
 }
 
-/// Makes the hosting view itself eligible to move the borderless window when a
-/// click lands on a truly empty SwiftUI region. Interactive AppKit descendants
-/// still win hit testing and retain their usual event handling.
-@MainActor
-private final class DraggableHostingView<Content: View>: NSHostingView<Content> {
-    override var mouseDownCanMoveWindow: Bool { true }
+private extension NSView {
+    var hasInteractiveAncestor: Bool {
+        sequence(first: self, next: \.superview).contains { view in
+            view is NSControl ||
+            view is NSScrollView ||
+            view is NSTextView ||
+            view is NSTableView ||
+            view is NSCollectionView
+        }
+    }
 }
