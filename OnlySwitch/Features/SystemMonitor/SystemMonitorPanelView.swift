@@ -345,13 +345,7 @@ struct SystemMonitorPanelView: View {
                     Spacer()
                     rateSummary("Upload".localized(), rate: network.uploadBytesPerSecond, tint: .pink)
                 }
-                SystemMonitorChartView(
-                    points: store.wrappedValue.history.snapshots.map { $0.network.value?.downloadBytesPerSecond ?? 0 },
-                    tint: .blue,
-                    accessibilityLabel: "Download history".localized(),
-                    valueDescription: { SystemMonitorFormatter.rate(bytesPerSecond: $0) },
-                    scale: .adaptive
-                )
+                networkHistory(store.wrappedValue.history.snapshots)
                 DisclosureGroup(
                     "Network Details".localized(),
                     isExpanded: expansionBinding(for: .network, store: store)
@@ -375,6 +369,37 @@ struct SystemMonitorPanelView: View {
                 .font(.caption)
                 .foregroundStyle(tint)
         }
+    }
+
+    private func networkHistory(_ snapshots: [SystemMonitorSnapshot]) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            networkHistorySeries(
+                title: "Download history".localized(),
+                points: snapshots.map { $0.network.value?.downloadBytesPerSecond ?? 0 },
+                tint: .blue
+            )
+            networkHistorySeries(
+                title: "Upload history".localized(),
+                points: snapshots.map { $0.network.value?.uploadBytesPerSecond ?? 0 },
+                tint: .pink
+            )
+        }
+    }
+
+    private func networkHistorySeries(title: String, points: [Double], tint: Color) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Label(title, systemImage: "circle.fill")
+                .font(.caption)
+                .foregroundStyle(tint)
+            SystemMonitorChartView(
+                points: points,
+                tint: tint,
+                accessibilityLabel: title,
+                valueDescription: { SystemMonitorFormatter.rate(bytesPerSecond: $0) },
+                scale: .adaptive
+            )
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private func metricHeader(_ title: String, symbolName: String, tint: Color) -> some View {

@@ -23,11 +23,12 @@ struct SystemMonitorChartView: View {
             let markerRadius: CGFloat = 3.5
             let plotWidth = max(size.width - markerRadius, 1)
             let step = plotWidth / CGFloat(max(normalized.count - 1, 1))
-            let plotHeight = max(size.height - 10, 1)
-            let baseline = plotHeight
+            let plotTop = markerRadius
+            let baseline = max(size.height - markerRadius, plotTop)
+            let plotHeight = max(baseline - plotTop, 1)
 
             for fraction in [0.25, 0.5, 0.75] {
-                let y = baseline * fraction
+                let y = plotTop + (plotHeight * fraction)
                 var grid = Path()
                 grid.move(to: CGPoint(x: 0, y: y))
                 grid.addLine(to: CGPoint(x: plotWidth, y: y))
@@ -40,7 +41,7 @@ struct SystemMonitorChartView: View {
             for (index, point) in normalized.enumerated() {
                 let location = CGPoint(
                     x: CGFloat(index) * step,
-                    y: baseline * (1 - CGFloat(point))
+                    y: plotTop + (plotHeight * (1 - CGFloat(point)))
                 )
                 if index == 0 {
                     line.move(to: location)
@@ -65,7 +66,7 @@ struct SystemMonitorChartView: View {
             context.stroke(line, with: .color(tint), lineWidth: 2)
 
             if let latest = normalized.last {
-                let marker = CGPoint(x: plotWidth, y: baseline * (1 - CGFloat(latest)))
+                let marker = CGPoint(x: plotWidth, y: plotTop + (plotHeight * (1 - CGFloat(latest))))
                 let markerBounds = CGRect(
                     x: marker.x - markerRadius,
                     y: marker.y - markerRadius,
