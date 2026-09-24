@@ -92,6 +92,43 @@ public enum SystemMonitorMemoryPressure: String, Codable, Equatable, Sendable {
     case critical
 }
 
+/// Static hardware facts captured when a monitor sampler is created.
+///
+/// The operating system does not expose every fact on every Mac. In
+/// particular, the public graphics APIs expose the GPU name but not its core
+/// count, so consumers must retain the distinction between an unavailable
+/// value and a zero value.
+public struct SystemMonitorHardware: Codable, Equatable, Sendable {
+    public let cpu: SystemMonitorProcessor
+    public let gpu: SystemMonitorProcessor
+
+    public init(
+        cpu: SystemMonitorProcessor = .unavailable,
+        gpu: SystemMonitorProcessor = .unavailable
+    ) {
+        self.cpu = cpu
+        self.gpu = gpu
+    }
+}
+
+public struct SystemMonitorProcessor: Codable, Equatable, Sendable {
+    public let model: MetricAvailability<String>
+    public let physicalCoreCount: MetricAvailability<Int>
+    public let logicalCoreCount: MetricAvailability<Int>
+
+    public init(
+        model: MetricAvailability<String> = .unavailable,
+        physicalCoreCount: MetricAvailability<Int> = .unavailable,
+        logicalCoreCount: MetricAvailability<Int> = .unavailable
+    ) {
+        self.model = model
+        self.physicalCoreCount = physicalCoreCount
+        self.logicalCoreCount = logicalCoreCount
+    }
+
+    public static let unavailable = Self()
+}
+
 public struct SystemMonitorDisk: Codable, Equatable, Identifiable, Sendable {
     public let id: String
     public let name: String
@@ -144,6 +181,7 @@ public struct SystemMonitorSnapshot: Codable, Equatable, Sendable {
     public let cpuTemperatureCelsius: MetricAvailability<Double>
     public let gpuUsage: MetricAvailability<Double>
     public let gpuTemperatureCelsius: MetricAvailability<Double>
+    public let hardware: SystemMonitorHardware
     public let memory: MetricAvailability<SystemMonitorMemory>
     public let disks: [SystemMonitorDisk]
     public let network: MetricAvailability<SystemMonitorNetwork>
@@ -155,6 +193,7 @@ public struct SystemMonitorSnapshot: Codable, Equatable, Sendable {
         cpuTemperatureCelsius: MetricAvailability<Double> = .unavailable,
         gpuUsage: MetricAvailability<Double> = .unavailable,
         gpuTemperatureCelsius: MetricAvailability<Double> = .unavailable,
+        hardware: SystemMonitorHardware = .init(),
         memory: MetricAvailability<SystemMonitorMemory> = .unavailable,
         disks: [SystemMonitorDisk] = [],
         network: MetricAvailability<SystemMonitorNetwork> = .unavailable,
@@ -165,6 +204,7 @@ public struct SystemMonitorSnapshot: Codable, Equatable, Sendable {
         self.cpuTemperatureCelsius = cpuTemperatureCelsius
         self.gpuUsage = gpuUsage
         self.gpuTemperatureCelsius = gpuTemperatureCelsius
+        self.hardware = hardware
         self.memory = memory
         self.disks = disks
         self.network = network

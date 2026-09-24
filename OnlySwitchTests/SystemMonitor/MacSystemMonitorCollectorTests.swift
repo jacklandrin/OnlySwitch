@@ -74,4 +74,15 @@ struct MacSystemMonitorCollectorTests {
         #expect(snapshot.cpuTemperatureCelsius == .unavailable)
         #expect(snapshot.disks.allSatisfy { $0.temperatureCelsius == .unavailable })
     }
+
+    @Test
+    func hardwareIdentityDistinguishesUnavailableGPUCoreCountFromZero() async {
+        let collector = MacSystemMonitorCollector()
+        let snapshot = await collector.sample()
+
+        #expect(snapshot.hardware.gpu.physicalCoreCount == .unavailable)
+        #expect(snapshot.hardware.gpu.logicalCoreCount == .unavailable)
+        #expect(snapshot.hardware.cpu.physicalCoreCount.value.map { $0 > 0 } ?? true)
+        #expect(snapshot.memory.value.map { $0.usage >= 0 && $0.usage <= 1 } ?? true)
+    }
 }

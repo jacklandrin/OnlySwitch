@@ -1,6 +1,7 @@
 import Darwin
 import Dispatch
 import Foundation
+import Metal
 import SystemMonitor
 
 /// Calculates a non-negative network rate from two monotonic interface counters.
@@ -87,8 +88,10 @@ actor MacSystemMonitorCollector {
     private var latestSnapshot: SystemMonitorSnapshot?
     private var memoryPressure: SystemMonitorMemoryPressure = .normal
     private let memoryPressureSource: any DispatchSourceMemoryPressure
+    private let hardware: SystemMonitorHardware
 
     init() {
+        hardware = Self.readHardware()
         let source = DispatchSource.makeMemoryPressureSource(eventMask: .all, queue: .global(qos: .utility))
         memoryPressureSource = source
         source.setEventHandler { [weak self, weak source] in
@@ -186,6 +189,7 @@ actor MacSystemMonitorCollector {
             cpuTemperatureCelsius: .unavailable,
             gpuUsage: .unavailable,
             gpuTemperatureCelsius: .unavailable,
+            hardware: hardware,
             memory: readMemory().map(MetricAvailability.available) ?? .unavailable,
             disks: readDisks(),
             network: network.map(MetricAvailability.available) ?? .unavailable,
@@ -199,6 +203,43 @@ actor MacSystemMonitorCollector {
 }
 
 private extension MacSystemMonitorCollector {
+    static func readHardware() -> SystemMonitorHardware {
+        let gpuName = MTLCreateSystemDefaultDevice()?.name
+        let cpuModel = readSysctlString("machdep.cpu.brand_string")
+            ?? gpuName.flatMap { $0.hasPrefix("Apple ") ? $0 : nil }
+
+        return SystemMonitorHardware(
+            cpu: SystemMonitorProcessor(
+                model: cpuModel.map(MetricAvailability.available) ?? .unavailable,
+                physicalCoreCount: readSysctlInt("hw.physicalcpu").map(MetricAvailability.available) ?? .unavailable,
+                logicalCoreCount: readSysctlInt("hw.logicalcpu").map(MetricAvailability.available) ?? .unavailable
+            ),
+            gpu: SystemMonitorProcessor(
+                model: gpuName.map(MetricAvailability.available) ?? .unavailable,
+                // Metal intentionally does not publish a GPU core-count property.
+                physicalCoreCount: .unavailable,
+                logicalCoreCount: .unavailable
+            )
+        )
+    }
+
+    static func readSysctlString(_ name: String) -> String? {
+        var byteCount = 0
+        guard sysctlbyname(name, nil, &byteCount, nil, 0) == 0, byteCount > 1 else { return nil }
+
+        var buffer = Array(repeating: CChar(0), count: byteCount)
+        guard sysctlbyname(name, &buffer, &byteCount, nil, 0) == 0 else { return nil }
+        let value = String(cString: buffer)
+        return value.isEmpty ? nil : value
+    }
+
+    static func readSysctlInt(_ name: String) -> Int? {
+        var value: Int32 = 0
+        var byteCount = MemoryLayout<Int32>.size
+        guard sysctlbyname(name, &value, &byteCount, nil, 0) == 0, value > 0 else { return nil }
+        return Int(value)
+    }
+
     func recordMemoryPressure(_ status: SystemMonitorMemoryPressure) {
         memoryPressure = status
     }
