@@ -245,8 +245,8 @@ private final class StatusItemContentView: NSView {
     private let metric: SystemMonitorMetric
     private let imageView = NSImageView()
     private let valueLabel = NSTextField(labelWithString: "")
-    private let topDot = NSTextField(labelWithString: "●")
-    private let bottomDot = NSTextField(labelWithString: "●")
+    private let topDot = NetworkIndicatorDot(color: .systemRed)
+    private let bottomDot = NetworkIndicatorDot(color: .systemBlue)
     private let topValueLabel = NSTextField(labelWithString: "")
     private let bottomValueLabel = NSTextField(labelWithString: "")
 
@@ -296,15 +296,23 @@ private final class StatusItemContentView: NSView {
         let totalHeight = lineHeight * 2
         let topY = (bounds.height + totalHeight) / 2 - lineHeight
         let bottomY = topY - lineHeight
-        // `NSTextField` can draw the dot glyph slightly outside its frame. Keep
-        // a generous inset so status-bar clipping never cuts the circular mark.
         let dotLeading: CGFloat = 7
-        let dotWidth: CGFloat = 11
+        let dotSide: CGFloat = 7
         let valueLeading: CGFloat = 21
         let valueWidth = max(0, bounds.width - valueLeading - 5)
 
-        topDot.frame = CGRect(x: dotLeading, y: topY, width: dotWidth, height: lineHeight)
-        bottomDot.frame = CGRect(x: dotLeading, y: bottomY, width: dotWidth, height: lineHeight)
+        topDot.frame = CGRect(
+            x: dotLeading,
+            y: topY + (lineHeight - dotSide) / 2,
+            width: dotSide,
+            height: dotSide
+        )
+        bottomDot.frame = CGRect(
+            x: dotLeading,
+            y: bottomY + (lineHeight - dotSide) / 2,
+            width: dotSide,
+            height: dotSide
+        )
         topValueLabel.frame = CGRect(x: valueLeading, y: topY, width: valueWidth, height: lineHeight)
         bottomValueLabel.frame = CGRect(x: valueLeading, y: bottomY, width: valueWidth, height: lineHeight)
     }
@@ -350,14 +358,27 @@ private final class StatusItemContentView: NSView {
             addSubview(valueLabel)
         }
 
-        topDot.font = NSFont.systemFont(ofSize: 10, weight: .bold)
-        topDot.textColor = .systemRed
-        topDot.alignment = .center
-        bottomDot.font = NSFont.systemFont(ofSize: 10, weight: .bold)
-        bottomDot.textColor = .systemBlue
-        bottomDot.alignment = .center
         addSubview(topDot)
         addSubview(bottomDot)
+    }
+}
+
+@MainActor
+private final class NetworkIndicatorDot: NSView {
+    init(color: NSColor) {
+        super.init(frame: .zero)
+        wantsLayer = true
+        layer?.backgroundColor = color.cgColor
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        nil
+    }
+
+    override func layout() {
+        super.layout()
+        layer?.cornerRadius = min(bounds.width, bounds.height) / 2
     }
 }
 
