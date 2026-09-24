@@ -360,7 +360,6 @@ struct SystemMonitorPanelView: View {
                         ))
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                        temperatureLabel(disk.temperatureCelsius)
                     }
                 }
             }
