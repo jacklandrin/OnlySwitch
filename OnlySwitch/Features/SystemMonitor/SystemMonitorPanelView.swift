@@ -54,24 +54,15 @@ struct SystemMonitorSectionBar: View {
     @Binding var selection: SectionBar.Section
 
     var body: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: 4) {
             ForEach(sections, id: \.self) { section in
                 Button {
                     selection = section
                 } label: {
-                    Group {
-                        if sections.count <= 3 {
-                            Label(section.title, systemImage: section.symbolName)
-                                .labelStyle(.titleAndIcon)
-                                .lineLimit(1)
-                                .minimumScaleFactor(0.75)
-                        } else {
-                            Label(section.title, systemImage: section.symbolName)
-                                .labelStyle(.iconOnly)
-                        }
-                    }
-                    .font(.subheadline.weight(.medium))
-                    .frame(maxWidth: .infinity, minHeight: 38)
+                    Label(section.title, systemImage: section.symbolName)
+                        .labelStyle(.iconOnly)
+                        .font(.body.weight(.semibold))
+                        .frame(maxWidth: .infinity, minHeight: 36)
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
@@ -90,9 +81,10 @@ struct SystemMonitorSectionBar: View {
                 .accessibilityLabel(Text(section.title))
                 .accessibilityAddTraits(selection == section ? .isSelected : [])
                 .accessibilityHint(Text("Shows the \(section.title) section".localized()))
+                .help(Text(section.title))
             }
         }
-        .padding(6)
+        .padding(4)
         .background(.regularMaterial, in: Capsule())
         .overlay {
             Capsule()
@@ -100,8 +92,6 @@ struct SystemMonitorSectionBar: View {
         }
         .shadow(color: .black.opacity(0.10), radius: 10, y: 3)
         .padding(.horizontal, 15)
-        .padding(.top, 16)
-        .padding(.bottom, 4)
         .accessibilityElement(children: .contain)
     }
 }

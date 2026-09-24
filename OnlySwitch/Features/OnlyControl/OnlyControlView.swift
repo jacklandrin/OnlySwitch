@@ -43,6 +43,7 @@ struct OnlyControlView: View {
                         sections: [.controls, .systemMonitor],
                         selection: selectedSection
                     )
+                    .padding(.top, 16)
 
                     Spacer()
                     HStack(alignment: .bottom) {

@@ -37,7 +37,7 @@ struct OnlySwitchListView: View {
     
     var body: some View {
         ZStack {
-            VStack {
+            VStack(spacing: 0) {
                 Spacer()
                 BluredSoundWave(width: listWidth, height: soundWaveHeight)
                     .rotation3DEffect(.degrees(180), axis: (x: 1, y: 0, z: 0))
@@ -56,6 +56,10 @@ struct OnlySwitchListView: View {
                     sections: sections,
                     selection: $selectedSection
                 )
+                // Keep this inset in the popover layout so it cannot be compressed
+                // away by the section bar's own intrinsic height.
+                .padding(.top, 12)
+                .padding(.bottom, 2)
 
                 ScrollView {
                     Group {
@@ -76,7 +80,8 @@ struct OnlySwitchListView: View {
                     }
                 }
                 .frame(height: scrollViewHeight)
-                .padding(.vertical,15)
+                .padding(.top, 4)
+                .padding(.bottom, 15)
                 .padding(.horizontal, 0)
                 if switchVM.showAds {
                     recommendApp.opacity(0.8)
