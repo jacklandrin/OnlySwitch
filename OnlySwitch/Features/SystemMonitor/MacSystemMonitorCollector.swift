@@ -1,4 +1,5 @@
 import Darwin
+import Dispatch
 import Foundation
 import SystemMonitor
 
@@ -31,6 +32,31 @@ enum ProcessSampler {
     }
 }
 
+enum NetworkInterfaceFilter {
+    static func shouldInclude(
+        family: sa_family_t,
+        flags: UInt32,
+        name: String,
+        seenNames: inout Set<String>
+    ) -> Bool {
+        guard family == sa_family_t(AF_LINK),
+              (flags & UInt32(IFF_UP)) != 0,
+              (flags & UInt32(IFF_LOOPBACK)) == 0
+        else { return false }
+        return seenNames.insert(name).inserted
+    }
+}
+
+enum MemoryPressureSampler {
+    static func status(
+        for event: DispatchSource.MemoryPressureEvent
+    ) -> SystemMonitorMemoryPressure {
+        if event.contains(.critical) { return .critical }
+        if event.contains(.warning) { return .warning }
+        return .normal
+    }
+}
+
 /// A public-API-only sampler for macOS system metrics.
 ///
 /// This actor owns all mutable counters so rates cannot be computed from interleaved samples.
@@ -59,6 +85,25 @@ actor MacSystemMonitorCollector {
     private var previousSampleUptime: TimeInterval?
     private var lastCollectedUptime: TimeInterval?
     private var latestSnapshot: SystemMonitorSnapshot?
+    private var memoryPressure: SystemMonitorMemoryPressure = .normal
+    private let memoryPressureSource: any DispatchSourceMemoryPressure
+
+    init() {
+        let source = DispatchSource.makeMemoryPressureSource(eventMask: .all, queue: .global(qos: .utility))
+        memoryPressureSource = source
+        source.setEventHandler { [weak self, weak source] in
+            guard let source else { return }
+            let status = MemoryPressureSampler.status(for: source.data)
+            Task { [weak self] in
+                await self?.recordMemoryPressure(status)
+            }
+        }
+        source.activate()
+    }
+
+    deinit {
+        memoryPressureSource.cancel()
+    }
 
     nonisolated static func liveClient(
         refreshInterval: TimeInterval = 1
@@ -154,6 +199,10 @@ actor MacSystemMonitorCollector {
 }
 
 private extension MacSystemMonitorCollector {
+    func recordMemoryPressure(_ status: SystemMonitorMemoryPressure) {
+        memoryPressure = status
+    }
+
     private func readCPUTicks() -> CPUTicks? {
         var info = host_cpu_load_info()
         var count = mach_msg_type_number_t(MemoryLayout<host_cpu_load_info_data_t>.size / MemoryLayout<integer_t>.size)
@@ -195,7 +244,7 @@ private extension MacSystemMonitorCollector {
             compressedBytes: compressed,
             cachedBytes: cached,
             swapUsedBytes: readSwapUsedBytes(),
-            pressure: .unavailable
+            pressure: .available(memoryPressure)
         )
     }
 
@@ -250,13 +299,18 @@ private extension MacSystemMonitorCollector {
         while let interface = cursor {
             defer { cursor = interface.pointee.ifa_next }
             let flags = interface.pointee.ifa_flags
-            guard (flags & UInt32(IFF_UP)) != 0, (flags & UInt32(IFF_LOOPBACK)) == 0,
+            guard let address = interface.pointee.ifa_addr,
                   let namePointer = interface.pointee.ifa_name,
                   let dataPointer = interface.pointee.ifa_data
             else { continue }
 
             let name = String(cString: namePointer)
-            guard seenNames.insert(name).inserted else { continue }
+            guard NetworkInterfaceFilter.shouldInclude(
+                family: address.pointee.sa_family,
+                flags: flags,
+                name: name,
+                seenNames: &seenNames
+            ) else { continue }
             let data = dataPointer.assumingMemoryBound(to: if_data.self).pointee
             downloaded &+= UInt64(data.ifi_ibytes)
             uploaded &+= UInt64(data.ifi_obytes)
@@ -315,7 +369,10 @@ private extension MacSystemMonitorCollector {
         return ProcessCounters(
             cpuNanoseconds: usage.ri_user_time + usage.ri_system_time,
             residentBytes: usage.ri_resident_size,
-            name: String(cString: nameBuffer)
+            name: String(
+                decoding: nameBuffer.prefix(Int(nameLength)).map { UInt8(bitPattern: $0) },
+                as: UTF8.self
+            )
         )
     }
 }

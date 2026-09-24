@@ -1,3 +1,5 @@
+import Darwin
+import Dispatch
 import SystemMonitor
 import Testing
 @testable import OnlySwitch
@@ -6,6 +8,42 @@ struct MacSystemMonitorCollectorTests {
     @Test
     func resetNetworkCounterProducesZeroRate() {
         #expect(NetworkRate.delta(current: 20, previous: 40, seconds: 1) == 0)
+    }
+
+    @Test
+    func networkCountersUseOnlyOneLinkLayerEntryPerActiveInterface() {
+        var seenNames = Set<String>()
+
+        #expect(NetworkInterfaceFilter.shouldInclude(
+            family: sa_family_t(AF_INET),
+            flags: UInt32(IFF_UP),
+            name: "en0",
+            seenNames: &seenNames
+        ) == false)
+        #expect(NetworkInterfaceFilter.shouldInclude(
+            family: sa_family_t(AF_LINK),
+            flags: UInt32(IFF_UP),
+            name: "en0",
+            seenNames: &seenNames
+        ))
+        #expect(NetworkInterfaceFilter.shouldInclude(
+            family: sa_family_t(AF_LINK),
+            flags: UInt32(IFF_UP),
+            name: "en0",
+            seenNames: &seenNames
+        ) == false)
+    }
+
+    @Test(arguments: [
+        (DispatchSource.MemoryPressureEvent.normal, SystemMonitorMemoryPressure.normal),
+        (DispatchSource.MemoryPressureEvent.warning, SystemMonitorMemoryPressure.warning),
+        (DispatchSource.MemoryPressureEvent.critical, SystemMonitorMemoryPressure.critical)
+    ])
+    func memoryPressureEventsMapToStatus(
+        event: DispatchSource.MemoryPressureEvent,
+        expected: SystemMonitorMemoryPressure
+    ) {
+        #expect(MemoryPressureSampler.status(for: event) == expected)
     }
 
     @Test
