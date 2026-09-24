@@ -11,6 +11,7 @@ import ComposableArchitecture
 import SwiftUI
 import OnlyControl
 import Defines
+import Extensions
 import Foundation
 import SystemMonitor
 
@@ -56,6 +57,10 @@ struct OnlyControlView: View {
                 .padding(.top, 4)
             }
             .cornerRadius(15)
+            // The borderless window can only begin a drag from unhandled areas. Keep this
+            // behind the TabView so native controls, dashboard tiles, and scrolling retain
+            // their normal mouse handling.
+            .appKitWindowDrag()
             .blur(radius: store.blurRadius)
             .opacity(store.opacity)
             .animation(.interactiveSpring(duration: 0.5), value: store.blurRadius)
