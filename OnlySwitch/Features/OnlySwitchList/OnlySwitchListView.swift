@@ -71,7 +71,7 @@ struct OnlySwitchListView: View {
                         case .soundMixer:
                             SoundMixerPanelView()
                         case .systemMonitor:
-                            SystemMonitorPanelView()
+                            SystemMonitorPanelContainer()
                         }
                     }
                 }

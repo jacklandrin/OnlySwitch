@@ -379,6 +379,7 @@
 		B90000000000000000000002 /* MacSystemMonitorCollectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90000000000000000000001 /* MacSystemMonitorCollectorTests.swift */; };
 		B90100000000000000000002 /* SystemMonitorPreferencesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90100000000000000000001 /* SystemMonitorPreferencesTests.swift */; };
 		B90200000000000000000002 /* SystemMonitorSectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90200000000000000000001 /* SystemMonitorSectionTests.swift */; };
+		B90300000000000000000002 /* OnlyControlSystemMonitorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90300000000000000000001 /* OnlyControlSystemMonitorTests.swift */; };
 		B90200000000000000000005 /* SystemMonitorPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90200000000000000000004 /* SystemMonitorPanelView.swift */; };
 		B90200000000000000000007 /* SystemMonitorChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90200000000000000000006 /* SystemMonitorChartView.swift */; };
 		B90000000000000000000005 /* MacSystemMonitorCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90000000000000000000004 /* MacSystemMonitorCollector.swift */; };
@@ -866,6 +867,7 @@
 		B90000000000000000000001 /* MacSystemMonitorCollectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacSystemMonitorCollectorTests.swift; sourceTree = "<group>"; };
 		B90100000000000000000001 /* SystemMonitorPreferencesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorPreferencesTests.swift; sourceTree = "<group>"; };
 		B90200000000000000000001 /* SystemMonitorSectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorSectionTests.swift; sourceTree = "<group>"; };
+		B90300000000000000000001 /* OnlyControlSystemMonitorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyControlSystemMonitorTests.swift; sourceTree = "<group>"; };
 		B90200000000000000000004 /* SystemMonitorPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorPanelView.swift; sourceTree = "<group>"; };
 		B90200000000000000000006 /* SystemMonitorChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorChartView.swift; sourceTree = "<group>"; };
 		B90000000000000000000004 /* MacSystemMonitorCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacSystemMonitorCollector.swift; sourceTree = "<group>"; };
@@ -2007,6 +2009,7 @@
 				B90000000000000000000001 /* MacSystemMonitorCollectorTests.swift */,
 				B90100000000000000000001 /* SystemMonitorPreferencesTests.swift */,
 				B90200000000000000000001 /* SystemMonitorSectionTests.swift */,
+				B90300000000000000000001 /* OnlyControlSystemMonitorTests.swift */,
 			);
 			path = SystemMonitor;
 			sourceTree = "<group>";
@@ -2669,6 +2672,7 @@
 				B90000000000000000000002 /* MacSystemMonitorCollectorTests.swift in Sources */,
 				B90100000000000000000002 /* SystemMonitorPreferencesTests.swift in Sources */,
 				B90200000000000000000002 /* SystemMonitorSectionTests.swift in Sources */,
+				B90300000000000000000002 /* OnlyControlSystemMonitorTests.swift in Sources */,
 				C1A0C00518E9202600000001 /* PrivilegedHelperExecutorTests.swift in Sources */,
 				C1A0D00518E9202600000001 /* PrivilegedOperationClientTests.swift in Sources */,
 				C1A0F00718E9202600000001 /* PrivilegedAccessViewModelTests.swift in Sources */,

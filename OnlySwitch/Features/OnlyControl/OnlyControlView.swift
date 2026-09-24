@@ -11,6 +11,7 @@ import SwiftUI
 import OnlyControl
 import Defines
 import Foundation
+import SystemMonitor
 
 struct OnlyControlView: View {
     @Environment(\.colorScheme) private var colorScheme
@@ -38,6 +39,11 @@ struct OnlyControlView: View {
                 }
 
                 VStack(spacing: 0) {
+                    SystemMonitorSectionBar(
+                        sections: [.controls, .systemMonitor],
+                        selection: selectedSection
+                    )
+
                     Spacer()
                     HStack(alignment: .bottom) {
                         Text(currentDate, style: .time)
@@ -63,14 +69,26 @@ struct OnlyControlView: View {
                             .padding(.trailing, 50)
                     }
                     Spacer()
-                    DashboardView(store: store.scope(state: \.dashboard, action: \.dashboardAction))
-                        .background(
-                            // A tricky approach to prevent dragging window
-                            Button{} label: {
-                                Color.clear
-                            }
-                            .buttonStyle(.plain)
-                        )
+                    switch store.selectedSection {
+                    case .controls:
+                        DashboardView(store: store.scope(state: \.dashboard, action: \.dashboardAction))
+                            .background(
+                                // A tricky approach to prevent dragging window
+                                Button{} label: {
+                                    Color.clear
+                                }
+                                .buttonStyle(.plain)
+                            )
+                    case .systemMonitor:
+                        ScrollView {
+                            SystemMonitorPanelView(
+                                store: store.scope(state: \.systemMonitor, action: \.systemMonitor)
+                            )
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    case .authenticator, .soundMixer:
+                        EmptyView()
+                    }
 
                     HStack {
                         Spacer()
@@ -122,6 +140,13 @@ struct OnlyControlView: View {
             }
         }
     }
+
+    private var selectedSection: Binding<SectionBar.Section> {
+        Binding(
+            get: { store.selectedSection },
+            set: { store.send(.selectedSectionChanged($0)) }
+        )
+    }
 }
 
 #Preview {
@@ -143,6 +168,8 @@ final class OnlyControlWindow: NSWindow, NSWindowDelegate {
 
     private let onlyControlStore: StoreOf<OnlyControlReducer> = .init(initialState: .init()) {
         OnlyControlReducer()
+    } withDependencies: {
+        $0.systemMonitor = MacSystemMonitorCollector.liveClient()
     }
     private var globalMouseMonitor: Any?
     private var localMouseMonitor: Any?

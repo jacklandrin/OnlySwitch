@@ -83,9 +83,8 @@ struct SystemMonitorSectionBar: View {
     }
 }
 
-struct SystemMonitorPanelView: View {
+struct SystemMonitorPanelContainer: View {
     @State private var store: StoreOf<SystemMonitorReducer>
-    @State private var preferences = Preferences.shared.systemMonitorPreferences
 
     init() {
         _store = State(initialValue: Store(initialState: SystemMonitorReducer.State()) {
@@ -94,6 +93,15 @@ struct SystemMonitorPanelView: View {
             $0.systemMonitor = MacSystemMonitorCollector.liveClient()
         })
     }
+
+    var body: some View {
+        SystemMonitorPanelView(store: store)
+    }
+}
+
+struct SystemMonitorPanelView: View {
+    let store: StoreOf<SystemMonitorReducer>
+    @State private var preferences = Preferences.shared.systemMonitorPreferences
 
     var body: some View {
         @Bindable var store = store

@@ -11,6 +11,7 @@ import AppKit
 import Defines
 import Switches
 import Extensions
+import SystemMonitor
 
 @Reducer
 struct OnlyControlReducer {
@@ -28,6 +29,10 @@ struct OnlyControlReducer {
             } else if lhs.isAirPodsConnected != rhs.isAirPodsConnected {
                 return false
             } else if lhs.airPodsBatteryValues != rhs.airPodsBatteryValues {
+                return false
+            } else if lhs.selectedSection != rhs.selectedSection {
+                return false
+            } else if lhs.systemMonitor != rhs.systemMonitor {
                 return false
             }
 
@@ -54,6 +59,8 @@ struct OnlyControlReducer {
         var switchList: [SwitchBarVM] = []
         var isAirPodsConnected: Bool = false
         var airPodsBatteryValues: [Float] = []
+        var selectedSection: SectionBar.Section = .controls
+        var systemMonitor = SystemMonitorReducer.State()
 
         var soundWaveEffectDisplay: Bool {
             Preferences.shared.soundWaveEffectDisplay
@@ -73,6 +80,8 @@ struct OnlyControlReducer {
         case dashboardAction(DashboardReducer.Action)
         case refreshAirPodsBattery
         case updateAirPodsBattery(isConnected: Bool, batteryValues: [Float])
+        case selectedSectionChanged(SectionBar.Section)
+        case systemMonitor(SystemMonitorReducer.Action)
     }
 
     @Dependency(\.onlyControlClient) var client
@@ -80,6 +89,10 @@ struct OnlyControlReducer {
     var body: some ReducerOf<Self> {
         Scope(state: \.dashboard, action: \.dashboardAction) {
             DashboardReducer()
+        }
+
+        Scope(state: \.systemMonitor, action: \.systemMonitor) {
+            SystemMonitorReducer()
         }
 
         Reduce { state, action in
@@ -111,15 +124,22 @@ struct OnlyControlReducer {
                 case .showControl:
                     state.blurRadius = 0
                     state.opacity = 1
+                    let monitorVisibility = state.selectedSection == .systemMonitor
                     return .merge(
                         .send(.refreshDashboard),
-                        .send(.refreshAirPodsBattery)
+                        .send(.refreshAirPodsBattery),
+                        .send(.systemMonitor(.visibilityChanged(monitorVisibility)))
                     )
 
                 case .hideControl:
                     state.blurRadius = 20
                     state.opacity = 0
-                    return .none
+                    return .send(.systemMonitor(.visibilityChanged(false)))
+
+                case let .selectedSectionChanged(section):
+                    guard state.selectedSection != section else { return .none }
+                    state.selectedSection = section
+                    return .send(.systemMonitor(.visibilityChanged(section == .systemMonitor)))
 
                 case let .updateItems(units, items, switches):
                     let items = items.sorted { $0.weight < $1.weight }
@@ -189,6 +209,9 @@ struct OnlyControlReducer {
                     return .none
 
                 case .dashboardAction:
+                    return .none
+
+                case .systemMonitor:
                     return .none
 
                 case .refreshAirPodsBattery:
