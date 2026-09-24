@@ -6,6 +6,12 @@ struct SystemMonitorStatusItemPresentation: Equatable {
     let symbolName: String
     let title: String
     let accessibilityLabel: String
+    let visualStyle: VisualStyle
+
+    enum VisualStyle: Equatable {
+        case standard
+        case network
+    }
 }
 
 @MainActor
@@ -147,7 +153,8 @@ private extension SystemMonitorStatusItemController {
             return .init(
                 symbolName: "cpu",
                 title: value,
-                accessibilityLabel: "CPU %@".localizeWithFormat(arguments: value)
+                accessibilityLabel: "CPU %@".localizeWithFormat(arguments: value),
+                visualStyle: .standard
             )
 
         case .gpu:
@@ -155,7 +162,8 @@ private extension SystemMonitorStatusItemController {
             return .init(
                 symbolName: "rectangle.3.group",
                 title: value,
-                accessibilityLabel: "GPU %@".localizeWithFormat(arguments: value)
+                accessibilityLabel: "GPU %@".localizeWithFormat(arguments: value),
+                visualStyle: .standard
             )
 
         case .memory:
@@ -165,7 +173,8 @@ private extension SystemMonitorStatusItemController {
             return .init(
                 symbolName: "memorychip",
                 title: value,
-                accessibilityLabel: "Memory %@ used".localizeWithFormat(arguments: value)
+                accessibilityLabel: "Memory %@ used".localizeWithFormat(arguments: value),
+                visualStyle: .standard
             )
 
         case .disk:
@@ -175,7 +184,8 @@ private extension SystemMonitorStatusItemController {
             return .init(
                 symbolName: "internaldrive",
                 title: value,
-                accessibilityLabel: "Disk %@ used".localizeWithFormat(arguments: value)
+                accessibilityLabel: "Disk %@ used".localizeWithFormat(arguments: value),
+                visualStyle: .standard
             )
 
         case .network:
@@ -187,11 +197,12 @@ private extension SystemMonitorStatusItemController {
             } ?? "—"
             return .init(
                 symbolName: "network",
-                title: "↓ \(download)  ↑ \(upload)",
+                title: "↓ \(download)\n↑ \(upload)",
                 accessibilityLabel: "Network download %@, upload %@".localizeWithFormat(
                     arguments: download,
                     upload
-                )
+                ),
+                visualStyle: .network
             )
         }
     }
@@ -200,7 +211,7 @@ private extension SystemMonitorStatusItemController {
 @MainActor
 private final class AppKitSystemMonitorStatusItemFactory: SystemMonitorStatusItemFactory {
     func makeStatusItem(for metric: SystemMonitorMetric) -> any SystemMonitorStatusItemHandle {
-        AppKitSystemMonitorStatusItem()
+        AppKitSystemMonitorStatusItem(metric: metric)
     }
 }
 
@@ -210,8 +221,8 @@ private final class AppKitSystemMonitorStatusItem: SystemMonitorStatusItemHandle
     private let actionTarget = ActionTarget()
     private var isRemoved = false
 
-    init(statusBar: NSStatusBar = .system) {
-        item = statusBar.statusItem(withLength: NSStatusItem.variableLength)
+    init(metric: SystemMonitorMetric, statusBar: NSStatusBar = .system) {
+        item = statusBar.statusItem(withLength: Self.width(for: metric))
         StatusBarController.configureStatusItem(item)
 
         guard let button = item.button else { return }
@@ -224,10 +235,25 @@ private final class AppKitSystemMonitorStatusItem: SystemMonitorStatusItemHandle
 
     func update(_ presentation: SystemMonitorStatusItemPresentation) {
         guard let button = item.button else { return }
-        let image = NSImage(systemSymbolName: presentation.symbolName, accessibilityDescription: nil)
-        image?.isTemplate = true
-        button.image = image
-        button.title = presentation.title
+        switch presentation.visualStyle {
+        case .standard:
+            let image = NSImage(systemSymbolName: presentation.symbolName, accessibilityDescription: nil)
+            image?.isTemplate = true
+            button.image = image
+            button.imagePosition = .imageLeading
+            button.attributedTitle = NSAttributedString(
+                string: presentation.title,
+                attributes: [
+                    .font: NSFont.monospacedDigitSystemFont(ofSize: NSFont.systemFontSize, weight: .medium),
+                    .foregroundColor: NSColor.labelColor
+                ]
+            )
+
+        case .network:
+            button.image = nil
+            button.imagePosition = .noImage
+            button.attributedTitle = Self.networkTitle(presentation.title)
+        }
         button.toolTip = presentation.accessibilityLabel
         button.setAccessibilityLabel(presentation.accessibilityLabel)
     }
@@ -241,6 +267,44 @@ private final class AppKitSystemMonitorStatusItem: SystemMonitorStatusItemHandle
         isRemoved = true
         actionTarget.action = nil
         NSStatusBar.system.removeStatusItem(item)
+    }
+
+    private static func width(for metric: SystemMonitorMetric) -> CGFloat {
+        switch metric {
+        case .cpu, .gpu, .disk:
+            52
+        case .memory:
+            72
+        case .network:
+            64
+        }
+    }
+
+    private static func networkTitle(_ title: String) -> NSAttributedString {
+        let lines = title.split(separator: "\n", maxSplits: 1, omittingEmptySubsequences: false)
+        let download = lines.indices.contains(0) ? String(lines[0].dropFirst(2)) : "—"
+        let upload = lines.indices.contains(1) ? String(lines[1].dropFirst(2)) : "—"
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.minimumLineHeight = 9
+        paragraphStyle.maximumLineHeight = 9
+        paragraphStyle.alignment = .left
+        let result = NSMutableAttributedString()
+        let valueAttributes: [NSAttributedString.Key: Any] = [
+            .font: NSFont.monospacedDigitSystemFont(ofSize: 9, weight: .medium),
+            .foregroundColor: NSColor.labelColor,
+            .paragraphStyle: paragraphStyle
+        ]
+        var markerAttributes: [NSAttributedString.Key: Any] = [
+            .font: NSFont.systemFont(ofSize: 9, weight: .bold),
+            .foregroundColor: NSColor.systemBlue,
+            .paragraphStyle: paragraphStyle
+        ]
+        result.append(NSAttributedString(string: "● ", attributes: markerAttributes))
+        result.append(NSAttributedString(string: "\(download)\n", attributes: valueAttributes))
+        markerAttributes[.foregroundColor] = NSColor.systemRed
+        result.append(NSAttributedString(string: "● ", attributes: markerAttributes))
+        result.append(NSAttributedString(string: upload, attributes: valueAttributes))
+        return result
     }
 
     @MainActor
