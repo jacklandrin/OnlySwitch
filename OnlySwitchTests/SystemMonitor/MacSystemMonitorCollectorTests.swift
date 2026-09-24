@@ -62,16 +62,20 @@ struct MacSystemMonitorCollectorTests {
     func sensorKeySelectionKeepsCPUAndGPUClassesSeparate() {
         let cpuPerformance = fourCharacterCode("Tp0P")
         let cpuEfficiency = fourCharacterCode("Te0P")
-        let cpuFrequency = fourCharacterCode("Tf0P")
+        let m3CPU = fourCharacterCode("Tf04")
+        let m3GPU = fourCharacterCode("Tf14")
         let gpu = fourCharacterCode("Tg0P")
 
         #expect(SMCTemperatureCodec.isCPUKey(cpuPerformance, chipModel: "Apple M4 Max"))
         #expect(SMCTemperatureCodec.isCPUKey(cpuEfficiency, chipModel: "Apple M4 Max"))
-        #expect(SMCTemperatureCodec.isCPUKey(cpuFrequency, chipModel: "Apple M3 Max"))
-        #expect(SMCTemperatureCodec.isCPUKey(cpuFrequency, chipModel: "Apple M4 Max") == false)
+        #expect(SMCTemperatureCodec.isCPUKey(m3CPU, chipModel: "Apple M3 Max"))
+        #expect(SMCTemperatureCodec.isCPUKey(m3GPU, chipModel: "Apple M3 Max") == false)
+        #expect(SMCTemperatureCodec.isCPUKey(m3CPU, chipModel: "Apple M4 Max") == false)
         #expect(SMCTemperatureCodec.isCPUKey(gpu, chipModel: "Apple M4 Max") == false)
-        #expect(SMCTemperatureCodec.isGPUKey(gpu))
-        #expect(SMCTemperatureCodec.isGPUKey(cpuPerformance) == false)
+        #expect(SMCTemperatureCodec.isGPUKey(m3GPU, chipModel: "Apple M3 Max"))
+        #expect(SMCTemperatureCodec.isGPUKey(m3CPU, chipModel: "Apple M3 Max") == false)
+        #expect(SMCTemperatureCodec.isGPUKey(gpu, chipModel: "Apple M4 Max"))
+        #expect(SMCTemperatureCodec.isGPUKey(cpuPerformance, chipModel: "Apple M4 Max") == false)
     }
 
     @Test

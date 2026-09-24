@@ -66,6 +66,13 @@ enum MemoryPressureSampler {
 enum SMCTemperatureCodec {
     private static let sp78 = fourCharacterCode("sp78")
     private static let floatingPoint = fourCharacterCode("flt ")
+    private static let m3CPUKeys: Set<String> = [
+        "Tf04", "Tf09", "Tf0A", "Tf0B", "Tf0D", "Tf0E",
+        "Tf44", "Tf49", "Tf4A", "Tf4B", "Tf4D", "Tf4E"
+    ]
+    private static let m3GPUKeys: Set<String> = [
+        "Tf14", "Tf18", "Tf19", "Tf1A", "Tf24", "Tf28", "Tf29", "Tf2A"
+    ]
 
     static func decode(dataType: UInt32, bytes: [UInt8]) -> Double? {
         switch dataType {
@@ -92,24 +99,27 @@ enum SMCTemperatureCodec {
 
     static func isCPUKey(_ key: String, chipModel: String?) -> Bool {
         if key.hasPrefix("Tp") || key.hasPrefix("Te") { return true }
-        guard key.hasPrefix("Tf"), let chipModel else { return false }
-        return chipModel.range(of: #"\bM3(?:\s|$)"#, options: .regularExpression) != nil
+        return isM3(chipModel) && m3CPUKeys.contains(key)
     }
 
-    static func isGPUKey(_ key: String) -> Bool {
-        key.hasPrefix("Tg")
+    static func isGPUKey(_ key: String, chipModel: String?) -> Bool {
+        key.hasPrefix("Tg") || (isM3(chipModel) && m3GPUKeys.contains(key))
     }
 
     static func isCPUKey(_ key: UInt32, chipModel: String?) -> Bool {
         isCPUKey(string(for: key), chipModel: chipModel)
     }
 
-    static func isGPUKey(_ key: UInt32) -> Bool {
-        isGPUKey(string(for: key))
+    static func isGPUKey(_ key: UInt32, chipModel: String?) -> Bool {
+        isGPUKey(string(for: key), chipModel: chipModel)
     }
 
     private static func fourCharacterCode(_ value: String) -> UInt32 {
         value.utf8.reduce(UInt32(0)) { ($0 << 8) | UInt32($1) }
+    }
+
+    private static func isM3(_ chipModel: String?) -> Bool {
+        chipModel?.range(of: #"\bM3(?:\s|$)"#, options: .regularExpression) != nil
     }
 
     private static func string(for value: UInt32) -> String {
@@ -268,7 +278,7 @@ private struct PrivateAppleSiliconMetricsReader {
             guard let key = key(at: index) else { continue }
             let name = Self.string(for: key)
             let isCPU = SMCTemperatureCodec.isCPUKey(name, chipModel: chipModel)
-            let isGPU = SMCTemperatureCodec.isGPUKey(name)
+            let isGPU = SMCTemperatureCodec.isGPUKey(name, chipModel: chipModel)
             guard isCPU || isGPU, let keyInfo = readKeyInfo(key: key) else { continue }
 
             let sensor = TemperatureSensor(
