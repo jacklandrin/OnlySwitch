@@ -180,6 +180,7 @@ struct SystemMonitorPanelView: View {
                 symbolName: "cpu",
                 availability: snapshot.cpuUsage,
                 temperature: snapshot.cpuTemperatureCelsius,
+                processor: snapshot.hardware.cpu,
                 detail: { cpuDetails(snapshot, store: store) }
             ) { usage in
                 metricSummary(usage, history: store.wrappedValue.history.snapshots.map { $0.cpuUsage.value ?? 0 })
@@ -190,6 +191,7 @@ struct SystemMonitorPanelView: View {
                 symbolName: "rectangle.3.group",
                 availability: snapshot.gpuUsage,
                 temperature: snapshot.gpuTemperatureCelsius,
+                processor: snapshot.hardware.gpu,
                 detail: { EmptyView() }
             ) { usage in
                 metricSummary(usage, history: store.wrappedValue.history.snapshots.map { $0.gpuUsage.value ?? 0 })
@@ -209,11 +211,13 @@ struct SystemMonitorPanelView: View {
         symbolName: String,
         availability: MetricAvailability<Double>,
         temperature: MetricAvailability<Double>,
+        processor: SystemMonitorProcessor,
         @ViewBuilder detail: () -> Detail,
         @ViewBuilder content: (Double) -> Content
     ) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             metricHeader(title, symbolName: symbolName, tint: .accentColor)
+            processorDetails(processor, metricName: title)
             switch availability {
             case let .available(value):
                 content(value)
@@ -342,12 +346,11 @@ struct SystemMonitorPanelView: View {
                     rateSummary("Upload".localized(), rate: network.uploadBytesPerSecond, tint: .pink)
                 }
                 SystemMonitorChartView(
-                    points: store.wrappedValue.history.snapshots.map {
-                        min(($0.network.value?.downloadBytesPerSecond ?? 0) / 1_048_576, 1)
-                    },
+                    points: store.wrappedValue.history.snapshots.map { $0.network.value?.downloadBytesPerSecond ?? 0 },
                     tint: .blue,
                     accessibilityLabel: "Download history".localized(),
-                    valueDescription: { SystemMonitorFormatter.rate(bytesPerSecond: $0 * 1_048_576) }
+                    valueDescription: { SystemMonitorFormatter.rate(bytesPerSecond: $0) },
+                    scale: .adaptive
                 )
                 DisclosureGroup(
                     "Network Details".localized(),
@@ -386,6 +389,38 @@ struct SystemMonitorPanelView: View {
                 .background(tint.opacity(0.14), in: RoundedRectangle(cornerRadius: 8))
                 .accessibilityHidden(true)
         }
+    }
+
+    @ViewBuilder
+    private func processorDetails(_ processor: SystemMonitorProcessor, metricName: String) -> some View {
+        if let model = processor.model.value {
+            Text(model)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .lineLimit(2)
+        } else {
+            Text("\(metricName) model unavailable".localized())
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+        }
+
+        if processor.physicalCoreCount.value == nil, processor.logicalCoreCount.value == nil {
+            processorFact("\(metricName) core count unavailable".localized())
+        } else {
+            HStack(spacing: 6) {
+                processorFact(processor.physicalCoreCount.value.map { "\($0) physical cores".localized() } ?? "Physical cores unavailable".localized())
+                processorFact(processor.logicalCoreCount.value.map { "\($0) logical cores".localized() } ?? "Logical cores unavailable".localized())
+            }
+        }
+    }
+
+    private func processorFact(_ value: String) -> some View {
+        Text(value)
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            .padding(.horizontal, 7)
+            .padding(.vertical, 4)
+            .background(.primary.opacity(0.06), in: Capsule())
     }
 
     private func temperatureLabel(_ temperature: MetricAvailability<Double>) -> some View {
