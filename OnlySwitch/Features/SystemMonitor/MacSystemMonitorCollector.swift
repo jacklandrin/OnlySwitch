@@ -356,10 +356,7 @@ private extension MacSystemMonitorCollector {
 
     private func processCounters(for pid: pid_t) -> ProcessCounters? {
         var usage = rusage_info_v2()
-        let result = withUnsafeMutablePointer(to: &usage) { usagePointer in
-            var rawUsage: rusage_info_t? = UnsafeMutableRawPointer(usagePointer)
-            return proc_pid_rusage(pid, RUSAGE_INFO_V2, &rawUsage)
-        }
+        let result = OnlySwitchProcessRusageV2(pid, &usage)
         guard result == 0 else { return nil }
 
         var nameBuffer = Array(repeating: CChar(0), count: Int(MAXCOMLEN) + 1)
