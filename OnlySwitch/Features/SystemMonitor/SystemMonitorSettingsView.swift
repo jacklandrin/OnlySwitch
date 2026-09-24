@@ -10,7 +10,7 @@ struct SystemMonitorSettingsView: View {
                 ForEach(SystemMonitorMetric.allCases, id: \.self) { metric in
                     Toggle(metric.rawValue.uppercased().localized(), isOn: viewModel.panelMetricBinding(for: metric))
                 }
-                Text("GPU monitoring is unavailable because macOS provides no public GPU-usage API.".localized())
+                Text("GPU readings depend on Mac hardware and macOS version.".localized())
                     .font(.caption)
                     .foregroundStyle(.secondary)
             } header: {
@@ -22,11 +22,7 @@ struct SystemMonitorSettingsView: View {
             Section {
                 ForEach(SystemMonitorMetric.allCases, id: \.self) { metric in
                     Toggle(metric.rawValue.uppercased().localized(), isOn: viewModel.menuBarMetricBinding(for: metric))
-                        .disabled(metric == .gpu)
                 }
-                Text("GPU indicators are unavailable on this Mac because macOS has no public GPU-usage API.".localized())
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
             } header: {
                 Text("Menu Bar Indicators".localized())
             } footer: {

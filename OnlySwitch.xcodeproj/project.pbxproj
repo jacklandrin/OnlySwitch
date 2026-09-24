@@ -380,9 +380,11 @@
 		B90100000000000000000002 /* SystemMonitorPreferencesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90100000000000000000001 /* SystemMonitorPreferencesTests.swift */; };
 		B90200000000000000000002 /* SystemMonitorSectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90200000000000000000001 /* SystemMonitorSectionTests.swift */; };
 		B90300000000000000000002 /* OnlyControlSystemMonitorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90300000000000000000001 /* OnlyControlSystemMonitorTests.swift */; };
+		B90400000000000000000002 /* SystemMonitorStatusItemControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90400000000000000000001 /* SystemMonitorStatusItemControllerTests.swift */; };
 		B90200000000000000000005 /* SystemMonitorPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90200000000000000000004 /* SystemMonitorPanelView.swift */; };
 		B90200000000000000000007 /* SystemMonitorChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90200000000000000000006 /* SystemMonitorChartView.swift */; };
 		B90000000000000000000005 /* MacSystemMonitorCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90000000000000000000004 /* MacSystemMonitorCollector.swift */; };
+		B90400000000000000000005 /* SystemMonitorStatusItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90400000000000000000004 /* SystemMonitorStatusItemController.swift */; };
 		B90100000000000000000005 /* SystemMonitorSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90100000000000000000004 /* SystemMonitorSettingsView.swift */; };
 		B90100000000000000000007 /* SystemMonitorSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90100000000000000000006 /* SystemMonitorSettingsViewModel.swift */; };
 		B90100000000000000000009 /* StoredSystemMonitorPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90100000000000000000008 /* StoredSystemMonitorPreferences.swift */; };
@@ -868,9 +870,11 @@
 		B90100000000000000000001 /* SystemMonitorPreferencesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorPreferencesTests.swift; sourceTree = "<group>"; };
 		B90200000000000000000001 /* SystemMonitorSectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorSectionTests.swift; sourceTree = "<group>"; };
 		B90300000000000000000001 /* OnlyControlSystemMonitorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyControlSystemMonitorTests.swift; sourceTree = "<group>"; };
+		B90400000000000000000001 /* SystemMonitorStatusItemControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorStatusItemControllerTests.swift; sourceTree = "<group>"; };
 		B90200000000000000000004 /* SystemMonitorPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorPanelView.swift; sourceTree = "<group>"; };
 		B90200000000000000000006 /* SystemMonitorChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorChartView.swift; sourceTree = "<group>"; };
 		B90000000000000000000004 /* MacSystemMonitorCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacSystemMonitorCollector.swift; sourceTree = "<group>"; };
+		B90400000000000000000004 /* SystemMonitorStatusItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorStatusItemController.swift; sourceTree = "<group>"; };
 		B90100000000000000000004 /* SystemMonitorSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorSettingsView.swift; sourceTree = "<group>"; };
 		B90100000000000000000006 /* SystemMonitorSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorSettingsViewModel.swift; sourceTree = "<group>"; };
 		B90100000000000000000008 /* StoredSystemMonitorPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredSystemMonitorPreferences.swift; sourceTree = "<group>"; };
@@ -2010,6 +2014,7 @@
 				B90100000000000000000001 /* SystemMonitorPreferencesTests.swift */,
 				B90200000000000000000001 /* SystemMonitorSectionTests.swift */,
 				B90300000000000000000001 /* OnlyControlSystemMonitorTests.swift */,
+				B90400000000000000000001 /* SystemMonitorStatusItemControllerTests.swift */,
 			);
 			path = SystemMonitor;
 			sourceTree = "<group>";
@@ -2018,6 +2023,7 @@
 			isa = PBXGroup;
 			children = (
 				B90000000000000000000004 /* MacSystemMonitorCollector.swift */,
+				B90400000000000000000004 /* SystemMonitorStatusItemController.swift */,
 				B90100000000000000000004 /* SystemMonitorSettingsView.swift */,
 				B90100000000000000000006 /* SystemMonitorSettingsViewModel.swift */,
 				B90200000000000000000004 /* SystemMonitorPanelView.swift */,
@@ -2673,6 +2679,7 @@
 				B90100000000000000000002 /* SystemMonitorPreferencesTests.swift in Sources */,
 				B90200000000000000000002 /* SystemMonitorSectionTests.swift in Sources */,
 				B90300000000000000000002 /* OnlyControlSystemMonitorTests.swift in Sources */,
+				B90400000000000000000002 /* SystemMonitorStatusItemControllerTests.swift in Sources */,
 				C1A0C00518E9202600000001 /* PrivilegedHelperExecutorTests.swift in Sources */,
 				C1A0D00518E9202600000001 /* PrivilegedOperationClientTests.swift in Sources */,
 				C1A0F00718E9202600000001 /* PrivilegedAccessViewModelTests.swift in Sources */,
@@ -2763,6 +2770,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B90000000000000000000005 /* MacSystemMonitorCollector.swift in Sources */,
+				B90400000000000000000005 /* SystemMonitorStatusItemController.swift in Sources */,
 				B90100000000000000000005 /* SystemMonitorSettingsView.swift in Sources */,
 				B90100000000000000000007 /* SystemMonitorSettingsViewModel.swift in Sources */,
 				B90100000000000000000009 /* StoredSystemMonitorPreferences.swift in Sources */,

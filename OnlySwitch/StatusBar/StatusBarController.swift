@@ -11,6 +11,7 @@ import Defines
 import SwiftUI
 import Foundation
 import ComposableArchitecture
+import SystemMonitor
 
 @MainActor
 class StatusBarController {
@@ -33,6 +34,8 @@ class StatusBarController {
     private let privateMenuBarBridge = MenuBarClientCoreBridgeAdapter()
     private var nativeVisibilityApplier: MenuBarClientCoreVisibilityApplier!
     private var menuBarIconHidingCoordinator: MenuBarIconHidingCoordinator!
+    private var systemMonitorStatusItems: SystemMonitorStatusItemController!
+    private var systemMonitorPreferencesObserver: NSObjectProtocol?
     @UserDefaultValue(key: UserDefaults.Key.isMenubarCollapse, defaultValue: false)
     private var isMenubarCollapse:Bool
     private var hasOtherPopover = false
@@ -87,6 +90,17 @@ class StatusBarController {
                 await self.restoreMenuBarIconHidingState()
             }
         }
+
+        let monitorPreferences = Preferences.shared.systemMonitorPreferences
+        systemMonitorStatusItems = SystemMonitorStatusItemController(
+            client: MacSystemMonitorCollector.liveClient(
+                refreshInterval: monitorPreferences.refreshInterval
+            ),
+            onClick: { [weak self] in
+                self?.togglePopover(sender: nil)
+            }
+        )
+        systemMonitorStatusItems.apply(monitorPreferences)
 
         observeNotifications()
     }
@@ -310,6 +324,17 @@ class StatusBarController {
     }
 
     private func observeNotifications() {
+        systemMonitorPreferencesObserver = NotificationCenter.default.addObserver(
+            forName: .systemMonitorPreferencesChanged,
+            object: nil,
+            queue: .main
+        ) { [weak self] notification in
+            guard let preferences = notification.object as? SystemMonitorPreferences else { return }
+            Task { @MainActor [weak self] in
+                self?.systemMonitorStatusItems.apply(preferences)
+            }
+        }
+
         NotificationCenter.default.addObserver(
             forName: .changeMenuBarIcon,
             object: nil,
@@ -373,6 +398,9 @@ class StatusBarController {
     }
 
     isolated deinit {
+        if let systemMonitorPreferencesObserver {
+            NotificationCenter.default.removeObserver(systemMonitorPreferencesObserver)
+        }
         nativeVisibilityApplier?.invalidateSynchronously()
         HideMenubarIconsSwitch.shared.clearTransition(owner: menuBarTransitionOwner)
         if let markItem {
