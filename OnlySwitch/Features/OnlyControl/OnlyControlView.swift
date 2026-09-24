@@ -137,25 +137,28 @@ struct OnlyControlView: View {
     }
 
     private var controlHeader: some View {
-        HStack(alignment: .bottom) {
-            Text(currentDate, style: .time)
-                .font(.system(size: 60, weight: .bold, design: .rounded))
-                .foregroundStyle(colorScheme == .dark ? .white : .black)
-                .onReceive(timer) { _ in
-                    currentDate = Date()
-                }
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(alignment: .bottom, spacing: 16) {
+                Text(currentDate, style: .time)
+                    .font(.system(size: 60, weight: .bold, design: .rounded))
+                    .foregroundStyle(colorScheme == .dark ? .white : .black)
+                    .layoutPriority(1)
+                    .onReceive(timer) { _ in
+                        currentDate = Date()
+                    }
+
+                Spacer(minLength: 16)
+
+                TimerCountDownView(ptswitch: PomodoroTimerSwitch.shared, showImage: true)
+                    .font(.system(size: 20, weight: .bold, design: .rounded))
+                    .padding(.bottom, 8)
+            }
 
             if store.isAirPodsConnected && !store.airPodsBatteryValues.isEmpty {
                 AirPodsBatteryView(batteryValues: store.airPodsBatteryValues)
-                    .padding(.bottom, 8)
-                    .padding(.leading, 24)
+                    .fixedSize(horizontal: true, vertical: false)
+                    .accessibilityLabel("AirPods battery levels".localized())
             }
-
-            Spacer(minLength: 16)
-
-            TimerCountDownView(ptswitch: PomodoroTimerSwitch.shared, showImage: true)
-                .font(.system(size: 20, weight: .bold, design: .rounded))
-                .padding(.bottom, 8)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }

@@ -30,31 +30,30 @@ struct AirPodsBatteryView: View {
         HStack(spacing: 8) {
             ForEach(batteryValues.indices, id:\.self) { index in
                 HStack(spacing: 4) {
-                    ZStack{
+                    ZStack {
                         Circle()
-                            .foregroundColor(.gray)
+                            .foregroundStyle(.gray)
                             .frame(width: 10, height: 10)
                         Text(batteryText[index])
                             .font(.system(size:7))
-                            .foregroundColor(.white)
+                            .foregroundStyle(.white)
                     }
                     
                     HStack {
                         Rectangle()
-                            .foregroundColor(batteryColor(for: batteryValues[index]))
+                            .foregroundStyle(batteryColor(for: batteryValues[index]))
                             .frame(width: CGFloat(batteryValues[index]) * viewWidth, height: viewHeight)
                         Spacer()
                             .frame(width: ((1.0 - CGFloat(batteryValues[index])) * viewWidth))
                     }
                     .frame(width: viewWidth, height: viewHeight)
-                  .overlay(RoundedRectangle(cornerRadius: 2).stroke(colorScheme == .dark ? .white : .black, lineWidth: 1))
-                  .overlay(Text("\(Int(batteryValues[index] * 100))%")
-                            .font(.system(size:6)).fontWeight(.medium))
+                    .overlay(RoundedRectangle(cornerRadius: 2).stroke(colorScheme == .dark ? .white : .black, lineWidth: 1))
+                    .overlay(Text("\(Int(batteryValues[index] * 100))%")
+                        .font(.system(size: 6).weight(.medium)))
                 }
-                
             }
         }
-        .frame(width: viewWidth)
+        .fixedSize(horizontal: true, vertical: false)
     }
 }
 
