@@ -363,29 +363,41 @@ struct OnlySwitchListView: View {
     }
     
     var recommendApp: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 10)
-                .foregroundColor(colorScheme == .dark ? Color(nsColor: NSColor.darkGray) : .white)
-                .frame(height: 45)
-            HStack(spacing:5) {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 5) {
                 ForEach(Ads) { ad in
-                    Link(destination: URL(string: ad.link)!) {
-                        Image(ad.imageName)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 45)
-                            .cornerRadius(12)
-                            .help(Text(ad.hint.localized()))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .stroke(.gray, lineWidth: 1)
-                                    .opacity(0.5)
-                            )
+                    Link(destination: ad.link) {
+                        AsyncImage(url: ad.imageURL) { phase in
+                            if let image = phase.image {
+                                image
+                                    .resizable()
+                                    .scaledToFit()
+                            } else {
+                                Image(systemName: "app.dashed")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .padding(10)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        .frame(width: 45)
+                        .cornerRadius(12)
+                        .help(Text(ad.hint.localized()))
+                        .accessibilityLabel(ad.hint.localized())
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(.gray, lineWidth: 1)
+                                .opacity(0.5)
+                        )
                     }
                 }
-            }.frame(height: 45)
-            
+            }
         }
+        .frame(height: 45)
+        .background(
+            RoundedRectangle(cornerRadius: 10)
+                .foregroundColor(colorScheme == .dark ? Color(nsColor: NSColor.darkGray) : .white)
+        )
         .padding(.horizontal, 15)
         .opacity(playerItem.isPlaying ? 0.5 : 1)
     }

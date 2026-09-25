@@ -7,42 +7,48 @@
 
 import Foundation
 
-struct AdsModel:Identifiable{
-    var id = UUID()
-    let imageName:String
-    let link:String
-    let hint:String
+struct AdsModel: Codable, Identifiable, Hashable {
+    let imageURL: URL
+    let link: URL
+    let hint: String
+
+    var id: String { link.absoluteString }
+
+    private enum CodingKeys: String, CodingKey {
+        case imageURL
+        case link
+        case hint
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        imageURL = try container.decode(URL.self, forKey: .imageURL)
+        link = try container.decode(URL.self, forKey: .link)
+        hint = try container.decode(String.self, forKey: .hint)
+
+        guard imageURL.scheme == "https", link.scheme == "https" else {
+            throw DecodingError.dataCorruptedError(
+                forKey: .imageURL,
+                in: container,
+                debugDescription: "Ad image and destination URLs must use HTTPS."
+            )
+        }
+    }
+
+    static func decode(from data: Data) throws -> [AdsModel] {
+        try JSONDecoder().decode([AdsModel].self, from: data)
+    }
+
+    static func loadBundledAds(bundle: Bundle = .main) -> [AdsModel] {
+        guard let url = bundle.url(
+            forResource: "AdsMarket",
+            withExtension: "json"
+        ), let data = try? Data(contentsOf: url) else {
+            return []
+        }
+
+        return (try? decode(from: data)) ?? []
+    }
 }
 
-let Ads:[AdsModel] = [
-    AdsModel(
-        imageName: "OnlyRemote",
-        link: "https://apps.apple.com/app/id6793657946",
-        hint: "Download OnlyRemote on the App Store"
-    ),
-    AdsModel(
-        imageName: "QRCobot",
-        link: "https://apps.apple.com/us/app/id1590006394",
-        hint: "Download QRCobot"
-    ),
-    AdsModel(
-        imageName: "OnlyBaby",
-        link: "https://apps.apple.com/us/app/onlybaby/id6758526534",
-        hint: "Download OnlyBaby"
-    ),
-    AdsModel(
-        imageName: "illa",
-        link: "https://github.com/illacloud/illa-builder",
-        hint: "illa Builder"
-    ),
-    AdsModel(
-        imageName: "CalendarX",
-        link: "https://github.com/ZzzM/CalendarX",
-        hint: "CalendarX"
-    ),
-    AdsModel(
-        imageName: "hdwh",
-        link: "https://hdwh.de/",
-        hint: "hdwh"
-    )
-]
+let Ads = AdsModel.loadBundledAds()

@@ -25,6 +25,9 @@
 		041B17892AD841EE0032919B /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 041B17882AD841EE0032919B /* Sparkle */; };
 		041B178B2AD842470032919B /* Updater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041B178A2AD842470032919B /* Updater.swift */; };
 		041D725728353A160083092D /* OnlySwitchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041D725628353A160083092D /* OnlySwitchTests.swift */; };
+		A9AD00010000000000000001 /* AdsModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9AD00020000000000000001 /* AdsModelTests.swift */; };
+		A9AD00030000000000000001 /* AdsMarket.json in Resources */ = {isa = PBXBuildFile; fileRef = A9AD00040000000000000001 /* AdsMarket.json */; };
+		A9AD00050000000000000001 /* Ads in Resources */ = {isa = PBXBuildFile; fileRef = A9AD00060000000000000001 /* Ads */; };
 		0427364827C1A5430068108F /* SpotifyScripting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0427364427C1A5430068108F /* SpotifyScripting.swift */; };
 		0427364927C1A5430068108F /* SpotifyBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0427364527C1A5430068108F /* SpotifyBridge.swift */; };
 		0427364B27C1A55B0068108F /* SBProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0427364A27C1A55B0068108F /* SBProtocols.swift */; };
@@ -591,6 +594,9 @@
 		041B178A2AD842470032919B /* Updater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Updater.swift; sourceTree = "<group>"; };
 		041D725428353A150083092D /* OnlySwitchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnlySwitchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		041D725628353A160083092D /* OnlySwitchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlySwitchTests.swift; sourceTree = "<group>"; };
+		A9AD00020000000000000001 /* AdsModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdsModelTests.swift; sourceTree = "<group>"; };
+		A9AD00040000000000000001 /* AdsMarket.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = AdsMarket.json; sourceTree = "<group>"; };
+		A9AD00060000000000000001 /* Ads */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Ads; sourceTree = "<group>"; };
 		042661402780C147005DF2B9 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
 		0427364427C1A5430068108F /* SpotifyScripting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotifyScripting.swift; sourceTree = "<group>"; };
 		0427364527C1A5430068108F /* SpotifyBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotifyBridge.swift; sourceTree = "<group>"; };
@@ -1120,6 +1126,7 @@
 				F3A400000000000000000013 /* RemoteAccess */,
 				B82700022700000000C0DE01 /* MenuBarIconHidingTests.swift */,
 				041D725628353A160083092D /* OnlySwitchTests.swift */,
+				A9AD00020000000000000001 /* AdsModelTests.swift */,
 				0444D5EA28393FF800327D0B /* Info.plist */,
 			);
 			path = OnlySwitchTests;
@@ -1938,6 +1945,8 @@
 			children = (
 				0406EDC22ACB3EBE0015F4D0 /* Evolution */,
 				046331D12795DA4C00C5F894 /* ShortcutsMarket */,
+				A9AD00040000000000000001 /* AdsMarket.json */,
+				A9AD00060000000000000001 /* Ads */,
 				047140B127788364005B160B /* mixkit-alert-bells-echo-765.wav */,
 				047140B227788364005B160B /* mixkit-bell-notification-933.wav */,
 				04E03B03275FD98500EA5FB9 /* battery-airpods-monterey.sh */,
@@ -2580,6 +2589,8 @@
 				04447B602754F08100CD2900 /* Assets.xcassets in Resources */,
 				04E562002E2467E6004E0BD0 /* Localizable.xcstrings in Resources */,
 				046331D32795DACB00C5F894 /* ShortcutsMarket.json in Resources */,
+				A9AD00030000000000000001 /* AdsMarket.json in Resources */,
+				A9AD00050000000000000001 /* Ads in Resources */,
 				A9A98A412F78834500034ADB /* models.json in Resources */,
 				A9C70D062EE490B3000A2367 /* GoogleService-Info.plist in Resources */,
 			);
@@ -2752,6 +2763,7 @@
 				047C1E522A2252620061235D /* EvolutionReducer.swift in Sources */,
 				0447E38A2B71746E00D07B9A /* AutohideDockSwitch.swift in Sources */,
 				041D725728353A160083092D /* OnlySwitchTests.swift in Sources */,
+				A9AD00010000000000000001 /* AdsModelTests.swift in Sources */,
 				0447E3822B71746E00D07B9A /* ShowUserLibrarySwitch.swift in Sources */,
 				0447E3842B71746E00D07B9A /* PomodoroTimerSwitch.swift in Sources */,
 				0444D5CF283683D800327D0B /* SystemInfo.swift in Sources */,

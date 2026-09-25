@@ -1,0 +1,37 @@
+[
+  {
+    "imageURL": "https://raw.githubusercontent.com/jacklandrin/OnlySwitch/main/OnlySwitch/Resource/Ads/OnlyRemote.png",
+    "link": "https://apps.apple.com/app/id6793657946",
+    "hint": "Download OnlyRemote on the App Store"
+  },
+  {
+    "imageURL": "https://raw.githubusercontent.com/jacklandrin/OnlySwitch/main/OnlySwitch/Resource/Ads/QRCobot.png",
+    "link": "https://apps.apple.com/us/app/id1590006394",
+    "hint": "Download QRCobot"
+  },
+  {
+    "imageURL": "https://raw.githubusercontent.com/jacklandrin/OnlySwitch/main/OnlySwitch/Resource/Ads/OnlyBaby.png",
+    "link": "https://apps.apple.com/us/app/onlybaby/id6758526534",
+    "hint": "Download OnlyBaby"
+  },
+  {
+    "imageURL": "https://raw.githubusercontent.com/jacklandrin/OnlySwitch/main/OnlySwitch/Resource/Ads/HappyEar.png",
+    "link": "https://happyears.app/",
+    "hint": "Download Happy Ear"
+  },
+  {
+    "imageURL": "https://raw.githubusercontent.com/jacklandrin/OnlySwitch/main/OnlySwitch/Resource/Ads/illa.png",
+    "link": "https://github.com/illacloud/illa-builder",
+    "hint": "illa Builder"
+  },
+  {
+    "imageURL": "https://raw.githubusercontent.com/jacklandrin/OnlySwitch/main/OnlySwitch/Resource/Ads/CalendarX.png",
+    "link": "https://github.com/ZzzM/CalendarX",
+    "hint": "CalendarX"
+  },
+  {
+    "imageURL": "https://raw.githubusercontent.com/jacklandrin/OnlySwitch/main/OnlySwitch/Resource/Ads/hdwh.png",
+    "link": "https://hdwh.de/",
+    "hint": "hdwh"
+  }
+]
