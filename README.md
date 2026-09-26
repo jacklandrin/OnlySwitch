@@ -179,6 +179,9 @@ System Monitor shows live CPU, GPU, memory, disk, and network usage. Open the **
 Enabled menu-bar indicators keep the monitor sampling while the Only Control popover is closed. The sampling interval has a one-second minimum. Public IP lookup makes external requests to ipify’s IPv4 and IPv6 endpoints; results are cached for up to five minutes.
 
 Some values may appear as unavailable when the hardware or macOS does not expose them, including temperature readings. GPU reporting relies on private, undocumented macOS APIs and may stop working after a system update. Network usage is system-wide; per-process network rates are not available.
+<p align="center">
+<img alt="Screenshot 2026-09-26 at 16 06 05" src="https://github.com/user-attachments/assets/ac8178f6-9f61-43be-a73b-a2103ac18ff7" width="30%" align="center" />
+</p>
 
 ## Only Widget
 
