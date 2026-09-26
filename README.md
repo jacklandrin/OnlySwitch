@@ -174,9 +174,9 @@ You can also control OnlySwitch by **natural language** using [OpenClaw](https:/
 
 ## System Monitor
 
-System Monitor shows live CPU, GPU, memory, disk, and network usage. Enable and configure it in **OnlySwitch Settings → System Monitor**, then open the **System Monitor** tab in Only Control. CPU and memory cards can expand to show the busiest processes, while Network Details includes Wi-Fi or Ethernet information, local and public IP addresses, and—when macOS makes them available—SSID, signal strength, and link rate.
+System Monitor shows live CPU, GPU, memory, disk, and network usage. Open the **System Monitor** tab in Only Control, and choose its dashboard cards and optional menu-bar indicators in **OnlySwitch Settings → System Monitor**. CPU and memory cards can expand to show the busiest processes, while Network Details includes Wi-Fi or Ethernet information, local and public IP addresses, and—when macOS makes them available—SSID, signal strength, and link rate.
 
-The Only Control dashboard and menu-bar indicator can be enabled separately. When either display needs updates, monitoring continues even while the Only Control popover is closed. The sampling interval has a one-second minimum. Looking up the public IP address sends an external request to the ipify service.
+Enabled menu-bar indicators keep the monitor sampling while the Only Control popover is closed. The sampling interval has a one-second minimum. Public IP lookup makes external requests to ipify’s IPv4 and IPv6 endpoints; results are cached for up to five minutes.
 
 Some values may appear as unavailable when the hardware or macOS does not expose them, including temperature readings. GPU reporting relies on private, undocumented macOS APIs and may stop working after a system update. Network usage is system-wide; per-process network rates are not available.
 
