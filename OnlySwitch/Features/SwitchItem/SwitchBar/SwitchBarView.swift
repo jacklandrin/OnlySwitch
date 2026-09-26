@@ -31,7 +31,6 @@ struct SwitchBarView: View {
             
             if switchOption.switchType == .airPods {
                 AirPodsBatteryView(batteryValues: convertBattery(info: switchOption.info))
-                    .offset(x: 60)
             } else if switchOption.switchType == .pomodoroTimer {
                 TimerCountDownView(ptswitch: switchOption.switchOperator as! PomodoroTimerSwitch)
             }
