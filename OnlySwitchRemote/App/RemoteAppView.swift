@@ -11,20 +11,22 @@ struct RemoteAppView: View {
                 NavigationStack { SettingsView(store: requiredStore) }
             } else {
                 NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
-                    ZStack {
+                    ZStack(alignment: .bottom) {
                         DashboardBackground()
 
                         TabView(selection: pageSelection) {
                             DashboardView(store: store.scope(state: \.dashboard, action: \.dashboard))
+                                .ignoresSafeArea(edges: .bottom)
                                 .tag(RemoteAppPage.controls)
                             RemoteSystemMonitorView(store: store.scope(state: \.systemMonitor, action: \.systemMonitor))
+                                .ignoresSafeArea(edges: .bottom)
                                 .tag(RemoteAppPage.systemMonitor)
                         }
                         .tabViewStyle(.page(indexDisplayMode: .never))
-                        .overlay(alignment: .bottom) {
-                            RemotePageTabBar(selection: pageSelection)
-                                .padding(.bottom, 4)
-                        }
+                        .ignoresSafeArea(edges: .bottom)
+
+                        RemotePageTabBar(selection: pageSelection)
+                            .padding(.bottom, 4)
                     }
                         .toolbarBackground(.hidden, for: .navigationBar)
                         .overlay {

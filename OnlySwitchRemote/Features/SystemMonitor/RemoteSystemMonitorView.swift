@@ -223,11 +223,6 @@ struct RemoteSystemMonitorView: View {
             disclosureButton(.network, title: "Network Details")
             if store.expandedMetrics.contains(.network) {
                 networkDetails(network.details)
-                processRows(snapshot.processes, value: {
-                    let down = availability($0.downloadBytesPerSecond, format: rate)
-                    let up = availability($0.uploadBytesPerSecond, format: rate)
-                    return "↓ \(down)  ↑ \(up)"
-                })
             }
         case .unavailable:
             Text("Unavailable").foregroundStyle(.secondary)
