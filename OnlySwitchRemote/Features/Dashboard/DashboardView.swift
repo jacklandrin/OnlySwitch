@@ -39,18 +39,9 @@ struct DashboardView: View {
 
     var body: some View {
         ZStack {
-            DashboardBackground()
-
             ScrollView {
                 DashboardGlassContainer(spacing: 16) {
                     VStack(spacing: 16) {
-                        MacPickerView(
-                            macs: Array(store.pairedMacs),
-                            selectedMacID: store.selectedMacID,
-                            select: { store.send(.macSelected($0)) }
-                        )
-                        .frame(maxWidth: 280)
-
                         if let connectionMessage {
                             Label(connectionMessage, systemImage: connectionSymbol)
                                 .font(.subheadline)
@@ -115,6 +106,7 @@ struct DashboardView: View {
                     }
                 }
                 .padding(20)
+                .padding(.bottom, RemotePageTabBar.contentBottomInset)
             }
 
             if let snapshot = store.soundMixerSnapshot, snapshot.isEnabled {
@@ -127,21 +119,11 @@ struct DashboardView: View {
                     command: { store.send(.soundMixerCommand($0)) }
                 )
                 .padding(.horizontal, 16)
-                .padding(.bottom, 10)
+                .padding(.bottom, RemotePageTabBar.contentBottomInset + 10)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
             }
         }
         .navigationTitle("OnlySwitch")
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button("Settings", systemImage: "line.3.horizontal") {
-                    store.send(.menuTapped)
-                }
-                .labelStyle(.iconOnly)
-                .accessibilityLabel("Settings")
-                .accessibilityHint("Opens remote control settings")
-            }
-        }
         .task { await store.send(.task).finish() }
         .alert($store.scope(state: \.alert, action: \.alert))
     }

@@ -53,6 +53,7 @@ struct RemoteConnectionClient: Sendable {
     var subscribe: @Sendable (Set<RemoteControlID>) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
     var send: @Sendable (RemoteActionInvocation) async throws -> RemoteActionResult = { _ in throw RemoteDependencyError.unimplemented }
     var sendSoundMixer: @Sendable (RemoteSoundMixerCommand) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
+    var setSystemMonitorStreaming: @Sendable (Bool) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
     var setForegrounded: @Sendable (Bool) async -> Void = { _ in }
 }
 

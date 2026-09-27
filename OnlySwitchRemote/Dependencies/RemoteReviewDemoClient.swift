@@ -20,6 +20,7 @@ actor RemoteReviewDemoRuntime {
     private var authenticatedMacID: UUID? = studioMacID
     private var authenticatedSessionID: UUID? = sessionID
     private var layouts: [UUID: MacDashboardLayout] = [:]
+    private var systemMonitorLayouts: [UUID: MacSystemMonitorLayout] = [:]
     private var catalogs: [UUID: RemoteCatalogCache] = [:]
     private var statuses: [UUID: [RemoteControlStatus]] = [:]
     private var tombstones: Set<UUID> = []
@@ -45,6 +46,10 @@ actor RemoteReviewDemoRuntime {
         layouts = [
             Self.studioMacID: .init(macID: Self.studioMacID, selectedControlIDs: Set(order), order: order),
             Self.travelMacID: .init(macID: Self.travelMacID, selectedControlIDs: Set(order), order: order),
+        ]
+        systemMonitorLayouts = [
+            Self.studioMacID: .default(macID: Self.studioMacID),
+            Self.travelMacID: .default(macID: Self.travelMacID),
         ]
         let catalog = RemoteCatalogCache(revision: 42, controls: controls)
         catalogs = [Self.studioMacID: catalog, Self.travelMacID: catalog]
@@ -223,6 +228,12 @@ actor RemoteReviewDemoRuntime {
     func setSelectedMacID(_ id: UUID?) { selectedMacID = id }
     func layout(for id: UUID) -> MacDashboardLayout? { tombstones.contains(id) ? nil : layouts[id] }
     func setLayout(_ layout: MacDashboardLayout) { if tombstones.contains(layout.macID) == false { layouts[layout.macID] = layout } }
+    func systemMonitorLayout(for id: UUID) -> MacSystemMonitorLayout? {
+        tombstones.contains(id) ? nil : systemMonitorLayouts[id]
+    }
+    func setSystemMonitorLayout(_ layout: MacSystemMonitorLayout) {
+        if tombstones.contains(layout.macID) == false { systemMonitorLayouts[layout.macID] = layout }
+    }
     func catalog(for id: UUID) -> RemoteCatalogCache? { tombstones.contains(id) ? nil : catalogs[id] }
     func setCatalog(_ catalog: RemoteCatalogCache, for id: UUID) { if tombstones.contains(id) == false { catalogs[id] = catalog } }
     func statuses(for id: UUID) -> [RemoteControlStatus]? { tombstones.contains(id) ? nil : statuses[id] }
@@ -240,6 +251,7 @@ actor RemoteReviewDemoRuntime {
         tombstones.insert(id)
         removePairedMac(id)
         layouts[id] = nil
+        systemMonitorLayouts[id] = nil
         catalogs[id] = nil
         statuses[id] = nil
     }
@@ -334,6 +346,10 @@ actor RemoteReviewDemoRuntime {
         let order = controls.map(\.id)
         let layout = MacDashboardLayout(macID: Self.studioMacID, selectedControlIDs: Set(order), order: order)
         layouts = [Self.studioMacID: layout, Self.travelMacID: .init(macID: Self.travelMacID, selectedControlIDs: Set(order), order: order)]
+        systemMonitorLayouts = [
+            Self.studioMacID: .default(macID: Self.studioMacID),
+            Self.travelMacID: .default(macID: Self.travelMacID),
+        ]
         let catalog = RemoteCatalogCache(revision: 42, controls: controls)
         catalogs = [Self.studioMacID: catalog, Self.travelMacID: catalog]
         let statusValues = [
@@ -428,6 +444,7 @@ extension RemoteConnectionClient {
             subscribe: { try await runtime.subscribe($0) },
             send: { try await runtime.send($0) },
             sendSoundMixer: { _ in },
+            setSystemMonitorStreaming: { _ in },
             setForegrounded: { _ in }
         )
     }
@@ -449,6 +466,8 @@ extension RemotePersistenceClient {
             saveSelectedMacID: { await runtime.setSelectedMacID($0) },
             loadLayout: { await runtime.layout(for: $0) },
             saveLayout: { await runtime.setLayout($0) },
+            loadSystemMonitorLayout: { await runtime.systemMonitorLayout(for: $0) },
+            saveSystemMonitorLayout: { await runtime.setSystemMonitorLayout($0) },
             loadCatalog: { await runtime.catalog(for: $0) },
             saveCatalog: { await runtime.setCatalog(.init(revision: $1, controls: $2), for: $0) },
             loadStatuses: { await runtime.statuses(for: $0) },

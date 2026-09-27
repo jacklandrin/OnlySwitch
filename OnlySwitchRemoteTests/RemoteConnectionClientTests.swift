@@ -378,6 +378,85 @@ struct RemoteConnectionClientTests {
     }
 
     @Test(.timeLimit(.minutes(1)))
+    func currentProtocolSessionSendsMonitorSubscriptionAndReceivesSnapshot() async throws {
+        let macID = UUID()
+        let deviceID = UUID()
+        let credential = Data(repeating: 18, count: 32)
+        let monitorSnapshot = SystemMonitorSnapshot(
+            timestamp: Date(timeIntervalSince1970: 1_800_000_000),
+            cpuUsage: .available(0.42)
+        )
+        let listener = try NWListener(using: .tcp, on: .any)
+        let (connections, connectionContinuation) = AsyncStream.makeStream(
+            of: NWConnection.self,
+            bufferingPolicy: .bufferingOldest(1)
+        )
+        listener.newConnectionHandler = { connectionContinuation.yield($0) }
+        try await start(listener)
+        defer {
+            connectionContinuation.finish()
+            listener.cancel()
+        }
+        let port = try #require(listener.port)
+        let server = Task {
+            var iterator = connections.makeAsyncIterator()
+            let connection = try #require(await iterator.next())
+            let io = RemoteConnectionIO(connection: connection)
+            try await io.start()
+            guard case let .clientHello(hello)? = (try await io.receive()).plaintext else {
+                throw TestProtocolError.unexpectedMessage
+            }
+            let key = P256.KeyAgreement.PrivateKey()
+            let serverHello = ServerHello(
+                version: .current,
+                macID: macID,
+                macName: "Studio",
+                ephemeralPublicKey: key.publicKey.rawRepresentation,
+                challenge: Data(repeating: 8, count: 32)
+            )
+            try await io.send(.plaintext(.serverHello(serverHello)))
+            let transcript = try RemoteHandshakeCrypto.transcript(client: hello, server: serverHello)
+            let crypto = try makeServerCrypto(
+                key: key,
+                hello: hello,
+                credential: credential,
+                transcript: transcript
+            )
+            guard case let .authenticationProof(proof) = try await receiveEncrypted(io: io, crypto: crypto) else {
+                throw TestProtocolError.unexpectedMessage
+            }
+            #expect(RemoteHandshakeCrypto.verifyAuthenticationProof(
+                proof.proof,
+                credential: credential,
+                transcript: transcript
+            ))
+            try await io.send(.encrypted(try crypto.seal(.authenticationResult(.success(.init(
+                sessionID: UUID(),
+                catalogRevision: 3
+            ))))))
+            #expect(try await receiveEncrypted(io: io, crypto: crypto) == .systemMonitorSubscriptionUpdate(true))
+            try await io.send(.encrypted(try crypto.seal(.systemMonitorSnapshot(monitorSnapshot))))
+            await io.cancel()
+        }
+        let (events, eventContinuation) = AsyncStream.makeStream(of: RemoteMessage.self)
+        let session = try await RemoteClientSession.authenticate(
+            endpoint: .hostPort(host: .ipv4(.loopback), port: port),
+            expectedMacID: macID,
+            credential: credential,
+            deviceID: deviceID,
+            deviceName: "Test iPad",
+            event: { eventContinuation.yield($0) }
+        )
+        session.startReceiving()
+        try await session.setSystemMonitorStreaming(true)
+        var eventIterator = events.makeAsyncIterator()
+        #expect(await eventIterator.next() == .systemMonitorSnapshot(monitorSnapshot))
+        eventContinuation.finish()
+        try await server.value
+        await session.close()
+    }
+
+    @Test(.timeLimit(.minutes(1)))
     func existingCredentialAuthenticatesWithoutPairing() async throws {
         let macID = UUID()
         let deviceID = UUID()

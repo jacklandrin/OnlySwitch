@@ -188,6 +188,7 @@ let package = Package(
         .target(
             name: "SystemMonitor",
             dependencies: [
+                "RemoteCore",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ]
         ),

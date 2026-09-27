@@ -393,6 +393,18 @@
 		B90300000000000000000002 /* OnlyControlSystemMonitorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90300000000000000000001 /* OnlyControlSystemMonitorTests.swift */; };
 		B90400000000000000000002 /* SystemMonitorStatusItemControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90400000000000000000001 /* SystemMonitorStatusItemControllerTests.swift */; };
 		B90400000000000000000005 /* SystemMonitorStatusItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90400000000000000000004 /* SystemMonitorStatusItemController.swift */; };
+		C0D000000000000000000001 /* RemoteSystemMonitorFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D000000000000000000021 /* RemoteSystemMonitorFeature.swift */; };
+		C0D000000000000000000002 /* RemoteSystemMonitorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D000000000000000000022 /* RemoteSystemMonitorView.swift */; };
+		C0D000000000000000000003 /* RemoteSystemMonitorChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D000000000000000000023 /* RemoteSystemMonitorChartView.swift */; };
+		C0D000000000000000000004 /* RemotePageTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D000000000000000000024 /* RemotePageTabBar.swift */; };
+		C0D000000000000000000005 /* RemoteSystemMonitorFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D000000000000000000025 /* RemoteSystemMonitorFeatureTests.swift */; };
+		C0D000000000000000000006 /* RemoteSystemMonitorViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D000000000000000000026 /* RemoteSystemMonitorViewTests.swift */; };
+		C0D000000000000000000007 /* RemoteSystemMonitorGaugeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D000000000000000000027 /* RemoteSystemMonitorGaugeView.swift */; };
+		C0E000000000000000000001 /* MacSystemMonitorLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E000000000000000000021 /* MacSystemMonitorLayout.swift */; };
+		C0E000000000000000000002 /* RemoteSystemMonitorCardSurface.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E000000000000000000022 /* RemoteSystemMonitorCardSurface.swift */; };
+		C0E000000000000000000003 /* RemoteSystemMonitorConfigurationFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E000000000000000000023 /* RemoteSystemMonitorConfigurationFeature.swift */; };
+		C0E000000000000000000004 /* RemoteSystemMonitorConfigurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E000000000000000000024 /* RemoteSystemMonitorConfigurationView.swift */; };
+		C0E000000000000000000005 /* RemoteSystemMonitorConfigurationFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E000000000000000000025 /* RemoteSystemMonitorConfigurationFeatureTests.swift */; };
 		C1A0B00118E9202600000001 /* PrivilegedOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0B00318E9202600000001 /* PrivilegedOperation.swift */; };
 		C1A0B00218E9202600000001 /* PrivilegedOperationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0B00418E9202600000001 /* PrivilegedOperationTests.swift */; };
 		C1A0C00118E9202600000001 /* PrivilegedOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0B00318E9202600000001 /* PrivilegedOperation.swift */; };
@@ -884,6 +896,18 @@
 		B90300000000000000000001 /* OnlyControlSystemMonitorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyControlSystemMonitorTests.swift; sourceTree = "<group>"; };
 		B90400000000000000000001 /* SystemMonitorStatusItemControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorStatusItemControllerTests.swift; sourceTree = "<group>"; };
 		B90400000000000000000004 /* SystemMonitorStatusItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorStatusItemController.swift; sourceTree = "<group>"; };
+		C0D000000000000000000021 /* RemoteSystemMonitorFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorFeature.swift; sourceTree = "<group>"; };
+		C0D000000000000000000022 /* RemoteSystemMonitorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorView.swift; sourceTree = "<group>"; };
+		C0D000000000000000000023 /* RemoteSystemMonitorChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorChartView.swift; sourceTree = "<group>"; };
+		C0D000000000000000000024 /* RemotePageTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemotePageTabBar.swift; sourceTree = "<group>"; };
+		C0D000000000000000000025 /* RemoteSystemMonitorFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorFeatureTests.swift; sourceTree = "<group>"; };
+		C0D000000000000000000026 /* RemoteSystemMonitorViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorViewTests.swift; sourceTree = "<group>"; };
+		C0D000000000000000000027 /* RemoteSystemMonitorGaugeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorGaugeView.swift; sourceTree = "<group>"; };
+		C0E000000000000000000021 /* MacSystemMonitorLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacSystemMonitorLayout.swift; sourceTree = "<group>"; };
+		C0E000000000000000000022 /* RemoteSystemMonitorCardSurface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorCardSurface.swift; sourceTree = "<group>"; };
+		C0E000000000000000000023 /* RemoteSystemMonitorConfigurationFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorConfigurationFeature.swift; sourceTree = "<group>"; };
+		C0E000000000000000000024 /* RemoteSystemMonitorConfigurationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorConfigurationView.swift; sourceTree = "<group>"; };
+		C0E000000000000000000025 /* RemoteSystemMonitorConfigurationFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorConfigurationFeatureTests.swift; sourceTree = "<group>"; };
 		C1A0B00318E9202600000001 /* PrivilegedOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedOperation.swift; sourceTree = "<group>"; };
 		C1A0B00418E9202600000001 /* PrivilegedOperationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedOperationTests.swift; sourceTree = "<group>"; };
 		C1A0C10318E9202600000001 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -2033,6 +2057,28 @@
 			path = SystemMonitor;
 			sourceTree = "<group>";
 		};
+		C0D000000000000000000010 /* SystemMonitor */ = {
+			isa = PBXGroup;
+			children = (
+				C0D000000000000000000021 /* RemoteSystemMonitorFeature.swift */,
+				C0D000000000000000000022 /* RemoteSystemMonitorView.swift */,
+				C0D000000000000000000023 /* RemoteSystemMonitorChartView.swift */,
+				C0D000000000000000000027 /* RemoteSystemMonitorGaugeView.swift */,
+				C0E000000000000000000022 /* RemoteSystemMonitorCardSurface.swift */,
+				C0E000000000000000000023 /* RemoteSystemMonitorConfigurationFeature.swift */,
+				C0E000000000000000000024 /* RemoteSystemMonitorConfigurationView.swift */,
+			);
+			path = SystemMonitor;
+			sourceTree = "<group>";
+		};
+		C0D000000000000000000011 /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				C0D000000000000000000024 /* RemotePageTabBar.swift */,
+			);
+			path = Navigation;
+			sourceTree = "<group>";
+		};
 		C1A0B00518E9202600000001 /* PrivilegedOperations */ = {
 			isa = PBXGroup;
 			children = (
@@ -2133,6 +2179,9 @@
 				F3AA00000000000000000022 /* MacManagementFeatureTests.swift */,
 				F3AB00000000000000000021 /* DashboardFeatureTests.swift */,
 				F3AB00000000000000000026 /* RemoteEndToEndTests.swift */,
+				C0D000000000000000000025 /* RemoteSystemMonitorFeatureTests.swift */,
+				C0D000000000000000000026 /* RemoteSystemMonitorViewTests.swift */,
+				C0E000000000000000000025 /* RemoteSystemMonitorConfigurationFeatureTests.swift */,
 			);
 			path = OnlySwitchRemoteTests;
 			sourceTree = "<group>";
@@ -2216,6 +2265,7 @@
 			children = (
 				F3A800000000000000000023 /* PairedMac.swift */,
 				F3A800000000000000000024 /* MacDashboardLayout.swift */,
+				C0E000000000000000000021 /* MacSystemMonitorLayout.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2241,6 +2291,8 @@
 				F3A900000000000000000011 /* Pairing */,
 				F3A900000000000000000012 /* Settings */,
 				F3AB00000000000000000010 /* Dashboard */,
+				C0D000000000000000000010 /* SystemMonitor */,
+				C0D000000000000000000011 /* Navigation */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -3105,6 +3157,15 @@
 				B23000000000000000000004 /* ControlTileStatusBadge.swift in Sources */,
 				B23000000000000000000006 /* ControlTileIconView.swift in Sources */,
 				F3AB00000000000000000008 /* MacPickerView.swift in Sources */,
+				C0D000000000000000000001 /* RemoteSystemMonitorFeature.swift in Sources */,
+				C0D000000000000000000002 /* RemoteSystemMonitorView.swift in Sources */,
+				C0D000000000000000000003 /* RemoteSystemMonitorChartView.swift in Sources */,
+				C0D000000000000000000007 /* RemoteSystemMonitorGaugeView.swift in Sources */,
+				C0D000000000000000000004 /* RemotePageTabBar.swift in Sources */,
+				C0E000000000000000000001 /* MacSystemMonitorLayout.swift in Sources */,
+				C0E000000000000000000002 /* RemoteSystemMonitorCardSurface.swift in Sources */,
+				C0E000000000000000000003 /* RemoteSystemMonitorConfigurationFeature.swift in Sources */,
+				C0E000000000000000000004 /* RemoteSystemMonitorConfigurationView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3122,6 +3183,9 @@
 				F3AA00000000000000000002 /* MacManagementFeatureTests.swift in Sources */,
 				F3AB00000000000000000001 /* DashboardFeatureTests.swift in Sources */,
 				F3AB00000000000000000009 /* RemoteEndToEndTests.swift in Sources */,
+				C0D000000000000000000005 /* RemoteSystemMonitorFeatureTests.swift in Sources */,
+				C0D000000000000000000006 /* RemoteSystemMonitorViewTests.swift in Sources */,
+				C0E000000000000000000005 /* RemoteSystemMonitorConfigurationFeatureTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3363,7 +3427,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.8.0;
+				MARKETING_VERSION = 2.8.1;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3418,7 +3482,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.8.0;
+				MARKETING_VERSION = 2.8.1;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3464,7 +3528,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.8.0;
+				MARKETING_VERSION = 2.8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = OnlySwitchWidgets;
@@ -3504,7 +3568,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.8.0;
+				MARKETING_VERSION = 2.8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = OnlySwitchWidgets;
@@ -3575,7 +3639,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitchRemote;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -3606,7 +3670,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitchRemote;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;

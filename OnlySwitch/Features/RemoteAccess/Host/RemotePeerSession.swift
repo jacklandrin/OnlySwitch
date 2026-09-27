@@ -108,6 +108,7 @@ actor RemotePeerSession {
     private let authenticated: @Sendable (UUID, UUID) async -> Bool
     private let authenticationAuthorized: @Sendable (UUID, UUID) async -> Bool
     private let authenticationConfirmed: @Sendable (UUID, UUID) async -> Bool
+    private let systemMonitorSnapshots: @Sendable () -> AsyncThrowingStream<SystemMonitorSnapshot, Error>
     private let authenticationResultSender: AuthenticationResultSender
     private let commitStageReached: @Sendable (RemotePairingCommitStage) async -> Void
     private let ended: @Sendable (UUID) async -> Void
@@ -118,6 +119,7 @@ actor RemotePeerSession {
     private var authenticatedCredential: Data?
     private var negotiatedVersion: RemoteProtocolVersion?
     private var advertisedCatalogRevision: UInt64?
+    private var systemMonitorTask: Task<Void, Never>?
 
     init(
         id: UUID = UUID(),
@@ -140,6 +142,7 @@ actor RemotePeerSession {
         authenticated: @escaping @Sendable (UUID, UUID) async -> Bool,
         authenticationAuthorized: @escaping @Sendable (UUID, UUID) async -> Bool,
         authenticationConfirmed: @escaping @Sendable (UUID, UUID) async -> Bool,
+        systemMonitorSnapshots: @escaping @Sendable () -> AsyncThrowingStream<SystemMonitorSnapshot, Error>,
         authenticationResultSender: @escaping AuthenticationResultSender = { operation in
             try await operation()
         },
@@ -167,6 +170,7 @@ actor RemotePeerSession {
         self.authenticated = authenticated
         self.authenticationAuthorized = authenticationAuthorized
         self.authenticationConfirmed = authenticationConfirmed
+        self.systemMonitorSnapshots = systemMonitorSnapshots
         self.authenticationResultSender = authenticationResultSender
         self.commitStageReached = commitStageReached
         self.ended = ended
@@ -188,6 +192,7 @@ actor RemotePeerSession {
         } else {
             await rollbackPendingPairingIfNeeded()
         }
+        stopSystemMonitorStreaming()
         state = .closed
         await io.cancel()
         await ended(id)
@@ -197,6 +202,7 @@ actor RemotePeerSession {
         if RemotePairingTeardownPolicy.action(for: teardownPhase) == .preserveDurablePreparedTransaction {
             pendingPairing = nil
         }
+        stopSystemMonitorStreaming()
         state = .closed
         await io.cancel()
         await ended(id)
@@ -752,6 +758,18 @@ actor RemotePeerSession {
                 throw RemoteProtocolError(code: .actionNotSupported, message: "Sound Mixer remote control requires a newer OnlySwitch")
             }
             try await sendEncrypted(.soundMixerSnapshot(try await SoundMixerVM.shared.performRemoteCommand(command)))
+        case let .systemMonitorSubscriptionUpdate(enabled):
+            guard negotiatedVersion?.supportsSystemMonitorRemote == true else {
+                throw RemoteProtocolError(
+                    code: .actionNotSupported,
+                    message: "System Monitor remote viewing requires a newer OnlySwitch"
+                )
+            }
+            if enabled {
+                startSystemMonitorStreaming()
+            } else {
+                stopSystemMonitorStreaming()
+            }
         case let .pairingCommit(command):
             let status = try await credentialStore.transactionStatus(
                 command.transactionID,
@@ -809,6 +827,28 @@ actor RemotePeerSession {
             controls: snapshot.controls
         ))
         advertisedCatalogRevision = snapshot.revision
+    }
+
+    private func startSystemMonitorStreaming() {
+        stopSystemMonitorStreaming()
+        let snapshots = systemMonitorSnapshots
+        systemMonitorTask = Task { [weak self] in
+            do {
+                for try await snapshot in snapshots() {
+                    try Task.checkCancellation()
+                    guard let self else { return }
+                    try await self.sendEncrypted(.systemMonitorSnapshot(snapshot))
+                }
+            } catch is CancellationError {
+            } catch {
+                // Sampling failure affects only the monitor page; controls stay connected.
+            }
+        }
+    }
+
+    private func stopSystemMonitorStreaming() {
+        systemMonitorTask?.cancel()
+        systemMonitorTask = nil
     }
 
     private func sendEncrypted(_ message: RemoteMessage) async throws {

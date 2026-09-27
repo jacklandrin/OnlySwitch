@@ -9,6 +9,85 @@ struct RemoteAppFeatureTests {
     private let studio = PairedMac(id: UUID(uuidString: "00000000-0000-0000-0000-000000000101")!, displayName: "Studio", lastEndpointDescription: nil, lastConnectedAt: nil, requiresPairing: false)
     private let laptop = PairedMac(id: UUID(uuidString: "00000000-0000-0000-0000-000000000102")!, displayName: "Laptop", lastEndpointDescription: nil, lastConnectedAt: nil, requiresPairing: false)
 
+    @Test func pageSelectionSynchronizesMonitorVisibilityWithSwipeablePages() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.systemMonitor.selectedMacID = studio.id
+        state.systemMonitor.connectionState = .authenticated
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remoteConnection.setSystemMonitorStreaming = { _ in }
+        }
+
+        await store.send(.pageSelected(.systemMonitor)) {
+            $0.selectedPage = .systemMonitor
+        }
+        await store.receive(.systemMonitor(.visibilityChanged(true))) {
+            $0.systemMonitor.isVisible = true
+        }
+        await store.receive(.systemMonitor(.streamingResponse(.success(true)))) {
+            $0.systemMonitor.isStreaming = true
+        }
+        await store.send(.pageSelected(.controls)) {
+            $0.selectedPage = .controls
+        }
+        await store.receive(.systemMonitor(.visibilityChanged(false))) {
+            $0.systemMonitor.isVisible = false
+            $0.systemMonitor.isStreaming = false
+        }
+    }
+
+    @Test func activeMonitorReceivesSnapshotsWithoutForwardingThemToDashboard() async {
+        let snapshot = SystemMonitorSnapshot(
+            timestamp: Date(timeIntervalSince1970: 1_800_000_000),
+            cpuUsage: .available(0.42)
+        )
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.selectedPage = .systemMonitor
+        state.systemMonitor.selectedMacID = studio.id
+        state.systemMonitor.connectionState = .authenticated
+        state.systemMonitor.isVisible = true
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+
+        await store.send(.connectionEvent(.systemMonitor(studio.id, snapshot))) {
+            $0.connectionEventRevision = 1
+        }
+        await store.receive(.systemMonitor(.connectionEvent(.systemMonitor(studio.id, snapshot)))) {
+            $0.systemMonitor.snapshot = snapshot
+            $0.systemMonitor.history = .init(snapshots: [snapshot])
+        }
+        #expect(store.state.dashboard.statuses.isEmpty)
+    }
+
+    @Test func returningToAnActiveMonitorPageRestartsItsVisibleStream() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.selectedPage = .systemMonitor
+        state.systemMonitor.selectedMacID = studio.id
+        state.systemMonitor.connectionState = .authenticated
+        state.systemMonitor.isVisible = false
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remoteConnection.setForegrounded = { _ in }
+            $0.remoteConnection.setSystemMonitorStreaming = { enabled in
+                #expect(enabled)
+            }
+        }
+
+        await store.send(.scenePhaseChanged(true)) {
+            $0.lifecycleGeneration = 1
+        }
+        await store.receive(.systemMonitor(.visibilityChanged(true))) {
+            $0.systemMonitor.isVisible = true
+        }
+        await store.receive(.systemMonitor(.streamingResponse(.success(true)))) {
+            $0.systemMonitor.isStreaming = true
+        }
+        await store.receive(.lifecycleResponse(1))
+    }
+
     @Test func rootForwardsSelectedMacStatusIntoDashboard() async {
         let current = RemoteControlStatus(
             id: .darkMode,
@@ -579,6 +658,96 @@ struct RemoteAppFeatureTests {
         var state = RemoteAppFeature.State(hasCompletedInitialSetup: true); state.pairedMacs = [studio]; state.selectedMacID = studio.id
         let store = TestStore(initialState: state) { RemoteAppFeature() }
         await store.send(.settingsButtonTapped) { $0.path.append(.settings(.init(isSetupRequired: false, pairedMacs: [studio], selectedMacID: studio.id))) }
+    }
+
+    @Test func monitorSettingsPushesConfigurationInsteadOfControlSettings() async {
+        let layout = MacSystemMonitorLayout.default(macID: studio.id)
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.selectedPage = .systemMonitor
+        state.systemMonitor.layout = layout
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+
+        await store.send(.settingsButtonTapped) {
+            $0.path.append(.monitorConfiguration(.init(layout: layout)))
+        }
+    }
+
+    @Test func controlsSettingsStillPushesControlSettings() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.selectedPage = .controls
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+
+        await store.send(.settingsButtonTapped) {
+            $0.path.append(.settings(.init(
+                isSetupRequired: false,
+                pairedMacs: [studio],
+                selectedMacID: studio.id
+            )))
+        }
+    }
+
+    @Test func configurationDelegateUpdatesTheActiveMonitorLayout() async throws {
+        let initial = MacSystemMonitorLayout.default(macID: studio.id)
+        let updated = MacSystemMonitorLayout(
+            macID: studio.id,
+            visibleMetrics: [.cpu, .memory, .network],
+            order: [.memory, .cpu, .gpu, .disk, .network]
+        )
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.systemMonitor.layout = initial
+        state.path.append(.monitorConfiguration(.init(layout: initial)))
+        let pathID = try #require(state.path.ids.last)
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+
+        await store.send(.path(.element(
+            id: pathID,
+            action: .monitorConfiguration(.delegate(.layoutChanged(updated)))
+        ))) {
+            $0.systemMonitor.layout = updated
+        }
+    }
+
+    @Test func staleMonitorLayoutResponseCannotOverwriteANewlySelectedMac() async {
+        let studioLayout = MacSystemMonitorLayout.default(macID: studio.id)
+        let laptopLayout = MacSystemMonitorLayout.default(macID: laptop.id)
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio, laptop]
+        state.selectedMacID = laptop.id
+        state.systemMonitor.selectedMacID = laptop.id
+        state.systemMonitor.layout = laptopLayout
+        state.systemMonitorLayoutGeneration = 2
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+
+        await store.send(.systemMonitorLayoutLoaded(1, studio.id, .success(studioLayout)))
+
+        #expect(store.state.selectedMacID == laptop.id)
+        #expect(store.state.systemMonitor.layout == laptopLayout)
+    }
+
+    @Test func currentSelectedMacAcceptsItsLoadedMonitorLayout() async {
+        let initial = MacSystemMonitorLayout.default(macID: studio.id)
+        let loaded = MacSystemMonitorLayout(
+            macID: studio.id,
+            visibleMetrics: [.cpu, .gpu],
+            order: [.gpu, .cpu, .memory, .disk, .network]
+        )
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.systemMonitor.selectedMacID = studio.id
+        state.systemMonitor.layout = initial
+        state.systemMonitorLayoutGeneration = 3
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+
+        await store.send(.systemMonitorLayoutLoaded(3, studio.id, .success(loaded))) {
+            $0.systemMonitor.layout = loaded
+        }
     }
 
     @Test func settingsMacSelectionAtomicallyPersistsAndSelectsConnection() async throws {

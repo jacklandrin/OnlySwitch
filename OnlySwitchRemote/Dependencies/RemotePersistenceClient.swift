@@ -132,6 +132,10 @@ struct RemotePersistenceClient: Sendable {
     var saveSelectedMacID: @Sendable (UUID?) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
     var loadLayout: @Sendable (UUID) async throws -> MacDashboardLayout? = { _ in nil }
     var saveLayout: @Sendable (MacDashboardLayout) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
+    var loadSystemMonitorLayout: @Sendable (UUID) async throws -> MacSystemMonitorLayout? = { _ in nil }
+    var saveSystemMonitorLayout: @Sendable (MacSystemMonitorLayout) async throws -> Void = { _ in
+        throw RemoteDependencyError.unimplemented
+    }
     var loadCatalog: @Sendable (UUID) async throws -> RemoteCatalogCache? = { _ in nil }
     var saveCatalog: @Sendable (UUID, UInt64, [RemoteControlDescriptor]) async throws -> Void = { _, _, _ in throw RemoteDependencyError.unimplemented }
     var loadStatuses: @Sendable (UUID) async throws -> [RemoteControlStatus]? = { _ in nil }
@@ -180,6 +184,8 @@ extension RemotePersistenceClient {
             saveSelectedMacID: { await store.setSelectedMacID($0) },
             loadLayout: { await store.loadLayout($0) },
             saveLayout: { await store.setLayout($0) },
+            loadSystemMonitorLayout: { await store.loadSystemMonitorLayout($0) },
+            saveSystemMonitorLayout: { await store.setSystemMonitorLayout($0) },
             loadCatalog: { await store.loadCatalog($0) },
             saveCatalog: { await store.setCatalog(.init(revision: $1, controls: $2), for: $0) },
             loadStatuses: { await store.loadStatuses($0) },
@@ -222,6 +228,12 @@ extension RemotePersistenceClient {
             saveSelectedMacID: { try await store.saveSelectedMacID($0) },
             loadLayout: { try await store.load(MacDashboardLayout.self, macID: $0, name: "layout.json") },
             saveLayout: { try await store.save($0, macID: $0.macID, name: "layout.json") },
+            loadSystemMonitorLayout: {
+                try await store.load(MacSystemMonitorLayout.self, macID: $0, name: "system-monitor-layout.json")
+            },
+            saveSystemMonitorLayout: {
+                try await store.save($0, macID: $0.macID, name: "system-monitor-layout.json")
+            },
             loadCatalog: { try await store.load(RemoteCatalogCache.self, macID: $0, name: "catalog.json") },
             saveCatalog: { try await store.save(RemoteCatalogCache(revision: $1, controls: $2), macID: $0, name: "catalog.json") },
             loadStatuses: { try await store.load([RemoteControlStatus].self, macID: $0, name: "statuses.json") },
@@ -280,6 +292,7 @@ private actor InMemoryRemotePersistenceStore {
     var pairedMacs: [PairedMac] { envelope.pairedMacs }
     var selectedMacID: UUID? { envelope.selectedMacID }
     var layouts: [UUID: MacDashboardLayout] = [:]
+    var systemMonitorLayouts: [UUID: MacSystemMonitorLayout] = [:]
     var catalogs: [UUID: RemoteCatalogCache] = [:]
     var statuses: [UUID: [RemoteControlStatus]] = [:]
     var tombstones: Set<UUID> { envelope.tombstonedMacIDs }
@@ -326,6 +339,13 @@ private actor InMemoryRemotePersistenceStore {
         layouts[value.macID] = value
     }
     func loadLayout(_ id: UUID) -> MacDashboardLayout? { tombstones.contains(id) ? nil : layouts[id] }
+    func setSystemMonitorLayout(_ value: MacSystemMonitorLayout) {
+        guard tombstones.contains(value.macID) == false else { return }
+        systemMonitorLayouts[value.macID] = value
+    }
+    func loadSystemMonitorLayout(_ id: UUID) -> MacSystemMonitorLayout? {
+        tombstones.contains(id) ? nil : systemMonitorLayouts[id]
+    }
     func loadCatalog(_ id: UUID) -> RemoteCatalogCache? { tombstones.contains(id) ? nil : catalogs[id] }
     func loadStatuses(_ id: UUID) -> [RemoteControlStatus]? { tombstones.contains(id) ? nil : statuses[id] }
     func setCatalog(_ value: RemoteCatalogCache, for id: UUID) {
@@ -359,6 +379,7 @@ private actor InMemoryRemotePersistenceStore {
         envelope.pairedMacs.removeAll { $0.id == id }
         if envelope.selectedMacID == id { envelope.selectedMacID = nil }
         layouts[id] = nil
+        systemMonitorLayouts[id] = nil
         catalogs[id] = nil
         statuses[id] = nil
     }

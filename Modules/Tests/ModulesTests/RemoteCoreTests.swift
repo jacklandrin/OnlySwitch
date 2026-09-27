@@ -42,6 +42,29 @@ struct RemoteCoreTests {
         #expect(try JSONDecoder().decode(RemoteMessage.self, from: JSONEncoder().encode(message)) == message)
     }
 
+    @Test func systemMonitorRequiresProtocolMinorFour() {
+        #expect(RemoteProtocolVersion(major: 1, minor: 3).supportsSystemMonitorRemote == false)
+        #expect(RemoteProtocolVersion.current == .init(major: 1, minor: 4))
+        #expect(RemoteProtocolVersion.current.supportsSystemMonitorRemote)
+    }
+
+    @Test func systemMonitorMessagesRoundTrip() throws {
+        let snapshot = SystemMonitorSnapshot(
+            timestamp: Date(timeIntervalSince1970: 1_800_000_000),
+            cpuUsage: .available(0.42),
+            memory: .available(.init(totalBytes: 16_000, usedBytes: 8_000)),
+            disks: [.init(id: "root", name: "Macintosh HD", totalBytes: 1_000, usedBytes: 500)]
+        )
+
+        for message in [
+            RemoteMessage.systemMonitorSubscriptionUpdate(true),
+            .systemMonitorSubscriptionUpdate(false),
+            .systemMonitorSnapshot(snapshot),
+        ] {
+            #expect(try JSONDecoder().decode(RemoteMessage.self, from: JSONEncoder().encode(message)) == message)
+        }
+    }
+
     @Test func provisionalTeardownAlonePreservesDurablePreparedTransaction() {
         #expect(RemotePairingTeardownPolicy.action(for: .provisional) == .preserveDurablePreparedTransaction)
         #expect(RemotePairingTeardownPolicy.action(for: .committing) == .performNormalCleanup)

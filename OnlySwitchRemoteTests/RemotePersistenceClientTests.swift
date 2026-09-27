@@ -10,6 +10,25 @@ struct RemotePersistenceClientTests {
     private let firstMac = UUID(uuidString: "00000000-0000-0000-0000-000000000001")!
     private let secondMac = UUID(uuidString: "00000000-0000-0000-0000-000000000002")!
 
+    @Test func systemMonitorLayoutsPersistPerMacAndForgettingOneMacRemovesOnlyItsLayout() async throws {
+        let persistence = RemotePersistenceClient.inMemory()
+        var firstLayout = MacSystemMonitorLayout.default(macID: firstMac)
+        firstLayout.setVisible(.disk, isVisible: false)
+        var secondLayout = MacSystemMonitorLayout.default(macID: secondMac)
+        secondLayout.move(from: IndexSet(integer: 2), to: 0)
+
+        try await persistence.saveSystemMonitorLayout(firstLayout)
+        try await persistence.saveSystemMonitorLayout(secondLayout)
+
+        #expect(try await persistence.loadSystemMonitorLayout(firstMac) == firstLayout)
+        #expect(try await persistence.loadSystemMonitorLayout(secondMac) == secondLayout)
+
+        try await persistence.forgetMac(firstMac)
+
+        #expect(try await persistence.loadSystemMonitorLayout(firstMac) == nil)
+        #expect(try await persistence.loadSystemMonitorLayout(secondMac) == secondLayout)
+    }
+
     @Test func preparedEnvelopePersistsOnlyCredentialDigestAndDurableAdoptionPhase() async throws {
         let harness = try AtomicEnvelopeHarness.make()
         let candidate = mac(id: secondMac, name: "Candidate")

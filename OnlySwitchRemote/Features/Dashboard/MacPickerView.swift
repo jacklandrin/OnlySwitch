@@ -1,6 +1,9 @@
 import SwiftUI
 
 struct MacPickerView: View {
+    enum Style { case dashboard, toolbar }
+
+    var style: Style = .dashboard
     let macs: [PairedMac]
     let selectedMacID: UUID?
     let select: (UUID) -> Void
@@ -21,24 +24,31 @@ struct MacPickerView: View {
                 }
             }
         } label: {
-            HStack(spacing: 8) {
-                Image(systemName: "desktopcomputer")
-                Text(selectedName)
+            if style == .toolbar {
+                Label(selectedName, systemImage: "desktopcomputer")
                     .lineLimit(1)
                     .truncationMode(.middle)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                Image(systemName: "chevron.up.chevron.down")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .accessibilityHidden(true)
+                    .frame(maxWidth: 150)
+            } else {
+                HStack(spacing: 8) {
+                    Image(systemName: "desktopcomputer")
+                    Text(selectedName)
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Image(systemName: "chevron.up.chevron.down")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .accessibilityHidden(true)
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                .frame(maxWidth: .infinity, minHeight: 56, alignment: .leading)
+                .contentShape(.rect)
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
-            .frame(maxWidth: .infinity, minHeight: 56, alignment: .leading)
-            .contentShape(.rect)
         }
         .buttonStyle(.plain)
-        .modifier(MacPickerSurface(isInteractive: isEnabled))
+        .modifier(MacPickerSurface(isInteractive: isEnabled, isToolbar: style == .toolbar))
         .hoverEffect(.highlight)
         .focusable(isEnabled)
         .disabled(!isEnabled)
@@ -58,10 +68,13 @@ private struct MacPickerSurface: ViewModifier {
     @Environment(\.colorSchemeContrast) private var colorSchemeContrast
 
     let isInteractive: Bool
+    let isToolbar: Bool
 
     @ViewBuilder
     func body(content: Content) -> some View {
-        if reduceTransparency {
+        if isToolbar {
+            content
+        } else if reduceTransparency {
             content
                 .background(selectionTint, in: pickerShape)
                 .background(opaqueSurfaceColor, in: pickerShape)

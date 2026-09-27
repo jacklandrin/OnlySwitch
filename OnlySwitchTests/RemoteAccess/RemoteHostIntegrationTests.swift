@@ -6,6 +6,59 @@ import Switches
 @testable import OnlySwitch
 
 struct RemoteHostIntegrationTests {
+    @Test(.timeLimit(.minutes(1)))
+    func authenticatedSystemMonitorSubscriptionStreamsAndCancelsDeterministically() async throws {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let snapshot = SystemMonitorSnapshot(
+            timestamp: Date(timeIntervalSince1970: 1_800_000_000),
+            cpuUsage: .available(0.42),
+            memory: .available(.init(totalBytes: 16_000, usedBytes: 8_000))
+        )
+        let probe = SystemMonitorStreamProbe()
+        let (stream, continuation) = AsyncThrowingStream.makeStream(
+            of: SystemMonitorSnapshot.self,
+            throwing: Error.self
+        )
+        continuation.onTermination = { _ in
+            Task { await probe.recordCancellation() }
+        }
+        let host = RemoteHost.testing(
+            catalog: [],
+            router: router,
+            pairingCode: "ABCDEFGH2345",
+            systemMonitorSnapshots: { stream }
+        )
+        let endpoint = try await host.startForTesting(port: 0)
+        defer {
+            continuation.finish()
+            Task { await host.stop() }
+        }
+        let client = try await RemoteHostTestClient.connect(to: endpoint)
+        try await client.pair(code: "ABCDEFGH2345")
+
+        try await client.setSystemMonitorStreaming(true)
+        continuation.yield(snapshot)
+        #expect(try await client.nextMessage() == .systemMonitorSnapshot(snapshot))
+
+        try await client.setSystemMonitorStreaming(false)
+        await probe.waitForCancellation()
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func legacyPeerCompletesItsNormalAuthenticatedFlowWithoutMonitorMessages() async throws {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let host = RemoteHost.testing(catalog: [], router: router, pairingCode: "ABCDEFGH2345")
+        let endpoint = try await host.startForTesting(port: 0)
+        defer { Task { await host.stop() } }
+        let client = try await RemoteHostTestClient.connect(
+            to: endpoint,
+            version: .init(major: 1, minor: 3)
+        )
+
+        try await client.pair(code: "ABCDEFGH2345")
+        #expect(try await client.catalog() == [])
+    }
+
     @Test
     func preparedReplacementDoesNotReplaceCommittedCredential() async throws {
         let store = RemoteCredentialStore.inMemory()
@@ -919,6 +972,28 @@ struct RemoteHostIntegrationTests {
         #expect(boundary.events == [.sendInvoked, .sendReturned, .finalized])
     }
 
+}
+
+private actor SystemMonitorStreamProbe {
+    private var wasCancelled = false
+    private var cancellationWaiters: [CheckedContinuation<Void, Never>] = []
+
+    func recordCancellation() {
+        guard wasCancelled == false else { return }
+        wasCancelled = true
+        let waiters = cancellationWaiters
+        cancellationWaiters.removeAll()
+        for waiter in waiters {
+            waiter.resume()
+        }
+    }
+
+    func waitForCancellation() async {
+        guard wasCancelled == false else { return }
+        await withCheckedContinuation { continuation in
+            cancellationWaiters.append(continuation)
+        }
+    }
 }
 
 private actor IntegrationCatalogSource {

@@ -23,6 +23,7 @@ extension RemoteConnectionClient {
             subscribe: { try await runtime.subscribe($0) },
             send: { try await runtime.send($0) },
             sendSoundMixer: { try await runtime.sendSoundMixer($0) },
+            setSystemMonitorStreaming: { try await runtime.setSystemMonitorStreaming($0) },
             setForegrounded: { await runtime.setForegrounded($0) }
         )
     }
@@ -492,7 +493,10 @@ actor RemoteConnectionRuntime {
         try? await persistence.saveCatalog(pending.macID, pending.catalog.revision, pending.catalog.controls)
         pending.session.startReceiving()
         try? await pending.session.requestSoundMixerIfSupported()
-        if let previousSession { await closeSession(previousSession) }
+        if let previousSession {
+            try? await previousSession.setSystemMonitorStreaming(false)
+            await closeSession(previousSession)
+        }
         if foregrounded == false { await setForegrounded(false) }
         finalizingTransactionID = nil
         return pending.mac
@@ -671,6 +675,13 @@ actor RemoteConnectionRuntime {
         try await session.sendSoundMixer(command)
     }
 
+    func setSystemMonitorStreaming(_ enabled: Bool) async throws {
+        guard let session else {
+            throw RemoteProtocolError(code: .authenticationFailed, message: "Mac is offline")
+        }
+        try await session.setSystemMonitorStreaming(enabled)
+    }
+
     func setForegrounded(_ value: Bool) async {
         foregroundLifecycleGeneration &+= 1
         let lifecycleGeneration = foregroundLifecycleGeneration
@@ -689,7 +700,10 @@ actor RemoteConnectionRuntime {
                 browserRetryTask = nil
                 browserGeneration &+= 1
                 discovered.removeAll()
-                if let detachedSession { await closeSession(detachedSession) }
+                if let detachedSession {
+                    try? await detachedSession.setSystemMonitorStreaming(false)
+                    await closeSession(detachedSession)
+                }
                 await backgroundCleanup()
                 return
             }
@@ -706,7 +720,10 @@ actor RemoteConnectionRuntime {
             browserRetryTask = nil
             browserGeneration &+= 1
             discovered.removeAll()
-            if let detachedSession { await closeSession(detachedSession) }
+            if let detachedSession {
+                try? await detachedSession.setSystemMonitorStreaming(false)
+                await closeSession(detachedSession)
+            }
             await backgroundCleanup()
             guard foregroundLifecycleGeneration == lifecycleGeneration else { return }
             return
@@ -1014,6 +1031,8 @@ actor RemoteConnectionRuntime {
             eventHub.yield(.action(macID, result))
         case let .soundMixerSnapshot(snapshot):
             eventHub.yield(.soundMixer(macID, snapshot))
+        case let .systemMonitorSnapshot(snapshot):
+            eventHub.yield(.systemMonitor(macID, snapshot))
         case let .catalogChanged(revision):
             eventHub.yield(.catalogInvalidated(macID, revision))
             guard let activeSession = session else { return }
@@ -1587,6 +1606,15 @@ actor RemoteClientSession {
             throw RemoteProtocolError(code: .actionNotSupported, message: "Sound Mixer remote control is unavailable on this Mac")
         }
         try await sendMessage(.soundMixerCommand(command))
+    }
+    func setSystemMonitorStreaming(_ enabled: Bool) async throws {
+        guard protocolVersion.supportsSystemMonitorRemote else {
+            throw RemoteProtocolError(
+                code: .actionNotSupported,
+                message: "System Monitor is unavailable on this Mac"
+            )
+        }
+        try await sendMessage(.systemMonitorSubscriptionUpdate(enabled))
     }
     func receiveCatalog() async throws -> RemoteCatalogCache {
         try await sendMessage(.catalogRequest)

@@ -2,6 +2,7 @@ import Foundation
 import Network
 import RemoteCore
 import RemoteTransport
+import SystemMonitor
 
 actor RemoteHost {
     @MainActor static let shared = RemoteHost(
@@ -21,6 +22,7 @@ actor RemoteHost {
     private let authenticationResultSender: RemotePeerSession.AuthenticationResultSender
     private let commitStageReached: @Sendable (RemotePairingCommitStage) async -> Void
     private let authenticatedSessionObserver: @Sendable () -> Void
+    private let systemMonitorSnapshots: @Sendable () -> AsyncThrowingStream<SystemMonitorSnapshot, Error>
     private var eventContinuations: [
         UUID: AsyncStream<RemoteHostEvent>.Continuation
     ] = [:]
@@ -50,7 +52,10 @@ actor RemoteHost {
             try await operation()
         },
         commitStageReached: @escaping @Sendable (RemotePairingCommitStage) async -> Void = { _ in },
-        authenticatedSessionObserver: @escaping @Sendable () -> Void = {}
+        authenticatedSessionObserver: @escaping @Sendable () -> Void = {},
+        systemMonitorSnapshots: @escaping @Sendable () -> AsyncThrowingStream<SystemMonitorSnapshot, Error> = {
+            MacSystemMonitorCollector.liveClient().snapshots()
+        }
     ) {
         self.credentialStore = credentialStore
         self.catalogProvider = catalogProvider
@@ -65,6 +70,7 @@ actor RemoteHost {
         self.authenticationResultSender = authenticationResultSender
         self.commitStageReached = commitStageReached
         self.authenticatedSessionObserver = authenticatedSessionObserver
+        self.systemMonitorSnapshots = systemMonitorSnapshots
         self.statusScheduler = RemoteStatusScheduler(provider: catalogProvider)
         self.catalogMonitor = RemoteCatalogMonitor(provider: catalogProvider)
     }
@@ -91,7 +97,10 @@ actor RemoteHost {
         },
         commitStageReached: @escaping @Sendable (RemotePairingCommitStage) async -> Void = { _ in },
         authenticatedSessionObserver: @escaping @Sendable () -> Void = {},
-        finalizeRepairObserver: @escaping @Sendable (UUID) -> Void = { _ in }
+        finalizeRepairObserver: @escaping @Sendable (UUID) -> Void = { _ in },
+        systemMonitorSnapshots: @escaping @Sendable () -> AsyncThrowingStream<SystemMonitorSnapshot, Error> = {
+            MacSystemMonitorCollector.liveClient().snapshots()
+        }
     ) -> RemoteHost {
         let fixedProvider = RemoteCatalogProvider(
             catalog: { catalog },
@@ -123,7 +132,8 @@ actor RemoteHost {
             revocationPrepared: revocationPrepared,
             authenticationResultSender: authenticationResultSender,
             commitStageReached: commitStageReached,
-            authenticatedSessionObserver: authenticatedSessionObserver
+            authenticatedSessionObserver: authenticatedSessionObserver,
+            systemMonitorSnapshots: systemMonitorSnapshots
         )
     }
 
@@ -420,6 +430,7 @@ actor RemoteHost {
                     generation: generation
                 ) ?? false
             },
+            systemMonitorSnapshots: systemMonitorSnapshots,
             authenticationResultSender: authenticationResultSender,
             commitStageReached: commitStageReached,
             ended: { [weak self] id in await self?.sessionEnded(id) },

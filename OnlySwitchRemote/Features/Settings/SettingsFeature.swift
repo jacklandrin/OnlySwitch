@@ -323,7 +323,8 @@ struct SettingsFeature {
             return .none
         case let .connecting(id), let .authenticated(id), let .offline(id, _), let .revoked(id),
              let .sessionStarted(id, _), let .catalog(id, _, _), let .catalogInvalidated(id, _),
-             let .statusSnapshot(id, _), let .status(id, _), let .action(id, _), let .soundMixer(id, _):
+             let .statusSnapshot(id, _), let .status(id, _), let .action(id, _), let .soundMixer(id, _),
+             let .systemMonitor(id, _):
             macID = id
         }
         guard state.pairedMacs[id: macID] != nil else { return .none }
@@ -353,7 +354,7 @@ struct SettingsFeature {
                 }
             }
             .cancellable(id: CancelID.catalogSave(id), cancelInFlight: true)
-        case .sessionStarted, .catalogInvalidated, .statusSnapshot, .status, .action, .soundMixer:
+        case .sessionStarted, .catalogInvalidated, .statusSnapshot, .status, .action, .soundMixer, .systemMonitor:
             break
         }
         return .none

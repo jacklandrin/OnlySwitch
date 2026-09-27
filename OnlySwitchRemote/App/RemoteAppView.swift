@@ -11,7 +11,22 @@ struct RemoteAppView: View {
                 NavigationStack { SettingsView(store: requiredStore) }
             } else {
                 NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
-                    DashboardView(store: store.scope(state: \.dashboard, action: \.dashboard))
+                    ZStack {
+                        DashboardBackground()
+
+                        TabView(selection: pageSelection) {
+                            DashboardView(store: store.scope(state: \.dashboard, action: \.dashboard))
+                                .tag(RemoteAppPage.controls)
+                            RemoteSystemMonitorView(store: store.scope(state: \.systemMonitor, action: \.systemMonitor))
+                                .tag(RemoteAppPage.systemMonitor)
+                        }
+                        .tabViewStyle(.page(indexDisplayMode: .never))
+                        .overlay(alignment: .bottom) {
+                            RemotePageTabBar(selection: pageSelection)
+                                .padding(.bottom, 4)
+                        }
+                    }
+                        .toolbarBackground(.hidden, for: .navigationBar)
                         .overlay {
                             if store.isLoading {
                                 ProgressView("Loading Macs")
@@ -20,10 +35,37 @@ struct RemoteAppView: View {
                             }
                         }
                         .toolbarTitleDisplayMode(.inline)
+                        .toolbar {
+                            ToolbarItemGroup(placement: .topBarTrailing) {
+                                MacPickerView(
+                                    style: .toolbar,
+                                    macs: Array(store.pairedMacs),
+                                    selectedMacID: store.selectedMacID,
+                                    select: { store.send(.macSelected($0)) }
+                                )
+                                Button("Settings", systemImage: "line.3.horizontal") {
+                                    store.send(.settingsButtonTapped)
+                                }
+                                .labelStyle(.iconOnly)
+                                .disabled(store.selectedPage == .systemMonitor && store.selectedMacID == nil)
+                                .accessibilityLabel(
+                                    store.selectedPage == .systemMonitor
+                                        ? "System Monitor Configuration"
+                                        : "Settings"
+                                )
+                                .accessibilityHint(
+                                    store.selectedPage == .systemMonitor
+                                        ? "Choose and reorder System Monitor widgets"
+                                        : "Opens remote control settings"
+                                )
+                            }
+                        }
                 } destination: { destinationStore in
                     switch destinationStore.case {
                     case let .settings(settingsStore):
                         SettingsView(store: settingsStore)
+                    case let .monitorConfiguration(configurationStore):
+                        RemoteSystemMonitorConfigurationView(store: configurationStore)
                     }
                 }
             }
@@ -54,5 +96,12 @@ struct RemoteAppView: View {
         .onChange(of: scenePhase, initial: true) { _, phase in
             store.send(.scenePhaseChanged(phase == .active))
         }
+    }
+
+    private var pageSelection: Binding<RemoteAppPage> {
+        Binding(
+            get: { store.selectedPage },
+            set: { store.send(.pageSelected($0)) }
+        )
     }
 }

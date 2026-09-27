@@ -143,6 +143,8 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
     case soundMixerSnapshotRequest
     case soundMixerSnapshot(RemoteSoundMixerSnapshot)
     case soundMixerCommand(RemoteSoundMixerCommand)
+    case systemMonitorSubscriptionUpdate(Bool)
+    case systemMonitorSnapshot(SystemMonitorSnapshot)
     case ping(UInt64)
     case pong(UInt64)
     case credentialRevoked
@@ -183,6 +185,8 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
         case soundMixerSnapshotRequest
         case soundMixerSnapshot
         case soundMixerCommand
+        case systemMonitorSubscriptionUpdate
+        case systemMonitorSnapshot
         case ping
         case pong
         case credentialRevoked
@@ -244,6 +248,10 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
             self = .soundMixerSnapshot(try container.decode(RemoteSoundMixerSnapshot.self, forKey: .payload))
         case .soundMixerCommand:
             self = .soundMixerCommand(try container.decode(RemoteSoundMixerCommand.self, forKey: .payload))
+        case .systemMonitorSubscriptionUpdate:
+            self = .systemMonitorSubscriptionUpdate(try container.decode(Bool.self, forKey: .payload))
+        case .systemMonitorSnapshot:
+            self = .systemMonitorSnapshot(try container.decode(SystemMonitorSnapshot.self, forKey: .payload))
         case .ping:
             self = .ping(try container.decode(UInt64.self, forKey: .payload))
         case .pong:
@@ -330,6 +338,12 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
         case let .soundMixerCommand(command):
             try container.encode(Kind.soundMixerCommand, forKey: .type)
             try container.encode(command, forKey: .payload)
+        case let .systemMonitorSubscriptionUpdate(enabled):
+            try container.encode(Kind.systemMonitorSubscriptionUpdate, forKey: .type)
+            try container.encode(enabled, forKey: .payload)
+        case let .systemMonitorSnapshot(snapshot):
+            try container.encode(Kind.systemMonitorSnapshot, forKey: .type)
+            try container.encode(snapshot, forKey: .payload)
         case let .ping(nonce):
             try container.encode(Kind.ping, forKey: .type)
             try container.encode(nonce, forKey: .payload)

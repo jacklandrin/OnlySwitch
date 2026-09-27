@@ -22,6 +22,7 @@ enum RemoteConnectionEvent: Equatable, Sendable {
     case status(UUID, RemoteControlStatus)
     case action(UUID, RemoteActionResult)
     case soundMixer(UUID, RemoteSoundMixerSnapshot)
+    case systemMonitor(UUID, SystemMonitorSnapshot)
 }
 
 enum DiscoveryFailure: Equatable, Sendable {
