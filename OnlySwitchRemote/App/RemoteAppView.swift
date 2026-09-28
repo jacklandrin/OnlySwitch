@@ -7,8 +7,11 @@ struct RemoteAppView: View {
 
     var body: some View {
         Group {
-            if let requiredStore = store.scope(state: \.requiredSettings, action: \.requiredSettings) {
-                NavigationStack { SettingsView(store: requiredStore) }
+            if let requiredStore = store.scope(
+                state: \.requiredGlobalSettings,
+                action: \.requiredGlobalSettings
+            ) {
+                NavigationStack { GlobalSettingsView(store: requiredStore) }
             } else {
                 NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
                     ZStack(alignment: .bottom) {
@@ -38,6 +41,13 @@ struct RemoteAppView: View {
                         }
                         .toolbarTitleDisplayMode(.inline)
                         .toolbar {
+                            ToolbarItem(placement: .topBarLeading) {
+                                Button("Settings", systemImage: "gearshape") {
+                                    store.send(.globalSettingsButtonTapped)
+                                }
+                                .labelStyle(.iconOnly)
+                                .accessibilityHint("Opens app settings, help, and Mac pairing")
+                            }
                             ToolbarItemGroup(placement: .topBarTrailing) {
                                 MacPickerView(
                                     style: .toolbar,
@@ -45,26 +55,32 @@ struct RemoteAppView: View {
                                     selectedMacID: store.selectedMacID,
                                     select: { store.send(.macSelected($0)) }
                                 )
-                                Button("Settings", systemImage: "line.3.horizontal") {
-                                    store.send(.settingsButtonTapped)
+                                Button(
+                                    store.selectedPage == .systemMonitor
+                                        ? "Configure System Monitor"
+                                        : "Configure Controls",
+                                    systemImage: "slider.horizontal.3"
+                                ) {
+                                    if store.selectedPage == .systemMonitor {
+                                        store.send(.systemMonitor(.delegate(.openConfiguration)))
+                                    } else {
+                                        store.send(.controlsConfigurationButtonTapped)
+                                    }
                                 }
                                 .labelStyle(.iconOnly)
-                                .disabled(store.selectedPage == .systemMonitor && store.selectedMacID == nil)
-                                .accessibilityLabel(
-                                    store.selectedPage == .systemMonitor
-                                        ? "System Monitor Configuration"
-                                        : "Settings"
-                                )
+                                .disabled(store.selectedMacID == nil)
                                 .accessibilityHint(
                                     store.selectedPage == .systemMonitor
                                         ? "Choose and reorder System Monitor widgets"
-                                        : "Opens remote control settings"
+                                        : "Choose controls shown on the dashboard"
                                 )
                             }
                         }
                 } destination: { destinationStore in
                     switch destinationStore.case {
-                    case let .settings(settingsStore):
+                    case let .globalSettings(settingsStore):
+                        GlobalSettingsView(store: settingsStore)
+                    case let .controlsConfiguration(settingsStore):
                         SettingsView(store: settingsStore)
                     case let .monitorConfiguration(configurationStore):
                         RemoteSystemMonitorConfigurationView(store: configurationStore)

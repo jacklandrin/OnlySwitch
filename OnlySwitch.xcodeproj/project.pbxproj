@@ -405,6 +405,9 @@
 		C0E000000000000000000003 /* RemoteSystemMonitorConfigurationFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E000000000000000000023 /* RemoteSystemMonitorConfigurationFeature.swift */; };
 		C0E000000000000000000004 /* RemoteSystemMonitorConfigurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E000000000000000000024 /* RemoteSystemMonitorConfigurationView.swift */; };
 		C0E000000000000000000005 /* RemoteSystemMonitorConfigurationFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E000000000000000000025 /* RemoteSystemMonitorConfigurationFeatureTests.swift */; };
+		C0F000000000000000000001 /* RemoteSystemMonitorWaterfallLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F000000000000000000021 /* RemoteSystemMonitorWaterfallLayout.swift */; };
+		DABA00000000000000000002 /* GlobalSettingsFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA00000000000000000022 /* GlobalSettingsFeature.swift */; };
+		DABA00000000000000000003 /* GlobalSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA00000000000000000023 /* GlobalSettingsView.swift */; };
 		C1A0B00118E9202600000001 /* PrivilegedOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0B00318E9202600000001 /* PrivilegedOperation.swift */; };
 		C1A0B00218E9202600000001 /* PrivilegedOperationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0B00418E9202600000001 /* PrivilegedOperationTests.swift */; };
 		C1A0C00118E9202600000001 /* PrivilegedOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0B00318E9202600000001 /* PrivilegedOperation.swift */; };
@@ -991,6 +994,9 @@
 		F3AC00000000000000000021 /* RemoteCatalogMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCatalogMonitor.swift; sourceTree = "<group>"; };
 		F3AD00000000000000000021 /* HowToUseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToUseView.swift; sourceTree = "<group>"; };
 		F3AD00000000000000000022 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		C0F000000000000000000021 /* RemoteSystemMonitorWaterfallLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorWaterfallLayout.swift; sourceTree = "<group>"; };
+		DABA00000000000000000022 /* GlobalSettingsFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSettingsFeature.swift; sourceTree = "<group>"; };
+		DABA00000000000000000023 /* GlobalSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSettingsView.swift; sourceTree = "<group>"; };
 		F3AF000000000000000000021 /* OnlyRemoteCampaignFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyRemoteCampaignFeatureTests.swift; sourceTree = "<group>"; };
 		F3AF000000000000000000022 /* OnlyRemoteCampaignClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyRemoteCampaignClient.swift; sourceTree = "<group>"; };
 		F3AF000000000000000000023 /* OnlyRemoteCampaignFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyRemoteCampaignFeature.swift; sourceTree = "<group>"; };
@@ -2062,6 +2068,7 @@
 			children = (
 				C0D000000000000000000021 /* RemoteSystemMonitorFeature.swift */,
 				C0D000000000000000000022 /* RemoteSystemMonitorView.swift */,
+				C0F000000000000000000021 /* RemoteSystemMonitorWaterfallLayout.swift */,
 				C0D000000000000000000023 /* RemoteSystemMonitorChartView.swift */,
 				C0D000000000000000000027 /* RemoteSystemMonitorGaugeView.swift */,
 				C0E000000000000000000022 /* RemoteSystemMonitorCardSurface.swift */,
@@ -2309,6 +2316,8 @@
 		F3A900000000000000000012 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				DABA00000000000000000022 /* GlobalSettingsFeature.swift */,
+				DABA00000000000000000023 /* GlobalSettingsView.swift */,
 				F3A900000000000000000025 /* SettingsFeature.swift */,
 				F3A900000000000000000026 /* SettingsView.swift */,
 				F3AD00000000000000000021 /* HowToUseView.swift */,
@@ -3144,6 +3153,8 @@
 				F3A900000000000000000004 /* PairingView.swift in Sources */,
 				F3A900000000000000000005 /* SettingsFeature.swift in Sources */,
 				F3A900000000000000000006 /* SettingsView.swift in Sources */,
+				DABA00000000000000000002 /* GlobalSettingsFeature.swift in Sources */,
+				DABA00000000000000000003 /* GlobalSettingsView.swift in Sources */,
 				F3AD00000000000000000001 /* HowToUseView.swift in Sources */,
 				F3AD00000000000000000002 /* AboutView.swift in Sources */,
 				F3AA00000000000000000003 /* MacManagementFeature.swift in Sources */,
@@ -3159,6 +3170,7 @@
 				F3AB00000000000000000008 /* MacPickerView.swift in Sources */,
 				C0D000000000000000000001 /* RemoteSystemMonitorFeature.swift in Sources */,
 				C0D000000000000000000002 /* RemoteSystemMonitorView.swift in Sources */,
+				C0F000000000000000000001 /* RemoteSystemMonitorWaterfallLayout.swift in Sources */,
 				C0D000000000000000000003 /* RemoteSystemMonitorChartView.swift in Sources */,
 				C0D000000000000000000007 /* RemoteSystemMonitorGaugeView.swift in Sources */,
 				C0D000000000000000000004 /* RemotePageTabBar.swift in Sources */,

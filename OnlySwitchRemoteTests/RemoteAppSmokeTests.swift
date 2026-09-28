@@ -9,7 +9,7 @@ struct RemoteAppSmokeTests {
         let state = RemoteAppFeature.State(hasCompletedInitialSetup: false)
         #expect(state.requiresSetup)
         #expect(state.path.isEmpty)
-        #expect(state.requiredSettings != nil)
+        #expect(state.requiredGlobalSettings != nil)
     }
 
     @Test func reviewDemoWalkthroughDeclaresEveryReviewerScreen() {
@@ -31,7 +31,6 @@ struct RemoteAppSmokeTests {
         let layout = try #require(try await persistence.loadLayout(studioID))
         let catalog = try #require(try await persistence.loadCatalog(studioID))
         let state = SettingsFeature.State(
-            isSetupRequired: false,
             pairedMacs: .init(uniqueElements: pairedMacs),
             selectedMacID: studioID,
             catalog: .init(uniqueElements: catalog.controls),
@@ -47,7 +46,6 @@ struct RemoteAppSmokeTests {
             $0.remotePersistence = persistence
         }
 
-        #expect(store.state.isSetupRequired == false)
         #expect(store.state.pairedMacs.map(\.displayName) == ["Studio", "Travel"])
         #expect(store.state.controls(kind: .builtIn).isEmpty == false)
         #expect(store.state.controls(kind: .shortcut).isEmpty == false)
@@ -58,9 +56,10 @@ struct RemoteAppSmokeTests {
         }
         #expect(store.state.management?.mac.displayName == "Studio")
 
-        await store.send(.pairAnotherTapped) {
-            $0.pairing = .init()
+        let globalStore = TestStore(initialState: GlobalSettingsFeature.State()) {
+            GlobalSettingsFeature()
         }
-        #expect(store.state.pairing != nil)
+        await globalStore.send(.pairNewMacTapped) { $0.pairing = .init() }
+        #expect(globalStore.state.pairing != nil)
     }
 }

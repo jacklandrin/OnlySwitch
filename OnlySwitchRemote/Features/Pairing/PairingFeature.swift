@@ -223,7 +223,9 @@ struct PairingFeature {
                       state.discoveryPhase == .searching else { return .none }
                 state.isDiscovering = false
                 state.discoveryPhase = .empty
-                return .none
+                return .run { [connection] _ in
+                    await connection.restartDiscovery()
+                }
 
             case .retryDiscoveryTapped:
                 state.discoveredMacs.removeAll()
@@ -234,6 +236,7 @@ struct PairingFeature {
                 return .merge(
                     .cancel(id: CancelID.discovery),
                     .cancel(id: CancelID.discoveryDeadline),
+                    .run { [connection] _ in await connection.restartDiscovery() },
                     .send(.task)
                 )
 

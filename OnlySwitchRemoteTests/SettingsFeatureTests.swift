@@ -31,7 +31,6 @@ struct SettingsFeatureTests {
         let cache = RemoteCatalogCache(revision: 7, controls: [descriptor(mute)])
         let layout = MacDashboardLayout(macID: laptop.id, selectedControlIDs: [mute], order: [mute])
         let store = TestStore(initialState: SettingsFeature.State(
-            isSetupRequired: false,
             pairedMacs: [studio, laptop],
             selectedMacID: studio.id
         )) { SettingsFeature() } withDependencies: {
@@ -58,7 +57,7 @@ struct SettingsFeatureTests {
     }
 
     @Test func staleSwitchLoadAndOtherMacCatalogEventsAreIgnored() async {
-        var state = SettingsFeature.State(isSetupRequired: false, pairedMacs: [studio, laptop], selectedMacID: laptop.id)
+        var state = SettingsFeature.State(pairedMacs: [studio, laptop], selectedMacID: laptop.id)
         state.selectionGeneration = 2
         let store = TestStore(initialState: state) { SettingsFeature() }
         let staleLayout = MacDashboardLayout(macID: studio.id, selectedControlIDs: [mute], order: [mute])
@@ -70,7 +69,7 @@ struct SettingsFeatureTests {
     }
 
     @Test func switchingBackKeepsNewestUnsavedLayoutForRetry() async {
-        var state = SettingsFeature.State(isSetupRequired: false, pairedMacs: [studio, laptop], selectedMacID: studio.id)
+        var state = SettingsFeature.State(pairedMacs: [studio, laptop], selectedMacID: studio.id)
         state.selectionGeneration = 3
         let pending = MacDashboardLayout(macID: studio.id, selectedControlIDs: [mute, shortcut], order: [shortcut, mute])
         state.pendingLayoutSaves[studio.id] = pending
@@ -87,7 +86,6 @@ struct SettingsFeatureTests {
     @Test func unavailableControlCanRemainSelectedAndShowsReason() async {
         let unavailable = descriptor(mute, available: false, reason: "Configure audio on the Mac")
         let store = TestStore(initialState: SettingsFeature.State(
-            isSetupRequired: false,
             pairedMacs: [studio],
             selectedMacID: studio.id,
             catalog: [unavailable]
@@ -117,7 +115,6 @@ struct SettingsFeatureTests {
 
     @Test func groupedControlsIncludeAllKindsAndMissingIDsAreNotRendered() {
         let state = SettingsFeature.State(
-            isSetupRequired: false,
             pairedMacs: [studio],
             selectedMacID: studio.id,
             catalog: [descriptor(mute), descriptor(shortcut), descriptor(evolution)],
@@ -134,7 +131,6 @@ struct SettingsFeatureTests {
 
     @Test func availableControlsExcludeItemsAlreadyOnTheDashboard() {
         let state = SettingsFeature.State(
-            isSetupRequired: false,
             pairedMacs: [studio],
             selectedMacID: studio.id,
             catalog: [descriptor(mute), descriptor(shortcut), descriptor(evolution)],
@@ -161,7 +157,6 @@ struct SettingsFeatureTests {
 
     @Test func selectedControlsMissingFromSavedOrderRemainVisibleForRemoval() {
         let state = SettingsFeature.State(
-            isSetupRequired: false,
             pairedMacs: [studio],
             selectedMacID: studio.id,
             catalog: [descriptor(mute), descriptor(shortcut)],
@@ -174,7 +169,6 @@ struct SettingsFeatureTests {
 
     @Test func movingSelectedControlMissingFromSavedOrderPersistsItsNewPosition() async {
         let store = TestStore(initialState: SettingsFeature.State(
-            isSetupRequired: false,
             pairedMacs: [studio],
             selectedMacID: studio.id,
             catalog: [descriptor(mute), descriptor(shortcut)],
@@ -201,7 +195,6 @@ struct SettingsFeatureTests {
     @Test func movingFilteredSelectedRowsProjectsBackWithoutDroppingMissingIDs() async {
         let recorder = LayoutSaveRecorder()
         let store = TestStore(initialState: SettingsFeature.State(
-            isSetupRequired: false,
             pairedMacs: [studio],
             selectedMacID: studio.id,
             catalog: [descriptor(mute), descriptor(shortcut), descriptor(evolution)],
@@ -230,7 +223,6 @@ struct SettingsFeatureTests {
     @Test func failedLayoutSaveIsRetriedWithNewestMonotonicLayout() async {
         let recorder = GatedLayoutSaveRecorder()
         let store = TestStore(initialState: SettingsFeature.State(
-            isSetupRequired: false,
             pairedMacs: [studio],
             selectedMacID: studio.id,
             catalog: [descriptor(mute), descriptor(shortcut)]
@@ -268,7 +260,6 @@ struct SettingsFeatureTests {
     @Test func successfulOldSaveCannotOverwriteNewerRapidToggle() async {
         let recorder = SuccessfulGatedLayoutSaveRecorder()
         let store = TestStore(initialState: SettingsFeature.State(
-            isSetupRequired: false,
             pairedMacs: [studio],
             selectedMacID: studio.id,
             catalog: [descriptor(mute), descriptor(shortcut)]
@@ -302,7 +293,7 @@ struct SettingsFeatureTests {
 
     @Test func catalogEventsUpdateCacheOnlyForSelectedMac() async {
         let cacheRecorder = CatalogSaveRecorder()
-        var state = SettingsFeature.State(isSetupRequired: false, pairedMacs: [studio], selectedMacID: studio.id)
+        var state = SettingsFeature.State(pairedMacs: [studio], selectedMacID: studio.id)
         state.isObservingConnectionEvents = true
         let controls = [descriptor(mute)]
         let store = TestStore(initialState: state) { SettingsFeature() } withDependencies: {
@@ -316,28 +307,81 @@ struct SettingsFeatureTests {
         #expect(await cacheRecorder.revisions == [12])
     }
 
-    @Test func pairAnotherSuccessLoadsTheNewMacLayoutBeforeDelegating() async {
+    @Test func rePairKeepsThePerMacPairingFlowAvailable() async {
         let laptop = laptop
-        let layout = MacDashboardLayout(macID: laptop.id, selectedControlIDs: [mute], order: [mute])
-        var state = SettingsFeature.State(isSetupRequired: false, pairedMacs: [studio], selectedMacID: studio.id)
-        state.pairing = PairingFeature.State()
-        let store = TestStore(initialState: state) { SettingsFeature() } withDependencies: {
-            $0.remotePersistence.loadLayout = { _ in layout }
-            $0.remotePersistence.loadCatalog = { _ in nil }
+        var state = SettingsFeature.State(pairedMacs: [studio, laptop], selectedMacID: studio.id)
+        state.management = .init(mac: laptop)
+        let store = TestStore(initialState: state) { SettingsFeature() }
+
+        await store.send(.management(.presented(.delegate(.rePair(laptop.id))))) {
+            $0.management = nil
+            $0.pairing = PairingFeature.State()
+        }
+    }
+}
+
+@MainActor
+struct GlobalSettingsFeatureTests {
+    private let studio = PairedMac(
+        id: UUID(uuidString: "00000000-0000-0000-0000-000000000903")!,
+        displayName: "Studio",
+        lastEndpointDescription: nil,
+        lastConnectedAt: nil,
+        requiresPairing: false
+    )
+
+    @Test func pairNewMacPresentsTheGlobalPairingFlow() async {
+        let store = TestStore(initialState: GlobalSettingsFeature.State()) {
+            GlobalSettingsFeature()
         }
 
-        await store.send(.pairing(.presented(.delegate(.paired(laptop))))) {
-            $0.pairing = nil; $0.pairedMacs = [studio, laptop]; $0.selectedMacID = laptop.id
-            $0.selectionGeneration = 1; $0.catalog = []; $0.catalogRevision = 0; $0.selectedControlIDs = []; $0.order = []
-        }
-        await store.receive(.delegate(.paired(laptop)))
-        await store.receive(.selectedMacDataLoaded(1, laptop.id, layout, nil)) {
-            $0.selectedControlIDs = [mute]; $0.order = [mute]
+        await store.send(.pairNewMacTapped) {
+            $0.pairing = PairingFeature.State()
         }
     }
 
+    @Test func pairedMacIsDelegatedAndDismissesTheGlobalPairingFlow() async {
+        var state = GlobalSettingsFeature.State()
+        state.pairing = PairingFeature.State()
+        let store = TestStore(initialState: state) {
+            GlobalSettingsFeature()
+        }
+
+        await store.send(.pairing(.presented(.delegate(.paired(studio))))) {
+            $0.pairing = nil
+        }
+        await store.receive(.delegate(.paired(studio)))
+    }
+
+    @Test func dismissalDoesNotInterruptPairingFinalization() async {
+        var state = GlobalSettingsFeature.State()
+        state.pairing = PairingFeature.State()
+        state.pairing?.isFinalizing = true
+        let store = TestStore(initialState: state) {
+            GlobalSettingsFeature()
+        }
+
+        await store.send(.pairing(.dismiss))
+        #expect(store.state.pairing?.isFinalizing == true)
+    }
+
+    @Test func foregroundChangesReachPresentedPairing() async {
+        var state = GlobalSettingsFeature.State()
+        state.pairing = PairingFeature.State()
+        let store = TestStore(initialState: state) {
+            GlobalSettingsFeature()
+        }
+
+        await store.send(.foregroundChanged(false))
+        await store.receive(.pairing(.presented(.foregroundChanged(false)))) {
+            $0.pairing?.isForegrounded = false
+        }
+    }
+}
+
+extension SettingsFeatureTests {
     @Test func forgettingSelectedMacChoosesDeterministicFallbackAndDelegatesSelection() async {
-        var state = SettingsFeature.State(isSetupRequired: false, pairedMacs: [studio, laptop], selectedMacID: studio.id)
+        var state = SettingsFeature.State(pairedMacs: [studio, laptop], selectedMacID: studio.id)
         state.management = .init(mac: studio)
         let store = TestStore(initialState: state) { SettingsFeature() } withDependencies: {
             $0.remotePersistence.loadLayout = { _ in nil }
@@ -357,7 +401,7 @@ struct SettingsFeatureTests {
     }
 
     @Test func forgettingLastMacDelegatesAllMacsRemoved() async {
-        var state = SettingsFeature.State(isSetupRequired: false, pairedMacs: [studio], selectedMacID: studio.id)
+        var state = SettingsFeature.State(pairedMacs: [studio], selectedMacID: studio.id)
         state.management = .init(mac: studio)
         let store = TestStore(initialState: state) { SettingsFeature() }
 
@@ -371,7 +415,7 @@ struct SettingsFeatureTests {
 
     @Test func successfulForgetClearsPerMacSaveBookkeepingAndIgnoresLateCompletion() async {
         let layout = MacDashboardLayout(macID: studio.id, selectedControlIDs: [mute], order: [mute])
-        var state = SettingsFeature.State(isSetupRequired: false, pairedMacs: [studio, laptop], selectedMacID: laptop.id)
+        var state = SettingsFeature.State(pairedMacs: [studio, laptop], selectedMacID: laptop.id)
         state.management = .init(mac: studio)
         state.pendingLayoutSaves[studio.id] = layout
         state.layoutSaveGenerations[studio.id] = 4

@@ -7,7 +7,7 @@ struct RemoteAppShellView: View {
     var body: some View {
         RemoteAppView(store: store.scope(state: \.production, action: \.production))
             .safeAreaInset(edge: .bottom) {
-                if store.production.requiredSettings?.isSetupRequired == true {
+                if store.production.requiredGlobalSettings?.isSetupRequired == true {
                     Button("Explore Demo", systemImage: "sparkles") {
                         store.send(.exploreDemoTapped)
                     }

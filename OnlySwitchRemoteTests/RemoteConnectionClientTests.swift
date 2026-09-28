@@ -44,6 +44,13 @@ struct RemoteConnectionClientTests {
         )
     }
 
+    @Test func recoverableDiscoveryWaitingRestartsTheBrowser() {
+        #expect(RemoteConnectionRuntime.shouldRestartBrowser(after: .networkUnavailable, failureCount: 0))
+        #expect(RemoteConnectionRuntime.shouldRestartBrowser(after: .browserUnavailable, failureCount: 0))
+        #expect(RemoteConnectionRuntime.shouldRestartBrowser(after: .localNetworkAccessNeeded, failureCount: 0))
+        #expect(!RemoteConnectionRuntime.shouldRestartBrowser(after: .localNetworkAccessNeeded, failureCount: 1))
+    }
+
     @Test func reviewDemoUsesCanonicalMacsAuthenticatedStudioAndDemoOnlyEvents() async throws {
         let runtime = RemoteReviewDemoRuntime()
         let connection = RemoteConnectionClient.reviewDemo(runtime: runtime)
@@ -720,8 +727,8 @@ struct RemoteConnectionClientTests {
             hasCompletedInitialSetup: true
         )
 
-        await store.send(.requiredSettings(.delegate(.paired(paired)))) {
-            $0.requiredSettings = nil
+        await store.send(.requiredGlobalSettings(.delegate(.paired(paired)))) {
+            $0.requiredGlobalSettings = nil
             $0.pairedMacs = [paired]
             $0.selectedMacID = macID
             $0.metadataRefreshGeneration = 1

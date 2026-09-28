@@ -1,23 +1,14 @@
 import SwiftUI
 
 struct AboutView: View {
-    @Environment(\.dismiss) private var dismiss
-
     var body: some View {
-        NavigationStack {
-            List {
-                Section {
-                    LabeledContent("Version", value: versionDescription)
-                    LabeledContent("Copyright", value: "© 2021–2026 Jacklandrin")
-                }
-            }
-            .navigationTitle("About")
-            .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Done", action: close)
-                }
+        List {
+            Section {
+                LabeledContent("Version", value: versionDescription)
+                LabeledContent("Copyright", value: "© 2021–2026 Jacklandrin")
             }
         }
+        .navigationTitle("About")
     }
 
     private var versionDescription: String {
@@ -28,9 +19,5 @@ struct AboutView: View {
             return version
         }
         return "\(version) (\(build))"
-    }
-
-    private func close() {
-        dismiss()
     }
 }

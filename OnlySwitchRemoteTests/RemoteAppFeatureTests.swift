@@ -292,8 +292,7 @@ struct RemoteAppFeatureTests {
             connectionState: .authenticated,
             isActive: true
         )
-        state.path.append(.settings(.init(
-            isSetupRequired: false,
+        state.path.append(.controlsConfiguration(.init(
             pairedMacs: [studio],
             selectedMacID: studio.id
         )))
@@ -309,7 +308,7 @@ struct RemoteAppFeatureTests {
         }
         store.exhaustivity = .off(showSkippedAssertions: false)
 
-        await store.send(.path(.element(id: pathID, action: .settings(.delegate(.paired(laptop))))))
+        await store.send(.path(.element(id: pathID, action: .controlsConfiguration(.delegate(.paired(laptop))))))
         await store.finish()
 
         #expect(await loads.macIDs == [laptop.id])
@@ -331,8 +330,7 @@ struct RemoteAppFeatureTests {
             connectionState: .authenticated,
             isActive: true
         )
-        state.path.append(.settings(.init(
-            isSetupRequired: false,
+        state.path.append(.controlsConfiguration(.init(
             pairedMacs: [studio],
             selectedMacID: studio.id
         )))
@@ -344,7 +342,7 @@ struct RemoteAppFeatureTests {
 
         await store.send(.path(.element(
             id: pathID,
-            action: .settings(.delegate(.layoutChanged(layout)))
+            action: .controlsConfiguration(.delegate(.layoutChanged(layout)))
         )))
         await store.receive(.dashboard(.layoutChanged(layout))) {
             $0.dashboard.orderedSelectedIDs = [.mute, .darkMode]
@@ -355,7 +353,7 @@ struct RemoteAppFeatureTests {
 
     @Test func firstLaunchHasRequiredSettingsBeforeAnyEffect() {
         let state = RemoteAppFeature.State(hasCompletedInitialSetup: false)
-        #expect(state.requiredSettings?.isSetupRequired == true)
+        #expect(state.requiredGlobalSettings?.isSetupRequired == true)
         #expect(state.path.isEmpty)
         #expect(state.hasCompletedInitialSetup == false)
     }
@@ -367,7 +365,7 @@ struct RemoteAppFeatureTests {
             $0.remotePersistence.loadSelectedMacID = { laptop.id }
             $0.remoteConnection.select = { await selected.record($0) }
         }
-        #expect(store.state.requiredSettings == nil)
+        #expect(store.state.requiredGlobalSettings == nil)
         await store.send(.task) { $0.loadGeneration = 1; $0.isLoading = true }
         await store.receive(.launchResponse(1, .success(.init(pairedMacs: [studio, laptop], selectedMacID: laptop.id)))) {
             $0.isLoading = false; $0.pairedMacs = [studio, laptop]; $0.selectedMacID = laptop.id
@@ -391,9 +389,8 @@ struct RemoteAppFeatureTests {
             $0.connectedMacIDs = [studio.id]
             $0.activeSessionID = sessionID
         }
-        await store.send(.settingsButtonTapped) {
-            $0.path.append(.settings(.init(
-                isSetupRequired: false,
+        await store.send(.controlsConfigurationButtonTapped) {
+            $0.path.append(.controlsConfiguration(.init(
                 pairedMacs: [studio],
                 selectedMacID: studio.id,
                 connectionStatuses: [studio.id: .connected]
@@ -405,8 +402,7 @@ struct RemoteAppFeatureTests {
         var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
         state.pairedMacs = [studio, laptop]
         state.selectedMacID = studio.id
-        state.path.append(.settings(.init(
-            isSetupRequired: false,
+        state.path.append(.controlsConfiguration(.init(
             pairedMacs: [studio, laptop],
             selectedMacID: studio.id
         )))
@@ -422,26 +418,26 @@ struct RemoteAppFeatureTests {
             authenticatedMacID: studioID
         ))) {
             $0.connectedMacIDs = [studioID]
-            if case var .settings(settings) = $0.path[id: pathID] {
+            if case var .controlsConfiguration(settings) = $0.path[id: pathID] {
                 settings.connectionStatuses = [studioID: .connected]
-                $0.path[id: pathID] = .settings(settings)
+                $0.path[id: pathID] = .controlsConfiguration(settings)
             }
         }
         await store.send(.connectionEvent(.connecting(laptopID))) {
             $0.connectionEventRevision = 1
             $0.connectedMacIDs = []
-            if case var .settings(settings) = $0.path[id: pathID] {
+            if case var .controlsConfiguration(settings) = $0.path[id: pathID] {
                 settings.connectionStatuses = [laptopID: .connecting]
-                $0.path[id: pathID] = .settings(settings)
+                $0.path[id: pathID] = .controlsConfiguration(settings)
             }
         }
         await store.send(.connectionEvent(.authenticated(laptopID))) {
             $0.connectionEventRevision = 2
             $0.connectedMacIDs = [laptopID]
             $0.metadataRefreshGeneration = 1
-            if case var .settings(settings) = $0.path[id: pathID] {
+            if case var .controlsConfiguration(settings) = $0.path[id: pathID] {
                 settings.connectionStatuses = [laptopID: .connected]
-                $0.path[id: pathID] = .settings(settings)
+                $0.path[id: pathID] = .controlsConfiguration(settings)
             }
         }
         await store.receive(.pairedMetadataRefreshed(1, [studio, laptop]))
@@ -450,9 +446,8 @@ struct RemoteAppFeatureTests {
         var reopened = store.state
         reopened.path.removeAll()
         let reopenedStore = TestStore(initialState: reopened) { RemoteAppFeature() }
-        await reopenedStore.send(.settingsButtonTapped) {
-            $0.path.append(.settings(.init(
-                isSetupRequired: false,
+        await reopenedStore.send(.controlsConfigurationButtonTapped) {
+            $0.path.append(.controlsConfiguration(.init(
                 pairedMacs: [studio, laptop],
                 selectedMacID: studioID,
                 connectionStatuses: [laptopID: .connected]
@@ -465,8 +460,7 @@ struct RemoteAppFeatureTests {
         state.pairedMacs = [studio]
         state.selectedMacID = studio.id
         state.connectedMacIDs = [studio.id]
-        state.path.append(.settings(.init(
-            isSetupRequired: false,
+        state.path.append(.controlsConfiguration(.init(
             pairedMacs: [studio],
             selectedMacID: studio.id,
             connectionStatuses: [studio.id: .connected]
@@ -487,16 +481,16 @@ struct RemoteAppFeatureTests {
             $0.connectionEventRevision = 1
             $0.connectedMacIDs = []
             $0.metadataRefreshGeneration = 1
-            if case var .settings(settings) = $0.path[id: pathID] {
+            if case var .controlsConfiguration(settings) = $0.path[id: pathID] {
                 settings.connectionStatuses[studio.id] = .needsPairing
-                $0.path[id: pathID] = .settings(settings)
+                $0.path[id: pathID] = .controlsConfiguration(settings)
             }
         }
         await store.receive(.pairedMetadataRefreshed(1, [refreshed])) {
             $0.pairedMacs = [refreshed]
-            if case var .settings(settings) = $0.path[id: pathID] {
+            if case var .controlsConfiguration(settings) = $0.path[id: pathID] {
                 settings.pairedMacs = [refreshed]
-                $0.path[id: pathID] = .settings(settings)
+                $0.path[id: pathID] = .controlsConfiguration(settings)
             }
         }
         await store.finish()
@@ -504,9 +498,8 @@ struct RemoteAppFeatureTests {
         var reopenedState = store.state
         reopenedState.path.removeAll()
         let reopenedStore = TestStore(initialState: reopenedState) { RemoteAppFeature() }
-        await reopenedStore.send(.settingsButtonTapped) {
-            $0.path.append(.settings(.init(
-                isSetupRequired: false,
+        await reopenedStore.send(.controlsConfigurationButtonTapped) {
+            $0.path.append(.controlsConfiguration(.init(
                 pairedMacs: [refreshed],
                 selectedMacID: studio.id,
                 connectionStatuses: [studio.id: .needsPairing]
@@ -520,7 +513,7 @@ struct RemoteAppFeatureTests {
         var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
         state.pairedMacs = [studio]
         state.selectedMacID = studio.id
-        state.path.append(.settings(.init(isSetupRequired: false, pairedMacs: [studio], selectedMacID: studio.id)))
+        state.path.append(.controlsConfiguration(.init(pairedMacs: [studio], selectedMacID: studio.id)))
         let pathID = try #require(state.path.ids.last)
         let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
             $0.remotePersistence.loadPairedMacs = { try await gate.load() }
@@ -531,9 +524,9 @@ struct RemoteAppFeatureTests {
             $0.connectionEventRevision = 1
             $0.connectedMacIDs = [studio.id]
             $0.metadataRefreshGeneration = 1
-            if case var .settings(settings) = $0.path[id: pathID] {
+            if case var .controlsConfiguration(settings) = $0.path[id: pathID] {
                 settings.connectionStatuses[studio.id] = .connected
-                $0.path[id: pathID] = .settings(settings)
+                $0.path[id: pathID] = .controlsConfiguration(settings)
             }
         }
         await gate.waitUntilEntered()
@@ -543,17 +536,17 @@ struct RemoteAppFeatureTests {
             selectedMacID: laptop.id,
             hasCompletedInitialSetup: true
         )
-        await store.send(.path(.element(id: pathID, action: .settings(.delegate(.paired(laptop)))))) {
+        await store.send(.path(.element(id: pathID, action: .controlsConfiguration(.delegate(.paired(laptop)))))) {
             $0.pairedMacs = [studio, laptop]
             $0.selectedMacID = laptop.id
             $0.connectedMacIDs = []
             $0.pairAdoptionGeneration = 1
             $0.metadataRefreshGeneration = 2
-            if case var .settings(settings) = $0.path[id: pathID] {
+            if case var .controlsConfiguration(settings) = $0.path[id: pathID] {
                 settings.pairedMacs = [studio, laptop]
                 settings.selectedMacID = laptop.id
                 settings.connectionStatuses = [:]
-                $0.path[id: pathID] = .settings(settings)
+                $0.path[id: pathID] = .controlsConfiguration(settings)
             }
             $0.nextPersistenceSequence = 1
             $0.pendingPersistenceIntent = intent
@@ -575,7 +568,7 @@ struct RemoteAppFeatureTests {
         var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
         state.pairedMacs = [studio, laptop]
         state.selectedMacID = laptop.id
-        state.path.append(.settings(.init(isSetupRequired: false, pairedMacs: [studio, laptop], selectedMacID: laptop.id)))
+        state.path.append(.controlsConfiguration(.init(pairedMacs: [studio, laptop], selectedMacID: laptop.id)))
         let pathID = try #require(state.path.ids.last)
         let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
             $0.remotePersistence.loadPairedMacs = { try await gate.load() }
@@ -585,19 +578,19 @@ struct RemoteAppFeatureTests {
             $0.connectionEventRevision = 1
             $0.connectedMacIDs = [laptop.id]
             $0.metadataRefreshGeneration = 1
-            if case var .settings(settings) = $0.path[id: pathID] {
+            if case var .controlsConfiguration(settings) = $0.path[id: pathID] {
                 settings.connectionStatuses[laptop.id] = .connected
-                $0.path[id: pathID] = .settings(settings)
+                $0.path[id: pathID] = .controlsConfiguration(settings)
             }
         }
         await gate.waitUntilEntered()
-        await store.send(.path(.element(id: pathID, action: .settings(.delegate(.macForgotten(studio.id)))))) {
+        await store.send(.path(.element(id: pathID, action: .controlsConfiguration(.delegate(.macForgotten(studio.id)))))) {
             $0.pairedMacs = [laptop]
             $0.metadataRefreshGeneration = 2
-            if case var .settings(settings) = $0.path[id: pathID] {
+            if case var .controlsConfiguration(settings) = $0.path[id: pathID] {
                 settings.pairedMacs = [laptop]
                 settings.connectionStatuses = [laptop.id: .connected]
-                $0.path[id: pathID] = .settings(settings)
+                $0.path[id: pathID] = .controlsConfiguration(settings)
             }
         }
         await gate.open()
@@ -612,8 +605,7 @@ struct RemoteAppFeatureTests {
         state.selectedMacID = studio.id
         state.connectedMacIDs = [studio.id]
         state.metadataRefreshGeneration = 4
-        state.path.append(.settings(.init(
-            isSetupRequired: false,
+        state.path.append(.controlsConfiguration(.init(
             pairedMacs: [studio, laptop],
             selectedMacID: studio.id,
             connectionStatuses: [studio.id: .connected]
@@ -626,11 +618,11 @@ struct RemoteAppFeatureTests {
             $0.selectedMacID = laptop.id
             $0.connectedMacIDs = []
             $0.metadataRefreshGeneration = 5
-            if case var .settings(settings) = $0.path[id: pathID] {
+            if case var .controlsConfiguration(settings) = $0.path[id: pathID] {
                 settings.pairedMacs = [laptop]
                 settings.selectedMacID = laptop.id
                 settings.connectionStatuses = [:]
-                $0.path[id: pathID] = .settings(settings)
+                $0.path[id: pathID] = .controlsConfiguration(settings)
             }
         }
     }
@@ -654,13 +646,25 @@ struct RemoteAppFeatureTests {
         #expect(await persistence.selectedIDs == [studio.id]); #expect(await persistence.completionValues == [true]); #expect(await selected.ids == [studio.id])
     }
 
-    @Test func hamburgerPushesNormalSettings() async {
-        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true); state.pairedMacs = [studio]; state.selectedMacID = studio.id
+    @Test func globalSettingsButtonIsAvailableWithoutASelectedMac() async {
+        let state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
         let store = TestStore(initialState: state) { RemoteAppFeature() }
-        await store.send(.settingsButtonTapped) { $0.path.append(.settings(.init(isSetupRequired: false, pairedMacs: [studio], selectedMacID: studio.id))) }
+        await store.send(.globalSettingsButtonTapped) {
+            $0.path.append(.globalSettings(.init()))
+        }
     }
 
-    @Test func monitorSettingsPushesConfigurationInsteadOfControlSettings() async {
+    @Test func globalSettingsButtonUsesTheSameRouteFromSystemMonitor() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.selectedPage = .systemMonitor
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+
+        await store.send(.globalSettingsButtonTapped) {
+            $0.path.append(.globalSettings(.init()))
+        }
+    }
+
+    @Test func systemMonitorConfigurationStillUsesItsContextualRoute() async {
         let layout = MacSystemMonitorLayout.default(macID: studio.id)
         var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
         state.pairedMacs = [studio]
@@ -669,25 +673,55 @@ struct RemoteAppFeatureTests {
         state.systemMonitor.layout = layout
         let store = TestStore(initialState: state) { RemoteAppFeature() }
 
-        await store.send(.settingsButtonTapped) {
+        await store.send(.systemMonitor(.delegate(.openConfiguration))) {
             $0.path.append(.monitorConfiguration(.init(layout: layout)))
         }
     }
 
-    @Test func controlsSettingsStillPushesControlSettings() async {
+    @Test func controlsConfigurationIsTheContextualTrailingRoute() async {
         var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
         state.pairedMacs = [studio]
         state.selectedMacID = studio.id
         state.selectedPage = .controls
         let store = TestStore(initialState: state) { RemoteAppFeature() }
 
-        await store.send(.settingsButtonTapped) {
-            $0.path.append(.settings(.init(
-                isSetupRequired: false,
+        await store.send(.controlsConfigurationButtonTapped) {
+            $0.path.append(.controlsConfiguration(.init(
                 pairedMacs: [studio],
                 selectedMacID: studio.id
             )))
         }
+    }
+
+    @Test func controlsConfigurationDoesNotOpenWithoutASelectedMac() async {
+        let store = TestStore(
+            initialState: RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        ) {
+            RemoteAppFeature()
+        }
+
+        await store.send(.controlsConfigurationButtonTapped)
+        #expect(store.state.path.isEmpty)
+    }
+
+    @Test func globalSettingsPairingAdoptsTheNewMac() async throws {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.path.append(.globalSettings(.init()))
+        let pathID = try #require(state.path.ids.last)
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.saveAppState = { _ in }
+            $0.remotePersistence.loadSystemMonitorLayout = { _ in nil }
+            $0.remoteConnection.adoptPairedMac = { _ in .offline }
+        }
+        store.exhaustivity = .off(showSkippedAssertions: false)
+
+        await store.send(.path(.element(
+            id: pathID,
+            action: .globalSettings(.delegate(.paired(studio)))
+        )))
+        #expect(store.state.pairedMacs == [studio])
+        #expect(store.state.selectedMacID == studio.id)
+        await store.finish()
     }
 
     @Test func configurationDelegateUpdatesTheActiveMonitorLayout() async throws {
@@ -756,7 +790,7 @@ struct RemoteAppFeatureTests {
         var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
         state.pairedMacs = [studio, laptop]
         state.selectedMacID = studio.id
-        state.path.append(.settings(.init(isSetupRequired: false, pairedMacs: [studio, laptop], selectedMacID: studio.id)))
+        state.path.append(.controlsConfiguration(.init(pairedMacs: [studio, laptop], selectedMacID: studio.id)))
         let pathID = try #require(state.path.ids.last)
         let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
             $0.remotePersistence.saveAppState = { try await persistence.save($0) }
@@ -764,11 +798,11 @@ struct RemoteAppFeatureTests {
         }
         let intent = RemoteAppPersistenceIntent(writerID: store.state.persistenceWriterID, sequence: 1, selectedMacID: laptop.id, hasCompletedInitialSetup: true)
 
-        await store.send(.path(.element(id: pathID, action: .settings(.delegate(.selectedMacChanged(laptop)))))) {
+        await store.send(.path(.element(id: pathID, action: .controlsConfiguration(.delegate(.selectedMacChanged(laptop)))))) {
             $0.selectedMacID = laptop.id
-            if case var .settings(settings) = $0.path[id: pathID] {
+            if case var .controlsConfiguration(settings) = $0.path[id: pathID] {
                 settings.selectedMacID = laptop.id
-                $0.path[id: pathID] = .settings(settings)
+                $0.path[id: pathID] = .controlsConfiguration(settings)
             }
             $0.nextPersistenceSequence = 1; $0.pendingPersistenceIntent = intent; $0.isPersisting = true
         }
@@ -782,16 +816,16 @@ struct RemoteAppFeatureTests {
         var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
         state.pairedMacs = [studio, laptop]
         state.selectedMacID = studio.id
-        state.path.append(.settings(.init(isSetupRequired: false, pairedMacs: [studio, laptop], selectedMacID: studio.id)))
+        state.path.append(.controlsConfiguration(.init(pairedMacs: [studio, laptop], selectedMacID: studio.id)))
         let pathID = try #require(state.path.ids.last)
         let store = TestStore(initialState: state) { RemoteAppFeature() }
 
-        await store.send(.path(.element(id: pathID, action: .settings(.delegate(.macForgotten(laptop.id)))))) {
+        await store.send(.path(.element(id: pathID, action: .controlsConfiguration(.delegate(.macForgotten(laptop.id)))))) {
             $0.pairedMacs = [studio]
             $0.metadataRefreshGeneration = 1
-            if case var .settings(settings) = $0.path[id: pathID] {
+            if case var .controlsConfiguration(settings) = $0.path[id: pathID] {
                 settings.pairedMacs = [studio]
-                $0.path[id: pathID] = .settings(settings)
+                $0.path[id: pathID] = .controlsConfiguration(settings)
             }
         }
     }
@@ -812,8 +846,7 @@ struct RemoteAppFeatureTests {
         state.dashboard.activeSessionID = sessionID
         state.dashboard.requestsInFlight = [.darkMode]
         state.dashboard.requestIDs = [.darkMode: requestID]
-        state.path.append(.settings(.init(
-            isSetupRequired: false,
+        state.path.append(.controlsConfiguration(.init(
             pairedMacs: [studio],
             selectedMacID: studio.id
         )))
@@ -826,7 +859,7 @@ struct RemoteAppFeatureTests {
 
         await store.send(.path(.element(
             id: pathID,
-            action: .settings(.delegate(.allMacsRemoved))
+            action: .controlsConfiguration(.delegate(.allMacsRemoved))
         )))
 
         #expect(store.state.dashboard.selectedMacID == nil)
@@ -838,11 +871,11 @@ struct RemoteAppFeatureTests {
 
     @Test func attemptedNormalNavigationCannotReplaceRequiredSettingsOrPairingState() async {
         var state = RemoteAppFeature.State(hasCompletedInitialSetup: false)
-        state.requiredSettings?.pairing = PairingFeature.State(code: "ABCDEFGHJKMN")
-        let original = state.requiredSettings
+        state.requiredGlobalSettings?.pairing = PairingFeature.State(code: "ABCDEFGHJKMN")
+        let original = state.requiredGlobalSettings
         let store = TestStore(initialState: state) { RemoteAppFeature() }
-        await store.send(.settingsButtonTapped)
-        #expect(store.state.requiredSettings == original)
+        await store.send(.controlsConfigurationButtonTapped)
+        #expect(store.state.requiredGlobalSettings == original)
         #expect(store.state.path.isEmpty)
     }
 
@@ -853,8 +886,8 @@ struct RemoteAppFeatureTests {
             $0.remoteConnection.select = { await selected.record($0) }
         }
         let intent = RemoteAppPersistenceIntent(writerID: store.state.persistenceWriterID, sequence: 1, selectedMacID: studio.id, hasCompletedInitialSetup: true)
-        await store.send(.requiredSettings(.delegate(.paired(studio)))) {
-            $0.requiredSettings = nil; $0.hasCompletedInitialSetup = true; $0.pairedMacs = [studio]; $0.selectedMacID = studio.id
+        await store.send(.requiredGlobalSettings(.delegate(.paired(studio)))) {
+            $0.requiredGlobalSettings = nil; $0.hasCompletedInitialSetup = true; $0.pairedMacs = [studio]; $0.selectedMacID = studio.id
             $0.pairAdoptionGeneration = 1; $0.metadataRefreshGeneration = 1
             $0.nextPersistenceSequence = 1; $0.pendingPersistenceIntent = intent; $0.isPersisting = true
         }
@@ -880,8 +913,8 @@ struct RemoteAppFeatureTests {
             hasCompletedInitialSetup: true
         )
 
-        await store.send(.requiredSettings(.delegate(.paired(studio)))) {
-            $0.requiredSettings = nil
+        await store.send(.requiredGlobalSettings(.delegate(.paired(studio)))) {
+            $0.requiredGlobalSettings = nil
             $0.pairedMacs = [studio]
             $0.selectedMacID = studio.id
             $0.metadataRefreshGeneration = 1
@@ -921,8 +954,8 @@ struct RemoteAppFeatureTests {
             hasCompletedInitialSetup: true
         )
 
-        await store.send(.requiredSettings(.delegate(.paired(studio)))) {
-            $0.requiredSettings = nil
+        await store.send(.requiredGlobalSettings(.delegate(.paired(studio)))) {
+            $0.requiredGlobalSettings = nil
             $0.pairedMacs = [studio]
             $0.selectedMacID = studio.id
             $0.metadataRefreshGeneration = 1
@@ -950,15 +983,15 @@ struct RemoteAppFeatureTests {
 
     @Test func removingFinalMacCreatesRequiredChild() async throws {
         var state = RemoteAppFeature.State(hasCompletedInitialSetup: true); state.pairedMacs = [studio]; state.selectedMacID = studio.id
-        state.path.append(.settings(.init(isSetupRequired: false, pairedMacs: [studio], selectedMacID: studio.id)))
+        state.path.append(.controlsConfiguration(.init(pairedMacs: [studio], selectedMacID: studio.id)))
         let id = try #require(state.path.ids.last); let selected = SelectionRecorder(); let persistence = PersistenceAttemptRecorder(shouldFail: false)
         let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
             $0.remotePersistence.saveAppState = { try await persistence.save($0) }
             $0.remoteConnection.select = { await selected.record($0) }
         }
         let intent = RemoteAppPersistenceIntent(writerID: store.state.persistenceWriterID, sequence: 1, selectedMacID: nil, hasCompletedInitialSetup: false)
-        await store.send(.path(.element(id: id, action: .settings(.delegate(.allMacsRemoved))))) {
-            $0.pairedMacs = []; $0.selectedMacID = nil; $0.path.removeAll(); $0.requiredSettings = .init(isSetupRequired: true)
+        await store.send(.path(.element(id: id, action: .controlsConfiguration(.delegate(.allMacsRemoved))))) {
+            $0.pairedMacs = []; $0.selectedMacID = nil; $0.path.removeAll(); $0.requiredGlobalSettings = .init(isSetupRequired: true)
             $0.metadataRefreshGeneration = 1; $0.hasCompletedInitialSetup = false
             $0.nextPersistenceSequence = 1; $0.pendingPersistenceIntent = intent; $0.isPersisting = true
         }
@@ -976,7 +1009,7 @@ struct RemoteAppFeatureTests {
         await store.send(.task) { $0.loadGeneration = 1; $0.isLoading = true }
         let intent = RemoteAppPersistenceIntent(writerID: store.state.persistenceWriterID, sequence: 1, selectedMacID: nil, hasCompletedInitialSetup: false)
         await store.receive(.launchResponse(1, .success(.init(pairedMacs: [], selectedMacID: nil)))) {
-            $0.isLoading = false; $0.requiredSettings = .init(isSetupRequired: true); $0.hasCompletedInitialSetup = false
+            $0.isLoading = false; $0.requiredGlobalSettings = .init(isSetupRequired: true); $0.hasCompletedInitialSetup = false
             $0.nextPersistenceSequence = 1; $0.pendingPersistenceIntent = intent; $0.isPersisting = true
         }
         await store.receive(.persistenceResponse(intent, .success)) { $0.pendingPersistenceIntent = nil; $0.isPersisting = false }
@@ -1053,7 +1086,7 @@ struct RemoteAppFeatureTests {
         let intent = RemoteAppPersistenceIntent(writerID: store.state.persistenceWriterID, sequence: 1, selectedMacID: nil, hasCompletedInitialSetup: false)
         await store.receive(.launchResponse(1, .success(.init(pairedMacs: [], selectedMacID: studio.id)))) {
             $0.isLoading = false
-            $0.requiredSettings = .init(isSetupRequired: true)
+            $0.requiredGlobalSettings = .init(isSetupRequired: true)
             $0.hasCompletedInitialSetup = false
             $0.nextPersistenceSequence = 1
             $0.pendingPersistenceIntent = intent
@@ -1094,7 +1127,7 @@ struct RemoteAppFeatureTests {
             $0.isLoading = false
             $0.pairedMacs = [studio]
             $0.selectedMacID = studio.id
-            $0.requiredSettings = nil
+            $0.requiredGlobalSettings = nil
             $0.hasCompletedInitialSetup = true
             $0.nextPersistenceSequence = 1
             $0.pendingPersistenceIntent = intent
@@ -1116,7 +1149,7 @@ struct RemoteAppFeatureTests {
         var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
         state.pairedMacs = [laptop]
         state.selectedMacID = laptop.id
-        state.path.append(.settings(.init(isSetupRequired: false, pairedMacs: [laptop], selectedMacID: laptop.id)))
+        state.path.append(.controlsConfiguration(.init(pairedMacs: [laptop], selectedMacID: laptop.id)))
         let originalPath = state.path
         let store = TestStore(initialState: state) {
             RemoteAppFeature()
@@ -1150,10 +1183,10 @@ struct RemoteAppFeatureTests {
             $0.pairedMacs = [studio]
             $0.selectedMacID = studio.id
             if let pathID = $0.path.ids.last,
-               case var .settings(settings) = $0.path[id: pathID] {
+               case var .controlsConfiguration(settings) = $0.path[id: pathID] {
                 settings.pairedMacs = [studio]
                 settings.selectedMacID = studio.id
-                $0.path[id: pathID] = .settings(settings)
+                $0.path[id: pathID] = .controlsConfiguration(settings)
             }
         }
         await store.finish()
@@ -1172,8 +1205,8 @@ struct RemoteAppFeatureTests {
         }
         let intent = RemoteAppPersistenceIntent(writerID: store.state.persistenceWriterID, sequence: 1, selectedMacID: studio.id, hasCompletedInitialSetup: true)
 
-        await store.send(.requiredSettings(.delegate(.paired(studio)))) {
-            $0.requiredSettings = nil
+        await store.send(.requiredGlobalSettings(.delegate(.paired(studio)))) {
+            $0.requiredGlobalSettings = nil
             $0.hasCompletedInitialSetup = true
             $0.pairedMacs = [studio]
             $0.selectedMacID = studio.id
@@ -1204,7 +1237,7 @@ struct RemoteAppFeatureTests {
         var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
         state.pairedMacs = [studio]
         state.selectedMacID = studio.id
-        state.path.append(.settings(.init(isSetupRequired: false, pairedMacs: [studio], selectedMacID: studio.id)))
+        state.path.append(.controlsConfiguration(.init(pairedMacs: [studio], selectedMacID: studio.id)))
         let id = try #require(state.path.ids.last)
         let store = TestStore(initialState: state) {
             RemoteAppFeature()
@@ -1214,11 +1247,11 @@ struct RemoteAppFeatureTests {
         }
         let intent = RemoteAppPersistenceIntent(writerID: store.state.persistenceWriterID, sequence: 1, selectedMacID: nil, hasCompletedInitialSetup: false)
 
-        await store.send(.path(.element(id: id, action: .settings(.delegate(.allMacsRemoved))))) {
+        await store.send(.path(.element(id: id, action: .controlsConfiguration(.delegate(.allMacsRemoved))))) {
             $0.pairedMacs = []
             $0.selectedMacID = nil
             $0.path.removeAll()
-            $0.requiredSettings = .init(isSetupRequired: true)
+            $0.requiredGlobalSettings = .init(isSetupRequired: true)
             $0.metadataRefreshGeneration = 1
             $0.hasCompletedInitialSetup = false
             $0.nextPersistenceSequence = 1
@@ -1250,8 +1283,7 @@ struct RemoteAppFeatureTests {
         )
         state.pairedMacs = [studio]
         state.selectedMacID = studio.id
-        state.path.append(.settings(.init(
-            isSetupRequired: false,
+        state.path.append(.controlsConfiguration(.init(
             pairedMacs: [studio],
             selectedMacID: studio.id
         )))
@@ -1275,27 +1307,27 @@ struct RemoteAppFeatureTests {
             hasCompletedInitialSetup: false
         )
 
-        await store.send(.path(.element(id: pathID, action: .settings(.delegate(.paired(laptop)))))) {
+        await store.send(.path(.element(id: pathID, action: .controlsConfiguration(.delegate(.paired(laptop)))))) {
             $0.pairedMacs = [self.studio, self.laptop]
             $0.selectedMacID = self.laptop.id
             $0.pairAdoptionGeneration = 1
             $0.metadataRefreshGeneration = 1
-            if case var .settings(settings) = $0.path[id: pathID] {
+            if case var .controlsConfiguration(settings) = $0.path[id: pathID] {
                 settings.pairedMacs = [self.studio, self.laptop]
                 settings.selectedMacID = self.laptop.id
                 settings.connectionStatuses = [:]
-                $0.path[id: pathID] = .settings(settings)
+                $0.path[id: pathID] = .controlsConfiguration(settings)
             }
             $0.nextPersistenceSequence = 1
             $0.pendingPersistenceIntent = pairedIntent
             $0.isPersisting = true
         }
         await saver.waitUntilFirstSaveStarts()
-        await store.send(.path(.element(id: pathID, action: .settings(.delegate(.allMacsRemoved))))) {
+        await store.send(.path(.element(id: pathID, action: .controlsConfiguration(.delegate(.allMacsRemoved))))) {
             $0.pairedMacs = []
             $0.selectedMacID = nil
             $0.path.removeAll()
-            $0.requiredSettings = .init(isSetupRequired: true)
+            $0.requiredGlobalSettings = .init(isSetupRequired: true)
             $0.connectedMacIDs = []
             $0.metadataRefreshGeneration = 2
             $0.hasCompletedInitialSetup = false
@@ -1327,8 +1359,7 @@ struct RemoteAppFeatureTests {
         )
         state.pairedMacs = [studio]
         state.selectedMacID = studio.id
-        state.path.append(.settings(.init(
-            isSetupRequired: false,
+        state.path.append(.controlsConfiguration(.init(
             pairedMacs: [studio],
             selectedMacID: studio.id
         )))
@@ -1353,11 +1384,11 @@ struct RemoteAppFeatureTests {
             hasCompletedInitialSetup: true
         )
 
-        await store.send(.path(.element(id: pathID, action: .settings(.delegate(.allMacsRemoved))))) {
+        await store.send(.path(.element(id: pathID, action: .controlsConfiguration(.delegate(.allMacsRemoved))))) {
             $0.pairedMacs = []
             $0.selectedMacID = nil
             $0.path.removeAll()
-            $0.requiredSettings = .init(isSetupRequired: true)
+            $0.requiredGlobalSettings = .init(isSetupRequired: true)
             $0.metadataRefreshGeneration = 1
             $0.hasCompletedInitialSetup = false
             $0.nextPersistenceSequence = 1
@@ -1365,8 +1396,8 @@ struct RemoteAppFeatureTests {
             $0.isPersisting = true
         }
         await saver.waitUntilFirstSaveStarts()
-        await store.send(.requiredSettings(.delegate(.paired(laptop)))) {
-            $0.requiredSettings = nil
+        await store.send(.requiredGlobalSettings(.delegate(.paired(laptop)))) {
+            $0.requiredGlobalSettings = nil
             $0.hasCompletedInitialSetup = true
             $0.pairedMacs = [laptop]
             $0.selectedMacID = laptop.id

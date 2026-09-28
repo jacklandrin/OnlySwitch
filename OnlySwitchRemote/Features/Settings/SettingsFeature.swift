@@ -6,7 +6,6 @@ import RemoteCore
 struct SettingsFeature {
     @ObservableState
     struct State: Equatable {
-        let isSetupRequired: Bool
         var pairedMacs: IdentifiedArrayOf<PairedMac>
         var selectedMacID: UUID?
         var catalog: IdentifiedArrayOf<RemoteControlDescriptor>
@@ -24,7 +23,6 @@ struct SettingsFeature {
         @Presents var management: MacManagementFeature.State?
 
         init(
-            isSetupRequired: Bool,
             pairedMacs: IdentifiedArrayOf<PairedMac> = [],
             selectedMacID: UUID? = nil,
             catalog: IdentifiedArrayOf<RemoteControlDescriptor> = [],
@@ -33,7 +31,6 @@ struct SettingsFeature {
             order: [RemoteControlID] = [],
             connectionStatuses: [UUID: MacConnectionStatus] = [:]
         ) {
-            self.isSetupRequired = isSetupRequired
             self.pairedMacs = pairedMacs
             self.selectedMacID = selectedMacID
             self.catalog = catalog
@@ -74,7 +71,6 @@ struct SettingsFeature {
         case move(IndexSet, Int)
         case layoutSaveResponse(UUID, UInt64, MacDashboardLayout, OperationResult)
         case retryLayoutSave(UUID)
-        case pairAnotherTapped
         case manageMac(UUID)
         case pairing(PresentationAction<PairingFeature.Action>)
         case management(PresentationAction<MacManagementFeature.Action>)
@@ -191,10 +187,6 @@ struct SettingsFeature {
                       let pending = state.pendingLayoutSaves[macID]
                 else { return .none }
                 return startLayoutSave(pending, state: &state)
-
-            case .pairAnotherTapped:
-                state.pairing = PairingFeature.State()
-                return .none
 
             case let .manageMac(id):
                 guard let mac = state.pairedMacs[id: id] else { return .none }

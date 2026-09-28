@@ -76,12 +76,16 @@ struct PairingFeatureTests {
 
     @Test func discoveryPresentationTimesOutAfterEightSecondsWithoutStoppingTheStream() async {
         let clock = TestClock()
+        let restartRequests = LockIsolated(0)
         let stream = AsyncStream<DiscoveryEvent> { _ in }
         let store = TestStore(initialState: PairingFeature.State()) {
             PairingFeature()
         } withDependencies: {
             $0.continuousClock = clock
             $0.remoteConnection.discover = { stream }
+            $0.remoteConnection.restartDiscovery = {
+                restartRequests.withValue { $0 += 1 }
+            }
         }
 
         await store.send(.task) {
@@ -94,6 +98,8 @@ struct PairingFeatureTests {
             $0.isDiscovering = false
             $0.discoveryPhase = .empty
         }
+        await Task.yield()
+        #expect(restartRequests.value == 1)
         await store.send(.foregroundChanged(false)) {
             $0.isForegrounded = false
             $0.discoveryGeneration = 2
@@ -608,7 +614,7 @@ struct PairingFeatureTests {
         let (stream, continuation) = AsyncStream.makeStream(of: DiscoveryEvent.self)
         let (terminations, terminationContinuation) = AsyncStream.makeStream(of: Void.self, bufferingPolicy: .bufferingOldest(1))
         continuation.onTermination = { _ in terminationContinuation.yield(()) }
-        var state = SettingsFeature.State(isSetupRequired: false); state.pairing = PairingFeature.State()
+        var state = SettingsFeature.State(); state.pairing = PairingFeature.State()
         let store = TestStore(initialState: state) {
             SettingsFeature()
         } withDependencies: {
@@ -645,7 +651,7 @@ struct PairingFeatureTests {
             bufferingPolicy: .bufferingOldest(1)
         )
         continuation.onTermination = { _ in terminationContinuation.yield(()) }
-        var state = SettingsFeature.State(isSetupRequired: false)
+        var state = SettingsFeature.State()
         state.pairing = PairingFeature.State()
         let store = TestStore(initialState: state) {
             SettingsFeature()
@@ -682,7 +688,7 @@ struct PairingFeatureTests {
         let (gate, gateContinuation) = AsyncStream.makeStream(of: Void.self)
         let (cancelled, cancelledContinuation) = AsyncStream.makeStream(of: Void.self, bufferingPolicy: .bufferingOldest(1))
         var pairing = PairingFeature.State(); pairing.discoveredMacs = [discovered()]; pairing.selectedMacID = macID; pairing.code = "ABCDEFGHJKMN"
-        var state = SettingsFeature.State(isSetupRequired: false); state.pairing = pairing
+        var state = SettingsFeature.State(); state.pairing = pairing
         let store = TestStore(initialState: state) {
             SettingsFeature()
         } withDependencies: {
@@ -722,7 +728,7 @@ struct PairingFeatureTests {
 
     @Test func interactivePairingDismissCancelsTransportTransaction() async {
         let transportCancellations = LockIsolated(0)
-        var state = SettingsFeature.State(isSetupRequired: false)
+        var state = SettingsFeature.State()
         state.pairing = PairingFeature.State()
         let store = TestStore(initialState: state) { SettingsFeature() } withDependencies: {
             $0.remoteConnection.abortPairing = { _ in transportCancellations.withValue { $0 += 1 } }

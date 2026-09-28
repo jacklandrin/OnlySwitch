@@ -5,16 +5,29 @@ import SwiftUI
 import UIKit
 
 struct RemoteSystemMonitorView: View {
-    enum Layout: Equatable { case list, grid(columns: Int) }
+    enum Layout: Equatable { case list, waterfall(columns: Int) }
 
     @Bindable var store: StoreOf<RemoteSystemMonitorFeature>
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     private var idiom: UIUserInterfaceIdiom { UIDevice.current.userInterfaceIdiom }
 
-    static func layout(for idiom: UIUserInterfaceIdiom, dynamicTypeSize: DynamicTypeSize) -> Layout {
+    static func layout(
+        for idiom: UIUserInterfaceIdiom,
+        containerSize: CGSize,
+        dynamicTypeSize: DynamicTypeSize
+    ) -> Layout {
         guard idiom == .pad, dynamicTypeSize.isAccessibilitySize == false else { return .list }
-        return .grid(columns: 2)
+        let deviceClass = RemoteSystemMonitorWaterfallLayout.DeviceClass.classify(
+            userInterfaceIdiom: idiom,
+            containerSize: containerSize
+        )
+        let columnCount = RemoteSystemMonitorWaterfallLayout.columnCount(
+            containerWidth: max(0, containerSize.width - 40),
+            deviceClass: deviceClass,
+            dynamicTypeSize: dynamicTypeSize
+        )
+        return .waterfall(columns: columnCount)
     }
 
     var body: some View {
@@ -31,10 +44,12 @@ struct RemoteSystemMonitorView: View {
                     .buttonStyle(.borderedProminent)
                 }
             } else if let snapshot = store.snapshot {
-                ScrollView {
-                    monitorCardsContainer(snapshot)
-                        .padding(20)
-                        .padding(.bottom, RemotePageTabBar.contentBottomInset)
+                GeometryReader { geometry in
+                    ScrollView {
+                        monitorCardsContainer(snapshot, containerSize: geometry.size)
+                            .padding(20)
+                            .padding(.bottom, RemotePageTabBar.contentBottomInset)
+                    }
                 }
             } else if let message = store.availabilityMessage {
                 ContentUnavailableView(
@@ -63,29 +78,36 @@ struct RemoteSystemMonitorView: View {
     }
 
     @ViewBuilder
-    private func monitorCardsContainer(_ snapshot: SystemMonitorSnapshot) -> some View {
+    private func monitorCardsContainer(
+        _ snapshot: SystemMonitorSnapshot,
+        containerSize: CGSize
+    ) -> some View {
         if #available(iOS 26.0, *) {
             GlassEffectContainer(spacing: 16) {
-                monitorCards(snapshot)
+                monitorCards(snapshot, containerSize: containerSize)
             }
         } else {
-            monitorCards(snapshot)
+            monitorCards(snapshot, containerSize: containerSize)
         }
     }
 
     @ViewBuilder
-    private func monitorCards(_ snapshot: SystemMonitorSnapshot) -> some View {
-        let cards = store.layout?.orderedVisibleMetrics ?? SystemMonitorMetric.allCases
-        switch Self.layout(for: idiom, dynamicTypeSize: dynamicTypeSize) {
+    private func monitorCards(
+        _ snapshot: SystemMonitorSnapshot,
+        containerSize: CGSize
+    ) -> some View {
+        let cards = store.layout?.orderedVisibleMetrics ?? []
+        switch Self.layout(
+            for: idiom,
+            containerSize: containerSize,
+            dynamicTypeSize: dynamicTypeSize
+        ) {
         case .list:
             LazyVStack(spacing: 16) {
                 ForEach(cards, id: \.self) { metric in metricCard(metric, snapshot: snapshot) }
             }
-        case let .grid(columnCount):
-            LazyVGrid(
-                columns: Array(repeating: GridItem(.flexible(), spacing: 16, alignment: .top), count: columnCount),
-                spacing: 16
-            ) {
+        case let .waterfall(columnCount):
+            RemoteSystemMonitorWaterfallLayout(columnCount: columnCount) {
                 ForEach(cards, id: \.self) { metric in metricCard(metric, snapshot: snapshot) }
             }
         }

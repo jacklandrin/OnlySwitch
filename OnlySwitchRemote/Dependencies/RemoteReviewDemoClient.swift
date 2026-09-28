@@ -419,6 +419,7 @@ extension RemoteConnectionClient {
                     continuation.onTermination = { _ in task.cancel() }
                 }
             },
+            restartDiscovery: {},
             preparePairing: { discoveredMac, code, _ in
                 try await runtime.preparePairing(discoveredMac: discoveredMac, code: code)
             },

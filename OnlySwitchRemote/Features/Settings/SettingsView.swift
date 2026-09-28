@@ -4,31 +4,9 @@ import SwiftUI
 
 struct SettingsView: View {
     @Bindable var store: StoreOf<SettingsFeature>
-    @State private var isHowToUsePresented = false
-    @State private var isAboutPresented = false
 
     var body: some View {
         List {
-            if store.isSetupRequired {
-                Section {
-                    ContentUnavailableView(
-                        "Connect Your First Mac",
-                        systemImage: "desktopcomputer.and.arrow.down",
-                        description: Text("Enable iOS Remote Access in OnlySwitch on your Mac, then start pairing.")
-                    )
-                }
-            }
-
-            Section {
-                Button("How to Use", systemImage: "questionmark.circle") {
-                    isHowToUsePresented = true
-                }
-
-                Button("About", systemImage: "info.circle") {
-                    isAboutPresented = true
-                }
-            }
-
             macsSection
 
             if store.selectedMacID != nil {
@@ -38,18 +16,8 @@ struct SettingsView: View {
                 controlsSection(title: "Shortcuts", kind: .shortcut)
                 controlsSection(title: "Evolutions", kind: .evolution)
             }
-
         }
-        .navigationTitle("Settings")
-        .navigationBarBackButtonHidden(store.isSetupRequired)
-        .interactiveDismissDisabled(store.isSetupRequired)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button("Pair Another Mac", systemImage: "plus.circle") {
-                    store.send(.pairAnotherTapped)
-                }
-            }
-        }
+        .navigationTitle("Configure Controls")
         .task { await store.send(.task).finish() }
         .onDisappear { store.send(.foregroundChanged(false)) }
         .sheet(item: $store.scope(state: \.pairing, action: \.pairing)) { pairingStore in
@@ -57,12 +25,6 @@ struct SettingsView: View {
         }
         .sheet(item: $store.scope(state: \.management, action: \.management)) { managementStore in
             NavigationStack { MacManagementView(store: managementStore) }
-        }
-        .sheet(isPresented: $isHowToUsePresented) {
-            HowToUseView()
-        }
-        .sheet(isPresented: $isAboutPresented) {
-            AboutView()
         }
     }
 

@@ -40,6 +40,7 @@ struct PreparedPairing: Equatable, Sendable {
 @DependencyClient
 struct RemoteConnectionClient: Sendable {
     var discover: @Sendable () -> AsyncStream<DiscoveryEvent> = { AsyncStream { $0.finish() } }
+    var restartDiscovery: @Sendable () async -> Void = { }
     var preparePairing: @Sendable (DiscoveredMac, String, String) async throws -> PreparedPairing = { _, _, _ in
         throw RemoteDependencyError.unimplemented
     }

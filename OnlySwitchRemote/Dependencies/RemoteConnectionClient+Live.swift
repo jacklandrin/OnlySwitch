@@ -12,6 +12,7 @@ extension RemoteConnectionClient {
         )
         return Self(
             discover: { runtime.makeDiscoveryStream() },
+            restartDiscovery: { await runtime.restartDiscovery() },
             preparePairing: { try await runtime.preparePairing($0, code: $1, deviceName: $2) },
             finalizePairing: { try await runtime.finalizePairing($0) },
             abortPairing: { await runtime.abortPairing($0) },
@@ -263,6 +264,18 @@ actor RemoteConnectionRuntime {
         }
         discoveryHub.yield(.started)
         browser.start(queue: .global(qos: .userInitiated))
+    }
+
+    func restartDiscovery() {
+        guard foregrounded else { return }
+        browser?.cancel()
+        browser = nil
+        browserRetryTask?.cancel()
+        browserRetryTask = nil
+        browserFailureCount = 0
+        browserGeneration &+= 1
+        discovered.removeAll()
+        startDiscovery()
     }
 
     func preparePairing(_ mac: DiscoveredMac, code: String, deviceName: String) async throws -> PreparedPairing {
@@ -1226,7 +1239,11 @@ actor RemoteConnectionRuntime {
         guard foregrounded,
               browser != nil,
               browserGeneration == expectedGeneration else { return }
-        discoveryHub.yield(.waiting(Self.discoveryFailure(for: error)))
+        let failure = Self.discoveryFailure(for: error)
+        discoveryHub.yield(.waiting(failure))
+        if Self.shouldRestartBrowser(after: failure, failureCount: browserFailureCount) {
+            scheduleBrowserRestart(generation: expectedGeneration)
+        }
     }
 
     private func publishFailureAndRestart(_ error: NWError, generation expectedGeneration: UInt64) {
@@ -1402,6 +1419,15 @@ actor RemoteConnectionRuntime {
     static func browserRetryDelay(failureCount: Int) -> Duration {
         let delays: [Duration] = [.milliseconds(500), .seconds(1), .seconds(2), .seconds(4), .seconds(8)]
         return delays[min(max(failureCount, 0), delays.count - 1)]
+    }
+
+    static func shouldRestartBrowser(after failure: DiscoveryFailure, failureCount: Int) -> Bool {
+        switch failure {
+        case .localNetworkAccessNeeded:
+            failureCount == 0
+        case .networkUnavailable, .browserUnavailable:
+            true
+        }
     }
 
     static func mayCommitPairing(

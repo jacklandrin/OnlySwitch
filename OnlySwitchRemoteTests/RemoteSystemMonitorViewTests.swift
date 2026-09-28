@@ -5,13 +5,98 @@ import RemoteCore
 
 @MainActor
 struct RemoteSystemMonitorViewTests {
-    @Test func phoneUsesAListAndStandardIPadUsesTwoColumns() {
-        #expect(RemoteSystemMonitorView.layout(for: .phone, dynamicTypeSize: .large) == .list)
-        #expect(RemoteSystemMonitorView.layout(for: .pad, dynamicTypeSize: .large) == .grid(columns: 2))
+    @Test func iPhoneUsesAList() {
+        #expect(
+            RemoteSystemMonitorView.layout(
+                for: .phone,
+                containerSize: CGSize(width: 430, height: 932),
+                dynamicTypeSize: .large
+            ) == .list
+        )
     }
 
-    @Test func accessibilityDynamicTypeCollapsesIPadGridToAList() {
-        #expect(RemoteSystemMonitorView.layout(for: .pad, dynamicTypeSize: .accessibility3) == .list)
+    @Test func iPadMiniUsesTwoWaterfallColumns() {
+        #expect(RemoteSystemMonitorWaterfallLayout.columnCount(
+            containerWidth: 744,
+            deviceClass: .iPadMini,
+            dynamicTypeSize: .large
+        ) == 2)
+        #expect(
+            RemoteSystemMonitorView.layout(
+                for: .pad,
+                containerSize: CGSize(width: 744, height: 1_133),
+                dynamicTypeSize: .large
+            ) == .waterfall(columns: 2)
+        )
+    }
+
+    @Test func largerIPadUsesThreeWaterfallColumnsWhenTheContainerFits() {
+        #expect(RemoteSystemMonitorWaterfallLayout.columnCount(
+            containerWidth: 1_024,
+            deviceClass: .iPad,
+            dynamicTypeSize: .large
+        ) == 3)
+        #expect(
+            RemoteSystemMonitorView.layout(
+                for: .pad,
+                containerSize: CGSize(width: 1_024, height: 1_366),
+                dynamicTypeSize: .large
+            ) == .waterfall(columns: 3)
+        )
+    }
+
+    @Test func splitIPadDoesNotOvercommitToThreeWaterfallColumns() {
+        #expect(RemoteSystemMonitorWaterfallLayout.columnCount(
+            containerWidth: 560,
+            deviceClass: .iPad,
+            dynamicTypeSize: .large
+        ) == 2)
+        #expect(
+            RemoteSystemMonitorView.layout(
+                for: .pad,
+                containerSize: CGSize(width: 560, height: 1_366),
+                dynamicTypeSize: .large
+            ) == .waterfall(columns: 2)
+        )
+    }
+
+    @Test func accessibilityDynamicTypeCollapsesIPadWaterfallToAList() {
+        #expect(RemoteSystemMonitorWaterfallLayout.columnCount(
+            containerWidth: 1_024,
+            deviceClass: .iPad,
+            dynamicTypeSize: .accessibility3
+        ) == 1)
+        #expect(
+            RemoteSystemMonitorView.layout(
+                for: .pad,
+                containerSize: CGSize(width: 1_024, height: 1_366),
+                dynamicTypeSize: .accessibility3
+            ) == .list
+        )
+    }
+
+    @Test func waterfallPlacementRetainsOrderedVisibleMetricOrder() {
+        let monitorLayout = MacSystemMonitorLayout(
+            macID: UUID(),
+            visibleMetrics: [.memory, .cpu, .network],
+            order: [.memory, .disk, .cpu, .network]
+        )
+        let orderedVisibleMetrics = monitorLayout.orderedVisibleMetrics
+        #expect(orderedVisibleMetrics == [.memory, .cpu, .network])
+        let placements = RemoteSystemMonitorWaterfallLayout.placements(
+            metrics: orderedVisibleMetrics,
+            sizes: [
+                CGSize(width: 220, height: 180),
+                CGSize(width: 220, height: 148),
+                CGSize(width: 220, height: 260),
+            ],
+            columnCount: 2,
+            columnWidth: 220
+        )
+
+        #expect(placements.map(\.metric) == orderedVisibleMetrics)
+        #expect(placements.map(\.column) == [0, 1, 1])
+        #expect(placements[2].origin.y == 164)
     }
 
     @Test(arguments: [
