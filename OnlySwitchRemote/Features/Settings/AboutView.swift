@@ -6,6 +6,9 @@ struct AboutView: View {
             Section {
                 LabeledContent("Version", value: versionDescription)
                 LabeledContent("Copyright", value: "© 2021–2026 Jacklandrin")
+                Link(destination: URL(string: "https://onlyswitch.click/#/privacy-policy")!) {
+                    Text("Privacy Policy")
+                }
             }
         }
         .navigationTitle("About")

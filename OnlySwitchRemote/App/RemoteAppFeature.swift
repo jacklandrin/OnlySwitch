@@ -27,6 +27,7 @@ struct RemoteAppFeature {
         var isLoading = false
         var loadGeneration: UInt64 = 0
         var isForegrounded = true
+        var isKeepingScreenAwake = RemoteIdleTimerClient.preferenceSeed()
         var lifecycleGeneration: UInt64 = 0
         let persistenceWriterID: UUID
         var nextPersistenceSequence: UInt64 = 0
@@ -128,6 +129,7 @@ struct RemoteAppFeature {
 
     @Dependency(\.remoteConnection) var connection
     @Dependency(\.remotePersistence) var persistence
+    @Dependency(\.remoteIdleTimer) var idleTimer
     private enum CancelID { case load, lifecycle, connectionEvents, metadataRefresh }
 
     var body: some ReducerOf<Self> {
@@ -161,7 +163,11 @@ struct RemoteAppFeature {
                     }
                 } catch: { _, _ in }
                     .cancellable(id: CancelID.connectionEvents, cancelInFlight: true)
-                return .merge(load, events)
+                let keepScreenAwake = state.isForegrounded && state.isKeepingScreenAwake
+                let idleTimerEffect = Effect<Action>.run { [idleTimer] _ in
+                    await idleTimer.setIdleTimerDisabled(keepScreenAwake)
+                }
+                return .merge(load, events, idleTimerEffect)
 
             case let .launchResponse(generation, .failure):
                 guard generation == state.loadGeneration else { return .none }
@@ -352,7 +358,9 @@ struct RemoteAppFeature {
 
             case .globalSettingsButtonTapped:
                 guard state.requiredGlobalSettings == nil else { return .none }
-                state.path.append(.globalSettings(.init()))
+                state.path.append(.globalSettings(.init(
+                    isKeepingScreenAwake: state.isKeepingScreenAwake
+                )))
                 return .none
 
             case .controlsConfigurationButtonTapped:
@@ -373,6 +381,7 @@ struct RemoteAppFeature {
                 state.isForegrounded = foregrounded
                 state.lifecycleGeneration &+= 1
                 let generation = state.lifecycleGeneration
+                let keepScreenAwake = foregrounded && state.isKeepingScreenAwake
                 var effects: [Effect<Action>] = state.path.ids.compactMap { id in
                     switch state.path[id: id] {
                     case .globalSettings:
@@ -404,6 +413,9 @@ struct RemoteAppFeature {
                     }
                     .cancellable(id: CancelID.lifecycle, cancelInFlight: true)
                 )
+                effects.append(.run { [idleTimer] _ in
+                    await idleTimer.setIdleTimerDisabled(keepScreenAwake)
+                })
                 return .merge(effects)
 
             case let .lifecycleResponse(generation):
@@ -440,9 +452,23 @@ struct RemoteAppFeature {
                 state.hasCompletedInitialSetup = true
                 return paired(mac, state: &state)
 
+            case let .requiredGlobalSettings(.keepScreenAwakeToggled(isEnabled)):
+                state.isKeepingScreenAwake = isEnabled
+                let keepScreenAwake = state.isForegrounded && isEnabled
+                return .run { [idleTimer] _ in
+                    await idleTimer.setIdleTimerDisabled(keepScreenAwake)
+                }
+
             case let .path(.element(_, action: .globalSettings(.delegate(.paired(mac))))):
                 state.hasCompletedInitialSetup = true
                 return paired(mac, state: &state)
+
+            case let .path(.element(_, action: .globalSettings(.keepScreenAwakeToggled(isEnabled)))):
+                state.isKeepingScreenAwake = isEnabled
+                let keepScreenAwake = state.isForegrounded && isEnabled
+                return .run { [idleTimer] _ in
+                    await idleTimer.setIdleTimerDisabled(keepScreenAwake)
+                }
 
             case let .path(.element(_, action: .controlsConfiguration(.delegate(.paired(mac))))):
                 state.hasCompletedInitialSetup = true

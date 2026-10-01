@@ -377,6 +377,23 @@ struct GlobalSettingsFeatureTests {
             $0.pairing?.isForegrounded = false
         }
     }
+
+    @Test func keepingScreenAwakeIsPersisted() async {
+        let recorder = IdleTimerRecorder()
+        let store = TestStore(initialState: GlobalSettingsFeature.State()) {
+            GlobalSettingsFeature()
+        } withDependencies: {
+            $0.remoteIdleTimer.savePreference = { await recorder.record($0) }
+        }
+
+        await store.send(.keepScreenAwakeToggled(true)) {
+            $0.isKeepingScreenAwake = true
+        }
+        await store.finish()
+
+        #expect(store.state.isKeepingScreenAwake == true)
+        #expect(await recorder.values == [true])
+    }
 }
 
 extension SettingsFeatureTests {
@@ -446,6 +463,14 @@ extension SettingsFeatureTests {
             supportsStatus: true,
             supportsSecondaryInformation: true
         )
+    }
+}
+
+private actor IdleTimerRecorder {
+    private(set) var values: [Bool] = []
+
+    func record(_ isDisabled: Bool) {
+        values.append(isDisabled)
     }
 }
 

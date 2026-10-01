@@ -5,19 +5,27 @@ struct GlobalSettingsFeature {
     @ObservableState
     struct State: Equatable {
         let isSetupRequired: Bool
+        var isKeepingScreenAwake: Bool
         @Presents var pairing: PairingFeature.State?
 
-        init(isSetupRequired: Bool = false) {
+        init(
+            isSetupRequired: Bool = false,
+            isKeepingScreenAwake: Bool = RemoteIdleTimerClient.preferenceSeed()
+        ) {
             self.isSetupRequired = isSetupRequired
+            self.isKeepingScreenAwake = isKeepingScreenAwake
         }
     }
 
     enum Action: Equatable {
         case pairNewMacTapped
+        case keepScreenAwakeToggled(Bool)
         case pairing(PresentationAction<PairingFeature.Action>)
         case foregroundChanged(Bool)
         case delegate(Delegate)
     }
+
+    @Dependency(\.remoteIdleTimer) var idleTimer
 
     enum Delegate: Equatable {
         case paired(PairedMac)
@@ -29,6 +37,12 @@ struct GlobalSettingsFeature {
             case .pairNewMacTapped:
                 state.pairing = PairingFeature.State()
                 return .none
+
+            case let .keepScreenAwakeToggled(isEnabled):
+                state.isKeepingScreenAwake = isEnabled
+                return .run { _ in
+                    await idleTimer.savePreference(isEnabled)
+                }
 
             case let .pairing(.presented(.delegate(.paired(mac)))):
                 state.pairing = nil

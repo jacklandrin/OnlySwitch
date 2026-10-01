@@ -1056,12 +1056,41 @@ struct RemoteAppFeatureTests {
     }
 
     @Test func sceneLifecycleForwardsLatestState() async {
-        let recorder = ForegroundRecorder(); let store = TestStore(initialState: RemoteAppFeature.State(hasCompletedInitialSetup: true)) { RemoteAppFeature() } withDependencies: {
+        let recorder = ForegroundRecorder()
+        let idleTimer = RemoteIdleTimerRecorder()
+        var initialState = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        initialState.isKeepingScreenAwake = true
+        let store = TestStore(initialState: initialState) { RemoteAppFeature() } withDependencies: {
             $0.remoteConnection.setForegrounded = { await recorder.record($0) }
+            $0.remoteIdleTimer.setIdleTimerDisabled = { await idleTimer.record($0) }
         }
-        await store.send(.scenePhaseChanged(false)) { $0.isForegrounded = false; $0.lifecycleGeneration = 1 }; await store.receive(.lifecycleResponse(1))
-        await store.send(.scenePhaseChanged(true)) { $0.isForegrounded = true; $0.lifecycleGeneration = 2 }; await store.receive(.lifecycleResponse(2))
+        await store.send(.scenePhaseChanged(false)) {
+            $0.isForegrounded = false
+            $0.lifecycleGeneration = 1
+        }
+        await store.receive(.lifecycleResponse(1))
+        await store.send(.scenePhaseChanged(true)) {
+            $0.isForegrounded = true
+            $0.lifecycleGeneration = 2
+        }
+        await store.receive(.lifecycleResponse(2))
         #expect(await recorder.values == [false, true])
+        #expect(await idleTimer.values == [false, true])
+    }
+
+    @Test func globalSettingsToggleUpdatesTheAppWideWakePreference() async {
+        var initialState = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        initialState.path.append(.globalSettings(.init(isKeepingScreenAwake: false)))
+        let store = TestStore(initialState: initialState) { RemoteAppFeature() }
+        let id = store.state.path.ids[0]
+
+        await store.send(.path(.element(
+            id: id,
+            action: .globalSettings(.keepScreenAwakeToggled(true))
+        ))) {
+            $0.isKeepingScreenAwake = true
+            $0.path[id: id] = .globalSettings(.init(isKeepingScreenAwake: true))
+        }
     }
 
     @Test func authoritativeEmptyStorageRepairsCompletedSeedAndRequiresSetup() async {
@@ -1487,6 +1516,14 @@ struct RemoteAppFeatureTests {
 
 private actor SelectionRecorder { private(set) var ids: [UUID?] = []; func record(_ mac: PairedMac?) { ids.append(mac?.id) }; func recordID(_ id: UUID?) { ids.append(id) } }
 private actor ForegroundRecorder { private(set) var values: [Bool] = []; func record(_ value: Bool) { values.append(value) } }
+
+private actor RemoteIdleTimerRecorder {
+    private(set) var values: [Bool] = []
+
+    func record(_ value: Bool) {
+        values.append(value)
+    }
+}
 
 private actor MetadataLoadGate {
     private let result: [PairedMac]

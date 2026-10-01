@@ -53,6 +53,9 @@ struct AboutView: View {
                     }
                 }
 
+                Link(destination: URL(string: "https://onlyswitch.click/#/privacy-policy")!) {
+                    Text("Privacy Policy")
+                }
 
                 Link(destination:URL(string: "https://github.com/sponsors/jacklandrin")!) {
                     Text("Donation".localized())
