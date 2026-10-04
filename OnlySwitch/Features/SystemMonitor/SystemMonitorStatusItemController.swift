@@ -29,7 +29,7 @@ protocol SystemMonitorStatusItemFactory: AnyObject {
 @MainActor
 final class SystemMonitorStatusItemController {
     private let factory: any SystemMonitorStatusItemFactory
-    private let clientFactory: @Sendable (TimeInterval) -> SystemMonitorClient
+    private let clientFactory: @Sendable (TimeInterval, Set<SystemMonitorMetric>) -> SystemMonitorClient
     private let onClick: @MainActor () -> Void
     private var items: [SystemMonitorMetric: any SystemMonitorStatusItemHandle] = [:]
     private var enabledMetrics: Set<SystemMonitorMetric> = []
@@ -40,8 +40,12 @@ final class SystemMonitorStatusItemController {
 
     init(
         factory: any SystemMonitorStatusItemFactory = AppKitSystemMonitorStatusItemFactory(),
-        clientFactory: @escaping @Sendable (TimeInterval) -> SystemMonitorClient = {
-            MacSystemMonitorCollector.liveClient(refreshInterval: $0)
+        clientFactory: @escaping @Sendable (TimeInterval, Set<SystemMonitorMetric>) -> SystemMonitorClient = {
+            MacSystemMonitorCollector.liveClient(
+                refreshInterval: $0,
+                metrics: $1,
+                includeDetails: false
+            )
         },
         onClick: @escaping @MainActor () -> Void = {}
     ) {
@@ -55,7 +59,7 @@ final class SystemMonitorStatusItemController {
         client: SystemMonitorClient,
         onClick: @escaping @MainActor () -> Void = {}
     ) {
-        self.init(factory: factory, clientFactory: { _ in client }, onClick: onClick)
+        self.init(factory: factory, clientFactory: { _, _ in client }, onClick: onClick)
     }
 
     func apply(_ preferences: SystemMonitorPreferences) {
@@ -72,7 +76,7 @@ final class SystemMonitorStatusItemController {
         if items.isEmpty {
             stopSampling()
         } else {
-            if intervalChanged {
+            if metricsChanged || intervalChanged {
                 stopSampling()
             }
             startSamplingIfNeeded()
@@ -114,7 +118,7 @@ private extension SystemMonitorStatusItemController {
         guard let refreshInterval else { return }
         samplingGeneration += 1
         let generation = samplingGeneration
-        let client = clientFactory(refreshInterval)
+        let client = clientFactory(refreshInterval, enabledMetrics)
 
         samplingTask = Task { @MainActor [weak self] in
             do {

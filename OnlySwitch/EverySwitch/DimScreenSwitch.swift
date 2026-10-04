@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import Defines
 import Switches
 
 final class DimScreenSwitch: SwitchProvider, @unchecked Sendable {
@@ -102,12 +103,13 @@ final class DimScreenSwitch: SwitchProvider, @unchecked Sendable {
             throw DimScreenError.brightnessTooLow
         }
         manager.setBrightness(level: dimBrightness)
+        NotificationCenter.default.post(name: .builtInDisplayBrightnessDidChange, object: nil)
     }
 
     private func restoreScreen() {
         manager.configureDisplays()
         manager.setBrightness(level: originalBrightness)
+        NotificationCenter.default.post(name: .builtInDisplayBrightnessDidChange, object: nil)
         isDimming = false
     }
 }
-

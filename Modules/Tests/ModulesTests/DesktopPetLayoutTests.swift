@@ -4,6 +4,42 @@ import Testing
 @testable import DesktopPet
 
 struct DesktopPetLayoutTests {
+    @Test func refreshPolicyUsesFifteenFramesPerSecond() {
+        #expect(DesktopPetRefreshPolicy.minimumInterval == 1.0 / 15.0)
+    }
+
+    @Test func refreshPolicyPausesOnlyWhenAnimationCannotBePresented() {
+        #expect(
+            !DesktopPetRefreshPolicy.isPaused(
+                isActive: true,
+                isDragging: false,
+                reduceMotion: false
+            )
+        )
+
+        #expect(
+            DesktopPetRefreshPolicy.isPaused(
+                isActive: false,
+                isDragging: false,
+                reduceMotion: false
+            )
+        )
+        #expect(
+            DesktopPetRefreshPolicy.isPaused(
+                isActive: true,
+                isDragging: true,
+                reduceMotion: false
+            )
+        )
+        #expect(
+            DesktopPetRefreshPolicy.isPaused(
+                isActive: true,
+                isDragging: false,
+                reduceMotion: true
+            )
+        )
+    }
+
     @Test func pomodoroStatePreservesPhaseAndCountdown() {
         let state = DesktopPetPomodoroState(phase: .focus, remainingTime: "24:59")
 

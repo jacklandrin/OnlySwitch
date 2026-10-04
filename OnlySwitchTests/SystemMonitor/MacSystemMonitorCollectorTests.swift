@@ -150,6 +150,30 @@ struct MacSystemMonitorCollectorTests {
     }
 
     @Test
+    func lightweightProfileDoesNotReuseAFullSnapshotOrCollectUnrequestedMetrics() async {
+        let collector = MacSystemMonitorCollector()
+        _ = await collector.sample()
+
+        let snapshot = await collector.sample(metrics: [.cpu], includeDetails: false)
+
+        #expect(snapshot.cpuTemperatureCelsius == .unavailable)
+        #expect(snapshot.gpuUsage == .unavailable)
+        #expect(snapshot.gpuTemperatureCelsius == .unavailable)
+        #expect(snapshot.memory == .unavailable)
+        #expect(snapshot.disks.isEmpty)
+        #expect(snapshot.network == .unavailable)
+        #expect(snapshot.processes.isEmpty)
+    }
+
+    @Test
+    func lightweightNetworkProfileOmitsNetworkDetails() async {
+        let collector = MacSystemMonitorCollector()
+        let snapshot = await collector.sample(metrics: [.network], includeDetails: false)
+
+        #expect(snapshot.network.value?.details == nil)
+    }
+
+    @Test
     func privateGPUReadingsAreEitherUnavailableOrSane() async {
         let collector = MacSystemMonitorCollector()
         let snapshot = await collector.sample()

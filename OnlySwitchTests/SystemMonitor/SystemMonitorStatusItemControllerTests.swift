@@ -144,20 +144,65 @@ struct SystemMonitorStatusItemControllerTests {
     }
 
     @Test
-    func metricChangesKeepOneUpstreamAndDisablingTheLastItemCancelsIt() async {
+    func changingEnabledMetricsRestartsUpstreamWithTheNewMetricSet() async {
         let factory = RecordingSystemMonitorStatusItemFactory()
         let clients = RecordingMonitorClientFactory()
         let controller = SystemMonitorStatusItemController(
             factory: factory,
-            clientFactory: clients.makeClient(refreshInterval:)
+            clientFactory: clients.makeClient(refreshInterval:metrics:)
         )
 
         controller.apply(.init(menuBarMetrics: [.cpu]))
-        await Task.yield()
+        for _ in 0..<10 where clients.streamStartCount == 0 {
+            await Task.yield()
+        }
         controller.apply(.init(menuBarMetrics: [.cpu, .network]))
+        for _ in 0..<10 where clients.streamStartCount < 2 || clients.terminationCount == 0 {
+            await Task.yield()
+        }
+
+        #expect(clients.requestedRequests == [
+            .init(interval: 1, metrics: [.cpu]),
+            .init(interval: 1, metrics: [.cpu, .network])
+        ])
+        #expect(clients.streamStartCount == 2)
+        #expect(clients.terminationCount == 1)
+    }
+
+    @Test
+    func reapplyingTheSameMetricSetDoesNotRestartUpstream() async {
+        let factory = RecordingSystemMonitorStatusItemFactory()
+        let clients = RecordingMonitorClientFactory()
+        let controller = SystemMonitorStatusItemController(
+            factory: factory,
+            clientFactory: clients.makeClient(refreshInterval:metrics:)
+        )
+
+        controller.apply(.init(menuBarMetrics: [.cpu, .network]))
+        for _ in 0..<10 where clients.streamStartCount == 0 {
+            await Task.yield()
+        }
+        controller.apply(.init(menuBarMetrics: [.network, .cpu]))
         await Task.yield()
 
+        #expect(clients.requestedRequests == [.init(interval: 1, metrics: [.cpu, .network])])
         #expect(clients.streamStartCount == 1)
+        #expect(clients.terminationCount == 0)
+    }
+
+    @Test
+    func disablingTheLastIndicatorCancelsTheUpstream() async {
+        let factory = RecordingSystemMonitorStatusItemFactory()
+        let clients = RecordingMonitorClientFactory()
+        let controller = SystemMonitorStatusItemController(
+            factory: factory,
+            clientFactory: clients.makeClient(refreshInterval:metrics:)
+        )
+
+        controller.apply(.init(menuBarMetrics: [.cpu]))
+        for _ in 0..<10 where clients.streamStartCount == 0 {
+            await Task.yield()
+        }
 
         controller.apply(.init(menuBarMetrics: []))
         for _ in 0..<10 where clients.terminationCount == 0 {
@@ -173,17 +218,22 @@ struct SystemMonitorStatusItemControllerTests {
         let clients = RecordingMonitorClientFactory()
         let controller = SystemMonitorStatusItemController(
             factory: factory,
-            clientFactory: clients.makeClient(refreshInterval:)
+            clientFactory: clients.makeClient(refreshInterval:metrics:)
         )
 
         controller.apply(.init(menuBarMetrics: [.cpu], refreshInterval: 1))
-        await Task.yield()
+        for _ in 0..<10 where clients.streamStartCount == 0 {
+            await Task.yield()
+        }
         controller.apply(.init(menuBarMetrics: [.cpu], refreshInterval: 2))
         for _ in 0..<10 where clients.streamStartCount < 2 {
             await Task.yield()
         }
 
-        #expect(clients.requestedIntervals == [1, 2])
+        #expect(clients.requestedRequests == [
+            .init(interval: 1, metrics: [.cpu]),
+            .init(interval: 2, metrics: [.cpu])
+        ])
         #expect(clients.streamStartCount == 2)
         #expect(clients.terminationCount == 1)
     }
@@ -234,13 +284,18 @@ private extension SystemMonitorClient {
 }
 
 private final class RecordingMonitorClientFactory: @unchecked Sendable {
+    struct SamplingRequest: Equatable {
+        let interval: TimeInterval
+        let metrics: Set<SystemMonitorMetric>
+    }
+
     private let lock = NSLock()
-    private var intervals: [TimeInterval] = []
+    private var requests: [SamplingRequest] = []
     private var starts = 0
     private var terminations = 0
 
-    var requestedIntervals: [TimeInterval] {
-        lock.withLock { intervals }
+    var requestedRequests: [SamplingRequest] {
+        lock.withLock { requests }
     }
 
     var streamStartCount: Int {
@@ -251,8 +306,11 @@ private final class RecordingMonitorClientFactory: @unchecked Sendable {
         lock.withLock { terminations }
     }
 
-    func makeClient(refreshInterval: TimeInterval) -> SystemMonitorClient {
-        lock.withLock { intervals.append(refreshInterval) }
+    func makeClient(
+        refreshInterval: TimeInterval,
+        metrics: Set<SystemMonitorMetric>
+    ) -> SystemMonitorClient {
+        lock.withLock { requests.append(.init(interval: refreshInterval, metrics: metrics)) }
         return SystemMonitorClient { [weak self] in
             guard let self else {
                 return AsyncThrowingStream { $0.finish() }

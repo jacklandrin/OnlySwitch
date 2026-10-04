@@ -468,6 +468,11 @@ private struct PrivateAppleSiliconMetricsReader {
         )
     }
 
+    static func usage() -> Double? {
+        guard isAppleSilicon else { return nil }
+        return readUsage()
+    }
+
     mutating func close() {
         guard smcConnection != IO_OBJECT_NULL else { return }
         IOServiceClose(smcConnection)
@@ -752,6 +757,11 @@ private struct PrivateAppleSiliconMetricsReader {
 /// metrics. If that path is absent or changes on a future macOS release, the affected values stay
 /// explicitly unavailable.
 actor MacSystemMonitorCollector {
+    private struct SamplingProfile: Hashable {
+        let metrics: Set<SystemMonitorMetric>
+        let includeDetails: Bool
+    }
+
     private struct CPUTicks {
         let busy: UInt64
         let total: UInt64
@@ -768,22 +778,26 @@ actor MacSystemMonitorCollector {
         let name: String
     }
 
-    private var previousCPUTicks: CPUTicks?
-    private var previousNetworkCounters: NetworkCounters?
-    private var previousProcessCPUTimes: [Int32: UInt64] = [:]
-    private var previousSampleUptime: TimeInterval?
-    private var lastCollectedUptime: TimeInterval?
-    private var latestSnapshot: SystemMonitorSnapshot?
+    private struct SamplingState {
+        var previousCPUTicks: CPUTicks?
+        var previousNetworkCounters: NetworkCounters?
+        var previousProcessCPUTimes: [Int32: UInt64] = [:]
+        var previousNetworkUptime: TimeInterval?
+        var previousProcessUptime: TimeInterval?
+        var lastCollectedUptime: TimeInterval?
+        var latestSnapshot: SystemMonitorSnapshot?
+    }
+
+    private var samplingStates: [SamplingProfile: SamplingState] = [:]
     private var publicAddresses = PublicIPAddresses(ipv4: nil, ipv6: nil)
     private var memoryPressure: SystemMonitorMemoryPressure = .normal
     private var privateMetricsReader = PrivateAppleSiliconMetricsReader()
     private let memoryPressureSource: any DispatchSourceMemoryPressure
-    private let hardware: SystemMonitorHardware
+    private var hardware: SystemMonitorHardware?
     private let publicIPAddressProvider: PublicIPAddressProvider
 
     init(publicIPAddressProvider: PublicIPAddressProvider = PublicIPAddressProvider()) {
         self.publicIPAddressProvider = publicIPAddressProvider
-        hardware = Self.readHardware(gpuCoreCount: PrivateAppleSiliconMetricsReader.coreCount())
         let source = DispatchSource.makeMemoryPressureSource(eventMask: .all, queue: .global(qos: .utility))
         memoryPressureSource = source
         source.setEventHandler { [weak self, weak source] in
@@ -802,16 +816,24 @@ actor MacSystemMonitorCollector {
     }
 
     nonisolated static func liveClient(
-        refreshInterval: TimeInterval = 1
+        refreshInterval: TimeInterval = 1,
+        metrics: Set<SystemMonitorMetric> = Set(SystemMonitorMetric.allCases),
+        includeDetails: Bool = true
     ) -> SystemMonitorClient {
         let collector = Self()
         return SystemMonitorClient {
-            collector.snapshotStream(refreshInterval: refreshInterval)
+            collector.snapshotStream(
+                refreshInterval: refreshInterval,
+                metrics: metrics,
+                includeDetails: includeDetails
+            )
         }
     }
 
     nonisolated func snapshotStream(
-        refreshInterval: TimeInterval = 1
+        refreshInterval: TimeInterval = 1,
+        metrics: Set<SystemMonitorMetric> = Set(SystemMonitorMetric.allCases),
+        includeDetails: Bool = true
     ) -> AsyncThrowingStream<SystemMonitorSnapshot, Error> {
         let interval = max(refreshInterval, 1)
 
@@ -820,7 +842,7 @@ actor MacSystemMonitorCollector {
                 await withTaskGroup(of: Void.self) { group in
                     group.addTask {
                         while Task.isCancelled == false {
-                            continuation.yield(await self.sample())
+                            continuation.yield(await self.sample(metrics: metrics, includeDetails: includeDetails))
 
                             do {
                                 try await Task.sleep(for: .seconds(interval))
@@ -829,14 +851,16 @@ actor MacSystemMonitorCollector {
                             }
                         }
                     }
-                    group.addTask {
-                        while Task.isCancelled == false {
-                            await self.refreshPublicAddresses()
+                    if includeDetails && metrics.contains(.network) {
+                        group.addTask {
+                            while Task.isCancelled == false {
+                                await self.refreshPublicAddresses()
 
-                            do {
-                                try await Task.sleep(for: .seconds(5 * 60))
-                            } catch {
-                                break
+                                do {
+                                    try await Task.sleep(for: .seconds(5 * 60))
+                                } catch {
+                                    break
+                                }
                             }
                         }
                     }
@@ -850,63 +874,97 @@ actor MacSystemMonitorCollector {
         }
     }
 
-    func sample() -> SystemMonitorSnapshot {
+    func sample(
+        metrics: Set<SystemMonitorMetric> = Set(SystemMonitorMetric.allCases),
+        includeDetails: Bool = true
+    ) -> SystemMonitorSnapshot {
+        let profile = SamplingProfile(metrics: metrics, includeDetails: includeDetails)
+        var state = samplingStates[profile] ?? SamplingState()
         let uptime = ProcessInfo.processInfo.systemUptime
-        if let lastCollectedUptime, let latestSnapshot, uptime - lastCollectedUptime < 1 {
+        if let lastCollectedUptime = state.lastCollectedUptime,
+           let latestSnapshot = state.latestSnapshot,
+           uptime - lastCollectedUptime < 1 {
             return latestSnapshot
         }
 
         let now = Date()
-        let elapsed = previousSampleUptime.map { max(uptime - $0, 0) }
-        let networkDetails = NetworkDetailsSampler.read(publicAddresses: publicAddresses)
-
-        let cpuUsage = readCPUTicks().map { current in
-            defer { previousCPUTicks = current }
-            guard let previous = previousCPUTicks, current.total >= previous.total else { return 0.0 }
+        let cpuUsage = (metrics.contains(.cpu) ? readCPUTicks() : nil).map { current in
+            defer { state.previousCPUTicks = current }
+            guard let previous = state.previousCPUTicks, current.total >= previous.total else { return 0.0 }
             let totalDelta = current.total - previous.total
             guard totalDelta > 0, current.busy >= previous.busy else { return 0.0 }
             return min(max(Double(current.busy - previous.busy) / Double(totalDelta), 0), 1)
         }
 
-        let network = readNetworkCounters().map { current in
-            defer { previousNetworkCounters = current }
-            let seconds = elapsed ?? 0
+        let network = (metrics.contains(.network) ? readNetworkCounters() : nil).map { current in
+            defer {
+                state.previousNetworkCounters = current
+                state.previousNetworkUptime = uptime
+            }
+            let seconds = state.previousNetworkUptime.map { max(uptime - $0, 0) } ?? 0
             return SystemMonitorNetwork(
                 totalDownloadedBytes: current.downloaded,
                 totalUploadedBytes: current.uploaded,
                 downloadBytesPerSecond: NetworkRate.delta(
                     current: current.downloaded,
-                    previous: previousNetworkCounters?.downloaded,
+                    previous: state.previousNetworkCounters?.downloaded,
                     seconds: seconds
                 ),
                 uploadBytesPerSecond: NetworkRate.delta(
                     current: current.uploaded,
-                    previous: previousNetworkCounters?.uploaded,
+                    previous: state.previousNetworkCounters?.uploaded,
                     seconds: seconds
                 ),
-                details: networkDetails
+                details: includeDetails ? NetworkDetailsSampler.read(publicAddresses: publicAddresses) : nil
             )
         }
 
-        let processes = readProcesses(elapsed: elapsed ?? 0)
-
-        let privateMetrics = privateMetricsReader.sample(chipModel: hardware.cpu.model.value)
+        let hardware = includeDetails ? hardwareDetails() : SystemMonitorHardware()
+        let privateMetrics = includeDetails && (metrics.contains(.cpu) || metrics.contains(.gpu))
+            ? privateMetricsReader.sample(chipModel: hardware.cpu.model.value)
+            : nil
+        let gpuUsage = metrics.contains(.gpu)
+            ? (includeDetails ? privateMetrics?.usage : PrivateAppleSiliconMetricsReader.usage())
+            : nil
+        let processes: [SystemMonitorProcess]
+        if includeDetails {
+            let elapsed = state.previousProcessUptime.map { max(uptime - $0, 0) } ?? 0
+            processes = readProcesses(
+                elapsed: elapsed,
+                previousProcessCPUTimes: &state.previousProcessCPUTimes
+            )
+            state.previousProcessUptime = uptime
+        } else {
+            processes = []
+        }
         let snapshot = SystemMonitorSnapshot(
             timestamp: now,
             cpuUsage: cpuUsage.map(MetricAvailability.available) ?? .unavailable,
-            cpuTemperatureCelsius: privateMetrics.cpuTemperatureCelsius.map(MetricAvailability.available) ?? .unavailable,
-            gpuUsage: privateMetrics.usage.map(MetricAvailability.available) ?? .unavailable,
-            gpuTemperatureCelsius: privateMetrics.gpuTemperatureCelsius.map(MetricAvailability.available) ?? .unavailable,
+            cpuTemperatureCelsius: metrics.contains(.cpu)
+                ? privateMetrics?.cpuTemperatureCelsius.map(MetricAvailability.available) ?? .unavailable
+                : .unavailable,
+            gpuUsage: gpuUsage.map(MetricAvailability.available) ?? .unavailable,
+            gpuTemperatureCelsius: metrics.contains(.gpu)
+                ? privateMetrics?.gpuTemperatureCelsius.map(MetricAvailability.available) ?? .unavailable
+                : .unavailable,
             hardware: hardware,
-            memory: readMemory().map(MetricAvailability.available) ?? .unavailable,
-            disks: readDisks(),
+            memory: (metrics.contains(.memory) ? readMemory() : nil)
+                .map(MetricAvailability.available) ?? .unavailable,
+            disks: metrics.contains(.disk) ? readDisks() : [],
             network: network.map(MetricAvailability.available) ?? .unavailable,
             processes: ProcessSampler.topRows(from: processes, limit: 12)
         )
-        previousSampleUptime = uptime
-        lastCollectedUptime = uptime
-        latestSnapshot = snapshot
+        state.lastCollectedUptime = uptime
+        state.latestSnapshot = snapshot
+        samplingStates[profile] = state
         return snapshot
+    }
+
+    private func hardwareDetails() -> SystemMonitorHardware {
+        if let hardware { return hardware }
+        let hardware = Self.readHardware(gpuCoreCount: PrivateAppleSiliconMetricsReader.coreCount())
+        self.hardware = hardware
+        return hardware
     }
 
     private func refreshPublicAddresses() async {
@@ -1076,7 +1134,10 @@ private extension MacSystemMonitorCollector {
         return NetworkCounters(downloaded: downloaded, uploaded: uploaded)
     }
 
-    func readProcesses(elapsed: TimeInterval) -> [SystemMonitorProcess] {
+    func readProcesses(
+        elapsed: TimeInterval,
+        previousProcessCPUTimes: inout [Int32: UInt64]
+    ) -> [SystemMonitorProcess] {
         let byteCount = proc_listpids(UInt32(PROC_ALL_PIDS), 0, nil, 0)
         guard byteCount > 0 else { return [] }
 

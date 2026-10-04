@@ -266,6 +266,50 @@ private enum ReverseScrollDirectionTestError: Error {
     case failed
 }
 
+struct BrightnessSyncStateTests {
+    @Test func pollingRequiresRunningSyncWithBuiltInAndExternalDisplays() {
+        var state = BrightnessSyncState()
+
+        #expect(!state.shouldPoll)
+
+        state.start()
+        #expect(!state.shouldPoll)
+
+        let generation = state.topologyChanged(hasBuiltInDisplay: true)
+        #expect(!state.shouldPoll)
+        #expect(state.acceptRefresh(generation: generation, externalDisplayCount: 0))
+        #expect(!state.shouldPoll)
+        #expect(state.acceptRefresh(generation: generation, externalDisplayCount: 1))
+        #expect(state.shouldPoll)
+
+        _ = state.topologyChanged(hasBuiltInDisplay: false)
+        #expect(!state.shouldPoll)
+    }
+
+    @Test func stopAndStaleRefreshesCannotReenablePolling() {
+        var state = BrightnessSyncState()
+        state.start()
+        let generation = state.topologyChanged(hasBuiltInDisplay: true)
+
+        state.stop()
+
+        #expect(!state.acceptRefresh(generation: generation, externalDisplayCount: 1))
+        #expect(!state.shouldPoll)
+    }
+
+    @Test func currentTopologyRefreshIsAcceptedAndSupersedesOlderRefreshes() {
+        var state = BrightnessSyncState()
+        state.start()
+        let oldGeneration = state.topologyChanged(hasBuiltInDisplay: true)
+        let currentGeneration = state.topologyChanged(hasBuiltInDisplay: true)
+
+        #expect(!state.acceptRefresh(generation: oldGeneration, externalDisplayCount: 2))
+        #expect(!state.shouldPoll)
+        #expect(state.acceptRefresh(generation: currentGeneration, externalDisplayCount: 2))
+        #expect(state.shouldPoll)
+    }
+}
+
 @MainActor
 private final class TestDesktopPetPomodoroPresenter: DesktopPetPomodoroPresenting {
     var isVisible = false
