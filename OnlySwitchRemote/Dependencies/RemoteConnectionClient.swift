@@ -25,6 +25,12 @@ struct RemoteActionInvocation: Equatable, Sendable {
     let request: RemoteActionRequest
 }
 
+struct RemoteCodexUsageInvocation: Equatable, Sendable {
+    let macID: UUID
+    let sessionID: UUID
+    let request: RemoteCodexUsageRequest
+}
+
 enum RemotePairAdoptionResult: Equatable, Sendable {
     case authenticated
     case connecting
@@ -53,6 +59,7 @@ struct RemoteConnectionClient: Sendable {
     var forgetMac: @Sendable (UUID) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
     var subscribe: @Sendable (Set<RemoteControlID>) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
     var send: @Sendable (RemoteActionInvocation) async throws -> RemoteActionResult = { _ in throw RemoteDependencyError.unimplemented }
+    var fetchCodexUsage: @Sendable (RemoteCodexUsageInvocation) async throws -> RemoteCodexUsageResult = { _ in throw RemoteDependencyError.unimplemented }
     var sendSoundMixer: @Sendable (RemoteSoundMixerCommand) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
     var setSystemMonitorStreaming: @Sendable (Bool) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
     var setForegrounded: @Sendable (Bool) async -> Void = { _ in }

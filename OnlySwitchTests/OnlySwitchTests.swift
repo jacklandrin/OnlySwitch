@@ -11,6 +11,7 @@ import XCTest
 import Testing
 import Combine
 import DesktopPet
+import Defines
 import Switches
 @testable import OnlySwitch
 
@@ -197,6 +198,72 @@ class OnlySwitchTests: XCTestCase {
     try await control.operateSwitch(isOn: false)
     #expect(await control.currentStatus() == false)
     #expect(writes == [true, false])
+}
+
+@MainActor
+@Test func codexUsageBuiltInSwitchControlsTabVisibility() async throws {
+    var isVisible = true
+    let control = CodexUsageSwitch(
+        visibility: { isVisible },
+        setVisibility: { isVisible = $0 }
+    )
+
+    #expect(control.type == .codexUsage)
+    #expect(SwitchType.codexUsage.barInfo().title == "Codex Usage")
+    #expect(await control.currentStatus())
+
+    try await control.operateSwitch(isOn: false)
+
+    #expect(await control.currentStatus() == false)
+}
+
+@MainActor
+@Test func reverseScrollDirectionBuiltInSwitchMapsStatusAndCommands() async throws {
+    var isReversed = false
+    var writes: [Bool] = []
+    let control = ReverseScrollDirectionSwitch(
+        readStatus: { isReversed },
+        writeStatus: { value in
+            writes.append(value)
+            isReversed = value
+        }
+    )
+
+    #expect(control.type == .reverseScrollDirection)
+    #expect(SwitchType.reverseScrollDirection.rawValue == 1 << 41)
+    #expect(SwitchType.reverseScrollDirection.barInfo().title == "Reverse Scroll Direction")
+    #expect(ReverseScrollDirectionCMD.on.hasSuffix("-bool false"))
+    #expect(ReverseScrollDirectionCMD.off.hasSuffix("-bool true"))
+    #expect(await control.currentStatus() == false)
+
+    try await control.operateSwitch(isOn: true)
+    #expect(await control.currentStatus())
+    #expect(writes == [true])
+
+    try await control.operateSwitch(isOn: false)
+    #expect(await control.currentStatus() == false)
+    #expect(writes == [true, false])
+}
+
+@MainActor
+@Test func reverseScrollDirectionBuiltInSwitchHandlesCommandErrors() async {
+    let readFailure = ReverseScrollDirectionSwitch(
+        readStatus: { throw ReverseScrollDirectionTestError.failed },
+        writeStatus: { _ in }
+    )
+    #expect(await readFailure.currentStatus() == false)
+
+    let writeFailure = ReverseScrollDirectionSwitch(
+        readStatus: { false },
+        writeStatus: { _ in throw ReverseScrollDirectionTestError.failed }
+    )
+    await #expect(throws: SwitchError.self) {
+        try await writeFailure.operateSwitch(isOn: true)
+    }
+}
+
+private enum ReverseScrollDirectionTestError: Error {
+    case failed
 }
 
 @MainActor

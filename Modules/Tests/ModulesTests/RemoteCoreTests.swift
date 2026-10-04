@@ -27,7 +27,7 @@ struct RemoteCoreTests {
     @Test func transactionalPairingRequiresMinorTwo() {
         #expect(!RemoteProtocolVersion(major: 1, minor: 1).supportsTransactionalPairing)
         #expect(RemoteProtocolVersion(major: 1, minor: 2).supportsTransactionalPairing)
-        #expect(RemoteProtocolVersion.current == .init(major: 1, minor: 3))
+        #expect(RemoteProtocolVersion.current == .init(major: 1, minor: 5))
     }
 
     @Test func soundMixerRequiresProtocolMinorThree() throws {
@@ -44,7 +44,7 @@ struct RemoteCoreTests {
 
     @Test func systemMonitorRequiresProtocolMinorFour() {
         #expect(RemoteProtocolVersion(major: 1, minor: 3).supportsSystemMonitorRemote == false)
-        #expect(RemoteProtocolVersion.current == .init(major: 1, minor: 4))
+        #expect(RemoteProtocolVersion.current == .init(major: 1, minor: 5))
         #expect(RemoteProtocolVersion.current.supportsSystemMonitorRemote)
     }
 
@@ -63,6 +63,89 @@ struct RemoteCoreTests {
         ] {
             #expect(try JSONDecoder().decode(RemoteMessage.self, from: JSONEncoder().encode(message)) == message)
         }
+    }
+
+    @Test func codexUsageContractRoundTripsWithoutCredentialBearingValues() throws {
+        let requestID = UUID(uuidString: "00000000-0000-0000-0000-000000000501")!
+        let snapshot = RemoteCodexUsageSnapshot(
+            account: .init(email: "person@example.com", plan: "Plus"),
+            session: .init(remainingPercent: 71, resetAt: Date(timeIntervalSince1970: 1_800_000_100)),
+            weekly: .init(remainingPercent: 42, resetAt: Date(timeIntervalSince1970: 1_800_100_000)),
+            resetCredits: .available(count: 3, expiresAt: Date(timeIntervalSince1970: 1_800_200_000)),
+            creditBalance: .available(remaining: 12.5, limit: 50, unit: "credits"),
+            source: .oauth,
+            fetchedAt: Date(timeIntervalSince1970: 1_800_000_000),
+            activity: .init(
+                dailyUsage: [.init(date: Date(timeIntervalSince1970: 1_799_900_000), tokenCount: 1_234)],
+                isPartial: true
+            )
+        )
+        let request = RemoteCodexUsageRequest(requestID: requestID, includeLocalActivity: true)
+        let response = RemoteCodexUsageResult(requestID: requestID, result: .success(snapshot))
+
+        for message in [RemoteMessage.codexUsageRequest(request), .codexUsageResult(response)] {
+            let data = try JSONEncoder().encode(message)
+            #expect(try JSONDecoder().decode(RemoteMessage.self, from: data) == message)
+            let wire = String(decoding: data, as: UTF8.self)
+            #expect(wire.contains("accessToken") == false)
+            #expect(wire.contains("refreshToken") == false)
+            #expect(wire.contains("cookie") == false)
+            #expect(wire.contains("filesystem") == false)
+        }
+    }
+
+    @Test(arguments: [
+        CodexResetCreditsDTO.unavailable,
+        .unlimited,
+        .available(count: 2, expiresAt: nil),
+    ])
+    func codexResetCreditFormsRoundTrip(_ value: CodexResetCreditsDTO) throws {
+        #expect(try JSONDecoder().decode(CodexResetCreditsDTO.self, from: JSONEncoder().encode(value)) == value)
+    }
+
+    @Test(arguments: [
+        CodexCreditBalanceDTO.unavailable,
+        .unlimited,
+        .available(remaining: 4.25, limit: nil, unit: "credits"),
+    ])
+    func codexCreditBalanceFormsRoundTrip(_ value: CodexCreditBalanceDTO) throws {
+        #expect(try JSONDecoder().decode(CodexCreditBalanceDTO.self, from: JSONEncoder().encode(value)) == value)
+    }
+
+    @Test func codexUsageFailureRoundTripsAndMalformedEnvelopesAreRejected() throws {
+        let id = UUID(uuidString: "00000000-0000-0000-0000-000000000502")!
+        let failure = RemoteCodexUsageResult(
+            requestID: id,
+            result: .failure(.init(code: .authenticationFailed, message: "Sign in to Codex on the selected Mac."))
+        )
+        #expect(try JSONDecoder().decode(RemoteCodexUsageResult.self, from: JSONEncoder().encode(failure)) == failure)
+
+        let decoder = JSONDecoder()
+        let both = Data(#"{"requestID":"\#(id.uuidString)","success":{},"failure":{"code":"authenticationFailed","message":"No"}}"#.utf8)
+        let neither = Data(#"{"requestID":"\#(id.uuidString)"}"#.utf8)
+        #expect(throws: DecodingError.self) { try decoder.decode(RemoteCodexUsageResult.self, from: both) }
+        #expect(throws: DecodingError.self) { try decoder.decode(RemoteCodexUsageResult.self, from: neither) }
+    }
+
+    @Test func codexUsageRequiresProtocolMinorFive() {
+        let legacy = RemoteProtocolVersion(major: 1, minor: 4)
+        let current = RemoteProtocolVersion(major: 1, minor: 5)
+
+        #expect(legacy.supportsCodexUsageRemote == false)
+        #expect(current.supportsCodexUsageRemote)
+        #expect(RemoteProtocolVersion.current == current)
+        #expect(current.negotiated(with: legacy) == legacy)
+    }
+
+    @Test(arguments: [
+        (rawValue: -1, expected: 0),
+        (rawValue: 0, expected: 0),
+        (rawValue: 49, expected: 49),
+        (rawValue: 100, expected: 100),
+        (rawValue: 101, expected: 100),
+    ])
+    func codexQuotaRemainingPercentIsClamped(_ input: (rawValue: Int, expected: Int)) {
+        #expect(CodexQuotaWindowDTO(remainingPercent: input.rawValue, resetAt: nil).remainingPercent == input.expected)
     }
 
     @Test func provisionalTeardownAlonePreservesDurablePreparedTransaction() {
@@ -107,9 +190,9 @@ struct RemoteCoreTests {
 
     @Test func protocolMinorNegotiatesWithoutSendingNewMessagesToLegacyPeers() {
         let legacy = RemoteProtocolVersion(major: 1, minor: 0)
-        let future = RemoteProtocolVersion(major: 1, minor: 3)
+        let future = RemoteProtocolVersion(major: 1, minor: 5)
 
-        #expect(RemoteProtocolVersion.current == .init(major: 1, minor: 3))
+        #expect(RemoteProtocolVersion.current == .init(major: 1, minor: 5))
         #expect(RemoteProtocolVersion.current.negotiated(with: legacy) == legacy)
         #expect(legacy.supportsAuthenticatedRevocation == false)
         #expect(RemoteProtocolVersion.current.supportsAuthenticatedRevocation)

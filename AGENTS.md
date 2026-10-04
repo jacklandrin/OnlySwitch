@@ -39,5 +39,6 @@ Use the narrowest applicable skill. If several conditions match, load the smalle
 - Prefer focused, composable modules and reusable abstractions over expanding monolithic files.
 - Maintain Swift 6 concurrency safety, including explicit sendability and actor isolation at networking, persistence, and process-boundary crossings.
 - Treat shell commands, Apple Events, keychain access, system settings, and user permissions as security-sensitive effects that require explicit dependencies and testable failure handling.
+- Design new or substantially changed UI with modern platform styling, adopting Liquid Glass where supported, providing compatible fallbacks, supporting light and dark modes, and adapting layouts for macOS, iPhone, and iPad sizes as applicable.
+- Translate every new user-facing string into every language supported by OnlySwitch; do not ship newly added source-only strings.
 - Avoid unrelated formatting or refactoring. Update documentation when a change alters an architectural decision or workflow.
-

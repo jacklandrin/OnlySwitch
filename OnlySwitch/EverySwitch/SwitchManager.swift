@@ -86,14 +86,28 @@ final class SwitchManager: @unchecked Sendable {
     }
     
     func getAllSwitchState() -> UInt64 {
-        if let stateStr = UserDefaults.standard.string(forKey: UserDefaults.Key.SwitchState) {
-            let state = UInt64(stateStr) ?? 16383 // binary 11111111111111
-            return state
-        } else {
-            UserDefaults.standard.set("16383", forKey: UserDefaults.Key.SwitchState)
-            UserDefaults.standard.synchronize()
-            return 16383
+        let defaultState: UInt64 = 16_383 // binary 11111111111111
+        let storedState = UserDefaults.standard.string(forKey: UserDefaults.Key.SwitchState)
+        var state = storedState.flatMap(UInt64.init) ?? defaultState
+
+        // Make the new built-in switch discoverable once without re-enabling it after a user
+        // later hides it from Customize.
+        if !UserDefaults.standard.bool(forKey: UserDefaults.Key.didInstallCodexUsageSwitch) {
+            state |= SwitchType.codexUsage.rawValue
+            UserDefaults.standard.set(true, forKey: UserDefaults.Key.didInstallCodexUsageSwitch)
         }
+
+        if !UserDefaults.standard.bool(forKey: UserDefaults.Key.didInstallReverseScrollDirectionSwitch) {
+            state |= SwitchType.reverseScrollDirection.rawValue
+            UserDefaults.standard.set(true, forKey: UserDefaults.Key.didInstallReverseScrollDirectionSwitch)
+        }
+
+        if storedState == nil || state != UInt64(storedState ?? "") {
+            UserDefaults.standard.set(String(state), forKey: UserDefaults.Key.SwitchState)
+            UserDefaults.standard.synchronize()
+        }
+
+        return state
     }
 
     func activeEvolutionList() -> [EvolutionBarVM] {

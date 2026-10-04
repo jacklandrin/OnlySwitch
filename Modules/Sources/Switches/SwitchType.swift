@@ -70,6 +70,8 @@ public enum SwitchType: UInt64, CaseIterable, Sendable {
     case authenticator = 137_438_953_472 // 1 << 37
     case soundMixer = 274_877_906_944 // 1 << 38
     case desktopPet = 549_755_813_888 // 1 << 39
+    case codexUsage = 1_099_511_627_776 // 1 << 40
+    case reverseScrollDirection = 2_199_023_255_552 // 1 << 41
 
     public func barInfo() -> SwitchBarInfo {
         switch self {
@@ -340,6 +342,19 @@ public enum SwitchType: UInt64, CaseIterable, Sendable {
                 title: "Show Desktop Pet",
                 onImage: NSImage(systemSymbolName: "pawprint"),
                 offImage: NSImage(systemSymbolName: "pawprint")
+            )
+        case .codexUsage:
+            return SwitchBarInfo(
+                title: "Codex Usage",
+                onImage: NSImage(systemSymbolName: "gauge.with.dots.needle.50percent"),
+                offImage: NSImage(systemSymbolName: "gauge.with.dots.needle.50percent"),
+                category: .tool
+            )
+        case .reverseScrollDirection:
+            return SwitchBarInfo(
+                title: "Reverse Scroll Direction",
+                onImage: NSImage(systemSymbolName: "computermouse.fill"),
+                offImage: NSImage(systemSymbolName: "computermouse")
             )
         }
     }

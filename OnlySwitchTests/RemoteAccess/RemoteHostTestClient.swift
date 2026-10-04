@@ -205,6 +205,14 @@ actor RemoteHostTestClient {
         try await receiveEncrypted()
     }
 
+    func requestCodexUsage(_ request: RemoteCodexUsageRequest) async throws -> RemoteCodexUsageResult {
+        try await sendEncrypted(.codexUsageRequest(request))
+        guard case let .codexUsageResult(result) = try await receiveEncrypted() else {
+            throw RemoteProtocolError(code: .invalidFrame, message: "Expected Codex usage result")
+        }
+        return result
+    }
+
     func sendTransaction(_ message: RemoteMessage) async throws {
         switch message {
         case .pairingCommit, .pairingAbort, .pairingStatusRequest:

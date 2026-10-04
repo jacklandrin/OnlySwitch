@@ -14,12 +14,10 @@ import Utilities
 struct CustomizeView: View {
     @ObservedObject var customizeVM = CustomizeVM.shared
     @ObservedObject var langManager = LanguageManager.sharedManager
-    
     var body: some View {
         VStack(alignment:.leading) {
             Text("To add or remove any switches on list".localized())
                 .padding(10)
-            Divider()
             ScrollView {
                 VStack{
                     ForEach(customizeVM.allSwitches, id: \.type) { item in

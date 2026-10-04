@@ -9,6 +9,7 @@ enum SectionBar {
         case authenticator
         case soundMixer
         case systemMonitor
+        case codexUsage
 
         var title: String {
             switch self {
@@ -16,6 +17,7 @@ enum SectionBar {
             case .authenticator: "Authenticator".localized()
             case .soundMixer: "Sound Mixer".localized()
             case .systemMonitor: "System Monitor".localized()
+            case .codexUsage: "Codex Usage".localized()
             }
         }
 
@@ -25,15 +27,17 @@ enum SectionBar {
             case .authenticator: "key.viewfinder"
             case .soundMixer: "slider.horizontal.3"
             case .systemMonitor: "waveform.path.ecg"
+            case .codexUsage: "gauge.with.dots.needle.50percent"
             }
         }
     }
 
-    static func sections(authenticator: Bool, soundMixer: Bool) -> [Section] {
+    static func sections(authenticator: Bool, soundMixer: Bool, codexUsage: Bool) -> [Section] {
         var sections: [Section] = [.controls]
         if authenticator { sections.append(.authenticator) }
         if soundMixer { sections.append(.soundMixer) }
         sections.append(.systemMonitor)
+        if codexUsage { sections.append(.codexUsage) }
         return sections
     }
 }

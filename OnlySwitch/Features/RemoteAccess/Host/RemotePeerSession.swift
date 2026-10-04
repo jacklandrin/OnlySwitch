@@ -109,6 +109,7 @@ actor RemotePeerSession {
     private let authenticationAuthorized: @Sendable (UUID, UUID) async -> Bool
     private let authenticationConfirmed: @Sendable (UUID, UUID) async -> Bool
     private let systemMonitorSnapshots: @Sendable () -> AsyncThrowingStream<SystemMonitorSnapshot, Error>
+    private let codexUsage: @Sendable (Bool) async -> Result<RemoteCodexUsageSnapshot, RemoteProtocolError>
     private let authenticationResultSender: AuthenticationResultSender
     private let commitStageReached: @Sendable (RemotePairingCommitStage) async -> Void
     private let ended: @Sendable (UUID) async -> Void
@@ -120,6 +121,8 @@ actor RemotePeerSession {
     private var negotiatedVersion: RemoteProtocolVersion?
     private var advertisedCatalogRevision: UInt64?
     private var systemMonitorTask: Task<Void, Never>?
+    private var codexUsageTask: Task<Void, Never>?
+    private var codexUsageGeneration: UInt64 = 0
 
     init(
         id: UUID = UUID(),
@@ -143,6 +146,9 @@ actor RemotePeerSession {
         authenticationAuthorized: @escaping @Sendable (UUID, UUID) async -> Bool,
         authenticationConfirmed: @escaping @Sendable (UUID, UUID) async -> Bool,
         systemMonitorSnapshots: @escaping @Sendable () -> AsyncThrowingStream<SystemMonitorSnapshot, Error>,
+        codexUsage: @escaping @Sendable (Bool) async -> Result<RemoteCodexUsageSnapshot, RemoteProtocolError> = { _ in
+            .failure(.init(code: .actionNotSupported, message: "Codex usage is unavailable"))
+        },
         authenticationResultSender: @escaping AuthenticationResultSender = { operation in
             try await operation()
         },
@@ -171,6 +177,7 @@ actor RemotePeerSession {
         self.authenticationAuthorized = authenticationAuthorized
         self.authenticationConfirmed = authenticationConfirmed
         self.systemMonitorSnapshots = systemMonitorSnapshots
+        self.codexUsage = codexUsage
         self.authenticationResultSender = authenticationResultSender
         self.commitStageReached = commitStageReached
         self.ended = ended
@@ -193,6 +200,8 @@ actor RemotePeerSession {
             await rollbackPendingPairingIfNeeded()
         }
         stopSystemMonitorStreaming()
+        codexUsageTask?.cancel()
+        codexUsageTask = nil
         state = .closed
         await io.cancel()
         await ended(id)
@@ -203,6 +212,8 @@ actor RemotePeerSession {
             pendingPairing = nil
         }
         stopSystemMonitorStreaming()
+        codexUsageTask?.cancel()
+        codexUsageTask = nil
         state = .closed
         await io.cancel()
         await ended(id)
@@ -770,6 +781,20 @@ actor RemotePeerSession {
             } else {
                 stopSystemMonitorStreaming()
             }
+        case let .codexUsageRequest(request):
+            guard negotiatedVersion?.supportsCodexUsageRemote == true else {
+                let error = RemoteProtocolError(code: .upgradeRequired, message: "Codex Usage requires a newer OnlySwitch")
+                try await sendEncrypted(.codexUsageResult(.init(requestID: request.requestID, result: .failure(error))))
+                return
+            }
+            codexUsageGeneration &+= 1
+            let generation = codexUsageGeneration
+            codexUsageTask?.cancel()
+            codexUsageTask = Task { [weak self, codexUsage] in
+                let result = await codexUsage(request.includeLocalActivity)
+                guard Task.isCancelled == false else { return }
+                try? await self?.finishCodexUsage(requestID: request.requestID, generation: generation, result: result)
+            }
         case let .pairingCommit(command):
             let status = try await credentialStore.transactionStatus(
                 command.transactionID,
@@ -812,6 +837,16 @@ actor RemotePeerSession {
         default:
             throw RemoteProtocolError(code: .invalidFrame, message: "Message is not valid in authenticated state")
         }
+    }
+
+    private func finishCodexUsage(
+        requestID: UUID,
+        generation: UInt64,
+        result: Result<RemoteCodexUsageSnapshot, RemoteProtocolError>
+    ) async throws {
+        guard generation == codexUsageGeneration, case .authenticated = state else { return }
+        codexUsageTask = nil
+        try await sendEncrypted(.codexUsageResult(.init(requestID: requestID, result: result)))
     }
 
     private func sendCatalog() async throws {

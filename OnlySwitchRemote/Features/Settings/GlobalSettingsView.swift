@@ -20,7 +20,7 @@ struct GlobalSettingsView: View {
                 Button {
                     store.send(.pairNewMacTapped)
                 } label: {
-                    settingsRowLabel("Pair New Mac", systemImage: "plus.circle")
+                    settingsRowLabel("Pair a Mac", systemImage: "plus.circle")
                 }
                 .buttonStyle(.plain)
             }

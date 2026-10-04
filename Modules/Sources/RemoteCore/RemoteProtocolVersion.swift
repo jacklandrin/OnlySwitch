@@ -1,5 +1,5 @@
 public struct RemoteProtocolVersion: Codable, Equatable, Sendable {
-    public static let current = Self(major: 1, minor: 4)
+    public static let current = Self(major: 1, minor: 5)
 
     public let major: UInt16
     public let minor: UInt16
@@ -24,4 +24,6 @@ public struct RemoteProtocolVersion: Codable, Equatable, Sendable {
     public var supportsSoundMixerRemote: Bool { minor >= 3 }
     /// System Monitor messages are only valid after both peers negotiated this capability.
     public var supportsSystemMonitorRemote: Bool { minor >= 4 }
+    /// Codex usage messages are only valid after both peers negotiated this capability.
+    public var supportsCodexUsageRemote: Bool { minor >= 5 }
 }

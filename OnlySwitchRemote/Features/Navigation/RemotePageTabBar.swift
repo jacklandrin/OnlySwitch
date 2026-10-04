@@ -7,7 +7,7 @@ struct RemotePageTabBar: View {
     static let visualHeight: CGFloat = 44
     static let minimumTouchHeight: CGFloat = 44
     static let contentBottomInset = minimumTouchHeight + 4
-    static let maximumWidth: CGFloat = 260
+    static let maximumWidth: CGFloat = 330
 
     @Binding var selection: RemoteAppPage
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -17,17 +17,18 @@ struct RemotePageTabBar: View {
     var body: some View {
         GeometryReader { proxy in
             let spacing: CGFloat = 4
-            let width = max(0, (proxy.size.width - spacing) / 2)
+            let width = max(0, (proxy.size.width - spacing * 2) / 3)
             ZStack(alignment: .leading) {
                 Capsule()
                     .fill(Color.accentColor.opacity(0.18))
                     .overlay { Capsule().stroke(Color.accentColor.opacity(0.45)) }
                     .frame(width: width, height: Self.visualHeight)
-                    .offset(x: selection == .controls ? 0 : width + spacing)
+                    .offset(x: CGFloat(selection.index) * (width + spacing))
                     .accessibilityHidden(true)
                 HStack(spacing: spacing) {
                     tabButton(.controls, title: "Controls", symbol: "switch.2")
                     tabButton(.systemMonitor, title: "System Monitor", symbol: "waveform.path.ecg")
+                    tabButton(.codexUsage, title: "Codex Usage", symbol: RemoteCodexUsagePresentation.tabSymbol)
                 }
             }
             .animation(reduceMotion ? nil : .smooth(duration: 0.28), value: selection)
@@ -71,4 +72,8 @@ struct RemotePageTabBar: View {
         .accessibilityAddTraits(selection == page ? .isSelected : [])
         .accessibilityHint("Shows this page")
     }
+}
+
+private extension RemoteAppPage {
+    var index: Int { switch self { case .controls: 0; case .systemMonitor: 1; case .codexUsage: 2 } }
 }

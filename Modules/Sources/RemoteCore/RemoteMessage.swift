@@ -145,6 +145,8 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
     case soundMixerCommand(RemoteSoundMixerCommand)
     case systemMonitorSubscriptionUpdate(Bool)
     case systemMonitorSnapshot(SystemMonitorSnapshot)
+    case codexUsageRequest(RemoteCodexUsageRequest)
+    case codexUsageResult(RemoteCodexUsageResult)
     case ping(UInt64)
     case pong(UInt64)
     case credentialRevoked
@@ -187,6 +189,8 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
         case soundMixerCommand
         case systemMonitorSubscriptionUpdate
         case systemMonitorSnapshot
+        case codexUsageRequest
+        case codexUsageResult
         case ping
         case pong
         case credentialRevoked
@@ -252,6 +256,10 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
             self = .systemMonitorSubscriptionUpdate(try container.decode(Bool.self, forKey: .payload))
         case .systemMonitorSnapshot:
             self = .systemMonitorSnapshot(try container.decode(SystemMonitorSnapshot.self, forKey: .payload))
+        case .codexUsageRequest:
+            self = .codexUsageRequest(try container.decode(RemoteCodexUsageRequest.self, forKey: .payload))
+        case .codexUsageResult:
+            self = .codexUsageResult(try container.decode(RemoteCodexUsageResult.self, forKey: .payload))
         case .ping:
             self = .ping(try container.decode(UInt64.self, forKey: .payload))
         case .pong:
@@ -344,6 +352,12 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
         case let .systemMonitorSnapshot(snapshot):
             try container.encode(Kind.systemMonitorSnapshot, forKey: .type)
             try container.encode(snapshot, forKey: .payload)
+        case let .codexUsageRequest(request):
+            try container.encode(Kind.codexUsageRequest, forKey: .type)
+            try container.encode(request, forKey: .payload)
+        case let .codexUsageResult(result):
+            try container.encode(Kind.codexUsageResult, forKey: .type)
+            try container.encode(result, forKey: .payload)
         case let .ping(nonce):
             try container.encode(Kind.ping, forKey: .type)
             try container.encode(nonce, forKey: .payload)

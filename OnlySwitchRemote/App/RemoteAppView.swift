@@ -24,6 +24,9 @@ struct RemoteAppView: View {
                             RemoteSystemMonitorView(store: store.scope(state: \.systemMonitor, action: \.systemMonitor))
                                 .ignoresSafeArea(edges: .bottom)
                                 .tag(RemoteAppPage.systemMonitor)
+                            RemoteCodexUsageView(store: store.scope(state: \.codexUsage, action: \.codexUsage))
+                                .ignoresSafeArea(edges: .bottom)
+                                .tag(RemoteAppPage.codexUsage)
                         }
                         .tabViewStyle(.page(indexDisplayMode: .never))
                         .ignoresSafeArea(edges: .bottom)
@@ -55,25 +58,27 @@ struct RemoteAppView: View {
                                     selectedMacID: store.selectedMacID,
                                     select: { store.send(.macSelected($0)) }
                                 )
-                                Button(
-                                    store.selectedPage == .systemMonitor
-                                        ? "Configure System Monitor"
-                                        : "Configure Controls",
-                                    systemImage: "slider.horizontal.3"
-                                ) {
-                                    if store.selectedPage == .systemMonitor {
-                                        store.send(.systemMonitor(.delegate(.openConfiguration)))
-                                    } else {
-                                        store.send(.controlsConfigurationButtonTapped)
+                                if store.selectedPage != .codexUsage {
+                                    Button(
+                                        store.selectedPage == .systemMonitor
+                                            ? "Configure System Monitor"
+                                            : "Configure Controls",
+                                        systemImage: "slider.horizontal.3"
+                                    ) {
+                                        if store.selectedPage == .systemMonitor {
+                                            store.send(.systemMonitor(.delegate(.openConfiguration)))
+                                        } else {
+                                            store.send(.controlsConfigurationButtonTapped)
+                                        }
                                     }
+                                    .labelStyle(.iconOnly)
+                                    .disabled(store.selectedMacID == nil)
+                                    .accessibilityHint(
+                                        store.selectedPage == .systemMonitor
+                                            ? "Choose and reorder System Monitor widgets"
+                                            : "Choose controls shown on the dashboard"
+                                    )
                                 }
-                                .labelStyle(.iconOnly)
-                                .disabled(store.selectedMacID == nil)
-                                .accessibilityHint(
-                                    store.selectedPage == .systemMonitor
-                                        ? "Choose and reorder System Monitor widgets"
-                                        : "Choose controls shown on the dashboard"
-                                )
                             }
                         }
                 } destination: { destinationStore in

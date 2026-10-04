@@ -39,6 +39,7 @@ public extension UserDefaults {
         public static let menubarCollapsable = "menubarCollapsableKey"
         //Switch
         public static let SwitchState = "SwitchStateKey"
+        public static let didInstallReverseScrollDirectionSwitch = "didInstallReverseScrollDirectionSwitchKey"
         //Shortcuts
         public static let shortcutsDic = "shortcutsDicKey"
         //Sort
@@ -72,6 +73,8 @@ public extension UserDefaults {
         //Sticker
         public static let sticker = "stickerKey"
         //OnlyAgent
+        public static let showCodexUsageTab = "showCodexUsageTabKey"
+        public static let didInstallCodexUsageSwitch = "didInstallCodexUsageSwitchKey"
         public static let currentAIModel = "currentAIModelKey"
         public static let ollamaUrl = "ollamaUrlKey"
         public static let ollamaModels = "ollamaModelsKey"
@@ -118,7 +121,7 @@ public extension UserDefaults {
             autoDimScreenTime, dimScreenPercent, syncExternalBrightness,
             nightShiftStrength, nightShiftStartDate, nightShiftEndDate, isNightShiftScheduleOn,
             sticker,
-            currentAIModel, ollamaUrl, openAIHost,
+            showCodexUsageTab, currentAIModel, ollamaUrl, openAIHost,
             keyLightBrightness,
             authenticatorEnabled,
             ScreenSaverInterval, checkUpdateOnLaunch, hideMenuAfterRunning, canPlayEffectSound,

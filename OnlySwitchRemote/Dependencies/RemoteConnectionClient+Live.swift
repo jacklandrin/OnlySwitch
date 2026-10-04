@@ -23,6 +23,7 @@ extension RemoteConnectionClient {
             forgetMac: { try await runtime.forgetMac($0) },
             subscribe: { try await runtime.subscribe($0) },
             send: { try await runtime.send($0) },
+            fetchCodexUsage: { try await runtime.fetchCodexUsage($0) },
             sendSoundMixer: { try await runtime.sendSoundMixer($0) },
             setSystemMonitorStreaming: { try await runtime.setSystemMonitorStreaming($0) },
             setForegrounded: { await runtime.setForegrounded($0) }
@@ -674,6 +675,26 @@ actor RemoteConnectionRuntime {
         else { throw RemoteProtocolError(code: .authenticationFailed, message: "The selected Mac session changed") }
         let result = try await actionDeadline(actionTimeout) {
             try await session.send(invocation.request)
+        }
+        guard selected?.id == invocation.macID,
+              sessionToken == invocation.sessionID,
+              self.session === session else {
+            throw RemoteProtocolError(code: .authenticationFailed, message: "The selected Mac session changed")
+        }
+        return result
+    }
+
+    func fetchCodexUsage(_ invocation: RemoteCodexUsageInvocation) async throws -> RemoteCodexUsageResult {
+        guard selected?.id == invocation.macID,
+              sessionToken == invocation.sessionID,
+              let session else {
+            throw RemoteProtocolError(code: .authenticationFailed, message: "The selected Mac session changed")
+        }
+        guard session.protocolVersion.supportsCodexUsageRemote else {
+            throw RemoteProtocolError(code: .upgradeRequired, message: "Update OnlySwitch on the selected Mac")
+        }
+        let result = try await Self.withTimeout(.seconds(45)) {
+            try await session.fetchCodexUsage(invocation.request)
         }
         guard selected?.id == invocation.macID,
               sessionToken == invocation.sessionID,
@@ -1485,6 +1506,7 @@ actor RemoteClientSession {
     private let event: @Sendable (RemoteMessage) async -> Void
     private let disconnected: @Sendable (Swift.Error) async -> Void
     private let actionResponses = RemoteActionResponses()
+    private let codexUsageResponses = RemoteCodexUsageResponses()
     private var receiveTask: Task<Void, Never>?
     private var closed = false
 
@@ -1684,6 +1706,21 @@ actor RemoteClientSession {
         }
     }
 
+    func fetchCodexUsage(_ request: RemoteCodexUsageRequest) async throws -> RemoteCodexUsageResult {
+        guard protocolVersion.supportsCodexUsageRemote else {
+            throw RemoteProtocolError(code: .upgradeRequired, message: "Update OnlySwitch on the selected Mac")
+        }
+        let registration = await codexUsageResponses.register(request.requestID)
+        do {
+            try await sendMessage(.codexUsageRequest(request))
+            for try await result in registration.stream { return result }
+            throw CancellationError()
+        } catch {
+            await codexUsageResponses.cancel(request.requestID, token: registration.token)
+            throw error
+        }
+    }
+
     func close() async {
         guard closed == false else { return }
         closed = true
@@ -1691,6 +1728,7 @@ actor RemoteClientSession {
         receiveTask = nil
         await io.cancel()
         await actionResponses.finishAll()
+        await codexUsageResponses.finishAll()
     }
 
     private func startReceiveLoopIfNeeded() {
@@ -1703,11 +1741,13 @@ actor RemoteClientSession {
             while Task.isCancelled == false {
                 let message = try await receiveMessage()
                 if case let .actionResult(result) = message { await actionResponses.resolve(result) }
+                if case let .codexUsageResult(result) = message { await codexUsageResponses.resolve(result) }
                 await event(message)
             }
         } catch is CancellationError {
         } catch {
             await actionResponses.finishAll()
+            await codexUsageResponses.finishAll()
             await disconnected(error)
         }
     }
@@ -1796,6 +1836,41 @@ private actor RemoteActionResponses {
         let values = continuations.values
         continuations.removeAll()
         for continuation in values { continuation.finish(throwing: CancellationError()) }
+    }
+}
+
+private actor RemoteCodexUsageResponses {
+    typealias Stream = AsyncThrowingStream<RemoteCodexUsageResult, Swift.Error>
+    struct Registration: Sendable {
+        let token: UUID
+        let stream: Stream
+    }
+    private struct Pending: Sendable {
+        let token: UUID
+        let continuation: Stream.Continuation
+    }
+    private var continuations: [UUID: Pending] = [:]
+    func register(_ id: UUID) -> Registration {
+        let (stream, continuation) = Stream.makeStream(of: RemoteCodexUsageResult.self, bufferingPolicy: .bufferingNewest(1))
+        let token = UUID()
+        continuations[id]?.continuation.finish(throwing: CancellationError())
+        continuations[id] = Pending(token: token, continuation: continuation)
+        continuation.onTermination = { [weak self] _ in Task { await self?.cancel(id, token: token) } }
+        return Registration(token: token, stream: stream)
+    }
+    func resolve(_ result: RemoteCodexUsageResult) {
+        guard let pending = continuations.removeValue(forKey: result.requestID) else { return }
+        pending.continuation.yield(result)
+        pending.continuation.finish()
+    }
+    func cancel(_ id: UUID, token: UUID) {
+        guard continuations[id]?.token == token else { return }
+        continuations.removeValue(forKey: id)?.continuation.finish(throwing: CancellationError())
+    }
+    func finishAll() {
+        let values = continuations.values
+        continuations.removeAll()
+        for pending in values { pending.continuation.finish(throwing: CancellationError()) }
     }
 }
 

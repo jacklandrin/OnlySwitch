@@ -15,6 +15,7 @@ import Defines
 import Extensions
 import Foundation
 import SystemMonitor
+import OnlyAgent
 
 struct OnlyControlView: View {
     @Environment(\.colorScheme) private var colorScheme
@@ -23,6 +24,7 @@ struct OnlyControlView: View {
     @ObservedObject private var authenticatorStore = AuthenticatorStore.shared
     @ObservedObject private var soundMixerVM = SoundMixerVM.shared
     @State private var currentDate = Date()
+    @AppStorage(UserDefaults.Key.showCodexUsageTab) private var showCodexUsageTab = true
     
     private let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
 
@@ -83,6 +85,8 @@ struct OnlyControlView: View {
                 soundMixerPage
             case .systemMonitor:
                 systemMonitorPage
+            case .codexUsage:
+                codexUsagePage
         }
     }
 
@@ -132,6 +136,15 @@ struct OnlyControlView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
 
+            footer
+        }
+    }
+
+    private var codexUsagePage: some View {
+        VStack(spacing: 0) {
+            if #available(macOS 14.0, *) {
+                CodexUsagePanelContainer()
+            }
             footer
         }
     }
@@ -202,7 +215,8 @@ struct OnlyControlView: View {
     private var sections: [SectionBar.Section] {
         SectionBar.sections(
             authenticator: authenticatorStore.enabled,
-            soundMixer: soundMixerVM.enabled
+            soundMixer: soundMixerVM.enabled,
+            codexUsage: showCodexUsageTab
         )
     }
 }

@@ -11,6 +11,7 @@ import SwiftUI
 import LaunchAtLogin
 import Switches
 import Utilities
+import OnlyAgent
 
 enum Focusable: Hashable {
   case none
@@ -29,6 +30,7 @@ struct OnlySwitchListView: View {
     @ObservedObject private var languageManager = LanguageManager.sharedManager
     @FocusState var focusedBar: Focusable?
     @State private var selectedSection: SectionBar.Section = .controls
+    @AppStorage(UserDefaults.Key.showCodexUsageTab) private var showCodexUsageTab = true
 
     let columns = [
         GridItem(.fixed(Layout.popoverWidth - 40)),
@@ -76,6 +78,10 @@ struct OnlySwitchListView: View {
                             SoundMixerPanelView()
                         case .systemMonitor:
                             SystemMonitorPanelContainer()
+                        case .codexUsage:
+                            if #available(macOS 14.0, *) {
+                                CodexUsagePanelContainer()
+                            }
                         }
                     }
                 }
@@ -510,7 +516,8 @@ struct OnlySwitchListView: View {
     var sections: [SectionBar.Section] {
         SectionBar.sections(
             authenticator: shouldShowAuthenticatorPanel,
-            soundMixer: soundMixerVM.enabled
+            soundMixer: soundMixerVM.enabled,
+            codexUsage: showCodexUsageTab
         )
     }
 

@@ -137,6 +137,12 @@ public struct ShowDockRecentCMD:SwitchCMD {
     public static let status:String = "defaults read com.apple.dock show-recents"
 }
 
+public struct ReverseScrollDirectionCMD: SwitchCMD {
+    public static let status = "defaults read -g com.apple.swipescrolldirection"
+    public static let on = "defaults write -g com.apple.swipescrolldirection -bool false"
+    public static let off = "defaults write -g com.apple.swipescrolldirection -bool true"
+}
+
 public struct ShorcutsCMD {
     public static let getList = "shortcuts list"
 

@@ -87,6 +87,8 @@ enum RemoteIconAdapter {
         case .authenticator: "key"
         case .soundMixer: "slider.horizontal.3"
         case .desktopPet: "pawprint"
+        case .codexUsage: "gauge.with.dots.needle.50percent"
+        case .reverseScrollDirection: "computermouse"
         }
     }
 }

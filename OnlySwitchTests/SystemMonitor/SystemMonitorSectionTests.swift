@@ -3,10 +3,10 @@ import Testing
 
 struct SystemMonitorSectionTests {
     @Test
-    func sectionOrderKeepsControlsFirstAndMonitorLast() {
+    func sectionOrderKeepsControlsFirstAndUsageLast() {
         #expect(
-            SectionBar.sections(authenticator: true, soundMixer: true)
-                == [.controls, .authenticator, .soundMixer, .systemMonitor]
+            SectionBar.sections(authenticator: true, soundMixer: true, codexUsage: true)
+                == [.controls, .authenticator, .soundMixer, .systemMonitor, .codexUsage]
         )
     }
 
@@ -25,15 +25,16 @@ struct SystemMonitorSectionTests {
     }
 
     @Test(arguments: [
-        (false, false, [SectionBar.Section.controls, .systemMonitor]),
-        (true, false, [.controls, .authenticator, .systemMonitor]),
-        (false, true, [.controls, .soundMixer, .systemMonitor])
+        (false, false, false, [SectionBar.Section.controls, .systemMonitor]),
+        (true, false, false, [.controls, .authenticator, .systemMonitor]),
+        (false, true, true, [.controls, .soundMixer, .systemMonitor, .codexUsage])
     ])
     func sectionOrderIncludesOnlyEnabledOptionalSections(
         authenticator: Bool,
         soundMixer: Bool,
+        codexUsage: Bool,
         expected: [SectionBar.Section]
     ) {
-        #expect(SectionBar.sections(authenticator: authenticator, soundMixer: soundMixer) == expected)
+        #expect(SectionBar.sections(authenticator: authenticator, soundMixer: soundMixer, codexUsage: codexUsage) == expected)
     }
 }

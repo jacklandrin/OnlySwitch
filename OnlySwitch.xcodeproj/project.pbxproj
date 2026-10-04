@@ -350,6 +350,10 @@
 		A1D0E10A2F0A000100BEEF01 /* SoundMixerSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E00B2F0A000100BEEF01 /* SoundMixerSwitch.swift */; };
 		A1D0E10C2F0A000100BEEF01 /* DesktopPetSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E00C2F0A000100BEEF01 /* DesktopPetSwitch.swift */; };
 		A1D0E10D2F0A000100BEEF01 /* DesktopPetSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E00C2F0A000100BEEF01 /* DesktopPetSwitch.swift */; };
+		B98000000000000000000002 /* CodexUsageSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B98000000000000000000001 /* CodexUsageSwitch.swift */; };
+		B98000000000000000000003 /* CodexUsageSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B98000000000000000000001 /* CodexUsageSwitch.swift */; };
+		B99000000000000000000002 /* ReverseScrollDirectionSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99000000000000000000001 /* ReverseScrollDirectionSwitch.swift */; };
+		B99000000000000000000003 /* ReverseScrollDirectionSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99000000000000000000001 /* ReverseScrollDirectionSwitch.swift */; };
 		A1D200012F0B000200BEEF01 /* PureColorView in Frameworks */ = {isa = PBXBuildFile; productRef = A1D201012F0B000200BEEF01 /* PureColorView */; };
 		A1D200022F0B000200BEEF01 /* StickerView in Frameworks */ = {isa = PBXBuildFile; productRef = A1D201022F0B000200BEEF01 /* StickerView */; };
 		A1D200032F0B000200BEEF01 /* Authenticator in Frameworks */ = {isa = PBXBuildFile; productRef = A1D201032F0B000200BEEF01 /* Authenticator */; };
@@ -424,6 +428,14 @@
 		C1A0F00218E9202600000001 /* PrivilegedAccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0F00518E9202600000001 /* PrivilegedAccessViewModel.swift */; };
 		C1A0F00318E9202600000001 /* PrivilegedAccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0F00618E9202600000001 /* PrivilegedAccessView.swift */; };
 		C1A0F00718E9202600000001 /* PrivilegedAccessViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0F00818E9202600000001 /* PrivilegedAccessViewModelTests.swift */; };
+		C0F000000000000000000002 /* RemoteCodexUsageFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F000000000000000000022 /* RemoteCodexUsageFeatureTests.swift */; };
+		C0F000000000000000000003 /* RemoteCodexUsageViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F000000000000000000023 /* RemoteCodexUsageViewTests.swift */; };
+		CADE00000000000000000001 /* RemoteCodexUsageProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADE00000000000000000021 /* RemoteCodexUsageProviderTests.swift */; };
+		CADE00000000000000000002 /* RemoteCodexUsageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADE00000000000000000022 /* RemoteCodexUsageProvider.swift */; };
+		CADE00000000000000000003 /* RemoteCodexUsageFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADE00000000000000000023 /* RemoteCodexUsageFeature.swift */; };
+		CADE00000000000000000004 /* RemoteCodexUsagePresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADE00000000000000000024 /* RemoteCodexUsagePresentation.swift */; };
+		CADE00000000000000000005 /* RemoteCodexUsageCardSurface.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADE00000000000000000025 /* RemoteCodexUsageCardSurface.swift */; };
+		CADE00000000000000000006 /* RemoteCodexUsageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADE00000000000000000026 /* RemoteCodexUsageView.swift */; };
 		C2CE44CA134851106759FA13 /* SoundMixerVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = A47E483C8C562DBBD024C25A /* SoundMixerVM.swift */; };
 		D35C00012F12000100D35C01 /* DesktopPet in Frameworks */ = {isa = PBXBuildFile; productRef = D35C00022F12000100D35C01 /* DesktopPet */; };
 		D35C00042F12000100D35C01 /* DesktopPet in Frameworks */ = {isa = PBXBuildFile; productRef = D35C00032F12000100D35C01 /* DesktopPet */; };
@@ -860,6 +872,8 @@
 		A1D0E00A2F0A000100BEEF01 /* AuthenticatorSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorSwitch.swift; sourceTree = "<group>"; };
 		A1D0E00B2F0A000100BEEF01 /* SoundMixerSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundMixerSwitch.swift; sourceTree = "<group>"; };
 		A1D0E00C2F0A000100BEEF01 /* DesktopPetSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesktopPetSwitch.swift; sourceTree = "<group>"; };
+		B98000000000000000000001 /* CodexUsageSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodexUsageSwitch.swift; sourceTree = "<group>"; };
+		B99000000000000000000001 /* ReverseScrollDirectionSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReverseScrollDirectionSwitch.swift; sourceTree = "<group>"; };
 		A47E483C8C562DBBD024C25A /* SoundMixerVM.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoundMixerVM.swift; sourceTree = "<group>"; };
 		A93C8BE02ECA34CB00D7CE52 /* AICommanderSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AICommanderSwitch.swift; sourceTree = "<group>"; };
 		A99F5CE8301140740029426A /* onlyswitch.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = onlyswitch.icon; sourceTree = "<group>"; };
@@ -930,6 +944,14 @@
 		C1A0F00518E9202600000001 /* PrivilegedAccessViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedAccessViewModel.swift; sourceTree = "<group>"; };
 		C1A0F00618E9202600000001 /* PrivilegedAccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedAccessView.swift; sourceTree = "<group>"; };
 		C1A0F00818E9202600000001 /* PrivilegedAccessViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedAccessViewModelTests.swift; sourceTree = "<group>"; };
+		C0F000000000000000000022 /* RemoteCodexUsageFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCodexUsageFeatureTests.swift; sourceTree = "<group>"; };
+		C0F000000000000000000023 /* RemoteCodexUsageViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCodexUsageViewTests.swift; sourceTree = "<group>"; };
+		CADE00000000000000000021 /* RemoteCodexUsageProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCodexUsageProviderTests.swift; sourceTree = "<group>"; };
+		CADE00000000000000000022 /* RemoteCodexUsageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCodexUsageProvider.swift; sourceTree = "<group>"; };
+		CADE00000000000000000023 /* RemoteCodexUsageFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCodexUsageFeature.swift; sourceTree = "<group>"; };
+		CADE00000000000000000024 /* RemoteCodexUsagePresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCodexUsagePresentation.swift; sourceTree = "<group>"; };
+		CADE00000000000000000025 /* RemoteCodexUsageCardSurface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCodexUsageCardSurface.swift; sourceTree = "<group>"; };
+		CADE00000000000000000026 /* RemoteCodexUsageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCodexUsageView.swift; sourceTree = "<group>"; };
 		DABA00000000000000000022 /* GlobalSettingsFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSettingsFeature.swift; sourceTree = "<group>"; };
 		DABA00000000000000000023 /* GlobalSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSettingsView.swift; sourceTree = "<group>"; };
 		DABA00000000000000000024 /* RemoteIdleTimerClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteIdleTimerClient.swift; sourceTree = "<group>"; };
@@ -1172,6 +1194,8 @@
 				A1D0E00A2F0A000100BEEF01 /* AuthenticatorSwitch.swift */,
 				A1D0E00B2F0A000100BEEF01 /* SoundMixerSwitch.swift */,
 				A1D0E00C2F0A000100BEEF01 /* DesktopPetSwitch.swift */,
+				B98000000000000000000001 /* CodexUsageSwitch.swift */,
+				B99000000000000000000001 /* ReverseScrollDirectionSwitch.swift */,
 				0447E33F2B71746C00D07B9A /* AirPodsSwitch.swift */,
 				0447E3382B71746C00D07B9A /* AppleMusicSwitch.swift */,
 				0447E3492B71746D00D07B9A /* AutohideDockSwitch.swift */,
@@ -2088,6 +2112,17 @@
 			path = Navigation;
 			sourceTree = "<group>";
 		};
+		CADE00000000000000000010 /* CodexUsage */ = {
+			isa = PBXGroup;
+			children = (
+				CADE00000000000000000023 /* RemoteCodexUsageFeature.swift */,
+				CADE00000000000000000024 /* RemoteCodexUsagePresentation.swift */,
+				CADE00000000000000000025 /* RemoteCodexUsageCardSurface.swift */,
+				CADE00000000000000000026 /* RemoteCodexUsageView.swift */,
+			);
+			path = CodexUsage;
+			sourceTree = "<group>";
+		};
 		C1A0B00518E9202600000001 /* PrivilegedOperations */ = {
 			isa = PBXGroup;
 			children = (
@@ -2178,6 +2213,8 @@
 		F3A300000000000000000007 /* OnlySwitchRemoteTests */ = {
 			isa = PBXGroup;
 			children = (
+				C0F000000000000000000022 /* RemoteCodexUsageFeatureTests.swift */,
+				C0F000000000000000000023 /* RemoteCodexUsageViewTests.swift */,
 				F3A300000000000000000016 /* RemoteAppSmokeTests.swift */,
 				F3A300000000000000000017 /* RemoteTestValues.swift */,
 				F3A800000000000000000021 /* RemotePersistenceClientTests.swift */,
@@ -2231,6 +2268,7 @@
 		F3A400000000000000000013 /* RemoteAccess */ = {
 			isa = PBXGroup;
 			children = (
+				CADE00000000000000000021 /* RemoteCodexUsageProviderTests.swift */,
 				F3A400000000000000000028 /* RemoteCatalogProviderTests.swift */,
 				F3A400000000000000000029 /* RemoteCommandRouterTests.swift */,
 				F3A40000000000000000002A /* RemoteMacTestValues.swift */,
@@ -2253,6 +2291,7 @@
 				F3A500000000000000000027 /* RemoteStatusScheduler.swift */,
 				F3A500000000000000000028 /* RemoteHost.swift */,
 				F3A500000000000000000029 /* RemoteHostClient.swift */,
+				CADE00000000000000000022 /* RemoteCodexUsageProvider.swift */,
 				F3AC00000000000000000021 /* RemoteCatalogMonitor.swift */,
 				F3A600000000000000000022 /* RemoteHostLifecycle.swift */,
 			);
@@ -2301,6 +2340,7 @@
 				F3A900000000000000000011 /* Pairing */,
 				F3A900000000000000000012 /* Settings */,
 				F3AB00000000000000000010 /* Dashboard */,
+				CADE00000000000000000010 /* CodexUsage */,
 				C0D000000000000000000010 /* SystemMonitor */,
 				C0D000000000000000000011 /* Navigation */,
 			);
@@ -2742,6 +2782,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CADE00000000000000000001 /* RemoteCodexUsageProviderTests.swift in Sources */,
 				B90000000000000000000002 /* MacSystemMonitorCollectorTests.swift in Sources */,
 				B90100000000000000000002 /* SystemMonitorPreferencesTests.swift in Sources */,
 				B90200000000000000000002 /* SystemMonitorSectionTests.swift in Sources */,
@@ -2771,6 +2812,8 @@
 				04E89D5F289B054C00667710 /* IOService.swift in Sources */,
 				0447E3862B71746E00D07B9A /* HiddenDesktopSwitch.swift in Sources */,
 				A1D0E10C2F0A000100BEEF01 /* DesktopPetSwitch.swift in Sources */,
+				B98000000000000000000002 /* CodexUsageSwitch.swift in Sources */,
+				B99000000000000000000002 /* ReverseScrollDirectionSwitch.swift in Sources */,
 				04FC161728402E5200D4A4AC /* ShortcutOnMarket.swift in Sources */,
 				0447E35E2B71746E00D07B9A /* AppleMusicSwitch.swift in Sources */,
 				0447E3942B71746E00D07B9A /* LowPowerModeSwitch.swift in Sources */,
@@ -2865,6 +2908,7 @@
 				F3A500000000000000000007 /* RemoteStatusScheduler.swift in Sources */,
 				F3A500000000000000000008 /* RemoteHost.swift in Sources */,
 				F3A500000000000000000009 /* RemoteHostClient.swift in Sources */,
+				CADE00000000000000000002 /* RemoteCodexUsageProvider.swift in Sources */,
 				F3AC00000000000000000001 /* RemoteCatalogMonitor.swift in Sources */,
 				F3A600000000000000000002 /* RemoteHostLifecycle.swift in Sources */,
 				F3A700000000000000000002 /* RemoteAccessSettingsFeature.swift in Sources */,
@@ -3041,6 +3085,8 @@
 				047C1E6A2A2298AB0061235D /* EvolutionListService+Test.swift in Sources */,
 				0447E3872B71746E00D07B9A /* HiddenDesktopSwitch.swift in Sources */,
 				A1D0E10D2F0A000100BEEF01 /* DesktopPetSwitch.swift in Sources */,
+				B98000000000000000000003 /* CodexUsageSwitch.swift in Sources */,
+				B99000000000000000000003 /* ReverseScrollDirectionSwitch.swift in Sources */,
 				04819CD52BBC8A6700645A0C /* KeyLightSwitch.swift in Sources */,
 				04581DB02764CBCF008ADF30 /* SettingsVM.swift in Sources */,
 				04E03B06275FEBE200EA5FB9 /* AirPodsBatteryView.swift in Sources */,
@@ -3182,6 +3228,10 @@
 				C0E000000000000000000002 /* RemoteSystemMonitorCardSurface.swift in Sources */,
 				C0E000000000000000000003 /* RemoteSystemMonitorConfigurationFeature.swift in Sources */,
 				C0E000000000000000000004 /* RemoteSystemMonitorConfigurationView.swift in Sources */,
+				CADE00000000000000000003 /* RemoteCodexUsageFeature.swift in Sources */,
+				CADE00000000000000000004 /* RemoteCodexUsagePresentation.swift in Sources */,
+				CADE00000000000000000005 /* RemoteCodexUsageCardSurface.swift in Sources */,
+				CADE00000000000000000006 /* RemoteCodexUsageView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3189,6 +3239,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0F000000000000000000002 /* RemoteCodexUsageFeatureTests.swift in Sources */,
+				C0F000000000000000000003 /* RemoteCodexUsageViewTests.swift in Sources */,
 				F3A300000000000000000024 /* RemoteAppSmokeTests.swift in Sources */,
 				F3A300000000000000000025 /* RemoteTestValues.swift in Sources */,
 				F3A800000000000000000001 /* RemotePersistenceClientTests.swift in Sources */,

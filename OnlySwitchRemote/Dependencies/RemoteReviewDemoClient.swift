@@ -444,6 +444,29 @@ extension RemoteConnectionClient {
             forgetMac: { await runtime.forget($0) },
             subscribe: { try await runtime.subscribe($0) },
             send: { try await runtime.send($0) },
+            fetchCodexUsage: { invocation in
+                let snapshot = await runtime.connectionSnapshot()
+                guard invocation.macID == snapshot.authenticatedMacID,
+                      invocation.sessionID == snapshot.authenticatedSessionID else {
+                    throw RemoteProtocolError(code: .authenticationFailed, message: "The selected Mac session changed")
+                }
+                return .init(
+                    requestID: invocation.request.requestID,
+                    result: .success(.init(
+                        account: .init(email: "review@example.com", plan: "Plus"),
+                        session: .init(remainingPercent: 82, resetAt: Date(timeIntervalSince1970: 1_800_003_600)),
+                        weekly: .init(remainingPercent: 64, resetAt: Date(timeIntervalSince1970: 1_800_604_800)),
+                        resetCredits: .available(count: 3, expiresAt: Date(timeIntervalSince1970: 1_800_086_400)),
+                        creditBalance: .available(remaining: 12.5, limit: 50, unit: "credits"),
+                        source: .oauth,
+                        fetchedAt: Date(timeIntervalSince1970: 1_800_000_000),
+                        activity: invocation.request.includeLocalActivity ? .init(
+                            dailyUsage: [.init(date: Date(timeIntervalSince1970: 1_800_000_000), tokenCount: 12_345)],
+                            isPartial: false
+                        ) : nil
+                    ))
+                )
+            },
             sendSoundMixer: { _ in },
             setSystemMonitorStreaming: { _ in },
             setForegrounded: { _ in }

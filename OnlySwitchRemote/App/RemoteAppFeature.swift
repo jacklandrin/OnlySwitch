@@ -4,6 +4,7 @@ import Foundation
 enum RemoteAppPage: Hashable, Sendable {
     case controls
     case systemMonitor
+    case codexUsage
 }
 
 @Reducer
@@ -17,6 +18,7 @@ struct RemoteAppFeature {
         var dashboard = DashboardFeature.State()
         var selectedPage: RemoteAppPage = .controls
         var systemMonitor = RemoteSystemMonitorFeature.State()
+        var codexUsage = RemoteCodexUsageFeature.State()
         var systemMonitorLayoutGeneration: UInt64 = 0
         var connectedMacIDs: Set<UUID> = []
         var activeSessionID: UUID?
@@ -117,6 +119,7 @@ struct RemoteAppFeature {
         case pageSelected(RemoteAppPage)
         case dashboard(DashboardFeature.Action)
         case systemMonitor(RemoteSystemMonitorFeature.Action)
+        case codexUsage(RemoteCodexUsageFeature.Action)
         case requiredGlobalSettings(GlobalSettingsFeature.Action)
         case path(StackActionOf<Path>)
     }
@@ -135,6 +138,7 @@ struct RemoteAppFeature {
     var body: some ReducerOf<Self> {
         Scope(state: \.dashboard, action: \.dashboard) { DashboardFeature() }
         Scope(state: \.systemMonitor, action: \.systemMonitor) { RemoteSystemMonitorFeature() }
+        Scope(state: \.codexUsage, action: \.codexUsage) { RemoteCodexUsageFeature() }
         Reduce { state, action in
             switch action {
             case .task:
@@ -194,7 +198,8 @@ struct RemoteAppFeature {
                     syncSettingsState(&state)
                     state.hasCompletedInitialSetup = false
                     var effects: [Effect<Action>] = [
-                        .run { [connection] _ in await connection.select(nil) }
+                        .run { [connection] _ in await connection.select(nil) },
+                        .send(.codexUsage(.contextChanged(macID: nil, sessionID: nil)))
                     ]
                     if hadCompletedInitialSetup || response.selectedMacID != nil {
                         effects.append(beginPersistence(
@@ -215,7 +220,8 @@ struct RemoteAppFeature {
                 syncSettingsState(&state)
                 var effects: [Effect<Action>] = [
                     .run { [connection] _ in await connection.select(selected) },
-                    loadSystemMonitorLayout(for: selected.id, state: &state)
+                    loadSystemMonitorLayout(for: selected.id, state: &state),
+                    .send(.codexUsage(.contextChanged(macID: selected.id, sessionID: state.activeSessionID)))
                 ]
                 if hadCompletedInitialSetup == false || response.selectedMacID != selected.id {
                     effects.append(beginPersistence(
@@ -233,7 +239,7 @@ struct RemoteAppFeature {
                     ? snapshot.authenticatedSessionID
                     : nil
                 syncSettingsState(&state)
-                return .none
+                return .send(.codexUsage(.contextChanged(macID: state.selectedMacID, sessionID: state.activeSessionID)))
 
             case let .connectionEvent(event):
                 state.connectionEventRevision &+= 1
@@ -262,30 +268,34 @@ struct RemoteAppFeature {
                     syncSettingsState(&state)
                     return forwardToDashboard(event, alongside: refreshPairedMetadata(state: &state), state: state)
                 case let .revoked(id):
+                    guard id == state.selectedMacID else { return forwardToDashboard(event, state: state) }
                     state.activeSessionID = nil
                     if state.connectedMacIDs.contains(id) {
                         state.connectedMacIDs.removeAll()
                         syncSettingsState(&state)
                     }
                     updateConnectionStatus(.needsPairing, for: id, state: &state)
-                    return forwardToDashboard(event, alongside: refreshPairedMetadata(state: &state), state: state)
+                    return .merge(forwardToDashboard(event, alongside: refreshPairedMetadata(state: &state), state: state), .send(.codexUsage(.contextChanged(macID: state.selectedMacID, sessionID: nil))))
                 case let .offline(id, reason):
+                    guard id == state.selectedMacID else { return forwardToDashboard(event, state: state) }
                     state.activeSessionID = nil
                     if state.connectedMacIDs.contains(id) {
                         state.connectedMacIDs.removeAll()
                         syncSettingsState(&state)
                     }
                     updateConnectionStatus(.offline(reason), for: id, state: &state)
-                    return forwardToDashboard(event, state: state)
+                    return .merge(forwardToDashboard(event, state: state), .send(.codexUsage(.contextChanged(macID: state.selectedMacID, sessionID: nil))))
                 case let .connecting(id):
+                    guard id == state.selectedMacID else { return forwardToDashboard(event, state: state) }
                     state.activeSessionID = nil
                     state.connectedMacIDs.removeAll()
                     syncSettingsState(&state)
                     updateConnectionStatus(.connecting, for: id, state: &state)
-                    return forwardToDashboard(event, state: state)
-                case let .sessionStarted(_, sessionID):
+                    return .merge(forwardToDashboard(event, state: state), .send(.codexUsage(.contextChanged(macID: state.selectedMacID, sessionID: nil))))
+                case let .sessionStarted(macID, sessionID):
+                    guard macID == state.selectedMacID else { return forwardToDashboard(event, state: state) }
                     state.activeSessionID = sessionID
-                    return forwardToDashboard(event, state: state)
+                    return .merge(forwardToDashboard(event, state: state), .send(.codexUsage(.contextChanged(macID: macID, sessionID: sessionID))))
                 case .catalog, .catalogInvalidated, .statusSnapshot, .status, .action, .soundMixer, .systemMonitor:
                     return forwardToDashboard(event, state: state)
                 }
@@ -316,11 +326,17 @@ struct RemoteAppFeature {
                    state.pairedMacs[id: selectedMacID] == nil {
                     state.selectedMacID = state.pairedMacs.first?.id
                     state.connectedMacIDs.removeAll()
+                    state.activeSessionID = nil
                 }
                 syncSettingsState(&state)
-                guard previousSelectedMacID != state.selectedMacID,
-                      let selectedMacID = state.selectedMacID else { return .none }
-                return loadSystemMonitorLayout(for: selectedMacID, state: &state)
+                guard previousSelectedMacID != state.selectedMacID else { return .none }
+                guard let selectedMacID = state.selectedMacID else {
+                    return .send(.codexUsage(.contextChanged(macID: nil, sessionID: nil)))
+                }
+                return .merge(
+                    loadSystemMonitorLayout(for: selectedMacID, state: &state),
+                    .send(.codexUsage(.contextChanged(macID: selectedMacID, sessionID: nil)))
+                )
 
             case let .systemMonitorLayoutLoaded(generation, macID, result):
                 guard generation == state.systemMonitorLayoutGeneration,
@@ -406,6 +422,7 @@ struct RemoteAppFeature {
                 } else if foregrounded, state.selectedPage == .systemMonitor {
                     effects.append(.send(.systemMonitor(.visibilityChanged(true))))
                 }
+                effects.append(.send(.codexUsage(.visibilityChanged(foregrounded && state.selectedPage == .codexUsage))))
                 effects.append(
                     .run { [connection] send in
                         await connection.setForegrounded(foregrounded)
@@ -425,7 +442,10 @@ struct RemoteAppFeature {
             case let .pageSelected(page):
                 guard state.selectedPage != page else { return .none }
                 state.selectedPage = page
-                return .send(.systemMonitor(.visibilityChanged(page == .systemMonitor)))
+                return .merge(
+                    .send(.systemMonitor(.visibilityChanged(page == .systemMonitor))),
+                    .send(.codexUsage(.visibilityChanged(page == .codexUsage && state.isForegrounded)))
+                )
 
             case .dashboard(.delegate(.openSettings)):
                 return .send(.controlsConfigurationButtonTapped)
@@ -506,7 +526,7 @@ struct RemoteAppFeature {
                 state.systemMonitor.layout = layout
                 return .none
 
-            case .dashboard, .systemMonitor, .requiredGlobalSettings, .path:
+            case .dashboard, .systemMonitor, .codexUsage, .requiredGlobalSettings, .path:
                 return .none
             }
         }
@@ -536,7 +556,8 @@ struct RemoteAppFeature {
         var effects: [Effect<Action>] = [
             .cancel(id: CancelID.metadataRefresh),
             .concatenate(persistenceEffect, adoptionEffect),
-            loadSystemMonitorLayout(for: mac.id, state: &state)
+            loadSystemMonitorLayout(for: mac.id, state: &state),
+            .send(.codexUsage(.contextChanged(macID: mac.id, sessionID: nil)))
         ]
         if state.dashboard.isActive { effects.append(.send(.dashboard(.task))) }
         return .merge(effects)
@@ -552,6 +573,7 @@ struct RemoteAppFeature {
         syncSettingsState(&state)
         state.rootIssue = nil
         var effects: [Effect<Action>] = [
+            .send(.codexUsage(.contextChanged(macID: mac.id, sessionID: nil))),
             beginPersistence(
                 selectedMacID: mac.id,
                 hasCompletedInitialSetup: true,
@@ -581,6 +603,7 @@ struct RemoteAppFeature {
                 state: &state
             ),
             .run { [connection] _ in await connection.select(nil) },
+            .send(.codexUsage(.contextChanged(macID: nil, sessionID: nil))),
             .merge(activeActionIDs.map {
                 .cancel(id: DashboardFeature.CancelID.action($0))
             })

@@ -23,6 +23,7 @@ actor RemoteHost {
     private let commitStageReached: @Sendable (RemotePairingCommitStage) async -> Void
     private let authenticatedSessionObserver: @Sendable () -> Void
     private let systemMonitorSnapshots: @Sendable () -> AsyncThrowingStream<SystemMonitorSnapshot, Error>
+    private let codexUsage: @Sendable (Bool) async -> Result<RemoteCodexUsageSnapshot, RemoteProtocolError>
     private var eventContinuations: [
         UUID: AsyncStream<RemoteHostEvent>.Continuation
     ] = [:]
@@ -55,7 +56,8 @@ actor RemoteHost {
         authenticatedSessionObserver: @escaping @Sendable () -> Void = {},
         systemMonitorSnapshots: @escaping @Sendable () -> AsyncThrowingStream<SystemMonitorSnapshot, Error> = {
             MacSystemMonitorCollector.liveClient().snapshots()
-        }
+        },
+        codexUsage: @escaping @Sendable (Bool) async -> Result<RemoteCodexUsageSnapshot, RemoteProtocolError> = RemoteCodexUsageProvider.live.fetch
     ) {
         self.credentialStore = credentialStore
         self.catalogProvider = catalogProvider
@@ -71,6 +73,7 @@ actor RemoteHost {
         self.commitStageReached = commitStageReached
         self.authenticatedSessionObserver = authenticatedSessionObserver
         self.systemMonitorSnapshots = systemMonitorSnapshots
+        self.codexUsage = codexUsage
         self.statusScheduler = RemoteStatusScheduler(provider: catalogProvider)
         self.catalogMonitor = RemoteCatalogMonitor(provider: catalogProvider)
     }
@@ -100,6 +103,9 @@ actor RemoteHost {
         finalizeRepairObserver: @escaping @Sendable (UUID) -> Void = { _ in },
         systemMonitorSnapshots: @escaping @Sendable () -> AsyncThrowingStream<SystemMonitorSnapshot, Error> = {
             MacSystemMonitorCollector.liveClient().snapshots()
+        },
+        codexUsage: @escaping @Sendable (Bool) async -> Result<RemoteCodexUsageSnapshot, RemoteProtocolError> = { _ in
+            .failure(.init(code: .actionNotSupported, message: "Codex usage is unavailable"))
         }
     ) -> RemoteHost {
         let fixedProvider = RemoteCatalogProvider(
@@ -133,7 +139,8 @@ actor RemoteHost {
             authenticationResultSender: authenticationResultSender,
             commitStageReached: commitStageReached,
             authenticatedSessionObserver: authenticatedSessionObserver,
-            systemMonitorSnapshots: systemMonitorSnapshots
+            systemMonitorSnapshots: systemMonitorSnapshots,
+            codexUsage: codexUsage
         )
     }
 
@@ -431,6 +438,7 @@ actor RemoteHost {
                 ) ?? false
             },
             systemMonitorSnapshots: systemMonitorSnapshots,
+            codexUsage: codexUsage,
             authenticationResultSender: authenticationResultSender,
             commitStageReached: commitStageReached,
             ended: { [weak self] id in await self?.sessionEnded(id) },
