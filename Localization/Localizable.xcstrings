@@ -7962,7 +7962,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Control OnlySwitch z vašeho iPhone nebo iPad, když jsou obě zařízení ve stejné místní síti."
+            "value" : "Ovládejte OnlySwitch z iPhonu nebo iPadu, když jsou obě zařízení ve stejné místní síti."
           }
         },
         "de" : {
@@ -7992,13 +7992,13 @@
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Control OnlySwitch s vašeg iPhonea ili iPada kada su oba uređaja na istoj lokalnoj mreži."
+            "value" : "Upravljajte aplikacijom OnlySwitch sa svog iPhonea ili iPada kada su oba uređaja na istoj lokalnoj mreži."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Controlla solo il passaggio dal tuo iPhone o iPad quando entrambi i dispositivi si trovano sulla stessa rete locale."
+            "value" : "Controlla OnlySwitch dal tuo iPhone o iPad quando entrambi i dispositivi sono sulla stessa rete locale."
           }
         },
         "ja" : {
@@ -8022,7 +8022,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Control OnlySwitch z iPhone'a lub iPada, gdy oba urządzenia znajdują się w tej samej sieci lokalnej."
+            "value" : "Steruj OnlySwitch z iPhone’a lub iPada, gdy oba urządzenia są w tej samej sieci lokalnej."
           }
         },
         "pt-BR" : {
@@ -8046,31 +8046,31 @@
         "so" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ka xakamee KeliyaSwitch ka iPhone-kaaga ama iPad-kaaga marka labada qalabba ay ku jiraan isku shabakad maxalli ah."
+            "value" : "Ka maamul OnlySwitch iPhone-kaaga ama iPad-kaaga marka labada qalab ay ku jiraan isla shabakadda maxalliga ah."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Her iki cihaz da aynı yerel ağda olduğunda Yalnızca Kontrol iPhone veya iPad'inizden geçiş yapın."
+            "value" : "Her iki cihaz aynı yerel ağdayken OnlySwitch’i iPhone veya iPad’inizden kontrol edin."
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Control OnlySwitch з вашого iPhone або iPad, коли обидва пристрої підключені до однієї локальної мережі."
+            "value" : "Керуйте OnlySwitch з iPhone або iPad, коли обидва пристрої підключені до однієї локальної мережі."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "当 iPhone 或 iPad 位于同一本地网络时，仅控制这两个设备的切换。"
+            "value" : "当 iPhone 或 iPad 与 Mac 连接到同一局域网时，即可通过 iPhone 或 iPad 控制 OnlySwitch。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "當 iPhone 或 iPad 位於同一本地網路時，僅控制這兩個裝置的切換。"
+            "value" : "當 iPhone 或 iPad 與 Mac 連線至同一區域網路時，即可透過 iPhone 或 iPad 控制 OnlySwitch。"
           }
         }
       }
