@@ -105,6 +105,21 @@ struct OnlyRemoteCampaignFeatureTests {
     }
 
     @Test
+    func qrCodeTappedMarksCurrentVersionWithoutOpeningAppStore() async {
+        let recorder = OnlyRemoteCampaignRecorder(currentVersion: "3.1.0", acknowledgedVersion: nil)
+        let store = TestStore(initialState: .init(isPresented: true)) {
+            OnlyRemoteCampaignFeature()
+        } withDependencies: {
+            $0.onlyRemoteCampaign = recorder.client
+        }
+
+        await store.send(.showQRCodeTapped) { $0.isPresented = false }
+        await store.finish()
+        #expect(await recorder.acknowledgedVersions == ["3.1.0"])
+        #expect(await recorder.appStoreOpenCount == 0)
+    }
+
+    @Test
     func remoteAccessSettingsMarksCurrentVersionHidesCampaignAndOpensSettings() async {
         let recorder = OnlyRemoteCampaignRecorder(
             currentVersion: "3.1.0",

@@ -26,6 +26,21 @@ struct AdsModelTests {
         #expect(ad.id == "https://apps.apple.com/app/id6793657946")
         #expect(ad.imageURL.absoluteString.hasSuffix("Ads/OnlyRemote.png"))
         #expect(ad.hint == "Download OnlyRemote on the App Store")
+        #expect(ad.qrcode == nil)
+    }
+
+    @Test("Prefers a QR code destination when present")
+    func decodesQRCodeDestinationWithoutLink() throws {
+        let data = Data("""
+        [{
+          "imageURL": "https://example.com/ad.png",
+          "qrcode": "https://example.com/qr.png",
+          "hint": "Scan me"
+        }]
+        """.utf8)
+        let ad = try #require(AdsModel.decode(from: data).first)
+        #expect(ad.link == nil)
+        #expect(ad.qrcode?.absoluteString == "https://example.com/qr.png")
     }
 
     @Test("Rejects ad records without a valid image URL")

@@ -12,6 +12,7 @@ struct OnlyRemoteCampaignFeature {
         case launch(forcePresentation: Bool)
         case dismissTapped
         case downloadTapped
+        case showQRCodeTapped
         case openRemoteAccessSettingsTapped
     }
 
@@ -39,6 +40,14 @@ struct OnlyRemoteCampaignFeature {
                 return .run { _ in
                     await campaign.markAcknowledged(version)
                     await campaign.openAppStore()
+                }
+
+            case .showQRCodeTapped:
+                guard state.isPresented else { return .none }
+                state.isPresented = false
+                let version = campaign.currentVersion()
+                return .run { _ in
+                    await campaign.markAcknowledged(version)
                 }
 
             case .openRemoteAccessSettingsTapped:

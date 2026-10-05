@@ -372,7 +372,13 @@ struct OnlySwitchListView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 5) {
                 ForEach(Ads) { ad in
-                    Link(destination: ad.link) {
+                    Button {
+                        if let qrcode = ad.qrcode {
+                            QRCodeWindowController.shared.show(url: qrcode)
+                        } else if let link = ad.link {
+                            NSWorkspace.shared.open(link)
+                        }
+                    } label: {
                         AsyncImage(url: ad.imageURL) { phase in
                             if let image = phase.image {
                                 image
@@ -396,6 +402,7 @@ struct OnlySwitchListView: View {
                                 .opacity(0.5)
                         )
                     }
+                    .buttonStyle(.plain)
                 }
             }
         }

@@ -5,6 +5,7 @@ import SwiftUI
 struct OnlyRemoteCampaignView: View {
     let store: StoreOf<OnlyRemoteCampaignFeature>
     let closeWindow: () -> Void
+    let showQRCode: () -> Void
 
     var body: some View {
         WithPerceptionTracking {
@@ -34,10 +35,11 @@ struct OnlyRemoteCampaignView: View {
 
                 VStack(spacing: 12) {
                     Button {
-                        store.send(.downloadTapped)
+                        store.send(.showQRCodeTapped)
                         closeWindow()
+                        showQRCode()
                     } label: {
-                        Label("Download on the App Store".localized(), systemImage: "apple.logo")
+                        Label("Download OnlyRemote on the App Store".localized(), systemImage: "qrcode")
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
