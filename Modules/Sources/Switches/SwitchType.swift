@@ -352,7 +352,7 @@ public enum SwitchType: UInt64, CaseIterable, Sendable {
             )
         case .reverseScrollDirection:
             return SwitchBarInfo(
-                title: "Reverse Scroll Direction",
+                title: "Natural Scrolling",
                 onImage: NSImage(systemSymbolName: "computermouse.fill"),
                 offImage: NSImage(systemSymbolName: "computermouse")
             )

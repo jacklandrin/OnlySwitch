@@ -48234,127 +48234,127 @@
         }
       }
     },
-    "Reverse Scroll Direction" : {
+    "Natural Scrolling" : {
       "extractionState" : "manual",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Obrátit směr posouvání"
+            "value" : "Přirozené posouvání"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Scrollrichtung umkehren"
+            "value" : "Natürliches Scrollen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Reverse Scroll Direction"
+            "value" : "Natural Scrolling"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Invertir dirección de desplazamiento"
+            "value" : "Desplazamiento natural"
           }
         },
         "fil" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Baligtarin ang Direksyon ng Pag-scroll"
+            "value" : "Natural na Pag-scroll"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Inverser le sens du défilement"
+            "value" : "Défilement naturel"
           }
         },
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Obrni smjer pomicanja"
+            "value" : "Prirodno pomicanje"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Inverti direzione di scorrimento"
+            "value" : "Scorrimento naturale"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "スクロール方向を反転"
+            "value" : "ナチュラルスクロール"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "스크롤 방향 반전"
+            "value" : "자연스러운 스크롤"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Scrollrichting omkeren"
+            "value" : "Natuurlijk scrollen"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Odwróć kierunek przewijania"
+            "value" : "Naturalne przewijanie"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Inverter direção da rolagem"
+            "value" : "Rolagem natural"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Инвертировать направление прокрутки"
+            "value" : "Естественная прокрутка"
           }
         },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Obrátiť smer posúvania"
+            "value" : "Prirodzené posúvanie"
           }
         },
         "so" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rog jihada rogista"
+            "value" : "Rogista dabiiciga ah"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kaydırma Yönünü Tersine Çevir"
+            "value" : "Doğal Kaydırma"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Інвертувати напрямок прокручування"
+            "value" : "Природне прокручування"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "反转滚动方向"
+            "value" : "自然滚动"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "反轉捲動方向"
+            "value" : "自然捲動"
           }
         }
       }

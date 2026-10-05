@@ -40,6 +40,8 @@ public extension UserDefaults {
         //Switch
         public static let SwitchState = "SwitchStateKey"
         public static let didInstallReverseScrollDirectionSwitch = "didInstallReverseScrollDirectionSwitchKey"
+        public static let reverseScrollDirectionEnabled = "reverseScrollDirectionEnabledKey"
+        public static let reverseScrollDirectionOriginalNaturalScrolling = "reverseScrollDirectionOriginalNaturalScrollingKey"
         //Shortcuts
         public static let shortcutsDic = "shortcutsDicKey"
         //Sort
@@ -111,7 +113,7 @@ public extension UserDefaults {
             WorkDuration, RestDuration, RestAlert, WorkAlert, AllowNotificationAlert, PTimerCycleCount,
             soundWaveEffectDisplay, volume, allowNotificationChangingStation, allowNotificationTrack, radioEnable,
             isMenubarCollapse, autoCollapseMenubarTime, menubarCollapsable,
-            SwitchState,
+            SwitchState, reverseScrollDirectionEnabled,
             shortcutsDic,
             orderWeight, onlyControlOrderWeight,
             soundMixerEnabled,

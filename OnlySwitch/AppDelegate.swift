@@ -206,6 +206,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         setupDesktopPet()
 
         SwitchManager.shared.registerSwitchesShouldShow()
+        _ = ReverseScrollDirectionController.shared.currentStatus()
 
         blManager = BluetoothDevicesManager.shared
         RadioStationSwitch.shared.setDefaultRadioStations()
@@ -239,6 +240,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationWillTerminate(_ notification: Notification) {
+        ReverseScrollDirectionController.shared.suspendForTermination()
         stopDesktopPetPomodoroRefresh()
         OnlyControlWindow.shared.onVisibilityChanged = nil
         NotificationCenter.default.removeObserver(

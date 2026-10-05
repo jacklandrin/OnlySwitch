@@ -218,7 +218,7 @@ class OnlySwitchTests: XCTestCase {
 }
 
 @MainActor
-@Test func reverseScrollDirectionBuiltInSwitchMapsStatusAndCommands() async throws {
+@Test func reverseScrollDirectionBuiltInSwitchMapsStatusAndControllerRequests() async throws {
     var isReversed = false
     var writes: [Bool] = []
     let control = ReverseScrollDirectionSwitch(
@@ -231,9 +231,8 @@ class OnlySwitchTests: XCTestCase {
 
     #expect(control.type == .reverseScrollDirection)
     #expect(SwitchType.reverseScrollDirection.rawValue == 1 << 41)
-    #expect(SwitchType.reverseScrollDirection.barInfo().title == "Reverse Scroll Direction")
-    #expect(ReverseScrollDirectionCMD.on.hasSuffix("-bool false"))
-    #expect(ReverseScrollDirectionCMD.off.hasSuffix("-bool true"))
+    #expect(SwitchType.reverseScrollDirection.barInfo().title == "Natural Scrolling")
+    #expect(control.isVisible())
     #expect(await control.currentStatus() == false)
 
     try await control.operateSwitch(isOn: true)
@@ -264,6 +263,189 @@ class OnlySwitchTests: XCTestCase {
 
 private enum ReverseScrollDirectionTestError: Error {
     case failed
+}
+
+struct ScrollWheelEventTraitsTests {
+    @Test func ordinaryVerticalWheelIsInverted() {
+        let traits = ScrollWheelEventTraits(
+            isContinuous: false,
+            scrollPhase: 0,
+            momentumPhase: 0,
+            tabletDeviceID: 0,
+            sourceUserData: 0,
+            vertical: .init(line: 3, point: 24, fixedPoint: 24 << 16),
+            horizontal: .init(line: 0, point: 0, fixedPoint: 0)
+        )
+
+        #expect(traits.shouldInvert)
+    }
+
+    @Test func continuousTrackpadEventPassesThrough() {
+        let traits = ScrollWheelEventTraits(
+            isContinuous: true,
+            scrollPhase: 0,
+            momentumPhase: 0,
+            tabletDeviceID: 0,
+            sourceUserData: 0,
+            vertical: .init(line: 1, point: 8, fixedPoint: 8 << 16),
+            horizontal: .init(line: 0, point: 0, fixedPoint: 0)
+        )
+
+        #expect(traits.shouldInvert == false)
+    }
+
+    @Test func phaseBearingEventsPassThrough() {
+        let gesture = ScrollWheelEventTraits(
+            isContinuous: false,
+            scrollPhase: 1,
+            momentumPhase: 0,
+            tabletDeviceID: 0,
+            sourceUserData: 0,
+            vertical: .init(line: 1, point: 8, fixedPoint: 8 << 16),
+            horizontal: .init(line: 0, point: 0, fixedPoint: 0)
+        )
+        let momentum = ScrollWheelEventTraits(
+            isContinuous: false,
+            scrollPhase: 0,
+            momentumPhase: 1,
+            tabletDeviceID: 0,
+            sourceUserData: 0,
+            vertical: .init(line: 1, point: 8, fixedPoint: 8 << 16),
+            horizontal: .init(line: 0, point: 0, fixedPoint: 0)
+        )
+
+        #expect(gesture.shouldInvert == false)
+        #expect(momentum.shouldInvert == false)
+    }
+
+    @Test func tabletAndDiagonalEventsPassThrough() {
+        let tablet = ScrollWheelEventTraits(
+            isContinuous: false,
+            scrollPhase: 0,
+            momentumPhase: 0,
+            tabletDeviceID: 7,
+            sourceUserData: 0,
+            vertical: .init(line: 1, point: 8, fixedPoint: 8 << 16),
+            horizontal: .init(line: 0, point: 0, fixedPoint: 0)
+        )
+        let diagonal = ScrollWheelEventTraits(
+            isContinuous: false,
+            scrollPhase: 0,
+            momentumPhase: 0,
+            tabletDeviceID: 0,
+            sourceUserData: 0,
+            vertical: .init(line: 1, point: 8, fixedPoint: 8),
+            horizontal: .init(line: 1, point: 4, fixedPoint: 4 << 16)
+        )
+
+        #expect(tablet.shouldInvert == false)
+        #expect(diagonal.shouldInvert == false)
+    }
+
+    @Test func syntheticReplacementEventPassesThrough() {
+        let traits = ScrollWheelEventTraits(
+            isContinuous: false,
+            scrollPhase: 0,
+            momentumPhase: 0,
+            tabletDeviceID: 0,
+            sourceUserData: ScrollDirectionEventTap.syntheticEventTag,
+            vertical: .init(line: 1, point: 8, fixedPoint: 8 << 16),
+            horizontal: .init(line: 0, point: 0, fixedPoint: 0)
+        )
+
+        #expect(traits.shouldInvert == false)
+    }
+}
+
+struct VerticalScrollInversionPlanTests {
+    @Test func ordinaryWheelInvertsAllVerticalDeltaRepresentations() {
+        let inverted = VerticalScrollDeltas(
+            line: -2,
+            point: -17,
+            fixedPoint: -(17 << 16)
+        ).inverted
+
+        #expect(inverted == VerticalScrollDeltas(line: 2, point: 17, fixedPoint: 17 << 16))
+    }
+
+    @Test func minimumIntegerDeltasAreNegatedWithoutOverflow() {
+        let inverted = VerticalScrollDeltas(line: .min, point: .min, fixedPoint: .min).inverted
+
+        #expect(inverted.line == .max)
+        #expect(inverted.point == .max)
+        #expect(inverted.fixedPoint == .max)
+    }
+}
+
+struct ReverseScrollRuntimeStateTests {
+    @Test func requestedStateCanSurviveAStoppedTapAndResumeLater() {
+        var state = ReverseScrollRuntimeState(isRequested: true)
+
+        #expect(state.isRequested)
+        #expect(state.currentStatus == false)
+
+        state.didStart()
+        #expect(state.currentStatus)
+
+        state.didStop()
+        #expect(state.isRequested)
+        #expect(state.currentStatus == false)
+
+        state.didStart()
+        #expect(state.currentStatus)
+    }
+
+    @Test func disablingClearsBothRequestedAndRunningState() {
+        var state = ReverseScrollRuntimeState(isRequested: true)
+        state.didStart()
+
+        state.setRequested(false)
+
+        #expect(state.isRequested == false)
+        #expect(state.isRunning == false)
+        #expect(state.currentStatus == false)
+    }
+}
+
+struct LegacyScrollDirectionMigrationTests {
+    @MainActor
+    @Test func migrationRestoresAndRemovesSavedPreferenceAfterSuccess() throws {
+        let suiteName = "LegacyScrollDirectionMigrationTests-\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suiteName))
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let key = UserDefaults.Key.reverseScrollDirectionOriginalNaturalScrolling
+        defaults.set(false, forKey: key)
+        var restoredValues: [Bool] = []
+
+        let succeeded = restoreLegacyScrollDirectionIfNeeded(
+            defaults: defaults,
+            preference: GlobalScrollDirectionPreference(setNatural: { value in
+                restoredValues.append(value)
+                return true
+            })
+        )
+
+        #expect(succeeded)
+        #expect(restoredValues == [false])
+        #expect(defaults.object(forKey: key) == nil)
+    }
+
+    @MainActor
+    @Test func migrationKeepsSavedPreferenceWhenRestoreFails() throws {
+        let suiteName = "LegacyScrollDirectionMigrationTests-\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suiteName))
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let key = UserDefaults.Key.reverseScrollDirectionOriginalNaturalScrolling
+        defaults.set(true, forKey: key)
+
+        let succeeded = restoreLegacyScrollDirectionIfNeeded(
+            defaults: defaults,
+            preference: GlobalScrollDirectionPreference(setNatural: { _ in false })
+        )
+
+        #expect(succeeded == false)
+        #expect(defaults.object(forKey: key) as? Bool == true)
+    }
 }
 
 struct BrightnessSyncStateTests {
