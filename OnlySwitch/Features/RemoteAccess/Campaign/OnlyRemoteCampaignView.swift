@@ -31,6 +31,7 @@ struct OnlyRemoteCampaignView: View {
                     .font(.body)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
                 }
 
                 VStack(spacing: 12) {

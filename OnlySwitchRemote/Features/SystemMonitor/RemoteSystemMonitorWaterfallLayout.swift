@@ -49,7 +49,7 @@ struct RemoteSystemMonitorWaterfallLayout: Layout {
             Int((containerWidth + spacing) / (minimumCardWidth + spacing))
         )
         let maximumColumns = switch deviceClass {
-        case .phone: 1
+        case .phone: 2
         case .iPadMini: 2
         case .iPad: 3
         }

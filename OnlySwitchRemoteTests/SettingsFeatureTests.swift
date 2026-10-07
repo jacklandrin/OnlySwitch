@@ -307,17 +307,6 @@ struct SettingsFeatureTests {
         #expect(await cacheRecorder.revisions == [12])
     }
 
-    @Test func rePairKeepsThePerMacPairingFlowAvailable() async {
-        let laptop = laptop
-        var state = SettingsFeature.State(pairedMacs: [studio, laptop], selectedMacID: studio.id)
-        state.management = .init(mac: laptop)
-        let store = TestStore(initialState: state) { SettingsFeature() }
-
-        await store.send(.management(.presented(.delegate(.rePair(laptop.id))))) {
-            $0.management = nil
-            $0.pairing = PairingFeature.State()
-        }
-    }
 }
 
 @MainActor
@@ -326,6 +315,13 @@ struct GlobalSettingsFeatureTests {
         id: UUID(uuidString: "00000000-0000-0000-0000-000000000903")!,
         displayName: "Studio",
         lastEndpointDescription: nil,
+        lastConnectedAt: nil,
+        requiresPairing: false
+    )
+    private let laptop = PairedMac(
+        id: UUID(uuidString: "00000000-0000-0000-0000-000000000904")!,
+        displayName: "Laptop",
+        lastEndpointDescription: "laptop.local",
         lastConnectedAt: nil,
         requiresPairing: false
     )
@@ -394,63 +390,92 @@ struct GlobalSettingsFeatureTests {
         #expect(store.state.isKeepingScreenAwake == true)
         #expect(await recorder.values == [true])
     }
-}
 
-extension SettingsFeatureTests {
-    @Test func forgettingSelectedMacChoosesDeterministicFallbackAndDelegatesSelection() async {
-        var state = SettingsFeature.State(pairedMacs: [studio, laptop], selectedMacID: studio.id)
-        state.management = .init(mac: studio)
-        let store = TestStore(initialState: state) { SettingsFeature() } withDependencies: {
-            $0.remotePersistence.loadLayout = { _ in nil }
-            $0.remotePersistence.loadCatalog = { _ in nil }
+    @Test func pairedMacManagementIsPresentedFromGlobalSettings() async {
+        let store = TestStore(initialState: GlobalSettingsFeature.State(
+            pairedMacs: [studio],
+            selectedMacID: studio.id,
+            connectionStatuses: [studio.id: .connected]
+        )) {
+            GlobalSettingsFeature()
         }
 
-        await store.send(.management(.presented(.delegate(.forgotten(studio.id))))) {
-            $0.management = nil; $0.pairedMacs = [laptop]; $0.connectionStatuses[studio.id] = nil
+        await store.send(.manageMac(studio.id)) {
+            $0.management = .init(mac: studio, connectionStatus: .connected)
         }
-        await store.receive(.delegate(.macForgotten(studio.id)))
-        await store.receive(.selectedMacChanged(laptop.id)) {
-            $0.selectedMacID = laptop.id; $0.selectionGeneration = 1
-            $0.catalog = []; $0.catalogRevision = 0; $0.selectedControlIDs = []; $0.order = []
-        }
-        await store.receive(.delegate(.selectedMacChanged(laptop)))
-        await store.receive(.selectedMacDataLoaded(1, laptop.id, nil, nil))
     }
 
-    @Test func forgettingLastMacDelegatesAllMacsRemoved() async {
-        var state = SettingsFeature.State(pairedMacs: [studio], selectedMacID: studio.id)
-        state.management = .init(mac: studio)
-        let store = TestStore(initialState: state) { SettingsFeature() }
+    @Test func selectingAMacFromGlobalSettingsDelegatesTheNewSelection() async {
+        let store = TestStore(initialState: GlobalSettingsFeature.State(
+            pairedMacs: [studio, laptop],
+            selectedMacID: studio.id
+        )) {
+            GlobalSettingsFeature()
+        }
+
+        await store.send(.selectMac(laptop.id)) {
+            $0.selectedMacID = laptop.id
+        }
+        await store.receive(.delegate(.selectedMacChanged(laptop)))
+    }
+
+    @Test func rePairFromGlobalSettingsKeepsTheMacAndStartsPairing() async {
+        var state = GlobalSettingsFeature.State(
+            pairedMacs: [studio, laptop],
+            selectedMacID: studio.id
+        )
+        state.management = .init(mac: laptop)
+        let store = TestStore(initialState: state) {
+            GlobalSettingsFeature()
+        }
+
+        await store.send(.management(.presented(.delegate(.rePair(laptop.id))))) {
+            $0.management = nil
+            $0.pairing = PairingFeature.State()
+        }
+    }
+
+    @Test func forgettingSelectedMacFromGlobalSettingsChoosesFallbackAndDelegatesSelection() async {
+        var state = GlobalSettingsFeature.State(
+            pairedMacs: [studio, laptop],
+            selectedMacID: studio.id,
+            connectionStatuses: [studio.id: .connected]
+        )
+        state.management = .init(mac: studio, connectionStatus: .connected)
+        let store = TestStore(initialState: state) {
+            GlobalSettingsFeature()
+        }
 
         await store.send(.management(.presented(.delegate(.forgotten(studio.id))))) {
-            $0.management = nil; $0.pairedMacs = []; $0.selectedMacID = nil
-            $0.connectionStatuses[studio.id] = nil; $0.catalog = []; $0.catalogRevision = 0
-            $0.selectedControlIDs = []; $0.order = []
+            $0.management = nil
+            $0.pairedMacs = [laptop]
+            $0.selectedMacID = laptop.id
+            $0.connectionStatuses = [:]
+        }
+        await store.receive(.delegate(.macForgotten(studio.id)))
+        await store.receive(.delegate(.selectedMacChanged(laptop)))
+    }
+
+    @Test func forgettingLastMacFromGlobalSettingsDelegatesSetupReset() async {
+        var state = GlobalSettingsFeature.State(
+            pairedMacs: [studio],
+            selectedMacID: studio.id
+        )
+        state.management = .init(mac: studio)
+        let store = TestStore(initialState: state) {
+            GlobalSettingsFeature()
+        }
+
+        await store.send(.management(.presented(.delegate(.forgotten(studio.id))))) {
+            $0.management = nil
+            $0.pairedMacs = []
+            $0.selectedMacID = nil
         }
         await store.receive(.delegate(.allMacsRemoved))
     }
+}
 
-    @Test func successfulForgetClearsPerMacSaveBookkeepingAndIgnoresLateCompletion() async {
-        let layout = MacDashboardLayout(macID: studio.id, selectedControlIDs: [mute], order: [mute])
-        var state = SettingsFeature.State(pairedMacs: [studio, laptop], selectedMacID: laptop.id)
-        state.management = .init(mac: studio)
-        state.pendingLayoutSaves[studio.id] = layout
-        state.layoutSaveGenerations[studio.id] = 4
-        state.layoutSaveInFlight.insert(studio.id)
-        state.layoutSaveIssueMacIDs.insert(studio.id)
-        let store = TestStore(initialState: state) { SettingsFeature() }
-
-        await store.send(.management(.presented(.delegate(.forgotten(studio.id))))) {
-            $0.management = nil; $0.pairedMacs = [laptop]
-            $0.pendingLayoutSaves[studio.id] = nil; $0.layoutSaveGenerations[studio.id] = nil
-            $0.layoutSaveInFlight.remove(studio.id); $0.layoutSaveIssueMacIDs.remove(studio.id)
-        }
-        await store.receive(.delegate(.macForgotten(studio.id)))
-        await store.send(.layoutSaveResponse(studio.id, 4, layout, .success))
-        await store.send(.connectionEvent(.catalog(studio.id, 99, [descriptor(mute)])))
-        #expect(store.state.pendingLayoutSaves[studio.id] == nil)
-    }
-
+extension SettingsFeatureTests {
     private func descriptor(_ id: RemoteControlID, available: Bool = true, reason: String? = nil) -> RemoteControlDescriptor {
         .init(
             id: id,

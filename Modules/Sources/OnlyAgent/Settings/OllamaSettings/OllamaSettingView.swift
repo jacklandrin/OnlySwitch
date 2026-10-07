@@ -27,7 +27,7 @@ public struct OllamaSettingView: View {
                     TextField("", text: $store.host)
                         .padding(.bottom, 10)
                     HStack {
-                        Text("Models:")
+                        Text("Models:".localized())
                         Spacer()
                         Button {
                             store.send(.refresh)

@@ -7942,11 +7942,68 @@
     "Control OnlySwitch from your iPhone or iPad" : {
       "extractionState" : "manual",
       "localizations" : {
+        "cs" : {
+          "stringUnit" : { "state" : "translated", "value" : "Ovládejte OnlySwitch z iPhonu nebo iPadu" }
+        },
+        "de" : {
+          "stringUnit" : { "state" : "translated", "value" : "Steuern Sie OnlySwitch von Ihrem iPhone oder iPad aus" }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Control OnlySwitch from your iPhone or iPad"
           }
+        },
+        "es" : {
+          "stringUnit" : { "state" : "translated", "value" : "Controle OnlySwitch desde su iPhone o iPad" }
+        },
+        "fil" : {
+          "stringUnit" : { "state" : "translated", "value" : "Kontrolin ang OnlySwitch mula sa iyong iPhone o iPad" }
+        },
+        "fr" : {
+          "stringUnit" : { "state" : "translated", "value" : "Contrôlez OnlySwitch depuis votre iPhone ou iPad" }
+        },
+        "hr" : {
+          "stringUnit" : { "state" : "translated", "value" : "Upravljajte OnlySwitchom sa svog iPhonea ili iPada" }
+        },
+        "it" : {
+          "stringUnit" : { "state" : "translated", "value" : "Controlla OnlySwitch dal tuo iPhone o iPad" }
+        },
+        "ja" : {
+          "stringUnit" : { "state" : "translated", "value" : "iPhoneまたはiPadからOnlySwitchを操作" }
+        },
+        "ko" : {
+          "stringUnit" : { "state" : "translated", "value" : "iPhone 또는 iPad에서 OnlySwitch 제어" }
+        },
+        "nl" : {
+          "stringUnit" : { "state" : "translated", "value" : "Bedien OnlySwitch vanaf je iPhone of iPad" }
+        },
+        "pl" : {
+          "stringUnit" : { "state" : "translated", "value" : "Steruj OnlySwitch z iPhone'a lub iPada" }
+        },
+        "pt-BR" : {
+          "stringUnit" : { "state" : "translated", "value" : "Controle o OnlySwitch pelo iPhone ou iPad" }
+        },
+        "ru" : {
+          "stringUnit" : { "state" : "translated", "value" : "Управляйте OnlySwitch с iPhone или iPad" }
+        },
+        "sk" : {
+          "stringUnit" : { "state" : "translated", "value" : "Ovládajte OnlySwitch z iPhonu alebo iPadu" }
+        },
+        "so" : {
+          "stringUnit" : { "state" : "translated", "value" : "Ka xakamee OnlySwitch iPhone ama iPad-kaaga" }
+        },
+        "tr" : {
+          "stringUnit" : { "state" : "translated", "value" : "OnlySwitch'i iPhone veya iPad'inizden kontrol edin" }
+        },
+        "uk" : {
+          "stringUnit" : { "state" : "translated", "value" : "Керуйте OnlySwitch зі свого iPhone або iPad" }
+        },
+        "zh-Hans" : {
+          "stringUnit" : { "state" : "translated", "value" : "在 iPhone 或 iPad 上控制 OnlySwitch" }
+        },
+        "zh-Hant" : {
+          "stringUnit" : { "state" : "translated", "value" : "在 iPhone 或 iPad 上控制 OnlySwitch" }
         }
       }
     },
@@ -23195,6 +23252,12 @@
             "state" : "translated",
             "value" : "Not Now"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : { "state" : "translated", "value" : "暂时不要" }
+        },
+        "zh-Hant" : {
+          "stringUnit" : { "state" : "translated", "value" : "現在不要" }
         }
       }
     },
@@ -24090,6 +24153,12 @@
             "state" : "translated",
             "value" : "OnlyRemote is here"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : { "state" : "translated", "value" : "OnlyRemote 来了" }
+        },
+        "zh-Hant" : {
+          "stringUnit" : { "state" : "translated", "value" : "OnlyRemote 來了" }
         }
       }
     },
@@ -31362,6 +31431,12 @@
             "state" : "translated",
             "value" : "Set Up Remote Access"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : { "state" : "translated", "value" : "设置远程访问" }
+        },
+        "zh-Hant" : {
+          "stringUnit" : { "state" : "translated", "value" : "設定遠端存取" }
         }
       }
     },
@@ -41924,6 +41999,12 @@
             "state" : "translated",
             "value" : "Use OnlyRemote on the same local network to run switches and control your Mac from anywhere in the room."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : { "state" : "translated", "value" : "在同一局域网内使用 OnlyRemote 运行开关，并在房间内的任何位置控制 Mac。" }
+        },
+        "zh-Hant" : {
+          "stringUnit" : { "state" : "translated", "value" : "在同一區域網路中使用 OnlyRemote 執行開關，並在房間內的任何位置控制 Mac。" }
         }
       }
     },
@@ -48851,6 +48932,86 @@
             "value" : "The pairing code couldn’t be copied."
           }
         }
+      }
+    },
+    "Model Providers" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Model Providers" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "模型提供商" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "模型提供者" } }
+      }
+    },
+    "API Key:" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "API Key:" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "API 密钥：" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "API 金鑰：" } }
+      }
+    },
+    "Models:" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Models:" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "模型：" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "模型：" } }
+      }
+    },
+    "Check" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Check" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "检查" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "檢查" } }
+      }
+    },
+    "Authorization:" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Authorization:" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "授权：" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "授權：" } }
+      }
+    },
+    "Sign In With ChatGPT" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Sign In With ChatGPT" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "使用 ChatGPT 登录" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "使用 ChatGPT 登入" } }
+      }
+    },
+    "Re-authorize with ChatGPT" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Re-authorize with ChatGPT" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "使用 ChatGPT 重新授权" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "使用 ChatGPT 重新授權" } }
+      }
+    },
+    "Sign Out" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Sign Out" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "退出登录" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "登出" } }
+      }
+    },
+    "Signed in as %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Signed in as %@" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "登录身份：%@" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "登入身分：%@" } }
+      }
+    },
+    "Plan: %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Plan: %@" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "方案：%@" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "方案：%@" } }
       }
     }
   },

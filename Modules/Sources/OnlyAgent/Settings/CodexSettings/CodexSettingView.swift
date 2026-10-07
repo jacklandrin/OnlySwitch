@@ -22,7 +22,7 @@ public struct CodexSettingView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
                     HStack {
-                        Text("Authorization:")
+                        Text("Authorization:".localized())
                         Spacer()
                     }
 
@@ -35,7 +35,7 @@ public struct CodexSettingView: View {
                         Button {
                             store.send(.signIn)
                         } label: {
-                            Text(store.isSignedIn ? "Re-authorize with ChatGPT" : "Sign In With ChatGPT")
+                            Text((store.isSignedIn ? "Re-authorize with ChatGPT" : "Sign In With ChatGPT").localized())
                         }
                         .disabled(store.isAuthorizing || store.isSigningOut)
 
@@ -43,21 +43,21 @@ public struct CodexSettingView: View {
                             Button {
                                 store.send(.signOut)
                             } label: {
-                                Text("Sign Out")
+                                Text("Sign Out".localized())
                             }
                             .disabled(store.isAuthorizing || store.isSigningOut)
                         }
                     }
                     if let email = store.accountEmail {
                         HStack {
-                            Text("Signed in as \(email)")
+                            Text("Signed in as %@".localizeWithFormat(arguments: email))
                                 .font(.footnote)
                                 .foregroundStyle(.secondary)
                             Spacer()
                         }
                         if let plan = store.plan {
                             HStack {
-                                Text("Plan: \(plan)")
+                                Text("Plan: %@".localizeWithFormat(arguments: plan))
                                     .font(.footnote)
                                     .foregroundStyle(.secondary)
                                 Spacer()
@@ -66,7 +66,7 @@ public struct CodexSettingView: View {
                     }
 
                     HStack {
-                        Text("Models:")
+                        Text("Models:".localized())
                         Spacer()
                     }
                     ForEach(store.models, id: \.self) { model in

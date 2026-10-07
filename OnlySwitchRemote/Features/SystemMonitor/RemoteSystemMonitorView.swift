@@ -17,7 +17,7 @@ struct RemoteSystemMonitorView: View {
         containerSize: CGSize,
         dynamicTypeSize: DynamicTypeSize
     ) -> Layout {
-        guard idiom == .pad, dynamicTypeSize.isAccessibilitySize == false else { return .list }
+        guard dynamicTypeSize.isAccessibilitySize == false else { return .list }
         let deviceClass = RemoteSystemMonitorWaterfallLayout.DeviceClass.classify(
             userInterfaceIdiom: idiom,
             containerSize: containerSize
@@ -27,7 +27,7 @@ struct RemoteSystemMonitorView: View {
             deviceClass: deviceClass,
             dynamicTypeSize: dynamicTypeSize
         )
-        return .waterfall(columns: columnCount)
+        return columnCount > 1 ? .waterfall(columns: columnCount) : .list
     }
 
     var body: some View {

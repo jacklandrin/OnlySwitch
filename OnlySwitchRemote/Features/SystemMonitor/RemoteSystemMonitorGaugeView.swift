@@ -57,8 +57,18 @@ struct RemoteSystemMonitorGaugeView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.accessibilityDifferentiateWithoutColor) private var differentiateWithoutColor
     @Environment(\.colorSchemeContrast) private var contrast
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @ScaledMetric(relativeTo: .body) private var trackWidth = 22.0
     @ScaledMetric(relativeTo: .largeTitle) private var valueSize = 60.0
+
+    static func valueFontSize(
+        containerWidth: CGFloat,
+        preferredSize: CGFloat,
+        isAccessibilitySize: Bool
+    ) -> CGFloat {
+        guard isAccessibilitySize == false else { return preferredSize }
+        return min(preferredSize, containerWidth * 0.18)
+    }
 
     var body: some View {
         VStack(spacing: 8) {
@@ -67,6 +77,11 @@ struct RemoteSystemMonitorGaugeView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             GeometryReader { proxy in
+                let valueFontSize = Self.valueFontSize(
+                    containerWidth: proxy.size.width,
+                    preferredSize: valueSize,
+                    isAccessibilitySize: dynamicTypeSize.isAccessibilitySize
+                )
                 let center = CGPoint(
                     x: proxy.size.width / 2,
                     y: proxy.size.height - trackWidth - 8
@@ -114,11 +129,11 @@ struct RemoteSystemMonitorGaugeView: View {
                     }
 
                     Text(verbatim: presentation.displayValue)
-                        .font(.system(size: valueSize, weight: .bold, design: .rounded).monospacedDigit())
+                        .font(.system(size: valueFontSize, weight: .bold, design: .rounded).monospacedDigit())
                         .minimumScaleFactor(0.65)
                         .lineLimit(1)
                         .foregroundStyle(presentation.usage == nil ? .secondary : .primary)
-                        .position(x: center.x, y: max(center.y - radius * 0.18, valueSize / 2))
+                        .position(x: center.x, y: max(center.y - radius * 0.18, valueFontSize / 2))
                 }
                 .animation(reduceMotion ? nil : .smooth(duration: 0.35), value: presentation.usage)
             }

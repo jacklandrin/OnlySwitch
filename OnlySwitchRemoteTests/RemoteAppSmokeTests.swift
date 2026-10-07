@@ -51,14 +51,17 @@ struct RemoteAppSmokeTests {
         #expect(store.state.controls(kind: .shortcut).isEmpty == false)
         #expect(store.state.controls(kind: .evolution).isEmpty == false)
 
-        await store.send(.manageMac(studioID)) {
-            $0.management = .init(mac: studio, connectionStatus: .connected)
-        }
-        #expect(store.state.management?.mac.displayName == "Studio")
-
-        let globalStore = TestStore(initialState: GlobalSettingsFeature.State()) {
+        let globalStore = TestStore(initialState: GlobalSettingsFeature.State(
+            pairedMacs: .init(uniqueElements: pairedMacs),
+            selectedMacID: studioID,
+            connectionStatuses: [studioID: .connected]
+        )) {
             GlobalSettingsFeature()
         }
+        await globalStore.send(.manageMac(studioID)) {
+            $0.management = .init(mac: studio, connectionStatus: .connected)
+        }
+        #expect(globalStore.state.management?.mac.displayName == "Studio")
         await globalStore.send(.pairNewMacTapped) { $0.pairing = .init() }
         #expect(globalStore.state.pairing != nil)
     }

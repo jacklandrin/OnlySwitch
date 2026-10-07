@@ -11782,131 +11782,6 @@
         }
       }
     },
-    "Natural Scrolling" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Přirozené posouvání"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Natürliches Scrollen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Natural Scrolling"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Desplazamiento natural"
-          }
-        },
-        "fil" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Natural na Pag-scroll"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Défilement naturel"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Prirodno pomicanje"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Scorrimento naturale"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ナチュラルスクロール"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "자연스러운 스크롤"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Natuurlijk scrollen"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Naturalne przewijanie"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rolagem natural"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Естественная прокрутка"
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Prirodzené posúvanie"
-          }
-        },
-        "so" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rogista dabiiciga ah"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Doğal Kaydırma"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Природне прокручування"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "自然滚动"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "自然捲動"
-          }
-        }
-      }
-    },
     "IPv4" : {
       "localizations" : {
         "cs" : {
@@ -15076,6 +14951,7 @@
       }
     },
     "Macs" : {
+      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -16650,6 +16526,131 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "名稱"
+          }
+        }
+      }
+    },
+    "Natural Scrolling" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přirozené posouvání"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Natürliches Scrollen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Natural Scrolling"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desplazamiento natural"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Natural na Pag-scroll"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Défilement naturel"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prirodno pomicanje"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scorrimento naturale"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ナチュラルスクロール"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "자연스러운 스크롤"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Natuurlijk scrollen"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Naturalne przewijanie"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rolagem natural"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Естественная прокрутка"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prirodzené posúvanie"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rogista dabiiciga ah"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doğal Kaydırma"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Природне прокручування"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自然滚动"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自然捲動"
           }
         }
       }
@@ -21704,7 +21705,6 @@
       }
     },
     "Paired Macs" : {
-      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -22908,26 +22908,126 @@
       "comment" : "A link to the app's privacy policy.",
       "isCommentAutoGenerated" : true,
       "localizations" : {
-        "cs" : { "stringUnit" : { "state" : "translated", "value" : "Zásady ochrany soukromí" } },
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Datenschutzrichtlinie" } },
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Privacy Policy" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Política de privacidad" } },
-        "fil" : { "stringUnit" : { "state" : "translated", "value" : "Patakaran sa Privacy" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Politique de confidentialité" } },
-        "hr" : { "stringUnit" : { "state" : "translated", "value" : "Pravila privatnosti" } },
-        "it" : { "stringUnit" : { "state" : "translated", "value" : "Informativa sulla privacy" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "プライバシーポリシー" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "개인정보 처리방침" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Privacybeleid" } },
-        "pl" : { "stringUnit" : { "state" : "translated", "value" : "Polityka prywatności" } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Política de Privacidade" } },
-        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Политика конфиденциальности" } },
-        "sk" : { "stringUnit" : { "state" : "translated", "value" : "Zásady ochrany súkromia" } },
-        "so" : { "stringUnit" : { "state" : "translated", "value" : "Siyaasadda Asturnaanta" } },
-        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Gizlilik Politikası" } },
-        "uk" : { "stringUnit" : { "state" : "translated", "value" : "Політика конфіденційності" } },
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "隐私政策" } },
-        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "隱私權政策" } }
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zásady ochrany soukromí"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datenschutzrichtlinie"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacy Policy"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Política de privacidad"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Patakaran sa Privacy"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Politique de confidentialité"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pravila privatnosti"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informativa sulla privacy"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "プライバシーポリシー"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "개인정보 처리방침"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacybeleid"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Polityka prywatności"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Política de Privacidade"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Политика конфиденциальности"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zásady ochrany súkromia"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Siyaasadda Asturnaanta"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gizlilik Politikası"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Політика конфіденційності"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "隐私政策"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "隱私權政策"
+          }
+        }
       }
     },
     "Public IPv4" : {

@@ -5,13 +5,33 @@ import RemoteCore
 
 @MainActor
 struct RemoteSystemMonitorViewTests {
-    @Test func iPhoneUsesAList() {
+    @Test func narrowIPhoneUsesAList() {
         #expect(
             RemoteSystemMonitorView.layout(
                 for: .phone,
                 containerSize: CGSize(width: 430, height: 932),
                 dynamicTypeSize: .large
             ) == .list
+        )
+    }
+
+    @Test func iPhoneDuoLandscapeUsesTwoWaterfallColumns() {
+        #expect(
+            RemoteSystemMonitorView.layout(
+                for: .phone,
+                containerSize: CGSize(width: 932, height: 430),
+                dynamicTypeSize: .large
+            ) == .waterfall(columns: 2)
+        )
+    }
+
+    @Test func iPhoneDuoOpenModeUsesTwoWaterfallColumns() {
+        #expect(
+            RemoteSystemMonitorView.layout(
+                for: .phone,
+                containerSize: CGSize(width: 700, height: 900),
+                dynamicTypeSize: .large
+            ) == .waterfall(columns: 2)
         )
     }
 
@@ -142,6 +162,30 @@ struct RemoteSystemMonitorViewTests {
         #expect(RemoteSystemMonitorGaugeAccent(metric: .memory) == .memory)
         #expect(
             RemoteSystemMonitorGaugePresentation(title: "Memory", usage: .available(0.84)).displayValue == "84%"
+        )
+    }
+
+    @Test func monitorGaugeValueShrinksForNarrowDuoCards() {
+        #expect(
+            RemoteSystemMonitorGaugeView.valueFontSize(
+                containerWidth: 250,
+                preferredSize: 60,
+                isAccessibilitySize: false
+            ) == 45
+        )
+        #expect(
+            RemoteSystemMonitorGaugeView.valueFontSize(
+                containerWidth: 360,
+                preferredSize: 60,
+                isAccessibilitySize: false
+            ) == 60
+        )
+        #expect(
+            RemoteSystemMonitorGaugeView.valueFontSize(
+                containerWidth: 250,
+                preferredSize: 90,
+                isAccessibilitySize: true
+            ) == 90
         )
     }
 

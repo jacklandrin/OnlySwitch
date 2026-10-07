@@ -375,7 +375,10 @@ struct RemoteAppFeature {
             case .globalSettingsButtonTapped:
                 guard state.requiredGlobalSettings == nil else { return .none }
                 state.path.append(.globalSettings(.init(
-                    isKeepingScreenAwake: state.isKeepingScreenAwake
+                    isKeepingScreenAwake: state.isKeepingScreenAwake,
+                    pairedMacs: state.pairedMacs,
+                    selectedMacID: state.selectedMacID,
+                    connectionStatuses: connectionStatuses(state)
                 )))
                 return .none
 
@@ -490,16 +493,40 @@ struct RemoteAppFeature {
                     await idleTimer.setIdleTimerDisabled(keepScreenAwake)
                 }
 
+            case let .path(.element(_, action: .globalSettings(.delegate(.selectedMacChanged(mac))))):
+                return select(mac, state: &state)
+
+            case let .path(.element(_, action: .controlsConfiguration(.delegate(.layoutChanged(layout))))):
+                guard state.dashboard.isActive else { return .none }
+                return .send(.dashboard(.layoutChanged(layout)))
+
+            case let .path(.element(_, action: .globalSettings(.delegate(.macForgotten(id))))):
+                state.pairedMacs.remove(id: id)
+                state.connectedMacIDs.remove(id)
+                invalidateMetadataRefresh(state: &state)
+                syncSettingsState(&state)
+                return .cancel(id: CancelID.metadataRefresh)
+
+            case .path(.element(_, action: .globalSettings(.delegate(.allMacsRemoved)))):
+                state.pairedMacs.removeAll()
+                state.connectedMacIDs.removeAll()
+                state.selectedMacID = nil
+                state.path.removeAll()
+                state.requiredGlobalSettings = .init(isSetupRequired: true)
+                state.hasCompletedInitialSetup = false
+                invalidateMetadataRefresh(state: &state)
+                return .merge(
+                    .cancel(id: CancelID.metadataRefresh),
+                    clearedSelection(state: &state)
+                )
+
+            // Kept for restoring older navigation stacks that may still emit these delegates.
             case let .path(.element(_, action: .controlsConfiguration(.delegate(.paired(mac))))):
                 state.hasCompletedInitialSetup = true
                 return paired(mac, state: &state)
 
             case let .path(.element(_, action: .controlsConfiguration(.delegate(.selectedMacChanged(mac))))):
                 return select(mac, state: &state)
-
-            case let .path(.element(_, action: .controlsConfiguration(.delegate(.layoutChanged(layout))))):
-                guard state.dashboard.isActive else { return .none }
-                return .send(.dashboard(.layoutChanged(layout)))
 
             case let .path(.element(_, action: .controlsConfiguration(.delegate(.macForgotten(id))))):
                 state.pairedMacs.remove(id: id)
@@ -658,9 +685,16 @@ struct RemoteAppFeature {
         state: inout State
     ) {
         for pathID in state.path.ids {
-            guard case var .controlsConfiguration(settings) = state.path[id: pathID] else { continue }
-            settings.connectionStatuses[id] = status
-            state.path[id: pathID] = .controlsConfiguration(settings)
+            switch state.path[id: pathID] {
+            case var .globalSettings(settings):
+                settings.connectionStatuses[id] = status
+                state.path[id: pathID] = .globalSettings(settings)
+            case var .controlsConfiguration(settings):
+                settings.connectionStatuses[id] = status
+                state.path[id: pathID] = .controlsConfiguration(settings)
+            case .monitorConfiguration, nil:
+                continue
+            }
         }
     }
 
@@ -678,11 +712,20 @@ struct RemoteAppFeature {
     private func syncSettingsState(_ state: inout State) {
         let statuses = connectionStatuses(state)
         for id in state.path.ids {
-            guard case var .controlsConfiguration(settings) = state.path[id: id] else { continue }
-            settings.pairedMacs = state.pairedMacs
-            settings.selectedMacID = state.selectedMacID
-            settings.connectionStatuses = statuses
-            state.path[id: id] = .controlsConfiguration(settings)
+            switch state.path[id: id] {
+            case var .globalSettings(settings):
+                settings.pairedMacs = state.pairedMacs
+                settings.selectedMacID = state.selectedMacID
+                settings.connectionStatuses = statuses
+                state.path[id: id] = .globalSettings(settings)
+            case var .controlsConfiguration(settings):
+                settings.pairedMacs = state.pairedMacs
+                settings.selectedMacID = state.selectedMacID
+                settings.connectionStatuses = statuses
+                state.path[id: id] = .controlsConfiguration(settings)
+            case .monitorConfiguration, nil:
+                continue
+            }
         }
         syncSystemMonitorState(&state)
         guard state.dashboard.isActive else { return }

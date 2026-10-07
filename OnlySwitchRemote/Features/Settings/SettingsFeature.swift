@@ -20,7 +20,6 @@ struct SettingsFeature {
         var layoutSaveInFlight: Set<UUID> = []
         var layoutSaveIssueMacIDs: Set<UUID> = []
         @Presents var pairing: PairingFeature.State?
-        @Presents var management: MacManagementFeature.State?
 
         init(
             pairedMacs: IdentifiedArrayOf<PairedMac> = [],
@@ -71,9 +70,7 @@ struct SettingsFeature {
         case move(IndexSet, Int)
         case layoutSaveResponse(UUID, UInt64, MacDashboardLayout, OperationResult)
         case retryLayoutSave(UUID)
-        case manageMac(UUID)
         case pairing(PresentationAction<PairingFeature.Action>)
-        case management(PresentationAction<MacManagementFeature.Action>)
         case foregroundChanged(Bool)
         case delegate(Delegate)
     }
@@ -188,12 +185,6 @@ struct SettingsFeature {
                 else { return .none }
                 return startLayoutSave(pending, state: &state)
 
-            case let .manageMac(id):
-                guard let mac = state.pairedMacs[id: id] else { return .none }
-                let status = mac.requiresPairing ? .needsPairing : (state.connectionStatuses[id] ?? .unknown)
-                state.management = .init(mac: mac, connectionStatus: status)
-                return .none
-
             case let .pairing(.presented(.delegate(.paired(mac)))):
                 state.pairing = nil
                 state.pairedMacs.updateOrAppend(mac)
@@ -218,48 +209,6 @@ struct SettingsFeature {
                 state.pairing = nil
                 return .none
 
-            case let .management(.presented(.delegate(.rePair(id)))):
-                guard state.pairedMacs[id: id] != nil else { return .none }
-                state.management = nil
-                state.pairing = PairingFeature.State()
-                return .none
-
-            case let .management(.presented(.delegate(.forgotten(id)))):
-                state.management = nil
-                let wasSelected = state.selectedMacID == id
-                state.pairedMacs.remove(id: id)
-                state.connectionStatuses[id] = nil
-                state.pendingLayoutSaves[id] = nil
-                state.layoutSaveGenerations[id] = nil
-                state.layoutSaveInFlight.remove(id)
-                state.layoutSaveIssueMacIDs.remove(id)
-                var cancellationEffects: [Effect<Action>] = [
-                    .cancel(id: CancelID.layoutSave(id)),
-                    .cancel(id: CancelID.catalogSave(id)),
-                ]
-                if wasSelected { cancellationEffects.append(.cancel(id: CancelID.selectedMacLoad)) }
-                if state.pairedMacs.isEmpty {
-                    state.selectedMacID = nil
-                    state.catalog = []
-                    state.catalogRevision = 0
-                    state.selectedControlIDs = []
-                    state.order = []
-                    cancellationEffects.append(.send(.delegate(.allMacsRemoved)))
-                    return .merge(cancellationEffects)
-                }
-                guard wasSelected, let fallback = state.pairedMacs.first else {
-                    cancellationEffects.append(.send(.delegate(.macForgotten(id))))
-                    return .merge(cancellationEffects)
-                }
-                cancellationEffects.append(.concatenate(
-                    .send(.delegate(.macForgotten(id))),
-                    .send(.selectedMacChanged(fallback.id))
-                ))
-                return .merge(cancellationEffects)
-
-            case .management(.dismiss):
-                return .none
-
             case let .foregroundChanged(isForegrounded):
                 var effects: [Effect<Action>] = []
                 if state.pairing != nil {
@@ -274,12 +223,11 @@ struct SettingsFeature {
                 }
                 return .merge(effects)
 
-            case .pairing, .management, .delegate:
+            case .pairing, .delegate:
                 return .none
             }
         }
         .ifLet(\.$pairing, action: \.pairing) { PairingFeature() }
-        .ifLet(\.$management, action: \.management) { MacManagementFeature() }
     }
 
     private func observeConnectionEvents() -> Effect<Action> {

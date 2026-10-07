@@ -12,7 +12,7 @@ struct OnlyRemoteCampaignClient: Sendable {
 }
 
 extension OnlyRemoteCampaignClient: DependencyKey {
-    static let campaignVersion = "onlyremote-app-store-launch-v1"
+    static let campaignVersion = "onlyremote-app-store-launch-v2"
     static let appStoreURL = URL(
         string: "https://apps.apple.com/us/app/onlyremote/id6793657946"
     )!

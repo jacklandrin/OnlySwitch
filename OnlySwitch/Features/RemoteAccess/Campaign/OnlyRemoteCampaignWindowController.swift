@@ -3,7 +3,7 @@ import ComposableArchitecture
 import Extensions
 import SwiftUI
 
-private let campaignWindowContentSize = NSSize(width: 460, height: 395)
+private let campaignWindowContentSize = NSSize(width: 460, height: 440)
 private let qrCodeWindowContentSize = NSSize(width: 400, height: 440)
 
 @MainActor

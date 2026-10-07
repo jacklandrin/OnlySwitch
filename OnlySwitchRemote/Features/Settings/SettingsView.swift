@@ -7,8 +7,6 @@ struct SettingsView: View {
 
     var body: some View {
         List {
-            macsSection
-
             if store.selectedMacID != nil {
                 selectedOrderSection
                 layoutSaveErrorSection
@@ -20,56 +18,6 @@ struct SettingsView: View {
         .navigationTitle("Configure Controls")
         .task { await store.send(.task).finish() }
         .onDisappear { store.send(.foregroundChanged(false)) }
-        .sheet(item: $store.scope(state: \.pairing, action: \.pairing)) { pairingStore in
-            PairingView(store: pairingStore)
-        }
-        .sheet(item: $store.scope(state: \.management, action: \.management)) { managementStore in
-            NavigationStack { MacManagementView(store: managementStore) }
-        }
-    }
-
-    private var macsSection: some View {
-        Section("Macs") {
-            if store.pairedMacs.isEmpty {
-                Text("No paired Macs")
-                    .foregroundStyle(.secondary)
-            } else {
-                ForEach(store.pairedMacs) { mac in
-                    HStack(spacing: 12) {
-                        Button {
-                            store.send(.selectedMacChanged(mac.id))
-                        } label: {
-                            HStack(spacing: 12) {
-                                Image(systemName: mac.id == store.selectedMacID ? "checkmark.circle.fill" : "circle")
-                                    .foregroundStyle(mac.id == store.selectedMacID ? Color.accentColor : .secondary)
-                                    .accessibilityHidden(true)
-                                VStack(alignment: .leading, spacing: 3) {
-                                    Text(mac.displayName)
-                                        .foregroundStyle(.primary)
-                                    Text(status(for: mac).title)
-                                        .font(.caption)
-                                        .foregroundStyle(mac.requiresPairing ? .red : .secondary)
-                                    if let date = mac.lastConnectedAt {
-                                        Text("Last connected \(date, format: .relative(presentation: .named))")
-                                            .font(.caption2)
-                                            .foregroundStyle(.secondary)
-                                    }
-                                }
-                                Spacer()
-                            }
-                            .contentShape(.rect)
-                        }
-                        .buttonStyle(.plain)
-                        .accessibilityLabel(Text(mac.id == store.selectedMacID ? "Selected Mac: \(mac.displayName)" : "Select Mac: \(mac.displayName)"))
-
-                        Button("Manage \(mac.displayName)", systemImage: "info.circle") {
-                            store.send(.manageMac(mac.id))
-                        }
-                        .labelStyle(.iconOnly)
-                    }
-                }
-            }
-        }
     }
 
     @ViewBuilder
@@ -125,10 +73,5 @@ struct SettingsView: View {
                 }
             }
         }
-    }
-
-    private func status(for mac: PairedMac) -> MacConnectionStatus {
-        if mac.requiresPairing { return .needsPairing }
-        return store.connectionStatuses[mac.id] ?? .unknown
     }
 }

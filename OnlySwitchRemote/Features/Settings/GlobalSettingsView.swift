@@ -25,6 +25,46 @@ struct GlobalSettingsView: View {
                 .buttonStyle(.plain)
             }
 
+            Section("Paired Macs") {
+                if store.pairedMacs.isEmpty {
+                    Text("No paired Macs")
+                        .foregroundStyle(.secondary)
+                } else {
+                    ForEach(store.pairedMacs) { mac in
+                        HStack(spacing: 12) {
+                            Button {
+                                store.send(.selectMac(mac.id))
+                            } label: {
+                                HStack(spacing: 12) {
+                                    Image(systemName: mac.id == store.selectedMacID ? "checkmark.circle.fill" : statusSymbol(for: mac))
+                                        .foregroundStyle(mac.id == store.selectedMacID ? Color.accentColor : statusTint(for: mac))
+                                        .accessibilityHidden(true)
+                                    VStack(alignment: .leading, spacing: 3) {
+                                        Text(mac.displayName)
+                                            .foregroundStyle(.primary)
+                                        Text(status(for: mac).title)
+                                            .font(.caption)
+                                            .foregroundStyle(mac.requiresPairing ? .red : .secondary)
+                                        if let date = mac.lastConnectedAt {
+                                            Text("Last connected \(date, format: .relative(presentation: .named))")
+                                                .font(.caption2)
+                                                .foregroundStyle(.secondary)
+                                        }
+                                    }
+                                    Spacer()
+                                }
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel(Text(mac.id == store.selectedMacID ? "Selected Mac: \(mac.displayName)" : "Select Mac: \(mac.displayName)"))
+                            Button("Manage \(mac.displayName)", systemImage: "info.circle") {
+                                store.send(.manageMac(mac.id))
+                            }
+                            .labelStyle(.iconOnly)
+                        }
+                    }
+                }
+            }
+
             Section("Display") {
                 Toggle(isOn: Binding(
                     get: { store.isKeepingScreenAwake },
@@ -107,6 +147,9 @@ struct GlobalSettingsView: View {
         .sheet(item: $store.scope(state: \.pairing, action: \.pairing)) { pairingStore in
             PairingView(store: pairingStore)
         }
+        .sheet(item: $store.scope(state: \.management, action: \.management)) { managementStore in
+            NavigationStack { MacManagementView(store: managementStore) }
+        }
     }
 
     private func settingsRowLabel(_ title: LocalizedStringKey, systemImage: String) -> some View {
@@ -120,4 +163,28 @@ struct GlobalSettingsView: View {
     }
 
     private static let reviewURL = URL(string: "itms-apps://itunes.apple.com/app/id6793657946?action=write-review")!
+
+    private func status(for mac: PairedMac) -> MacConnectionStatus {
+        if mac.requiresPairing { return .needsPairing }
+        return store.connectionStatuses[mac.id] ?? .unknown
+    }
+
+    private func statusSymbol(for mac: PairedMac) -> String {
+        switch status(for: mac) {
+        case .connected: "checkmark.circle.fill"
+        case .connecting: "arrow.triangle.2.circlepath.circle"
+        case .offline: "exclamationmark.circle"
+        case .needsPairing: "link.badge.plus"
+        case .unknown: "questionmark.circle"
+        }
+    }
+
+    private func statusTint(for mac: PairedMac) -> Color {
+        switch status(for: mac) {
+        case .connected: .green
+        case .connecting: .orange
+        case .offline, .needsPairing: .red
+        case .unknown: .secondary
+        }
+    }
 }

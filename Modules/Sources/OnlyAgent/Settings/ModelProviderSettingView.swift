@@ -27,7 +27,7 @@ public struct ModelProviderSettingView: View {
                 
                 CustomTabItem(
                     icon: "openai",
-                    title: "Open AI",
+                    title: "Open AI".localized(),
                     isSelected: selection == .openai
                 ) {
                     selection = .openai
@@ -35,7 +35,7 @@ public struct ModelProviderSettingView: View {
 
                 CustomTabItem(
                     icon: "codex",
-                    title: "Codex",
+                    title: "Codex".localized(),
                     isSelected: selection == .codex
                 ) {
                     selection = .codex

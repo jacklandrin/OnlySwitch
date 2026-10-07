@@ -22,7 +22,7 @@ public struct OpenAISettingView: View {
             ScrollView {
                 VStack(alignment: .leading) {
                     HStack {
-                        Text("API Key:")
+                        Text("API Key:".localized())
                         Spacer()
                     }
                     
@@ -45,7 +45,7 @@ public struct OpenAISettingView: View {
                         Button {
                             store.send(.check)
                         } label: {
-                            Text("Check")
+                            Text("Check".localized())
                         }
                     }
                     .padding(.bottom, 10)
@@ -63,7 +63,7 @@ public struct OpenAISettingView: View {
                     }
                     .padding(.bottom, 10)
                     HStack {
-                        Text("Models:")
+                        Text("Models:".localized())
                         Spacer()
                     }
                     ForEach(store.models, id: \.self) { model in
