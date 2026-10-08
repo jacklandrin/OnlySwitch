@@ -32,11 +32,11 @@ Discord: https://discord.gg/UzSNpYdPZj
 Control OnlySwitch from your iPhone or iPad over your local network. Download [OnlyRemote on the App Store](https://apps.apple.com/us/app/onlyremote/id6793657946), then open **iOS Remote** in OnlySwitch settings to enable remote access and pair your device.
 
 <p align="center">
-<img alt="OnlyRemote App Store QR code" src="https://raw.githubusercontent.com/jacklandrin/OnlySwitch/main/OnlySwitch/Resource/Ads/OnlyRemoteQRCode.jpeg" width="260" />
+<img alt="05-organized-controls-ipad-13" src="https://github.com/user-attachments/assets/8cbba2ca-ff02-4600-9c6f-265fd91d1d67"  width="70%" align="center" />
 </p>
 
 <p align="center">
-<img alt="05-organized-controls-ipad-13" src="https://github.com/user-attachments/assets/8cbba2ca-ff02-4600-9c6f-265fd91d1d67"  width="70%" align="center" />
+<img alt="OnlyRemote App Store QR code" src="https://raw.githubusercontent.com/jacklandrin/OnlySwitch/main/OnlySwitch/Resource/Ads/OnlyRemoteQRCode.jpeg" width="160" />
 </p>
 
 ## What's the OnlySwitch?
@@ -187,6 +187,9 @@ Some values may appear as unavailable when the hardware or macOS does not expose
 <p align="center">
 <img alt="Screenshot 2026-09-26 at 16 06 05" src="https://github.com/user-attachments/assets/ac8178f6-9f61-43be-a73b-a2103ac18ff7" width="30%" align="center" />
 </p>
+
+## Codex Usage
+<img alt="Screenshot 2026-10-08 at 21 20 36" src="https://github.com/user-attachments/assets/dad0f898-fe19-4df4-be7f-9db278ba5334" width="30%" align="center"/>
 
 ## Only Widget
 
