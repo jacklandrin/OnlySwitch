@@ -116,7 +116,8 @@ Everyone can contribute macOS Shortcuts for OnlySwitch now. Please read [How to 
 | Hide Windows        | partly finished | True Tone                | finished          |
 | Top Sticker         | partly finished | Key Light                | finished          |
 | Only Agent          | finished        | Authenticator            | finished          |
-| Sound Mixer         | finished        |                          |                   |
+| Sound Mixer         | finished        | Natural Scrolling        | finished          |
+| Show desktop pet    | finished        | Codex Usage              | finished          |
 
 Since Version 1.3, switches can be added to or removed from the list.
 
@@ -192,7 +193,9 @@ Some values may appear as unavailable when the hardware or macOS does not expose
 
 Codex Usage is an optional built-in tab that shows the signed-in Codex account’s plan, remaining 5-hour and weekly usage, reset times, available credits, and reset-credit information. Enable the **Codex Usage** switch to show it in both OnlySwitch and Only Control. It uses your existing local Codex sign-in, so no separate sign-in in OnlySwitch is required.
 
-<img alt="Screenshot 2026-10-08 at 21 20 36" src="https://github.com/user-attachments/assets/dad0f898-fe19-4df4-be7f-9db278ba5334" width="30%" align="center"/>
+<p align="center">
+<img alt="Screenshot 2026-10-08 at 21 20 36" src="https://github.com/user-attachments/assets/dad0f898-fe19-4df4-be7f-9db278ba5334" width="30%" align="center"/ >
+</p>
 
 ## Only Widget
 
