@@ -4,44 +4,26 @@ import SwiftUI
 
 struct SettingsView: View {
     @Bindable var store: StoreOf<SettingsFeature>
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         List {
             if store.selectedMacID != nil {
-                selectedOrderSection
                 layoutSaveErrorSection
-                controlsSection(title: "Built-ins", kind: .builtIn)
-                controlsSection(title: "Shortcuts", kind: .shortcut)
-                controlsSection(title: "Evolutions", kind: .evolution)
+                allControlsSection
             }
         }
         .navigationTitle("Configure Controls")
-        .task { await store.send(.task).finish() }
-        .onDisappear { store.send(.foregroundChanged(false)) }
-    }
-
-    @ViewBuilder
-    private var selectedOrderSection: some View {
-        let ids = store.orderedVisibleSelectedControlIDs
-        Section("On Dashboard") {
-            if ids.isEmpty {
-                Text("Add controls below to show them on your dashboard.")
-                    .foregroundStyle(.secondary)
-            } else {
-                ForEach(ids, id: \.self) { id in
-                    if let descriptor = store.catalog[id: id] {
-                        ControlSelectionRow(
-                            descriptor: descriptor,
-                            isSelected: true,
-                            showsReorderHandle: true,
-                            selectionChanged: { store.send(.toggleControl(descriptor.id, $0)) }
-                        )
-                    }
-                }
-                .onMove { store.send(.move($0, $1)) }
-                .environment(\.editMode, .constant(.active))
+        .toolbarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("Close", systemImage: "xmark", action: dismiss.callAsFunction)
+                    .labelStyle(.iconOnly)
+                    .accessibilityHint("Dismisses control configuration")
             }
         }
+        .task { await store.send(.task).finish() }
+        .onDisappear { store.send(.foregroundChanged(false)) }
     }
 
     @ViewBuilder
@@ -57,20 +39,28 @@ struct SettingsView: View {
     }
 
     @ViewBuilder
-    private func controlsSection(title: LocalizedStringKey, kind: RemoteControlID.Kind) -> some View {
-        let controls = store.catalog.filter {
-            $0.id.kind == kind && store.selectedControlIDs.contains($0.id) == false
-        }
-        if controls.isEmpty == false {
-            Section(title) {
-                ForEach(controls) { descriptor in
+    private var allControlsSection: some View {
+        Section("Controls") {
+            ForEach(store.orderedVisibleSelectedControlIDs, id: \.self) { id in
+                if let descriptor = store.catalog[id: id] {
                     ControlSelectionRow(
                         descriptor: descriptor,
-                        isSelected: store.selectedControlIDs.contains(descriptor.id),
-                        showsReorderHandle: false,
+                        isSelected: true,
+                        showsReorderHandle: true,
                         selectionChanged: { store.send(.toggleControl(descriptor.id, $0)) }
                     )
                 }
+            }
+            .onMove { store.send(.move($0, $1)) }
+            .environment(\.editMode, .constant(.active))
+
+            ForEach(store.catalog.filter { store.selectedControlIDs.contains($0.id) == false }) { descriptor in
+                ControlSelectionRow(
+                    descriptor: descriptor,
+                    isSelected: false,
+                    showsReorderHandle: false,
+                    selectionChanged: { store.send(.toggleControl(descriptor.id, $0)) }
+                )
             }
         }
     }

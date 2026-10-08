@@ -5,10 +5,6 @@ import SwiftUI
 struct RemoteAccessSettingsView: View {
     @Bindable var store: StoreOf<RemoteAccessSettingsFeature>
 
-    private let onlyRemoteAppStoreURL = URL(
-        string: "https://apps.apple.com/us/app/onlyremote/id6793657946"
-    )!
-
     var body: some View {
         Form {
             Section("OnlyRemote for iPhone and iPad".localized()) {
@@ -18,12 +14,13 @@ struct RemoteAccessSettingsView: View {
                 )
                 .foregroundStyle(.secondary)
 
-                Link(destination: onlyRemoteAppStoreURL) {
+                Button {
+                    QRCodeWindowController.shared.show(
+                        url: QRCodeWindowController.onlyRemoteQRCodeURL
+                    )
+                } label: {
                     Label("Download OnlyRemote on the App Store".localized(), systemImage: "apple.logo")
                 }
-                .accessibilityHint(
-                    Text("Opens the OnlyRemote App Store page.".localized())
-                )
             }
 
             Section("Remote Access".localized()) {

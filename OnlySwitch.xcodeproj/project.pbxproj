@@ -350,10 +350,6 @@
 		A1D0E10A2F0A000100BEEF01 /* SoundMixerSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E00B2F0A000100BEEF01 /* SoundMixerSwitch.swift */; };
 		A1D0E10C2F0A000100BEEF01 /* DesktopPetSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E00C2F0A000100BEEF01 /* DesktopPetSwitch.swift */; };
 		A1D0E10D2F0A000100BEEF01 /* DesktopPetSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E00C2F0A000100BEEF01 /* DesktopPetSwitch.swift */; };
-		B98000000000000000000002 /* CodexUsageSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B98000000000000000000001 /* CodexUsageSwitch.swift */; };
-		B98000000000000000000003 /* CodexUsageSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B98000000000000000000001 /* CodexUsageSwitch.swift */; };
-		B99000000000000000000002 /* ReverseScrollDirectionSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99000000000000000000001 /* ReverseScrollDirectionSwitch.swift */; };
-		B99000000000000000000003 /* ReverseScrollDirectionSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99000000000000000000001 /* ReverseScrollDirectionSwitch.swift */; };
 		A1D200012F0B000200BEEF01 /* PureColorView in Frameworks */ = {isa = PBXBuildFile; productRef = A1D201012F0B000200BEEF01 /* PureColorView */; };
 		A1D200022F0B000200BEEF01 /* StickerView in Frameworks */ = {isa = PBXBuildFile; productRef = A1D201022F0B000200BEEF01 /* StickerView */; };
 		A1D200032F0B000200BEEF01 /* Authenticator in Frameworks */ = {isa = PBXBuildFile; productRef = A1D201032F0B000200BEEF01 /* Authenticator */; };
@@ -397,6 +393,10 @@
 		B90300000000000000000002 /* OnlyControlSystemMonitorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90300000000000000000001 /* OnlyControlSystemMonitorTests.swift */; };
 		B90400000000000000000002 /* SystemMonitorStatusItemControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90400000000000000000001 /* SystemMonitorStatusItemControllerTests.swift */; };
 		B90400000000000000000005 /* SystemMonitorStatusItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90400000000000000000004 /* SystemMonitorStatusItemController.swift */; };
+		B98000000000000000000002 /* CodexUsageSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B98000000000000000000001 /* CodexUsageSwitch.swift */; };
+		B98000000000000000000003 /* CodexUsageSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B98000000000000000000001 /* CodexUsageSwitch.swift */; };
+		B99000000000000000000002 /* ReverseScrollDirectionSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99000000000000000000001 /* ReverseScrollDirectionSwitch.swift */; };
+		B99000000000000000000003 /* ReverseScrollDirectionSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99000000000000000000001 /* ReverseScrollDirectionSwitch.swift */; };
 		C0D000000000000000000001 /* RemoteSystemMonitorFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D000000000000000000021 /* RemoteSystemMonitorFeature.swift */; };
 		C0D000000000000000000002 /* RemoteSystemMonitorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D000000000000000000022 /* RemoteSystemMonitorView.swift */; };
 		C0D000000000000000000003 /* RemoteSystemMonitorChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D000000000000000000023 /* RemoteSystemMonitorChartView.swift */; };
@@ -410,6 +410,8 @@
 		C0E000000000000000000004 /* RemoteSystemMonitorConfigurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E000000000000000000024 /* RemoteSystemMonitorConfigurationView.swift */; };
 		C0E000000000000000000005 /* RemoteSystemMonitorConfigurationFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E000000000000000000025 /* RemoteSystemMonitorConfigurationFeatureTests.swift */; };
 		C0F000000000000000000001 /* RemoteSystemMonitorWaterfallLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F000000000000000000021 /* RemoteSystemMonitorWaterfallLayout.swift */; };
+		C0F000000000000000000002 /* RemoteCodexUsageFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F000000000000000000022 /* RemoteCodexUsageFeatureTests.swift */; };
+		C0F000000000000000000003 /* RemoteCodexUsageViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F000000000000000000023 /* RemoteCodexUsageViewTests.swift */; };
 		C1A0B00118E9202600000001 /* PrivilegedOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0B00318E9202600000001 /* PrivilegedOperation.swift */; };
 		C1A0B00218E9202600000001 /* PrivilegedOperationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0B00418E9202600000001 /* PrivilegedOperationTests.swift */; };
 		C1A0C00118E9202600000001 /* PrivilegedOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0B00318E9202600000001 /* PrivilegedOperation.swift */; };
@@ -428,15 +430,13 @@
 		C1A0F00218E9202600000001 /* PrivilegedAccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0F00518E9202600000001 /* PrivilegedAccessViewModel.swift */; };
 		C1A0F00318E9202600000001 /* PrivilegedAccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0F00618E9202600000001 /* PrivilegedAccessView.swift */; };
 		C1A0F00718E9202600000001 /* PrivilegedAccessViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0F00818E9202600000001 /* PrivilegedAccessViewModelTests.swift */; };
-		C0F000000000000000000002 /* RemoteCodexUsageFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F000000000000000000022 /* RemoteCodexUsageFeatureTests.swift */; };
-		C0F000000000000000000003 /* RemoteCodexUsageViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F000000000000000000023 /* RemoteCodexUsageViewTests.swift */; };
+		C2CE44CA134851106759FA13 /* SoundMixerVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = A47E483C8C562DBBD024C25A /* SoundMixerVM.swift */; };
 		CADE00000000000000000001 /* RemoteCodexUsageProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADE00000000000000000021 /* RemoteCodexUsageProviderTests.swift */; };
 		CADE00000000000000000002 /* RemoteCodexUsageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADE00000000000000000022 /* RemoteCodexUsageProvider.swift */; };
 		CADE00000000000000000003 /* RemoteCodexUsageFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADE00000000000000000023 /* RemoteCodexUsageFeature.swift */; };
 		CADE00000000000000000004 /* RemoteCodexUsagePresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADE00000000000000000024 /* RemoteCodexUsagePresentation.swift */; };
 		CADE00000000000000000005 /* RemoteCodexUsageCardSurface.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADE00000000000000000025 /* RemoteCodexUsageCardSurface.swift */; };
 		CADE00000000000000000006 /* RemoteCodexUsageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADE00000000000000000026 /* RemoteCodexUsageView.swift */; };
-		C2CE44CA134851106759FA13 /* SoundMixerVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = A47E483C8C562DBBD024C25A /* SoundMixerVM.swift */; };
 		D35C00012F12000100D35C01 /* DesktopPet in Frameworks */ = {isa = PBXBuildFile; productRef = D35C00022F12000100D35C01 /* DesktopPet */; };
 		D35C00042F12000100D35C01 /* DesktopPet in Frameworks */ = {isa = PBXBuildFile; productRef = D35C00032F12000100D35C01 /* DesktopPet */; };
 		D418A0C2EBC2CD7CCD451615 /* SoundMixerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E43EF22E4BA4D2E63E454D7 /* SoundMixerService.swift */; };
@@ -872,8 +872,6 @@
 		A1D0E00A2F0A000100BEEF01 /* AuthenticatorSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorSwitch.swift; sourceTree = "<group>"; };
 		A1D0E00B2F0A000100BEEF01 /* SoundMixerSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundMixerSwitch.swift; sourceTree = "<group>"; };
 		A1D0E00C2F0A000100BEEF01 /* DesktopPetSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesktopPetSwitch.swift; sourceTree = "<group>"; };
-		B98000000000000000000001 /* CodexUsageSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodexUsageSwitch.swift; sourceTree = "<group>"; };
-		B99000000000000000000001 /* ReverseScrollDirectionSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReverseScrollDirectionSwitch.swift; sourceTree = "<group>"; };
 		A47E483C8C562DBBD024C25A /* SoundMixerVM.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoundMixerVM.swift; sourceTree = "<group>"; };
 		A93C8BE02ECA34CB00D7CE52 /* AICommanderSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AICommanderSwitch.swift; sourceTree = "<group>"; };
 		A99F5CE8301140740029426A /* onlyswitch.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = onlyswitch.icon; sourceTree = "<group>"; };
@@ -914,6 +912,8 @@
 		B90300000000000000000001 /* OnlyControlSystemMonitorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyControlSystemMonitorTests.swift; sourceTree = "<group>"; };
 		B90400000000000000000001 /* SystemMonitorStatusItemControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorStatusItemControllerTests.swift; sourceTree = "<group>"; };
 		B90400000000000000000004 /* SystemMonitorStatusItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorStatusItemController.swift; sourceTree = "<group>"; };
+		B98000000000000000000001 /* CodexUsageSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodexUsageSwitch.swift; sourceTree = "<group>"; };
+		B99000000000000000000001 /* ReverseScrollDirectionSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReverseScrollDirectionSwitch.swift; sourceTree = "<group>"; };
 		C0D000000000000000000021 /* RemoteSystemMonitorFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorFeature.swift; sourceTree = "<group>"; };
 		C0D000000000000000000022 /* RemoteSystemMonitorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorView.swift; sourceTree = "<group>"; };
 		C0D000000000000000000023 /* RemoteSystemMonitorChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorChartView.swift; sourceTree = "<group>"; };
@@ -927,6 +927,8 @@
 		C0E000000000000000000024 /* RemoteSystemMonitorConfigurationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorConfigurationView.swift; sourceTree = "<group>"; };
 		C0E000000000000000000025 /* RemoteSystemMonitorConfigurationFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorConfigurationFeatureTests.swift; sourceTree = "<group>"; };
 		C0F000000000000000000021 /* RemoteSystemMonitorWaterfallLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorWaterfallLayout.swift; sourceTree = "<group>"; };
+		C0F000000000000000000022 /* RemoteCodexUsageFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCodexUsageFeatureTests.swift; sourceTree = "<group>"; };
+		C0F000000000000000000023 /* RemoteCodexUsageViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCodexUsageViewTests.swift; sourceTree = "<group>"; };
 		C1A0B00318E9202600000001 /* PrivilegedOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedOperation.swift; sourceTree = "<group>"; };
 		C1A0B00418E9202600000001 /* PrivilegedOperationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedOperationTests.swift; sourceTree = "<group>"; };
 		C1A0C10318E9202600000001 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -944,8 +946,6 @@
 		C1A0F00518E9202600000001 /* PrivilegedAccessViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedAccessViewModel.swift; sourceTree = "<group>"; };
 		C1A0F00618E9202600000001 /* PrivilegedAccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedAccessView.swift; sourceTree = "<group>"; };
 		C1A0F00818E9202600000001 /* PrivilegedAccessViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedAccessViewModelTests.swift; sourceTree = "<group>"; };
-		C0F000000000000000000022 /* RemoteCodexUsageFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCodexUsageFeatureTests.swift; sourceTree = "<group>"; };
-		C0F000000000000000000023 /* RemoteCodexUsageViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCodexUsageViewTests.swift; sourceTree = "<group>"; };
 		CADE00000000000000000021 /* RemoteCodexUsageProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCodexUsageProviderTests.swift; sourceTree = "<group>"; };
 		CADE00000000000000000022 /* RemoteCodexUsageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCodexUsageProvider.swift; sourceTree = "<group>"; };
 		CADE00000000000000000023 /* RemoteCodexUsageFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCodexUsageFeature.swift; sourceTree = "<group>"; };
@@ -2112,17 +2112,6 @@
 			path = Navigation;
 			sourceTree = "<group>";
 		};
-		CADE00000000000000000010 /* CodexUsage */ = {
-			isa = PBXGroup;
-			children = (
-				CADE00000000000000000023 /* RemoteCodexUsageFeature.swift */,
-				CADE00000000000000000024 /* RemoteCodexUsagePresentation.swift */,
-				CADE00000000000000000025 /* RemoteCodexUsageCardSurface.swift */,
-				CADE00000000000000000026 /* RemoteCodexUsageView.swift */,
-			);
-			path = CodexUsage;
-			sourceTree = "<group>";
-		};
 		C1A0B00518E9202600000001 /* PrivilegedOperations */ = {
 			isa = PBXGroup;
 			children = (
@@ -2177,6 +2166,17 @@
 				35AD1FCF5024EAC8DC9C8E5E /* SystemAudioMixer.swift */,
 			);
 			path = SoundMixer;
+			sourceTree = "<group>";
+		};
+		CADE00000000000000000010 /* CodexUsage */ = {
+			isa = PBXGroup;
+			children = (
+				CADE00000000000000000023 /* RemoteCodexUsageFeature.swift */,
+				CADE00000000000000000024 /* RemoteCodexUsagePresentation.swift */,
+				CADE00000000000000000025 /* RemoteCodexUsageCardSurface.swift */,
+				CADE00000000000000000026 /* RemoteCodexUsageView.swift */,
+			);
+			path = CodexUsage;
 			sourceTree = "<group>";
 		};
 		F3A300000000000000000005 /* OnlySwitchRemote */ = {

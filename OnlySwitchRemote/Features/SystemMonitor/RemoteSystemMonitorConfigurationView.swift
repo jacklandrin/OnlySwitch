@@ -16,19 +16,19 @@ struct RemoteSystemMonitorConfigurationView: View {
                             store.layout.visibleMetrics.contains(metric) == false
                         ))
                     } label: {
-                        Label {
-                            HStack {
-                                Text(LocalizedStringKey(metric.displayTitleKey))
-                                Spacer()
-                                Image(systemName: store.layout.visibleMetrics.contains(metric)
-                                    ? "checkmark.circle.fill"
-                                    : "circle")
-                                    .foregroundStyle(store.layout.visibleMetrics.contains(metric)
-                                        ? Color.accentColor
-                                        : Color.secondary)
-                            }
-                        } icon: {
+                        HStack(spacing: 12) {
+                            Image(systemName: store.layout.visibleMetrics.contains(metric)
+                                ? "checkmark.circle.fill"
+                                : "circle")
+                                .foregroundStyle(store.layout.visibleMetrics.contains(metric)
+                                    ? Color.accentColor
+                                    : Color.secondary)
+                                .accessibilityHidden(true)
                             Image(systemName: Self.symbol(for: metric))
+                                .foregroundStyle(Color.accentColor)
+                                .accessibilityHidden(true)
+                            Text(LocalizedStringKey(metric.displayTitleKey))
+                            Spacer()
                         }
                         .frame(minHeight: 44)
                     }
@@ -51,11 +51,14 @@ struct RemoteSystemMonitorConfigurationView: View {
                 }
             }
         }
+        .scrollContentBackground(.hidden)
         .environment(\.editMode, .constant(.active))
-        .navigationTitle("System Monitor Configuration")
+        .navigationTitle("Configure System Monitor")
+        .toolbarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .confirmationAction) {
-                Button("Done", action: dismiss.callAsFunction)
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("Close", systemImage: "xmark", action: dismiss.callAsFunction)
+                    .labelStyle(.iconOnly)
             }
         }
     }

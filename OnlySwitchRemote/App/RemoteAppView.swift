@@ -93,6 +93,18 @@ struct RemoteAppView: View {
                 }
             }
         }
+        .sheet(item: $store.scope(state: \.$controlsConfiguration, action: \.controlsConfiguration)) { configurationStore in
+            NavigationStack {
+                SettingsView(store: configurationStore)
+            }
+            .modifier(ConfigurationSheetPresentation())
+        }
+        .sheet(item: $store.scope(state: \.$monitorConfiguration, action: \.monitorConfiguration)) { configurationStore in
+            NavigationStack {
+                RemoteSystemMonitorConfigurationView(store: configurationStore)
+            }
+            .modifier(ConfigurationSheetPresentation())
+        }
         .safeAreaInset(edge: .top, spacing: 0) {
             if let issue = store.rootIssue {
                 HStack(alignment: .top, spacing: 12) {
@@ -126,5 +138,26 @@ struct RemoteAppView: View {
             get: { store.selectedPage },
             set: { store.send(.pageSelected($0)) }
         )
+    }
+}
+
+private struct ConfigurationSheetPresentation: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(iOS 26, *) {
+            content
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
+                .presentationCornerRadius(32)
+                .presentationBackground {
+                    Color.clear
+                        .glassEffect(.regular, in: .rect(cornerRadius: 32))
+                }
+        } else {
+            content
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
+                .presentationCornerRadius(32)
+                .presentationBackground(.regularMaterial)
+        }
     }
 }

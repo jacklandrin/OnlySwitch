@@ -10,12 +10,12 @@ struct ControlSelectionRow: View {
     var body: some View {
         let title = descriptor.localizedTitle
         HStack(spacing: 12) {
-            Button(isSelected ? "Remove \(title) from Dashboard" : "Add \(title) to Dashboard", systemImage: isSelected ? "minus.circle.fill" : "plus.circle.fill") {
+            Button(isSelected ? "Remove \(title) from Dashboard" : "Add \(title) to Dashboard", systemImage: isSelected ? "checkmark.circle.fill" : "circle") {
                 selectionChanged(isSelected == false)
             }
             .labelStyle(.iconOnly)
             .font(.title2)
-            .foregroundStyle(isSelected ? .red : .green)
+            .foregroundStyle(isSelected ? Color.accentColor : .secondary)
             .frame(minWidth: 44, minHeight: 44)
             .buttonStyle(.borderless)
             .accessibilityHint(Text(accessibilityHint))

@@ -678,6 +678,55 @@ struct RemoteAppFeatureTests {
         }
     }
 
+    @Test func controlsConfigurationPresentsSheetStateWithoutChangingNavigationPath() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+
+        await store.send(.controlsConfigurationButtonTapped) {
+            $0.controlsConfiguration = .init(
+                pairedMacs: [studio],
+                selectedMacID: studio.id
+            )
+        }
+
+        #expect(store.state.path.isEmpty)
+    }
+
+    @Test func monitorConfigurationPresentsSheetStateWithoutChangingNavigationPath() async {
+        let layout = MacSystemMonitorLayout.default(macID: studio.id)
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.selectedPage = .systemMonitor
+        state.systemMonitor.layout = layout
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+
+        await store.send(.systemMonitor(.delegate(.openConfiguration))) {
+            $0.monitorConfiguration = .init(layout: layout)
+        }
+
+        #expect(store.state.path.isEmpty)
+    }
+
+    @Test func controlConfigurationSheetDismissalClearsOnlyItsPresentationState() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.controlsConfiguration = .init(
+            pairedMacs: [studio],
+            selectedMacID: studio.id
+        )
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+
+        await store.send(.controlsConfiguration(.dismiss)) {
+            $0.controlsConfiguration = nil
+        }
+
+        #expect(store.state.path.isEmpty)
+    }
+
     @Test func controlsConfigurationIsTheContextualTrailingRoute() async {
         var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
         state.pairedMacs = [studio]

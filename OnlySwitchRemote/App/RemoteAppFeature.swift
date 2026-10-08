@@ -13,6 +13,8 @@ struct RemoteAppFeature {
     struct State: Equatable {
         var path = StackState<Path.State>()
         var requiredGlobalSettings: GlobalSettingsFeature.State?
+        @Presents var controlsConfiguration: SettingsFeature.State?
+        @Presents var monitorConfiguration: RemoteSystemMonitorConfigurationFeature.State?
         var pairedMacs: IdentifiedArrayOf<PairedMac> = []
         var selectedMacID: UUID?
         var dashboard = DashboardFeature.State()
@@ -121,6 +123,8 @@ struct RemoteAppFeature {
         case systemMonitor(RemoteSystemMonitorFeature.Action)
         case codexUsage(RemoteCodexUsageFeature.Action)
         case requiredGlobalSettings(GlobalSettingsFeature.Action)
+        case controlsConfiguration(PresentationAction<SettingsFeature.Action>)
+        case monitorConfiguration(PresentationAction<RemoteSystemMonitorConfigurationFeature.Action>)
         case path(StackActionOf<Path>)
     }
     @Reducer
@@ -385,11 +389,11 @@ struct RemoteAppFeature {
             case .controlsConfigurationButtonTapped:
                 guard state.requiredGlobalSettings == nil,
                       state.selectedMacID != nil else { return .none }
-                state.path.append(.controlsConfiguration(.init(
+                state.controlsConfiguration = .init(
                     pairedMacs: state.pairedMacs,
                     selectedMacID: state.selectedMacID,
                     connectionStatuses: connectionStatuses(state)
-                )))
+                )
                 return .none
 
             case let .macSelected(id):
@@ -419,6 +423,9 @@ struct RemoteAppFeature {
                 }
                 if state.requiredGlobalSettings != nil {
                     effects.append(.send(.requiredGlobalSettings(.foregroundChanged(foregrounded))))
+                }
+                if state.controlsConfiguration != nil {
+                    effects.append(.send(.controlsConfiguration(.presented(.foregroundChanged(foregrounded)))))
                 }
                 if foregrounded == false, state.systemMonitor.isVisible {
                     effects.append(.send(.systemMonitor(.visibilityChanged(false))))
@@ -456,7 +463,7 @@ struct RemoteAppFeature {
             case .systemMonitor(.delegate(.openConfiguration)):
                 guard let selectedMacID = state.selectedMacID else { return .none }
                 let layout = state.systemMonitor.layout ?? .default(macID: selectedMacID)
-                state.path.append(.monitorConfiguration(.init(layout: layout)))
+                state.monitorConfiguration = .init(layout: layout)
                 return .none
 
             case let .dashboard(.delegate(.selectedMac(mac))):
@@ -499,6 +506,15 @@ struct RemoteAppFeature {
             case let .path(.element(_, action: .controlsConfiguration(.delegate(.layoutChanged(layout))))):
                 guard state.dashboard.isActive else { return .none }
                 return .send(.dashboard(.layoutChanged(layout)))
+
+            case let .controlsConfiguration(.presented(.delegate(.layoutChanged(layout)))):
+                guard state.dashboard.isActive else { return .none }
+                return .send(.dashboard(.layoutChanged(layout)))
+
+            case let .monitorConfiguration(.presented(.delegate(.layoutChanged(layout)))):
+                guard state.selectedMacID == layout.macID else { return .none }
+                state.systemMonitor.layout = layout
+                return .none
 
             case let .path(.element(_, action: .globalSettings(.delegate(.macForgotten(id))))):
                 state.pairedMacs.remove(id: id)
@@ -553,11 +569,14 @@ struct RemoteAppFeature {
                 state.systemMonitor.layout = layout
                 return .none
 
-            case .dashboard, .systemMonitor, .codexUsage, .requiredGlobalSettings, .path:
+            case .dashboard, .systemMonitor, .codexUsage, .requiredGlobalSettings,
+                 .controlsConfiguration, .monitorConfiguration, .path:
                 return .none
             }
         }
         .ifLet(\.requiredGlobalSettings, action: \.requiredGlobalSettings) { GlobalSettingsFeature() }
+        .ifLet(\.$controlsConfiguration, action: \.controlsConfiguration) { SettingsFeature() }
+        .ifLet(\.$monitorConfiguration, action: \.monitorConfiguration) { RemoteSystemMonitorConfigurationFeature() }
         .forEach(\.path, action: \.path)
     }
 
@@ -684,6 +703,9 @@ struct RemoteAppFeature {
         for id: UUID,
         state: inout State
     ) {
+        if state.controlsConfiguration != nil {
+            state.controlsConfiguration?.connectionStatuses[id] = status
+        }
         for pathID in state.path.ids {
             switch state.path[id: pathID] {
             case var .globalSettings(settings):
@@ -711,6 +733,14 @@ struct RemoteAppFeature {
 
     private func syncSettingsState(_ state: inout State) {
         let statuses = connectionStatuses(state)
+        let pairedMacs = state.pairedMacs
+        let selectedMacID = state.selectedMacID
+        if var controlsConfiguration = state.controlsConfiguration {
+            controlsConfiguration.pairedMacs = pairedMacs
+            controlsConfiguration.selectedMacID = selectedMacID
+            controlsConfiguration.connectionStatuses = statuses
+            state.controlsConfiguration = controlsConfiguration
+        }
         for id in state.path.ids {
             switch state.path[id: id] {
             case var .globalSettings(settings):

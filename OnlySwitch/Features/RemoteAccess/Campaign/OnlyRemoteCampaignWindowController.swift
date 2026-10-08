@@ -42,7 +42,7 @@ final class OnlyRemoteCampaignWindowController: NSWindowController, NSWindowDele
                 },
                 showQRCode: {
                     QRCodeWindowController.shared.show(
-                        url: URL(string: "https://raw.githubusercontent.com/jacklandrin/OnlySwitch/main/OnlySwitch/Resource/Ads/OnlyRemoteQRCode.jpeg")!
+                        url: QRCodeWindowController.onlyRemoteQRCodeURL
                     )
                 }
             )
@@ -82,6 +82,9 @@ final class OnlyRemoteCampaignWindowController: NSWindowController, NSWindowDele
 @MainActor
 final class QRCodeWindowController: NSWindowController {
     static let shared = QRCodeWindowController()
+    static let onlyRemoteQRCodeURL = URL(
+        string: "https://raw.githubusercontent.com/jacklandrin/OnlySwitch/main/OnlySwitch/Resource/Ads/OnlyRemoteQRCode.jpeg"
+    )!
 
     private init() {
         let window = QRCodeWindow(

@@ -30,6 +30,11 @@ Discord: https://discord.gg/UzSNpYdPZj
 ## OnlyRemote for iPhone and iPad
 
 Control OnlySwitch from your iPhone or iPad over your local network. Download [OnlyRemote on the App Store](https://apps.apple.com/us/app/onlyremote/id6793657946), then open **iOS Remote** in OnlySwitch settings to enable remote access and pair your device.
+
+<p align="center">
+<img alt="OnlyRemote App Store QR code" src="https://raw.githubusercontent.com/jacklandrin/OnlySwitch/main/OnlySwitch/Resource/Ads/OnlyRemoteQRCode.jpeg" width="260" />
+</p>
+
 <p align="center">
 <img alt="05-organized-controls-ipad-13" src="https://github.com/user-attachments/assets/8cbba2ca-ff02-4600-9c6f-265fd91d1d67"  width="70%" align="center" />
 </p>
@@ -296,6 +301,7 @@ If both OnlySwitch menu-bar icons disappear after command-dragging the divider, 
 * [AIProxySwift](https://github.com/lzell/AIProxySwift)
 * [ollama-swift](https://github.com/mattt/ollama-swift)
 * [CodexKit](https://github.com/timazed/CodexKit)
+* Codex Usage experience inspired by [CodexBar](https://github.com/steipete/CodexBar)
 
 ## Contributors
 
