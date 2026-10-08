@@ -189,6 +189,9 @@ Some values may appear as unavailable when the hardware or macOS does not expose
 </p>
 
 ## Codex Usage
+
+Codex Usage is an optional built-in tab that shows the signed-in Codex account’s plan, remaining 5-hour and weekly usage, reset times, available credits, and reset-credit information. Enable the **Codex Usage** switch to show it in both OnlySwitch and Only Control. It uses your existing local Codex sign-in, so no separate sign-in in OnlySwitch is required.
+
 <img alt="Screenshot 2026-10-08 at 21 20 36" src="https://github.com/user-attachments/assets/dad0f898-fe19-4df4-be7f-9db278ba5334" width="30%" align="center"/>
 
 ## Only Widget
