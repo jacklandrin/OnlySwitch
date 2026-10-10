@@ -51,7 +51,7 @@ final class RemoteCommandRouterTests: XCTestCase {
 
         let result = await router.perform(.init(
             requestID: UUID(),
-            controlID: .init(kind: .builtIn, value: String(SwitchType.lowpowerMode.rawValue)),
+            controlID: .init(kind: .builtIn, value: String(SwitchType.lowpowerMode.legacyIdentifier)),
             action: .setState(true)
         ))
 

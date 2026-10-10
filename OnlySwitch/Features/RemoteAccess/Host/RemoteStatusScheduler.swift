@@ -164,7 +164,9 @@ actor RemoteStatusScheduler {
                 for await notification in NotificationCenter.default.notifications(named: .refreshSingleSwitchStatus) {
                     guard Task.isCancelled == false else { return }
                     if let type = notification.object as? SwitchType {
-                        await self?.refresh(.init(kind: .builtIn, value: String(type.rawValue)))
+                        await self?.refresh(
+                            .init(kind: .builtIn, value: String(type.legacyIdentifier))
+                        )
                     }
                 }
             }

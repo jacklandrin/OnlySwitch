@@ -21,7 +21,7 @@ struct BuiltInSwitchEntity: AppEntity {
 
     static var allSwitches: [BuiltInSwitchEntity] {
         let switches = SwitchType.allCases.filter{ !exceptionSwitches.contains($0) }
-        return switches.map { BuiltInSwitchEntity(id: String($0.rawValue), type: $0) }
+        return switches.map { BuiltInSwitchEntity(id: String($0.legacyIdentifier), type: $0) }
     }
 
     private static var exceptionSwitches: [SwitchType] {

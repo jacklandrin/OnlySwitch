@@ -11,11 +11,19 @@ import Switches
 
 struct OnlyWidgetBuiltInProvider: AppIntentTimelineProvider {
     func placeholder(in context: Context) -> OnlySwitchBuiltInEntry {
-        .init(date: .now, builtInSwitchType: SwitchType.darkMode, id: String(SwitchType.darkMode.rawValue))
+        .init(
+            date: .now,
+            builtInSwitchType: .darkMode,
+            id: String(SwitchType.darkMode.legacyIdentifier)
+        )
     }
 
     func snapshot(for configuration: SelectBuiltInSwitchesIntent, in context: Context) async -> OnlySwitchBuiltInEntry {
-        .init(date: .now, builtInSwitchType: SwitchType.darkMode, id: String(SwitchType.darkMode.rawValue))
+        .init(
+            date: .now,
+            builtInSwitchType: .darkMode,
+            id: String(SwitchType.darkMode.legacyIdentifier)
+        )
     }
 
     func timeline(for configuration: SelectBuiltInSwitchesIntent, in context: Context) async -> Timeline<OnlySwitchBuiltInEntry> {

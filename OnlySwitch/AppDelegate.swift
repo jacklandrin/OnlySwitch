@@ -55,7 +55,7 @@ struct OnlySwitchApp: App {
                     if unitType == .builtIn {
                         guard
                             let intID = UInt64(id),
-                            let type = SwitchType(rawValue: intID)
+                            let type = SwitchType(legacyIdentifier: intID)
                         else {
                             return
                         }

@@ -231,7 +231,7 @@ struct RemoteHostIntegrationTests {
         _ = try await client.preparePairing(code: "ABCDEFGH2345")
         let request = RemoteActionRequest(
             requestID: UUID(),
-            controlID: .init(kind: .builtIn, value: String(SwitchType.darkMode.rawValue)),
+            controlID: .init(kind: .builtIn, value: String(SwitchType.darkMode.legacyIdentifier)),
             action: .setState(true)
         )
 
@@ -647,7 +647,7 @@ struct RemoteHostIntegrationTests {
             RemoteCommandRouter(resolveBuiltIn: { _ in control })
         }
         let descriptor = RemoteControlDescriptor(
-            id: .init(kind: .builtIn, value: String(SwitchType.darkMode.rawValue)),
+            id: .init(kind: .builtIn, value: String(SwitchType.darkMode.legacyIdentifier)),
             title: "Dark Mode",
             behavior: .switch,
             icon: .systemSymbol("moon"),

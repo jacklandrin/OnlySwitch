@@ -40,7 +40,7 @@ extension RemoteCommandRouter {
     static var live: RemoteCommandRouter {
         RemoteCommandRouter(
             resolveBuiltIn: { rawValue in
-                SwitchType(rawValue: rawValue)?.getNewSwitchInstance()
+                SwitchType(legacyIdentifier: rawValue)?.getNewSwitchInstance()
             },
             installedShortcutNames: {
                 Set(await ShortcutsSettingVM.shared.getAllInstalledShortcutName() ?? [])

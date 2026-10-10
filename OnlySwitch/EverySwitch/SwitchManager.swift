@@ -17,7 +17,9 @@ final class SwitchManager: @unchecked Sendable {
     private var shownSwitchMap = [SwitchType: SwitchProvider?]()
     
     @MainActor var barVMList: [SwitchBarVM] {
-        let sortedSwitchMap = shownSwitchMap.sorted() {$0.key.rawValue < $1.key.rawValue}
+        let sortedSwitchMap = shownSwitchMap.sorted() {
+            $0.key.legacyIdentifier < $1.key.legacyIdentifier
+        }
         var switchBarVMs = [SwitchBarVM]()
         for (_, value) in sortedSwitchMap {
             if let aswitch = value {
@@ -28,8 +30,8 @@ final class SwitchManager: @unchecked Sendable {
         return switchBarVMs
     }
     
-    var shownSwitchCount:Int {
-        shownSwitchMap.count
+    var shownPersistentSwitchCount: Int {
+        shownSwitchMap.keys.filter(\.persistsVisibility).count
     }
     
     func register(aswitch: SwitchProvider) {
@@ -69,45 +71,67 @@ final class SwitchManager: @unchecked Sendable {
 
     @MainActor
     func registerSwitchesShouldShow() {
-        let state = getAllSwitchState()
-        for index in 0..<switchTypeCount {
-            let bitwise:UInt64 = 1 << index
-            let shouldShow = (state & bitwise == 0) ? false : true
-            if shouldShow {
-                let type = SwitchType(rawValue: bitwise)!
-                if type == .radioStation {
-                    self.register(aswitch: RadioStationSwitch.shared)
-                } else {
-                    self.register(aswitch: type.getNewSwitchInstance())
-                }
-                
-            }
+        let visibleTypes = visibleSwitchTypes()
+        for type in SwitchType.allCases
+        where type.persistsVisibility == false || visibleTypes.contains(type) {
+            register(type: type)
         }
     }
-    
-    func getAllSwitchState() -> UInt64 {
-        let defaultState: UInt64 = 16_383 // binary 11111111111111
-        let storedState = UserDefaults.standard.string(forKey: UserDefaults.Key.SwitchState)
-        var state = storedState.flatMap(UInt64.init) ?? defaultState
 
-        // Make the new built-in switch discoverable once without re-enabling it after a user
-        // later hides it from Customize.
+    func visibleSwitchTypes() -> Set<SwitchType> {
+        visibleTypesIncludingNewDiscoveries()
+    }
+
+    func isVisible(_ type: SwitchType) -> Bool {
+        type.persistsVisibility == false || visibleSwitchTypes().contains(type)
+    }
+
+    @MainActor
+    func setVisible(_ isVisible: Bool, for type: SwitchType) {
+        guard type.persistsVisibility else { return }
+
+        if isVisible {
+            register(type: type)
+        } else {
+            if type == .radioStation {
+                RadioStationSwitch.shared.playerItem.isPlaying = false
+            }
+            unregister(for: type)
+        }
+        SwitchVisibilityState.setVisible(type, for: isVisible, in: .standard)
+    }
+
+    @MainActor
+    private func register(type: SwitchType) {
+        if type == .radioStation {
+            register(aswitch: RadioStationSwitch.shared)
+        } else {
+            register(aswitch: type.getNewSwitchInstance())
+        }
+    }
+
+    private func visibleTypesIncludingNewDiscoveries() -> Set<SwitchType> {
+        var visibleTypes = SwitchVisibilityState.visibleTypes(from: .standard)
+        var discoveredTypes = Set<SwitchType>()
+
         if !UserDefaults.standard.bool(forKey: UserDefaults.Key.didInstallCodexUsageSwitch) {
-            state |= SwitchType.codexUsage.rawValue
+            discoveredTypes.insert(.codexUsage)
+        }
+        if !UserDefaults.standard.bool(forKey: UserDefaults.Key.didInstallReverseScrollDirectionSwitch) {
+            discoveredTypes.insert(.reverseScrollDirection)
+        }
+
+        guard discoveredTypes.isEmpty == false else { return visibleTypes }
+
+        visibleTypes.formUnion(discoveredTypes)
+        SwitchVisibilityState.setVisibleTypes(visibleTypes, in: .standard)
+        if discoveredTypes.contains(.codexUsage) {
             UserDefaults.standard.set(true, forKey: UserDefaults.Key.didInstallCodexUsageSwitch)
         }
-
-        if !UserDefaults.standard.bool(forKey: UserDefaults.Key.didInstallReverseScrollDirectionSwitch) {
-            state |= SwitchType.reverseScrollDirection.rawValue
+        if discoveredTypes.contains(.reverseScrollDirection) {
             UserDefaults.standard.set(true, forKey: UserDefaults.Key.didInstallReverseScrollDirectionSwitch)
         }
-
-        if storedState == nil || state != UInt64(storedState ?? "") {
-            UserDefaults.standard.set(String(state), forKey: UserDefaults.Key.SwitchState)
-            UserDefaults.standard.synchronize()
-        }
-
-        return state
+        return visibleTypes
     }
 
     func activeEvolutionList() -> [EvolutionBarVM] {

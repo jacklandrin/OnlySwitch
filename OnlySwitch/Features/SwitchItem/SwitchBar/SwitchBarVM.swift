@@ -79,7 +79,7 @@ class SwitchBarVM : BarProvider, ObservableObject, @MainActor SwitchDelegate {
     }
 
     var id: String {
-        String(switchType.rawValue)
+        String(switchType.legacyIdentifier)
     }
 
     @Published private var model = SwitchBarModel()

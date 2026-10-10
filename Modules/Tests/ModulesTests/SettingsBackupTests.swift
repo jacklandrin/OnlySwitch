@@ -75,6 +75,50 @@ struct SettingsBackupTests {
         #expect(collected[UserDefaults.Key.openAIAPI] == nil)
     }
 
+    @Test func preservesLegacySwitchVisibilityMaskInBackups() throws {
+        let legacyMask = "10"
+        let backup = SettingsBackup(
+            preferences: [UserDefaults.Key.SwitchState: legacyMask],
+            sharedPreferences: [:],
+            radioStations: [],
+            evolution: .init(preExecution: nil, commands: [])
+        )
+
+        let decoded = try SettingsBackup(data: try backup.encoded())
+
+        #expect(decoded.preferences[UserDefaults.Key.SwitchState] as? String == legacyMask)
+
+        let defaults = makeDefaults()
+        SettingsBackup.replace(
+            decoded.preferences,
+            in: defaults,
+            isAllowed: SettingsBackup.isExportablePreference
+        )
+        #expect(defaults.string(forKey: UserDefaults.Key.SwitchState) == legacyMask)
+    }
+
+    @Test func preservesExtensibleSwitchVisibilityIdentifiersInBackups() throws {
+        let identifiers = ["darkMode", "mute"]
+        let backup = SettingsBackup(
+            preferences: [UserDefaults.Key.SwitchState: identifiers],
+            sharedPreferences: [:],
+            radioStations: [],
+            evolution: .init(preExecution: nil, commands: [])
+        )
+
+        let decoded = try SettingsBackup(data: try backup.encoded())
+
+        #expect(decoded.preferences[UserDefaults.Key.SwitchState] as? [String] == identifiers)
+
+        let defaults = makeDefaults()
+        SettingsBackup.replace(
+            decoded.preferences,
+            in: defaults,
+            isAllowed: SettingsBackup.isExportablePreference
+        )
+        #expect(defaults.stringArray(forKey: UserDefaults.Key.SwitchState) == identifiers)
+    }
+
     @Test func replaceWritesValuesAndResetsMissingSettingsOnly() {
         let defaults = makeDefaults()
         defaults.set(0.9, forKey: UserDefaults.Key.nightShiftStrength)

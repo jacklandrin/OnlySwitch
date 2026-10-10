@@ -196,6 +196,7 @@ let package = Package(
             name: "ModulesTests",
             dependencies: [
                 "Extensions",
+                "Switches",
                 "Authenticator",
                 "DesktopPet",
                 "OnlyControl",

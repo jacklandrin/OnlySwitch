@@ -46,6 +46,7 @@ private struct CustomizeRowView: View {
     var body: some View {
         HStack {
             Toggle("", isOn: $item.toggle)
+                .disabled(item.type.persistsVisibility == false)
             if let iconImage = item.iconImage {
                 Image(nsImage: iconImage)
                     .renderingMode(.template)

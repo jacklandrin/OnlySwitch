@@ -27,7 +27,7 @@ extension RemoteCatalogProvider {
             case .builtIn:
                 guard let rawValue = UInt64(id.value),
                       String(rawValue) == id.value,
-                      let type = SwitchType(rawValue: rawValue),
+                      let type = SwitchType(legacyIdentifier: rawValue),
                       builtIns().contains(type) else {
                     throw RemoteProtocolError(code: .controlNotFound, message: "Control not found")
                 }
@@ -95,7 +95,7 @@ extension RemoteCatalogProvider {
         let barInfo = type.barInfo()
         let availability = availability(for: type, control: control)
         return RemoteControlDescriptor(
-            id: .init(kind: .builtIn, value: String(type.rawValue)),
+            id: .init(kind: .builtIn, value: String(type.legacyIdentifier)),
             title: barInfo.title,
             behavior: behavior(for: barInfo.controlType),
             icon: RemoteIconAdapter.icon(for: type, barInfo: barInfo),
@@ -154,7 +154,7 @@ extension RemoteCatalogProvider {
         let isOn = controlType == .Button ? nil : await control.currentStatus()
         let info = await control.currentInfo()
         return RemoteControlStatus(
-            id: .init(kind: .builtIn, value: String(type.rawValue)),
+            id: .init(kind: .builtIn, value: String(type.legacyIdentifier)),
             isAvailable: availability.isAvailable,
             unavailableReason: availability.reason,
             isOn: isOn,

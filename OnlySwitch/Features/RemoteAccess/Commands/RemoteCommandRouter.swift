@@ -109,7 +109,7 @@ final class RemoteCommandRouter: Sendable {
     private func executeBuiltIn(_ request: RemoteActionRequest) async throws -> RemoteControlStatus {
         guard let rawValue = UInt64(request.controlID.value),
               String(rawValue) == request.controlID.value,
-              let type = SwitchType(rawValue: rawValue),
+              let type = SwitchType(legacyIdentifier: rawValue),
               let control = resolveBuiltIn(rawValue),
               control.type == type else {
             throw controlNotFound("Control not found")

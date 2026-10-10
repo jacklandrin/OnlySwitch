@@ -230,7 +230,7 @@ class OnlySwitchTests: XCTestCase {
     )
 
     #expect(control.type == .reverseScrollDirection)
-    #expect(SwitchType.reverseScrollDirection.rawValue == 1 << 41)
+    #expect(SwitchType.reverseScrollDirection.legacyIdentifier == 1 << 41)
     #expect(SwitchType.reverseScrollDirection.barInfo().title == "Natural Scrolling")
     #expect(control.isVisible())
     #expect(await control.currentStatus() == false)
