@@ -127,21 +127,6 @@ public enum SwitchType: String, CaseIterable, Sendable {
         self = type
     }
 
-    public var persistsVisibility: Bool {
-        switch self {
-        case .xcodeCache, .emptyTrash, .emptyPasteboard, .screenTest, .ejectDiscs, .aiCommender:
-            false
-        case .hiddeDesktop, .darkMode, .topNotch, .mute, .keepAwake, .screenSaver, .nightShift,
-             .autohideDock, .autohideMenuBar, .airPods, .bluetooth, .hiddenFiles, .radioStation,
-             .showUserLibrary, .showExtensionName, .pomodoroTimer, .smallLaunchpadIcon,
-             .lowpowerMode, .muteMicrophone, .showFinderPathbar, .dockRecent, .spotify,
-             .applemusic, .hideMenubarIcons, .fkey, .backNoises, .dimScreen, .hideWindows,
-             .trueTone, .topSticker, .keyLight, .authenticator, .soundMixer, .desktopPet,
-             .codexUsage, .reverseScrollDirection:
-            true
-        }
-    }
-
     public func barInfo() -> SwitchBarInfo {
         switch self {
         case .hiddeDesktop:

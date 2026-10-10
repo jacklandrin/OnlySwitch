@@ -20,7 +20,7 @@ class CustomizeVM:ObservableObject {
     init() {
         let visibleTypes = SwitchManager.shared.visibleSwitchTypes()
         for type in SwitchType.allCases {
-            let isVisible = type.persistsVisibility == false || visibleTypes.contains(type)
+            let isVisible = visibleTypes.contains(type)
             allSwitches.append(CustomizeItem(type: type, toggle: isVisible, error: { [weak self] info in
                 guard let strongSelf = self else {return}
                 strongSelf.errorInfo = info
@@ -39,17 +39,10 @@ class CustomizeItem: ObservableObject {
     @Published var toggle:Bool
     {
         didSet {
-            guard type.persistsVisibility else {
-                if toggle == false {
-                    toggle = true
-                }
-                return
-            }
-
             if toggle {
                 SwitchManager.shared.setVisible(true, for: type)
             } else {
-                if SwitchManager.shared.shownPersistentSwitchCount < 5 {
+                if SwitchManager.shared.shownSwitchCount < 5 {
                     error("At least remain 4 switches")
                     toggle = true
                     return

@@ -30,8 +30,8 @@ final class SwitchManager: @unchecked Sendable {
         return switchBarVMs
     }
     
-    var shownPersistentSwitchCount: Int {
-        shownSwitchMap.keys.filter(\.persistsVisibility).count
+    var shownSwitchCount: Int {
+        shownSwitchMap.count
     }
     
     func register(aswitch: SwitchProvider) {
@@ -73,7 +73,7 @@ final class SwitchManager: @unchecked Sendable {
     func registerSwitchesShouldShow() {
         let visibleTypes = visibleSwitchTypes()
         for type in SwitchType.allCases
-        where type.persistsVisibility == false || visibleTypes.contains(type) {
+        where visibleTypes.contains(type) {
             register(type: type)
         }
     }
@@ -83,13 +83,11 @@ final class SwitchManager: @unchecked Sendable {
     }
 
     func isVisible(_ type: SwitchType) -> Bool {
-        type.persistsVisibility == false || visibleSwitchTypes().contains(type)
+        visibleSwitchTypes().contains(type)
     }
 
     @MainActor
     func setVisible(_ isVisible: Bool, for type: SwitchType) {
-        guard type.persistsVisibility else { return }
-
         if isVisible {
             register(type: type)
         } else {
@@ -111,7 +109,10 @@ final class SwitchManager: @unchecked Sendable {
     }
 
     private func visibleTypesIncludingNewDiscoveries() -> Set<SwitchType> {
-        var visibleTypes = SwitchVisibilityState.visibleTypes(from: .standard)
+        guard var visibleTypes = SwitchVisibilityState.load(from: .standard).visibleTypes else {
+            // Do not replace a present value that this version cannot decode.
+            return []
+        }
         var discoveredTypes = Set<SwitchType>()
 
         if !UserDefaults.standard.bool(forKey: UserDefaults.Key.didInstallCodexUsageSwitch) {

@@ -4,7 +4,7 @@ import Testing
 @testable import Switches
 
 struct SwitchVisibilityStateTests {
-    private let historicalDefaultPersistentTypes: Set<SwitchType> = [
+    private let historicalDefaultTypes: Set<SwitchType> = [
         .hiddeDesktop,
         .darkMode,
         .topNotch,
@@ -16,9 +16,14 @@ struct SwitchVisibilityStateTests {
         .autohideMenuBar,
         .airPods,
         .bluetooth,
+        .xcodeCache,
         .hiddenFiles,
         .radioStation,
     ]
+
+    private var buttonTypes: Set<SwitchType> {
+        Set(SwitchType.allCases.filter { $0.barInfo().controlType == .Button })
+    }
 
     private func makeDefaults() -> (defaults: UserDefaults, suite: String) {
         let suite = "SwitchVisibilityStateTests.\(UUID().uuidString)"
@@ -37,12 +42,7 @@ struct SwitchVisibilityStateTests {
         #expect(SwitchType(legacyIdentifier: value.1) == value.0)
     }
 
-    @Test func buttonsDoNotPersistVisibility() {
-        #expect(SwitchType.emptyTrash.persistsVisibility == false)
-        #expect(SwitchType.darkMode.persistsVisibility)
-    }
-
-    @Test func migratesLegacyMaskToStableNames() {
+    @Test func migratesLegacyStringMaskToStableNames() {
         let (defaults, suite) = makeDefaults()
         defer { defaults.removePersistentDomain(forName: suite) }
         defaults.set("10", forKey: UserDefaults.Key.SwitchState)
@@ -51,30 +51,64 @@ struct SwitchVisibilityStateTests {
         #expect(defaults.array(forKey: UserDefaults.Key.SwitchState) as? [String] == ["darkMode", "mute"])
     }
 
-    @Test func canonicalizesNewFormatAndIgnoresUnknownValues() {
+    @Test func legacyNSNumberAndUInt64MasksRetainEverySelectedButton() {
+        let selectedTypes = buttonTypes.union([.darkMode])
+        let mask = selectedTypes.reduce(UInt64.zero) { $0 | $1.legacyIdentifier }
+
+        for value: Any in [NSNumber(value: mask), mask] {
+            let (defaults, suite) = makeDefaults()
+            defer { defaults.removePersistentDomain(forName: suite) }
+            defaults.set(value, forKey: UserDefaults.Key.SwitchState)
+
+            #expect(SwitchVisibilityState.visibleTypes(from: defaults) == selectedTypes)
+            #expect(
+                defaults.array(forKey: UserDefaults.Key.SwitchState) as? [String]
+                    == canonicalIdentifiers(for: selectedTypes)
+            )
+        }
+    }
+
+    @Test func canonicalizesNewFormatAndRetainsEverySelectedButton() {
         let (defaults, suite) = makeDefaults()
         defer { defaults.removePersistentDomain(forName: suite) }
+        let selectedTypes = buttonTypes.union([.darkMode])
         defaults.set(
-            ["mute", "unknown", "darkMode", "darkMode", "emptyTrash"],
+            selectedTypes.map(\.rawValue) + ["unknown", "darkMode"],
             forKey: UserDefaults.Key.SwitchState
         )
 
-        #expect(SwitchVisibilityState.visibleTypes(from: defaults) == [.darkMode, .mute])
-        #expect(defaults.array(forKey: UserDefaults.Key.SwitchState) as? [String] == ["darkMode", "mute"])
+        #expect(SwitchVisibilityState.visibleTypes(from: defaults) == selectedTypes)
+        #expect(
+            defaults.array(forKey: UserDefaults.Key.SwitchState) as? [String]
+                == canonicalIdentifiers(for: selectedTypes)
+        )
     }
 
-    @Test func ignoresButtonVisibilityMutations() {
+    @Test func buttonVisibilityMutationsArePersisted() {
         let (defaults, suite) = makeDefaults()
         defer { defaults.removePersistentDomain(forName: suite) }
         defaults.set(["darkMode"], forKey: UserDefaults.Key.SwitchState)
 
-        SwitchVisibilityState.setVisible(.emptyTrash, for: true, in: defaults)
+        for type in buttonTypes {
+            SwitchVisibilityState.setVisible(type, for: true, in: defaults)
+        }
+
+        let selectedTypes = buttonTypes.union([.darkMode])
+        #expect(SwitchVisibilityState.visibleTypes(from: defaults) == selectedTypes)
+        #expect(
+            defaults.array(forKey: UserDefaults.Key.SwitchState) as? [String]
+                == canonicalIdentifiers(for: selectedTypes)
+        )
+
+        for type in buttonTypes {
+            SwitchVisibilityState.setVisible(type, for: false, in: defaults)
+        }
 
         #expect(SwitchVisibilityState.visibleTypes(from: defaults) == [.darkMode])
         #expect(defaults.array(forKey: UserDefaults.Key.SwitchState) as? [String] == ["darkMode"])
     }
 
-    @Test func persistsMutationsForPersistentTypesOnly() {
+    @Test func persistsVisibilityMutations() {
         let (defaults, suite) = makeDefaults()
         defer { defaults.removePersistentDomain(forName: suite) }
         defaults.set(["darkMode"], forKey: UserDefaults.Key.SwitchState)
@@ -88,16 +122,28 @@ struct SwitchVisibilityStateTests {
         #expect(defaults.array(forKey: UserDefaults.Key.SwitchState) as? [String] == ["mute"])
     }
 
-    @Test func malformedOrMissingLegacyValueUsesHistoricalPersistentDefaults() {
+    @Test func malformedExistingValueDoesNotReplaceSelectionWithHistoricalDefaults() {
         let malformed = makeDefaults()
         defer { malformed.defaults.removePersistentDomain(forName: malformed.suite) }
         malformed.defaults.set("not-a-mask", forKey: UserDefaults.Key.SwitchState)
 
-        #expect(SwitchVisibilityState.visibleTypes(from: malformed.defaults) == historicalDefaultPersistentTypes)
+        #expect(SwitchVisibilityState.load(from: malformed.defaults) == .unreadable)
+        #expect(SwitchVisibilityState.visibleTypes(from: malformed.defaults).isEmpty)
+        #expect(malformed.defaults.string(forKey: UserDefaults.Key.SwitchState) == "not-a-mask")
+    }
 
+    @Test func missingValueUsesHistoricalDefaults() {
         let missing = makeDefaults()
         defer { missing.defaults.removePersistentDomain(forName: missing.suite) }
-        #expect(SwitchVisibilityState.visibleTypes(from: missing.defaults) == historicalDefaultPersistentTypes)
+
+        #expect(
+            SwitchVisibilityState.load(from: missing.defaults)
+                == .missing(historicalDefaultTypes)
+        )
+        #expect(
+            missing.defaults.array(forKey: UserDefaults.Key.SwitchState) as? [String]
+                == canonicalIdentifiers(for: historicalDefaultTypes)
+        )
     }
 
     @Test func unknownLegacyBitsAreIgnored() {
@@ -133,8 +179,14 @@ struct SwitchVisibilityStateTests {
 
         let visibleTypes = SwitchVisibilityState.visibleTypes(from: defaults)
 
-        #expect(visibleTypes == historicalDefaultPersistentTypes)
+        #expect(visibleTypes == historicalDefaultTypes)
         #expect(visibleTypes.contains(.codexUsage) == false)
         #expect(visibleTypes.contains(.reverseScrollDirection) == false)
+    }
+
+    private func canonicalIdentifiers(for types: Set<SwitchType>) -> [String] {
+        types
+            .sorted { $0.legacyIdentifier < $1.legacyIdentifier }
+            .map(\.rawValue)
     }
 }
