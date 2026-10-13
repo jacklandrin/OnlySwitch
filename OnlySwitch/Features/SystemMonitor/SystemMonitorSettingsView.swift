@@ -1,11 +1,18 @@
+import Extensions
 import SwiftUI
 import SystemMonitor
 
 struct SystemMonitorSettingsView: View {
     @StateObject private var viewModel = SystemMonitorSettingsViewModel()
+    @AppStorage(UserDefaults.Key.showSystemMonitorTab) private var showSystemMonitorTab = true
 
     var body: some View {
         Form {
+            Toggle("Show System Monitor tab".localized(), isOn: $showSystemMonitorTab)
+                .onChange(of: showSystemMonitorTab) {
+                    viewModel.systemMonitorTabVisibilityDidChange()
+                }
+
             Section {
                 ForEach(SystemMonitorMetric.allCases, id: \.self) { metric in
                     Toggle(metric.displayTitleKey.localized(), isOn: viewModel.panelMetricBinding(for: metric))

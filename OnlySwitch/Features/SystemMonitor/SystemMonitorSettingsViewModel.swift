@@ -1,3 +1,4 @@
+import Defines
 import SwiftUI
 import SystemMonitor
 
@@ -7,6 +8,10 @@ final class SystemMonitorSettingsViewModel: ObservableObject {
 
     init(preferences: SystemMonitorPreferences = Preferences.shared.systemMonitorPreferences) {
         self.preferences = preferences
+    }
+
+    func systemMonitorTabVisibilityDidChange() {
+        NotificationCenter.default.post(name: .changeSettings, object: nil)
     }
 
     func panelMetricBinding(for metric: SystemMonitorMetric) -> Binding<Bool> {
