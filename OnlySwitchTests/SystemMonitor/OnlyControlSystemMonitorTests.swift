@@ -64,4 +64,26 @@ struct OnlyControlSystemMonitorTests {
             $0.selectedSection = .controls
         }
     }
+
+    @MainActor
+    @Test
+    func disablingSelectedMonitorReturnsToControlsAndStopsSampling() async {
+        let store = TestStore(initialState: .init(
+            selectedSection: .systemMonitor,
+            systemMonitor: .init(isVisible: true, isSampling: true)
+        )) {
+            OnlyControlReducer()
+        } withDependencies: {
+            $0.systemMonitor.snapshots = { AsyncThrowingStream { _ in } }
+        }
+
+        await store.send(.availableSectionsChanged([.controls])) {
+            $0.selectedSection = .controls
+        }
+        await store.receive(.systemMonitor(.visibilityChanged(false))) {
+            $0.systemMonitor.isVisible = false
+            $0.systemMonitor.isSampling = false
+        }
+        await store.finish()
+    }
 }

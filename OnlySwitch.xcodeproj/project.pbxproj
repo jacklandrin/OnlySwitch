@@ -395,6 +395,8 @@
 		B90400000000000000000005 /* SystemMonitorStatusItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90400000000000000000004 /* SystemMonitorStatusItemController.swift */; };
 		B98000000000000000000002 /* CodexUsageSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B98000000000000000000001 /* CodexUsageSwitch.swift */; };
 		B98000000000000000000003 /* CodexUsageSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B98000000000000000000001 /* CodexUsageSwitch.swift */; };
+		B98500000000000000000002 /* SystemMonitorSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B98500000000000000000001 /* SystemMonitorSwitch.swift */; };
+		B98500000000000000000003 /* SystemMonitorSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B98500000000000000000001 /* SystemMonitorSwitch.swift */; };
 		B99000000000000000000002 /* ReverseScrollDirectionSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99000000000000000000001 /* ReverseScrollDirectionSwitch.swift */; };
 		B99000000000000000000003 /* ReverseScrollDirectionSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99000000000000000000001 /* ReverseScrollDirectionSwitch.swift */; };
 		C0D000000000000000000001 /* RemoteSystemMonitorFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D000000000000000000021 /* RemoteSystemMonitorFeature.swift */; };
@@ -913,6 +915,7 @@
 		B90400000000000000000001 /* SystemMonitorStatusItemControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorStatusItemControllerTests.swift; sourceTree = "<group>"; };
 		B90400000000000000000004 /* SystemMonitorStatusItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorStatusItemController.swift; sourceTree = "<group>"; };
 		B98000000000000000000001 /* CodexUsageSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodexUsageSwitch.swift; sourceTree = "<group>"; };
+		B98500000000000000000001 /* SystemMonitorSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorSwitch.swift; sourceTree = "<group>"; };
 		B99000000000000000000001 /* ReverseScrollDirectionSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReverseScrollDirectionSwitch.swift; sourceTree = "<group>"; };
 		C0D000000000000000000021 /* RemoteSystemMonitorFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorFeature.swift; sourceTree = "<group>"; };
 		C0D000000000000000000022 /* RemoteSystemMonitorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorView.swift; sourceTree = "<group>"; };
@@ -1195,6 +1198,7 @@
 				A1D0E00B2F0A000100BEEF01 /* SoundMixerSwitch.swift */,
 				A1D0E00C2F0A000100BEEF01 /* DesktopPetSwitch.swift */,
 				B98000000000000000000001 /* CodexUsageSwitch.swift */,
+				B98500000000000000000001 /* SystemMonitorSwitch.swift */,
 				B99000000000000000000001 /* ReverseScrollDirectionSwitch.swift */,
 				0447E33F2B71746C00D07B9A /* AirPodsSwitch.swift */,
 				0447E3382B71746C00D07B9A /* AppleMusicSwitch.swift */,
@@ -2813,6 +2817,7 @@
 				0447E3862B71746E00D07B9A /* HiddenDesktopSwitch.swift in Sources */,
 				A1D0E10C2F0A000100BEEF01 /* DesktopPetSwitch.swift in Sources */,
 				B98000000000000000000002 /* CodexUsageSwitch.swift in Sources */,
+				B98500000000000000000002 /* SystemMonitorSwitch.swift in Sources */,
 				B99000000000000000000002 /* ReverseScrollDirectionSwitch.swift in Sources */,
 				04FC161728402E5200D4A4AC /* ShortcutOnMarket.swift in Sources */,
 				0447E35E2B71746E00D07B9A /* AppleMusicSwitch.swift in Sources */,
@@ -3086,6 +3091,7 @@
 				0447E3872B71746E00D07B9A /* HiddenDesktopSwitch.swift in Sources */,
 				A1D0E10D2F0A000100BEEF01 /* DesktopPetSwitch.swift in Sources */,
 				B98000000000000000000003 /* CodexUsageSwitch.swift in Sources */,
+				B98500000000000000000003 /* SystemMonitorSwitch.swift in Sources */,
 				B99000000000000000000003 /* ReverseScrollDirectionSwitch.swift in Sources */,
 				04819CD52BBC8A6700645A0C /* KeyLightSwitch.swift in Sources */,
 				04581DB02764CBCF008ADF30 /* SettingsVM.swift in Sources */,

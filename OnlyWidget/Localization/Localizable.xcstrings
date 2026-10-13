@@ -4607,6 +4607,31 @@
         }
       }
     },
+    "System Monitor" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : { "stringUnit" : { "state" : "translated", "value" : "Monitor systému" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Systemmonitor" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "System Monitor" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Monitor del sistema" } },
+        "fil" : { "stringUnit" : { "state" : "translated", "value" : "Monitor ng System" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Moniteur système" } },
+        "hr" : { "stringUnit" : { "state" : "translated", "value" : "Nadzor sustava" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Monitor di sistema" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "システムモニタ" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "시스템 모니터" } },
+        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Systeemmonitor" } },
+        "pl" : { "stringUnit" : { "state" : "translated", "value" : "Monitor systemu" } },
+        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Monitor do Sistema" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Системный монитор" } },
+        "sk" : { "stringUnit" : { "state" : "translated", "value" : "Monitor systému" } },
+        "so" : { "stringUnit" : { "state" : "translated", "value" : "Kormeeraha Nidaamka" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Sistem Monitörü" } },
+        "uk" : { "stringUnit" : { "state" : "translated", "value" : "Системний монітор" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "系统监视器" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "系統監視器" } }
+      }
+    },
     "Xcode Derived Data" : {
       "extractionState" : "manual",
       "localizations" : {

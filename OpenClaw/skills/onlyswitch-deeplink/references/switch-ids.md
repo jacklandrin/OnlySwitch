@@ -45,5 +45,6 @@ Match user intent (e.g. "empty trash", "toggle keep awake") to one row below, th
 | 68719476736 | Only Agent | only agent, ai commander, ai commender |
 | 137438953472 | Authenticator | authenticator |
 | 2199023255552 | Natural Scrolling | natural scrolling, invert scroll direction, reverse scroll direction, reverse scrolling |
+| 4398046511104 | System Monitor | system monitor, monitor tab, performance monitor |
 
 When the user's request doesn't exactly match a title, use the **Aliases** column (and the title) to pick the correct id.

@@ -51,6 +51,8 @@ public extension UserDefaults {
         public static let soundMixerEnabled = "soundMixerEnabledKey"
         // System Monitor
         public static let systemMonitorPreferences = "systemMonitorPreferencesKey"
+        public static let showSystemMonitorTab = "showSystemMonitorTabKey"
+        public static let didInstallSystemMonitorSwitch = "didInstallSystemMonitorSwitchKey"
         //BackNoises
         public static let backNoisesTrack = "backNoisesTrackKey"
         public static let automaticallyStopPlayNoiseTime = "automaticallyStopPlayNoiseTimeKey"
@@ -117,7 +119,7 @@ public extension UserDefaults {
             shortcutsDic,
             orderWeight, onlyControlOrderWeight,
             soundMixerEnabled,
-            systemMonitorPreferences,
+            systemMonitorPreferences, showSystemMonitorTab,
             backNoisesTrack, automaticallyStopPlayNoiseTime,
             autoStopKeepAwakeMode, autoStopKeepAwakeTime, autoStopKeepAwakeStartDate, autoStopKeepAwakeEndDate, KeepAwakeKey,
             autoDimScreenTime, dimScreenPercent, syncExternalBrightness,

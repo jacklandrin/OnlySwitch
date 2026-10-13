@@ -121,6 +121,9 @@ final class SwitchManager: @unchecked Sendable {
         if !UserDefaults.standard.bool(forKey: UserDefaults.Key.didInstallReverseScrollDirectionSwitch) {
             discoveredTypes.insert(.reverseScrollDirection)
         }
+        if !UserDefaults.standard.bool(forKey: UserDefaults.Key.didInstallSystemMonitorSwitch) {
+            discoveredTypes.insert(.systemMonitor)
+        }
 
         guard discoveredTypes.isEmpty == false else { return visibleTypes }
 
@@ -131,6 +134,9 @@ final class SwitchManager: @unchecked Sendable {
         }
         if discoveredTypes.contains(.reverseScrollDirection) {
             UserDefaults.standard.set(true, forKey: UserDefaults.Key.didInstallReverseScrollDirectionSwitch)
+        }
+        if discoveredTypes.contains(.systemMonitor) {
+            UserDefaults.standard.set(true, forKey: UserDefaults.Key.didInstallSystemMonitorSwitch)
         }
         return visibleTypes
     }

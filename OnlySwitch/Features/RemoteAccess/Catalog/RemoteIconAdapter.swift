@@ -89,6 +89,7 @@ enum RemoteIconAdapter {
         case .desktopPet: "pawprint"
         case .codexUsage: "gauge.with.dots.needle.50percent"
         case .reverseScrollDirection: "computermouse"
+        case .systemMonitor: "waveform.path.ecg"
         }
     }
 }

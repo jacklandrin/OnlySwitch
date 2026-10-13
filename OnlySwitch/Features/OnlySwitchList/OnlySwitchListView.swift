@@ -31,6 +31,7 @@ struct OnlySwitchListView: View {
     @FocusState var focusedBar: Focusable?
     @State private var selectedSection: SectionBar.Section = .controls
     @AppStorage(UserDefaults.Key.showCodexUsageTab) private var showCodexUsageTab = true
+    @AppStorage(UserDefaults.Key.showSystemMonitorTab) private var showSystemMonitorTab = true
 
     let columns = [
         GridItem(.fixed(Layout.popoverWidth - 40)),
@@ -54,14 +55,16 @@ struct OnlySwitchListView: View {
                     .opacity(0.7)
                     .isHidden(SwitchListAppearance(rawValue: switchVM.currentAppearance) == .single, remove: true)
                 
-                SystemMonitorSectionBar(
-                    sections: sections,
-                    selection: $selectedSection
-                )
-                // Keep this inset in the popover layout so it cannot be compressed
-                // away by the section bar's own intrinsic height.
-                .padding(.top, 12)
-                .padding(.bottom, 2)
+                if SectionBar.shouldShowBar(for: sections) {
+                    SystemMonitorSectionBar(
+                        sections: sections,
+                        selection: $selectedSection
+                    )
+                    // Keep this inset in the popover layout so it cannot be compressed
+                    // away by the section bar's own intrinsic height.
+                    .padding(.top, 12)
+                    .padding(.bottom, 2)
+                }
 
                 ScrollView {
                     Group {
@@ -524,6 +527,7 @@ struct OnlySwitchListView: View {
         SectionBar.sections(
             authenticator: shouldShowAuthenticatorPanel,
             soundMixer: soundMixerVM.enabled,
+            systemMonitor: showSystemMonitorTab,
             codexUsage: showCodexUsageTab
         )
     }

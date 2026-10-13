@@ -97,6 +97,8 @@ extension SwitchType {
             return CodexUsageSwitch()
         case .reverseScrollDirection:
             return ReverseScrollDirectionSwitch()
+        case .systemMonitor:
+            return SystemMonitorSwitch()
         }
     }
     

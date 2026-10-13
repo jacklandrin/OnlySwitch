@@ -147,6 +147,7 @@ struct SettingsBackupTests {
         #expect(SettingsBackup.isExportablePreference(UserDefaults.Key.orderWeight))
         #expect(SettingsBackup.isExportablePreference(UserDefaults.Key.shortcutsDic))
         #expect(SettingsBackup.isExportablePreference(UserDefaults.Key.systemMonitorPreferences))
+        #expect(SettingsBackup.isExportablePreference(UserDefaults.Key.showSystemMonitorTab))
         #expect(!SettingsBackup.isExportablePreference("remoteAccess.isEnabled"))
     }
 

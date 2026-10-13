@@ -32,13 +32,22 @@ enum SectionBar {
         }
     }
 
-    static func sections(authenticator: Bool, soundMixer: Bool, codexUsage: Bool) -> [Section] {
+    static func sections(
+        authenticator: Bool,
+        soundMixer: Bool,
+        systemMonitor: Bool,
+        codexUsage: Bool
+    ) -> [Section] {
         var sections: [Section] = [.controls]
         if authenticator { sections.append(.authenticator) }
         if soundMixer { sections.append(.soundMixer) }
-        sections.append(.systemMonitor)
+        if systemMonitor { sections.append(.systemMonitor) }
         if codexUsage { sections.append(.codexUsage) }
         return sections
+    }
+
+    static func shouldShowBar(for sections: [Section]) -> Bool {
+        sections.count > 1
     }
 }
 

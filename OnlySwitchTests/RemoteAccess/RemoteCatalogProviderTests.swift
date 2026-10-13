@@ -35,7 +35,7 @@ final class RemoteCatalogProviderTests: XCTestCase {
 
     func testCatalogMapsBehaviorIconsAndDestructiveFlags() async throws {
         let provider = RemoteCatalogProvider(
-            builtIns: { [.topNotch, .mute, .emptyTrash, .xcodeCache] },
+            builtIns: { [.topNotch, .mute, .emptyTrash, .xcodeCache, .systemMonitor] },
             makeBuiltIn: { FakeSwitch(type: $0, visible: true) },
             shortcutNames: { [] },
             evolutions: { [] }
@@ -51,6 +51,10 @@ final class RemoteCatalogProviderTests: XCTestCase {
         XCTAssertEqual(catalog[id: .init(kind: .builtIn, value: "16384")]?.behavior, .button)
         XCTAssertEqual(catalog[id: .init(kind: .builtIn, value: "16384")]?.isDestructive, true)
         XCTAssertEqual(catalog[id: .init(kind: .builtIn, value: "2048")]?.isDestructive, true)
+        XCTAssertEqual(
+            catalog[id: .init(kind: .builtIn, value: "4398046511104")]?.icon,
+            .systemSymbol("waveform.path.ecg")
+        )
         guard case .png = catalog[id: .init(kind: .builtIn, value: "4")]?.icon else {
             return XCTFail("Top Notch must use its custom image as PNG data")
         }

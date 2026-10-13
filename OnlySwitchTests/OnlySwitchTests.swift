@@ -218,6 +218,35 @@ class OnlySwitchTests: XCTestCase {
 }
 
 @MainActor
+@Test func systemMonitorBuiltInSwitchControlsTabVisibility() async throws {
+    var isVisible = true
+    var writes: [Bool] = []
+    let control = SystemMonitorSwitch(
+        visibility: { isVisible },
+        setVisibility: {
+            writes.append($0)
+            isVisible = $0
+        }
+    )
+
+    #expect(control.type == .systemMonitor)
+    #expect(SwitchType.systemMonitor.legacyIdentifier == 1 << 42)
+    #expect(SwitchType.systemMonitor.barInfo().title == "System Monitor")
+    #expect(control.isVisible())
+    #expect(await control.currentStatus())
+
+    try await control.operateSwitch(isOn: false)
+
+    #expect(await control.currentStatus() == false)
+    #expect(writes == [false])
+
+    try await control.operateSwitch(isOn: true)
+
+    #expect(await control.currentStatus())
+    #expect(writes == [false, true])
+}
+
+@MainActor
 @Test func reverseScrollDirectionBuiltInSwitchMapsStatusAndControllerRequests() async throws {
     var isReversed = false
     var writes: [Bool] = []

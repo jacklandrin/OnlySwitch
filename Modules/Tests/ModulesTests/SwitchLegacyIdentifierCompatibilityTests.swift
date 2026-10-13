@@ -6,6 +6,7 @@ struct SwitchLegacyIdentifierCompatibilityTests {
         (SwitchType.hiddeDesktop, UInt64(1)),
         (SwitchType.emptyTrash, UInt64(16_384)),
         (SwitchType.reverseScrollDirection, UInt64(2_199_023_255_552)),
+    (SwitchType.systemMonitor, UInt64(4_398_046_511_104)),
     ])
     func legacyNumericIdentifiersRemainPubliclyStable(_ value: (SwitchType, UInt64)) {
         #expect(value.0.legacyIdentifier == value.1)

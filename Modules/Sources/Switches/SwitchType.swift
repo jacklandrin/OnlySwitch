@@ -72,6 +72,7 @@ public enum SwitchType: String, CaseIterable, Sendable {
     case desktopPet
     case codexUsage
     case reverseScrollDirection
+    case systemMonitor
 
     public var legacyIdentifier: UInt64 {
         switch self {
@@ -117,6 +118,7 @@ public enum SwitchType: String, CaseIterable, Sendable {
         case .desktopPet: 549_755_813_888
         case .codexUsage: 1_099_511_627_776
         case .reverseScrollDirection: 2_199_023_255_552
+        case .systemMonitor: 4_398_046_511_104
         }
     }
 
@@ -409,6 +411,13 @@ public enum SwitchType: String, CaseIterable, Sendable {
                 title: "Natural Scrolling",
                 onImage: NSImage(systemSymbolName: "computermouse.fill"),
                 offImage: NSImage(systemSymbolName: "computermouse")
+            )
+        case .systemMonitor:
+            return SwitchBarInfo(
+                title: "System Monitor",
+                onImage: NSImage(systemSymbolName: "waveform.path.ecg"),
+                offImage: NSImage(systemSymbolName: "waveform.path.ecg"),
+                category: .tool
             )
         }
     }

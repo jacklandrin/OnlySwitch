@@ -25,6 +25,7 @@ struct OnlyControlView: View {
     @ObservedObject private var soundMixerVM = SoundMixerVM.shared
     @State private var currentDate = Date()
     @AppStorage(UserDefaults.Key.showCodexUsageTab) private var showCodexUsageTab = true
+    @AppStorage(UserDefaults.Key.showSystemMonitorTab) private var showSystemMonitorTab = true
     
     private let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
 
@@ -47,13 +48,15 @@ struct OnlyControlView: View {
                 }
 
                 VStack(spacing: 0) {
-                    OnlyControlSectionBar(
-                        sections: sections,
-                        selection: selectedSection
-                    )
+                    if SectionBar.shouldShowBar(for: sections) {
+                        OnlyControlSectionBar(
+                            sections: sections,
+                            selection: selectedSection
+                        )
                         .padding(.horizontal, 20)
                         .padding(.top, 8)
                         .padding(.bottom, 4)
+                    }
 
                     sectionContent
                 }
@@ -66,6 +69,7 @@ struct OnlyControlView: View {
             .ignoresSafeArea()
             .padding(10)
             .task {
+                store.send(.availableSectionsChanged(sections))
                 store.send(.task)
             }
             .onChange(of: sections) { availableSections in
@@ -216,6 +220,7 @@ struct OnlyControlView: View {
         SectionBar.sections(
             authenticator: authenticatorStore.enabled,
             soundMixer: soundMixerVM.enabled,
+            systemMonitor: showSystemMonitorTab,
             codexUsage: showCodexUsageTab
         )
     }
