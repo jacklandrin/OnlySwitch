@@ -124,6 +124,9 @@ final class SwitchManager: @unchecked Sendable {
         if !UserDefaults.standard.bool(forKey: UserDefaults.Key.didInstallSystemMonitorSwitch) {
             discoveredTypes.insert(.systemMonitor)
         }
+        if !UserDefaults.standard.bool(forKey: UserDefaults.Key.didInstallAphroditeSwitch) {
+            discoveredTypes.insert(.aphrodite)
+        }
 
         guard discoveredTypes.isEmpty == false else { return visibleTypes }
 
@@ -137,6 +140,9 @@ final class SwitchManager: @unchecked Sendable {
         }
         if discoveredTypes.contains(.systemMonitor) {
             UserDefaults.standard.set(true, forKey: UserDefaults.Key.didInstallSystemMonitorSwitch)
+        }
+        if discoveredTypes.contains(.aphrodite) {
+            UserDefaults.standard.set(true, forKey: UserDefaults.Key.didInstallAphroditeSwitch)
         }
         return visibleTypes
     }

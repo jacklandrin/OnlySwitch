@@ -14,20 +14,48 @@ public enum RemoteModelProviderKey: String, Sendable {
     case claude
 }
 
-struct ProviderModelsResponse: Decodable {
-    let models: [ProviderModelGroup]
+public struct ProviderModelsCatalog: Codable, Equatable, Sendable {
+    public let updatedAt: String
+    public let models: [ProviderModelGroup]
 
-    func models(for provider: RemoteModelProviderKey) -> [String] {
+    public init(updatedAt: String, models: [ProviderModelGroup]) {
+        self.updatedAt = updatedAt; self.models = models
+    }
+
+    public static func resolve(remote: Self?, bundled: Self?) -> Self {
+        guard let remote else {
+            guard let bundled else { return Self(updatedAt: "", models: []) }
+            return bundled
+        }
+        guard let bundled else { return remote }
+        var groups = remote.models
+        for local in bundled.models {
+            if let index = groups.firstIndex(where: { $0.provider.lowercased() == local.provider.lowercased() && $0.family.lowercased() == local.family.lowercased() }) {
+                groups[index] = ProviderModelGroup(provider: groups[index].provider, family: groups[index].family, items: unique(local.items + groups[index].items))
+            } else { groups.append(local) }
+        }
+        return Self(updatedAt: max(remote.updatedAt, bundled.updatedAt), models: groups)
+    }
+
+    private static func unique(_ values: [String]) -> [String] {
+        var seen = Set<String>(); return values.filter { seen.insert($0).inserted }
+    }
+
+    public func models(for provider: RemoteModelProviderKey) -> [String] {
         models
             .filter { $0.normalizedProvider == provider }
             .flatMap(\.items)
     }
 }
 
-struct ProviderModelGroup: Decodable {
-    let provider: String
-    let family: String
-    let items: [String]
+public struct ProviderModelGroup: Codable, Equatable, Sendable {
+    public let provider: String
+    public let family: String
+    public let items: [String]
+
+    public init(provider: String, family: String, items: [String]) {
+        self.provider = provider; self.family = family; self.items = items
+    }
 
     var normalizedProvider: RemoteModelProviderKey? {
         let provider = provider.lowercased()
@@ -47,3 +75,5 @@ struct ProviderModelGroup: Decodable {
         }
     }
 }
+
+typealias ProviderModelsResponse = ProviderModelsCatalog

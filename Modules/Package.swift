@@ -46,6 +46,10 @@ let package = Package(
             targets: ["OnlyAgent"]
         ),
         .library(
+            name: "Aphrodite",
+            targets: ["Aphrodite"]
+        ),
+        .library(
             name: "PureColorView",
             targets: ["PureColorView"]
         ),
@@ -152,6 +156,15 @@ let package = Package(
             ]
         ),
         .target(
+            name: "Aphrodite",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                "OnlyAgent",
+                "Defines",
+                "Extensions"
+            ]
+        ),
+        .target(
             name: "PureColorView",
             dependencies: [
                 "Extensions"
@@ -201,6 +214,8 @@ let package = Package(
                 "DesktopPet",
                 "OnlyControl",
                 "OnlyAgent",
+                "Aphrodite",
+                "Networking",
                 "RemoteCore",
                 "RemoteTransport",
                 "SystemMonitor",

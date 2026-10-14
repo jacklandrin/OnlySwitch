@@ -47,7 +47,7 @@ final class OpenAILive: Sendable {
     }
     
     @Sendable
-    func chatStream(_ model: String, _ prompt: String) async throws -> AsyncThrowingStream<ModelStreamEvent, Error> {
+    func chatStream(_ model: String, _ prompt: String, systemInstructions: String = AppleScriptSystemPrompt.withCurrentMacOSVersion, maximumOutputTokens: Int? = nil) async throws -> AsyncThrowingStream<ModelStreamEvent, Error> {
         @Shared(.openAIAPIKey) var apiKeyShared: String = ""
         @Shared(.openAIHost) var hostShared
         let apiKey: String = apiKeyShared
@@ -80,15 +80,16 @@ final class OpenAILive: Sendable {
             body: .init(
                 model: model,
                 messages: [
-                    .system(content: .text(AppleScriptSystemPrompt.withCurrentMacOSVersion)),
+                    .system(content: .text(systemInstructions)),
                     .user(content: .text(prompt))
-                ]
+                ],
+                maxCompletionTokens: maximumOutputTokens
             ),
             secondsToWait: 120
         )
         
         return AsyncThrowingStream { continuation in
-            Task {
+            let worker = Task {
                 var finalText = ""
                 
                 do {
@@ -106,6 +107,7 @@ final class OpenAILive: Sendable {
                     continuation.finish(throwing: error)
                 }
             }
+            continuation.onTermination = { _ in worker.cancel() }
         }
     }
     

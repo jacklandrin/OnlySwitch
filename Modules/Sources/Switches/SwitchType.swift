@@ -73,6 +73,7 @@ public enum SwitchType: String, CaseIterable, Sendable {
     case codexUsage
     case reverseScrollDirection
     case systemMonitor
+    case aphrodite
 
     public var legacyIdentifier: UInt64 {
         switch self {
@@ -119,6 +120,7 @@ public enum SwitchType: String, CaseIterable, Sendable {
         case .codexUsage: 1_099_511_627_776
         case .reverseScrollDirection: 2_199_023_255_552
         case .systemMonitor: 4_398_046_511_104
+        case .aphrodite: 8_796_093_022_208
         }
     }
 
@@ -417,6 +419,13 @@ public enum SwitchType: String, CaseIterable, Sendable {
                 title: "System Monitor",
                 onImage: NSImage(systemSymbolName: "waveform.path.ecg"),
                 offImage: NSImage(systemSymbolName: "waveform.path.ecg"),
+                category: .tool
+            )
+        case .aphrodite:
+            return SwitchBarInfo(
+                title: "Aphrodite",
+                onImage: NSImage(systemSymbolName: "sparkles.rectangle.stack"),
+                offImage: NSImage(systemSymbolName: "sparkles.rectangle.stack"),
                 category: .tool
             )
         }

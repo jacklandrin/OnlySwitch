@@ -356,6 +356,10 @@
 		A93C8BE12ECA34D700D7CE52 /* AICommanderSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93C8BE02ECA34CB00D7CE52 /* AICommanderSwitch.swift */; };
 		A93C8BE22ECA34D700D7CE52 /* AICommanderSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93C8BE02ECA34CB00D7CE52 /* AICommanderSwitch.swift */; };
 		A93C8BE42ECA376900D7CE52 /* OnlyAgent in Frameworks */ = {isa = PBXBuildFile; productRef = A93C8BE32ECA376900D7CE52 /* OnlyAgent */; };
+		AF1000010000000000000001 /* Aphrodite in Frameworks */ = {isa = PBXBuildFile; productRef = AF1000020000000000000001 /* Aphrodite */; };
+		AF1000060000000000000001 /* Aphrodite in Frameworks */ = {isa = PBXBuildFile; productRef = AF1000020000000000000001 /* Aphrodite */; };
+		AF1000030000000000000001 /* AphroditeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF1000040000000000000001 /* AphroditeSwitch.swift */; };
+		AF1000050000000000000001 /* AphroditeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF1000040000000000000001 /* AphroditeSwitch.swift */; };
 		A99F5CE9301140740029426A /* onlyswitch.icon in Resources */ = {isa = PBXBuildFile; fileRef = A99F5CE8301140740029426A /* onlyswitch.icon */; };
 		A9A98A412F78834500034ADB /* models.json in Resources */ = {isa = PBXBuildFile; fileRef = A9A98A402F78834500034ADB /* models.json */; };
 		A9AD00010000000000000001 /* AdsModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9AD00020000000000000001 /* AdsModelTests.swift */; };
@@ -915,6 +919,7 @@
 		B90400000000000000000001 /* SystemMonitorStatusItemControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorStatusItemControllerTests.swift; sourceTree = "<group>"; };
 		B90400000000000000000004 /* SystemMonitorStatusItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorStatusItemController.swift; sourceTree = "<group>"; };
 		B98000000000000000000001 /* CodexUsageSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodexUsageSwitch.swift; sourceTree = "<group>"; };
+		AF1000040000000000000001 /* AphroditeSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AphroditeSwitch.swift; sourceTree = "<group>"; };
 		B98500000000000000000001 /* SystemMonitorSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorSwitch.swift; sourceTree = "<group>"; };
 		B99000000000000000000001 /* ReverseScrollDirectionSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReverseScrollDirectionSwitch.swift; sourceTree = "<group>"; };
 		C0D000000000000000000021 /* RemoteSystemMonitorFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorFeature.swift; sourceTree = "<group>"; };
@@ -1037,6 +1042,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AF1000060000000000000001 /* Aphrodite in Frameworks */,
 				B90000000000000000000006 /* SystemMonitor in Frameworks */,
 				D35C00042F12000100D35C01 /* DesktopPet in Frameworks */,
 				F3A40000000000000000000D /* RemoteCore in Frameworks */,
@@ -1077,6 +1083,7 @@
 				04DA45722E12F28A0051047B /* Dependencies in Frameworks */,
 				041B17892AD841EE0032919B /* Sparkle in Frameworks */,
 				A93C8BE42ECA376900D7CE52 /* OnlyAgent in Frameworks */,
+				AF1000010000000000000001 /* Aphrodite in Frameworks */,
 				04581DB6276506B9008ADF30 /* AlertToast in Frameworks */,
 				043316DE2B7168940078B867 /* Extensions in Frameworks */,
 				043E5D6D2757DADB00ADC004 /* AVFoundation.framework in Frameworks */,
@@ -1198,6 +1205,7 @@
 				A1D0E00B2F0A000100BEEF01 /* SoundMixerSwitch.swift */,
 				A1D0E00C2F0A000100BEEF01 /* DesktopPetSwitch.swift */,
 				B98000000000000000000001 /* CodexUsageSwitch.swift */,
+				AF1000040000000000000001 /* AphroditeSwitch.swift */,
 				B98500000000000000000001 /* SystemMonitorSwitch.swift */,
 				B99000000000000000000001 /* ReverseScrollDirectionSwitch.swift */,
 				0447E33F2B71746C00D07B9A /* AirPodsSwitch.swift */,
@@ -2420,6 +2428,7 @@
 			);
 			name = OnlySwitchTests;
 			packageProductDependencies = (
+				AF1000020000000000000001 /* Aphrodite */,
 				B90000000000000000000009 /* SystemMonitor */,
 				D35C00032F12000100D35C01 /* DesktopPet */,
 				0444D5D12836D87E00327D0B /* Alamofire */,
@@ -2472,6 +2481,7 @@
 				04DA45712E12F28A0051047B /* Dependencies */,
 				A9F007C92EC3D9BD002D9AB0 /* Design */,
 				A93C8BE32ECA376900D7CE52 /* OnlyAgent */,
+				AF1000020000000000000001 /* Aphrodite */,
 				A1D201012F0B000200BEEF01 /* PureColorView */,
 				A1D201022F0B000200BEEF01 /* StickerView */,
 				A1D201032F0B000200BEEF01 /* Authenticator */,
@@ -2817,6 +2827,7 @@
 				0447E3862B71746E00D07B9A /* HiddenDesktopSwitch.swift in Sources */,
 				A1D0E10C2F0A000100BEEF01 /* DesktopPetSwitch.swift in Sources */,
 				B98000000000000000000002 /* CodexUsageSwitch.swift in Sources */,
+				AF1000030000000000000001 /* AphroditeSwitch.swift in Sources */,
 				B98500000000000000000002 /* SystemMonitorSwitch.swift in Sources */,
 				B99000000000000000000002 /* ReverseScrollDirectionSwitch.swift in Sources */,
 				04FC161728402E5200D4A4AC /* ShortcutOnMarket.swift in Sources */,
@@ -3091,6 +3102,7 @@
 				0447E3872B71746E00D07B9A /* HiddenDesktopSwitch.swift in Sources */,
 				A1D0E10D2F0A000100BEEF01 /* DesktopPetSwitch.swift in Sources */,
 				B98000000000000000000003 /* CodexUsageSwitch.swift in Sources */,
+				AF1000050000000000000001 /* AphroditeSwitch.swift in Sources */,
 				B98500000000000000000003 /* SystemMonitorSwitch.swift in Sources */,
 				B99000000000000000000003 /* ReverseScrollDirectionSwitch.swift in Sources */,
 				04819CD52BBC8A6700645A0C /* KeyLightSwitch.swift in Sources */,
@@ -4107,6 +4119,10 @@
 		A93C8BE32ECA376900D7CE52 /* OnlyAgent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = OnlyAgent;
+		};
+		AF1000020000000000000001 /* Aphrodite */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Aphrodite;
 		};
 		A9F007C92EC3D9BD002D9AB0 /* Design */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -174,3 +174,19 @@ final class RemoteCatalogProviderTests: XCTestCase {
     #expect(descriptor.supportsStatus)
     #expect(descriptor.isAvailable)
 }
+
+@MainActor
+@Test func localOnlyAphroditeSwitchIsExcludedFromTheRemoteBuiltInCatalog() async throws {
+    let types = RemoteCatalogProvider.remoteBuiltIns(from: SwitchType.allCases)
+    #expect(types.contains(.aphrodite) == false)
+
+    let provider = RemoteCatalogProvider(
+        builtIns: { types },
+        makeBuiltIn: { FakeSwitch(type: $0, visible: true) },
+        shortcutNames: { [] },
+        evolutions: { [] }
+    )
+
+    let catalog = try await provider.catalog()
+    #expect(catalog.contains { $0.id == .init(kind: .builtIn, value: String(SwitchType.aphrodite.legacyIdentifier)) } == false)
+}

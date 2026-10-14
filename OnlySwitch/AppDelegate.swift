@@ -195,7 +195,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         KeychainMigration.migrateAPIKeysIfNeeded()
         //for issue #11
         closeWindow()
-        let contentView = OnlySwitchListView()
+        let contentView = OnlySwitchListView { [weak self] size in
+            guard let self, self.popover.contentSize != size else { return }
+            self.popover.contentSize = size
+        }
             .environmentObject(switchVM)
         let apperearance = SwitchListAppearance(rawValue: currentAppearance)
 

@@ -15,6 +15,7 @@ enum SettingsItem: String, CaseIterable {
     case Shortcuts = "Shortcuts"
     case Evolution = "Evolution"
     case ModelProviders = "Model Providers"
+    case Aphrodite = "Aphrodite"
     case AirPods = "AirPods"
     case Radio = "Radio"
     case Authenticator = "Authenticator"

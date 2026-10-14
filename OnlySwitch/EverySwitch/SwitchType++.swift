@@ -99,6 +99,8 @@ extension SwitchType {
             return ReverseScrollDirectionSwitch()
         case .systemMonitor:
             return SystemMonitorSwitch()
+        case .aphrodite:
+            return AphroditeSwitch()
         }
     }
     

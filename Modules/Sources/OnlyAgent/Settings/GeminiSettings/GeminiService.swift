@@ -42,7 +42,7 @@ final class GeminiLive: Sendable {
     }
     
     @Sendable
-    func chatStream(_ model: String, _ prompt: String) async throws -> AsyncThrowingStream<ModelStreamEvent, Error> {
+    func chatStream(_ model: String, _ prompt: String, systemInstructions: String = AppleScriptSystemPrompt.withCurrentMacOSVersion, maximumOutputTokens: Int = 1024) async throws -> AsyncThrowingStream<ModelStreamEvent, Error> {
         @Shared(.geminiAPIKey) var apiKeyShared: String = ""
         let apiKey: String = apiKeyShared
         
@@ -60,10 +60,10 @@ final class GeminiLive: Sendable {
                     role: "user"
                 )
             ],
-            generationConfig: .init(maxOutputTokens: 1024),
+            generationConfig: .init(maxOutputTokens: maximumOutputTokens),
             systemInstruction: .init(
                 parts: [
-                    .text(AppleScriptSystemPrompt.withCurrentMacOSVersion)
+                    .text(systemInstructions)
                 ]
             )
         )
@@ -75,7 +75,7 @@ final class GeminiLive: Sendable {
         )
         
         return AsyncThrowingStream { continuation in
-            Task {
+            let worker = Task {
                 var finalText = ""
                 
                 do {
@@ -97,6 +97,7 @@ final class GeminiLive: Sendable {
                     continuation.finish(throwing: error)
                 }
             }
+            continuation.onTermination = { _ in worker.cancel() }
         }
     }
     

@@ -12,6 +12,7 @@ import SwiftUI
 
 public struct DashboardView: View {
     let store: StoreOf<DashboardReducer>
+    private let managesScrolling: Bool
     let columns = [
         GridItem(.adaptive(minimum: 85, maximum: 180), alignment: .leading)
         ]
@@ -20,24 +21,27 @@ public struct DashboardView: View {
     @State private var hasChangedLocation = false
     @State private var presentedDetailID: String?
 
-    public init(store: StoreOf<DashboardReducer>) {
+    public init(store: StoreOf<DashboardReducer>, managesScrolling: Bool = true) {
         self.store = store
+        self.managesScrolling = managesScrolling
     }
 
     public var body: some View {
         WithPerceptionTracking {
-            ViewThatFits(in: .vertical) {
-                grid
-                    .fixedSize(horizontal: false, vertical: true)
-
-                ScrollView(.vertical) {
-                    grid
+            Group {
+                if managesScrolling {
+                    ViewThatFits(in: .vertical) {
+                        grid.fixedSize(horizontal: false, vertical: true)
+                        ScrollView(.vertical) { grid }
+                    }
+                } else {
+                    grid.fixedSize(horizontal: false, vertical: true)
                 }
             }
             .reorderableForEachContainer(active: $active) {
                 store.send(.onEndedMove)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .frame(maxWidth: .infinity, alignment: .top)
         }
     }
 

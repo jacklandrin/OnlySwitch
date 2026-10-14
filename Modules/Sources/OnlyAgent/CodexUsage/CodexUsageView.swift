@@ -5,13 +5,21 @@ import SwiftUI
 @available(macOS 14.0, *)
 public struct CodexUsageView: View {
     @Bindable private var store: StoreOf<CodexUsageReducer>
+    private let managesScrolling: Bool
 
-    public init(store: StoreOf<CodexUsageReducer>) {
+    public init(store: StoreOf<CodexUsageReducer>, managesScrolling: Bool = true) {
         self.store = store
+        self.managesScrolling = managesScrolling
     }
 
     public var body: some View {
-        ScrollView {
+        Group {
+            if managesScrolling { ScrollView { content } }
+            else { content }
+        }
+    }
+
+    private var content: some View {
             VStack(alignment: .leading, spacing: 20) {
                 HStack(alignment: .firstTextBaseline) {
                     VStack(alignment: .leading, spacing: 4) {
@@ -188,7 +196,7 @@ public struct CodexUsageView: View {
                 }
             }
             .padding(24)
-        }
+
         .task { await store.send(.task).finish() }
     }
 

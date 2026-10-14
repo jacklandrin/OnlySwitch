@@ -173,6 +173,44 @@ class OnlySwitchTests: XCTestCase {
 }
 
 @MainActor
+@Test func aphroditeBuiltInSwitchUpdatesTheSharedTabPreference() async throws {
+    var isVisible = true
+    let control = AphroditeSwitch(
+        visibility: { isVisible },
+        setVisibility: { isVisible = $0 }
+    )
+
+    #expect(control.type == .aphrodite)
+    #expect(await control.currentStatus())
+    try await control.operateSwitch(isOn: false)
+    #expect(await control.currentStatus() == false)
+}
+
+@Test func bundledModelCatalogIncludesLatestVerifiedModelsAndRetainsLegacyChoices() throws {
+    let url = try #require(Bundle.main.url(forResource: "models", withExtension: "json"))
+    let catalog = try JSONDecoder().decode(TestModelCatalog.self, from: Data(contentsOf: url))
+
+    #expect(catalog.items(provider: "openai", family: "gpt").contains("gpt-6.1-sol"))
+    #expect(catalog.items(provider: "openai", family: "gpt").contains("gpt-5.6"))
+    #expect(catalog.items(provider: "google", family: "gemini").contains("gemini-3.8-flash"))
+    #expect(catalog.items(provider: "anthropic", family: "claude").contains("claude-opus-5-5"))
+}
+
+private struct TestModelCatalog: Decodable {
+    struct Group: Decodable {
+        let provider: String
+        let family: String
+        let items: [String]
+    }
+
+    let models: [Group]
+
+    func items(provider: String, family: String) -> [String] {
+        models.first { $0.provider == provider && $0.family == family }?.items ?? []
+    }
+}
+
+@MainActor
 @Test func desktopPetBuiltInSwitchMapsVisibilityWithoutAdditionalEffects() async throws {
     var isVisible = false
     var writes: [Bool] = []

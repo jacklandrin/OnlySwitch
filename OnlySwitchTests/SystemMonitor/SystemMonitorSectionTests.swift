@@ -56,4 +56,25 @@ struct SystemMonitorSectionTests {
             codexUsage: codexUsage
         ) == expected)
     }
+
+    @Test
+    func aphroditeSectionFollowsItsSharedVisibilityPreference() {
+        let shown = SectionBar.sections(
+            authenticator: false,
+            soundMixer: false,
+            systemMonitor: false,
+            codexUsage: false,
+            aphrodite: true
+        )
+        let hidden = SectionBar.sections(
+            authenticator: false,
+            soundMixer: false,
+            systemMonitor: false,
+            codexUsage: false,
+            aphrodite: false
+        )
+
+        #expect(shown == [.controls, .aphrodite])
+        #expect(hidden == [.controls])
+    }
 }

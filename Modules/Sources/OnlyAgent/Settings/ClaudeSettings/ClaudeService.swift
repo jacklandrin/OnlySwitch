@@ -37,7 +37,7 @@ final class ClaudeLive: Sendable {
     }
 
     @Sendable
-    func chatStream(_ model: String, _ prompt: String) async throws -> AsyncThrowingStream<ModelStreamEvent, Error> {
+    func chatStream(_ model: String, _ prompt: String, systemInstructions: String = AppleScriptSystemPrompt.withCurrentMacOSVersion, maximumOutputTokens: Int = 1024) async throws -> AsyncThrowingStream<ModelStreamEvent, Error> {
         @Shared(.claudeAPIKey) var apiKeyShared: String = ""
         let apiKey: String = apiKeyShared
 
@@ -53,8 +53,8 @@ final class ClaudeLive: Sendable {
 
         let body: [String: Any] = [
             "model": model,
-            "max_tokens": 1024,
-            "system": AppleScriptSystemPrompt.withCurrentMacOSVersion,
+            "max_tokens": maximumOutputTokens,
+            "system": systemInstructions,
             "messages": [["role": "user", "content": prompt]],
             "stream": true
         ]
@@ -62,7 +62,7 @@ final class ClaudeLive: Sendable {
         let requestToSend = request
 
         return AsyncThrowingStream { continuation in
-            Task { [requestToSend] in
+            let worker = Task { [requestToSend] in
                 do {
                     let (asyncBytes, response) = try await URLSession.shared.bytes(for: requestToSend)
                     guard let httpResponse = response as? HTTPURLResponse,
@@ -95,6 +95,7 @@ final class ClaudeLive: Sendable {
                     continuation.finish(throwing: error)
                 }
             }
+            continuation.onTermination = { _ in worker.cancel() }
         }
     }
 

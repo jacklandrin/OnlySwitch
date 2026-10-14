@@ -10,6 +10,26 @@ import DependenciesMacros
 import CodexKit
 import Networking
 
+public enum ModelGenerationPurpose: String, Codable, Sendable { case chat, aphrodite }
+
+public enum ModelProviderServiceError: Error, Sendable {
+    case unsupportedPlatform
+}
+
+public struct ModelGenerationRequest: Equatable, Sendable {
+    public var provider: ModelProvider
+    public var model: String
+    public var purpose: ModelGenerationPurpose
+    public var systemInstructions: String
+    public var prompt: String
+    public var maximumOutputTokens: Int
+
+    public init(provider: ModelProvider, model: String, purpose: ModelGenerationPurpose, systemInstructions: String, prompt: String, maximumOutputTokens: Int) {
+        self.provider = provider; self.model = model; self.purpose = purpose
+        self.systemInstructions = systemInstructions; self.prompt = prompt; self.maximumOutputTokens = maximumOutputTokens
+    }
+}
+
 @DependencyClient
 public struct ModelProviderService: Sendable {
     public var setAPIKey: @Sendable (ModelProvider, String, String) -> Void
@@ -25,6 +45,7 @@ public struct ModelProviderService: Sendable {
         }
     }
     public var chat: @Sendable (ModelProvider, _ model: String, _ prompt: String) async throws -> String = { _,_,_ in "" }
+    public var generateApp: @Sendable (ModelGenerationRequest) async throws -> String = { _ in "" }
     public var test: @Sendable (ModelProvider) async -> Bool = { _ in true }
     public var codexSignIn: @Sendable () async throws -> ChatGPTSession = {
         throw CodexError.uninitialized
@@ -33,9 +54,9 @@ public struct ModelProviderService: Sendable {
     public var codexCurrentSession: @Sendable () async -> ChatGPTSession? = { nil }
 }
 
-@available(macOS 26.0, *)
 extension ModelProviderService: DependencyKey {
     static public var liveValue: Self {
+        if #available(macOS 26.0, *) {
         let ollamaClient = OllamaLive()
         let openAIClient = OpenAILive()
         let codexClient = CodexLive()
@@ -109,6 +130,24 @@ extension ModelProviderService: DependencyKey {
                 }
             }
             return accumulatedContent
+        } generateApp: { request in
+            if request.provider == .codex {
+                return try await codexClient.generateApp(request)
+            }
+            let stream: AsyncThrowingStream<ModelStreamEvent, Error>
+            switch request.provider {
+            case .ollama: stream = try await ollamaClient.chatStream(request.model, request.prompt, systemInstructions: request.systemInstructions)
+            case .openai: stream = try await openAIClient.chatStream(request.model, request.prompt, systemInstructions: request.systemInstructions, maximumOutputTokens: request.maximumOutputTokens)
+            case .gemini: stream = try await geminiClient.chatStream(request.model, request.prompt, systemInstructions: request.systemInstructions, maximumOutputTokens: request.maximumOutputTokens)
+            case .claude: stream = try await claudeClient.chatStream(request.model, request.prompt, systemInstructions: request.systemInstructions, maximumOutputTokens: request.maximumOutputTokens)
+            case .codex: fatalError("handled above")
+            }
+            var result = ""
+            for try await event in stream {
+                if case let .contentDelta(delta) = event { result += delta }
+                if case let .completed(final) = event, !final.isEmpty { result = final }
+            }
+            return result
         } test: { provider in
             switch provider {
                 case .ollama:
@@ -129,12 +168,26 @@ extension ModelProviderService: DependencyKey {
         } codexCurrentSession: {
             await codexClient.currentSession()
         }
+        } else {
+            return .unsupportedPlatformValue
+        }
     }
+
+    private static let unsupportedPlatformValue = Self(
+        setAPIKey: { _, _, _ in },
+        models: { _ in throw ModelProviderServiceError.unsupportedPlatform },
+        chatStream: { _, _, _ in throw ModelProviderServiceError.unsupportedPlatform },
+        chat: { _, _, _ in throw ModelProviderServiceError.unsupportedPlatform },
+        generateApp: { _ in throw ModelProviderServiceError.unsupportedPlatform },
+        test: { _ in false },
+        codexSignIn: { throw ModelProviderServiceError.unsupportedPlatform },
+        codexSignOut: { throw ModelProviderServiceError.unsupportedPlatform },
+        codexCurrentSession: { nil }
+    )
     
     static public var testValue: Self { Self() }
 }
 
-@available(macOS 26.0, *)
 extension DependencyValues {
     public var modelProviderService: ModelProviderService {
         get { self[ModelProviderService.self] }

@@ -5,7 +5,7 @@
 //  Created by Bo Liu on 06.12.25.
 //
 
-public enum ModelProvider: String, Sendable {
+public enum ModelProvider: String, CaseIterable, Codable, Sendable {
     case ollama
     case openai
     case codex
@@ -34,13 +34,16 @@ struct ToolArguments {
 }
 
 public struct ProviderModel: Sendable {
-    var model: String
-    var id: String 
-}
+    public var model: String
+    public var id: String
 
-extension ProviderModel {
-    init(model: String) {
+    public init(model: String) {
         self.model = model
         self.id = model
+    }
+
+    public init(model: String, id: String) {
+        self.model = model
+        self.id = id
     }
 }

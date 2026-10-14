@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Aphrodite
 import Authenticator
 import Utilities
 import OnlyAgent
@@ -115,6 +116,13 @@ struct SettingsView: View {
                     ModelProviderSettingView()
                 } else {
                     EmptyView()
+                }
+
+            case .Aphrodite:
+                if #available(macOS 26.0, *) {
+                    AphroditeSettingsView()
+                } else {
+                    AphroditeUnavailableView()
                 }
             
             case .NightShift:

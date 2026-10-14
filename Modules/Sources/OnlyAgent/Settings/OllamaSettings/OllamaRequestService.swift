@@ -63,13 +63,13 @@ final class OllamaLive: Sendable {
         return finalText
     }
     
-    func chatStream(_ model: String, _ prompt: String) async throws -> AsyncThrowingStream<ModelStreamEvent, Error> {
+    func chatStream(_ model: String, _ prompt: String, systemInstructions: String = AppleScriptSystemPrompt.withCurrentMacOSVersion) async throws -> AsyncThrowingStream<ModelStreamEvent, Error> {
         let client = await MainActor.run { getOrCreateClient() }
         let stream = try await MainActor.run {
             try client.chatStream(
                 model: Model.ID(rawValue: model) ?? "gpt-oss",
                 messages: [
-                    .system(AppleScriptSystemPrompt.withCurrentMacOSVersion),
+                    .system(systemInstructions),
                     .user(prompt)
                 ],
                 think: true
@@ -77,7 +77,7 @@ final class OllamaLive: Sendable {
         }
         
         return AsyncThrowingStream { continuation in
-            Task {
+            let worker = Task {
                 var finalText = ""
                 
                 do {
@@ -99,6 +99,7 @@ final class OllamaLive: Sendable {
                     continuation.finish(throwing: error)
                 }
             }
+            continuation.onTermination = { _ in worker.cancel() }
         }
     }
 }

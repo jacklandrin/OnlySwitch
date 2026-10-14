@@ -79,6 +79,8 @@ public extension UserDefaults {
         //OnlyAgent
         public static let showCodexUsageTab = "showCodexUsageTabKey"
         public static let didInstallCodexUsageSwitch = "didInstallCodexUsageSwitchKey"
+        public static let showAphroditeTab = "showAphroditeTabKey"
+        public static let didInstallAphroditeSwitch = "didInstallAphroditeSwitchKey"
         public static let currentAIModel = "currentAIModelKey"
         public static let ollamaUrl = "ollamaUrlKey"
         public static let ollamaModels = "ollamaModelsKey"
@@ -125,7 +127,7 @@ public extension UserDefaults {
             autoDimScreenTime, dimScreenPercent, syncExternalBrightness,
             nightShiftStrength, nightShiftStartDate, nightShiftEndDate, isNightShiftScheduleOn,
             sticker,
-            showCodexUsageTab, currentAIModel, ollamaUrl, openAIHost,
+            showCodexUsageTab, showAphroditeTab, currentAIModel, ollamaUrl, openAIHost,
             keyLightBrightness,
             authenticatorEnabled,
             ScreenSaverInterval, checkUpdateOnLaunch, hideMenuAfterRunning, canPlayEffectSound,
