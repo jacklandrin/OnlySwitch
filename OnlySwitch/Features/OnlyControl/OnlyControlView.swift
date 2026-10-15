@@ -26,21 +26,14 @@ struct OnlyControlView: View {
     @ObservedObject private var authenticatorStore = AuthenticatorStore.shared
     @ObservedObject private var soundMixerVM = SoundMixerVM.shared
     @State private var currentDate = Date()
-    @State private var measuredContentHeight: CGFloat?
-    @State private var measuredHeaderHeight: CGFloat = 36
-    @State private var measuredFooterHeight: CGFloat = 36
-    let onPanelHeightChange: @MainActor (CGFloat) -> Void
-    @ObservedObject private var sizingContext: OnlyControlSizingContext
     @AppStorage(UserDefaults.Key.showCodexUsageTab) private var showCodexUsageTab = true
     @AppStorage(UserDefaults.Key.showSystemMonitorTab) private var showSystemMonitorTab = true
     @AppStorage(UserDefaults.Key.showAphroditeTab) private var showAphroditeTab = true
     
     private let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
 
-    init(store: StoreOf<OnlyControlReducer>, sizingContext: OnlyControlSizingContext = .init(), onPanelHeightChange: @escaping @MainActor (CGFloat) -> Void = { _ in }) {
+    init(store: StoreOf<OnlyControlReducer>) {
         self.store = store
-        self.sizingContext = sizingContext
-        self.onPanelHeightChange = onPanelHeightChange
     }
 
     var body: some View {
@@ -66,23 +59,16 @@ struct OnlyControlView: View {
                         .padding(.horizontal, 20)
                         .padding(.top, 8)
                         .padding(.bottom, 4)
-                        .background(GeometryReader { proxy in
-                            Color.clear.preference(key: OnlyControlHeaderHeightKey.self, value: proxy.size.height)
-                        })
                     }
 
                     ScrollView {
                         sectionContent
-                            .background(GeometryReader { proxy in Color.clear.preference(key: OnlyControlContentHeightKey.self, value: proxy.size.height) })
                     }
-                    .frame(height: contentViewportHeight)
+                    .frame(maxHeight: .infinity)
 
                     if store.selectedSection != .aphrodite {
                         footer
                             .fixedSize(horizontal: false, vertical: true)
-                            .background(GeometryReader { proxy in
-                                Color.clear.preference(key: OnlyControlFooterHeightKey.self, value: proxy.size.height)
-                            })
                     }
                 }
             }
@@ -90,10 +76,9 @@ struct OnlyControlView: View {
             .blur(radius: store.blurRadius)
             .opacity(store.opacity)
             .animation(.interactiveSpring(duration: 0.5), value: store.blurRadius)
-            .frame(width: 800, height: innerPanelHeight)
+            .frame(width: 800, height: 600)
             .ignoresSafeArea()
             .padding(10)
-            .background(PanelScreenHeightReader { sizingContext.maximumPanelHeight = $0 })
             .task {
                 store.send(.availableSectionsChanged(sections))
                 store.send(.task)
@@ -101,27 +86,8 @@ struct OnlyControlView: View {
             .onChange(of: sections) { availableSections in
                 store.send(.availableSectionsChanged(availableSections))
             }
-            .onPreferenceChange(OnlyControlContentHeightKey.self) { height in
-                measuredContentHeight = height.isFinite && height >= 0 ? height : nil
-            }
-            .onPreferenceChange(OnlyControlHeaderHeightKey.self) { measuredHeaderHeight = $0 }
-            .onPreferenceChange(OnlyControlFooterHeightKey.self) { measuredFooterHeight = $0 }
-            .onChange(of: outerPanelHeight) { onPanelHeightChange($0) }
-            .onAppear { onPanelHeightChange(outerPanelHeight) }
         }
     }
-
-    private var outerPanelHeight: CGFloat {
-        AdaptivePanelHeightPolicy(
-            minimumContentHeight: measuredContentHeight == nil ? 120 : 0,
-            chromeHeight: sectionBarHeight + footerHeight + 20,
-            maximumPanelHeight: sizingContext.maximumPanelHeight
-        ).panelHeight(for: measuredContentHeight)
-    }
-    private var innerPanelHeight: CGFloat { max(0, outerPanelHeight - 20) }
-    private var contentViewportHeight: CGFloat { max(0, innerPanelHeight - sectionBarHeight - footerHeight) }
-    private var sectionBarHeight: CGFloat { SectionBar.shouldShowBar(for: sections) ? measuredHeaderHeight : 0 }
-    private var footerHeight: CGFloat { store.selectedSection == .aphrodite ? 0 : measuredFooterHeight }
 
     @ViewBuilder
     private var sectionContent: some View {
@@ -255,27 +221,6 @@ struct OnlyControlView: View {
     }
 }
 
-private struct OnlyControlContentHeightKey: PreferenceKey {
-    static let defaultValue: CGFloat = 0
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) { value = max(value, nextValue()) }
-}
-
-private struct OnlyControlHeaderHeightKey: PreferenceKey {
-    static let defaultValue: CGFloat = 0
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) { value = max(value, nextValue()) }
-}
-
-private struct OnlyControlFooterHeightKey: PreferenceKey {
-    static let defaultValue: CGFloat = 0
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) { value = max(value, nextValue()) }
-}
-
-@MainActor
-final class OnlyControlSizingContext: ObservableObject {
-    @Published var maximumPanelHeight: CGFloat
-    init(maximumPanelHeight: CGFloat = NSScreen.main?.visibleFrame.height ?? 620) { self.maximumPanelHeight = maximumPanelHeight }
-}
-
 private struct OnlyControlSectionBar: View {
     let sections: [SectionBar.Section]
     @Binding var selection: SectionBar.Section
@@ -365,7 +310,7 @@ private struct OnlyControlSectionBar: View {
 final class OnlyControlWindow: NSWindow, NSWindowDelegate {
     static let shared = OnlyControlWindow()
 
-    private static let initialContentSize = NSSize(width: 820, height: 220)
+    private static let contentSize = NSSize(width: 820, height: 620)
     private static let frameAutosaveName = "OnlyControlWindow"
 
     private(set) var isShowing = false
@@ -380,8 +325,6 @@ final class OnlyControlWindow: NSWindow, NSWindowDelegate {
     private var globalMouseMonitor: Any?
     private var localMouseMonitor: Any?
     private var hideTask: Task<Void, Never>?
-    private var lastProposedHeight: CGFloat = 220
-    private let sizingContext = OnlyControlSizingContext()
 
     override var canBecomeKey: Bool {
         true
@@ -398,8 +341,8 @@ final class OnlyControlWindow: NSWindow, NSWindowDelegate {
     }
 
     private func setupWindow() {
-        let view = OnlyControlHostingView(rootView: OnlyControlView(store: onlyControlStore, sizingContext: sizingContext) { [weak self] height in self?.setAdaptiveContentHeight(height) })
-        setContentSize(Self.initialContentSize)
+        let view = OnlyControlHostingView(rootView: OnlyControlView(store: onlyControlStore))
+        setContentSize(Self.contentSize)
         view.frame = contentRect(forFrameRect: frame)
         view.canDrawSubviewsIntoLayer = true
         contentView = view
@@ -470,6 +413,7 @@ final class OnlyControlWindow: NSWindow, NSWindowDelegate {
 
     private func restoreFrame() {
         let restoredSavedFrame = setFrameUsingName(Self.frameAutosaveName)
+        setContentSize(Self.contentSize)
         guard let screen = screenContainingWindow ?? NSScreen.main else {
             center()
             setFrameAutosaveName(Self.frameAutosaveName)
@@ -483,31 +427,11 @@ final class OnlyControlWindow: NSWindow, NSWindowDelegate {
         }
 
         setFrameAutosaveName(Self.frameAutosaveName)
-        setAdaptiveContentHeight(lastProposedHeight)
     }
 
     private var screenContainingWindow: NSScreen? {
         NSScreen.screens.first { $0.visibleFrame.intersects(frame) }
     }
-
-    private func setAdaptiveContentHeight(_ proposedHeight: CGFloat) {
-        lastProposedHeight = proposedHeight
-        guard proposedHeight.isFinite, let screen = screen ?? screenContainingWindow ?? NSScreen.main else { return }
-        if sizingContext.maximumPanelHeight != screen.visibleFrame.height {
-            sizingContext.maximumPanelHeight = screen.visibleFrame.height
-        }
-        let height = min(max(1, proposedHeight), screen.visibleFrame.height)
-        var next = frame
-        next.origin.y += next.height - height
-        next.size = NSSize(width: 820, height: height)
-        next.origin.y = max(screen.visibleFrame.minY, min(next.origin.y, screen.visibleFrame.maxY - height))
-        next = constrainFrameRect(next, to: screen)
-        guard next != frame else { return }
-        setFrame(next, display: true, animate: false)
-    }
-
-    func windowDidChangeScreen(_ notification: Notification) { setAdaptiveContentHeight(lastProposedHeight) }
-    func windowDidChangeScreenProfile(_ notification: Notification) { setAdaptiveContentHeight(lastProposedHeight) }
 
     private func startOutsideClickMonitoring() {
         guard globalMouseMonitor == nil, localMouseMonitor == nil else { return }
