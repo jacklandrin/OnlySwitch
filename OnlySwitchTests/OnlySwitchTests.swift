@@ -13,6 +13,7 @@ import Combine
 import DesktopPet
 import Defines
 import Switches
+import Utilities
 import Aphrodite
 import UserNotifications
 import ComposableArchitecture
@@ -574,6 +575,49 @@ private final class TestDesktopPetPomodoroPresenter: DesktopPetPomodoroPresentin
 
 @MainActor
 struct SettingsViewTests {
+    @Test("The open settings sidebar refreshes titles after a language change", .serialized)
+    func sidebarTitlesRefreshAfterLanguageChange() {
+        let languageManager = LanguageManager.sharedManager
+        let originalLanguage = languageManager.currentLang
+        let originalSystemLanguagePriority = languageManager.systemLangPriority
+        let originalSelection = SettingsVM.shared.selection
+        defer {
+            SettingsVM.shared.selection = originalSelection
+            if originalSystemLanguagePriority {
+                languageManager.setSystemLangPriority()
+            } else {
+                languageManager.setCertainLang(originalLanguage)
+            }
+        }
+
+        languageManager.setCertainLang("en")
+        SettingsVM.shared.selection = .Customize
+
+        let window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 900, height: 650),
+            styleMask: [.titled],
+            backing: .buffered,
+            defer: false
+        )
+        let hostingView = NSHostingView(rootView: SettingsView())
+        window.contentView = hostingView
+        window.orderFrontRegardless()
+        hostingView.layoutSubtreeIfNeeded()
+        defer { window.close() }
+
+        #expect(
+            waitForAccessibilityValue("General", in: hostingView),
+            "The sidebar should initially show the English title."
+        )
+
+        languageManager.setCertainLang("ja")
+
+        #expect(
+            waitForAccessibilityValue("一般", in: hostingView),
+            "The open sidebar should refresh its localized titles without recreating the settings window."
+        )
+    }
+
     @Test("The split-view detail renders the restored sidebar destination", .serialized)
     func splitViewDetailRendersRestoredSelection() {
         let originalSelection = SettingsVM.shared.selection

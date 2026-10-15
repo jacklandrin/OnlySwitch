@@ -21,7 +21,7 @@ struct SettingsView: View {
         }
     }
 
-    var naviagtionView: some View {
+    func naviagtionView(currentLang: String) -> some View {
         NavigationView {
             List(selection: $settingVM.selection) {
                 ForEach(settingVM.settingItems, id:\.self ) { item in
@@ -30,6 +30,7 @@ struct SettingsView: View {
                             .navigationTitle(item.rawValue.localized())
                     } label:{
                         Text(item.rawValue.localized())
+                            .id(currentLang)
                             .frame(minWidth: 190, alignment:.leading)
                             .lineLimit(2)
                     }
@@ -50,12 +51,13 @@ struct SettingsView: View {
     }
 
     @available(macOS 13.3, *)
-    func naviagtionSplitView() -> some View {
+    func naviagtionSplitView(currentLang: String) -> some View {
         NavigationSplitView(sidebar: {
             List(selection:$settingVM.selection) {
                 ForEach(settingVM.settingItems, id:\.self ) { item in
                     NavigationLink(value: item) {
                         Text(item.rawValue.localized())
+                            .id(currentLang)
                             .frame(minWidth: 190, alignment:.leading)
                             .lineLimit(2)
                     }
@@ -144,9 +146,9 @@ struct SettingsView: View {
 
     var body: some View {
         if #available(macOS 13.3, *) {
-            naviagtionSplitView()
+            naviagtionSplitView(currentLang: langManager.currentLang)
         } else {
-            naviagtionView
+            naviagtionView(currentLang: langManager.currentLang)
         }
     }
 
