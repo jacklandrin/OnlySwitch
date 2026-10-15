@@ -24,6 +24,7 @@ struct OnlySwitchListView: View {
     private let onPanelSizeChange: @MainActor (CGSize) -> Void
     @EnvironmentObject var switchVM:SwitchListVM
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.accessibilityReduceMotion) private var accessibilityReduceMotion
     @State private var distanceY:CGFloat = 0
     @State private var movingIndex = -1
     @State private var hoverIndex = -1
@@ -36,6 +37,7 @@ struct OnlySwitchListView: View {
     @State private var measuredContentHeight: CGFloat?
     @State private var measuredChromeHeight: CGFloat = 144
     @State private var maximumPanelHeight = NSScreen.main?.visibleFrame.height ?? CGFloat(700)
+    @State private var presentedPanelHeight: CGFloat?
     @AppStorage(UserDefaults.Key.showCodexUsageTab) private var showCodexUsageTab = true
     @AppStorage(UserDefaults.Key.showSystemMonitorTab) private var showSystemMonitorTab = true
     @AppStorage(UserDefaults.Key.showAphroditeTab) private var showAphroditeTab = true
@@ -100,7 +102,7 @@ struct OnlySwitchListView: View {
                     }
                     .background(GeometryReader { proxy in Color.clear.preference(key: PanelContentHeightKey.self, value: proxy.size.height) })
                 }
-                .frame(height: adaptiveScrollHeight)
+                .frame(height: presentedScrollHeight)
                 .padding(.bottom, 15)
                 .padding(.horizontal, 0)
                 VStack(spacing: 8) {
@@ -142,9 +144,21 @@ struct OnlySwitchListView: View {
         .onPreferenceChange(PanelContentHeightKey.self) { measuredContentHeight = $0.isFinite && $0 >= 0 ? $0 : nil }
         .onPreferenceChange(PanelChromeHeightKey.self) { measuredChromeHeight = $0 + 15 }
         .background(PanelScreenHeightReader { maximumPanelHeight = $0 })
-        .frame(width: listWidth, height: adaptivePanelHeight)
-        .onChange(of: panelSize) { onPanelSizeChange($0) }
-        .onAppear { onPanelSizeChange(panelSize) }
+        .frame(width: listWidth, height: currentPanelHeight)
+        .background(
+            GeometryReader { proxy in
+                Color.clear.preference(key: PanelRenderedSizeKey.self, value: proxy.size)
+            }
+        )
+        .onPreferenceChange(PanelRenderedSizeKey.self) { size in
+            guard size.width > 0, size.height > 0 else { return }
+            onPanelSizeChange(size)
+        }
+        .onChange(of: adaptivePanelHeight) { updatePresentedPanelHeight(to: $0) }
+        .onChange(of: accessibilityReduceMotion) { _ in
+            updatePresentedPanelHeight(to: adaptivePanelHeight)
+        }
+        .onAppear { presentedPanelHeight = adaptivePanelHeight }
     }
     
     var singleSwitchList: some View {
@@ -499,9 +513,19 @@ struct OnlySwitchListView: View {
         ).panelHeight(for: measuredContentHeight)
     }
 
-    private var adaptiveScrollHeight: CGFloat { max(0, adaptivePanelHeight - measuredChromeHeight) }
+    private var currentPanelHeight: CGFloat { presentedPanelHeight ?? adaptivePanelHeight }
 
-    private var panelSize: CGSize { CGSize(width: listWidth, height: adaptivePanelHeight) }
+    private var presentedScrollHeight: CGFloat { max(0, currentPanelHeight - measuredChromeHeight) }
+
+    private func updatePresentedPanelHeight(to height: CGFloat) {
+        if accessibilityReduceMotion {
+            presentedPanelHeight = height
+        } else {
+            withAnimation(.easeInOut(duration: 0.25)) {
+                presentedPanelHeight = height
+            }
+        }
+    }
     
     func move(from source: IndexSet, to destination: Int) {
         switchVM.moveItem(from: source, to: destination)
@@ -607,6 +631,11 @@ private struct PanelContentHeightKey: PreferenceKey {
 private struct PanelChromeHeightKey: PreferenceKey {
     static let defaultValue: CGFloat = 0
     static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) { value += nextValue() }
+}
+
+private struct PanelRenderedSizeKey: PreferenceKey {
+    static let defaultValue = CGSize.zero
+    static func reduce(value: inout CGSize, nextValue: () -> CGSize) { value = nextValue() }
 }
 
 #if DEBUG
