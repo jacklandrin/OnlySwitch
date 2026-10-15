@@ -11,6 +11,16 @@ public struct AphroditeSettingsView: View {
     public init(store: StoreOf<AphroditeReducer> = Store(initialState: .init()) { AphroditeReducer() }) { _store = State(initialValue: store) }
 
     public var body: some View {
+        Group {
+            if let id = store.editingAppID, let app = store.apps[id: id] { AphroditeEditorView(store: store, app: app) }
+            else { libraryForm }
+        }
+        .task { store.send(.task) }
+        .onReceive(NotificationCenter.default.publisher(for: .aphroditeLibraryChanged).receive(on: RunLoop.main)) { _ in store.send(.reloadLibrary) }
+        .onDisappear { if store.editingAppID != nil { store.send(.editorDisappeared) } }
+    }
+
+    private var libraryForm: some View {
         Form {
             Toggle("Show Aphrodite tab".localized(), isOn: $isVisible)
                 .onChange(of: isVisible) { _ in NotificationCenter.default.post(name: .changeSettings, object: nil) }
@@ -44,17 +54,22 @@ public struct AphroditeSettingsView: View {
                 if store.apps.isEmpty { ContentUnavailableView("No mini apps yet".localized(), systemImage: "sparkles.rectangle.stack", description: Text("Describe an app above to create it.".localized())) }
                 ForEach(store.apps) { app in
                     HStack {
-                        AphroditeIconView(svg: app.iconSVG).frame(width: 24, height: 24)
-                        Text(app.title)
-                        Spacer()
+                        Button { store.send(.editTapped(app.id)) } label: {
+                            HStack {
+                                AphroditeIconView(svg: app.iconSVG).frame(width: 24, height: 24)
+                                Text(app.title)
+                                Spacer()
+                            }
+                            .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .disabled(store.isGenerating)
                         Button("Delete".localized(), systemImage: "trash", role: .destructive) { store.send(.deleteTapped(app.id)) }.labelStyle(.iconOnly)
                     }
                 }
             }
         }
         .formStyle(.grouped)
-        .task { store.send(.task) }
-        .onReceive(NotificationCenter.default.publisher(for: .aphroditeLibraryChanged).receive(on: RunLoop.main)) { _ in store.send(.reloadLibrary) }
     }
 
     private var hasValidSelection: Bool {
@@ -74,7 +89,7 @@ public struct AphroditePanelView: View {
                 VStack(spacing: 8) {
                     HStack { Button("Back".localized(), systemImage: "chevron.left") { store.send(.selectApp(nil)) }; Text(app.title).font(.headline); Spacer() }.padding(.horizontal)
                     #if os(macOS)
-                    SecureAphroditeWebView(html: app.html) { webContentHeight = $0 }
+                    SecureAphroditeWebView(html: app.html, onContentHeightChange: { webContentHeight = $0 })
                         .frame(height: webContentHeight)
                     #endif
                 }
@@ -115,7 +130,7 @@ public struct AphroditeUnavailableView: View {
     public var body: some View { ContentUnavailableView("Aphrodite requires macOS 26 or later".localized(), systemImage: "sparkles.rectangle.stack") }
 }
 
-private extension ModelProvider {
+extension ModelProvider {
     var aphroditeDisplayName: String {
         self == .openai ? "OpenAI" : rawValue.capitalized
     }

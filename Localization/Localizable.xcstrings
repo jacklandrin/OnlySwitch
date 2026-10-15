@@ -12192,7 +12192,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Edit"
+            "value" : "Modifier"
           }
         },
         "hr" : {
@@ -12271,6 +12271,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "编辑"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "編輯"
           }
         }
       }
@@ -49587,6 +49593,181 @@
         "uk" : { "stringUnit" : { "state" : "translated", "value" : "Програма без назви" } },
         "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "未命名 App" } },
         "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "未命名 App" } }
+      }
+    },
+    "Edit mini app" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : { "stringUnit" : { "state" : "translated", "value" : "Upravit miniaplikaci" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Mini-App bearbeiten" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Edit mini app" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Editar miniapp" } },
+        "fil" : { "stringUnit" : { "state" : "translated", "value" : "I-edit ang mini app" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Modifier la mini-app" } },
+        "hr" : { "stringUnit" : { "state" : "translated", "value" : "Uredi mini aplikaciju" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Modifica mini app" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "ミニアプリを編集" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "미니 앱 편집" } },
+        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Mini-app bewerken" } },
+        "pl" : { "stringUnit" : { "state" : "translated", "value" : "Edytuj miniaplikację" } },
+        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Editar miniapp" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Редактировать мини-приложение" } },
+        "sk" : { "stringUnit" : { "state" : "translated", "value" : "Upraviť miniaplikáciu" } },
+        "so" : { "stringUnit" : { "state" : "translated", "value" : "Tafatir abka yar" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Mini uygulamayı düzenle" } },
+        "uk" : { "stringUnit" : { "state" : "translated", "value" : "Редагувати мініпрограму" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "编辑迷你 App" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "編輯迷你 App" } }
+      }
+    },
+    "Conversation" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : { "stringUnit" : { "state" : "translated", "value" : "Konverzace" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Unterhaltung" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Conversation" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Conversación" } },
+        "fil" : { "stringUnit" : { "state" : "translated", "value" : "Pag-uusap" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Conversation" } },
+        "hr" : { "stringUnit" : { "state" : "translated", "value" : "Razgovor" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Conversazione" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "会話" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "대화" } },
+        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Gesprek" } },
+        "pl" : { "stringUnit" : { "state" : "translated", "value" : "Rozmowa" } },
+        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Conversa" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Разговор" } },
+        "sk" : { "stringUnit" : { "state" : "translated", "value" : "Konverzácia" } },
+        "so" : { "stringUnit" : { "state" : "translated", "value" : "Wadahadal" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Konuşma" } },
+        "uk" : { "stringUnit" : { "state" : "translated", "value" : "Розмова" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "对话" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "對話" } }
+      }
+    },
+    "App updated" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : { "stringUnit" : { "state" : "translated", "value" : "Aplikace aktualizována" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "App aktualisiert" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "App updated" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "App actualizada" } },
+        "fil" : { "stringUnit" : { "state" : "translated", "value" : "Na-update ang app" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "App mise à jour" } },
+        "hr" : { "stringUnit" : { "state" : "translated", "value" : "Aplikacija je ažurirana" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "App aggiornata" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "アプリを更新しました" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "앱이 업데이트됨" } },
+        "nl" : { "stringUnit" : { "state" : "translated", "value" : "App bijgewerkt" } },
+        "pl" : { "stringUnit" : { "state" : "translated", "value" : "Aplikacja uaktualniona" } },
+        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "App atualizado" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Приложение обновлено" } },
+        "sk" : { "stringUnit" : { "state" : "translated", "value" : "Aplikácia bola aktualizovaná" } },
+        "so" : { "stringUnit" : { "state" : "translated", "value" : "Abka waa la cusboonaysiiyay" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Uygulama güncellendi" } },
+        "uk" : { "stringUnit" : { "state" : "translated", "value" : "Програму оновлено" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "App 已更新" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "App 已更新" } }
+      }
+    },
+    "Result available" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : { "stringUnit" : { "state" : "translated", "value" : "Výsledek je k dispozici" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Ergebnis verfügbar" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Result available" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Resultado disponible" } },
+        "fil" : { "stringUnit" : { "state" : "translated", "value" : "Available na ang resulta" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Résultat disponible" } },
+        "hr" : { "stringUnit" : { "state" : "translated", "value" : "Rezultat je dostupan" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Risultato disponibile" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "結果を利用できます" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "결과 사용 가능" } },
+        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Resultaat beschikbaar" } },
+        "pl" : { "stringUnit" : { "state" : "translated", "value" : "Wynik jest dostępny" } },
+        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Resultado disponível" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Результат готов" } },
+        "sk" : { "stringUnit" : { "state" : "translated", "value" : "Výsledok je k dispozícii" } },
+        "so" : { "stringUnit" : { "state" : "translated", "value" : "Natiijada waa diyaar" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Sonuç hazır" } },
+        "uk" : { "stringUnit" : { "state" : "translated", "value" : "Результат готовий" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "结果可用" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "結果可用" } }
+      }
+    },
+    "Describe a change" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : { "stringUnit" : { "state" : "translated", "value" : "Popište změnu" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Beschreibe eine Änderung" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Describe a change" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Describe un cambio" } },
+        "fil" : { "stringUnit" : { "state" : "translated", "value" : "Ilarawan ang pagbabago" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Décrivez une modification" } },
+        "hr" : { "stringUnit" : { "state" : "translated", "value" : "Opišite promjenu" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Descrivi una modifica" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "変更内容を説明" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "변경 사항 설명" } },
+        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Beschrijf een wijziging" } },
+        "pl" : { "stringUnit" : { "state" : "translated", "value" : "Opisz zmianę" } },
+        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Descreva uma alteração" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Опишите изменение" } },
+        "sk" : { "stringUnit" : { "state" : "translated", "value" : "Opíšte zmenu" } },
+        "so" : { "stringUnit" : { "state" : "translated", "value" : "Sharax isbeddel" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Bir değişikliği açıklayın" } },
+        "uk" : { "stringUnit" : { "state" : "translated", "value" : "Опишіть зміну" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "描述更改" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "描述更改" } }
+      }
+    },
+    "Send" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : { "stringUnit" : { "state" : "translated", "value" : "Odeslat" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Senden" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Send" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Enviar" } },
+        "fil" : { "stringUnit" : { "state" : "translated", "value" : "Ipadala" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Envoyer" } },
+        "hr" : { "stringUnit" : { "state" : "translated", "value" : "Pošalji" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Invia" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "送信" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "보내기" } },
+        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Verstuur" } },
+        "pl" : { "stringUnit" : { "state" : "translated", "value" : "Wyślij" } },
+        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Enviar" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Отправить" } },
+        "sk" : { "stringUnit" : { "state" : "translated", "value" : "Odoslať" } },
+        "so" : { "stringUnit" : { "state" : "translated", "value" : "Dir" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Gönder" } },
+        "uk" : { "stringUnit" : { "state" : "translated", "value" : "Надіслати" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "发送" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "傳送" } }
+      }
+    },
+    "Back" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : { "stringUnit" : { "state" : "translated", "value" : "Zpět" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Zurück" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Back" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Atrás" } },
+        "fil" : { "stringUnit" : { "state" : "translated", "value" : "Bumalik" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Retour" } },
+        "hr" : { "stringUnit" : { "state" : "translated", "value" : "Natrag" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Indietro" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "戻る" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "뒤로" } },
+        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Terug" } },
+        "pl" : { "stringUnit" : { "state" : "translated", "value" : "Wstecz" } },
+        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Voltar" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Назад" } },
+        "sk" : { "stringUnit" : { "state" : "translated", "value" : "Späť" } },
+        "so" : { "stringUnit" : { "state" : "translated", "value" : "Dib u noqo" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Geri" } },
+        "uk" : { "stringUnit" : { "state" : "translated", "value" : "Назад" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "返回" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "返回" } }
       }
     }
   },

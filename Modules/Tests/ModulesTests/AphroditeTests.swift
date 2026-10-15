@@ -33,6 +33,59 @@ struct AphroditeHTMLExtractorTests {
 }
 
 struct AphroditePersistenceTests {
+    @Test func legacyAppsDecodeWithAnEditableEmptyConversation() throws {
+        let legacy = LegacyAphroditeApp(
+            id: UUID(), title: "Legacy", html: completeHTML,
+            createdAt: .distantPast, updatedAt: .distantPast
+        )
+
+        let decoded = try JSONDecoder().decode(AphroditeApp.self, from: JSONEncoder().encode(legacy))
+
+        #expect(decoded.conversation.isEmpty)
+        #expect(decoded.conversationID == legacy.id)
+        #expect(try JSONDecoder().decode(AphroditeApp.self, from: JSONEncoder().encode(legacy)).conversationID == decoded.conversationID)
+    }
+
+    @Test func updateReplacesOnlyTheExpectedAppAndKeepsTheLibrarySelection() async throws {
+        let directory = try makeTemporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let original = AphroditeApp(id: UUID(), title: "Counter", html: completeHTML, createdAt: .distantPast, updatedAt: .distantPast)
+        let sibling = AphroditeApp(id: UUID(), title: "Timer", html: completeHTML, createdAt: .distantPast, updatedAt: .distantPast)
+        let selection = AphroditeModelSelection(provider: .gemini, model: "gemini-3.8-flash")
+        let updated = AphroditeApp(
+            id: original.id, title: "Counter Plus", html: updatedHTML,
+            iconSVG: original.iconSVG, createdAt: original.createdAt, updatedAt: .now,
+            conversationID: original.conversationID,
+            conversation: [.init(id: UUID(), prompt: "Add a reset button", createdAt: .now)]
+        )
+        let client = AphroditePersistenceClient.fileSystem(directory: directory)
+        _ = try await client.replace(.init(apps: [original, sibling], selection: selection))
+
+        let library = try await client.update(updated, original)
+
+        #expect(library.apps == [updated, sibling])
+        #expect(library.selection == selection)
+    }
+
+    @Test func updateRejectsDeletedAndStaleExpectedAppsWithoutRestoringThem() async throws {
+        let directory = try makeTemporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let original = AphroditeApp(id: UUID(), title: "Counter", html: completeHTML, createdAt: .distantPast, updatedAt: .distantPast)
+        let revised = AphroditeApp(id: original.id, title: "Newer", html: updatedHTML, createdAt: original.createdAt, updatedAt: .now, conversationID: original.conversationID, conversation: [])
+        let client = AphroditePersistenceClient.fileSystem(directory: directory)
+        _ = try await client.replace(.init(apps: [original]))
+        _ = try await client.update(revised, expected: original)
+
+        await #expect(throws: AphroditePersistenceClient.Error.staleRevision) {
+            try await client.update(original, original)
+        }
+        _ = try await client.delete(original.id)
+        await #expect(throws: AphroditePersistenceClient.Error.missingApp) {
+            try await client.update(revised, revised)
+        }
+        #expect(try await client.load().apps.isEmpty)
+    }
+
     @Test func absentStoreLoadsAnEmptyLibrary() async throws {
         let directory = try makeTemporaryDirectory()
         defer { try? FileManager.default.removeItem(at: directory) }
@@ -206,7 +259,7 @@ struct AphroditeReducerTests {
     @Test func generationPersistsAValidatedIconFromTheSameModelResponse() async {
         let id = UUID(uuidString: "C5D159C4-5299-4DF3-851F-26D2E1C2C0A3")!
         let response = completeHTML.replacingOccurrences(of: "</body>", with: "<template id=\"aphrodite-app-icon\">\(validIconSVG)</template></body>")
-        let app = AphroditeApp(id: id, title: "Counter", html: response, iconSVG: validIconSVG, createdAt: .distantPast, updatedAt: .distantPast)
+        let app = AphroditeApp(id: id, title: "Counter", html: response, iconSVG: validIconSVG, createdAt: .distantPast, updatedAt: .distantPast, conversationID: id, conversation: [.init(id: id, prompt: "Build a counter", createdAt: .distantPast)])
         let library = AphroditeLibrary(apps: [app], selection: .init(provider: .openai, model: "gpt-test"))
         let store = TestStore(initialState: AphroditeReducer.State(prompt: "Build a counter", selection: library.selection, storageState: .ready).withModels([.openai: ["gpt-test"]])) { AphroditeReducer() } withDependencies: {
             $0.uuid = .constant(id)
@@ -230,7 +283,7 @@ struct AphroditeReducerTests {
     @Test func missingOrUnsafeIconStillPersistsTheGeneratedApp() async {
         let id = UUID(uuidString: "C5D159C4-5299-4DF3-851F-26D2E1C2C0A4")!
         let response = completeHTML.replacingOccurrences(of: "</body>", with: "<template id=\"aphrodite-app-icon\"><svg><script/></svg></template></body>")
-        let app = AphroditeApp(id: id, title: "Counter", html: response, iconSVG: nil, createdAt: .distantPast, updatedAt: .distantPast)
+        let app = AphroditeApp(id: id, title: "Counter", html: response, iconSVG: nil, createdAt: .distantPast, updatedAt: .distantPast, conversationID: id, conversation: [.init(id: id, prompt: "Build a counter", createdAt: .distantPast)])
         let library = AphroditeLibrary(apps: [app], selection: .init(provider: .openai, model: "gpt-test"))
         let store = TestStore(initialState: AphroditeReducer.State(prompt: "Build a counter", selection: library.selection, storageState: .ready).withModels([.openai: ["gpt-test"]])) { AphroditeReducer() } withDependencies: {
             $0.uuid = .constant(id); $0.date.now = .distantPast
@@ -249,7 +302,7 @@ struct AphroditeReducerTests {
     @MainActor
     @Test func generatesAndPersistsASelectedProvidersSelfContainedApp() async {
         let id = UUID(uuidString: "C5D159C4-5299-4DF3-851F-26D2E1C2C0A2")!
-        let generated = AphroditeApp(id: id, title: "Counter", html: completeHTML, createdAt: .distantPast, updatedAt: .distantPast)
+        let generated = AphroditeApp(id: id, title: "Counter", html: completeHTML, createdAt: .distantPast, updatedAt: .distantPast, conversationID: id, conversation: [.init(id: id, prompt: "Build a counter", createdAt: .distantPast)])
         let expectedLibrary = AphroditeLibrary(
             apps: [generated],
             selection: .init(provider: .gemini, model: "gemini-3.8-flash")
@@ -412,6 +465,158 @@ struct AphroditeReducerTests {
         await store.finish()
         #expect(store.state.apps.isEmpty)
     }
+
+    @MainActor
+    @Test func editingAppSendsBoundedConversationAndAtomicallyUpdatesTheSameRecord() async {
+        let appID = UUID(uuidString: "C5D159C4-5299-4DF3-851F-26D2E1C2C211")!
+        let conversationID = UUID(uuidString: "C5D159C4-5299-4DF3-851F-26D2E1C2C212")!
+        let turnID = UUID(uuidString: "C5D159C4-5299-4DF3-851F-26D2E1C2C213")!
+        let editDate = Date(timeIntervalSince1970: 1_000)
+        let history = (0..<10).map { AphroditeConversationTurn(id: UUID(), prompt: "History \($0)", createdAt: .distantPast) }
+        let original = AphroditeApp(id: appID, title: "Counter", html: completeHTML, iconSVG: validIconSVG, createdAt: .distantPast, updatedAt: .distantPast, conversationID: conversationID, conversation: history)
+        let generated = updatedHTML
+        let expected = AphroditeApp(
+            id: appID, title: "Counter Plus", html: generated, iconSVG: validIconSVG,
+            createdAt: .distantPast, updatedAt: editDate, conversationID: conversationID,
+            conversation: history + [.init(id: turnID, prompt: "Add a reset button", createdAt: editDate)]
+        )
+        let library = AphroditeLibrary(apps: [expected], selection: .init(provider: .openai, model: "gpt-test"))
+        let store = TestStore(initialState: AphroditeReducer.State(
+            apps: [original], selection: library.selection, storageState: .ready
+        ).withModels([.openai: ["gpt-test"]])) { AphroditeReducer() } withDependencies: {
+            $0.uuid = .constant(turnID)
+            $0.date.now = editDate
+            $0.modelProviderService.generateApp = { request in
+                #expect(request.conversationID == conversationID)
+                #expect(request.prompt.contains(completeHTML))
+                #expect(request.prompt.contains("Add a reset button"))
+                #expect(!request.prompt.contains("History 0"))
+                #expect(!request.prompt.contains("History 1"))
+                #expect(request.prompt.contains("History 2"))
+                return generated
+            }
+            $0.aphroditePersistence.update = { replacement, expectedOld in
+                #expect(replacement == expected)
+                #expect(expectedOld == original)
+                return library
+            }
+        }
+
+        await store.send(.editTapped(appID)) { $0.editingAppID = appID }
+        await store.send(.editPromptChanged("Add a reset button")) { $0.editPrompt = "Add a reset button" }
+        await store.send(.sendEditTapped) { $0.isEditing = true }
+        await store.receive(\.editFinished) {
+            $0.isEditing = false
+            $0.apps = [expected]
+            $0.editPrompt = ""
+        }
+        await store.finish()
+    }
+
+    @MainActor
+    @Test func cancelledEditCannotPersistALateResponseAndKeepsItsDraft() async {
+        let app = AphroditeApp(id: UUID(), title: "Counter", html: completeHTML, createdAt: .distantPast, updatedAt: .distantPast)
+        let continuation = LockIsolated<CheckedContinuation<String, Error>?>(nil)
+        let store = TestStore(initialState: AphroditeReducer.State(
+            apps: [app], selection: .init(provider: .openai, model: "gpt-test"), storageState: .ready
+        ).withModels([.openai: ["gpt-test"]])) { AphroditeReducer() } withDependencies: {
+            $0.uuid = .constant(UUID())
+            $0.date.now = .distantPast
+            $0.modelProviderService.generateApp = { _ in
+                try await withCheckedThrowingContinuation { newContinuation in
+                    continuation.withValue { $0 = newContinuation }
+                }
+            }
+            $0.aphroditePersistence.update = { _, _ in
+                Issue.record("Cancelled edit must not update persistence")
+                return .init()
+            }
+        }
+
+        await store.send(.editTapped(app.id)) { $0.editingAppID = app.id }
+        await store.send(.editPromptChanged("Make it blue")) { $0.editPrompt = "Make it blue" }
+        await store.send(.sendEditTapped) { $0.isEditing = true }
+        await store.send(.cancelEditTapped) { $0.isEditing = false }
+        continuation.withValue { $0?.resume(returning: updatedHTML) }
+        await store.finish()
+        #expect(store.state.apps == [app])
+        #expect(store.state.editPrompt == "Make it blue")
+    }
+
+    @MainActor
+    @Test func closingTheEditorCancelsALateResponseWithoutPersistingIt() async {
+        let app = AphroditeApp(id: UUID(), title: "Counter", html: completeHTML, createdAt: .distantPast, updatedAt: .distantPast)
+        let continuation = LockIsolated<CheckedContinuation<String, Error>?>(nil)
+        let store = TestStore(initialState: AphroditeReducer.State(
+            apps: [app], selection: .init(provider: .openai, model: "gpt-test"), storageState: .ready
+        ).withModels([.openai: ["gpt-test"]])) { AphroditeReducer() } withDependencies: {
+            $0.uuid = .constant(UUID())
+            $0.date.now = .distantPast
+            $0.modelProviderService.generateApp = { _ in
+                try await withCheckedThrowingContinuation { newContinuation in
+                    continuation.withValue { $0 = newContinuation }
+                }
+            }
+            $0.aphroditePersistence.update = { _, _ in
+                Issue.record("Closed editor must not update persistence")
+                return .init()
+            }
+        }
+
+        await store.send(.editTapped(app.id)) { $0.editingAppID = app.id }
+        await store.send(.editPromptChanged("Make it blue")) { $0.editPrompt = "Make it blue" }
+        await store.send(.sendEditTapped) { $0.isEditing = true }
+        await store.send(.closeEditorTapped) {
+            $0.editingAppID = nil
+            $0.editPrompt = ""
+            $0.isEditing = false
+        }
+        continuation.withValue { $0?.resume(returning: updatedHTML) }
+        await store.finish()
+        #expect(store.state.apps == [app])
+    }
+
+    @MainActor
+    @Test func failedEditKeepsTheDraftAndSavedAppForRetry() async {
+        let app = AphroditeApp(id: UUID(), title: "Counter", html: completeHTML, createdAt: .distantPast, updatedAt: .distantPast)
+        let store = TestStore(initialState: AphroditeReducer.State(
+            apps: [app], selection: .init(provider: .openai, model: "gpt-test"), storageState: .ready
+        ).withModels([.openai: ["gpt-test"]])) { AphroditeReducer() } withDependencies: {
+            $0.uuid = .constant(UUID())
+            $0.date.now = .distantPast
+            $0.modelProviderService.generateApp = { _ in throw AphroditeTestError.failed }
+        }
+
+        await store.send(.editTapped(app.id)) { $0.editingAppID = app.id }
+        await store.send(.editPromptChanged("Make it blue")) { $0.editPrompt = "Make it blue" }
+        await store.send(.sendEditTapped) { $0.isEditing = true }
+        await store.receive(\.editGenerationFailed) {
+            $0.isEditing = false
+            $0.error = .generationFailed
+        }
+        #expect(store.state.apps == [app])
+        #expect(store.state.editPrompt == "Make it blue")
+        await store.finish()
+    }
+
+    @MainActor
+    @Test func reloadingTheLibraryKeepsAnOpenEditorsTargetAndDraft() async {
+        let app = AphroditeApp(id: UUID(), title: "Counter", html: completeHTML, createdAt: .distantPast, updatedAt: .distantPast)
+        let library = AphroditeLibrary(apps: [app], selection: .init(provider: .openai, model: "gpt-test"))
+        var initial = AphroditeReducer.State(apps: [app], selection: library.selection, storageState: .ready)
+        initial.models = Dictionary(uniqueKeysWithValues: ModelProvider.allCases.map { ($0, ["gpt-test"]) })
+        initial.editingAppID = app.id
+        initial.editPrompt = "Make it blue"
+        let store = TestStore(initialState: initial) { AphroditeReducer() } withDependencies: {
+            $0.aphroditePersistence.load = { library }
+        }
+
+        await store.send(.reloadLibrary)
+        await store.receive(\.libraryReloaded)
+        #expect(store.state.editingAppID == app.id)
+        #expect(store.state.editPrompt == "Make it blue")
+        await store.finish()
+    }
 }
 
 struct AphroditeSandboxDocumentTests {
@@ -456,6 +661,7 @@ private func waitForWebKitReports(_ reports: LockIsolated<[CGFloat]>) {
 
 
 private let completeHTML = "<!doctype html><html><head><title>Counter</title></head><body><button>0</button></body></html>"
+private let updatedHTML = "<!doctype html><html><head><title>Counter Plus</title></head><body><button>Reset</button></body></html>"
 private let validIconSVG = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 64 64\"><rect x=\"8\" y=\"8\" width=\"48\" height=\"48\" rx=\"8\" fill=\"#6750A4\"/></svg>"
 
 private struct LegacyAphroditeApp: Codable {

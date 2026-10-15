@@ -8,6 +8,7 @@
 import Dependencies
 import DependenciesMacros
 import CodexKit
+import Foundation
 import Networking
 
 public enum ModelGenerationPurpose: String, Codable, Sendable { case chat, aphrodite }
@@ -23,10 +24,12 @@ public struct ModelGenerationRequest: Equatable, Sendable {
     public var systemInstructions: String
     public var prompt: String
     public var maximumOutputTokens: Int
+    public var conversationID: UUID?
 
-    public init(provider: ModelProvider, model: String, purpose: ModelGenerationPurpose, systemInstructions: String, prompt: String, maximumOutputTokens: Int) {
+    public init(provider: ModelProvider, model: String, purpose: ModelGenerationPurpose, systemInstructions: String, prompt: String, maximumOutputTokens: Int, conversationID: UUID? = nil) {
         self.provider = provider; self.model = model; self.purpose = purpose
         self.systemInstructions = systemInstructions; self.prompt = prompt; self.maximumOutputTokens = maximumOutputTokens
+        self.conversationID = conversationID
     }
 }
 

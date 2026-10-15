@@ -19,3 +19,27 @@ public enum AphroditeContentHeightReport {
         return abs(previous - next) >= 1
     }
 }
+
+@MainActor
+public enum AphroditeContentSizeReport {
+    public static func parse(message: [String: Any], expectedNavigationToken: UUID, maximumDimension: CGFloat) -> CGSize? {
+        guard let token = message["token"] as? String, token == expectedNavigationToken.uuidString,
+              maximumDimension.isFinite, maximumDimension >= 1,
+              let width = number(message["width"]), let height = number(message["height"]),
+              width.isFinite, height.isFinite, width >= 1, height >= 1,
+              width <= maximumDimension, height <= maximumDimension else { return nil }
+        return CGSize(width: width, height: height)
+    }
+
+    public static func shouldReport(previous: CGSize?, next: CGSize) -> Bool {
+        guard next.width.isFinite, next.height.isFinite else { return false }
+        guard let previous else { return true }
+        return abs(previous.width - next.width) >= 1 || abs(previous.height - next.height) >= 1
+    }
+
+    private static func number(_ value: Any?) -> CGFloat? {
+        if let number = value as? NSNumber { return CGFloat(number.doubleValue) }
+        if let value = value as? Double { return CGFloat(value) }
+        return nil
+    }
+}

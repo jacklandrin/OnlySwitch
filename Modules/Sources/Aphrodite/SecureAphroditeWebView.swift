@@ -7,12 +7,14 @@ import WebKit
 public struct SecureAphroditeWebView: NSViewRepresentable {
     public var html: String
     public var onContentHeightChange: @MainActor (CGFloat) -> Void
-    public init(html: String, onContentHeightChange: @escaping @MainActor (CGFloat) -> Void = { _ in }) {
+    public var onContentSizeChange: @MainActor (CGSize) -> Void
+    public init(html: String, onContentSizeChange: @escaping @MainActor (CGSize) -> Void = { _ in }, onContentHeightChange: @escaping @MainActor (CGFloat) -> Void = { _ in }) {
         self.html = html
         self.onContentHeightChange = onContentHeightChange
+        self.onContentSizeChange = onContentSizeChange
     }
 
-    public func makeCoordinator() -> Coordinator { Coordinator(onContentHeightChange: onContentHeightChange) }
+    public func makeCoordinator() -> Coordinator { Coordinator(onContentHeightChange: onContentHeightChange, onContentSizeChange: onContentSizeChange) }
     public func makeNSView(context: Context) -> WKWebView {
         let configuration = WKWebViewConfiguration()
         configuration.websiteDataStore = .nonPersistent()
@@ -26,6 +28,7 @@ public struct SecureAphroditeWebView: NSViewRepresentable {
     }
     public func updateNSView(_ view: WKWebView, context: Context) {
         context.coordinator.onContentHeightChange = onContentHeightChange
+        context.coordinator.onContentSizeChange = onContentSizeChange
         guard context.coordinator.html != html else { return }
         context.coordinator.html = html
         context.coordinator.beginNavigation(in: view.configuration.userContentController)
@@ -46,11 +49,14 @@ public struct SecureAphroditeWebView: NSViewRepresentable {
         private static let maximumReportedHeight: CGFloat = 20_000
         var html: String?
         var onContentHeightChange: @MainActor (CGFloat) -> Void
+        var onContentSizeChange: @MainActor (CGSize) -> Void
         private var navigationToken = UUID()
         private var previousHeight: CGFloat?
+        private var previousSize: CGSize?
 
-        init(onContentHeightChange: @escaping @MainActor (CGFloat) -> Void) {
+        init(onContentHeightChange: @escaping @MainActor (CGFloat) -> Void, onContentSizeChange: @escaping @MainActor (CGSize) -> Void = { _ in }) {
             self.onContentHeightChange = onContentHeightChange
+            self.onContentSizeChange = onContentSizeChange
         }
 
         func installReporter(in controller: WKUserContentController) {
@@ -58,7 +64,7 @@ public struct SecureAphroditeWebView: NSViewRepresentable {
         }
 
         func beginNavigation(in controller: WKUserContentController) {
-            navigationToken = UUID(); previousHeight = nil
+            navigationToken = UUID(); previousHeight = nil; previousSize = nil
             controller.removeAllUserScripts()
             let token = navigationToken.uuidString
             let source = """
@@ -70,18 +76,25 @@ public struct SecureAphroditeWebView: NSViewRepresentable {
                 const body = document.body; if (!body) return;
                 const style = getComputedStyle(body);
                 const marginTop = parseFloat(style.marginTop)||0, marginBottom = parseFloat(style.marginBottom)||0;
+                const marginLeft = parseFloat(style.marginLeft)||0, marginRight = parseFloat(style.marginRight)||0;
                 let bottom = body.getBoundingClientRect().top + (parseFloat(style.paddingTop)||0);
+                const bodyRect = body.getBoundingClientRect();
+                let right = bodyRect.left + (parseFloat(style.paddingLeft)||0);
+                let left = right;
                 for (const child of body.children) {
                   const s = getComputedStyle(child); if (s.display === 'none' || s.position === 'fixed') continue;
                   const r = child.getBoundingClientRect();
                   bottom = Math.max(bottom, r.bottom + (parseFloat(s.marginBottom)||0));
+                  left = Math.min(left, r.left - (parseFloat(s.marginLeft)||0));
+                  right = Math.max(right, r.right + (parseFloat(s.marginRight)||0));
                 }
                 const range = document.createRange(); range.selectNodeContents(body);
-                for (const r of range.getClientRects()) bottom = Math.max(bottom, r.bottom);
-                const top = body.getBoundingClientRect().top;
+                for (const r of range.getClientRects()) { bottom = Math.max(bottom, r.bottom); left = Math.min(left, r.left); right = Math.max(right, r.right); }
+                const top = bodyRect.top;
                 const height = Math.min(\(Int(Self.maximumReportedHeight)), Math.max(1, Math.ceil(marginTop + bottom - top + (parseFloat(style.paddingBottom)||0) + marginBottom)));
-                if (Number.isFinite(height))
-                  window.webkit?.messageHandlers?.heightReporter?.postMessage({token, height});
+                const width = Math.min(\(Int(Self.maximumReportedHeight)), Math.max(1, Math.ceil(marginLeft + right - left + (parseFloat(style.paddingLeft)||0) + (parseFloat(style.paddingRight)||0) + marginRight)));
+                if (Number.isFinite(width) && Number.isFinite(height))
+                  window.webkit?.messageHandlers?.heightReporter?.postMessage({token, width, height});
               };
               const schedule = () => { if (!frame) frame = setTimeout(report, 16); };
               const resize = new ResizeObserver(schedule);
@@ -102,14 +115,21 @@ public struct SecureAphroditeWebView: NSViewRepresentable {
             controller.removeAllUserScripts()
             controller.removeScriptMessageHandler(forName: Self.handlerName, contentWorld: Self.contentWorld)
             onContentHeightChange = { _ in }
+            onContentSizeChange = { _ in }
         }
 
         public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-            guard !message.frameInfo.isMainFrame, let body = message.body as? [String: Any],
-                  let height = AphroditeContentHeightReport.parse(message: body, expectedNavigationToken: navigationToken, maximumHeight: Self.maximumReportedHeight),
-                  AphroditeContentHeightReport.shouldReport(previous: previousHeight, next: height) else { return }
-            previousHeight = height
-            onContentHeightChange(height)
+            guard !message.frameInfo.isMainFrame, let body = message.body as? [String: Any] else { return }
+            if let size = AphroditeContentSizeReport.parse(message: body, expectedNavigationToken: navigationToken, maximumDimension: Self.maximumReportedHeight),
+               AphroditeContentSizeReport.shouldReport(previous: previousSize, next: size) {
+                previousSize = size
+                onContentSizeChange(size)
+            }
+            if let height = AphroditeContentHeightReport.parse(message: body, expectedNavigationToken: navigationToken, maximumHeight: Self.maximumReportedHeight),
+               AphroditeContentHeightReport.shouldReport(previous: previousHeight, next: height) {
+                previousHeight = height
+                onContentHeightChange(height)
+            }
         }
         public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping @MainActor (WKNavigationActionPolicy) -> Void) {
             let url = navigationAction.request.url

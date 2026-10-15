@@ -74,6 +74,52 @@ struct PopoverContentCapTests {
     }
 }
 
+struct AphroditeEditorPreviewScalePolicyTests {
+    @Test func fitsWideAndTallContentWithoutChangingItsLogicalCanvas() throws {
+        let layout = try #require(AphroditeEditorPreviewScalePolicy.layout(
+            content: .init(width: 1_048, height: 900),
+            available: .init(width: 340, height: 500)
+        ))
+
+        #expect(layout.scale == CGFloat(340) / 1_048)
+        #expect(layout.displayedSize.width == 340)
+        #expect(layout.displayedSize.height <= 500)
+        #expect(layout.logicalSize == .init(width: 1_048, height: 900))
+    }
+
+    @Test func doesNotUpscaleSmallContent() throws {
+        let layout = try #require(AphroditeEditorPreviewScalePolicy.layout(
+            content: .init(width: 200, height: 100),
+            available: .init(width: 900, height: 700)
+        ))
+
+        #expect(layout.scale == 1)
+        #expect(layout.logicalSize == .init(width: 640, height: 100))
+        #expect(layout.displayedSize == .init(width: 640, height: 100))
+    }
+
+    @Test func rejectsInvalidGeometry() {
+        #expect(AphroditeEditorPreviewScalePolicy.layout(
+            content: .init(width: CGFloat.infinity, height: 100), available: .init(width: 300, height: 300)
+        ) == nil)
+        #expect(AphroditeEditorPreviewScalePolicy.layout(
+            content: .init(width: 300, height: 0), available: .init(width: 300, height: 300)
+        ) == nil)
+        #expect(AphroditeEditorPreviewScalePolicy.layout(
+            content: .init(width: 300, height: 100), available: .init(width: CGFloat.nan, height: 300)
+        ) == nil)
+    }
+
+    @Test func heightConstraintCanDetermineTheFitScale() throws {
+        let layout = try #require(AphroditeEditorPreviewScalePolicy.layout(
+            content: .init(width: 640, height: 1_200), available: .init(width: 900, height: 300)
+        ))
+
+        #expect(layout.scale == 0.25)
+        #expect(layout.displayedSize == .init(width: 160, height: 300))
+    }
+}
+
 @MainActor
 struct AphroditeContentHeightReportTests {
     @Test func acceptsAHeightForTheCurrentNavigation() {
@@ -111,5 +157,41 @@ struct AphroditeContentHeightReportTests {
         #expect(!AphroditeContentHeightReport.shouldReport(previous: 240, next: 240.5))
         #expect(AphroditeContentHeightReport.shouldReport(previous: 240, next: 400))
         #expect(AphroditeContentHeightReport.shouldReport(previous: 400, next: 180))
+    }
+}
+
+@MainActor
+struct AphroditeContentSizeReportTests {
+    @Test func acceptsTheCurrentBoundedContentSize() {
+        let token = UUID()
+        #expect(AphroditeContentSizeReport.parse(
+            message: ["token": token.uuidString, "width": 640, "height": 480],
+            expectedNavigationToken: token,
+            maximumDimension: 20_000
+        ) == .init(width: 640, height: 480))
+    }
+
+    @Test func rejectsStaleAndUnsafeDimensions() {
+        let current = UUID()
+        let stale = UUID()
+        let invalid: [[String: Any]] = [
+            ["token": stale.uuidString, "width": 640, "height": 480],
+            ["token": current.uuidString, "width": Double.nan, "height": 480],
+            ["token": current.uuidString, "width": 640, "height": Double.infinity],
+            ["token": current.uuidString, "width": 0, "height": 480],
+            ["token": current.uuidString, "width": 640, "height": 20_001]
+        ]
+
+        for message in invalid {
+            #expect(AphroditeContentSizeReport.parse(
+                message: message, expectedNavigationToken: current, maximumDimension: 20_000
+            ) == nil)
+        }
+    }
+
+    @Test func suppressesSubPointJitterButReportsAWidthChange() {
+        let previous = CGSize(width: 640, height: 480)
+        #expect(!AphroditeContentSizeReport.shouldReport(previous: previous, next: .init(width: 640.5, height: 480)))
+        #expect(AphroditeContentSizeReport.shouldReport(previous: previous, next: .init(width: 700, height: 480)))
     }
 }
