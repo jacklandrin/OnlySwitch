@@ -18,11 +18,15 @@ class SettingsWindow: NSWindow, NSWindowDelegate {
     private init() {
         super.init(
             contentRect: .zero,
-            styleMask: [.titled, .closable, .miniaturizable],
+            styleMask: [.titled, .closable, .miniaturizable, .resizable],
             backing: .buffered,
             defer: true
         )
         self.delegate = self
+        self.contentMinSize = NSSize(
+            width: Layout.settingWindowWidth,
+            height: Layout.settingWindowHeight
+        )
     }
 
     func receiveSettingWindowOperation() {
@@ -42,10 +46,6 @@ class SettingsWindow: NSWindow, NSWindowDelegate {
                         self.isInitialized = true
                         self.makeKeyAndOrderFront(nil)
 
-                        var windowFrame = self.frame
-                        windowFrame.size.height = Layout.settingWindowHeight
-                        self.setFrame(windowFrame, display: true)
-                        self.styleMask.remove(.resizable)
                         window.close()
                     } else {
                         if !self.isShowing {
@@ -86,10 +86,6 @@ class SettingsWindow: NSWindow, NSWindowDelegate {
         if isInitialized {
             makeKeyAndOrderFront(nil)
             makeKey()
-            var windowFrame = frame
-            windowFrame.size.height = Layout.settingWindowHeight
-            setFrame(windowFrame, display: true)
-            styleMask.remove(.resizable)
         } else {
             if let url = URL(string: "onlyswitch://SettingsWindow") {
                 if #available(macOS 13.3, *) {

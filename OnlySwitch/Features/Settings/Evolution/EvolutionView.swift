@@ -15,7 +15,7 @@ struct EvolutionView: View {
     var body: some View {
         WithPerceptionTracking {
             NavigationStack {
-                HStack {
+                HStack(spacing: 10) {
                     VStack {
                         HStack {
                             Text("To add or remove any Evolutions on list".localized())
@@ -75,7 +75,7 @@ struct EvolutionView: View {
                             Spacer()
                         }
                     }
-                    .frame(width: 420)
+                    .frame(minWidth: 370, idealWidth: 420, maxWidth: 420)
                     .padding(.bottom, 10)
 
                     EvolutionGalleryView(

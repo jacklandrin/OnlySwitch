@@ -26,6 +26,8 @@ enum OpenWindows: CurrentScreen {
                 let hostingController = NSHostingController(rootView:SettingsView().environment(\.managedObjectContext, persistenceController.container.viewContext))
                 let settingWindow = HostWindow(contentViewController: hostingController)
                 settingWindow.setContentSize(NSSize(width: Layout.settingWindowWidth, height: Layout.settingWindowHeight))
+                settingWindow.styleMask.insert(.resizable)
+                settingWindow.contentMinSize = NSSize(width: Layout.settingWindowWidth, height: Layout.settingWindowHeight)
                 let xPos = getScreenWithMouse()!.frame.width / 2 - Layout.settingWindowWidth / 2
                 let yPos = getScreenWithMouse()!.frame.height / 2 - Layout.settingWindowHeight / 2
                 settingWindow.setFrameOrigin(NSPoint(x: xPos, y: yPos))

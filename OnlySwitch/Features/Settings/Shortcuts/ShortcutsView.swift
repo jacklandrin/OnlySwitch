@@ -13,10 +13,7 @@ import Switches
 import Utilities
 
 struct ShortcutsView: View {
-    private let columns = [
-        GridItem(.flexible()),
-        GridItem(.flexible())
-    ]
+    private let columns = [GridItem(.adaptive(minimum: 140, maximum: 180), spacing: 12)]
     @StateObject var shortcutsVM = ShortcutsSettingVM()
     @ObservedObject var langManager = LanguageManager.sharedManager
     
@@ -24,9 +21,9 @@ struct ShortcutsView: View {
         GeometryReader { geometry in
             HStack(spacing:0) {
                 installedShortcutsSection
-                    .frame(width: geometry.size.width * 0.6)
+                    .frame(width: min(geometry.size.width * 0.6, 600))
                 gallerySection
-                    .frame(width: geometry.size.width * 0.4)
+                    .frame(maxWidth: .infinity)
             }
         }
         .onAppear{
@@ -61,13 +58,13 @@ struct ShortcutsView: View {
                         HStack {
                             Toggle("", isOn: $shortcutsVM.shortcutsList[index].toggle)
                             Text(shortcutsVM.shortcutsList[index].name)
-                                .frame(width: 170, alignment: .leading)
-                                .padding(.trailing, 10)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .frame(minWidth: 80, maxWidth: .infinity, alignment: .leading)
+                                .help(shortcutsVM.shortcutsList[index].name)
                             
                             KeyboardShortcuts.Recorder(for: shortcutsVM.shortcutsList[index].keyboardShortcutName)
                                 .environment(\.locale, .init(identifier: langManager.currentLang))//Localizable doesn't work
                             
-                            Spacer().frame(width:30)
                         }
                     }
                 }
@@ -142,7 +139,8 @@ struct ShortcutsView: View {
                         .padding(.trailing, 10)
                         .padding(.bottom, 5)
                     }
-                    .frame(width: 140, height: 100)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 100)
                     .background(Color(.themeLila))
                     .help(shortcutsVM.sharedShortcutsList[index].description)
                     .cornerRadius(10)

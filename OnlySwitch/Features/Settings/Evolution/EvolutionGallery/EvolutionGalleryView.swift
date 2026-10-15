@@ -10,10 +10,7 @@ import SwiftUI
 
 struct EvolutionGalleryView: View {
 
-    private let columns = [
-        GridItem(.flexible()),
-        GridItem(.flexible())
-    ]
+    private let columns = [GridItem(.adaptive(minimum: 140, maximum: 180), spacing: 10)]
 
     let store: StoreOf<EvolutionGalleryReducer>
 
@@ -45,7 +42,7 @@ struct EvolutionGalleryView: View {
                     Spacer()
                 }
             }
-            .frame(width: 300)
+            .frame(minWidth: 210, maxWidth: .infinity)
             .padding(.horizontal, 10)
             .task {
                 store.send(.refresh)

@@ -65,7 +65,8 @@ struct EvolutionGalleryItemView: View {
                 .padding(.trailing, 10)
                 .padding(.bottom, 5)
             }
-            .frame(width: 140, height: 100)
+            .frame(maxWidth: .infinity)
+            .frame(height: 100)
             .background(Color(.themeFountainBlue))
             .help(store.item.description)
             .cornerRadius(10)
