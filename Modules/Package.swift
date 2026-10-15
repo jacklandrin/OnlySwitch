@@ -162,6 +162,9 @@ let package = Package(
                 "OnlyAgent",
                 "Defines",
                 "Extensions"
+            ],
+            resources: [
+                .process("Resources")
             ]
         ),
         .target(

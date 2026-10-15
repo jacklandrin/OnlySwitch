@@ -1,4 +1,4 @@
-import Aphrodite
+@testable import Aphrodite
 import ComposableArchitecture
 import Foundation
 import OnlyAgent
@@ -58,7 +58,7 @@ struct AphroditePersistenceTests {
             conversationID: original.conversationID,
             conversation: [.init(id: UUID(), prompt: "Add a reset button", createdAt: .now)]
         )
-        let client = AphroditePersistenceClient.fileSystem(directory: directory)
+        let client = makeUnseededClient(directory: directory)
         _ = try await client.replace(.init(apps: [original, sibling], selection: selection))
 
         let library = try await client.update(updated, original)
@@ -72,7 +72,7 @@ struct AphroditePersistenceTests {
         defer { try? FileManager.default.removeItem(at: directory) }
         let original = AphroditeApp(id: UUID(), title: "Counter", html: completeHTML, createdAt: .distantPast, updatedAt: .distantPast)
         let revised = AphroditeApp(id: original.id, title: "Newer", html: updatedHTML, createdAt: original.createdAt, updatedAt: .now, conversationID: original.conversationID, conversation: [])
-        let client = AphroditePersistenceClient.fileSystem(directory: directory)
+        let client = makeUnseededClient(directory: directory)
         _ = try await client.replace(.init(apps: [original]))
         _ = try await client.update(revised, expected: original)
 
@@ -90,8 +90,76 @@ struct AphroditePersistenceTests {
         let directory = try makeTemporaryDirectory()
         defer { try? FileManager.default.removeItem(at: directory) }
 
-        let client = AphroditePersistenceClient.fileSystem(directory: directory)
+        let client = makeUnseededClient(directory: directory)
         #expect(try await client.load() == AphroditeLibrary())
+    }
+
+    @Test func freshInstallReceivesTheSixBundledApps() async throws {
+        let directory = try makeTemporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+
+        let library = try await AphroditePersistenceClient.fileSystem(directory: directory).load()
+
+        #expect(library.apps.map(\.title) == bundledAppTitles)
+        #expect(library.apps.map(\.id) == bundledAppIDs)
+        #expect(library.apps.allSatisfy { $0.conversation.isEmpty })
+        #expect(library.apps.allSatisfy { $0.conversationID == $0.id })
+        #expect(library.selection == nil)
+    }
+
+    @Test func upgradeAddsOnlyMissingSeedsAndPreservesExistingData() async throws {
+        let directory = try makeTemporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let modifiedSeed = AphroditeApp(
+            id: bundledAppIDs[0], title: "My Calculator", html: updatedHTML,
+            createdAt: .distantPast, updatedAt: .now,
+            conversation: [.init(id: UUID(), prompt: "Keep my edit", createdAt: .now)]
+        )
+        let custom = AphroditeApp(
+            id: UUID(), title: "Custom", html: completeHTML,
+            createdAt: .distantPast, updatedAt: .distantPast
+        )
+        let selection = AphroditeModelSelection(provider: .openai, model: "gpt-custom")
+        let legacy = LegacyAphroditeEnvelope(
+            schemaVersion: 1,
+            library: .init(apps: [modifiedSeed, custom], selection: selection)
+        )
+        try JSONEncoder().encode(legacy).write(to: directory.appending(path: "apps.json"))
+
+        let library = try await AphroditePersistenceClient.fileSystem(directory: directory).load()
+
+        #expect(library.apps.count == 7)
+        #expect(library.apps[0] == modifiedSeed)
+        #expect(library.apps[1] == custom)
+        #expect(library.selection == selection)
+        #expect(Set(library.apps.map(\.id)) == Set(bundledAppIDs + [custom.id]))
+    }
+
+    @Test func completedMigrationDoesNotReseedADeletedApp() async throws {
+        let directory = try makeTemporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let client = AphroditePersistenceClient.fileSystem(directory: directory)
+        _ = try await client.load()
+
+        let afterDeletion = try await client.delete(bundledAppIDs[0])
+        let afterReload = try await client.load()
+
+        #expect(afterDeletion.apps.count == 5)
+        #expect(afterReload == afterDeletion)
+        #expect(afterReload.apps.contains { $0.id == bundledAppIDs[0] } == false)
+    }
+
+    @Test func bundledSeedContainsOnlySanitizedFields() throws {
+        let object = try #require(JSONSerialization.jsonObject(with: AphroditeBundledSeed.resourceData()) as? [String: Any])
+        #expect(Set(object.keys) == Set(["seedVersion", "apps"]))
+        #expect(object["seedVersion"] as? Int == 1)
+        let apps = try #require(object["apps"] as? [[String: Any]])
+        let expectedKeys: Set<String> = ["id", "title", "html", "iconSVG", "createdAt", "updatedAt"]
+
+        #expect(apps.count == 6)
+        #expect(apps.allSatisfy { Set($0.keys) == expectedKeys })
+        #expect(apps.compactMap { $0["title"] as? String } == bundledAppTitles)
+        #expect(try AphroditeBundledSeed.loadApps().map(\.id) == bundledAppIDs)
     }
 
     @Test func roundTripPreservesStableIDsAndIndependentModelSelection() async throws {
@@ -102,7 +170,7 @@ struct AphroditePersistenceTests {
             apps: [.init(id: id, title: "Counter", html: completeHTML, createdAt: .distantPast, updatedAt: .distantPast)],
             selection: .init(provider: .gemini, model: "gemini-3.8-flash")
         )
-        let client = AphroditePersistenceClient.fileSystem(directory: directory)
+        let client = makeUnseededClient(directory: directory)
 
         let saved = try await client.replace(library)
 
@@ -127,7 +195,7 @@ struct AphroditePersistenceTests {
     @Test func serializedInsertAndSelectionMutationsKeepBothFeatureStoresChanges() async throws {
         let directory = try makeTemporaryDirectory()
         defer { try? FileManager.default.removeItem(at: directory) }
-        let client = AphroditePersistenceClient.fileSystem(directory: directory)
+        let client = makeUnseededClient(directory: directory)
         let selection = AphroditeModelSelection(provider: .openai, model: "gpt-test")
         let first = AphroditeApp(id: UUID(), title: "First", html: completeHTML, createdAt: .distantPast, updatedAt: .distantPast)
         let second = AphroditeApp(id: UUID(), title: "Second", html: completeHTML, createdAt: .distantPast, updatedAt: .distantPast)
@@ -145,7 +213,7 @@ struct AphroditePersistenceTests {
     @Test func completingAGenerationDoesNotRollBackANewerModelSelection() async throws {
         let directory = try makeTemporaryDirectory()
         defer { try? FileManager.default.removeItem(at: directory) }
-        let client = AphroditePersistenceClient.fileSystem(directory: directory)
+        let client = makeUnseededClient(directory: directory)
         let capturedGenerationSelection = AphroditeModelSelection(provider: .gemini, model: "gemini-3.8-flash")
         let newerSelection = AphroditeModelSelection(provider: .claude, model: "claude-opus-5-5")
         let app = AphroditeApp(id: UUID(), title: "Counter", html: completeHTML, createdAt: .distantPast, updatedAt: .distantPast)
@@ -160,7 +228,7 @@ struct AphroditePersistenceTests {
     @Test func invalidLibrariesAreNotWritten() async throws {
         let directory = try makeTemporaryDirectory()
         defer { try? FileManager.default.removeItem(at: directory) }
-        let client = AphroditePersistenceClient.fileSystem(directory: directory)
+        let client = makeUnseededClient(directory: directory)
         let duplicateID = UUID()
         let invalid = AphroditeLibrary(apps: [
             .init(id: duplicateID, title: "One", html: completeHTML, createdAt: .distantPast, updatedAt: .distantPast),
@@ -232,7 +300,7 @@ struct AphroditeIconPersistenceTests {
         let directory = try makeTemporaryDirectory()
         defer { try? FileManager.default.removeItem(at: directory) }
         let app = AphroditeApp(id: UUID(), title: "Counter", html: completeHTML, iconSVG: validIconSVG, createdAt: .distantPast, updatedAt: .distantPast)
-        let client = AphroditePersistenceClient.fileSystem(directory: directory)
+        let client = makeUnseededClient(directory: directory)
 
         _ = try await client.replace(.init(apps: [app]))
 
@@ -1173,6 +1241,24 @@ private struct LegacyAphroditeApp: Codable {
     let id: UUID; let title: String; let html: String; let createdAt: Date; let updatedAt: Date
 }
 
+private struct LegacyAphroditeEnvelope: Codable {
+    let schemaVersion: Int
+    let library: AphroditeLibrary
+}
+
+private let bundledAppTitles = [
+    "Calculator", "Flappy Bird", "1024 Game", "German Flash", "Calendar", "Aphrodite To-Do"
+]
+
+private let bundledAppIDs = [
+    UUID(uuidString: "0F3E5125-C33F-4DC6-B0E0-A1D7A4D315AF")!,
+    UUID(uuidString: "0BC050FB-8B0E-4ECC-AAE0-0F80865C6742")!,
+    UUID(uuidString: "F95C07F8-3A22-48CE-9421-F62EE5AD88F2")!,
+    UUID(uuidString: "33E7A1F6-8F34-4AE8-9913-6D9BE3E55737")!,
+    UUID(uuidString: "24960EDA-0F24-418C-9D95-A9775FC5CE0C")!,
+    UUID(uuidString: "B7B45660-9C37-4ADF-B0FE-3B1051DBA8B6")!
+]
+
 private struct IconBearingAphroditeApp: Codable {
     let id: UUID; let title: String; let html: String; let iconSVG: String?; let createdAt: Date; let updatedAt: Date
 }
@@ -1181,6 +1267,10 @@ private func makeTemporaryDirectory() throws -> URL {
     let directory = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString, directoryHint: .isDirectory)
     try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
     return directory
+}
+
+private func makeUnseededClient(directory: URL) -> AphroditePersistenceClient {
+    AphroditePersistenceClient.fileSystem(directory: directory, seedVersion: 0, seedApps: { [] })
 }
 
 private extension AphroditeReducer.State {

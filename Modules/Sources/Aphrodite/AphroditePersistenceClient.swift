@@ -18,7 +18,21 @@ public struct AphroditePersistenceClient: Sendable {
     public var updateSelection: @Sendable (AphroditeModelSelection) async throws -> AphroditeLibrary
 
     public static func fileSystem(directory: URL) -> Self {
-        let store = AphroditeFileStore(directory: directory)
+        fileSystem(directory: directory, seedVersion: 1) {
+            try AphroditeBundledSeed.loadApps()
+        }
+    }
+
+    static func fileSystem(
+        directory: URL,
+        seedVersion: Int,
+        seedApps: @escaping @Sendable () throws -> [AphroditeApp]
+    ) -> Self {
+        let store = AphroditeFileStore(
+            directory: directory,
+            seedVersion: seedVersion,
+            seedApps: seedApps
+        )
         return Self(
             load: { try await store.load() },
             replace: { try await store.replace($0) },
@@ -32,25 +46,75 @@ public struct AphroditePersistenceClient: Sendable {
 }
 
 private actor AphroditeFileStore {
-    private struct Envelope: Codable { var schemaVersion = 1; var library: AphroditeLibrary }
+    private struct Envelope: Codable {
+        var schemaVersion = 1
+        var seedVersion = 0
+        var library: AphroditeLibrary
+
+        private enum CodingKeys: String, CodingKey { case schemaVersion, seedVersion, library }
+
+        init(schemaVersion: Int = 1, seedVersion: Int = 0, library: AphroditeLibrary) {
+            self.schemaVersion = schemaVersion
+            self.seedVersion = seedVersion
+            self.library = library
+        }
+
+        init(from decoder: Decoder) throws {
+            let values = try decoder.container(keyedBy: CodingKeys.self)
+            schemaVersion = try values.decode(Int.self, forKey: .schemaVersion)
+            seedVersion = try values.decodeIfPresent(Int.self, forKey: .seedVersion) ?? 0
+            library = try values.decode(AphroditeLibrary.self, forKey: .library)
+        }
+    }
+
     let directory: URL
+    let seedVersion: Int
+    let seedApps: @Sendable () throws -> [AphroditeApp]
     var didFailLoading = false
     var fileURL: URL { directory.appending(path: "apps.json") }
 
-    init(directory: URL) { self.directory = directory }
+    init(
+        directory: URL,
+        seedVersion: Int,
+        seedApps: @escaping @Sendable () throws -> [AphroditeApp]
+    ) {
+        self.directory = directory
+        self.seedVersion = seedVersion
+        self.seedApps = seedApps
+    }
 
     func load() throws -> AphroditeLibrary {
-        guard FileManager.default.fileExists(atPath: fileURL.path) else { didFailLoading = false; return .init() }
         do {
-            let envelope = try JSONDecoder().decode(Envelope.self, from: Data(contentsOf: fileURL))
+            var envelope: Envelope
+            if FileManager.default.fileExists(atPath: fileURL.path) {
+                envelope = try JSONDecoder().decode(Envelope.self, from: Data(contentsOf: fileURL))
+            } else {
+                envelope = Envelope(library: .init())
+            }
             guard envelope.schemaVersion == 1 else { throw AphroditePersistenceClient.Error.corruptStore }
-            guard Set(envelope.library.apps.map(\.id)).count == envelope.library.apps.count,
-                  envelope.library.apps.allSatisfy({ $0.html.utf8.count <= AphroditeHTMLExtractor.maximumDocumentBytes }) else {
+            guard Self.isValid(envelope.library) else {
                 throw AphroditePersistenceClient.Error.corruptStore
+            }
+            if envelope.seedVersion < seedVersion {
+                let seeds = try seedApps()
+                guard Self.isValid(.init(apps: seeds)) else {
+                    throw AphroditePersistenceClient.Error.corruptStore
+                }
+                let existingIDs = Set(envelope.library.apps.map(\.id))
+                envelope.library.apps.append(contentsOf: seeds.filter { existingIDs.contains($0.id) == false })
+                envelope.seedVersion = seedVersion
+                do {
+                    try write(envelope)
+                } catch is CancellationError {
+                    throw CancellationError()
+                } catch {
+                    throw AphroditePersistenceClient.Error.writeFailed
+                }
             }
             didFailLoading = false
             return envelope.library
-        } catch let error as AphroditePersistenceClient.Error { didFailLoading = true; throw error }
+        } catch is CancellationError { throw CancellationError() }
+        catch let error as AphroditePersistenceClient.Error { didFailLoading = true; throw error }
         catch { didFailLoading = true; throw AphroditePersistenceClient.Error.corruptStore }
     }
 
@@ -60,14 +124,8 @@ private actor AphroditeFileStore {
         guard Self.isValid(library) else { throw AphroditePersistenceClient.Error.writeFailed }
         do {
             try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-            let data = try JSONEncoder().encode(Envelope(library: library))
-            try Task.checkCancellation()
-            let temporary = directory.appending(path: ".apps-\(UUID().uuidString).json")
-            try data.write(to: temporary, options: .atomic)
-            try Task.checkCancellation()
-            if FileManager.default.fileExists(atPath: fileURL.path) {
-                _ = try FileManager.default.replaceItemAt(fileURL, withItemAt: temporary)
-            } else { try FileManager.default.moveItem(at: temporary, to: fileURL) }
+            let currentSeedVersion = try currentEnvelope()?.seedVersion ?? 0
+            try write(Envelope(seedVersion: currentSeedVersion, library: library))
             NotificationCenter.default.post(name: .aphroditeLibraryChanged, object: nil)
             return library
         } catch is CancellationError {
@@ -110,6 +168,52 @@ private actor AphroditeFileStore {
     private static func isValid(_ library: AphroditeLibrary) -> Bool {
         Set(library.apps.map(\.id)).count == library.apps.count
             && library.apps.allSatisfy { $0.html.utf8.count <= AphroditeHTMLExtractor.maximumDocumentBytes }
+    }
+
+    private func currentEnvelope() throws -> Envelope? {
+        guard FileManager.default.fileExists(atPath: fileURL.path) else { return nil }
+        return try JSONDecoder().decode(Envelope.self, from: Data(contentsOf: fileURL))
+    }
+
+    private func write(_ envelope: Envelope) throws {
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let data = try JSONEncoder().encode(envelope)
+        try Task.checkCancellation()
+        let temporary = directory.appending(path: ".apps-\(UUID().uuidString).json")
+        try data.write(to: temporary, options: .atomic)
+        do {
+            try Task.checkCancellation()
+            if FileManager.default.fileExists(atPath: fileURL.path) {
+                _ = try FileManager.default.replaceItemAt(fileURL, withItemAt: temporary)
+            } else {
+                try FileManager.default.moveItem(at: temporary, to: fileURL)
+            }
+        } catch {
+            try? FileManager.default.removeItem(at: temporary)
+            throw error
+        }
+    }
+}
+
+enum AphroditeBundledSeed {
+    private struct Document: Decodable {
+        let seedVersion: Int
+        let apps: [AphroditeApp]
+    }
+
+    static func loadApps() throws -> [AphroditeApp] {
+        let document = try JSONDecoder().decode(Document.self, from: resourceData())
+        guard document.seedVersion == 1 else {
+            throw AphroditePersistenceClient.Error.corruptStore
+        }
+        return document.apps
+    }
+
+    static func resourceData() throws -> Data {
+        guard let url = Bundle.module.url(forResource: "InitialApps", withExtension: "json") else {
+            throw AphroditePersistenceClient.Error.corruptStore
+        }
+        return try Data(contentsOf: url)
     }
 }
 
