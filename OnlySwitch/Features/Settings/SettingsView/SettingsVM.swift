@@ -31,6 +31,15 @@ enum SettingsItem: String, CaseIterable {
     case PrivilegedAccess = "Privileged Switch Access"
     case iOSRemote = "iOS Remote"
     case About = "About"
+
+    var titleLocalizationKey: String {
+        switch self {
+        case .Customize:
+            "Built-In"
+        default:
+            rawValue
+        }
+    }
 }
 
 @MainActor

@@ -18,6 +18,8 @@
 		0406EDD32ACB664D0015F4D0 /* EvolutionGalleryService+Live.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406EDD22ACB664D0015F4D0 /* EvolutionGalleryService+Live.swift */; };
 		040C6EAA276B7D4500291DEB /* CustomizeVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040C6EA9276B7D4500291DEB /* CustomizeVM.swift */; };
 		040C6EAC276B7D9F00291DEB /* CustomizeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040C6EAB276B7D9F00291DEB /* CustomizeView.swift */; };
+		B1C100000000000000000002 /* BuiltInSwitchCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C100000000000000000001 /* BuiltInSwitchCatalog.swift */; };
+		B1C100000000000000000005 /* BuiltInSwitchCatalogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C100000000000000000004 /* BuiltInSwitchCatalogTests.swift */; };
 		040E97272760FF3E003D9D42 /* MetadataExtractorError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040E97262760FF3E003D9D42 /* MetadataExtractorError.swift */; };
 		041927682AEBFFA60041185B /* CBTrueToneClient++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041927672AEBFFA60041185B /* CBTrueToneClient++.swift */; };
 		0419276B2AEC124B0041185B /* KeyboardShortcutsDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0419276A2AEC124B0041185B /* KeyboardShortcutsDefine.swift */; };
@@ -619,6 +621,8 @@
 		0406EDD22ACB664D0015F4D0 /* EvolutionGalleryService+Live.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EvolutionGalleryService+Live.swift"; sourceTree = "<group>"; };
 		040C6EA9276B7D4500291DEB /* CustomizeVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomizeVM.swift; sourceTree = "<group>"; };
 		040C6EAB276B7D9F00291DEB /* CustomizeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomizeView.swift; sourceTree = "<group>"; };
+		B1C100000000000000000001 /* BuiltInSwitchCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuiltInSwitchCatalog.swift; sourceTree = "<group>"; };
+		B1C100000000000000000004 /* BuiltInSwitchCatalogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuiltInSwitchCatalogTests.swift; sourceTree = "<group>"; };
 		040CD2BD27579CEA002E0CC6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		040E97262760FF3E003D9D42 /* MetadataExtractorError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetadataExtractorError.swift; sourceTree = "<group>"; };
 		041927672AEBFFA60041185B /* CBTrueToneClient++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CBTrueToneClient++.swift"; sourceTree = "<group>"; };
@@ -1188,6 +1192,7 @@
 				B90000000000000000000003 /* SystemMonitor */,
 				C1A0B00518E9202600000001 /* PrivilegedOperations */,
 				F3A400000000000000000013 /* RemoteAccess */,
+				B1C100000000000000000004 /* BuiltInSwitchCatalogTests.swift */,
 				B82700022700000000C0DE01 /* MenuBarIconHidingTests.swift */,
 				041D725628353A160083092D /* OnlySwitchTests.swift */,
 				A9AD00020000000000000001 /* AdsModelTests.swift */,
@@ -1813,6 +1818,7 @@
 		04BF977227908ECE00E7C0E2 /* Customize */ = {
 			isa = PBXGroup;
 			children = (
+				B1C100000000000000000001 /* BuiltInSwitchCatalog.swift */,
 				040C6EAB276B7D9F00291DEB /* CustomizeView.swift */,
 				040C6EA9276B7D4500291DEB /* CustomizeVM.swift */,
 			);
@@ -2796,6 +2802,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B1C100000000000000000005 /* BuiltInSwitchCatalogTests.swift in Sources */,
 				CADE00000000000000000001 /* RemoteCodexUsageProviderTests.swift in Sources */,
 				B90000000000000000000002 /* MacSystemMonitorCollectorTests.swift in Sources */,
 				B90100000000000000000002 /* SystemMonitorPreferencesTests.swift in Sources */,
@@ -2896,6 +2903,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B1C100000000000000000002 /* BuiltInSwitchCatalog.swift in Sources */,
 				B90000000000000000000005 /* MacSystemMonitorCollector.swift in Sources */,
 				B90400000000000000000005 /* SystemMonitorStatusItemController.swift in Sources */,
 				B90100000000000000000005 /* SystemMonitorSettingsView.swift in Sources */,

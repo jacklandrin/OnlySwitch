@@ -28,6 +28,16 @@ class CustomizeVM:ObservableObject {
             }))
         }
     }
+
+    func sections(matching query: String, currentLanguage: String)
+        -> [(section: BuiltInSwitchSection, items: [CustomizeItem])]
+    {
+        BuiltInSwitchCatalog.sections(
+            items: allSwitches,
+            matching: query,
+            locale: Locale(identifier: currentLanguage)
+        )
+    }
 }
 
 @MainActor

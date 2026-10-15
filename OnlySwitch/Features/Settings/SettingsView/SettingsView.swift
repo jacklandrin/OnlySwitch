@@ -27,9 +27,9 @@ struct SettingsView: View {
                 ForEach(settingVM.settingItems, id:\.self ) { item in
                     NavigationLink{
                         page(item: item)
-                            .navigationTitle(item.rawValue.localized())
+                            .navigationTitle(item.titleLocalizationKey.localized())
                     } label:{
-                        Text(item.rawValue.localized())
+                        Text(item.titleLocalizationKey.localized())
                             .id(currentLang)
                             .frame(minWidth: 190, alignment:.leading)
                             .lineLimit(2)
@@ -56,7 +56,7 @@ struct SettingsView: View {
             List(selection:$settingVM.selection) {
                 ForEach(settingVM.settingItems, id:\.self ) { item in
                     NavigationLink(value: item) {
-                        Text(item.rawValue.localized())
+                        Text(item.titleLocalizationKey.localized())
                             .id(currentLang)
                             .frame(minWidth: 190, alignment:.leading)
                             .lineLimit(2)
@@ -67,7 +67,7 @@ struct SettingsView: View {
         }, detail: {
             let selection = settingVM.selection ?? .General
             page(item: selection)
-                .navigationTitle(selection.rawValue.localized())
+                .navigationTitle(selection.titleLocalizationKey.localized())
         })
     }
 

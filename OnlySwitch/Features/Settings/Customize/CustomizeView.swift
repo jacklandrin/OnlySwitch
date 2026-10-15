@@ -14,27 +14,71 @@ import Utilities
 struct CustomizeView: View {
     @ObservedObject var customizeVM = CustomizeVM.shared
     @ObservedObject var langManager = LanguageManager.sharedManager
+    @State private var searchText = ""
+
     var body: some View {
-        VStack(alignment:.leading) {
+        let currentLanguage = langManager.currentLang
+        let sections = customizeVM.sections(
+            matching: searchText,
+            currentLanguage: currentLanguage
+        )
+
+        VStack(alignment: .leading) {
             Text("To add or remove any switches on list".localized())
                 .padding(10)
+            TextField(
+                "Search Built-In Switches".localized(),
+                text: $searchText
+            )
+            .textFieldStyle(.roundedBorder)
+            .accessibilityLabel(Text("Search Built-In Switches".localized()))
+            .environment(\.locale, Locale(identifier: currentLanguage))
+            .padding(.horizontal, 10)
+
             ScrollView {
-                VStack{
-                    ForEach(customizeVM.allSwitches, id: \.type) { item in
-                        CustomizeRowView(item: item, currentLang: langManager.currentLang)
+                LazyVStack(alignment: .leading, spacing: 16) {
+                    if sections.isEmpty {
+                        VStack(spacing: 8) {
+                            Image(systemName: "magnifyingglass")
+                                .font(.title2)
+                                .accessibilityHidden(true)
+                            Text("No Built-In Switches Found".localized())
+                                .foregroundStyle(.secondary)
+                        }
+                        .accessibilityElement(children: .ignore)
+                        .accessibilityLabel(Text("No Built-In Switches Found".localized()))
+                        .frame(maxWidth: .infinity)
+                        .padding(.top, 24)
+                    } else {
+                        ForEach(sections, id: \.section.id) { section in
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text(section.section.titleKey.localized())
+                                    .font(.headline)
+                                    .foregroundStyle(.secondary)
+                                    .accessibilityAddTraits(.isHeader)
+                                    .padding(.horizontal)
+
+                                ForEach(section.items, id: \.type) { item in
+                                    CustomizeRowView(
+                                        item: item,
+                                        currentLang: currentLanguage
+                                    )
+                                }
+                            }
+                            .accessibilityElement(children: .contain)
+                        }
                     }
                 }
-                
+                .padding(.vertical, 8)
             }
             Divider()
-                .padding(.bottom,10)
+                .padding(.bottom, 10)
         }
         .toast(isPresenting: $customizeVM.showErrorToast) {
             AlertToast(displayMode: .alert,
                        type: .error(.red),
                        title: customizeVM.errorInfo.localized())
         }
-        
     }
 }
 
@@ -44,20 +88,27 @@ private struct CustomizeRowView: View {
     let currentLang: String
 
     var body: some View {
+        let localizedTitle = item.barInfo.title.localized()
+
         HStack {
-            Toggle("", isOn: $item.toggle)
+            Toggle(localizedTitle, isOn: $item.toggle)
+                .labelsHidden()
+                .accessibilityLabel(Text(localizedTitle))
             if let iconImage = item.iconImage {
                 Image(nsImage: iconImage)
                     .renderingMode(.template)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 25, height: 25)
+                    .accessibilityHidden(true)
             }
-            Text(item.barInfo.title.localized())
-                .frame(width:170, alignment: .leading)
+            Text(localizedTitle)
+                .frame(width: 170, alignment: .leading)
                 .padding(.trailing, 10)
+                .accessibilityHidden(true)
             KeyboardShortcuts.Recorder(for: item.keyboardShortcutName)
-                .environment(\.locale, .init(identifier: currentLang))//Localizable follow system
+                .environment(\.locale, Locale(identifier: currentLang))
+                .accessibilityLabel(Text("\(localizedTitle), \("Shortcuts".localized())"))
             extraSettingsButton
                 .padding(.leading, 10)
 
@@ -69,17 +120,14 @@ private struct CustomizeRowView: View {
     @ViewBuilder
     private var extraSettingsButton: some View {
         if item.type == .hideMenubarIcons {
-            Button(action: {
+            Button {
                 preferencesvm.preferences.menubarCollaspable.toggle()
-            }, label: {
-                if preferencesvm.preferences.menubarCollaspable {
-                    Text("Disable".localized())
-                } else {
-                    Text("Enable".localized())
-                }
-            })
+            } label: {
+                Text(extraSettingsActionTitle)
+            }
+            .accessibilityLabel(Text(extraSettingsAccessibilityLabel))
         } else if item.type == .radioStation || item.type == .backNoises {
-            Button(action: {
+            Button {
                 preferencesvm.preferences.radioEnable.toggle()
                 if preferencesvm.preferences.radioEnable {
                     PlayerManager.shared.player.setupRemoteCommandCenter()
@@ -87,14 +135,22 @@ private struct CustomizeRowView: View {
                     RadioStationSwitch.shared.playerItem.isPlaying = false
                     PlayerManager.shared.player.clearCommandCenter()
                 }
-            }, label: {
-                if preferencesvm.preferences.radioEnable {
-                    Text("Disable".localized())
-                } else {
-                    Text("Enable".localized())
-                }
-            })
+            } label: {
+                Text(extraSettingsActionTitle)
+            }
+            .accessibilityLabel(Text(extraSettingsAccessibilityLabel))
         }
+    }
+
+    private var extraSettingsActionTitle: String {
+        let isEnabled = item.type == .hideMenubarIcons
+            ? preferencesvm.preferences.menubarCollaspable
+            : preferencesvm.preferences.radioEnable
+        return (isEnabled ? "Disable" : "Enable").localized()
+    }
+
+    private var extraSettingsAccessibilityLabel: String {
+        "\(extraSettingsActionTitle) \(item.barInfo.title.localized())"
     }
 }
 
