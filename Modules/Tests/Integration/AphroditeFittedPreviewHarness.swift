@@ -8,10 +8,10 @@ enum AphroditeFittedPreviewHarness {
     static func main() throws {
         guard #available(macOS 26.0, *) else { print("SKIP: Aphrodite requires macOS 26"); return }
         _ = NSApplication.shared
-        let html = """
+        let app = AphroditeApp(id: UUID(), html: """
         <!doctype html><html><body style="margin:0;padding:10px"><button id="target" style="position:absolute;left:900px;top:800px;width:100px;height:50px" onclick="document.getElementById('wide').style.height='1100px'">Tap</button><div id="wide" style="width:1048px;height:900px"></div></body></html>
-        """
-        let host = NSHostingView(rootView: AphroditeFittedPreview(html: html))
+        """)
+        let host = NSHostingView(rootView: AphroditeFittedPreview(app: app))
         host.frame = CGRect(x: 0, y: 0, width: 340, height: 500)
         let window = NSWindow(contentRect: host.frame, styleMask: .borderless, backing: .buffered, defer: false)
         window.contentView = host; window.orderFront(nil)

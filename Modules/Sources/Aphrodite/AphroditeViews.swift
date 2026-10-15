@@ -1,14 +1,16 @@
 import ComposableArchitecture
 import OnlyAgent
 import SwiftUI
+import UniformTypeIdentifiers
 import Defines
 import Extensions
 
 @available(macOS 26.0, *)
 public struct AphroditeSettingsView: View {
-    @State private var store: StoreOf<AphroditeReducer>
+    private let store: StoreOf<AphroditeReducer>
     @AppStorage(UserDefaults.Key.showAphroditeTab) private var isVisible = true
-    public init(store: StoreOf<AphroditeReducer> = Store(initialState: .init()) { AphroditeReducer() }) { _store = State(initialValue: store) }
+    @Environment(\.colorScheme) private var colorScheme
+    public init(store: StoreOf<AphroditeReducer>) { self.store = store }
 
     public var body: some View {
         Group {
@@ -17,14 +19,13 @@ public struct AphroditeSettingsView: View {
         }
         .task { store.send(.task) }
         .onReceive(NotificationCenter.default.publisher(for: .aphroditeLibraryChanged).receive(on: RunLoop.main)) { _ in store.send(.reloadLibrary) }
-        .onDisappear { if store.editingAppID != nil { store.send(.editorDisappeared) } }
     }
 
     private var libraryForm: some View {
         Form {
             Toggle("Show Aphrodite tab".localized(), isOn: $isVisible)
                 .onChange(of: isVisible) { _ in NotificationCenter.default.post(name: .changeSettings, object: nil) }
-            Section("Create a mini app".localized()) {
+            Section {
                 TextEditor(text: Binding(get: { store.prompt }, set: { store.send(.promptChanged($0)) }))
                     .frame(minHeight: 100).accessibilityLabel("Describe your mini app".localized())
                 Picker("Provider".localized(), selection: Binding(get: { store.selection?.provider ?? .openai }, set: { store.send(.providerSelected($0)) })) {
@@ -49,32 +50,82 @@ public struct AphroditeSettingsView: View {
                         }
                     }
                 }
+            } header: {
+                AphroditeSectionHeader("Create a mini app".localized(), systemImage: "wand.and.stars")
             }
-            Section("Saved mini apps".localized()) {
+            Section {
+                Button("Import mini app".localized(), systemImage: "square.and.arrow.down") {
+                    store.send(.importTapped)
+                }
+                .disabled(store.storageState != .ready)
                 if store.apps.isEmpty { ContentUnavailableView("No mini apps yet".localized(), systemImage: "sparkles.rectangle.stack", description: Text("Describe an app above to create it.".localized())) }
                 ForEach(store.apps) { app in
-                    HStack {
-                        Button { store.send(.editTapped(app.id)) } label: {
-                            HStack {
-                                AphroditeIconView(svg: app.iconSVG).frame(width: 24, height: 24)
-                                Text(app.title)
-                                Spacer()
-                            }
-                            .contentShape(Rectangle())
+                    AphroditeLibraryCard(
+                        app: app,
+                        isOpenDisabled: store.isGenerating || (store.activeEdit != nil && store.activeEdit?.appID != app.id)
+                    ) {
+                        store.send(.editTapped(app.id))
+                    } actions: {
+                        ShareLink(
+                            item: AphroditeSharePayload(app: app),
+                            preview: SharePreview(app.title, image: sharePreviewImage(for: app))
+                        ) {
+                            Label("Share mini app".localized(), systemImage: "square.and.arrow.up")
+                                .labelStyle(.iconOnly)
                         }
-                        .buttonStyle(.plain)
-                        .disabled(store.isGenerating)
+                        .accessibilityLabel("Share mini app".localized())
+                        .accessibilityValue(app.title)
                         Button("Delete".localized(), systemImage: "trash", role: .destructive) { store.send(.deleteTapped(app.id)) }.labelStyle(.iconOnly)
                     }
                 }
+            } header: {
+                AphroditeSectionHeader("Saved mini apps".localized(), systemImage: "square.grid.2x2")
             }
         }
         .formStyle(.grouped)
+        .tint(colorScheme == .dark ? .mint : .accentColor)
+        .fileImporter(isPresented: Binding(
+            get: { store.isImporting },
+            set: { if !$0 { store.send(.importPickerDismissed) } }
+        ), allowedContentTypes: [.aphroditeMiniApp], allowsMultipleSelection: false) { result in
+            importDocument(result)
+        }
+        .alert("Import failed".localized(), isPresented: Binding(
+            get: { store.importError != nil },
+            set: { if !$0 { store.send(.importErrorDismissed) } }
+        )) {
+            Button("OK".localized()) { store.send(.importErrorDismissed) }
+        } message: {
+            Text(store.importError?.rawValue.localized() ?? "This mini app could not be imported.".localized())
+        }
     }
 
     private var hasValidSelection: Bool {
         guard let selection = store.selection else { return false }
         return store.models[selection.provider]?.contains(selection.model) == true
+    }
+
+    private func importDocument(_ result: Result<[URL], any Error>) {
+        do {
+            let urls = try result.get()
+            guard let url = urls.first else { throw AphroditeShareDocument.ValidationError.malformedDocument }
+            let hasAccess = url.startAccessingSecurityScopedResource()
+            defer { if hasAccess { url.stopAccessingSecurityScopedResource() } }
+            let fileSize = try url.resourceValues(forKeys: [.fileSizeKey]).fileSize ?? 0
+            guard fileSize <= AphroditeShareDocument.maximumEncodedBytes else {
+                throw AphroditeShareDocument.ValidationError.documentTooLarge
+            }
+            store.send(.importDocument(try Data(contentsOf: url, options: [.mappedIfSafe])))
+        } catch {
+            store.send(.importFinished(.failure(error)))
+        }
+    }
+
+    private func sharePreviewImage(for app: AphroditeApp) -> Image {
+        #if os(macOS)
+        if let image = AphroditeIconRenderer.image(svg: app.iconSVG) { return Image(nsImage: image) }
+        #endif
+        return Image(systemName: "sparkles.rectangle.stack")
     }
 }
 
@@ -87,12 +138,13 @@ public struct AphroditePanelView: View {
         Group {
             if let id = store.selectedAppID, let app = store.apps[id: id] {
                 VStack(spacing: 8) {
-                    HStack { Button("Back".localized(), systemImage: "chevron.left") { store.send(.selectApp(nil)) }; Text(app.title).font(.headline); Spacer() }.padding(.horizontal)
+                    HStack { Button("Back".localized(), systemImage: "chevron.left") { store.send(.selectApp(nil)) }; Text(app.title).font(.headline); Spacer() }.padding()
                     #if os(macOS)
-                    SecureAphroditeWebView(html: app.html, onContentHeightChange: { webContentHeight = $0 })
+                    SecureAphroditeWebView(app: app, onContentHeightChange: { webContentHeight = $0 })
                         .frame(height: webContentHeight)
                     #endif
                 }
+                .aphroditePanelSurface()
             } else if store.storageState == .failed {
                 VStack(spacing: 12) {
                     ContentUnavailableView("Aphrodite could not load your saved apps.".localized(), systemImage: "exclamationmark.triangle")
@@ -102,20 +154,18 @@ public struct AphroditePanelView: View {
                 ContentUnavailableView("No mini apps yet".localized(), systemImage: "sparkles.rectangle.stack", description: Text("Create one in Aphrodite Settings.".localized()))
             } else {
                 VStack(alignment: .leading, spacing: 0) {
-                    LazyVStack(alignment: .leading, spacing: 4) {
+                    LazyVStack(alignment: .leading, spacing: 8) {
                         ForEach(store.apps) { app in
-                            Button { store.send(.selectApp(app.id)) } label: {
-                                HStack(spacing: 10) {
-                                    AphroditeIconView(svg: app.iconSVG).frame(width: 28, height: 28)
-                                    Text(app.title)
-                                }
-                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            AphroditeLibraryCard(app: app) {
+                                store.send(.selectApp(app.id))
+                            } actions: {
+                                Image(systemName: "chevron.right")
+                                    .foregroundStyle(.tertiary)
+                                    .accessibilityHidden(true)
                             }
-                            .buttonStyle(.plain)
-                            .padding(.horizontal)
-                            .padding(.vertical, 8)
                         }
                     }
+                    .padding(8)
                 }
                 .frame(maxWidth: .infinity, alignment: .topLeading)
             }

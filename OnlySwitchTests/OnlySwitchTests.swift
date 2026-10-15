@@ -13,6 +13,9 @@ import Combine
 import DesktopPet
 import Defines
 import Switches
+import Aphrodite
+import UserNotifications
+import ComposableArchitecture
 @testable import OnlySwitch
 
 class OnlySwitchTests: XCTestCase {
@@ -624,6 +627,65 @@ struct SettingsViewTests {
         ]
             .compactMap { $0 }
             + children.flatMap { accessibilityTree(of: $0) }
+    }
+}
+
+@MainActor
+@available(macOS 26.0, *)
+struct SettingsVMAphroditeLifetimeTests {
+    @Test func retainedStoreFinishesGenerationAfterPresentationIsReleased() async {
+        let taskID = UUID()
+        let continuation = LockIsolated<CheckedContinuation<String, Error>?>(nil)
+        let delivered = LockIsolated(0)
+        let library = LockIsolated<AphroditeLibrary?>(nil)
+        let owner = SettingsVM()
+        owner.aphroditeStore = Store(initialState: AphroditeReducer.State(
+            prompt: "Build a counter",
+            selection: .init(provider: .openai, model: "gpt-test"),
+            storageState: .ready
+        )) {
+            AphroditeReducer()
+        } withDependencies: {
+            $0.uuid = .constant(taskID)
+            $0.date.now = .distantPast
+            $0.modelProviderService.generateApp = { _ in
+                try await withCheckedThrowingContinuation { pending in
+                    continuation.withValue { $0 = pending }
+                }
+            }
+            $0.aphroditePersistence.insert = { app, selection in
+                let persisted = AphroditeLibrary(apps: [app], selection: selection)
+                library.withValue { $0 = persisted }
+                return persisted
+            }
+            $0.aphroditeLocalNotification.requestAuthorization = { true }
+            $0.aphroditeLocalNotification.deliver = { _ in delivered.withValue { $0 += 1 } }
+        }
+
+        var presentation: NSHostingView<AphroditeSettingsView>? = NSHostingView(
+            rootView: AphroditeSettingsView(store: owner.aphroditeStore)
+        )
+        let operation = owner.aphroditeStore.send(.generateTapped)
+        presentation = nil
+        #expect(presentation == nil)
+        continuation.withValue { $0?.resume(returning: "<!doctype html><html><head><title>Counter</title></head><body></body></html>") }
+        await operation.finish()
+
+        let recreated = NSHostingView(rootView: AphroditeSettingsView(store: owner.aphroditeStore))
+        #expect(owner.aphroditeStore.apps == IdentifiedArray(uniqueElements: library.value!.apps))
+        #expect(delivered.value == 1)
+        _ = recreated
+
+        #expect(owner.aphroditeStore === owner.aphroditeStore)
+    }
+}
+
+struct AphroditeForegroundNotificationTests {
+    @Test func foregroundCompletionUsesBannerAndSound() {
+        let options = AppDelegate.aphroditeForegroundNotificationOptions
+
+        #expect(options.contains(.banner))
+        #expect(options.contains(.sound))
     }
 }
 

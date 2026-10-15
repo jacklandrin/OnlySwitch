@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import ComposableArchitecture
+import Aphrodite
 
 enum SettingsItem: String, CaseIterable {
     case General = "General"
@@ -61,6 +62,10 @@ class SettingsVM: ObservableObject {
         )
     ) {
         RemoteAccessSettingsFeature()
+    }
+
+    lazy var aphroditeStore = Store(initialState: AphroditeReducer.State()) {
+        AphroditeReducer()
     }
 
     init() {

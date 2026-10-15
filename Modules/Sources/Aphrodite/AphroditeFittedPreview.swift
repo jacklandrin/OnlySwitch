@@ -3,7 +3,7 @@ import SwiftUI
 #if os(macOS)
 @available(macOS 26.0, *)
 struct AphroditeFittedPreview: View {
-    let html: String
+    let app: AphroditeApp
     @State private var contentSize = CGSize(width: 640, height: 240)
 
     var body: some View {
@@ -12,7 +12,7 @@ struct AphroditeFittedPreview: View {
                 Color.clear
                     .frame(width: layout.displayedSize.width, height: layout.displayedSize.height)
                     .overlay(alignment: .topLeading) {
-                        SecureAphroditeWebView(html: html, onContentSizeChange: { contentSize = $0 })
+                        SecureAphroditeWebView(app: app, onContentSizeChange: { contentSize = $0 })
                             .frame(width: layout.logicalSize.width, height: layout.logicalSize.height)
                             .scaleEffect(layout.scale, anchor: .topLeading)
                     }
@@ -20,7 +20,9 @@ struct AphroditeFittedPreview: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             }
         }
-        .onChange(of: html) { contentSize = CGSize(width: 640, height: 240) }
+        .onChange(of: app.html) { contentSize = CGSize(width: 640, height: 240) }
+        .background(Color.primary.opacity(0.04), in: RoundedRectangle(cornerRadius: 12))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 }
 #endif

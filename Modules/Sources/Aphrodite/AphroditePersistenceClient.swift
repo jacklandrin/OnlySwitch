@@ -12,6 +12,7 @@ public struct AphroditePersistenceClient: Sendable {
     public var load: @Sendable () async throws -> AphroditeLibrary = { AphroditeLibrary() }
     public var replace: @Sendable (AphroditeLibrary) async throws -> AphroditeLibrary
     public var insert: @Sendable (AphroditeApp, AphroditeModelSelection) async throws -> AphroditeLibrary
+    public var insertImported: @Sendable (AphroditeApp) async throws -> AphroditeLibrary
     public var delete: @Sendable (UUID) async throws -> AphroditeLibrary
     public var update: @Sendable (AphroditeApp, _ expected: AphroditeApp) async throws -> AphroditeLibrary
     public var updateSelection: @Sendable (AphroditeModelSelection) async throws -> AphroditeLibrary
@@ -22,6 +23,7 @@ public struct AphroditePersistenceClient: Sendable {
             load: { try await store.load() },
             replace: { try await store.replace($0) },
             insert: { try await store.insert($0, selection: $1) },
+            insertImported: { try await store.insertImported($0) },
             delete: { try await store.delete($0) },
             update: { try await store.update($0, expected: $1) },
             updateSelection: { try await store.updateSelection($0) }
@@ -80,6 +82,12 @@ private actor AphroditeFileStore {
         if library.selection == nil {
             library.selection = selection
         }
+        return try replace(library)
+    }
+    func insertImported(_ app: AphroditeApp) throws -> AphroditeLibrary {
+        try Task.checkCancellation()
+        var library = try load()
+        library.apps.append(app)
         return try replace(library)
     }
     func delete(_ id: UUID) throws -> AphroditeLibrary {

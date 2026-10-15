@@ -23,6 +23,28 @@
 			</array>
 		</dict>
 	</array>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.json</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Aphrodite Mini App</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.onlyswitch.aphrodite-mini-app</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>aphrodite</string>
+				</array>
+				<key>public.mime-type</key>
+				<string>application/vnd.onlyswitch.aphrodite-mini-app+json</string>
+			</dict>
+		</dict>
+	</array>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>

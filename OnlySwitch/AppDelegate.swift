@@ -16,6 +16,7 @@ import Networking
 import FirebaseCore
 import Extensions
 import DesktopPet
+import UserNotifications
 
 @main
 struct OnlySwitchApp: App {
@@ -81,7 +82,7 @@ struct OnlySwitchApp: App {
         WindowGroup("Settings".localized()) {
             settings
         }
-        .windowKeepContentSize()
+        .windowResizability(.contentMinSize)
         .handlesExternalEvents(matching: Set(arrayLiteral: "SettingsWindow"))
         .commands{
             CommandMenu("Switches Availability") {
@@ -126,7 +127,7 @@ struct OnlySwitchApp: App {
 
     private var settings: some View {
         SettingsView(settingItem: $settingsItem)
-            .frame(width: Layout.settingWindowWidth, height: Layout.settingWindowHeight)
+            .frame(minWidth: Layout.settingWindowWidth, minHeight: Layout.settingWindowHeight)
             .onDisappear {
                 if #available(macOS 13.3, *) {
                     print("settings window closing")
@@ -169,7 +170,7 @@ protocol DesktopPetPomodoroPresenting: AnyObject {
 extension DesktopPetController: DesktopPetPomodoroPresenting {}
 
 @MainActor
-class AppDelegate: NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDelegate {
     var statusBar: StatusBarController?
     var popover = NSPopover()
     let switchVM = SwitchListVM()
@@ -189,6 +190,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var didStopRemoteAccess = false
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        UNUserNotificationCenter.current().delegate = self
         FirebaseApp.configure()
         Task { await remoteAccessController.startIfEnabled() }
         // Migrate API keys from UserDefaults to Keychain if needed
@@ -241,6 +243,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self?.onlyRemoteCampaignController.presentIfNeeded()
         }
     }
+
+    nonisolated func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+    ) {
+        completionHandler(Self.aphroditeForegroundNotificationOptions)
+    }
+
+    nonisolated static let aphroditeForegroundNotificationOptions: UNNotificationPresentationOptions = [.banner, .sound]
 
     func applicationWillTerminate(_ notification: Notification) {
         ReverseScrollDirectionController.shared.suspendForTermination()

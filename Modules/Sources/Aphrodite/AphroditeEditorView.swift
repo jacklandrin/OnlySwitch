@@ -21,6 +21,7 @@ public struct AphroditeEditorView: View {
             Divider()
             splitContent
         }
+        .background(.background)
     }
 
     private var header: some View {
@@ -28,6 +29,14 @@ public struct AphroditeEditorView: View {
             Button("Back".localized(), systemImage: "chevron.left") { store.send(.closeEditorTapped) }
             Text(app.title).font(.headline)
             Spacer()
+            ShareLink(
+                item: AphroditeSharePayload(app: app),
+                preview: SharePreview(app.title, image: sharePreviewImage)
+            ) {
+                Label("Share mini app".localized(), systemImage: "square.and.arrow.up")
+            }
+            .accessibilityLabel("Share mini app".localized())
+            .accessibilityValue(app.title)
         }
     }
 
@@ -101,19 +110,33 @@ public struct AphroditeEditorView: View {
     }
 
     private var previewPane: some View {
-        Group {
+        VStack(alignment: .leading, spacing: 8) {
+            AphroditeSectionHeader("Preview".localized(), systemImage: "macwindow")
+                .padding(.horizontal)
+                .padding(.top, 10)
+            Group {
             #if os(macOS)
-            AphroditeFittedPreview(html: app.html)
+            AphroditeFittedPreview(app: app)
                 .id(app.id)
             #else
             Color.clear
             #endif
+            }
         }
-        .frame(minWidth: 240, maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .frame(minWidth: AphroditeVisualStyle.minimumPreviewWidth, maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .padding(8)
+        .aphroditePanelSurface()
     }
 
     private var hasValidSelection: Bool {
         guard let selection = store.selection else { return false }
         return store.models[selection.provider]?.contains(selection.model) == true
+    }
+
+    private var sharePreviewImage: Image {
+        #if os(macOS)
+        if let image = AphroditeIconRenderer.image(svg: app.iconSVG) { return Image(nsImage: image) }
+        #endif
+        return Image(systemName: "sparkles.rectangle.stack")
     }
 }

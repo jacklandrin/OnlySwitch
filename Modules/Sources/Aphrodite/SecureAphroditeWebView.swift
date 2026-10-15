@@ -5,11 +5,11 @@ import WebKit
 
 @available(macOS 26.0, *)
 public struct SecureAphroditeWebView: NSViewRepresentable {
-    public var html: String
+    public var app: AphroditeApp
     public var onContentHeightChange: @MainActor (CGFloat) -> Void
     public var onContentSizeChange: @MainActor (CGSize) -> Void
-    public init(html: String, onContentSizeChange: @escaping @MainActor (CGSize) -> Void = { _ in }, onContentHeightChange: @escaping @MainActor (CGFloat) -> Void = { _ in }) {
-        self.html = html
+    public init(app: AphroditeApp, onContentSizeChange: @escaping @MainActor (CGSize) -> Void = { _ in }, onContentHeightChange: @escaping @MainActor (CGFloat) -> Void = { _ in }) {
+        self.app = app
         self.onContentHeightChange = onContentHeightChange
         self.onContentSizeChange = onContentSizeChange
     }
@@ -17,8 +17,11 @@ public struct SecureAphroditeWebView: NSViewRepresentable {
     public func makeCoordinator() -> Coordinator { Coordinator(onContentHeightChange: onContentHeightChange, onContentSizeChange: onContentSizeChange) }
     public func makeNSView(context: Context) -> WKWebView {
         let configuration = WKWebViewConfiguration()
-        configuration.websiteDataStore = .nonPersistent()
+        configuration.websiteDataStore = .default()
         configuration.preferences.javaScriptCanOpenWindowsAutomatically = false
+        let schemeHandler = AphroditeGeneratedDocumentSchemeHandler(app: app)
+        configuration.setURLSchemeHandler(schemeHandler, forURLScheme: AphroditeAppOrigin.scheme)
+        context.coordinator.schemeHandler = schemeHandler
         let view = WKWebView(frame: .zero, configuration: configuration)
         context.coordinator.installReporter(in: view.configuration.userContentController)
         view.navigationDelegate = context.coordinator
@@ -29,10 +32,11 @@ public struct SecureAphroditeWebView: NSViewRepresentable {
     public func updateNSView(_ view: WKWebView, context: Context) {
         context.coordinator.onContentHeightChange = onContentHeightChange
         context.coordinator.onContentSizeChange = onContentSizeChange
-        guard context.coordinator.html != html else { return }
-        context.coordinator.html = html
+        guard context.coordinator.app != app else { return }
+        context.coordinator.app = app
+        context.coordinator.schemeHandler?.update(app: app)
         context.coordinator.beginNavigation(in: view.configuration.userContentController)
-        view.loadHTMLString(AphroditeSandboxDocument.make(from: html), baseURL: nil)
+        view.loadHTMLString(AphroditeSandboxDocument.make(origin: AphroditeAppOrigin(appID: app.id)), baseURL: AphroditeSandboxDocument.wrapperBaseURL)
     }
 
     public static func dismantleNSView(_ view: WKWebView, coordinator: Coordinator) {
@@ -47,7 +51,8 @@ public struct SecureAphroditeWebView: NSViewRepresentable {
         private static let contentWorld = WKContentWorld.world(name: "AphroditeHeightReporter")
         private static let handlerName = "heightReporter"
         private static let maximumReportedHeight: CGFloat = 20_000
-        var html: String?
+        var app: AphroditeApp?
+        var schemeHandler: AphroditeGeneratedDocumentSchemeHandler?
         var onContentHeightChange: @MainActor (CGFloat) -> Void
         var onContentSizeChange: @MainActor (CGSize) -> Void
         private var navigationToken = UUID()
@@ -66,6 +71,29 @@ public struct SecureAphroditeWebView: NSViewRepresentable {
         func beginNavigation(in controller: WKUserContentController) {
             navigationToken = UUID(); previousHeight = nil; previousSize = nil
             controller.removeAllUserScripts()
+            let storageRestrictions = """
+            (() => {
+              const block = name => {
+                const unavailable = {
+                  configurable: false,
+                  get() { throw new DOMException(`${name} is unavailable`, 'SecurityError'); },
+                  set() { throw new DOMException(`${name} is unavailable`, 'SecurityError'); }
+                };
+                let target = globalThis;
+                while (target) {
+                  if (Object.prototype.hasOwnProperty.call(target, name)) {
+                    try { Object.defineProperty(target, name, unavailable); } catch {}
+                  }
+                  target = Object.getPrototypeOf(target);
+                }
+                try { Object.defineProperty(globalThis, name, unavailable); } catch {}
+              };
+              block('sessionStorage');
+              block('indexedDB');
+              block('webkitIndexedDB');
+            })();
+            """
+            controller.addUserScript(WKUserScript(source: storageRestrictions, injectionTime: .atDocumentStart, forMainFrameOnly: false, in: .page))
             let token = navigationToken.uuidString
             let source = """
             (() => {
@@ -114,6 +142,7 @@ public struct SecureAphroditeWebView: NSViewRepresentable {
         func teardown(_ controller: WKUserContentController) {
             controller.removeAllUserScripts()
             controller.removeScriptMessageHandler(forName: Self.handlerName, contentWorld: Self.contentWorld)
+            schemeHandler = nil
             onContentHeightChange = { _ in }
             onContentSizeChange = { _ in }
         }
@@ -133,12 +162,13 @@ public struct SecureAphroditeWebView: NSViewRepresentable {
         }
         public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping @MainActor (WKNavigationActionPolicy) -> Void) {
             let url = navigationAction.request.url
-            let controlled = url == nil || url?.scheme == "about"
+            let controlled = url == nil || url?.scheme == "about" || url == AphroditeSandboxDocument.wrapperBaseURL || url == app.map { AphroditeAppOrigin(appID: $0.id).indexURL }
             decisionHandler(controlled ? .allow : .cancel)
         }
         public func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping @MainActor (WKNavigationResponsePolicy) -> Void) {
             let url = navigationResponse.response.url
-            decisionHandler(url == nil || url?.scheme == "about" ? .allow : .cancel)
+            let controlled = url == nil || url?.scheme == "about" || url == AphroditeSandboxDocument.wrapperBaseURL || url == app.map { AphroditeAppOrigin(appID: $0.id).indexURL }
+            decisionHandler(controlled ? .allow : .cancel)
         }
         public func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? { nil }
         public func webView(_ webView: WKWebView, runOpenPanelWith parameters: WKOpenPanelParameters, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping @MainActor ([URL]?) -> Void) { completionHandler(nil) }

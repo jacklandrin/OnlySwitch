@@ -120,7 +120,7 @@ struct SettingsView: View {
 
             case .Aphrodite:
                 if #available(macOS 26.0, *) {
-                    AphroditeSettingsView()
+                    AphroditeSettingsView(store: settingVM.aphroditeStore)
                 } else {
                     AphroditeUnavailableView()
                 }

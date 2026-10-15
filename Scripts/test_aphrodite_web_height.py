@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Compile real Aphrodite rendering sources and exercise local WebKit reflow.
+"""Compile real Aphrodite rendering sources and exercise local WebKit reflow and storage cleanup.
 
 Run on macOS with Xcode: rtk proxy python3 scripts/test_aphrodite_web_height.py
 The native fixture needs access to macOS WebKit subprocesses outside restrictive
-command sandboxes. It makes no network requests and uses ephemeral storage.
+command sandboxes. It makes no network requests and removes its randomized
+persistent-storage origins before exiting.
 """
 
 from pathlib import Path
@@ -15,8 +16,12 @@ def main():
     root = Path(__file__).resolve().parents[1]
     sources = [
         root / "Modules/Sources/Aphrodite/SecureAphroditeWebView.swift",
+        root / "Modules/Sources/Aphrodite/AphroditeAppOrigin.swift",
+        root / "Modules/Sources/Aphrodite/AphroditeGeneratedDocumentSchemeHandler.swift",
+        root / "Modules/Sources/Aphrodite/AphroditeWebStorageCleanup.swift",
         root / "Modules/Sources/Aphrodite/AphroditeContentHeightReport.swift",
         root / "Modules/Sources/Aphrodite/AphroditeSandboxDocument.swift",
+        root / "Modules/Tests/Integration/AphroditeAppFixture.swift",
         root / "Modules/Tests/Integration/AphroditeWebHeightHarness.swift",
     ]
     with tempfile.TemporaryDirectory(prefix="aphrodite-height-") as temporary:
@@ -34,10 +39,13 @@ def main():
 
         fitted_sources = [
             root / "Modules/Sources/Aphrodite/SecureAphroditeWebView.swift",
+            root / "Modules/Sources/Aphrodite/AphroditeAppOrigin.swift",
+            root / "Modules/Sources/Aphrodite/AphroditeGeneratedDocumentSchemeHandler.swift",
             root / "Modules/Sources/Aphrodite/AphroditeContentHeightReport.swift",
             root / "Modules/Sources/Aphrodite/AphroditeSandboxDocument.swift",
             root / "Modules/Sources/Aphrodite/AphroditeEditorPreviewScalePolicy.swift",
             root / "Modules/Sources/Aphrodite/AphroditeFittedPreview.swift",
+            root / "Modules/Tests/Integration/AphroditeAppFixture.swift",
             root / "Modules/Tests/Integration/AphroditeFittedPreviewHarness.swift",
         ]
         fitted_executable = directory / "AphroditeFittedPreviewHarness"
