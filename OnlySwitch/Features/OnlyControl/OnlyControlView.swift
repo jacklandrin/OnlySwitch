@@ -26,6 +26,8 @@ struct OnlyControlView: View {
     @ObservedObject private var authenticatorStore = AuthenticatorStore.shared
     @ObservedObject private var soundMixerVM = SoundMixerVM.shared
     @State private var currentDate = Date()
+    @State private var aphroditeStore: StoreOf<AphroditeReducer>
+    @State private var sectionViewportHeight: CGFloat?
     @AppStorage(UserDefaults.Key.showCodexUsageTab) private var showCodexUsageTab = true
     @AppStorage(UserDefaults.Key.showSystemMonitorTab) private var showSystemMonitorTab = true
     @AppStorage(UserDefaults.Key.showAphroditeTab) private var showAphroditeTab = true
@@ -34,6 +36,7 @@ struct OnlyControlView: View {
 
     init(store: StoreOf<OnlyControlReducer>) {
         self.store = store
+        _aphroditeStore = State(initialValue: Store(initialState: .init()) { AphroditeReducer() })
     }
 
     var body: some View {
@@ -65,6 +68,9 @@ struct OnlyControlView: View {
                         sectionContent
                     }
                     .frame(maxHeight: .infinity)
+                    .background(GeometryReader { proxy in
+                        Color.clear.preference(key: OnlyControlSectionViewportHeightKey.self, value: proxy.size.height)
+                    })
 
                     if store.selectedSection != .aphrodite {
                         footer
@@ -85,6 +91,9 @@ struct OnlyControlView: View {
             }
             .onChange(of: sections) { availableSections in
                 store.send(.availableSectionsChanged(availableSections))
+            }
+            .onPreferenceChange(OnlyControlSectionViewportHeightKey.self) { height in
+                sectionViewportHeight = height.isFinite && height > 0 ? height : nil
             }
         }
     }
@@ -144,7 +153,13 @@ struct OnlyControlView: View {
     }
 
     private var aphroditePage: some View {
-        Group { if #available(macOS 26.0, *) { AphroditePanelView() } else { AphroditeUnavailableView() } }
+        Group {
+            if #available(macOS 26.0, *) {
+                AphroditePanelView(store: aphroditeStore, maximumRunningHeight: sectionViewportHeight)
+            } else {
+                AphroditeUnavailableView()
+            }
+        }
     }
 
     private var controlHeader: some View {
@@ -483,4 +498,9 @@ final class OnlyControlWindow: NSWindow, NSWindowDelegate {
 /// normal events before the background drag behavior applies.
 private final class OnlyControlHostingView: NSHostingView<OnlyControlView> {
     override var mouseDownCanMoveWindow: Bool { true }
+}
+
+private struct OnlyControlSectionViewportHeightKey: PreferenceKey {
+    static let defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) { value = nextValue() }
 }

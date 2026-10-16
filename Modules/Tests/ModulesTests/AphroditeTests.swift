@@ -1035,6 +1035,51 @@ struct AphroditeReducerTests {
         #expect(store.state.editPrompt == "Make it blue")
         await store.finish()
     }
+
+    @MainActor
+    @Test func returningToAPanelRefreshKeepsItsOpenAppWhenItStillExists() async {
+        let app = AphroditeApp(id: UUID(), title: "Counter", html: completeHTML, createdAt: .distantPast, updatedAt: .distantPast)
+        let store = TestStore(initialState: AphroditeReducer.State(apps: [app], storageState: .ready).withModels(Dictionary(uniqueKeysWithValues: ModelProvider.allCases.map { ($0, []) }))) { AphroditeReducer() } withDependencies: {
+            $0.aphroditePersistence.load = { .init(apps: [app]) }
+        }
+
+        await store.send(.selectApp(app.id)) { $0.selectedAppID = app.id }
+        await store.send(.reloadLibrary)
+        await store.receive(\.libraryReloaded)
+        #expect(store.state.selectedAppID == app.id)
+        await store.finish()
+    }
+
+    @MainActor
+    @Test func returningToAPanelRefreshClosesAnAppDeletedWhileHidden() async {
+        let app = AphroditeApp(id: UUID(), title: "Counter", html: completeHTML, createdAt: .distantPast, updatedAt: .distantPast)
+        let store = TestStore(initialState: AphroditeReducer.State(apps: [app], storageState: .ready).withModels(Dictionary(uniqueKeysWithValues: ModelProvider.allCases.map { ($0, []) }))) { AphroditeReducer() } withDependencies: {
+            $0.aphroditePersistence.load = { .init() }
+        }
+
+        await store.send(.selectApp(app.id)) { $0.selectedAppID = app.id }
+        await store.send(.reloadLibrary)
+        await store.receive(\.libraryReloaded) {
+            $0.apps = []
+            $0.selectedAppID = nil
+        }
+        await store.finish()
+    }
+
+    @MainActor
+    @Test func returningToAPanelDoesNotReopenAnAppAfterBack() async {
+        let app = AphroditeApp(id: UUID(), title: "Counter", html: completeHTML, createdAt: .distantPast, updatedAt: .distantPast)
+        let store = TestStore(initialState: AphroditeReducer.State(apps: [app], storageState: .ready).withModels(Dictionary(uniqueKeysWithValues: ModelProvider.allCases.map { ($0, []) }))) { AphroditeReducer() } withDependencies: {
+            $0.aphroditePersistence.load = { .init(apps: [app]) }
+        }
+
+        await store.send(.selectApp(app.id)) { $0.selectedAppID = app.id }
+        await store.send(.selectApp(nil)) { $0.selectedAppID = nil }
+        await store.send(.reloadLibrary)
+        await store.receive(\.libraryReloaded)
+        #expect(store.state.selectedAppID == nil)
+        await store.finish()
+    }
 }
 
 struct AphroditeShareTests {

@@ -86,6 +86,7 @@ public struct AphroditeEditorView: View {
                     }
                 }
                 TextEditor(text: Binding(get: { store.editPrompt }, set: { store.send(.editPromptChanged($0)) }))
+                    .aphroditeTextEditorInset()
                     .frame(minHeight: 80)
                     .accessibilityLabel("Describe a change".localized())
                     .disabled(store.isEditing)

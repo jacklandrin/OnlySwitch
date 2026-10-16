@@ -27,7 +27,9 @@ public struct AphroditeSettingsView: View {
                 .onChange(of: isVisible) { _ in NotificationCenter.default.post(name: .changeSettings, object: nil) }
             Section {
                 TextEditor(text: Binding(get: { store.prompt }, set: { store.send(.promptChanged($0)) }))
-                    .frame(minHeight: 100).accessibilityLabel("Describe your mini app".localized())
+                    .aphroditeTextEditorInset()
+                    .frame(minHeight: 100)
+                    .accessibilityLabel("Describe your mini app".localized())
                 Picker("Provider".localized(), selection: Binding(get: { store.selection?.provider ?? .openai }, set: { store.send(.providerSelected($0)) })) {
                     ForEach(ModelProvider.allCases, id: \.self) { Text($0.aphroditeDisplayName).tag($0) }
                 }
@@ -131,20 +133,30 @@ public struct AphroditeSettingsView: View {
 
 @available(macOS 26.0, *)
 public struct AphroditePanelView: View {
-    @State private var store: StoreOf<AphroditeReducer>
+    private let store: StoreOf<AphroditeReducer>
+    private let maximumRunningHeight: CGFloat?
     @State private var webContentHeight: CGFloat = 240
-    public init(store: StoreOf<AphroditeReducer> = Store(initialState: .init()) { AphroditeReducer() }) { _store = State(initialValue: store) }
+    @State private var runningHeaderHeight: CGFloat = 0
+    public init(store: StoreOf<AphroditeReducer>, maximumRunningHeight: CGFloat? = nil) {
+        self.store = store
+        self.maximumRunningHeight = maximumRunningHeight
+    }
     public var body: some View {
         Group {
             if let id = store.selectedAppID, let app = store.apps[id: id] {
                 VStack(spacing: 8) {
-                    HStack { Button("Back".localized(), systemImage: "chevron.left") { store.send(.selectApp(nil)) }; Text(app.title).font(.headline); Spacer() }.padding()
+                    HStack { Button("Back".localized(), systemImage: "chevron.left") { store.send(.selectApp(nil)) }; Text(app.title).font(.headline); Spacer() }
+                        .padding()
+                        .background(GeometryReader { proxy in
+                            Color.clear.preference(key: AphroditeRunningHeaderHeightKey.self, value: proxy.size.height)
+                        })
                     #if os(macOS)
                     SecureAphroditeWebView(app: app, onContentHeightChange: { webContentHeight = $0 })
-                        .frame(height: webContentHeight)
+                        .frame(height: runningWebViewHeight)
                     #endif
                 }
                 .aphroditePanelSurface()
+                .onPreferenceChange(AphroditeRunningHeaderHeightKey.self) { runningHeaderHeight = $0 }
             } else if store.storageState == .failed {
                 VStack(spacing: 12) {
                     ContentUnavailableView("Aphrodite could not load your saved apps.".localized(), systemImage: "exclamationmark.triangle")
@@ -170,9 +182,19 @@ public struct AphroditePanelView: View {
                 .frame(maxWidth: .infinity, alignment: .topLeading)
             }
         }
-        .task { store.send(.task) }
+        .task { store.send(.reloadLibrary) }
         .onReceive(NotificationCenter.default.publisher(for: .aphroditeLibraryChanged).receive(on: RunLoop.main)) { _ in store.send(.reloadLibrary) }
     }
+
+    private var runningWebViewHeight: CGFloat {
+        guard let maximumRunningHeight, maximumRunningHeight.isFinite else { return webContentHeight }
+        return min(webContentHeight, max(1, maximumRunningHeight - runningHeaderHeight - 8))
+    }
+}
+
+private struct AphroditeRunningHeaderHeightKey: PreferenceKey {
+    static let defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) { value = nextValue() }
 }
 
 public struct AphroditeUnavailableView: View {

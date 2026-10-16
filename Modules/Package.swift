@@ -158,6 +158,7 @@ let package = Package(
         .target(
             name: "Aphrodite",
             dependencies: [
+                .product(name: "SwiftUIIntrospect", package: "swiftui-introspect"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 "OnlyAgent",
                 "Defines",

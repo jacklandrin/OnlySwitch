@@ -137,8 +137,9 @@ struct AphroditeWebHeightHarness {
         guard try callChild("read", in: secondOriginView.view) == "41" else {
             throw Failure(message: "Deleting one app origin cleared another app's localStorage")
         }
+        try assertCappedWebViewReachesAndActivatesItsBottomControl()
         withExtendedLifetime([sameOriginView.coordinator, sameOriginView.handler, secondOriginView.coordinator, secondOriginView.handler, deletedOriginView.coordinator, deletedOriginView.handler]) {}
-        print("PASS: actual webview sizing, Light/Dark matchMedia, persistent per-app localStorage, exact-origin deletion, blocked sessionStorage/IndexedDB, cross-origin parent isolation, and isolated handler verified")
+        print("PASS: actual webview sizing, capped internal scrolling to a bottom control, Light/Dark matchMedia, persistent per-app localStorage, exact-origin deletion, blocked sessionStorage/IndexedDB, cross-origin parent isolation, and isolated handler verified")
     }
 
     private static func removeStorage(for appIDs: [UUID]) {
@@ -173,6 +174,42 @@ struct AphroditeWebHeightHarness {
         view.navigationDelegate = coordinator
         view.loadHTMLString(AphroditeSandboxDocument.make(origin: AphroditeAppOrigin(appID: app.id)), baseURL: AphroditeSandboxDocument.wrapperBaseURL)
         return (view, coordinator, handler)
+    }
+
+    @available(macOS 26.0, *)
+    private static func assertCappedWebViewReachesAndActivatesItsBottomControl() throws {
+        let app = AphroditeApp(id: UUID(), html: """
+        <!doctype html><html><body style="margin:0;height:2600px"><button id="bottom" style="position:absolute;top:2500px">Bottom action</button><script>
+        document.getElementById('bottom').addEventListener('click', () => { document.title = 'clicked'; });
+        addEventListener('message', event => {
+          if (event.data === 'scroll-bottom') { scrollTo(0, document.documentElement.scrollHeight); parent.postMessage({type:'aphrodite-test', value: String(scrollY)}, '*'); }
+          if (event.data === 'click-bottom') { document.getElementById('bottom').click(); parent.postMessage({type:'aphrodite-test', value: document.title}, '*'); }
+        });
+        </script></body></html>
+        """)
+        let configuration = WKWebViewConfiguration()
+        configuration.websiteDataStore = .nonPersistent()
+        let handler = AphroditeGeneratedDocumentSchemeHandler(app: app)
+        configuration.setURLSchemeHandler(handler, forURLScheme: AphroditeAppOrigin.scheme)
+        let view = WKWebView(frame: CGRect(x: 0, y: 0, width: 320, height: 180), configuration: configuration)
+        let coordinator = SecureAphroditeWebView.Coordinator { _ in }
+        coordinator.app = app
+        coordinator.schemeHandler = handler
+        coordinator.installReporter(in: configuration.userContentController)
+        coordinator.beginNavigation(in: configuration.userContentController)
+        view.navigationDelegate = coordinator
+        let window = NSWindow(contentRect: view.frame, styleMask: .borderless, backing: .buffered, defer: false)
+        window.contentView = view
+        window.orderFront(nil)
+        defer { view.stopLoading(); coordinator.teardown(configuration.userContentController); window.close() }
+        view.loadHTMLString(AphroditeSandboxDocument.make(origin: AphroditeAppOrigin(appID: app.id)), baseURL: AphroditeSandboxDocument.wrapperBaseURL)
+        guard let offset = try callChild("scroll-bottom", in: view).flatMap(Double.init), offset > 2_000 else {
+            throw Failure(message: "Capped Aphrodite web view could not reach the generated document bottom")
+        }
+        guard try callChild("click-bottom", in: view) == "clicked" else {
+            throw Failure(message: "Bottom control was not activatable after capped scrolling")
+        }
+        withExtendedLifetime([coordinator, handler]) {}
     }
 
     @available(macOS 26.0, *)

@@ -6,6 +6,7 @@
 //
 
 import AppKit
+import ComposableArchitecture
 import Defines
 import Authenticator
 import SwiftUI
@@ -38,6 +39,7 @@ struct OnlySwitchListView: View {
     @State private var measuredChromeHeight: CGFloat = 144
     @State private var maximumPanelHeight = NSScreen.main?.visibleFrame.height ?? CGFloat(700)
     @State private var presentedPanelHeight: CGFloat?
+    @State private var aphroditeStore: StoreOf<AphroditeReducer>
     @AppStorage(UserDefaults.Key.showCodexUsageTab) private var showCodexUsageTab = true
     @AppStorage(UserDefaults.Key.showSystemMonitorTab) private var showSystemMonitorTab = true
     @AppStorage(UserDefaults.Key.showAphroditeTab) private var showAphroditeTab = true
@@ -49,6 +51,7 @@ struct OnlySwitchListView: View {
 
     init(onPanelSizeChange: @escaping @MainActor (CGSize) -> Void = { _ in }) {
         self.onPanelSizeChange = onPanelSizeChange
+        _aphroditeStore = State(initialValue: Store(initialState: .init()) { AphroditeReducer() })
     }
     
     var body: some View {
@@ -96,7 +99,12 @@ struct OnlySwitchListView: View {
                                 CodexUsagePanelContainer(managesScrolling: false)
                             }
                         case .aphrodite:
-                            if #available(macOS 26.0, *) { AphroditePanelView() }
+                            if #available(macOS 26.0, *) {
+                                AphroditePanelView(
+                                    store: aphroditeStore,
+                                    maximumRunningHeight: max(0, maximumPanelHeight - measuredChromeHeight)
+                                )
+                            }
                             else { AphroditeUnavailableView() }
                         }
                     }
