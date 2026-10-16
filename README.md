@@ -50,6 +50,17 @@ To control OnlySwitch from an iPhone or iPad, install [OnlyRemote from the App S
   <img alt="OnlyRemote App Store QR code" src="https://raw.githubusercontent.com/jacklandrin/OnlySwitch/main/OnlySwitch/Resource/Ads/OnlyRemoteQRCode.jpeg" width="160" />
 </p>
 
+## What's new in 3.0.0
+
+- **Aphrodite:** Describe a mini app in natural language, choose a configured AI provider and model, then generate, run, edit, save, share, or import it. Aphrodite requires macOS 26 or later and uses the model-provider settings configured in OnlySwitch.
+- **Dock Preview:** Hover over a Dock app to see thumbnails of its open windows and click a thumbnail to activate that window. Enable the **Dock Preview** switch and grant Accessibility and Screen Recording permissions when prompted.
+- **Better switch customization:** Built-in switches are grouped by category and can be searched by name from the customization settings.
+- **Process activation:** Click a supported process in the System Monitor CPU or memory lists to bring its owning application to the front.
+
+<p align="center">
+  <img alt="How to create mini apps with Aphrodite" src="output/imagegen/aphrodite-guide.png" width="90%" />
+</p>
+
 ## Features
 
 ### Highlights
@@ -174,6 +185,8 @@ System Monitor shows live CPU, GPU, memory, disk, and network usage. Open its ta
 Enabled menu-bar indicators keep sampling while the Only Control popover is closed. The minimum sampling interval is one second. Public-IP lookup sends external requests to ipify's IPv4 and IPv6 endpoints; results are cached for up to five minutes.
 
 Some values may be unavailable when the hardware or macOS does not expose them, including temperature readings. GPU reporting relies on private, undocumented macOS APIs and may stop working after a system update. Network usage is system-wide; per-process network rates are not available.
+
+When a process is associated with a regular macOS application, click its row in the CPU or memory process list to activate that application. Protected or background-only processes may not be activatable.
 
 <p align="center">
   <img alt="OnlySwitch System Monitor" src="https://github.com/user-attachments/assets/ac8178f6-9f61-43be-a73b-a2103ac18ff7" width="30%" />
