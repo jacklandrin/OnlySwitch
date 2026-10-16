@@ -776,16 +776,28 @@ actor MacSystemMonitorCollector {
         let cpuNanoseconds: UInt64
         let residentBytes: UInt64
         let name: String
+        let identity: SystemMonitorProcessIdentity?
+    }
+
+    private struct ProcessCPUBaseline {
+        let identity: SystemMonitorProcessIdentity?
+        let cpuNanoseconds: UInt64
     }
 
     private struct SamplingState {
         var previousCPUTicks: CPUTicks?
         var previousNetworkCounters: NetworkCounters?
-        var previousProcessCPUTimes: [Int32: UInt64] = [:]
+        var previousProcessCPUTimes: [Int32: ProcessCPUBaseline] = [:]
         var previousNetworkUptime: TimeInterval?
         var previousProcessUptime: TimeInterval?
         var lastCollectedUptime: TimeInterval?
         var latestSnapshot: SystemMonitorSnapshot?
+        var latestProcessIdentities: [Int32: SystemMonitorProcessIdentity] = [:]
+    }
+
+    private struct SampledSnapshot: Sendable {
+        let snapshot: SystemMonitorSnapshot
+        let processIdentities: [Int32: SystemMonitorProcessIdentity]
     }
 
     private var samplingStates: [SamplingProfile: SamplingState] = [:]
@@ -821,13 +833,18 @@ actor MacSystemMonitorCollector {
         includeDetails: Bool = true
     ) -> SystemMonitorClient {
         let collector = Self()
-        return SystemMonitorClient {
-            collector.snapshotStream(
-                refreshInterval: refreshInterval,
-                metrics: metrics,
-                includeDetails: includeDetails
-            )
-        }
+        return SystemMonitorClient(
+            activateProcess: { target in
+                SystemMonitorProcessActivation.activate(target)
+            },
+            snapshots: {
+                collector.snapshotStream(
+                    refreshInterval: refreshInterval,
+                    metrics: metrics,
+                    includeDetails: includeDetails
+                )
+            }
+        )
     }
 
     nonisolated func snapshotStream(
@@ -842,7 +859,16 @@ actor MacSystemMonitorCollector {
                 await withTaskGroup(of: Void.self) { group in
                     group.addTask {
                         while Task.isCancelled == false {
-                            continuation.yield(await self.sample(metrics: metrics, includeDetails: includeDetails))
+                            let sampled = await self.sampleForStream(
+                                metrics: metrics,
+                                includeDetails: includeDetails
+                            )
+                            let enriched = await SystemMonitorProcessActivation.enrich(
+                                sampled.snapshot,
+                                sampledIdentities: sampled.processIdentities
+                            )
+                            guard Task.isCancelled == false else { break }
+                            continuation.yield(enriched)
 
                             do {
                                 try await Task.sleep(for: .seconds(interval))
@@ -878,13 +904,23 @@ actor MacSystemMonitorCollector {
         metrics: Set<SystemMonitorMetric> = Set(SystemMonitorMetric.allCases),
         includeDetails: Bool = true
     ) -> SystemMonitorSnapshot {
+        sampleForStream(metrics: metrics, includeDetails: includeDetails).snapshot
+    }
+
+    private func sampleForStream(
+        metrics: Set<SystemMonitorMetric>,
+        includeDetails: Bool
+    ) -> SampledSnapshot {
         let profile = SamplingProfile(metrics: metrics, includeDetails: includeDetails)
         var state = samplingStates[profile] ?? SamplingState()
         let uptime = ProcessInfo.processInfo.systemUptime
         if let lastCollectedUptime = state.lastCollectedUptime,
            let latestSnapshot = state.latestSnapshot,
            uptime - lastCollectedUptime < 1 {
-            return latestSnapshot
+            return SampledSnapshot(
+                snapshot: latestSnapshot,
+                processIdentities: state.latestProcessIdentities
+            )
         }
 
         let now = Date()
@@ -927,15 +963,21 @@ actor MacSystemMonitorCollector {
             ? (includeDetails ? privateMetrics?.usage : PrivateAppleSiliconMetricsReader.usage())
             : nil
         let processes: [SystemMonitorProcess]
+        var sampledProcessIdentities: [Int32: SystemMonitorProcessIdentity] = [:]
         if includeDetails {
             let elapsed = state.previousProcessUptime.map { max(uptime - $0, 0) } ?? 0
             processes = readProcesses(
                 elapsed: elapsed,
-                previousProcessCPUTimes: &state.previousProcessCPUTimes
+                previousProcessCPUTimes: &state.previousProcessCPUTimes,
+                sampledProcessIdentities: &sampledProcessIdentities
             )
             state.previousProcessUptime = uptime
         } else {
             processes = []
+        }
+        let topProcesses = ProcessSampler.topRows(from: processes, limit: 12)
+        sampledProcessIdentities = sampledProcessIdentities.filter { pid, _ in
+            topProcesses.contains { $0.pid == pid }
         }
         let snapshot = SystemMonitorSnapshot(
             timestamp: now,
@@ -952,12 +994,13 @@ actor MacSystemMonitorCollector {
                 .map(MetricAvailability.available) ?? .unavailable,
             disks: metrics.contains(.disk) ? readDisks() : [],
             network: network.map(MetricAvailability.available) ?? .unavailable,
-            processes: ProcessSampler.topRows(from: processes, limit: 12)
+            processes: topProcesses
         )
         state.lastCollectedUptime = uptime
         state.latestSnapshot = snapshot
+        state.latestProcessIdentities = sampledProcessIdentities
         samplingStates[profile] = state
-        return snapshot
+        return SampledSnapshot(snapshot: snapshot, processIdentities: sampledProcessIdentities)
     }
 
     private func hardwareDetails() -> SystemMonitorHardware {
@@ -1134,9 +1177,10 @@ private extension MacSystemMonitorCollector {
         return NetworkCounters(downloaded: downloaded, uploaded: uploaded)
     }
 
-    func readProcesses(
+    private func readProcesses(
         elapsed: TimeInterval,
-        previousProcessCPUTimes: inout [Int32: UInt64]
+        previousProcessCPUTimes: inout [Int32: ProcessCPUBaseline],
+        sampledProcessIdentities: inout [Int32: SystemMonitorProcessIdentity]
     ) -> [SystemMonitorProcess] {
         let byteCount = proc_listpids(UInt32(PROC_ALL_PIDS), 0, nil, 0)
         guard byteCount > 0 else { return [] }
@@ -1149,16 +1193,25 @@ private extension MacSystemMonitorCollector {
         guard filledByteCount > 0 else { return [] }
 
         let filledCount = Int(filledByteCount) / MemoryLayout<pid_t>.stride
-        var currentCPUTimes: [Int32: UInt64] = [:]
+        var currentCPUTimes: [Int32: ProcessCPUBaseline] = [:]
         let rows = pids.prefix(filledCount).compactMap { pid -> SystemMonitorProcess? in
             guard pid > 0, let counters = processCounters(for: pid) else { return nil }
             let cpuUsage: Double
-            if let previous = previousProcessCPUTimes[pid], counters.cpuNanoseconds >= previous, elapsed > 0 {
-                cpuUsage = min(max(Double(counters.cpuNanoseconds - previous) / (elapsed * 1_000_000_000), 0), 1)
+            if let previous = previousProcessCPUTimes[pid],
+               previous.identity == counters.identity,
+               counters.cpuNanoseconds >= previous.cpuNanoseconds,
+               elapsed > 0 {
+                cpuUsage = min(max(Double(counters.cpuNanoseconds - previous.cpuNanoseconds) / (elapsed * 1_000_000_000), 0), 1)
             } else {
                 cpuUsage = 0
             }
-            currentCPUTimes[pid] = counters.cpuNanoseconds
+            currentCPUTimes[pid] = ProcessCPUBaseline(
+                identity: counters.identity,
+                cpuNanoseconds: counters.cpuNanoseconds
+            )
+            if let identity = counters.identity {
+                sampledProcessIdentities[pid] = identity
+            }
             return SystemMonitorProcess(
                 pid: pid,
                 name: counters.name,
@@ -1173,6 +1226,7 @@ private extension MacSystemMonitorCollector {
     }
 
     private func processCounters(for pid: pid_t) -> ProcessCounters? {
+        let identity = SystemMonitorProcessActivation.processIdentity(pid: pid)
         var usage = rusage_info_v2()
         let resourceUsageResult = OnlySwitchProcessRusageV2(pid, &usage)
 
@@ -1234,7 +1288,8 @@ private extension MacSystemMonitorCollector {
         return ProcessCounters(
             cpuNanoseconds: values.cpuNanoseconds,
             residentBytes: values.residentBytes,
-            name: name
+            name: name,
+            identity: identity
         )
     }
 }

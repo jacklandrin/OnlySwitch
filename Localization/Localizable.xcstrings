@@ -1,6 +1,106 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Activate %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : { "stringUnit" : { "state" : "translated", "value" : "Aktivovat %@" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "%@ aktivieren" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Activate %@" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Activar %@" } },
+        "fil" : { "stringUnit" : { "state" : "translated", "value" : "I-activate ang %@" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Activer %@" } },
+        "hr" : { "stringUnit" : { "state" : "translated", "value" : "Aktiviraj %@" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Attiva %@" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "%@をアクティブにする" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "%@ 활성화" } },
+        "nl" : { "stringUnit" : { "state" : "translated", "value" : "%@ activeren" } },
+        "pl" : { "stringUnit" : { "state" : "translated", "value" : "Aktywuj %@" } },
+        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Ativar %@" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Активировать %@" } },
+        "sk" : { "stringUnit" : { "state" : "translated", "value" : "Aktivovať %@" } },
+        "so" : { "stringUnit" : { "state" : "translated", "value" : "Hawl geli %@" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "%@ uygulamasını etkinleştir" } },
+        "uk" : { "stringUnit" : { "state" : "translated", "value" : "Активувати %@" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "激活%@" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "啟用%@" } }
+      }
+    },
+    "Activates the application for this process" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : { "stringUnit" : { "state" : "translated", "value" : "Aktivuje aplikaci tohoto procesu" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Aktiviert die Anwendung dieses Prozesses" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Activates the application for this process" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Activa la aplicación de este proceso" } },
+        "fil" : { "stringUnit" : { "state" : "translated", "value" : "Ina-activate ang application para sa prosesong ito" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Active l’application associée à ce processus" } },
+        "hr" : { "stringUnit" : { "state" : "translated", "value" : "Aktivira aplikaciju ovog procesa" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Attiva l’applicazione associata a questo processo" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "このプロセスのアプリケーションをアクティブにします" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "이 프로세스의 응용 프로그램을 활성화합니다" } },
+        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Activeert de applicatie van dit proces" } },
+        "pl" : { "stringUnit" : { "state" : "translated", "value" : "Aktywuje aplikację tego procesu" } },
+        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Ativa o aplicativo deste processo" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Активирует приложение этого процесса" } },
+        "sk" : { "stringUnit" : { "state" : "translated", "value" : "Aktivuje aplikáciu tohto procesu" } },
+        "so" : { "stringUnit" : { "state" : "translated", "value" : "Waxay hawl gelisaa abka hawshan" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Bu işlemin uygulamasını etkinleştirir" } },
+        "uk" : { "stringUnit" : { "state" : "translated", "value" : "Активує програму цього процесу" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "激活此进程所属的应用程序" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "啟用此程序所屬的應用程式" } }
+      }
+    },
+    "Application unavailable" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : { "stringUnit" : { "state" : "translated", "value" : "Aplikace není k dispozici" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Anwendung nicht verfügbar" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Application unavailable" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Aplicación no disponible" } },
+        "fil" : { "stringUnit" : { "state" : "translated", "value" : "Hindi available ang application" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Application indisponible" } },
+        "hr" : { "stringUnit" : { "state" : "translated", "value" : "Aplikacija nije dostupna" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Applicazione non disponibile" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "アプリケーションを利用できません" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "응용 프로그램을 사용할 수 없음" } },
+        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Applicatie niet beschikbaar" } },
+        "pl" : { "stringUnit" : { "state" : "translated", "value" : "Aplikacja niedostępna" } },
+        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Aplicativo indisponível" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Приложение недоступно" } },
+        "sk" : { "stringUnit" : { "state" : "translated", "value" : "Aplikácia nie je k dispozícii" } },
+        "so" : { "stringUnit" : { "state" : "translated", "value" : "Abka lama heli karo" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Uygulama kullanılamıyor" } },
+        "uk" : { "stringUnit" : { "state" : "translated", "value" : "Програма недоступна" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "应用程序不可用" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "應用程式無法使用" } }
+      }
+    },
+    "The application for this process is no longer available." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : { "stringUnit" : { "state" : "translated", "value" : "Aplikace tohoto procesu již není k dispozici." } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Die Anwendung für diesen Prozess ist nicht mehr verfügbar." } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "The application for this process is no longer available." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "La aplicación de este proceso ya no está disponible." } },
+        "fil" : { "stringUnit" : { "state" : "translated", "value" : "Hindi na available ang application para sa prosesong ito." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "L’application associée à ce processus n’est plus disponible." } },
+        "hr" : { "stringUnit" : { "state" : "translated", "value" : "Aplikacija ovog procesa više nije dostupna." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "L’applicazione associata a questo processo non è più disponibile." } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "このプロセスのアプリケーションは使用できなくなりました。" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "이 프로세스의 응용 프로그램은 더 이상 사용할 수 없습니다." } },
+        "nl" : { "stringUnit" : { "state" : "translated", "value" : "De applicatie van dit proces is niet meer beschikbaar." } },
+        "pl" : { "stringUnit" : { "state" : "translated", "value" : "Aplikacja tego procesu nie jest już dostępna." } },
+        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "O aplicativo deste processo não está mais disponível." } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Приложение этого процесса больше недоступно." } },
+        "sk" : { "stringUnit" : { "state" : "translated", "value" : "Aplikácia tohto procesu už nie je k dispozícii." } },
+        "so" : { "stringUnit" : { "state" : "translated", "value" : "Abka hawshan mar dambe lama heli karo." } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Bu işlemin uygulaması artık kullanılamıyor." } },
+        "uk" : { "stringUnit" : { "state" : "translated", "value" : "Програма цього процесу більше недоступна." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "此进程所属的应用程序已不可用。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "此程序所屬的應用程式已無法使用。" } }
+      }
+    },
     "Dock Preview" : {
       "extractionState" : "manual",
       "localizations" : {

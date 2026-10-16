@@ -3,10 +3,13 @@ import Foundation
 
 public struct SystemMonitorClient: Sendable {
     public var snapshots: @Sendable () -> AsyncThrowingStream<SystemMonitorSnapshot, Error>
+    public var activateProcess: @MainActor @Sendable (SystemMonitorProcessActivationTarget) -> SystemMonitorProcessActivationOutcome
 
     public init(
+        activateProcess: @escaping @MainActor @Sendable (SystemMonitorProcessActivationTarget) -> SystemMonitorProcessActivationOutcome = { _ in .unavailable },
         snapshots: @escaping @Sendable () -> AsyncThrowingStream<SystemMonitorSnapshot, Error>
     ) {
+        self.activateProcess = activateProcess
         self.snapshots = snapshots
     }
 

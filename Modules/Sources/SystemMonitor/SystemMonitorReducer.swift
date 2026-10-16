@@ -10,6 +10,7 @@ public struct SystemMonitorReducer {
         public var history = SystemMonitorHistory()
         public var lastFailure: String?
         public var isSampling = false
+        public var processActivationFailure: ProcessActivationFailure?
 
         public init(
             isVisible: Bool = false,
@@ -17,7 +18,8 @@ public struct SystemMonitorReducer {
             snapshot: SystemMonitorSnapshot? = nil,
             history: SystemMonitorHistory = SystemMonitorHistory(),
             lastFailure: String? = nil,
-            isSampling: Bool = false
+            isSampling: Bool = false,
+            processActivationFailure: ProcessActivationFailure? = nil
         ) {
             self.isVisible = isVisible
             self.expandedMetrics = expandedMetrics
@@ -25,6 +27,11 @@ public struct SystemMonitorReducer {
             self.history = history
             self.lastFailure = lastFailure
             self.isSampling = isSampling
+            self.processActivationFailure = processActivationFailure
+        }
+
+        public enum ProcessActivationFailure: Equatable, Sendable {
+            case applicationUnavailable
         }
 
         var requiresSampling: Bool {
@@ -39,6 +46,9 @@ public struct SystemMonitorReducer {
         case streamFailed(String)
         case streamEnded
         case restartRequested
+        case processTapped(SystemMonitorProcess)
+        case processActivationFinished(SystemMonitorProcessActivationOutcome)
+        case dismissProcessActivationFailure
     }
 
     @Dependency(\.systemMonitor) private var systemMonitor
@@ -83,6 +93,26 @@ public struct SystemMonitorReducer {
                 guard state.requiresSampling, !state.isSampling else { return .none }
                 state.isSampling = true
                 return samplingStream()
+
+            case let .processTapped(process):
+                guard let target = process.activationTarget else {
+                    state.processActivationFailure = .applicationUnavailable
+                    return .none
+                }
+                let activateProcess = systemMonitor.activateProcess
+                return .run { send in
+                    await send(.processActivationFinished(activateProcess(target)))
+                }
+
+            case let .processActivationFinished(outcome):
+                if outcome == .unavailable {
+                    state.processActivationFailure = .applicationUnavailable
+                }
+                return .none
+
+            case .dismissProcessActivationFailure:
+                state.processActivationFailure = nil
+                return .none
             }
         }
     }

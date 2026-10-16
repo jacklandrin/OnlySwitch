@@ -25,10 +25,12 @@ struct SystemMonitorReducerTests {
 
     @MainActor
     @Test func visibleMonitorStartsSamplingAndTrimsHistory() async {
+        let clock = TestClock()
         let snapshots = (0 ... 60).map(fixture)
         let store = TestStore(initialState: SystemMonitorReducer.State()) {
             SystemMonitorReducer()
         } withDependencies: {
+            $0.continuousClock = clock
             $0.systemMonitor.snapshots = {
                 AsyncThrowingStream { continuation in
                     for snapshot in snapshots {
@@ -101,10 +103,12 @@ struct SystemMonitorReducerTests {
 
     @MainActor
     @Test func streamErrorsPreserveTheLastGoodSnapshot() async {
+        let clock = TestClock()
         let snapshot = fixture(0)
         let store = TestStore(initialState: .init()) {
             SystemMonitorReducer()
         } withDependencies: {
+            $0.continuousClock = clock
             $0.systemMonitor.snapshots = {
                 AsyncThrowingStream { continuation in
                     continuation.yield(snapshot)
@@ -251,8 +255,81 @@ struct SystemMonitorReducerTests {
         await store.finish()
     }
 
+    @MainActor
+    @Test func tappingProcessWithoutTargetShowsFailureWithoutCallingDependency() async {
+        let process = SystemMonitorProcess(pid: 10, name: "daemon")
+        let snapshot = SystemMonitorSnapshot(timestamp: .now, processes: [process])
+        let activationCalls = LockIsolated(0)
+        let store = TestStore(initialState: SystemMonitorReducer.State(snapshot: snapshot)) {
+            SystemMonitorReducer()
+        } withDependencies: {
+            $0.systemMonitor.activateProcess = { _ in
+                activationCalls.withValue { $0 += 1 }
+                return .activated
+            }
+        }
+
+        await store.send(.processTapped(process)) {
+            $0.processActivationFailure = .applicationUnavailable
+        }
+
+        #expect(activationCalls.value == 0)
+        #expect(store.state.snapshot == snapshot)
+    }
+
+    @MainActor
+    @Test func successfulActivationForwardsExactTargetAndPreservesSnapshot() async {
+        let target = processActivationTarget()
+        let process = SystemMonitorProcess(pid: 10, name: "Helper", activationTarget: target)
+        let snapshot = SystemMonitorSnapshot(timestamp: .now, processes: [process])
+        let receivedTargets = LockIsolated<[SystemMonitorProcessActivationTarget]>([])
+        let store = TestStore(initialState: SystemMonitorReducer.State(snapshot: snapshot)) {
+            SystemMonitorReducer()
+        } withDependencies: {
+            $0.systemMonitor.activateProcess = { target in
+                receivedTargets.withValue { $0.append(target) }
+                return .activated
+            }
+        }
+
+        await store.send(.processTapped(process))
+        await store.receive(.processActivationFinished(.activated))
+
+        #expect(receivedTargets.value == [target])
+        #expect(store.state.processActivationFailure == nil)
+        #expect(store.state.snapshot == snapshot)
+    }
+
+    @MainActor
+    @Test func unavailableActivationShowsDismissibleFailureAndPreservesSnapshot() async {
+        let target = processActivationTarget()
+        let process = SystemMonitorProcess(pid: 10, name: "Helper", activationTarget: target)
+        let snapshot = SystemMonitorSnapshot(timestamp: .now, processes: [process])
+        let store = TestStore(initialState: SystemMonitorReducer.State(snapshot: snapshot)) {
+            SystemMonitorReducer()
+        } withDependencies: {
+            $0.systemMonitor.activateProcess = { _ in .unavailable }
+        }
+
+        await store.send(.processTapped(process))
+        await store.receive(.processActivationFinished(.unavailable)) {
+            $0.processActivationFailure = .applicationUnavailable
+        }
+        #expect(store.state.snapshot == snapshot)
+        await store.send(.dismissProcessActivationFailure) {
+            $0.processActivationFailure = nil
+        }
+    }
+
     private func fixture(_ second: Int) -> SystemMonitorSnapshot {
         SystemMonitorSnapshot(timestamp: Date(timeIntervalSinceReferenceDate: Double(second)))
+    }
+
+    private func processActivationTarget() -> SystemMonitorProcessActivationTarget {
+        .init(
+            sampledProcess: .init(pid: 10, startTimeMicroseconds: 100),
+            owningApplication: .init(pid: 20, startTimeMicroseconds: 200)
+        )
     }
 }
 

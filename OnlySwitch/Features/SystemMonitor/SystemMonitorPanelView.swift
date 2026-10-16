@@ -184,6 +184,8 @@ struct SystemMonitorPanelView: View {
     @Environment(\.colorScheme) private var colorScheme
     let store: StoreOf<SystemMonitorReducer>
     @State private var preferences = Preferences.shared.systemMonitorPreferences
+    @State private var hoveredProcessRow: String?
+    @FocusState private var focusedProcessRow: String?
 
     var body: some View {
         @Bindable var store = store
@@ -217,6 +219,23 @@ struct SystemMonitorPanelView: View {
         .onReceive(NotificationCenter.default.publisher(for: .systemMonitorPreferencesChanged)) { notification in
             guard let updated = notification.object as? SystemMonitorPreferences else { return }
             preferences = updated
+        }
+        .alert(
+            "Application unavailable".localized(),
+            isPresented: Binding(
+                get: { store.processActivationFailure != nil },
+                set: { isPresented in
+                    if isPresented == false {
+                        store.send(.dismissProcessActivationFailure)
+                    }
+                }
+            )
+        ) {
+            Button("OK".localized()) {
+                store.send(.dismissProcessActivationFailure)
+            }
+        } message: {
+            Text("The application for this process is no longer available.".localized())
         }
     }
 
@@ -323,7 +342,7 @@ struct SystemMonitorPanelView: View {
             "Top Processes".localized(),
             isExpanded: expansionBinding(for: .cpu, store: store)
         ) {
-            processRows(snapshot.processes, metric: .cpu)
+            processRows(snapshot.processes, metric: .cpu, store: store)
         }
     }
 
@@ -363,7 +382,7 @@ struct SystemMonitorPanelView: View {
                     "Top Processes".localized(),
                     isExpanded: expansionBinding(for: .memory, store: store)
                 ) {
-                    processRows(snapshot.processes, metric: .memory)
+                    processRows(snapshot.processes, metric: .memory, store: store)
                 }
             case .unavailable:
                 Text("Unavailable".localized()).foregroundStyle(.secondary)
@@ -652,27 +671,69 @@ struct SystemMonitorPanelView: View {
     }
 
     @ViewBuilder
-    private func processRows(_ processes: [SystemMonitorProcess], metric: SystemMonitorMetric) -> some View {
+    private func processRows(
+        _ processes: [SystemMonitorProcess],
+        metric: SystemMonitorMetric,
+        store: Bindable<StoreOf<SystemMonitorReducer>>
+    ) -> some View {
         if processes.isEmpty {
             Text("No process details available".localized())
                 .font(.caption)
                 .foregroundStyle(.secondary)
         } else {
             ForEach(processes) { process in
-                HStack {
-                    Text(process.name).lineLimit(1)
-                    Spacer(minLength: 8)
-                    switch metric {
-                    case .cpu:
-                        Text(process.cpuUsage.value.map(SystemMonitorFormatter.percentage) ?? "Unavailable".localized())
-                    case .memory:
-                        Text(process.memoryBytes.value.map { SystemMonitorFormatter.bytes(bytes: Double($0)) } ?? "Unavailable".localized())
-                    default:
-                        EmptyView()
+                let value = processValue(process, metric: metric)
+                let rowID = "\(metric.rawValue)-\(process.pid)"
+                if process.activationTarget != nil {
+                    Button {
+                        store.wrappedValue.send(.processTapped(process))
+                    } label: {
+                        processRow(process, value: value)
                     }
+                    .buttonStyle(.plain)
+                    .contentShape(Rectangle())
+                    .focused($focusedProcessRow, equals: rowID)
+                    .background(
+                        Color.primary.opacity(
+                            hoveredProcessRow == rowID || focusedProcessRow == rowID ? 0.08 : 0
+                        ),
+                        in: RoundedRectangle(cornerRadius: 5)
+                    )
+                    .onHover { isHovered in
+                        hoveredProcessRow = isHovered ? rowID : nil
+                    }
+                    .accessibilityLabel(Text("Activate %@".localizedFormat(process.name)))
+                    .accessibilityValue(Text(value))
+                    .accessibilityInputLabels([Text(process.name)])
+                    .accessibilityHint(Text("Activates the application for this process".localized()))
+                    .help("Activate %@".localizedFormat(process.name))
+                } else {
+                    processRow(process, value: value)
                 }
-                .font(.caption)
             }
+        }
+    }
+
+    private func processRow(_ process: SystemMonitorProcess, value: String) -> some View {
+        HStack {
+            Text(process.name).lineLimit(1)
+            Spacer(minLength: 8)
+            Text(value)
+        }
+        .font(.caption)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(Rectangle())
+    }
+
+    private func processValue(_ process: SystemMonitorProcess, metric: SystemMonitorMetric) -> String {
+        switch metric {
+        case .cpu:
+            process.cpuUsage.value.map(SystemMonitorFormatter.percentage) ?? "Unavailable".localized()
+        case .memory:
+            process.memoryBytes.value.map { SystemMonitorFormatter.bytes(bytes: Double($0)) }
+                ?? "Unavailable".localized()
+        default:
+            "Unavailable".localized()
         }
     }
 
