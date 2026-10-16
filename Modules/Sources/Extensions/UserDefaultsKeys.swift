@@ -14,6 +14,7 @@ public extension UserDefaults {
         public static let appearanceColumnCount = "appearanceColumnCountKey"
         public static let showAds = "showAdsKey"
         public static let showDesktopPet = "showDesktopPetKey"
+        public static let dockPreviewEnabled = "dockPreviewEnabledKey"
         //Evolution
         public static let evolutionIDs = "evolutionIDsKey"
         //PomodoroTimer
@@ -112,7 +113,7 @@ public extension UserDefaults {
         /// user-facing setting (hasRunRadio, radioStation, window session state, caches,
         /// version-check bookkeeping, live volume mirrors).
         public static let exportableKeys: [String] = [
-            menubarIcon, appearanceColumnCount, showAds, showDesktopPet,
+            menubarIcon, appearanceColumnCount, showAds, showDesktopPet, dockPreviewEnabled,
             evolutionIDs,
             WorkDuration, RestDuration, RestAlert, WorkAlert, AllowNotificationAlert, PTimerCycleCount,
             soundWaveEffectDisplay, volume, allowNotificationChangingStation, allowNotificationTrack, radioEnable,

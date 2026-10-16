@@ -4,7 +4,6 @@
 //
 
 import Testing
-import Synchronization
 @testable import OnlySwitch
 
 struct PrivilegedHelperExecutorTests {
@@ -35,7 +34,7 @@ struct PrivilegedHelperExecutorTests {
 }
 
 private struct RecordingProcessRunner: Sendable {
-    private let state = Mutex<[PrivilegedHelperProcessInvocation]>([])
+    private let state = TestMutex<[PrivilegedHelperProcessInvocation]>([])
     private let result: PrivilegedHelperProcessResult
 
     init(result: PrivilegedHelperProcessResult) {

@@ -3,14 +3,13 @@
 //  OnlySwitchTests
 //
 
-import Synchronization
 import Testing
 @testable import OnlySwitch
 
 @MainActor
 struct PrivilegedAccessViewModelTests {
     @Test(arguments: [
-        (PrivilegedHelperStatus.enabled, "Privileged access enabled", nil),
+        (PrivilegedHelperStatus.enabled, "Privileged access enabled", nil as PrivilegedAccessAction?),
         (.notInstalled, "One-time authorization required", .install),
         (.requiresApproval, "Authorization approval needed", .openSystemSettings),
         (.disabled, "Privileged access disabled", .repair),
@@ -31,7 +30,7 @@ struct PrivilegedAccessViewModelTests {
 
     @Test
     func registrationOnlyOccursForAnExplicitLocalInstallOrRepairAction() async {
-        let registrations = Mutex(0)
+        let registrations = TestMutex(0)
         let model = PrivilegedAccessViewModel(client: client(
             status: .notInstalled,
             register: { registrations.withLock { $0 += 1 } }
@@ -46,7 +45,7 @@ struct PrivilegedAccessViewModelTests {
 
     @Test
     func registrationReportsApprovalNeededWhenMacOSHasNotEnabledTheHelperYet() async {
-        let status = Mutex(PrivilegedHelperStatus.notInstalled)
+        let status = TestMutex(PrivilegedHelperStatus.notInstalled)
         let model = PrivilegedAccessViewModel(client: PrivilegedOperationClient(
             status: { status.withLock { $0 } },
             installFromInteractiveUI: { status.withLock { $0 = .requiresApproval } },
@@ -63,7 +62,7 @@ struct PrivilegedAccessViewModelTests {
 
     @Test
     func removalOnlyUsesTheLocalRemovalAction() async {
-        let removals = Mutex(0)
+        let removals = TestMutex(0)
         let model = PrivilegedAccessViewModel(client: client(
             status: .enabled,
             remove: { removals.withLock { $0 += 1 } }

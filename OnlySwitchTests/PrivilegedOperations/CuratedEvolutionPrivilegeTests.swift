@@ -1,5 +1,4 @@
 import Dependencies
-import Synchronization
 import Testing
 @testable import OnlySwitch
 
@@ -28,8 +27,8 @@ struct CuratedEvolutionPrivilegeTests {
 
     @Test(arguments: [true, false])
     func curatedClamshellUsesTheTypedHelper(enabled: Bool) async throws {
-        let invocations = Mutex<[Invocation]>([])
-        let normalCommands = Mutex<[String]>([])
+        let invocations = TestMutex<[Invocation]>([])
+        let normalCommands = TestMutex<[String]>([])
         let service = service(recording: normalCommands)
         let client = recordingClient(invocations: invocations)
         let item = EvolutionGalleryAdaptor.convertToGalleryItem(from: clamshellModel()).evolution
@@ -47,8 +46,8 @@ struct CuratedEvolutionPrivilegeTests {
 
     @Test(arguments: ["sudo pmset -a disablesleep 1", "do shell script \"pmset -a disablesleep 1\"", "/bin/sh -c 'whoami'"])
     func customCommandsNeverReachTheHelper(command: String) async throws {
-        let invocations = Mutex<[Invocation]>([])
-        let normalCommands = Mutex<[String]>([])
+        let invocations = TestMutex<[Invocation]>([])
+        let normalCommands = TestMutex<[String]>([])
         let service = service(recording: normalCommands)
         let client = recordingClient(invocations: invocations)
         let item = EvolutionItem(
@@ -71,8 +70,8 @@ struct CuratedEvolutionPrivilegeTests {
 
     @Test
     func forgedPrivilegedMetadataNeverReachesTheHelper() async throws {
-        let invocations = Mutex<[Invocation]>([])
-        let normalCommands = Mutex<[String]>([])
+        let invocations = TestMutex<[Invocation]>([])
+        let normalCommands = TestMutex<[String]>([])
         let service = service(recording: normalCommands)
         let client = recordingClient(invocations: invocations)
         let command = "echo normal"
@@ -94,7 +93,7 @@ struct CuratedEvolutionPrivilegeTests {
         #expect(normalCommands.withLock { $0 } == [command])
     }
 
-    private func service(recording commands: Mutex<[String]>) -> EvolutionCommandService {
+    private func service(recording commands: TestMutex<[String]>) -> EvolutionCommandService {
         EvolutionCommandService(
             executeCommand: { command in
                 commands.withLock { $0.append(command?.commandString ?? "") }
@@ -105,7 +104,7 @@ struct CuratedEvolutionPrivilegeTests {
         )
     }
 
-    private func recordingClient(invocations: Mutex<[Invocation]>) -> PrivilegedOperationClient {
+    private func recordingClient(invocations: TestMutex<[Invocation]>) -> PrivilegedOperationClient {
         PrivilegedOperationClient(
             status: { .enabled },
             installFromInteractiveUI: {},

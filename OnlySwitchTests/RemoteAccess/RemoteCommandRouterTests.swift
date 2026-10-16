@@ -1,5 +1,4 @@
 import RemoteCore
-import Synchronization
 import Switches
 import Testing
 import XCTest
@@ -39,7 +38,7 @@ final class RemoteCommandRouterTests: XCTestCase {
     }
 
     func testPrivilegedSwitchFailureIsReportedWithoutInstallingHelper() async {
-        let registrations = Mutex(0)
+        let registrations = TestMutex(0)
         let control = LowPowerModeSwitch(client: .init(
             status: { .notInstalled },
             installFromInteractiveUI: { registrations.withLock { $0 += 1 } },

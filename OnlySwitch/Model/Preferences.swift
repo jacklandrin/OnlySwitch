@@ -173,6 +173,16 @@ final class Preferences: @unchecked Sendable {
         }
     }
 
+    @UserDefaultValue(key: UserDefaults.Key.dockPreviewEnabled, defaultValue: false)
+    var dockPreviewEnabled: Bool {
+        didSet {
+            NotificationCenter.default.post(
+                name: .dockPreviewVisibilityChanged,
+                object: dockPreviewEnabled
+            )
+        }
+    }
+
     // MARK: - Hidden Menubar
     @UserDefaultValue(key: UserDefaults.Key.menubarCollapsable, defaultValue: true)
     var menubarCollaspable:Bool {

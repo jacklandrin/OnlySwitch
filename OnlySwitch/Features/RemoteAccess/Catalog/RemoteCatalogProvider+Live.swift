@@ -14,7 +14,7 @@ extension RemoteCatalogProvider {
         now: @escaping @MainActor @Sendable () -> Date = Date.init
     ) {
         catalog = {
-            let builtInDescriptors = builtIns().filter { $0 != .aphrodite }.map { type in
+            let builtInDescriptors = builtIns().filter { $0 != .aphrodite && $0 != .dockPreview }.map { type in
                 Self.descriptor(for: type, control: makeBuiltIn(type))
             }
             let shortcutDescriptors = await shortcutNames().map(Self.descriptor(forShortcut:))
@@ -29,6 +29,7 @@ extension RemoteCatalogProvider {
                       String(rawValue) == id.value,
                       let type = SwitchType(legacyIdentifier: rawValue),
                       type != .aphrodite,
+                      type != .dockPreview,
                       builtIns().contains(type) else {
                     throw RemoteProtocolError(code: .controlNotFound, message: "Control not found")
                 }

@@ -74,6 +74,7 @@ public enum SwitchType: String, CaseIterable, Sendable {
     case reverseScrollDirection
     case systemMonitor
     case aphrodite
+    case dockPreview
 
     public var legacyIdentifier: UInt64 {
         switch self {
@@ -121,6 +122,7 @@ public enum SwitchType: String, CaseIterable, Sendable {
         case .reverseScrollDirection: 2_199_023_255_552
         case .systemMonitor: 4_398_046_511_104
         case .aphrodite: 8_796_093_022_208
+        case .dockPreview: 17_592_186_044_416
         }
     }
 
@@ -400,6 +402,12 @@ public enum SwitchType: String, CaseIterable, Sendable {
                 title: "Show Desktop Pet",
                 onImage: NSImage(systemSymbolName: "pawprint"),
                 offImage: NSImage(systemSymbolName: "pawprint")
+            )
+        case .dockPreview:
+            return SwitchBarInfo(
+                title: "Dock Preview",
+                onImage: NSImage(systemSymbolName: "dock.rectangle"),
+                offImage: NSImage(systemSymbolName: "dock.rectangle")
             )
         case .codexUsage:
             return SwitchBarInfo(

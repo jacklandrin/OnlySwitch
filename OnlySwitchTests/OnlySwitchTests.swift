@@ -530,9 +530,11 @@ struct BrightnessSyncStateTests {
 
         let generation = state.topologyChanged(hasBuiltInDisplay: true)
         #expect(!state.shouldPoll)
-        #expect(state.acceptRefresh(generation: generation, externalDisplayCount: 0))
+        let emptyRefreshAccepted = state.acceptRefresh(generation: generation, externalDisplayCount: 0)
+        #expect(emptyRefreshAccepted)
         #expect(!state.shouldPoll)
-        #expect(state.acceptRefresh(generation: generation, externalDisplayCount: 1))
+        let externalRefreshAccepted = state.acceptRefresh(generation: generation, externalDisplayCount: 1)
+        #expect(externalRefreshAccepted)
         #expect(state.shouldPoll)
 
         _ = state.topologyChanged(hasBuiltInDisplay: false)
@@ -546,7 +548,8 @@ struct BrightnessSyncStateTests {
 
         state.stop()
 
-        #expect(!state.acceptRefresh(generation: generation, externalDisplayCount: 1))
+        let stoppedRefreshAccepted = state.acceptRefresh(generation: generation, externalDisplayCount: 1)
+        #expect(!stoppedRefreshAccepted)
         #expect(!state.shouldPoll)
     }
 
@@ -556,9 +559,11 @@ struct BrightnessSyncStateTests {
         let oldGeneration = state.topologyChanged(hasBuiltInDisplay: true)
         let currentGeneration = state.topologyChanged(hasBuiltInDisplay: true)
 
-        #expect(!state.acceptRefresh(generation: oldGeneration, externalDisplayCount: 2))
+        let staleRefreshAccepted = state.acceptRefresh(generation: oldGeneration, externalDisplayCount: 2)
+        #expect(!staleRefreshAccepted)
         #expect(!state.shouldPoll)
-        #expect(state.acceptRefresh(generation: currentGeneration, externalDisplayCount: 2))
+        let currentRefreshAccepted = state.acceptRefresh(generation: currentGeneration, externalDisplayCount: 2)
+        #expect(currentRefreshAccepted)
         #expect(state.shouldPoll)
     }
 }
@@ -675,9 +680,9 @@ struct SettingsViewTests {
 }
 
 @MainActor
-@available(macOS 26.0, *)
 struct SettingsVMAphroditeLifetimeTests {
     @Test func retainedStoreFinishesGenerationAfterPresentationIsReleased() async {
+        guard #available(macOS 26.0, *) else { return }
         let taskID = UUID()
         let continuation = LockIsolated<CheckedContinuation<String, Error>?>(nil)
         let delivered = LockIsolated(0)

@@ -16,14 +16,14 @@ struct OnlyControlSystemMonitorTests {
         await store.send(.selectedSectionChanged(.systemMonitor)) {
             $0.selectedSection = .systemMonitor
         }
-        await store.receive(.systemMonitor(.visibilityChanged(true))) {
+        await store.receive(\.systemMonitor) {
             $0.systemMonitor.isVisible = true
             $0.systemMonitor.isSampling = true
         }
         await store.send(.selectedSectionChanged(.controls)) {
             $0.selectedSection = .controls
         }
-        await store.receive(.systemMonitor(.visibilityChanged(false))) {
+        await store.receive(\.systemMonitor) {
             $0.systemMonitor.isVisible = false
             $0.systemMonitor.isSampling = false
         }
@@ -46,7 +46,7 @@ struct OnlyControlSystemMonitorTests {
             $0.blurRadius = 20
             $0.opacity = 0
         }
-        await store.receive(.systemMonitor(.visibilityChanged(false))) {
+        await store.receive(\.systemMonitor) {
             $0.systemMonitor.isVisible = false
             $0.systemMonitor.isSampling = false
         }
@@ -80,7 +80,7 @@ struct OnlyControlSystemMonitorTests {
         await store.send(.availableSectionsChanged([.controls])) {
             $0.selectedSection = .controls
         }
-        await store.receive(.systemMonitor(.visibilityChanged(false))) {
+        await store.receive(\.systemMonitor) {
             $0.systemMonitor.isVisible = false
             $0.systemMonitor.isSampling = false
         }

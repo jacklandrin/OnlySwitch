@@ -524,7 +524,7 @@ struct RemoteCatalogMonitorTests {
         let coalesced = CoalescedRefreshProbe()
         let monitor = RemoteCatalogMonitor(
             provider: await provider.provider,
-            pollInterval: .hours(1),
+            pollInterval: .seconds(3_600),
             debounceInterval: .zero,
             pollWait: { try await Task.sleep(for: $0) },
             refreshCoalescedObserver: { coalesced.record() }
@@ -667,10 +667,10 @@ struct RemoteCatalogMonitorTests {
         let started = TestSignal()
         let monitor = RemoteCatalogMonitor(
             provider: await source.provider,
-            debounceInterval: .hours(1),
+            debounceInterval: .seconds(3_600),
             pollWait: { _ in
                 await started.signal()
-                try await Task.sleep(for: .hours(1))
+                try await Task.sleep(for: .seconds(3_600))
             }
         )
         _ = try await monitor.current()
@@ -1092,7 +1092,7 @@ private extension RemoteControlDescriptor {
     static var muteDescriptor: Self { descriptor(kind: .builtIn, value: "mute") }
     static var hideDesktopDescriptor: Self { descriptor(kind: .builtIn, value: "hideDesktop") }
 
-    private static func descriptor(kind: RemoteControlKind, value: String) -> Self {
+    private static func descriptor(kind: RemoteControlID.Kind, value: String) -> Self {
         .init(
             id: .init(kind: kind, value: value),
             title: value,

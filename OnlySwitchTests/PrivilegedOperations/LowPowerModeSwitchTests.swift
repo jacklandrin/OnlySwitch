@@ -3,7 +3,6 @@
 //  OnlySwitchTests
 //
 
-import Synchronization
 import Switches
 import Testing
 @testable import OnlySwitch
@@ -17,7 +16,7 @@ struct LowPowerModeSwitchTests {
     @Test(arguments: [true, false])
     @MainActor
     func changingStateUsesOnlyTheTypedLowPowerOperation(enabled: Bool) async throws {
-        let invocations = Mutex<[Invocation]>([])
+        let invocations = TestMutex<[Invocation]>([])
         let client = PrivilegedOperationClient(
             status: { .enabled },
             installFromInteractiveUI: {},
@@ -37,7 +36,7 @@ struct LowPowerModeSwitchTests {
     @Test
     @MainActor
     func statusUsesTheUnprivilegedStatusReader() async {
-        let reads = Mutex(0)
+        let reads = TestMutex(0)
         let sut = LowPowerModeSwitch(
             client: .init(),
             statusReader: {

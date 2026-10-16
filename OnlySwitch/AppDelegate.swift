@@ -186,6 +186,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     private var desktopPetPomodoroRefreshTask: Task<Void, Never>?
     private let remoteAccessController = RemoteAccessController()
     private lazy var onlyRemoteCampaignController = OnlyRemoteCampaignWindowController()
+    let dockPreviewController = DockPreviewController()
+    private lazy var dockPreviewPanelController = DockPreviewPanelController(
+        store: dockPreviewController.store,
+        updatePreviewFrame: dockPreviewController.updatePreviewFrame
+    )
     private var isStoppingRemoteAccess = false
     private var didStopRemoteAccess = false
 
@@ -209,6 +214,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
 
         statusBar = StatusBarController(popover)
         setupDesktopPet()
+        setupDockPreview()
 
         SwitchManager.shared.registerSwitchesShouldShow()
         _ = ReverseScrollDirectionController.shared.currentStatus()
@@ -256,11 +262,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
 
     func applicationWillTerminate(_ notification: Notification) {
         ReverseScrollDirectionController.shared.suspendForTermination()
+        dockPreviewPanelController.stop()
+        dockPreviewController.stop()
         stopDesktopPetPomodoroRefresh()
         OnlyControlWindow.shared.onVisibilityChanged = nil
         NotificationCenter.default.removeObserver(
             self,
             name: .desktopPetVisibilityChanged,
+            object: nil
+        )
+        NotificationCenter.default.removeObserver(
+            self,
+            name: .dockPreviewVisibilityChanged,
             object: nil
         )
     }
@@ -305,6 +318,24 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             name: .desktopPetVisibilityChanged,
             object: nil
         )
+    }
+
+    private func setupDockPreview() {
+        dockPreviewPanelController.start()
+        dockPreviewController.start(isEnabled: Preferences.shared.dockPreviewEnabled)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(dockPreviewVisibilityDidChange),
+            name: .dockPreviewVisibilityChanged,
+            object: nil
+        )
+    }
+
+    @objc private func dockPreviewVisibilityDidChange() {
+        dockPreviewController.setEnabled(Preferences.shared.dockPreviewEnabled)
+        if let previewSwitch = SwitchManager.shared.getSwitch(of: .dockPreview) {
+            previewSwitch.delegate?.shouldRefreshIfNeed(aSwitch: previewSwitch)
+        }
     }
 
     @objc private func desktopPetVisibilityDidChange() {

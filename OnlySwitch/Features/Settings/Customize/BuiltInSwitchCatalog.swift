@@ -55,7 +55,7 @@ enum BuiltInSwitchCatalog {
         case .hiddeDesktop, .autohideDock, .autohideMenuBar, .hiddenFiles,
              .showUserLibrary, .showExtensionName, .smallLaunchpadIcon,
              .showFinderPathbar, .dockRecent, .hideMenubarIcons, .hideWindows,
-             .topSticker, .desktopPet, .reverseScrollDirection:
+             .topSticker, .desktopPet, .reverseScrollDirection, .dockPreview:
             .desktopAndFinder
 
         case .xcodeCache, .emptyTrash, .emptyPasteboard, .ejectDiscs:

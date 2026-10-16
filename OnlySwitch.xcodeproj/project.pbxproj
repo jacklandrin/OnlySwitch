@@ -20,6 +20,7 @@
 		040C6EAC276B7D9F00291DEB /* CustomizeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040C6EAB276B7D9F00291DEB /* CustomizeView.swift */; };
 		B1C100000000000000000002 /* BuiltInSwitchCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C100000000000000000001 /* BuiltInSwitchCatalog.swift */; };
 		B1C100000000000000000005 /* BuiltInSwitchCatalogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C100000000000000000004 /* BuiltInSwitchCatalogTests.swift */; };
+		C1A0F1000000000000000002 /* TestMutex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0F1000000000000000001 /* TestMutex.swift */; };
 		040E97272760FF3E003D9D42 /* MetadataExtractorError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040E97262760FF3E003D9D42 /* MetadataExtractorError.swift */; };
 		041927682AEBFFA60041185B /* CBTrueToneClient++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041927672AEBFFA60041185B /* CBTrueToneClient++.swift */; };
 		0419276B2AEC124B0041185B /* KeyboardShortcutsDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0419276A2AEC124B0041185B /* KeyboardShortcutsDefine.swift */; };
@@ -70,11 +71,9 @@
 		04447B782755129D00CD2900 /* EventMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B772755129D00CD2900 /* EventMonitor.swift */; };
 		0444D5CF283683D800327D0B /* SystemInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0427B25A275D786400AD783A /* SystemInfo.swift */; };
 		0444D5D0283683DF00327D0B /* GitHubReleaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F118C327AED8BC005DA861 /* GitHubReleaseModel.swift */; };
-		0444D5D22836D87E00327D0B /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 0444D5D12836D87E00327D0B /* Alamofire */; };
 		0444D5D92836F1BA00327D0B /* CurrentScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E2AD1D2783B63600BC5DF3 /* CurrentScreen.swift */; };
 		0444D5DB2836F1DC00327D0B /* MetadataExtractorError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040E97262760FF3E003D9D42 /* MetadataExtractorError.swift */; };
 		0444D5E32838611600327D0B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 043E5D6C2757DADB00ADC004 /* AVFoundation.framework */; };
-		0444D5E42838616900327D0B /* CoreBrightness.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04A23B22275D5FC500B454C8 /* CoreBrightness.framework */; };
 		0444D5E72839315A00327D0B /* BluetoothDevicesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AFD275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift */; };
 		0444D5EB28393FF800327D0B /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0444D5EA28393FF800327D0B /* Info.plist */; };
 		0444D5EF2839471100327D0B /* UserDefaultValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140B7277884EE005B160B /* UserDefaultValue.swift */; };
@@ -352,6 +351,16 @@
 		A1D0E10A2F0A000100BEEF01 /* SoundMixerSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E00B2F0A000100BEEF01 /* SoundMixerSwitch.swift */; };
 		A1D0E10C2F0A000100BEEF01 /* DesktopPetSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E00C2F0A000100BEEF01 /* DesktopPetSwitch.swift */; };
 		A1D0E10D2F0A000100BEEF01 /* DesktopPetSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E00C2F0A000100BEEF01 /* DesktopPetSwitch.swift */; };
+		D0C000012F0A000100BEEF01 /* DockPreviewSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C000002F0A000100BEEF01 /* DockPreviewSwitch.swift */; };
+		D0C000022F0A000100BEEF01 /* DockPreviewSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C000002F0A000100BEEF01 /* DockPreviewSwitch.swift */; };
+		D0C100000000000000000011 /* DockPreviewModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C100000000000000000001 /* DockPreviewModels.swift */; };
+		D0C100000000000000000012 /* DockPreviewFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C100000000000000000002 /* DockPreviewFeature.swift */; };
+		D0C100000000000000000013 /* DockPreviewClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C100000000000000000003 /* DockPreviewClient.swift */; };
+		D0C100000000000000000014 /* DockPreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C100000000000000000004 /* DockPreviewController.swift */; };
+		D0C100000000000000000015 /* DockPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C100000000000000000005 /* DockPreviewView.swift */; };
+		D0C100000000000000000016 /* DockPreviewPanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C100000000000000000006 /* DockPreviewPanelController.swift */; };
+		D0C100000000000000000017 /* DockPreviewFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C100000000000000000007 /* DockPreviewFeatureTests.swift */; };
+		D0C100000000000000000018 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = D0C100000000000000000008 /* InfoPlist.xcstrings */; };
 		A1D200012F0B000200BEEF01 /* PureColorView in Frameworks */ = {isa = PBXBuildFile; productRef = A1D201012F0B000200BEEF01 /* PureColorView */; };
 		A1D200022F0B000200BEEF01 /* StickerView in Frameworks */ = {isa = PBXBuildFile; productRef = A1D201022F0B000200BEEF01 /* StickerView */; };
 		A1D200032F0B000200BEEF01 /* Authenticator in Frameworks */ = {isa = PBXBuildFile; productRef = A1D201032F0B000200BEEF01 /* Authenticator */; };
@@ -368,7 +377,6 @@
 		AF1000010000000000000001 /* Aphrodite in Frameworks */ = {isa = PBXBuildFile; productRef = AF1000020000000000000001 /* Aphrodite */; };
 		AF1000030000000000000001 /* AphroditeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF1000040000000000000001 /* AphroditeSwitch.swift */; };
 		AF1000050000000000000001 /* AphroditeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF1000040000000000000001 /* AphroditeSwitch.swift */; };
-		AF1000060000000000000001 /* Aphrodite in Frameworks */ = {isa = PBXBuildFile; productRef = AF1000020000000000000001 /* Aphrodite */; };
 		B210A0000000000000000001 /* RemoteSystemSettingsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B210A0000000000000000021 /* RemoteSystemSettingsClient.swift */; };
 		B220A0000000000000000001 /* RemoteReviewDemoClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B220A0000000000000000021 /* RemoteReviewDemoClient.swift */; };
 		B220A0000000000000000002 /* RemoteAppShellFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = B220A0000000000000000022 /* RemoteAppShellFeature.swift */; };
@@ -387,7 +395,6 @@
 		B82710312700000000C0DE01 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B82710322700000000C0DE01 /* Security.framework */; };
 		B90000000000000000000002 /* MacSystemMonitorCollectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90000000000000000000001 /* MacSystemMonitorCollectorTests.swift */; };
 		B90000000000000000000005 /* MacSystemMonitorCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90000000000000000000004 /* MacSystemMonitorCollector.swift */; };
-		B90000000000000000000006 /* SystemMonitor in Frameworks */ = {isa = PBXBuildFile; productRef = B90000000000000000000009 /* SystemMonitor */; };
 		B90000000000000000000007 /* SystemMonitor in Frameworks */ = {isa = PBXBuildFile; productRef = B90000000000000000000008 /* SystemMonitor */; };
 		B90100000000000000000002 /* SystemMonitorPreferencesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90100000000000000000001 /* SystemMonitorPreferencesTests.swift */; };
 		B90100000000000000000005 /* SystemMonitorSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90100000000000000000004 /* SystemMonitorSettingsView.swift */; };
@@ -446,7 +453,6 @@
 		CADE00000000000000000005 /* RemoteCodexUsageCardSurface.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADE00000000000000000025 /* RemoteCodexUsageCardSurface.swift */; };
 		CADE00000000000000000006 /* RemoteCodexUsageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADE00000000000000000026 /* RemoteCodexUsageView.swift */; };
 		D35C00012F12000100D35C01 /* DesktopPet in Frameworks */ = {isa = PBXBuildFile; productRef = D35C00022F12000100D35C01 /* DesktopPet */; };
-		D35C00042F12000100D35C01 /* DesktopPet in Frameworks */ = {isa = PBXBuildFile; productRef = D35C00032F12000100D35C01 /* DesktopPet */; };
 		D418A0C2EBC2CD7CCD451615 /* SoundMixerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E43EF22E4BA4D2E63E454D7 /* SoundMixerService.swift */; };
 		DABA00000000000000000002 /* GlobalSettingsFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA00000000000000000022 /* GlobalSettingsFeature.swift */; };
 		DABA00000000000000000003 /* GlobalSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA00000000000000000023 /* GlobalSettingsView.swift */; };
@@ -476,8 +482,6 @@
 		F3A40000000000000000000A /* RemoteMacTestValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A40000000000000000002A /* RemoteMacTestValues.swift */; };
 		F3A40000000000000000000B /* RemoteCore in Frameworks */ = {isa = PBXBuildFile; productRef = F3A400000000000000000030 /* RemoteCore */; };
 		F3A40000000000000000000C /* RemoteTransport in Frameworks */ = {isa = PBXBuildFile; productRef = F3A400000000000000000031 /* RemoteTransport */; };
-		F3A40000000000000000000D /* RemoteCore in Frameworks */ = {isa = PBXBuildFile; productRef = F3A400000000000000000032 /* RemoteCore */; };
-		F3A40000000000000000000E /* RemoteTransport in Frameworks */ = {isa = PBXBuildFile; productRef = F3A400000000000000000033 /* RemoteTransport */; };
 		F3A500000000000000000001 /* RemoteCredentialStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A500000000000000000021 /* RemoteCredentialStoreTests.swift */; };
 		F3A500000000000000000002 /* RemoteHostIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A500000000000000000022 /* RemoteHostIntegrationTests.swift */; };
 		F3A500000000000000000003 /* RemoteHostTestClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A500000000000000000023 /* RemoteHostTestClient.swift */; };
@@ -623,6 +627,7 @@
 		040C6EAB276B7D9F00291DEB /* CustomizeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomizeView.swift; sourceTree = "<group>"; };
 		B1C100000000000000000001 /* BuiltInSwitchCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuiltInSwitchCatalog.swift; sourceTree = "<group>"; };
 		B1C100000000000000000004 /* BuiltInSwitchCatalogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuiltInSwitchCatalogTests.swift; sourceTree = "<group>"; };
+		C1A0F1000000000000000001 /* TestMutex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Support/TestMutex.swift; sourceTree = "<group>"; };
 		040CD2BD27579CEA002E0CC6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		040E97262760FF3E003D9D42 /* MetadataExtractorError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetadataExtractorError.swift; sourceTree = "<group>"; };
 		041927672AEBFFA60041185B /* CBTrueToneClient++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CBTrueToneClient++.swift"; sourceTree = "<group>"; };
@@ -882,6 +887,15 @@
 		A1D0E00A2F0A000100BEEF01 /* AuthenticatorSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorSwitch.swift; sourceTree = "<group>"; };
 		A1D0E00B2F0A000100BEEF01 /* SoundMixerSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundMixerSwitch.swift; sourceTree = "<group>"; };
 		A1D0E00C2F0A000100BEEF01 /* DesktopPetSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesktopPetSwitch.swift; sourceTree = "<group>"; };
+		D0C000002F0A000100BEEF01 /* DockPreviewSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockPreviewSwitch.swift; sourceTree = "<group>"; };
+		D0C100000000000000000001 /* DockPreviewModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockPreviewModels.swift; sourceTree = "<group>"; };
+		D0C100000000000000000002 /* DockPreviewFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockPreviewFeature.swift; sourceTree = "<group>"; };
+		D0C100000000000000000003 /* DockPreviewClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockPreviewClient.swift; sourceTree = "<group>"; };
+		D0C100000000000000000004 /* DockPreviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockPreviewController.swift; sourceTree = "<group>"; };
+		D0C100000000000000000005 /* DockPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockPreviewView.swift; sourceTree = "<group>"; };
+		D0C100000000000000000006 /* DockPreviewPanelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockPreviewPanelController.swift; sourceTree = "<group>"; };
+		D0C100000000000000000007 /* DockPreviewFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockPreviewFeatureTests.swift; sourceTree = "<group>"; };
+		D0C100000000000000000008 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
 		A47E483C8C562DBBD024C25A /* SoundMixerVM.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoundMixerVM.swift; sourceTree = "<group>"; };
 		A93C8BE02ECA34CB00D7CE52 /* AICommanderSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AICommanderSwitch.swift; sourceTree = "<group>"; };
 		A99F5CE8301140740029426A /* onlyswitch.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = onlyswitch.icon; sourceTree = "<group>"; };
@@ -1046,14 +1060,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AF1000060000000000000001 /* Aphrodite in Frameworks */,
-				B90000000000000000000006 /* SystemMonitor in Frameworks */,
-				D35C00042F12000100D35C01 /* DesktopPet in Frameworks */,
-				F3A40000000000000000000D /* RemoteCore in Frameworks */,
-				F3A40000000000000000000E /* RemoteTransport in Frameworks */,
 				0444D5E32838611600327D0B /* AVFoundation.framework in Frameworks */,
-				0444D5D22836D87E00327D0B /* Alamofire in Frameworks */,
-				0444D5E42838616900327D0B /* CoreBrightness.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1189,10 +1196,12 @@
 		041D725528353A160083092D /* OnlySwitchTests */ = {
 			isa = PBXGroup;
 			children = (
+				D0C100000000000000000032 /* DockPreview */,
 				B90000000000000000000003 /* SystemMonitor */,
 				C1A0B00518E9202600000001 /* PrivilegedOperations */,
 				F3A400000000000000000013 /* RemoteAccess */,
 				B1C100000000000000000004 /* BuiltInSwitchCatalogTests.swift */,
+				C1A0F1000000000000000001 /* TestMutex.swift */,
 				B82700022700000000C0DE01 /* MenuBarIconHidingTests.swift */,
 				041D725628353A160083092D /* OnlySwitchTests.swift */,
 				A9AD00020000000000000001 /* AdsModelTests.swift */,
@@ -1209,6 +1218,7 @@
 				A1D0E00A2F0A000100BEEF01 /* AuthenticatorSwitch.swift */,
 				A1D0E00B2F0A000100BEEF01 /* SoundMixerSwitch.swift */,
 				A1D0E00C2F0A000100BEEF01 /* DesktopPetSwitch.swift */,
+				D0C000002F0A000100BEEF01 /* DockPreviewSwitch.swift */,
 				B98000000000000000000001 /* CodexUsageSwitch.swift */,
 				AF1000040000000000000001 /* AphroditeSwitch.swift */,
 				B98500000000000000000001 /* SystemMonitorSwitch.swift */,
@@ -1347,6 +1357,7 @@
 		043E5D672757C85500ADC004 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				D0C100000000000000000031 /* DockPreview */,
 				B90000000000000000000010 /* SystemMonitor */,
 				F3A400000000000000000010 /* RemoteAccess */,
 				04A5AA572C39F8A2001070CA /* OnlyControl */,
@@ -1360,6 +1371,27 @@
 				0434B4D02876325B00F06AB9 /* HostWindowFinder.swift */,
 			);
 			path = Features;
+			sourceTree = "<group>";
+		};
+		D0C100000000000000000031 /* DockPreview */ = {
+			isa = PBXGroup;
+			children = (
+				D0C100000000000000000001 /* DockPreviewModels.swift */,
+				D0C100000000000000000002 /* DockPreviewFeature.swift */,
+				D0C100000000000000000003 /* DockPreviewClient.swift */,
+				D0C100000000000000000004 /* DockPreviewController.swift */,
+				D0C100000000000000000005 /* DockPreviewView.swift */,
+				D0C100000000000000000006 /* DockPreviewPanelController.swift */,
+			);
+			path = DockPreview;
+			sourceTree = "<group>";
+		};
+		D0C100000000000000000032 /* DockPreview */ = {
+			isa = PBXGroup;
+			children = (
+				D0C100000000000000000007 /* DockPreviewFeatureTests.swift */,
+			);
+			path = DockPreview;
 			sourceTree = "<group>";
 		};
 		043E5D682757C86400ADC004 /* ViewModel */ = {
@@ -2057,6 +2089,7 @@
 			isa = PBXGroup;
 			children = (
 				04E561FF2E2467E6004E0BD0 /* Localizable.xcstrings */,
+				D0C100000000000000000008 /* InfoPlist.xcstrings */,
 			);
 			path = Localization;
 			sourceTree = "<group>";
@@ -2434,12 +2467,6 @@
 			);
 			name = OnlySwitchTests;
 			packageProductDependencies = (
-				AF1000020000000000000001 /* Aphrodite */,
-				B90000000000000000000009 /* SystemMonitor */,
-				D35C00032F12000100D35C01 /* DesktopPet */,
-				0444D5D12836D87E00327D0B /* Alamofire */,
-				F3A400000000000000000032 /* RemoteCore */,
-				F3A400000000000000000033 /* RemoteTransport */,
 			);
 			productName = OnlySwitchTests;
 			productReference = 041D725428353A150083092D /* OnlySwitchTests.xctest */;
@@ -2692,6 +2719,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0C100000000000000000018 /* InfoPlist.xcstrings in Resources */,
 				0443A6B627599AAC00A3BCFD /* README.md in Resources */,
 				0406EDC42ACB3EE80015F4D0 /* EvolutionMarket.json in Resources */,
 				04447B632754F08100CD2900 /* Preview Assets.xcassets in Resources */,
@@ -2802,7 +2830,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0C100000000000000000017 /* DockPreviewFeatureTests.swift in Sources */,
 				B1C100000000000000000005 /* BuiltInSwitchCatalogTests.swift in Sources */,
+				C1A0F1000000000000000002 /* TestMutex.swift in Sources */,
 				CADE00000000000000000001 /* RemoteCodexUsageProviderTests.swift in Sources */,
 				B90000000000000000000002 /* MacSystemMonitorCollectorTests.swift in Sources */,
 				B90100000000000000000002 /* SystemMonitorPreferencesTests.swift in Sources */,
@@ -2825,77 +2855,8 @@
 				F3A400000000000000000008 /* RemoteCatalogProviderTests.swift in Sources */,
 				F3A400000000000000000009 /* RemoteCommandRouterTests.swift in Sources */,
 				F3A40000000000000000000A /* RemoteMacTestValues.swift in Sources */,
-				0447E36A2B71746E00D07B9A /* TrueToneSwitch.swift in Sources */,
-				0444D5D0283683DF00327D0B /* GitHubReleaseModel.swift in Sources */,
-				0447E38E2B71746E00D07B9A /* TopNotchSwitch.swift in Sources */,
-				0447E3782B71746E00D07B9A /* EmptyTrashSwitch.swift in Sources */,
-				0447E3962B71746E00D07B9A /* HideMenubarIconsSwitch.swift in Sources */,
-				04E89D5F289B054C00667710 /* IOService.swift in Sources */,
-				0447E3862B71746E00D07B9A /* HiddenDesktopSwitch.swift in Sources */,
-				A1D0E10C2F0A000100BEEF01 /* DesktopPetSwitch.swift in Sources */,
-				B98000000000000000000002 /* CodexUsageSwitch.swift in Sources */,
-				AF1000030000000000000001 /* AphroditeSwitch.swift in Sources */,
-				B98500000000000000000002 /* SystemMonitorSwitch.swift in Sources */,
-				B99000000000000000000002 /* ReverseScrollDirectionSwitch.swift in Sources */,
-				04FC161728402E5200D4A4AC /* ShortcutOnMarket.swift in Sources */,
-				0447E35E2B71746E00D07B9A /* AppleMusicSwitch.swift in Sources */,
-				0447E3942B71746E00D07B9A /* LowPowerModeSwitch.swift in Sources */,
-				0447E3902B71746E00D07B9A /* HiddenFilesSwitch.swift in Sources */,
-				0447E3882B71746E00D07B9A /* EmptyPasteboardSwitch.swift in Sources */,
-				0447E3662B71746E00D07B9A /* DimScreenSwitch.swift in Sources */,
-				0447E3642B71746E00D07B9A /* BackNoisesSwitch.swift in Sources */,
-				0447E36E2B71746E00D07B9A /* EjectDiscsSwitch.swift in Sources */,
-				0447E3682B71746E00D07B9A /* ScreenSaverSwitch.swift in Sources */,
-				04FB3E73288D54C400F3B5E1 /* ShortcutsBarVM.swift in Sources */,
-				047C1E742A22B12E0061235D /* EvolutionCommandService+Test.swift in Sources */,
-				047C1E6B2A2298AB0061235D /* EvolutionListService+Test.swift in Sources */,
-				047C1E5F2A2262640061235D /* EvolutionModel.swift in Sources */,
-				0447E37A2B71746E00D07B9A /* TopStickerSwitch.swift in Sources */,
-				0444D5E72839315A00327D0B /* BluetoothDevicesManager.swift in Sources */,
-				0444D5EF2839471100327D0B /* UserDefaultValue.swift in Sources */,
-				0447E35A2B71746E00D07B9A /* FKeySwitch.swift in Sources */,
-				0444D5DB2836F1DC00327D0B /* MetadataExtractorError.swift in Sources */,
-				0447E3742B71746E00D07B9A /* MuteSwitch.swift in Sources */,
-				047C1E5C2A2255BF0061235D /* EvolutionEditorReducer.swift in Sources */,
-				0447E3562B71746E00D07B9A /* DarkModeSwitch.swift in Sources */,
-				0444D5D92836F1BA00327D0B /* CurrentScreen.swift in Sources */,
-				047C1E6F2A22AF840061235D /* EvolutionCommandService.swift in Sources */,
-				04FB3E72288D54B700F3B5E1 /* SwitchListModel.swift in Sources */,
-				0447E3802B71746E00D07B9A /* KeepAwakeSwitch.swift in Sources */,
-				0447E3702B71746E00D07B9A /* AutohideMenuBarSwitch.swift in Sources */,
-				04FB3E6E288D547900F3B5E1 /* SwitchBarVM.swift in Sources */,
-				0447E37C2B71746E00D07B9A /* RadioStationSwitch.swift in Sources */,
-				A93C8BE22ECA34D700D7CE52 /* AICommanderSwitch.swift in Sources */,
-				04FB3E65288D4BDF00F3B5E1 /* SwitchListVM.swift in Sources */,
-				0447E38C2B71746E00D07B9A /* ScreenTestSwitch.swift in Sources */,
-				0447E3922B71746E00D07B9A /* SpotifySwitch.swift in Sources */,
-				047F3A34285DE600004FFCDF /* EffectSoundHelper.swift in Sources */,
-				0447E36C2B71746E00D07B9A /* NightShiftSwitch.swift in Sources */,
-				04FB3E70288D549C00F3B5E1 /* SwitchBarModel.swift in Sources */,
-				0447E37E2B71746E00D07B9A /* HideWindowsSwitch.swift in Sources */,
-				047F3A38285DE67A004FFCDF /* SwitchListApperanceDefine.swift in Sources */,
-				0447E3582B71746E00D07B9A /* ShowFinderPathbarSwitch.swift in Sources */,
-				0447E39C2B7174F000D07B9A /* SwitchType++.swift in Sources */,
-				0447E3622B71746E00D07B9A /* XcodeCacheSwitch.swift in Sources */,
-				047C1E662A2297490061235D /* Evolution+Dependencies.swift in Sources */,
-				047C1E622A22960D0061235D /* EvolutionListService.swift in Sources */,
-				04FB3E6F288D548900F3B5E1 /* BarProvider.swift in Sources */,
-				04BC8EC4284FE9B5009E605F /* Preferences.swift in Sources */,
-				0447E3522B71746E00D07B9A /* MuteMicSwitch.swift in Sources */,
-				047C1E522A2252620061235D /* EvolutionReducer.swift in Sources */,
-				0447E38A2B71746E00D07B9A /* AutohideDockSwitch.swift in Sources */,
 				041D725728353A160083092D /* OnlySwitchTests.swift in Sources */,
 				A9AD00010000000000000001 /* AdsModelTests.swift in Sources */,
-				0447E3822B71746E00D07B9A /* ShowUserLibrarySwitch.swift in Sources */,
-				0447E3842B71746E00D07B9A /* PomodoroTimerSwitch.swift in Sources */,
-				0444D5CF283683D800327D0B /* SystemInfo.swift in Sources */,
-				0447E3602B71746E00D07B9A /* ShowExtensionNameSwitch.swift in Sources */,
-				04FB3E71288D54A500F3B5E1 /* SwitchManager.swift in Sources */,
-				0447E3762B71746E00D07B9A /* BluetoothSwitch.swift in Sources */,
-				0447E3722B71746E00D07B9A /* SmallLaunchpadIconSwitch.swift in Sources */,
-				0447E35C2B71746E00D07B9A /* DockRecentSwitch.swift in Sources */,
-				0447E3542B71746E00D07B9A /* AirPodsSwitch.swift in Sources */,
-				04FB3E74288D54D700F3B5E1 /* ShortcutsBarModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2903,6 +2864,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0C100000000000000000011 /* DockPreviewModels.swift in Sources */,
+				D0C100000000000000000012 /* DockPreviewFeature.swift in Sources */,
+				D0C100000000000000000013 /* DockPreviewClient.swift in Sources */,
+				D0C100000000000000000014 /* DockPreviewController.swift in Sources */,
+				D0C100000000000000000015 /* DockPreviewView.swift in Sources */,
+				D0C100000000000000000016 /* DockPreviewPanelController.swift in Sources */,
 				B1C100000000000000000002 /* BuiltInSwitchCatalog.swift in Sources */,
 				B90000000000000000000005 /* MacSystemMonitorCollector.swift in Sources */,
 				B90400000000000000000005 /* SystemMonitorStatusItemController.swift in Sources */,
@@ -3109,6 +3076,7 @@
 				047C1E6A2A2298AB0061235D /* EvolutionListService+Test.swift in Sources */,
 				0447E3872B71746E00D07B9A /* HiddenDesktopSwitch.swift in Sources */,
 				A1D0E10D2F0A000100BEEF01 /* DesktopPetSwitch.swift in Sources */,
+				D0C000022F0A000100BEEF01 /* DockPreviewSwitch.swift in Sources */,
 				B98000000000000000000003 /* CodexUsageSwitch.swift in Sources */,
 				AF1000050000000000000001 /* AphroditeSwitch.swift in Sources */,
 				B98500000000000000000003 /* SystemMonitorSwitch.swift in Sources */,
@@ -3328,11 +3296,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "OnlySwitch/Header/OnlySwitch-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-				SYSTEM_FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
-				);
-				TEST_HOST = "$(BUNDLE_LOADER)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OnlySwitch.app/Contents/MacOS/OnlySwitch";
 			};
 			name = Debug;
 		};
@@ -3355,11 +3319,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "OnlySwitch/Header/OnlySwitch-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-				SYSTEM_FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
-				);
-				TEST_HOST = "$(BUNDLE_LOADER)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OnlySwitch.app/Contents/MacOS/OnlySwitch";
 			};
 			name = Release;
 		};
@@ -4043,11 +4003,6 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = Extensions;
 		};
-		0444D5D12836D87E00327D0B /* Alamofire */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 04A6B54927715F90003B2647 /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = Alamofire;
-		};
 		0447E3982B7174AD00D07B9A /* Switches */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Switches;
@@ -4140,15 +4095,7 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = SystemMonitor;
 		};
-		B90000000000000000000009 /* SystemMonitor */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SystemMonitor;
-		};
 		D35C00022F12000100D35C01 /* DesktopPet */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = DesktopPet;
-		};
-		D35C00032F12000100D35C01 /* DesktopPet */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DesktopPet;
 		};
@@ -4188,14 +4135,6 @@
 			productName = RemoteCore;
 		};
 		F3A400000000000000000031 /* RemoteTransport */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = RemoteTransport;
-		};
-		F3A400000000000000000032 /* RemoteCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = RemoteCore;
-		};
-		F3A400000000000000000033 /* RemoteTransport */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = RemoteTransport;
 		};

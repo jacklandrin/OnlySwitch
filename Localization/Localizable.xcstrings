@@ -1,6 +1,106 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Dock Preview" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : { "stringUnit" : { "state" : "translated", "value" : "Náhled oken v Docku" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Dock-Fenstervorschau" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Dock Preview" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Vista previa del Dock" } },
+        "fil" : { "stringUnit" : { "state" : "translated", "value" : "Preview sa Dock" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Aperçu du Dock" } },
+        "hr" : { "stringUnit" : { "state" : "translated", "value" : "Pregled prozora u Docku" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Anteprima Dock" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Dockプレビュー" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "Dock 미리보기" } },
+        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Dock-voorvertoning" } },
+        "pl" : { "stringUnit" : { "state" : "translated", "value" : "Podgląd Docka" } },
+        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Prévia do Dock" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Предпросмотр Dock" } },
+        "sk" : { "stringUnit" : { "state" : "translated", "value" : "Náhľad okien v Docku" } },
+        "so" : { "stringUnit" : { "state" : "translated", "value" : "Hordhaca Dock" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Dock Önizlemesi" } },
+        "uk" : { "stringUnit" : { "state" : "translated", "value" : "Попередній перегляд Dock" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "程序坞预览" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "Dock 預覽" } }
+      }
+    },
+    "Dock Preview requires Accessibility and Screen Recording permissions." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : { "stringUnit" : { "state" : "translated", "value" : "Náhled oken v Docku vyžaduje oprávnění Zpřístupnění a Záznam obrazovky." } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Die Dock-Fenstervorschau benötigt Bedienungshilfen und Bildschirmaufnahme." } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Dock Preview requires Accessibility and Screen Recording permissions." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "La vista previa del Dock requiere permisos de Accesibilidad y Grabación de pantalla." } },
+        "fil" : { "stringUnit" : { "state" : "translated", "value" : "Kailangan ng Preview sa Dock ang pahintulot sa Accessibility at Pag-record ng Screen." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "L’aperçu du Dock nécessite les autorisations Accessibilité et Enregistrement de l’écran." } },
+        "hr" : { "stringUnit" : { "state" : "translated", "value" : "Pregled prozora u Docku zahtijeva dopuštenja za pristupačnost i snimanje zaslona." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Anteprima Dock richiede le autorizzazioni Accessibilità e Registrazione schermo." } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Dockプレビューにはアクセシビリティと画面収録の許可が必要です。" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "Dock 미리보기에는 손쉬운 사용 및 화면 기록 권한이 필요합니다." } },
+        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Dock-voorvertoning vereist toegang tot Toegankelijkheid en Schermopname." } },
+        "pl" : { "stringUnit" : { "state" : "translated", "value" : "Podgląd Docka wymaga uprawnień Dostępność i Nagrywanie ekranu." } },
+        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "A Prévia do Dock requer permissões de Acessibilidade e Gravação de Tela." } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Для предпросмотра Dock нужен доступ к Универсальному доступу и записи экрана." } },
+        "sk" : { "stringUnit" : { "state" : "translated", "value" : "Náhľad okien v Docku vyžaduje prístup k Prístupnosti a Nahrávaniu obrazovky." } },
+        "so" : { "stringUnit" : { "state" : "translated", "value" : "Hordhaca Dock wuxuu u baahan yahay oggolaanshaha Helitaanka iyo Duubista Shaashadda." } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Dock Önizlemesi için Erişilebilirlik ve Ekran Kaydı izinleri gerekir." } },
+        "uk" : { "stringUnit" : { "state" : "translated", "value" : "Для перегляду Dock потрібні дозволи Універсального доступу та запису екрана." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "程序坞预览需要辅助功能和屏幕录制权限。" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "Dock 預覽需要輔助使用和螢幕錄製權限。" } }
+      }
+    },
+    "Window preview unavailable" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : { "stringUnit" : { "state" : "translated", "value" : "Náhled okna není k dispozici" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Fenstervorschau nicht verfügbar" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Window preview unavailable" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Vista previa de ventana no disponible" } },
+        "fil" : { "stringUnit" : { "state" : "translated", "value" : "Hindi available ang preview ng window" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Aperçu de la fenêtre indisponible" } },
+        "hr" : { "stringUnit" : { "state" : "translated", "value" : "Pregled prozora nije dostupan" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Anteprima finestra non disponibile" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "ウインドウのプレビューを表示できません" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "윈도우 미리보기를 사용할 수 없음" } },
+        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Venstervoorvertoning niet beschikbaar" } },
+        "pl" : { "stringUnit" : { "state" : "translated", "value" : "Podgląd okna niedostępny" } },
+        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Prévia da janela indisponível" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Предпросмотр окна недоступен" } },
+        "sk" : { "stringUnit" : { "state" : "translated", "value" : "Náhľad okna nie je k dispozícii" } },
+        "so" : { "stringUnit" : { "state" : "translated", "value" : "Hordhaca daaqadda lama heli karo" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Pencere önizlemesi kullanılamıyor" } },
+        "uk" : { "stringUnit" : { "state" : "translated", "value" : "Попередній перегляд вікна недоступний" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "无法预览窗口" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "無法預覽視窗" } }
+      }
+    },
+    "Unable to activate window" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : { "stringUnit" : { "state" : "translated", "value" : "Okno nelze aktivovat" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Fenster kann nicht aktiviert werden" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Unable to activate window" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "No se puede activar la ventana" } },
+        "fil" : { "stringUnit" : { "state" : "translated", "value" : "Hindi ma-activate ang window" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Impossible d’activer la fenêtre" } },
+        "hr" : { "stringUnit" : { "state" : "translated", "value" : "Nije moguće aktivirati prozor" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Impossibile attivare la finestra" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "ウインドウをアクティブにできません" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "윈도우를 활성화할 수 없음" } },
+        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Venster kan niet worden geactiveerd" } },
+        "pl" : { "stringUnit" : { "state" : "translated", "value" : "Nie można aktywować okna" } },
+        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Não é possível ativar a janela" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Не удалось активировать окно" } },
+        "sk" : { "stringUnit" : { "state" : "translated", "value" : "Okno sa nedá aktivovať" } },
+        "so" : { "stringUnit" : { "state" : "translated", "value" : "Daaqadda lama hawlgelin karo" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Pencere etkinleştirilemiyor" } },
+        "uk" : { "stringUnit" : { "state" : "translated", "value" : "Не вдалося активувати вікно" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "无法激活窗口" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "無法啟用視窗" } }
+      }
+    },
     "Audio" : {
       "extractionState" : "manual",
       "localizations" : {

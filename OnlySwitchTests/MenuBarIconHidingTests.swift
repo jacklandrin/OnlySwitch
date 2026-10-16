@@ -1,5 +1,6 @@
 import AppKit
 @preconcurrency import ApplicationServices
+import Defines
 import Foundation
 import Testing
 @testable import OnlySwitch

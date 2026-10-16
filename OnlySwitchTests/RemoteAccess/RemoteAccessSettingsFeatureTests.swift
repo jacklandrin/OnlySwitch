@@ -39,7 +39,7 @@ struct RemoteAccessSettingsFeatureTests {
             $0.isEnabled = true
             $0.hostStatus = .starting
         }
-        await store.receive(.hostStarted)
+        await store.receive(\.hostStarted)
 
         #expect(await recorder.enabledValues == [true])
         #expect(await recorder.startedNames == ["Studio Mac"])
@@ -64,7 +64,7 @@ struct RemoteAccessSettingsFeatureTests {
         await store.send(.startPairingTapped) {
             $0.isPairingRequestInFlight = true
         }
-        await store.receive(.pairingStarted(recorder.pairingWindow)) {
+        await store.receive(\.pairingStarted) {
             $0.isPairingRequestInFlight = false
             $0.pairingCode = "ABCDEFGH2345"
             $0.pairingExpiresAt = now.addingTimeInterval(2)
@@ -75,7 +75,7 @@ struct RemoteAccessSettingsFeatureTests {
             $0.pairingExpiresAt = nil
             $0.pairingSecondsRemaining = 0
         }
-        await store.receive(.pairingCancelled)
+        await store.receive(\.pairingCancelled)
 
         #expect(await recorder.cancelPairingCount == 1)
         #expect(await recorder.enabledValues.isEmpty)
@@ -96,13 +96,13 @@ struct RemoteAccessSettingsFeatureTests {
         }
 
         await store.send(.task)
-        await store.receive(.devicesResponse(.success([])))
+        await store.receive(\.devicesResponse)
         continuation.yield(.statusChanged(.listening(port: 9_999)))
-        await store.receive(.hostEvent(.statusChanged(.listening(port: 9_999)))) {
+        await store.receive(\.hostEvent) {
             $0.hostStatus = .listening(port: 9_999)
         }
         continuation.yield(.connectionCountChanged(2))
-        await store.receive(.hostEvent(.connectionCountChanged(2))) {
+        await store.receive(\.hostEvent) {
             $0.connectionCount = 2
         }
         continuation.yield(.devicesChanged([
@@ -114,15 +114,7 @@ struct RemoteAccessSettingsFeatureTests {
                 lastConnectedAt: lastConnectedAt
             )
         ]))
-        await store.receive(.hostEvent(.devicesChanged([
-            PairedRemoteDevice(
-                id: deviceID,
-                name: "My iPad",
-                credential: Data(repeating: 7, count: 32),
-                createdAt: .distantPast,
-                lastConnectedAt: lastConnectedAt
-            )
-        ]))) {
+        await store.receive(\.hostEvent) {
             $0.pairedDevices = [
                 .init(id: deviceID, name: "My iPad", lastConnectedAt: lastConnectedAt)
             ]
@@ -152,10 +144,10 @@ struct RemoteAccessSettingsFeatureTests {
             $0.displayName = "Studio Mac"
         }
         await clock.advance(by: .milliseconds(350))
-        await store.receive(.commitDisplayName) {
+        await store.receive(\.commitDisplayName) {
             $0.hostStatus = .starting
         }
-        await store.receive(.hostStarted)
+        await store.receive(\.hostStarted)
 
         #expect(await recorder.displayNameValues == ["Studio Mac"])
         #expect(await recorder.startedNames == ["Studio Mac"])
@@ -177,7 +169,7 @@ struct RemoteAccessSettingsFeatureTests {
             $0.displayName = "  Desk Mac  "
         }
         await clock.advance(by: .milliseconds(350))
-        await store.receive(.commitDisplayName)
+        await store.receive(\.commitDisplayName)
 
         #expect(await recorder.displayNameValues == ["Desk Mac"])
         #expect(await recorder.startedNames.isEmpty)
@@ -203,9 +195,9 @@ struct RemoteAccessSettingsFeatureTests {
         await store.send(.setEnabled(false)) {
             $0.isEnabled = false
         }
-        await store.receive(.hostStopped)
+        await store.receive(\.hostStopped)
         await clock.advance(by: .milliseconds(350))
-        await store.receive(.commitDisplayName)
+        await store.receive(\.commitDisplayName)
 
         #expect(await recorder.displayNameValues == ["New Mac"])
         #expect(await recorder.startedNames.isEmpty)
@@ -248,7 +240,7 @@ struct RemoteAccessSettingsFeatureTests {
             $0.isPairingRequestInFlight = false
         }
         gateContinuation.finish()
-        await store.receive(.hostStopped)
+        await store.receive(\.hostStopped)
         await store.finish()
     }
 
@@ -266,7 +258,7 @@ struct RemoteAccessSettingsFeatureTests {
             $0.isEnabled = true
             $0.hostStatus = .starting
         }
-        await store.receive(.hostFailed("Test operation failed")) {
+        await store.receive(\.hostFailed) {
             $0.hostStatus = .failed("Test operation failed")
             $0.alert = .error("Test operation failed")
         }
@@ -373,7 +365,7 @@ struct RemoteAccessSettingsFeatureTests {
             $0.alert = nil
             $0.revokingDeviceIDs.insert(deviceID)
         }
-        await store.receive(.revokeResponse(deviceID, .success([]))) {
+        await store.receive(\.revokeResponse) {
             $0.revokingDeviceIDs.remove(deviceID)
             $0.pairedDevices = []
         }
@@ -395,13 +387,13 @@ struct RemoteAccessSettingsFeatureTests {
         }
 
         await store.send(.copyPairingCodeTapped)
-        await store.receive(.copyPairingCodeResponse(code: "ABCDEFGH2345", succeeded: true)) {
+        await store.receive(\.copyPairingCodeResponse) {
             $0.isPairingCodeCopied = true
         }
         #expect(await pasteboard.values == ["ABCDEFGH2345"])
 
         await clock.advance(by: .seconds(2))
-        await store.receive(.clearPairingCodeCopied) {
+        await store.receive(\.clearPairingCodeCopied) {
             $0.isPairingCodeCopied = false
         }
     }
@@ -431,7 +423,7 @@ struct RemoteAccessSettingsFeatureTests {
         }
 
         await store.send(.copyPairingCodeTapped)
-        await store.receive(.copyPairingCodeResponse(code: "ABCDEFGH2345", succeeded: false)) {
+        await store.receive(\.copyPairingCodeResponse) {
             $0.alert = .error("The pairing code couldn’t be copied.")
         }
         #expect(store.state.pairingCode == "ABCDEFGH2345")
@@ -467,7 +459,7 @@ struct RemoteAccessSettingsFeatureTests {
             $0.pairingSecondsRemaining = 60
         }
         await pasteboard.respond(succeeded: true)
-        await store.receive(.copyPairingCodeResponse(code: oldCode, succeeded: true))
+        await store.receive(\.copyPairingCodeResponse)
 
         #expect(store.state.isPairingCodeCopied == false)
         #expect(store.state.alert == nil)
@@ -477,7 +469,7 @@ struct RemoteAccessSettingsFeatureTests {
             $0.pairingExpiresAt = nil
             $0.pairingSecondsRemaining = 0
         }
-        await store.receive(.pairingCancelled)
+        await store.receive(\.pairingCancelled)
         #expect(await recorder.cancelPairingCount == 1)
     }
 
@@ -515,7 +507,7 @@ struct RemoteAccessSettingsFeatureTests {
             $0.pairingExpiresAt = nil
             $0.pairingSecondsRemaining = 0
         }
-        await store.receive(.pairingCancelled)
+        await store.receive(\.pairingCancelled)
         #expect(await recorder.cancelPairingCount == 1)
     }
 
@@ -554,7 +546,7 @@ struct RemoteAccessSettingsFeatureTests {
             $0.pairingSecondsRemaining = 0
             $0.isPairingCodeCopied = false
         }
-        await store.receive(.pairingCancelled)
+        await store.receive(\.pairingCancelled)
         #expect(await recorder.cancelPairingCount == 1)
     }
 }

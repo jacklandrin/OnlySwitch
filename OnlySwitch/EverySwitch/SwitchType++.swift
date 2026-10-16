@@ -101,6 +101,8 @@ extension SwitchType {
             return SystemMonitorSwitch()
         case .aphrodite:
             return AphroditeSwitch()
+        case .dockPreview:
+            return DockPreviewSwitch()
         }
     }
     

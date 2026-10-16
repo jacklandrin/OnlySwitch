@@ -4,7 +4,6 @@
 //
 
 import Dependencies
-import Synchronization
 import Testing
 @testable import OnlySwitch
 
@@ -25,7 +24,7 @@ struct PrivilegedOperationClientTests {
 
     @Test
     func performDoesNotRegisterHelperAsASideEffect() async {
-        let registrations = Mutex(0)
+        let registrations = TestMutex(0)
         let client = PrivilegedOperationClient(
             status: { .notInstalled },
             installFromInteractiveUI: { registrations.withLock { $0 += 1 } },

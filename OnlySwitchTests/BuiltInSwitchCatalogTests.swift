@@ -1,4 +1,5 @@
 import Foundation
+import Extensions
 import Switches
 import Testing
 @testable import OnlySwitch
@@ -38,7 +39,10 @@ struct BuiltInSwitchCatalogTests {
         let keys = [
             "Built-In", "Search Built-In Switches", "No Built-In Switches Found",
             "Audio", "Display & Appearance", "Desktop & Finder",
-            "Cleanup & Storage", "Productivity & Tools", "Other"
+            "Cleanup & Storage", "Productivity & Tools", "Other",
+            "Dock Preview",
+            "Dock Preview requires Accessibility and Screen Recording permissions.",
+            "Window preview unavailable", "Unable to activate window"
         ]
         let catalog = try localizationCatalog()
         let supportedLanguages: Set<String> = [
@@ -90,6 +94,37 @@ struct BuiltInSwitchCatalogTests {
         #expect(audio.types.contains(.muteMicrophone))
         #expect(audio.types.contains(.soundMixer))
         #expect(audio.types.contains(.applemusic))
+    }
+
+    @Test("Dock Preview is listed with Desktop & Finder switches")
+    func dockPreviewIsInDesktopAndFinder() {
+        #expect(BuiltInSwitchCatalog.section(for: .dockPreview) == .desktopAndFinder)
+        #expect(SwitchType.dockPreview.barInfo().title == "Dock Preview")
+        #expect(SwitchType.dockPreview.barInfo().controlType == .Switch)
+    }
+
+    @MainActor
+    @Test("Dock Preview switch controls enabled intent without changing card visibility")
+    func dockPreviewSwitchPreservesCustomizeVisibility() async throws {
+        let suite = "DockPreviewSwitchTests.\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        SwitchVisibilityState.setVisibleTypes([.darkMode], in: defaults)
+
+        let control = DockPreviewSwitch(
+            enabled: { defaults.bool(forKey: UserDefaults.Key.dockPreviewEnabled) },
+            setEnabled: { defaults.set($0, forKey: UserDefaults.Key.dockPreviewEnabled) }
+        )
+        #expect(control.type == .dockPreview)
+        #expect(await control.currentStatus() == false)
+
+        try await control.operateSwitch(isOn: true)
+        #expect(await control.currentStatus())
+        #expect(SwitchVisibilityState.visibleTypes(from: defaults) == [.darkMode])
+
+        try await control.operateSwitch(isOn: false)
+        #expect(await control.currentStatus() == false)
+        #expect(SwitchVisibilityState.visibleTypes(from: defaults) == [.darkMode])
     }
 
     @Test("Search matches the injected current-language title")

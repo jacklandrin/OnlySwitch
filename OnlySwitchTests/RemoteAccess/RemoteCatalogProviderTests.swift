@@ -101,7 +101,8 @@ final class RemoteCatalogProviderTests: XCTestCase {
             evolutions: { [evolution] }
         )
 
-        let descriptor = try XCTUnwrap(try await provider.catalog().first)
+        let catalog = try await provider.catalog()
+        let descriptor = try XCTUnwrap(catalog.first)
 
         XCTAssertFalse(descriptor.isAvailable)
         XCTAssertEqual(descriptor.unavailableReason, "This Evolution is missing its on, off, or status command")
@@ -176,10 +177,8 @@ final class RemoteCatalogProviderTests: XCTestCase {
 }
 
 @MainActor
-@Test func localOnlyAphroditeSwitchIsExcludedFromTheRemoteBuiltInCatalog() async throws {
-    let types = RemoteCatalogProvider.remoteBuiltIns(from: SwitchType.allCases)
-    #expect(types.contains(.aphrodite) == false)
-
+@Test func localOnlySwitchesAreExcludedFromTheRemoteBuiltInCatalog() async throws {
+    let types: [SwitchType] = [.aphrodite, .dockPreview, .darkMode]
     let provider = RemoteCatalogProvider(
         builtIns: { types },
         makeBuiltIn: { FakeSwitch(type: $0, visible: true) },
@@ -188,5 +187,10 @@ final class RemoteCatalogProviderTests: XCTestCase {
     )
 
     let catalog = try await provider.catalog()
-    #expect(catalog.contains { $0.id == .init(kind: .builtIn, value: String(SwitchType.aphrodite.legacyIdentifier)) } == false)
+    let aphroditeID = RemoteControlID(kind: .builtIn, value: String(SwitchType.aphrodite.legacyIdentifier))
+    let dockPreviewID = RemoteControlID(kind: .builtIn, value: String(SwitchType.dockPreview.legacyIdentifier))
+    let darkModeID = RemoteControlID(kind: .builtIn, value: String(SwitchType.darkMode.legacyIdentifier))
+    #expect(catalog.map(\.id) == [darkModeID])
+    #expect(!catalog.map(\.id).contains(aphroditeID))
+    #expect(!catalog.map(\.id).contains(dockPreviewID))
 }
