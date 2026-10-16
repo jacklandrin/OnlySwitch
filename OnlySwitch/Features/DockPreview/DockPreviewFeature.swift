@@ -27,6 +27,7 @@ struct DockPreviewFeature {
         var authorization = DockPreviewAuthorization.unknown
         var isObserving = false
         var hoverGeneration: UInt64 = 0
+        var hover: DockHoverEvent?
         var preview: Preview?
         var status: Status = .idle
         var showPermissionHelp = false
@@ -84,6 +85,7 @@ struct DockPreviewFeature {
                     let wasEnabled = state.isEnabled
                     state.isEnabled = false
                     state.isObserving = false
+                    state.hover = nil
                     state.preview = nil
                     state.status = .permissionRequired
                     state.showPermissionHelp = requested
@@ -99,7 +101,14 @@ struct DockPreviewFeature {
                 guard state.isEnabled, state.isObserving, state.authorization.isAuthorized else {
                     return .none
                 }
+                if let hover, hover.pid == state.hover?.pid {
+                    state.hover = hover
+                    state.preview?.itemFrame = hover.itemFrame
+                    state.preview?.screenFrame = hover.screenFrame
+                    return .none
+                }
                 state.hoverGeneration &+= 1
+                state.hover = hover
                 state.preview = nil
                 guard let hover else {
                     state.status = .idle
@@ -127,13 +136,14 @@ struct DockPreviewFeature {
             case let .windowsLoaded(generation, hover, result):
                 guard state.isEnabled, state.isObserving,
                       generation == state.hoverGeneration else { return .none }
+                let currentHover = state.hover ?? hover
                 switch result {
                 case let .success(windows) where !windows.isEmpty:
                     state.preview = .init(
                         generation: generation,
-                        appName: hover.appName,
-                        itemFrame: hover.itemFrame,
-                        screenFrame: hover.screenFrame,
+                        appName: currentHover.appName,
+                        itemFrame: currentHover.itemFrame,
+                        screenFrame: currentHover.screenFrame,
                         windows: windows
                     )
                     state.status = .idle
@@ -165,9 +175,9 @@ struct DockPreviewFeature {
                 case .failure:
                     state.preview = .init(
                         generation: generation,
-                        appName: hover.appName,
-                        itemFrame: hover.itemFrame,
-                        screenFrame: hover.screenFrame,
+                        appName: currentHover.appName,
+                        itemFrame: currentHover.itemFrame,
+                        screenFrame: currentHover.screenFrame,
                         windows: []
                     )
                     state.status = .captureFailed
@@ -207,8 +217,15 @@ struct DockPreviewFeature {
                 state.showPermissionHelp = false
                 return .none
 
-            case .escapePressed, .pointerExited:
+            case .escapePressed:
                 state.hoverGeneration &+= 1
+                state.preview = nil
+                state.status = .idle
+                return .merge(.cancel(id: CancelID.catalog), .cancel(id: CancelID.captures))
+
+            case .pointerExited:
+                state.hoverGeneration &+= 1
+                state.hover = nil
                 state.preview = nil
                 state.status = .idle
                 return .merge(.cancel(id: CancelID.catalog), .cancel(id: CancelID.captures))
@@ -253,6 +270,7 @@ struct DockPreviewFeature {
         state.authorization = .unknown
         state.isObserving = false
         state.hoverGeneration &+= 1
+        state.hover = nil
         state.preview = nil
         state.status = .idle
     }

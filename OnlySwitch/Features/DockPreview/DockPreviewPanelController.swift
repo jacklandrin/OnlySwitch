@@ -4,6 +4,11 @@ import Extensions
 import Observation
 import SwiftUI
 
+struct DockPreviewScreenFrame: Equatable, Sendable {
+    let frame: CGRect
+    let visibleFrame: CGRect
+}
+
 @MainActor
 final class DockPreviewPanelController {
     private let store: StoreOf<DockPreviewFeature>
@@ -80,7 +85,10 @@ final class DockPreviewPanelController {
         let frame = Self.frame(
             size: size,
             item: preview.itemFrame,
-            visibleScreen: preview.screenFrame
+            visibleScreen: Self.currentVisibleScreen(
+                for: preview.itemFrame,
+                fallback: preview.screenFrame
+            )
         )
         panel.setFrame(frame, display: true)
         updatePreviewFrame(frame)
@@ -113,6 +121,25 @@ final class DockPreviewPanelController {
         origin.x = min(max(origin.x, visibleScreen.minX), visibleScreen.maxX - size.width)
         origin.y = min(max(origin.y, visibleScreen.minY), visibleScreen.maxY - size.height)
         return CGRect(origin: origin, size: size)
+    }
+
+    static func currentVisibleScreen(for item: CGRect, fallback: CGRect) -> CGRect {
+        resolvedVisibleScreen(
+            for: item,
+            fallback: fallback,
+            screens: NSScreen.screens.map {
+                DockPreviewScreenFrame(frame: $0.frame, visibleFrame: $0.visibleFrame)
+            }
+        )
+    }
+
+    static func resolvedVisibleScreen(
+        for item: CGRect,
+        fallback: CGRect,
+        screens: [DockPreviewScreenFrame]
+    ) -> CGRect {
+        let itemCenter = CGPoint(x: item.midX, y: item.midY)
+        return screens.first(where: { $0.frame.contains(itemCenter) })?.visibleFrame ?? fallback
     }
 }
 

@@ -5,6 +5,126 @@ import Testing
 @MainActor
 struct DockPreviewFeatureTests {
     @Test
+    func permissionRevocationClearsTheCurrentHover() async {
+        let hover = DockHoverEvent(pid: 42, appName: "TextEdit", itemFrame: .zero, screenFrame: .zero)
+        let store = TestStore(initialState: DockPreviewFeature.State(
+            isEnabled: true, authorization: .authorized, isObserving: true, hover: hover
+        )) { DockPreviewFeature() }
+
+        await store.send(.authorizationChanged(.unknown, requested: false)) {
+            $0.isEnabled = false
+            $0.authorization = .unknown
+            $0.isObserving = false
+            $0.hover = nil
+            $0.status = .permissionRequired
+        }
+        await store.finish()
+    }
+
+    @Test
+    func firstHoverWaitsForDockRevealToSettle() {
+        var stabilizer = DockHoverStabilizer()
+        var hover = DockHoverEvent(
+            pid: 42, appName: "TextEdit",
+            itemFrame: CGRect(x: 500, y: -40, width: 64, height: 64),
+            screenFrame: CGRect(x: 0, y: 0, width: 1_440, height: 900)
+        )
+        #expect(stabilizer.update(hover) == .unchanged)
+        hover.itemFrame.origin.y = -10
+        #expect(stabilizer.update(hover) == .unchanged)
+        hover.itemFrame.origin.y = 16
+        #expect(stabilizer.update(hover) == .unchanged)
+        #expect(stabilizer.update(hover) == .unchanged)
+        #expect(stabilizer.update(hover) == .changed(hover))
+        #expect(stabilizer.update(hover) == .unchanged)
+
+        hover.itemFrame.size.height = 96
+        #expect(stabilizer.update(hover) == .unchanged)
+        #expect(stabilizer.update(hover) == .unchanged)
+        #expect(stabilizer.update(hover) == .changed(hover))
+        #expect(stabilizer.update(nil) == .changed(nil))
+        #expect(stabilizer.update(hover) == .unchanged)
+    }
+
+    @Test
+    func leavingBeforeDockSettlesNeverShowsAPreview() {
+        var stabilizer = DockHoverStabilizer()
+        let hover = DockHoverEvent(pid: 42, appName: "TextEdit", itemFrame: .zero, screenFrame: .zero)
+        #expect(stabilizer.update(hover) == .unchanged)
+        #expect(stabilizer.update(nil) == .unchanged)
+        #expect(stabilizer.update(hover) == .unchanged)
+        #expect(stabilizer.update(hover) == .unchanged)
+        #expect(stabilizer.update(hover) == .changed(hover))
+    }
+
+    @Test
+    func exitGraceDoesNotCountAsStableDockGeometry() {
+        var stabilizer = DockHoverStabilizer()
+        let hover = DockHoverEvent(pid: 42, appName: "TextEdit", itemFrame: .zero, screenFrame: .zero)
+        #expect(stabilizer.update(hover) == .unchanged)
+        for _ in 0..<5 {
+            #expect(stabilizer.update(hover, isDirectHit: false) == .unchanged)
+        }
+        #expect(stabilizer.update(hover) == .unchanged)
+        #expect(stabilizer.update(hover) == .unchanged)
+        #expect(stabilizer.update(hover) == .changed(hover))
+        #expect(stabilizer.update(hover, isDirectHit: false) == .unchanged)
+        #expect(stabilizer.update(nil) == .changed(nil))
+    }
+
+    @Test
+    func sameAppGeometryMovesPreviewWithoutReloadingWindows() async {
+        let original = DockHoverEvent(pid: 42, appName: "TextEdit", itemFrame: .zero, screenFrame: .zero)
+        var moved = original
+        moved.itemFrame = CGRect(x: 500, y: 16, width: 96, height: 96)
+        let window = DockPreviewWindow(
+            id: 1, title: "Document", pid: 42, frame: .zero,
+            isActivatable: true, thumbnailData: Data([1, 2, 3])
+        )
+        let store = TestStore(initialState: DockPreviewFeature.State(
+            isEnabled: true, authorization: .authorized, isObserving: true,
+            hoverGeneration: 1, hover: original,
+            preview: .init(generation: 1, appName: original.appName,
+                           itemFrame: original.itemFrame, screenFrame: original.screenFrame,
+                           windows: [window])
+        )) { DockPreviewFeature() }
+
+        await store.send(.hovered(moved)) {
+            $0.hover = moved
+            $0.preview?.itemFrame = moved.itemFrame
+        }
+        #expect(store.state.preview?.windows == [window])
+        #expect(store.state.hoverGeneration == 1)
+        await store.finish()
+    }
+
+    @Test
+    func catalogResultUsesLatestGeometryAndDismissalSurvivesMovement() async {
+        let original = DockHoverEvent(pid: 42, appName: "TextEdit", itemFrame: .zero, screenFrame: .zero)
+        var moved = original
+        moved.itemFrame = CGRect(x: 500, y: 16, width: 96, height: 96)
+        let store = TestStore(initialState: DockPreviewFeature.State(
+            isEnabled: true, authorization: .authorized, isObserving: true,
+            hoverGeneration: 1, hover: original, status: .loading
+        )) { DockPreviewFeature() }
+
+        await store.send(.hovered(moved)) { $0.hover = moved }
+        await store.send(.windowsLoaded(generation: 1, hover: original, result: .failure(.windowListing))) {
+            $0.preview = .init(generation: 1, appName: moved.appName,
+                               itemFrame: moved.itemFrame, screenFrame: moved.screenFrame, windows: [])
+            $0.status = .captureFailed
+        }
+        await store.send(.escapePressed) {
+            $0.hoverGeneration = 2
+            $0.preview = nil
+            $0.status = .idle
+        }
+        moved.itemFrame.origin.x += 10
+        await store.send(.hovered(moved)) { $0.hover = moved }
+        await store.finish()
+    }
+
+    @Test
     func enablingRequestsAuthorizationAndRemainsStoppedWhenDenied() async {
         let store = TestStore(initialState: DockPreviewFeature.State()) {
             DockPreviewFeature()
@@ -178,5 +298,30 @@ struct DockPreviewFeatureTests {
         #expect(frame.minX == 48)
         #expect(frame.minY >= 40)
         #expect(frame.maxY <= 600)
+    }
+
+    @Test
+    func autoHiddenBottomDockUsesTheCurrentVisibleScreenBoundary() {
+        let item = CGRect(x: 500, y: 16, width: 64, height: 16)
+        let visibleScreenAfterDockAppears = CGRect(x: 0, y: 88, width: 1_440, height: 812)
+        let visibleScreen = DockPreviewPanelController.resolvedVisibleScreen(
+            for: item,
+            fallback: CGRect(x: 0, y: 0, width: 1_440, height: 900),
+            screens: [
+                .init(
+                    frame: CGRect(x: 0, y: 0, width: 1_440, height: 900),
+                    visibleFrame: visibleScreenAfterDockAppears
+                )
+            ]
+        )
+
+        let frame = DockPreviewPanelController.frame(
+            size: CGSize(width: 240, height: 164),
+            item: item,
+            visibleScreen: visibleScreen
+        )
+
+        #expect(frame.minY == visibleScreenAfterDockAppears.minY)
+        #expect(frame.maxY <= visibleScreenAfterDockAppears.maxY)
     }
 }

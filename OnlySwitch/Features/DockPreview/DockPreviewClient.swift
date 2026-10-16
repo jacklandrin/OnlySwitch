@@ -80,14 +80,18 @@ private final class DockPreviewRuntime {
         observationTask?.cancel()
         lastHover = nil
 
-        return AsyncStream { continuation in
+        return AsyncStream(bufferingPolicy: .bufferingNewest(1)) { continuation in
             let task = Task { @MainActor [weak self] in
                 defer { continuation.finish() }
+                var stabilizer = DockHoverStabilizer()
                 while !Task.isCancelled {
-                    let event = self?.resolvedHover(at: CGEvent(source: nil)?.location)
-                    let changedApp = event?.pid != self?.lastHover?.pid
+                    let directHit = self?.dockHover(at: CGEvent(source: nil)?.location)
+                    let event = self?.resolvedHover(dockHover: directHit)
                     self?.lastHover = event
-                    if changedApp {
+                    if case let .changed(event) = stabilizer.update(
+                        event,
+                        isDirectHit: directHit != nil
+                    ) {
                         continuation.yield(event)
                     }
                     do {
@@ -203,8 +207,8 @@ private final class DockPreviewRuntime {
         }
     }
 
-    private func resolvedHover(at point: CGPoint?) -> DockHoverEvent? {
-        if let hover = dockHover(at: point) {
+    private func resolvedHover(dockHover: DockHoverEvent?) -> DockHoverEvent? {
+        if let hover = dockHover {
             pendingExitSince = nil
             return hover
         }
