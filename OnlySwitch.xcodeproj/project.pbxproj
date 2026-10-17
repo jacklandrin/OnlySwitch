@@ -18,9 +18,6 @@
 		0406EDD32ACB664D0015F4D0 /* EvolutionGalleryService+Live.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406EDD22ACB664D0015F4D0 /* EvolutionGalleryService+Live.swift */; };
 		040C6EAA276B7D4500291DEB /* CustomizeVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040C6EA9276B7D4500291DEB /* CustomizeVM.swift */; };
 		040C6EAC276B7D9F00291DEB /* CustomizeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040C6EAB276B7D9F00291DEB /* CustomizeView.swift */; };
-		B1C100000000000000000002 /* BuiltInSwitchCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C100000000000000000001 /* BuiltInSwitchCatalog.swift */; };
-		B1C100000000000000000005 /* BuiltInSwitchCatalogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C100000000000000000004 /* BuiltInSwitchCatalogTests.swift */; };
-		C1A0F1000000000000000002 /* TestMutex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0F1000000000000000001 /* TestMutex.swift */; };
 		040E97272760FF3E003D9D42 /* MetadataExtractorError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040E97262760FF3E003D9D42 /* MetadataExtractorError.swift */; };
 		041927682AEBFFA60041185B /* CBTrueToneClient++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041927672AEBFFA60041185B /* CBTrueToneClient++.swift */; };
 		0419276B2AEC124B0041185B /* KeyboardShortcutsDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0419276A2AEC124B0041185B /* KeyboardShortcutsDefine.swift */; };
@@ -69,87 +66,45 @@
 		04447B722754FE3800CD2900 /* SwitchListVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B712754FE3800CD2900 /* SwitchListVM.swift */; };
 		04447B7627550F6900CD2900 /* VisualEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B7527550F6900CD2900 /* VisualEffectView.swift */; };
 		04447B782755129D00CD2900 /* EventMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B772755129D00CD2900 /* EventMonitor.swift */; };
-		0444D5CF283683D800327D0B /* SystemInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0427B25A275D786400AD783A /* SystemInfo.swift */; };
-		0444D5D0283683DF00327D0B /* GitHubReleaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F118C327AED8BC005DA861 /* GitHubReleaseModel.swift */; };
-		0444D5D92836F1BA00327D0B /* CurrentScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E2AD1D2783B63600BC5DF3 /* CurrentScreen.swift */; };
-		0444D5DB2836F1DC00327D0B /* MetadataExtractorError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040E97262760FF3E003D9D42 /* MetadataExtractorError.swift */; };
 		0444D5E32838611600327D0B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 043E5D6C2757DADB00ADC004 /* AVFoundation.framework */; };
-		0444D5E72839315A00327D0B /* BluetoothDevicesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E03AFD275EA4EF00EA5FB9 /* BluetoothDevicesManager.swift */; };
 		0444D5EB28393FF800327D0B /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0444D5EA28393FF800327D0B /* Info.plist */; };
-		0444D5EF2839471100327D0B /* UserDefaultValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140B7277884EE005B160B /* UserDefaultValue.swift */; };
-		0447E3522B71746E00D07B9A /* MuteMicSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3452B71746D00D07B9A /* MuteMicSwitch.swift */; };
 		0447E3532B71746E00D07B9A /* MuteMicSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3452B71746D00D07B9A /* MuteMicSwitch.swift */; };
-		0447E3542B71746E00D07B9A /* AirPodsSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E33F2B71746C00D07B9A /* AirPodsSwitch.swift */; };
 		0447E3552B71746E00D07B9A /* AirPodsSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E33F2B71746C00D07B9A /* AirPodsSwitch.swift */; };
-		0447E3562B71746E00D07B9A /* DarkModeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3472B71746D00D07B9A /* DarkModeSwitch.swift */; };
 		0447E3572B71746E00D07B9A /* DarkModeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3472B71746D00D07B9A /* DarkModeSwitch.swift */; };
-		0447E3582B71746E00D07B9A /* ShowFinderPathbarSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3322B71746B00D07B9A /* ShowFinderPathbarSwitch.swift */; };
 		0447E3592B71746E00D07B9A /* ShowFinderPathbarSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3322B71746B00D07B9A /* ShowFinderPathbarSwitch.swift */; };
-		0447E35A2B71746E00D07B9A /* FKeySwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3342B71746C00D07B9A /* FKeySwitch.swift */; };
 		0447E35B2B71746E00D07B9A /* FKeySwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3342B71746C00D07B9A /* FKeySwitch.swift */; };
-		0447E35C2B71746E00D07B9A /* DockRecentSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E34E2B71746D00D07B9A /* DockRecentSwitch.swift */; };
 		0447E35D2B71746E00D07B9A /* DockRecentSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E34E2B71746D00D07B9A /* DockRecentSwitch.swift */; };
-		0447E35E2B71746E00D07B9A /* AppleMusicSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3382B71746C00D07B9A /* AppleMusicSwitch.swift */; };
 		0447E35F2B71746E00D07B9A /* AppleMusicSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3382B71746C00D07B9A /* AppleMusicSwitch.swift */; };
-		0447E3602B71746E00D07B9A /* ShowExtensionNameSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3372B71746C00D07B9A /* ShowExtensionNameSwitch.swift */; };
 		0447E3612B71746E00D07B9A /* ShowExtensionNameSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3372B71746C00D07B9A /* ShowExtensionNameSwitch.swift */; };
-		0447E3622B71746E00D07B9A /* XcodeCacheSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E34D2B71746D00D07B9A /* XcodeCacheSwitch.swift */; };
 		0447E3632B71746E00D07B9A /* XcodeCacheSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E34D2B71746D00D07B9A /* XcodeCacheSwitch.swift */; };
-		0447E3642B71746E00D07B9A /* BackNoisesSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E33D2B71746C00D07B9A /* BackNoisesSwitch.swift */; };
 		0447E3652B71746E00D07B9A /* BackNoisesSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E33D2B71746C00D07B9A /* BackNoisesSwitch.swift */; };
-		0447E3662B71746E00D07B9A /* DimScreenSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3312B71746B00D07B9A /* DimScreenSwitch.swift */; };
 		0447E3672B71746E00D07B9A /* DimScreenSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3312B71746B00D07B9A /* DimScreenSwitch.swift */; };
-		0447E3682B71746E00D07B9A /* ScreenSaverSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3362B71746C00D07B9A /* ScreenSaverSwitch.swift */; };
 		0447E3692B71746E00D07B9A /* ScreenSaverSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3362B71746C00D07B9A /* ScreenSaverSwitch.swift */; };
-		0447E36A2B71746E00D07B9A /* TrueToneSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E34B2B71746D00D07B9A /* TrueToneSwitch.swift */; };
 		0447E36B2B71746E00D07B9A /* TrueToneSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E34B2B71746D00D07B9A /* TrueToneSwitch.swift */; };
-		0447E36C2B71746E00D07B9A /* NightShiftSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3502B71746D00D07B9A /* NightShiftSwitch.swift */; };
 		0447E36D2B71746E00D07B9A /* NightShiftSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3502B71746D00D07B9A /* NightShiftSwitch.swift */; };
-		0447E36E2B71746E00D07B9A /* EjectDiscsSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3442B71746D00D07B9A /* EjectDiscsSwitch.swift */; };
 		0447E36F2B71746E00D07B9A /* EjectDiscsSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3442B71746D00D07B9A /* EjectDiscsSwitch.swift */; };
-		0447E3702B71746E00D07B9A /* AutohideMenuBarSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E33C2B71746C00D07B9A /* AutohideMenuBarSwitch.swift */; };
 		0447E3712B71746E00D07B9A /* AutohideMenuBarSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E33C2B71746C00D07B9A /* AutohideMenuBarSwitch.swift */; };
-		0447E3722B71746E00D07B9A /* SmallLaunchpadIconSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E33E2B71746C00D07B9A /* SmallLaunchpadIconSwitch.swift */; };
 		0447E3732B71746E00D07B9A /* SmallLaunchpadIconSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E33E2B71746C00D07B9A /* SmallLaunchpadIconSwitch.swift */; };
-		0447E3742B71746E00D07B9A /* MuteSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3402B71746C00D07B9A /* MuteSwitch.swift */; };
 		0447E3752B71746E00D07B9A /* MuteSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3402B71746C00D07B9A /* MuteSwitch.swift */; };
-		0447E3762B71746E00D07B9A /* BluetoothSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3352B71746C00D07B9A /* BluetoothSwitch.swift */; };
 		0447E3772B71746E00D07B9A /* BluetoothSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3352B71746C00D07B9A /* BluetoothSwitch.swift */; };
-		0447E3782B71746E00D07B9A /* EmptyTrashSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3412B71746C00D07B9A /* EmptyTrashSwitch.swift */; };
 		0447E3792B71746E00D07B9A /* EmptyTrashSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3412B71746C00D07B9A /* EmptyTrashSwitch.swift */; };
-		0447E37A2B71746E00D07B9A /* TopStickerSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3432B71746D00D07B9A /* TopStickerSwitch.swift */; };
 		0447E37B2B71746E00D07B9A /* TopStickerSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3432B71746D00D07B9A /* TopStickerSwitch.swift */; };
-		0447E37C2B71746E00D07B9A /* RadioStationSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3422B71746D00D07B9A /* RadioStationSwitch.swift */; };
 		0447E37D2B71746E00D07B9A /* RadioStationSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3422B71746D00D07B9A /* RadioStationSwitch.swift */; };
-		0447E37E2B71746E00D07B9A /* HideWindowsSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E34A2B71746D00D07B9A /* HideWindowsSwitch.swift */; };
 		0447E37F2B71746E00D07B9A /* HideWindowsSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E34A2B71746D00D07B9A /* HideWindowsSwitch.swift */; };
-		0447E3802B71746E00D07B9A /* KeepAwakeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E32F2B71746B00D07B9A /* KeepAwakeSwitch.swift */; };
 		0447E3812B71746E00D07B9A /* KeepAwakeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E32F2B71746B00D07B9A /* KeepAwakeSwitch.swift */; };
-		0447E3822B71746E00D07B9A /* ShowUserLibrarySwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3482B71746D00D07B9A /* ShowUserLibrarySwitch.swift */; };
 		0447E3832B71746E00D07B9A /* ShowUserLibrarySwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3482B71746D00D07B9A /* ShowUserLibrarySwitch.swift */; };
-		0447E3842B71746E00D07B9A /* PomodoroTimerSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3332B71746C00D07B9A /* PomodoroTimerSwitch.swift */; };
 		0447E3852B71746E00D07B9A /* PomodoroTimerSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3332B71746C00D07B9A /* PomodoroTimerSwitch.swift */; };
-		0447E3862B71746E00D07B9A /* HiddenDesktopSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E34F2B71746D00D07B9A /* HiddenDesktopSwitch.swift */; };
 		0447E3872B71746E00D07B9A /* HiddenDesktopSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E34F2B71746D00D07B9A /* HiddenDesktopSwitch.swift */; };
-		0447E3882B71746E00D07B9A /* EmptyPasteboardSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3512B71746D00D07B9A /* EmptyPasteboardSwitch.swift */; };
 		0447E3892B71746E00D07B9A /* EmptyPasteboardSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3512B71746D00D07B9A /* EmptyPasteboardSwitch.swift */; };
-		0447E38A2B71746E00D07B9A /* AutohideDockSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3492B71746D00D07B9A /* AutohideDockSwitch.swift */; };
 		0447E38B2B71746E00D07B9A /* AutohideDockSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3492B71746D00D07B9A /* AutohideDockSwitch.swift */; };
-		0447E38C2B71746E00D07B9A /* ScreenTestSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3392B71746C00D07B9A /* ScreenTestSwitch.swift */; };
 		0447E38D2B71746E00D07B9A /* ScreenTestSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3392B71746C00D07B9A /* ScreenTestSwitch.swift */; };
-		0447E38E2B71746E00D07B9A /* TopNotchSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E34C2B71746D00D07B9A /* TopNotchSwitch.swift */; };
 		0447E38F2B71746E00D07B9A /* TopNotchSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E34C2B71746D00D07B9A /* TopNotchSwitch.swift */; };
-		0447E3902B71746E00D07B9A /* HiddenFilesSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E33A2B71746C00D07B9A /* HiddenFilesSwitch.swift */; };
 		0447E3912B71746E00D07B9A /* HiddenFilesSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E33A2B71746C00D07B9A /* HiddenFilesSwitch.swift */; };
-		0447E3922B71746E00D07B9A /* SpotifySwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E33B2B71746C00D07B9A /* SpotifySwitch.swift */; };
 		0447E3932B71746E00D07B9A /* SpotifySwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E33B2B71746C00D07B9A /* SpotifySwitch.swift */; };
-		0447E3942B71746E00D07B9A /* LowPowerModeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3302B71746B00D07B9A /* LowPowerModeSwitch.swift */; };
 		0447E3952B71746E00D07B9A /* LowPowerModeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3302B71746B00D07B9A /* LowPowerModeSwitch.swift */; };
-		0447E3962B71746E00D07B9A /* HideMenubarIconsSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3462B71746D00D07B9A /* HideMenubarIconsSwitch.swift */; };
 		0447E3972B71746E00D07B9A /* HideMenubarIconsSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E3462B71746D00D07B9A /* HideMenubarIconsSwitch.swift */; };
 		0447E3992B7174AD00D07B9A /* Switches in Frameworks */ = {isa = PBXBuildFile; productRef = 0447E3982B7174AD00D07B9A /* Switches */; };
 		0447E39B2B7174F000D07B9A /* SwitchType++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E39A2B7174F000D07B9A /* SwitchType++.swift */; };
-		0447E39C2B7174F000D07B9A /* SwitchType++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447E39A2B7174F000D07B9A /* SwitchType++.swift */; };
 		0451765C27C27AFC00006BA0 /* MusicPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0451765B27C27AFC00006BA0 /* MusicPlayer.swift */; };
 		0451766527C283BC00006BA0 /* AppleMusicPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0451766427C283BC00006BA0 /* AppleMusicPlayer.swift */; };
 		0451766B27C284D600006BA0 /* iTunesScripting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0451766727C284D600006BA0 /* iTunesScripting.swift */; };
@@ -183,29 +138,19 @@
 		047C1E4C2A2251280061235D /* EvolutionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E4B2A2251280061235D /* EvolutionView.swift */; };
 		047C1E4F2A22523B0061235D /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 047C1E4E2A22523B0061235D /* ComposableArchitecture */; };
 		047C1E512A22525F0061235D /* EvolutionReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E502A22525F0061235D /* EvolutionReducer.swift */; };
-		047C1E522A2252620061235D /* EvolutionReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E502A22525F0061235D /* EvolutionReducer.swift */; };
 		047C1E592A2255A00061235D /* EvolutionEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E582A2255A00061235D /* EvolutionEditorView.swift */; };
 		047C1E5B2A2255BF0061235D /* EvolutionEditorReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E5A2A2255BF0061235D /* EvolutionEditorReducer.swift */; };
-		047C1E5C2A2255BF0061235D /* EvolutionEditorReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E5A2A2255BF0061235D /* EvolutionEditorReducer.swift */; };
 		047C1E5E2A2262640061235D /* EvolutionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E5D2A2262640061235D /* EvolutionModel.swift */; };
-		047C1E5F2A2262640061235D /* EvolutionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E5D2A2262640061235D /* EvolutionModel.swift */; };
 		047C1E612A22960D0061235D /* EvolutionListService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E602A22960D0061235D /* EvolutionListService.swift */; };
-		047C1E622A22960D0061235D /* EvolutionListService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E602A22960D0061235D /* EvolutionListService.swift */; };
 		047C1E652A2297490061235D /* Evolution+Dependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E642A2297490061235D /* Evolution+Dependencies.swift */; };
-		047C1E662A2297490061235D /* Evolution+Dependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E642A2297490061235D /* Evolution+Dependencies.swift */; };
 		047C1E682A2297DC0061235D /* EvolutionListService+Live.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E672A2297DC0061235D /* EvolutionListService+Live.swift */; };
 		047C1E6A2A2298AB0061235D /* EvolutionListService+Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E692A2298AB0061235D /* EvolutionListService+Test.swift */; };
-		047C1E6B2A2298AB0061235D /* EvolutionListService+Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E692A2298AB0061235D /* EvolutionListService+Test.swift */; };
 		047C1E6E2A22AF840061235D /* EvolutionCommandService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E6D2A22AF840061235D /* EvolutionCommandService.swift */; };
-		047C1E6F2A22AF840061235D /* EvolutionCommandService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E6D2A22AF840061235D /* EvolutionCommandService.swift */; };
 		047C1E712A22AFE20061235D /* EvolutionCommandService+Live.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E702A22AFE20061235D /* EvolutionCommandService+Live.swift */; };
 		047C1E732A22B12E0061235D /* EvolutionCommandService+Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E722A22B12E0061235D /* EvolutionCommandService+Test.swift */; };
-		047C1E742A22B12E0061235D /* EvolutionCommandService+Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E722A22B12E0061235D /* EvolutionCommandService+Test.swift */; };
 		047C1E762A24D1870061235D /* EvolutionCommandEditingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E752A24D1870061235D /* EvolutionCommandEditingView.swift */; };
 		047C1E782A24D2590061235D /* EvolutionCommandEditingReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C1E772A24D2590061235D /* EvolutionCommandEditingReducer.swift */; };
-		047F3A34285DE600004FFCDF /* EffectSoundHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047140B527788486005B160B /* EffectSoundHelper.swift */; };
 		047F3A37285DE67A004FFCDF /* SwitchListApperanceDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047F3A36285DE67A004FFCDF /* SwitchListApperanceDefine.swift */; };
-		047F3A38285DE67A004FFCDF /* SwitchListApperanceDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047F3A36285DE67A004FFCDF /* SwitchListApperanceDefine.swift */; };
 		04819CD22BBC884A00645A0C /* BrightnessControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 04819CCF2BBC884900645A0C /* BrightnessControl.m */; };
 		04819CD32BBC884A00645A0C /* KeyboardManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 04819CD12BBC884A00645A0C /* KeyboardManager.m */; };
 		04819CD52BBC8A6700645A0C /* KeyLightSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04819CD42BBC8A6700645A0C /* KeyLightSwitch.swift */; };
@@ -270,7 +215,6 @@
 		04B25459283C12A800D253E2 /* GeneralModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B25458283C12A800D253E2 /* GeneralModel.swift */; };
 		04B90C642ACF36290039B312 /* EvolutionGalleryContributing.md in Resources */ = {isa = PBXBuildFile; fileRef = 04B90C632ACF36290039B312 /* EvolutionGalleryContributing.md */; };
 		04BC8EC3284FE9B5009E605F /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8EC2284FE9B5009E605F /* Preferences.swift */; };
-		04BC8EC4284FE9B5009E605F /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8EC2284FE9B5009E605F /* Preferences.swift */; };
 		04BC8ECF285008C1009E605F /* RadioSettingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8ECE285008C1009E605F /* RadioSettingModel.swift */; };
 		04BC8ED928513D3A009E605F /* HideMenubarIconsSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8ED828513D3A009E605F /* HideMenubarIconsSettingView.swift */; };
 		04BC8EDB285146BF009E605F /* HideMenubarIconsSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC8EDA285146BF009E605F /* HideMenubarIconsSettingVM.swift */; };
@@ -320,7 +264,6 @@
 		04E562002E2467E6004E0BD0 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 04E561FF2E2467E6004E0BD0 /* Localizable.xcstrings */; };
 		04E562022E2467E6004E0BD0 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 04E562012E2467E6004E0BD0 /* Localizable.xcstrings */; };
 		04E89D5E289B054C00667710 /* IOService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E89D5D289B054C00667710 /* IOService.swift */; };
-		04E89D5F289B054C00667710 /* IOService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E89D5D289B054C00667710 /* IOService.swift */; };
 		04E89D64289C890F00667710 /* PreferencesObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E89D63289C890F00667710 /* PreferencesObserver.swift */; };
 		04E8BE3A2797241F00FF12B7 /* ShortcutsGalleryContributing.md in Resources */ = {isa = PBXBuildFile; fileRef = 04E8BE392797241F00FF12B7 /* ShortcutsGalleryContributing.md */; };
 		04EB1CD02780F36F00C612AB /* ShortcutsSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CCF2780F36F00C612AB /* ShortcutsSettingVM.swift */; };
@@ -330,17 +273,8 @@
 		04F118C427AED8BC005DA861 /* GitHubReleaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F118C327AED8BC005DA861 /* GitHubReleaseModel.swift */; };
 		04F118C627AED8EE005DA861 /* AboutVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F118C527AED8EE005DA861 /* AboutVM.swift */; };
 		04FB3E60288D49E100F3B5E1 /* SettingsWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FB3E5F288D49E100F3B5E1 /* SettingsWindow.swift */; };
-		04FB3E65288D4BDF00F3B5E1 /* SwitchListVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04447B712754FE3800CD2900 /* SwitchListVM.swift */; };
-		04FB3E6E288D547900F3B5E1 /* SwitchBarVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E5D742758208D00ADC004 /* SwitchBarVM.swift */; };
-		04FB3E6F288D548900F3B5E1 /* BarProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A6F9422788807800E3300F /* BarProvider.swift */; };
-		04FB3E70288D549C00F3B5E1 /* SwitchBarModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B25450283BEB8400D253E2 /* SwitchBarModel.swift */; };
-		04FB3E71288D54A500F3B5E1 /* SwitchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04938D0F27692B6900713F1D /* SwitchManager.swift */; };
-		04FB3E72288D54B700F3B5E1 /* SwitchListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B25454283C06C700D253E2 /* SwitchListModel.swift */; };
-		04FB3E73288D54C400F3B5E1 /* ShortcutsBarVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB1CD52781299A00C612AB /* ShortcutsBarVM.swift */; };
-		04FB3E74288D54D700F3B5E1 /* ShortcutsBarModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B25456283C0F8800D253E2 /* ShortcutsBarModel.swift */; };
 		04FC1613283FDE1D00D4A4AC /* ShortcutsSettingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FC1612283FDE1D00D4A4AC /* ShortcutsSettingModel.swift */; };
 		04FC161628402E5000D4A4AC /* ShortcutOnMarket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FC161528402E5000D4A4AC /* ShortcutOnMarket.swift */; };
-		04FC161728402E5200D4A4AC /* ShortcutOnMarket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FC161528402E5000D4A4AC /* ShortcutOnMarket.swift */; };
 		0DDC000000000000000000B2 /* DDCControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC000000000000000000A2 /* DDCControl.m */; };
 		0DDC000000000000000000B3 /* ExternalDisplayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC000000000000000000A3 /* ExternalDisplayManager.swift */; };
 		0DDC000000000000000000B4 /* BrightnessSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC000000000000000000A4 /* BrightnessSyncManager.swift */; };
@@ -349,23 +283,11 @@
 		732FB599FA7E3F9BEEF45DD9 /* SoundMixerPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3552BA772DD63DAD7EE8CF2 /* SoundMixerPanelView.swift */; };
 		A1D0E1092F0A000100BEEF01 /* AuthenticatorSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E00A2F0A000100BEEF01 /* AuthenticatorSwitch.swift */; };
 		A1D0E10A2F0A000100BEEF01 /* SoundMixerSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E00B2F0A000100BEEF01 /* SoundMixerSwitch.swift */; };
-		A1D0E10C2F0A000100BEEF01 /* DesktopPetSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E00C2F0A000100BEEF01 /* DesktopPetSwitch.swift */; };
 		A1D0E10D2F0A000100BEEF01 /* DesktopPetSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E00C2F0A000100BEEF01 /* DesktopPetSwitch.swift */; };
-		D0C000012F0A000100BEEF01 /* DockPreviewSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C000002F0A000100BEEF01 /* DockPreviewSwitch.swift */; };
-		D0C000022F0A000100BEEF01 /* DockPreviewSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C000002F0A000100BEEF01 /* DockPreviewSwitch.swift */; };
-		D0C100000000000000000011 /* DockPreviewModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C100000000000000000001 /* DockPreviewModels.swift */; };
-		D0C100000000000000000012 /* DockPreviewFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C100000000000000000002 /* DockPreviewFeature.swift */; };
-		D0C100000000000000000013 /* DockPreviewClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C100000000000000000003 /* DockPreviewClient.swift */; };
-		D0C100000000000000000014 /* DockPreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C100000000000000000004 /* DockPreviewController.swift */; };
-		D0C100000000000000000015 /* DockPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C100000000000000000005 /* DockPreviewView.swift */; };
-		D0C100000000000000000016 /* DockPreviewPanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C100000000000000000006 /* DockPreviewPanelController.swift */; };
-		D0C100000000000000000017 /* DockPreviewFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C100000000000000000007 /* DockPreviewFeatureTests.swift */; };
-		D0C100000000000000000018 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = D0C100000000000000000008 /* InfoPlist.xcstrings */; };
 		A1D200012F0B000200BEEF01 /* PureColorView in Frameworks */ = {isa = PBXBuildFile; productRef = A1D201012F0B000200BEEF01 /* PureColorView */; };
 		A1D200022F0B000200BEEF01 /* StickerView in Frameworks */ = {isa = PBXBuildFile; productRef = A1D201022F0B000200BEEF01 /* StickerView */; };
 		A1D200032F0B000200BEEF01 /* Authenticator in Frameworks */ = {isa = PBXBuildFile; productRef = A1D201032F0B000200BEEF01 /* Authenticator */; };
 		A93C8BE12ECA34D700D7CE52 /* AICommanderSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93C8BE02ECA34CB00D7CE52 /* AICommanderSwitch.swift */; };
-		A93C8BE22ECA34D700D7CE52 /* AICommanderSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93C8BE02ECA34CB00D7CE52 /* AICommanderSwitch.swift */; };
 		A93C8BE42ECA376900D7CE52 /* OnlyAgent in Frameworks */ = {isa = PBXBuildFile; productRef = A93C8BE32ECA376900D7CE52 /* OnlyAgent */; };
 		A99F5CE9301140740029426A /* onlyswitch.icon in Resources */ = {isa = PBXBuildFile; fileRef = A99F5CE8301140740029426A /* onlyswitch.icon */; };
 		A9A98A412F78834500034ADB /* models.json in Resources */ = {isa = PBXBuildFile; fileRef = A9A98A402F78834500034ADB /* models.json */; };
@@ -375,8 +297,9 @@
 		A9C70D062EE490B3000A2367 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A9C70D052EE490B3000A2367 /* GoogleService-Info.plist */; };
 		A9F007CA2EC3D9BD002D9AB0 /* Design in Frameworks */ = {isa = PBXBuildFile; productRef = A9F007C92EC3D9BD002D9AB0 /* Design */; };
 		AF1000010000000000000001 /* Aphrodite in Frameworks */ = {isa = PBXBuildFile; productRef = AF1000020000000000000001 /* Aphrodite */; };
-		AF1000030000000000000001 /* AphroditeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF1000040000000000000001 /* AphroditeSwitch.swift */; };
 		AF1000050000000000000001 /* AphroditeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF1000040000000000000001 /* AphroditeSwitch.swift */; };
+		B1C100000000000000000002 /* BuiltInSwitchCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C100000000000000000001 /* BuiltInSwitchCatalog.swift */; };
+		B1C100000000000000000005 /* BuiltInSwitchCatalogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C100000000000000000004 /* BuiltInSwitchCatalogTests.swift */; };
 		B210A0000000000000000001 /* RemoteSystemSettingsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B210A0000000000000000021 /* RemoteSystemSettingsClient.swift */; };
 		B220A0000000000000000001 /* RemoteReviewDemoClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B220A0000000000000000021 /* RemoteReviewDemoClient.swift */; };
 		B220A0000000000000000002 /* RemoteAppShellFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = B220A0000000000000000022 /* RemoteAppShellFeature.swift */; };
@@ -395,7 +318,6 @@
 		B82710312700000000C0DE01 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B82710322700000000C0DE01 /* Security.framework */; };
 		B90000000000000000000002 /* MacSystemMonitorCollectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90000000000000000000001 /* MacSystemMonitorCollectorTests.swift */; };
 		B90000000000000000000005 /* MacSystemMonitorCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90000000000000000000004 /* MacSystemMonitorCollector.swift */; };
-		BA1000000000000000000005 /* SystemMonitorProcessActivation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1000000000000000000004 /* SystemMonitorProcessActivation.swift */; };
 		B90000000000000000000007 /* SystemMonitor in Frameworks */ = {isa = PBXBuildFile; productRef = B90000000000000000000008 /* SystemMonitor */; };
 		B90100000000000000000002 /* SystemMonitorPreferencesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90100000000000000000001 /* SystemMonitorPreferencesTests.swift */; };
 		B90100000000000000000005 /* SystemMonitorSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90100000000000000000004 /* SystemMonitorSettingsView.swift */; };
@@ -407,12 +329,10 @@
 		B90300000000000000000002 /* OnlyControlSystemMonitorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90300000000000000000001 /* OnlyControlSystemMonitorTests.swift */; };
 		B90400000000000000000002 /* SystemMonitorStatusItemControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90400000000000000000001 /* SystemMonitorStatusItemControllerTests.swift */; };
 		B90400000000000000000005 /* SystemMonitorStatusItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90400000000000000000004 /* SystemMonitorStatusItemController.swift */; };
-		B98000000000000000000002 /* CodexUsageSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B98000000000000000000001 /* CodexUsageSwitch.swift */; };
 		B98000000000000000000003 /* CodexUsageSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B98000000000000000000001 /* CodexUsageSwitch.swift */; };
-		B98500000000000000000002 /* SystemMonitorSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B98500000000000000000001 /* SystemMonitorSwitch.swift */; };
 		B98500000000000000000003 /* SystemMonitorSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B98500000000000000000001 /* SystemMonitorSwitch.swift */; };
-		B99000000000000000000002 /* ReverseScrollDirectionSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99000000000000000000001 /* ReverseScrollDirectionSwitch.swift */; };
 		B99000000000000000000003 /* ReverseScrollDirectionSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99000000000000000000001 /* ReverseScrollDirectionSwitch.swift */; };
+		BA1000000000000000000005 /* SystemMonitorProcessActivation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1000000000000000000004 /* SystemMonitorProcessActivation.swift */; };
 		C0D000000000000000000001 /* RemoteSystemMonitorFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D000000000000000000021 /* RemoteSystemMonitorFeature.swift */; };
 		C0D000000000000000000002 /* RemoteSystemMonitorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D000000000000000000022 /* RemoteSystemMonitorView.swift */; };
 		C0D000000000000000000003 /* RemoteSystemMonitorChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D000000000000000000023 /* RemoteSystemMonitorChartView.swift */; };
@@ -446,6 +366,7 @@
 		C1A0F00218E9202600000001 /* PrivilegedAccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0F00518E9202600000001 /* PrivilegedAccessViewModel.swift */; };
 		C1A0F00318E9202600000001 /* PrivilegedAccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0F00618E9202600000001 /* PrivilegedAccessView.swift */; };
 		C1A0F00718E9202600000001 /* PrivilegedAccessViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0F00818E9202600000001 /* PrivilegedAccessViewModelTests.swift */; };
+		C1A0F1000000000000000002 /* Support/TestMutex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0F1000000000000000001 /* Support/TestMutex.swift */; };
 		C2CE44CA134851106759FA13 /* SoundMixerVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = A47E483C8C562DBBD024C25A /* SoundMixerVM.swift */; };
 		CADE00000000000000000001 /* RemoteCodexUsageProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADE00000000000000000021 /* RemoteCodexUsageProviderTests.swift */; };
 		CADE00000000000000000002 /* RemoteCodexUsageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADE00000000000000000022 /* RemoteCodexUsageProvider.swift */; };
@@ -453,6 +374,15 @@
 		CADE00000000000000000004 /* RemoteCodexUsagePresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADE00000000000000000024 /* RemoteCodexUsagePresentation.swift */; };
 		CADE00000000000000000005 /* RemoteCodexUsageCardSurface.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADE00000000000000000025 /* RemoteCodexUsageCardSurface.swift */; };
 		CADE00000000000000000006 /* RemoteCodexUsageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADE00000000000000000026 /* RemoteCodexUsageView.swift */; };
+		D0C000022F0A000100BEEF01 /* DockPreviewSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C000002F0A000100BEEF01 /* DockPreviewSwitch.swift */; };
+		D0C100000000000000000011 /* DockPreviewModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C100000000000000000001 /* DockPreviewModels.swift */; };
+		D0C100000000000000000012 /* DockPreviewFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C100000000000000000002 /* DockPreviewFeature.swift */; };
+		D0C100000000000000000013 /* DockPreviewClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C100000000000000000003 /* DockPreviewClient.swift */; };
+		D0C100000000000000000014 /* DockPreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C100000000000000000004 /* DockPreviewController.swift */; };
+		D0C100000000000000000015 /* DockPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C100000000000000000005 /* DockPreviewView.swift */; };
+		D0C100000000000000000016 /* DockPreviewPanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C100000000000000000006 /* DockPreviewPanelController.swift */; };
+		D0C100000000000000000017 /* DockPreviewFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C100000000000000000007 /* DockPreviewFeatureTests.swift */; };
+		D0C100000000000000000018 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = D0C100000000000000000008 /* InfoPlist.xcstrings */; };
 		D35C00012F12000100D35C01 /* DesktopPet in Frameworks */ = {isa = PBXBuildFile; productRef = D35C00022F12000100D35C01 /* DesktopPet */; };
 		D418A0C2EBC2CD7CCD451615 /* SoundMixerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E43EF22E4BA4D2E63E454D7 /* SoundMixerService.swift */; };
 		DABA00000000000000000002 /* GlobalSettingsFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA00000000000000000022 /* GlobalSettingsFeature.swift */; };
@@ -626,9 +556,6 @@
 		0406EDD22ACB664D0015F4D0 /* EvolutionGalleryService+Live.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EvolutionGalleryService+Live.swift"; sourceTree = "<group>"; };
 		040C6EA9276B7D4500291DEB /* CustomizeVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomizeVM.swift; sourceTree = "<group>"; };
 		040C6EAB276B7D9F00291DEB /* CustomizeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomizeView.swift; sourceTree = "<group>"; };
-		B1C100000000000000000001 /* BuiltInSwitchCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuiltInSwitchCatalog.swift; sourceTree = "<group>"; };
-		B1C100000000000000000004 /* BuiltInSwitchCatalogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuiltInSwitchCatalogTests.swift; sourceTree = "<group>"; };
-		C1A0F1000000000000000001 /* TestMutex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Support/TestMutex.swift; sourceTree = "<group>"; };
 		040CD2BD27579CEA002E0CC6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		040E97262760FF3E003D9D42 /* MetadataExtractorError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetadataExtractorError.swift; sourceTree = "<group>"; };
 		041927672AEBFFA60041185B /* CBTrueToneClient++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CBTrueToneClient++.swift"; sourceTree = "<group>"; };
@@ -888,15 +815,6 @@
 		A1D0E00A2F0A000100BEEF01 /* AuthenticatorSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorSwitch.swift; sourceTree = "<group>"; };
 		A1D0E00B2F0A000100BEEF01 /* SoundMixerSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundMixerSwitch.swift; sourceTree = "<group>"; };
 		A1D0E00C2F0A000100BEEF01 /* DesktopPetSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesktopPetSwitch.swift; sourceTree = "<group>"; };
-		D0C000002F0A000100BEEF01 /* DockPreviewSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockPreviewSwitch.swift; sourceTree = "<group>"; };
-		D0C100000000000000000001 /* DockPreviewModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockPreviewModels.swift; sourceTree = "<group>"; };
-		D0C100000000000000000002 /* DockPreviewFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockPreviewFeature.swift; sourceTree = "<group>"; };
-		D0C100000000000000000003 /* DockPreviewClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockPreviewClient.swift; sourceTree = "<group>"; };
-		D0C100000000000000000004 /* DockPreviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockPreviewController.swift; sourceTree = "<group>"; };
-		D0C100000000000000000005 /* DockPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockPreviewView.swift; sourceTree = "<group>"; };
-		D0C100000000000000000006 /* DockPreviewPanelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockPreviewPanelController.swift; sourceTree = "<group>"; };
-		D0C100000000000000000007 /* DockPreviewFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockPreviewFeatureTests.swift; sourceTree = "<group>"; };
-		D0C100000000000000000008 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
 		A47E483C8C562DBBD024C25A /* SoundMixerVM.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoundMixerVM.swift; sourceTree = "<group>"; };
 		A93C8BE02ECA34CB00D7CE52 /* AICommanderSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AICommanderSwitch.swift; sourceTree = "<group>"; };
 		A99F5CE8301140740029426A /* onlyswitch.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = onlyswitch.icon; sourceTree = "<group>"; };
@@ -908,6 +826,8 @@
 		AF1000040000000000000001 /* AphroditeSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AphroditeSwitch.swift; sourceTree = "<group>"; };
 		B01000000000000000000001 /* OnlySwitch.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = OnlySwitch.xcconfig; sourceTree = "<group>"; };
 		B01000000000000000000002 /* OnlySwitchRemote.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = OnlySwitchRemote.xcconfig; sourceTree = "<group>"; };
+		B1C100000000000000000001 /* BuiltInSwitchCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuiltInSwitchCatalog.swift; sourceTree = "<group>"; };
+		B1C100000000000000000004 /* BuiltInSwitchCatalogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuiltInSwitchCatalogTests.swift; sourceTree = "<group>"; };
 		B210A0000000000000000021 /* RemoteSystemSettingsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemSettingsClient.swift; sourceTree = "<group>"; };
 		B220A0000000000000000021 /* RemoteReviewDemoClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteReviewDemoClient.swift; sourceTree = "<group>"; };
 		B220A0000000000000000022 /* RemoteAppShellFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAppShellFeature.swift; sourceTree = "<group>"; };
@@ -928,7 +848,6 @@
 		B82710322700000000C0DE01 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		B90000000000000000000001 /* MacSystemMonitorCollectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacSystemMonitorCollectorTests.swift; sourceTree = "<group>"; };
 		B90000000000000000000004 /* MacSystemMonitorCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacSystemMonitorCollector.swift; sourceTree = "<group>"; };
-		BA1000000000000000000004 /* SystemMonitorProcessActivation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorProcessActivation.swift; sourceTree = "<group>"; };
 		B90100000000000000000001 /* SystemMonitorPreferencesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorPreferencesTests.swift; sourceTree = "<group>"; };
 		B90100000000000000000004 /* SystemMonitorSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorSettingsView.swift; sourceTree = "<group>"; };
 		B90100000000000000000006 /* SystemMonitorSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorSettingsViewModel.swift; sourceTree = "<group>"; };
@@ -942,6 +861,7 @@
 		B98000000000000000000001 /* CodexUsageSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodexUsageSwitch.swift; sourceTree = "<group>"; };
 		B98500000000000000000001 /* SystemMonitorSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorSwitch.swift; sourceTree = "<group>"; };
 		B99000000000000000000001 /* ReverseScrollDirectionSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReverseScrollDirectionSwitch.swift; sourceTree = "<group>"; };
+		BA1000000000000000000004 /* SystemMonitorProcessActivation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorProcessActivation.swift; sourceTree = "<group>"; };
 		C0D000000000000000000021 /* RemoteSystemMonitorFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorFeature.swift; sourceTree = "<group>"; };
 		C0D000000000000000000022 /* RemoteSystemMonitorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorView.swift; sourceTree = "<group>"; };
 		C0D000000000000000000023 /* RemoteSystemMonitorChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorChartView.swift; sourceTree = "<group>"; };
@@ -974,12 +894,22 @@
 		C1A0F00518E9202600000001 /* PrivilegedAccessViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedAccessViewModel.swift; sourceTree = "<group>"; };
 		C1A0F00618E9202600000001 /* PrivilegedAccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedAccessView.swift; sourceTree = "<group>"; };
 		C1A0F00818E9202600000001 /* PrivilegedAccessViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedAccessViewModelTests.swift; sourceTree = "<group>"; };
+		C1A0F1000000000000000001 /* Support/TestMutex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Support/TestMutex.swift; sourceTree = "<group>"; };
 		CADE00000000000000000021 /* RemoteCodexUsageProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCodexUsageProviderTests.swift; sourceTree = "<group>"; };
 		CADE00000000000000000022 /* RemoteCodexUsageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCodexUsageProvider.swift; sourceTree = "<group>"; };
 		CADE00000000000000000023 /* RemoteCodexUsageFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCodexUsageFeature.swift; sourceTree = "<group>"; };
 		CADE00000000000000000024 /* RemoteCodexUsagePresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCodexUsagePresentation.swift; sourceTree = "<group>"; };
 		CADE00000000000000000025 /* RemoteCodexUsageCardSurface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCodexUsageCardSurface.swift; sourceTree = "<group>"; };
 		CADE00000000000000000026 /* RemoteCodexUsageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCodexUsageView.swift; sourceTree = "<group>"; };
+		D0C000002F0A000100BEEF01 /* DockPreviewSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockPreviewSwitch.swift; sourceTree = "<group>"; };
+		D0C100000000000000000001 /* DockPreviewModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockPreviewModels.swift; sourceTree = "<group>"; };
+		D0C100000000000000000002 /* DockPreviewFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockPreviewFeature.swift; sourceTree = "<group>"; };
+		D0C100000000000000000003 /* DockPreviewClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockPreviewClient.swift; sourceTree = "<group>"; };
+		D0C100000000000000000004 /* DockPreviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockPreviewController.swift; sourceTree = "<group>"; };
+		D0C100000000000000000005 /* DockPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockPreviewView.swift; sourceTree = "<group>"; };
+		D0C100000000000000000006 /* DockPreviewPanelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockPreviewPanelController.swift; sourceTree = "<group>"; };
+		D0C100000000000000000007 /* DockPreviewFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockPreviewFeatureTests.swift; sourceTree = "<group>"; };
+		D0C100000000000000000008 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
 		DABA00000000000000000022 /* GlobalSettingsFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSettingsFeature.swift; sourceTree = "<group>"; };
 		DABA00000000000000000023 /* GlobalSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSettingsView.swift; sourceTree = "<group>"; };
 		DABA00000000000000000024 /* RemoteIdleTimerClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteIdleTimerClient.swift; sourceTree = "<group>"; };
@@ -1203,7 +1133,7 @@
 				C1A0B00518E9202600000001 /* PrivilegedOperations */,
 				F3A400000000000000000013 /* RemoteAccess */,
 				B1C100000000000000000004 /* BuiltInSwitchCatalogTests.swift */,
-				C1A0F1000000000000000001 /* TestMutex.swift */,
+				C1A0F1000000000000000001 /* Support/TestMutex.swift */,
 				B82700022700000000C0DE01 /* MenuBarIconHidingTests.swift */,
 				041D725628353A160083092D /* OnlySwitchTests.swift */,
 				A9AD00020000000000000001 /* AdsModelTests.swift */,
@@ -1373,27 +1303,6 @@
 				0434B4D02876325B00F06AB9 /* HostWindowFinder.swift */,
 			);
 			path = Features;
-			sourceTree = "<group>";
-		};
-		D0C100000000000000000031 /* DockPreview */ = {
-			isa = PBXGroup;
-			children = (
-				D0C100000000000000000001 /* DockPreviewModels.swift */,
-				D0C100000000000000000002 /* DockPreviewFeature.swift */,
-				D0C100000000000000000003 /* DockPreviewClient.swift */,
-				D0C100000000000000000004 /* DockPreviewController.swift */,
-				D0C100000000000000000005 /* DockPreviewView.swift */,
-				D0C100000000000000000006 /* DockPreviewPanelController.swift */,
-			);
-			path = DockPreview;
-			sourceTree = "<group>";
-		};
-		D0C100000000000000000032 /* DockPreview */ = {
-			isa = PBXGroup;
-			children = (
-				D0C100000000000000000007 /* DockPreviewFeatureTests.swift */,
-			);
-			path = DockPreview;
 			sourceTree = "<group>";
 		};
 		043E5D682757C86400ADC004 /* ViewModel */ = {
@@ -2233,6 +2142,27 @@
 			path = CodexUsage;
 			sourceTree = "<group>";
 		};
+		D0C100000000000000000031 /* DockPreview */ = {
+			isa = PBXGroup;
+			children = (
+				D0C100000000000000000001 /* DockPreviewModels.swift */,
+				D0C100000000000000000002 /* DockPreviewFeature.swift */,
+				D0C100000000000000000003 /* DockPreviewClient.swift */,
+				D0C100000000000000000004 /* DockPreviewController.swift */,
+				D0C100000000000000000005 /* DockPreviewView.swift */,
+				D0C100000000000000000006 /* DockPreviewPanelController.swift */,
+			);
+			path = DockPreview;
+			sourceTree = "<group>";
+		};
+		D0C100000000000000000032 /* DockPreview */ = {
+			isa = PBXGroup;
+			children = (
+				D0C100000000000000000007 /* DockPreviewFeatureTests.swift */,
+			);
+			path = DockPreview;
+			sourceTree = "<group>";
+		};
 		F3A300000000000000000005 /* OnlySwitchRemote */ = {
 			isa = PBXGroup;
 			children = (
@@ -2835,7 +2765,7 @@
 			files = (
 				D0C100000000000000000017 /* DockPreviewFeatureTests.swift in Sources */,
 				B1C100000000000000000005 /* BuiltInSwitchCatalogTests.swift in Sources */,
-				C1A0F1000000000000000002 /* TestMutex.swift in Sources */,
+				C1A0F1000000000000000002 /* Support/TestMutex.swift in Sources */,
 				CADE00000000000000000001 /* RemoteCodexUsageProviderTests.swift in Sources */,
 				B90000000000000000000002 /* MacSystemMonitorCollectorTests.swift in Sources */,
 				B90100000000000000000002 /* SystemMonitorPreferencesTests.swift in Sources */,
@@ -3485,7 +3415,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 3.0.0;
+				MARKETING_VERSION = 3.1.0;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3540,7 +3470,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 3.0.0;
+				MARKETING_VERSION = 3.1.0;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3586,7 +3516,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 3.0.0;
+				MARKETING_VERSION = 3.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = OnlySwitchWidgets;
@@ -3626,7 +3556,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 3.0.0;
+				MARKETING_VERSION = 3.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = OnlySwitchWidgets;
@@ -3697,7 +3627,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4.0;
+				MARKETING_VERSION = 1.5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitchRemote;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -3728,7 +3658,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4.0;
+				MARKETING_VERSION = 1.5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitchRemote;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
