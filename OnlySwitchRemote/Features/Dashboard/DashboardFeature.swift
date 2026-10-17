@@ -430,7 +430,7 @@ struct DashboardFeature {
         case let .connecting(id), let .authenticated(id), let .offline(id, _), let .revoked(id),
              let .sessionStarted(id, _), let .catalog(id, _, _), let .catalogInvalidated(id, _),
              let .statusSnapshot(id, _), let .status(id, _), let .action(id, _), let .soundMixer(id, _),
-             let .systemMonitor(id, _):
+             let .systemMonitor(id, _), let .aphroditeLibraryChanged(id, _):
             macID = id
         }
         guard macID == state.selectedMacID else { return .none }
@@ -509,7 +509,7 @@ struct DashboardFeature {
             state.soundMixerSnapshot = snapshot
             if snapshot.isEnabled == false { state.isSoundMixerCollapsed = false }
             return .none
-        case .systemMonitor:
+        case .systemMonitor, .aphroditeLibraryChanged:
             return .none
         }
         return .none

@@ -10,6 +10,33 @@ struct RemotePersistenceClientTests {
     private let firstMac = UUID(uuidString: "00000000-0000-0000-0000-000000000001")!
     private let secondMac = UUID(uuidString: "00000000-0000-0000-0000-000000000002")!
 
+    @Test func aphroditeSnapshotsStaySeparateAndForgettingMacRemovesOnlyItsTools() async throws {
+        let persistence = RemotePersistenceClient.inMemory()
+        let tool = try AphroditePersonalTool(id: UUID(), title: "Counter", html: "<html><body>Counter</body></html>", updatedAt: .distantPast)
+        let first = AphroditeRemoteLibrarySnapshot(revision: 2, apps: [tool])
+        let second = AphroditeRemoteLibrarySnapshot(revision: 3, apps: [])
+        try await persistence.replaceAphroditeLibrary(firstMac, first)
+        try await persistence.replaceAphroditeLibrary(secondMac, second)
+        #expect(try await persistence.loadAphroditeLibrary(firstMac) == first)
+        #expect(try await persistence.loadAphroditeLibrary(secondMac) == second)
+        try await persistence.forgetMac(firstMac)
+        #expect(try await persistence.loadAphroditeLibrary(firstMac) == nil)
+        #expect(try await persistence.loadAphroditeLibrary(secondMac) == second)
+    }
+
+    @Test func olderAphroditeSnapshotCannotReplaceNewerContentAndEmptySnapshotUnsharesAll() async throws {
+        let persistence = RemotePersistenceClient.inMemory()
+        let tool = try AphroditePersonalTool(id: UUID(), title: "Counter", html: "<html><body>Counter</body></html>", updatedAt: .distantPast)
+        let newest = AphroditeRemoteLibrarySnapshot(revision: 20, apps: [tool])
+        try await persistence.replaceAphroditeLibrary(firstMac, newest)
+        try await persistence.replaceAphroditeLibrary(firstMac, .init(revision: 19, apps: []))
+        try await persistence.replaceAphroditeLibrary(firstMac, .init(revision: 20, apps: []))
+        #expect(try await persistence.loadAphroditeLibrary(firstMac) == newest)
+        let unshared = AphroditeRemoteLibrarySnapshot(revision: 21, apps: [])
+        try await persistence.replaceAphroditeLibrary(firstMac, unshared)
+        #expect(try await persistence.loadAphroditeLibrary(firstMac) == unshared)
+    }
+
     @Test func systemMonitorLayoutsPersistPerMacAndForgettingOneMacRemovesOnlyItsLayout() async throws {
         let persistence = RemotePersistenceClient.inMemory()
         var firstLayout = MacSystemMonitorLayout.default(macID: firstMac)

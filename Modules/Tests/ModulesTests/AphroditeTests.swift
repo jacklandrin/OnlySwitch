@@ -1325,3 +1325,50 @@ private extension AphroditeReducer.State {
         return state
     }
 }
+
+struct AphroditeObsoleteRemoteSharingMigrationTests {
+    @Test(arguments: [ObsoleteRemoteSharingKey.absent, .disabled, .enabled])
+    private func obsoleteSharingBooleanDoesNotChangeDecodedApp(_ sharingKey: ObsoleteRemoteSharingKey) throws {
+        let expected = AphroditeApp(
+            id: UUID(uuidString: "11111111-2222-3333-4444-555555555555")!,
+            title: "Tool",
+            html: completeHTML,
+            iconSVG: validIconSVG,
+            createdAt: Date(timeIntervalSince1970: 1_600_000_000),
+            updatedAt: Date(timeIntervalSince1970: 1_700_000_000),
+            conversationID: UUID(uuidString: "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE")!,
+            conversation: [.init(id: UUID(uuidString: "99999999-8888-7777-6666-555555555555")!, prompt: "Keep this", createdAt: .distantPast)]
+        )
+        var object = try #require(JSONSerialization.jsonObject(with: JSONEncoder().encode(expected)) as? [String: Any])
+        switch sharingKey {
+        case .absent: object.removeValue(forKey: "isSharedWithRemote")
+        case .disabled: object["isSharedWithRemote"] = false
+        case .enabled: object["isSharedWithRemote"] = true
+        }
+
+        let decoded = try JSONDecoder().decode(AphroditeApp.self, from: JSONSerialization.data(withJSONObject: object))
+
+        #expect(decoded == expected)
+    }
+
+    @Test func newEncodingOmitsObsoleteSharingBoolean() throws {
+        let app = AphroditeApp(id: UUID(), title: "Tool", html: completeHTML, createdAt: .distantPast, updatedAt: .distantPast)
+        let object = try #require(JSONSerialization.jsonObject(with: JSONEncoder().encode(app)) as? [String: Any])
+
+        #expect(object["isSharedWithRemote"] == nil)
+    }
+}
+
+private enum ObsoleteRemoteSharingKey: CaseIterable, CustomTestStringConvertible, Sendable {
+    case absent
+    case disabled
+    case enabled
+
+    var testDescription: String {
+        switch self {
+        case .absent: "absent"
+        case .disabled: "false"
+        case .enabled: "true"
+        }
+    }
+}

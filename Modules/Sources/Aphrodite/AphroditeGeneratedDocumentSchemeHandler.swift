@@ -1,12 +1,11 @@
 #if os(macOS)
 import Foundation
+import RemoteCore
 import WebKit
 
 @available(macOS 26.0, *)
 @MainActor
 final class AphroditeGeneratedDocumentSchemeHandler: NSObject, WKURLSchemeHandler {
-    private static let contentSecurityPolicy = "default-src 'none'; connect-src 'none'; img-src data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; form-action 'none'; base-uri 'none'; object-src 'none'; worker-src 'none'; frame-src 'none'"
-
     private var appID: UUID
     private var html: String
 
@@ -29,7 +28,7 @@ final class AphroditeGeneratedDocumentSchemeHandler: NSObject, WKURLSchemeHandle
                 httpVersion: "HTTP/1.1",
                 headerFields: [
                     "Content-Type": "text/html; charset=utf-8",
-                    "Content-Security-Policy": Self.contentSecurityPolicy,
+                    "Content-Security-Policy": AphroditeRemoteSandboxDocument.contentSecurityPolicy,
                     "X-Content-Type-Options": "nosniff",
                 ]
               ) else {

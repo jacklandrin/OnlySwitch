@@ -5,6 +5,7 @@ enum RemoteAppPage: Hashable, Sendable {
     case controls
     case systemMonitor
     case codexUsage
+    case aphrodite
 }
 
 @Reducer
@@ -15,12 +16,14 @@ struct RemoteAppFeature {
         var requiredGlobalSettings: GlobalSettingsFeature.State?
         @Presents var controlsConfiguration: SettingsFeature.State?
         @Presents var monitorConfiguration: RemoteSystemMonitorConfigurationFeature.State?
+        @Presents var paywall: RemotePaywallFeature.State?
         var pairedMacs: IdentifiedArrayOf<PairedMac> = []
         var selectedMacID: UUID?
         var dashboard = DashboardFeature.State()
         var selectedPage: RemoteAppPage = .controls
         var systemMonitor = RemoteSystemMonitorFeature.State()
         var codexUsage = RemoteCodexUsageFeature.State()
+        var aphrodite = RemoteAphroditeFeature.State()
         var systemMonitorLayoutGeneration: UInt64 = 0
         var connectedMacIDs: Set<UUID> = []
         var activeSessionID: UUID?
@@ -119,12 +122,15 @@ struct RemoteAppFeature {
         case scenePhaseChanged(Bool)
         case lifecycleResponse(UInt64)
         case pageSelected(RemoteAppPage)
+        case membershipTapped
         case dashboard(DashboardFeature.Action)
         case systemMonitor(RemoteSystemMonitorFeature.Action)
         case codexUsage(RemoteCodexUsageFeature.Action)
+        case aphrodite(RemoteAphroditeFeature.Action)
         case requiredGlobalSettings(GlobalSettingsFeature.Action)
         case controlsConfiguration(PresentationAction<SettingsFeature.Action>)
         case monitorConfiguration(PresentationAction<RemoteSystemMonitorConfigurationFeature.Action>)
+        case paywall(PresentationAction<RemotePaywallFeature.Action>)
         case path(StackActionOf<Path>)
     }
     @Reducer
@@ -143,6 +149,7 @@ struct RemoteAppFeature {
         Scope(state: \.dashboard, action: \.dashboard) { DashboardFeature() }
         Scope(state: \.systemMonitor, action: \.systemMonitor) { RemoteSystemMonitorFeature() }
         Scope(state: \.codexUsage, action: \.codexUsage) { RemoteCodexUsageFeature() }
+        Scope(state: \.aphrodite, action: \.aphrodite) { RemoteAphroditeFeature() }
         Reduce { state, action in
             switch action {
             case .task:
@@ -203,7 +210,8 @@ struct RemoteAppFeature {
                     state.hasCompletedInitialSetup = false
                     var effects: [Effect<Action>] = [
                         .run { [connection] _ in await connection.select(nil) },
-                        .send(.codexUsage(.contextChanged(macID: nil, sessionID: nil)))
+                        .send(.codexUsage(.contextChanged(macID: nil, sessionID: nil))),
+                        .send(.aphrodite(.selectedMacChanged(nil)))
                     ]
                     if hadCompletedInitialSetup || response.selectedMacID != nil {
                         effects.append(beginPersistence(
@@ -225,7 +233,8 @@ struct RemoteAppFeature {
                 var effects: [Effect<Action>] = [
                     .run { [connection] _ in await connection.select(selected) },
                     loadSystemMonitorLayout(for: selected.id, state: &state),
-                    .send(.codexUsage(.contextChanged(macID: selected.id, sessionID: state.activeSessionID)))
+                    .send(.codexUsage(.contextChanged(macID: selected.id, sessionID: state.activeSessionID))),
+                    .send(.aphrodite(.selectedMacChanged(selected.id)))
                 ]
                 if hadCompletedInitialSetup == false || response.selectedMacID != selected.id {
                     effects.append(beginPersistence(
@@ -300,6 +309,8 @@ struct RemoteAppFeature {
                     guard macID == state.selectedMacID else { return forwardToDashboard(event, state: state) }
                     state.activeSessionID = sessionID
                     return .merge(forwardToDashboard(event, state: state), .send(.codexUsage(.contextChanged(macID: macID, sessionID: sessionID))))
+                case let .aphroditeLibraryChanged(macID, _):
+                    return .send(.aphrodite(.libraryChanged(macID)))
                 case .catalog, .catalogInvalidated, .statusSnapshot, .status, .action, .soundMixer, .systemMonitor:
                     return forwardToDashboard(event, state: state)
                 }
@@ -457,6 +468,10 @@ struct RemoteAppFeature {
                     .send(.codexUsage(.visibilityChanged(page == .codexUsage && state.isForegrounded)))
                 )
 
+            case .membershipTapped:
+                state.paywall = .init()
+                return .none
+
             case .dashboard(.delegate(.openSettings)):
                 return .send(.controlsConfigurationButtonTapped)
 
@@ -482,6 +497,10 @@ struct RemoteAppFeature {
                 state.hasCompletedInitialSetup = true
                 return paired(mac, state: &state)
 
+            case .requiredGlobalSettings(.delegate(.openMembership)):
+                state.paywall = .init()
+                return .none
+
             case let .requiredGlobalSettings(.keepScreenAwakeToggled(isEnabled)):
                 state.isKeepingScreenAwake = isEnabled
                 let keepScreenAwake = state.isForegrounded && isEnabled
@@ -492,6 +511,10 @@ struct RemoteAppFeature {
             case let .path(.element(_, action: .globalSettings(.delegate(.paired(mac))))):
                 state.hasCompletedInitialSetup = true
                 return paired(mac, state: &state)
+
+            case .path(.element(_, action: .globalSettings(.delegate(.openMembership)))):
+                state.paywall = .init()
+                return .none
 
             case let .path(.element(_, action: .globalSettings(.keepScreenAwakeToggled(isEnabled)))):
                 state.isKeepingScreenAwake = isEnabled
@@ -569,14 +592,15 @@ struct RemoteAppFeature {
                 state.systemMonitor.layout = layout
                 return .none
 
-            case .dashboard, .systemMonitor, .codexUsage, .requiredGlobalSettings,
-                 .controlsConfiguration, .monitorConfiguration, .path:
+            case .dashboard, .systemMonitor, .codexUsage, .aphrodite, .requiredGlobalSettings,
+                 .controlsConfiguration, .monitorConfiguration, .paywall, .path:
                 return .none
             }
         }
         .ifLet(\.requiredGlobalSettings, action: \.requiredGlobalSettings) { GlobalSettingsFeature() }
         .ifLet(\.$controlsConfiguration, action: \.controlsConfiguration) { SettingsFeature() }
         .ifLet(\.$monitorConfiguration, action: \.monitorConfiguration) { RemoteSystemMonitorConfigurationFeature() }
+        .ifLet(\.$paywall, action: \.paywall) { RemotePaywallFeature() }
         .forEach(\.path, action: \.path)
     }
 
@@ -603,7 +627,8 @@ struct RemoteAppFeature {
             .cancel(id: CancelID.metadataRefresh),
             .concatenate(persistenceEffect, adoptionEffect),
             loadSystemMonitorLayout(for: mac.id, state: &state),
-            .send(.codexUsage(.contextChanged(macID: mac.id, sessionID: nil)))
+            .send(.codexUsage(.contextChanged(macID: mac.id, sessionID: nil))),
+            .send(.aphrodite(.selectedMacChanged(mac.id)))
         ]
         if state.dashboard.isActive { effects.append(.send(.dashboard(.task))) }
         return .merge(effects)
@@ -620,6 +645,7 @@ struct RemoteAppFeature {
         state.rootIssue = nil
         var effects: [Effect<Action>] = [
             .send(.codexUsage(.contextChanged(macID: mac.id, sessionID: nil))),
+            .send(.aphrodite(.selectedMacChanged(mac.id))),
             beginPersistence(
                 selectedMacID: mac.id,
                 hasCompletedInitialSetup: true,
@@ -650,6 +676,7 @@ struct RemoteAppFeature {
             ),
             .run { [connection] _ in await connection.select(nil) },
             .send(.codexUsage(.contextChanged(macID: nil, sessionID: nil))),
+            .send(.aphrodite(.selectedMacChanged(nil))),
             .merge(activeActionIDs.map {
                 .cancel(id: DashboardFeature.CancelID.action($0))
             })

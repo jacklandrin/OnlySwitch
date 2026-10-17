@@ -9,6 +9,66 @@ struct RemoteAppFeatureTests {
     private let studio = PairedMac(id: UUID(uuidString: "00000000-0000-0000-0000-000000000101")!, displayName: "Studio", lastEndpointDescription: nil, lastConnectedAt: nil, requiresPairing: false)
     private let laptop = PairedMac(id: UUID(uuidString: "00000000-0000-0000-0000-000000000102")!, displayName: "Laptop", lastEndpointDescription: nil, lastConnectedAt: nil, requiresPairing: false)
 
+    @Test func membershipPresentationAndDismissalPreserveSetup() async {
+        let store = TestStore(initialState: RemoteAppFeature.State(hasCompletedInitialSetup: false)) { RemoteAppFeature() }
+        await store.send(.membershipTapped) { $0.paywall = .init() }
+        await store.send(.paywall(.dismiss)) { $0.paywall = nil }
+        #expect(store.state.requiredGlobalSettings?.isSetupRequired == true)
+        #expect(store.state.hasCompletedInitialSetup == false)
+    }
+
+    @Test func requiredSettingsCanOpenMembershipBeforePairing() async {
+        let store = TestStore(initialState: RemoteAppFeature.State(hasCompletedInitialSetup: false)) { RemoteAppFeature() }
+        await store.send(.requiredGlobalSettings(.delegate(.openMembership))) { $0.paywall = .init() }
+        #expect(store.state.requiredGlobalSettings?.isSetupRequired == true)
+        #expect(store.state.path.isEmpty)
+        #expect(store.state.selectedMacID == nil)
+    }
+
+    @Test func pushedSettingsCanOpenMembershipWithoutChangingNavigation() async throws {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.path.append(.globalSettings(.init()))
+        let pathID = try #require(state.path.ids.last)
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+        await store.send(.path(.element(id: pathID, action: .globalSettings(.delegate(.openMembership))))) {
+            $0.paywall = .init()
+        }
+        #expect(store.state.path.ids == state.path.ids)
+        #expect(store.state.hasCompletedInitialSetup)
+    }
+
+    @Test func aphroditeSelectionStopsVisibleMonitorStreaming() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.selectedPage = .systemMonitor
+        state.systemMonitor.isVisible = true
+        state.systemMonitor.isStreaming = true
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remoteConnection.setSystemMonitorStreaming = { #expect($0 == false) }
+        }
+        await store.send(.pageSelected(.aphrodite)) { $0.selectedPage = .aphrodite }
+        await store.receive(.systemMonitor(.visibilityChanged(false))) {
+            $0.systemMonitor.isVisible = false
+            $0.systemMonitor.isStreaming = false
+        }
+        await store.receive(.codexUsage(.visibilityChanged(false)))
+        #expect(store.state.controlsConfiguration == nil)
+        #expect(store.state.monitorConfiguration == nil)
+        #expect(store.state.paywall == nil)
+        #expect(store.state.path.isEmpty)
+    }
+
+    @Test func aphroditeSelectionHidesCodexUsage() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.selectedPage = .codexUsage
+        state.codexUsage.isVisible = true
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+        await store.send(.pageSelected(.aphrodite)) { $0.selectedPage = .aphrodite }
+        await store.receive(.systemMonitor(.visibilityChanged(false)))
+        await store.receive(.codexUsage(.visibilityChanged(false))) { $0.codexUsage.isVisible = false }
+        #expect(store.state.path.isEmpty)
+        #expect(store.state.paywall == nil)
+    }
+
     @Test func pageSelectionSynchronizesMonitorVisibilityWithSwipeablePages() async {
         var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
         state.pairedMacs = [studio]

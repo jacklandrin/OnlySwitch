@@ -348,6 +348,12 @@
 		C0F000000000000000000001 /* RemoteSystemMonitorWaterfallLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F000000000000000000021 /* RemoteSystemMonitorWaterfallLayout.swift */; };
 		C0F000000000000000000002 /* RemoteCodexUsageFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F000000000000000000022 /* RemoteCodexUsageFeatureTests.swift */; };
 		C0F000000000000000000003 /* RemoteCodexUsageViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F000000000000000000023 /* RemoteCodexUsageViewTests.swift */; };
+		F4AB00000000000000000001 /* RemoteSubscriptionClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AB00000000000000000011 /* RemoteSubscriptionClient.swift */; };
+		F4AB00000000000000000002 /* RemotePaywallFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AB00000000000000000012 /* RemotePaywallFeature.swift */; };
+		F4AB00000000000000000003 /* RemotePaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AB00000000000000000013 /* RemotePaywallView.swift */; };
+		F4AB00000000000000000004 /* RemoteAphroditeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AB00000000000000000014 /* RemoteAphroditeView.swift */; };
+		F4AC00000000000000000001 /* RemoteAphroditeFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AC00000000000000000011 /* RemoteAphroditeFeature.swift */; };
+		F4AC00000000000000000002 /* RemoteAphroditeSnapshotProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AC00000000000000000012 /* RemoteAphroditeSnapshotProvider.swift */; };
 		C1A0B00118E9202600000001 /* PrivilegedOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0B00318E9202600000001 /* PrivilegedOperation.swift */; };
 		C1A0B00218E9202600000001 /* PrivilegedOperationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0B00418E9202600000001 /* PrivilegedOperationTests.swift */; };
 		C1A0C00118E9202600000001 /* PrivilegedOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0B00318E9202600000001 /* PrivilegedOperation.swift */; };
@@ -440,6 +446,10 @@
 		F3A80000000000000000000A /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = F3A800000000000000000030 /* Dependencies */; };
 		F3A80000000000000000000B /* RemoteConnectionClient+Live.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A80000000000000000002A /* RemoteConnectionClient+Live.swift */; };
 		F3A80000000000000000000C /* DependenciesMacros in Frameworks */ = {isa = PBXBuildFile; productRef = F3A800000000000000000031 /* DependenciesMacros */; };
+		F4AA00000000000000000001 /* RemotePaywallFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AA00000000000000000014 /* RemotePaywallFeatureTests.swift */; };
+		F4AA00000000000000000002 /* RemoteSubscriptionClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AA00000000000000000015 /* RemoteSubscriptionClientTests.swift */; };
+		F4AA00000000000000000003 /* GlobalSettingsFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AA00000000000000000016 /* GlobalSettingsFeatureTests.swift */; };
+		F4AE00171017000000000001 /* RemoteAphroditeFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE00171017000000000021 /* RemoteAphroditeFeatureTests.swift */; };
 		F3A900000000000000000001 /* RemoteAppFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A900000000000000000021 /* RemoteAppFeatureTests.swift */; };
 		F3A900000000000000000002 /* PairingFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A900000000000000000022 /* PairingFeatureTests.swift */; };
 		F3A900000000000000000003 /* PairingFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A900000000000000000023 /* PairingFeature.swift */; };
@@ -877,6 +887,12 @@
 		C0F000000000000000000021 /* RemoteSystemMonitorWaterfallLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorWaterfallLayout.swift; sourceTree = "<group>"; };
 		C0F000000000000000000022 /* RemoteCodexUsageFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCodexUsageFeatureTests.swift; sourceTree = "<group>"; };
 		C0F000000000000000000023 /* RemoteCodexUsageViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCodexUsageViewTests.swift; sourceTree = "<group>"; };
+		F4AB00000000000000000011 /* RemoteSubscriptionClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSubscriptionClient.swift; sourceTree = "<group>"; };
+		F4AB00000000000000000012 /* RemotePaywallFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemotePaywallFeature.swift; sourceTree = "<group>"; };
+		F4AB00000000000000000013 /* RemotePaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemotePaywallView.swift; sourceTree = "<group>"; };
+		F4AB00000000000000000014 /* RemoteAphroditeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAphroditeView.swift; sourceTree = "<group>"; };
+		F4AC00000000000000000011 /* RemoteAphroditeFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAphroditeFeature.swift; sourceTree = "<group>"; };
+		F4AC00000000000000000012 /* RemoteAphroditeSnapshotProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAphroditeSnapshotProvider.swift; sourceTree = "<group>"; };
 		C1A0B00318E9202600000001 /* PrivilegedOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedOperation.swift; sourceTree = "<group>"; };
 		C1A0B00418E9202600000001 /* PrivilegedOperationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedOperationTests.swift; sourceTree = "<group>"; };
 		C1A0C10318E9202600000001 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -958,6 +974,10 @@
 		F3A800000000000000000028 /* RemoteConnectionEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConnectionEvent.swift; sourceTree = "<group>"; };
 		F3A800000000000000000029 /* RemoteConnectionClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConnectionClient.swift; sourceTree = "<group>"; };
 		F3A80000000000000000002A /* RemoteConnectionClient+Live.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RemoteConnectionClient+Live.swift"; sourceTree = "<group>"; };
+		F4AA00000000000000000014 /* RemotePaywallFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemotePaywallFeatureTests.swift; sourceTree = "<group>"; };
+		F4AA00000000000000000015 /* RemoteSubscriptionClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSubscriptionClientTests.swift; sourceTree = "<group>"; };
+		F4AA00000000000000000016 /* GlobalSettingsFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSettingsFeatureTests.swift; sourceTree = "<group>"; };
+		F4AE00171017000000000021 /* RemoteAphroditeFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAphroditeFeatureTests.swift; sourceTree = "<group>"; };
 		F3A900000000000000000021 /* RemoteAppFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAppFeatureTests.swift; sourceTree = "<group>"; };
 		F3A900000000000000000022 /* PairingFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingFeatureTests.swift; sourceTree = "<group>"; };
 		F3A900000000000000000023 /* PairingFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingFeature.swift; sourceTree = "<group>"; };
@@ -2203,6 +2223,10 @@
 				F3A300000000000000000017 /* RemoteTestValues.swift */,
 				F3A800000000000000000021 /* RemotePersistenceClientTests.swift */,
 				F3A800000000000000000022 /* RemoteConnectionClientTests.swift */,
+				F4AA00000000000000000014 /* RemotePaywallFeatureTests.swift */,
+				F4AA00000000000000000015 /* RemoteSubscriptionClientTests.swift */,
+				F4AA00000000000000000016 /* GlobalSettingsFeatureTests.swift */,
+				F4AE00171017000000000021 /* RemoteAphroditeFeatureTests.swift */,
 				F3A900000000000000000021 /* RemoteAppFeatureTests.swift */,
 				F3A900000000000000000022 /* PairingFeatureTests.swift */,
 				F3AA00000000000000000021 /* SettingsFeatureTests.swift */,
@@ -2274,6 +2298,7 @@
 				F3A500000000000000000026 /* RemotePeerSession.swift */,
 				F3A500000000000000000027 /* RemoteStatusScheduler.swift */,
 				F3A500000000000000000028 /* RemoteHost.swift */,
+				F4AC00000000000000000012 /* RemoteAphroditeSnapshotProvider.swift */,
 				F3A500000000000000000029 /* RemoteHostClient.swift */,
 				CADE00000000000000000022 /* RemoteCodexUsageProvider.swift */,
 				F3AC00000000000000000021 /* RemoteCatalogMonitor.swift */,
@@ -2314,6 +2339,7 @@
 				B210A0000000000000000021 /* RemoteSystemSettingsClient.swift */,
 				DABA00000000000000000024 /* RemoteIdleTimerClient.swift */,
 				B220A0000000000000000021 /* RemoteReviewDemoClient.swift */,
+				F4AB00000000000000000011 /* RemoteSubscriptionClient.swift */,
 			);
 			path = Dependencies;
 			sourceTree = "<group>";
@@ -2327,8 +2353,28 @@
 				CADE00000000000000000010 /* CodexUsage */,
 				C0D000000000000000000010 /* SystemMonitor */,
 				C0D000000000000000000011 /* Navigation */,
+				F4AB00000000000000000020 /* Subscription */,
+				F4AB00000000000000000021 /* Aphrodite */,
 			);
 			path = Features;
+			sourceTree = "<group>";
+		};
+		F4AB00000000000000000020 /* Subscription */ = {
+			isa = PBXGroup;
+			children = (
+				F4AB00000000000000000012 /* RemotePaywallFeature.swift */,
+				F4AB00000000000000000013 /* RemotePaywallView.swift */,
+			);
+			path = Subscription;
+			sourceTree = "<group>";
+		};
+		F4AB00000000000000000021 /* Aphrodite */ = {
+			isa = PBXGroup;
+			children = (
+				F4AB00000000000000000014 /* RemoteAphroditeView.swift */,
+				F4AC00000000000000000011 /* RemoteAphroditeFeature.swift */,
+			);
+			path = Aphrodite;
 			sourceTree = "<group>";
 		};
 		F3A900000000000000000011 /* Pairing */ = {
@@ -2832,6 +2878,7 @@
 				F3A500000000000000000006 /* RemotePeerSession.swift in Sources */,
 				F3A500000000000000000007 /* RemoteStatusScheduler.swift in Sources */,
 				F3A500000000000000000008 /* RemoteHost.swift in Sources */,
+				F4AC00000000000000000002 /* RemoteAphroditeSnapshotProvider.swift in Sources */,
 				F3A500000000000000000009 /* RemoteHostClient.swift in Sources */,
 				CADE00000000000000000002 /* RemoteCodexUsageProvider.swift in Sources */,
 				F3AC00000000000000000001 /* RemoteCatalogMonitor.swift in Sources */,
@@ -3111,6 +3158,11 @@
 				F3A300000000000000000020 /* OnlySwitchRemoteApp.swift in Sources */,
 				F3A300000000000000000021 /* RemoteAppFeature.swift in Sources */,
 				F3A300000000000000000022 /* RemoteAppView.swift in Sources */,
+				F4AB00000000000000000001 /* RemoteSubscriptionClient.swift in Sources */,
+				F4AB00000000000000000002 /* RemotePaywallFeature.swift in Sources */,
+				F4AB00000000000000000003 /* RemotePaywallView.swift in Sources */,
+				F4AB00000000000000000004 /* RemoteAphroditeView.swift in Sources */,
+				F4AC00000000000000000001 /* RemoteAphroditeFeature.swift in Sources */,
 				B220A0000000000000000002 /* RemoteAppShellFeature.swift in Sources */,
 				B220A0000000000000000003 /* RemoteAppShellView.swift in Sources */,
 				B220A0000000000000000004 /* ReviewDemoFeature.swift in Sources */,
@@ -3173,6 +3225,10 @@
 				F3A300000000000000000025 /* RemoteTestValues.swift in Sources */,
 				F3A800000000000000000001 /* RemotePersistenceClientTests.swift in Sources */,
 				F3A800000000000000000002 /* RemoteConnectionClientTests.swift in Sources */,
+				F4AA00000000000000000001 /* RemotePaywallFeatureTests.swift in Sources */,
+				F4AA00000000000000000002 /* RemoteSubscriptionClientTests.swift in Sources */,
+				F4AA00000000000000000003 /* GlobalSettingsFeatureTests.swift in Sources */,
+				F4AE00171017000000000001 /* RemoteAphroditeFeatureTests.swift in Sources */,
 				F3A900000000000000000001 /* RemoteAppFeatureTests.swift in Sources */,
 				F3A900000000000000000002 /* PairingFeatureTests.swift in Sources */,
 				F3AA00000000000000000001 /* SettingsFeatureTests.swift in Sources */,

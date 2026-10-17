@@ -161,6 +161,7 @@ let package = Package(
                 .product(name: "SwiftUIIntrospect", package: "swiftui-introspect"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 "OnlyAgent",
+                "RemoteCore",
                 "Defines",
                 "Extensions"
             ],

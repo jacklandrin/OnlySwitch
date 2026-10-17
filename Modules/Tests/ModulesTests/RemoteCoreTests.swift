@@ -27,7 +27,7 @@ struct RemoteCoreTests {
     @Test func transactionalPairingRequiresMinorTwo() {
         #expect(!RemoteProtocolVersion(major: 1, minor: 1).supportsTransactionalPairing)
         #expect(RemoteProtocolVersion(major: 1, minor: 2).supportsTransactionalPairing)
-        #expect(RemoteProtocolVersion.current == .init(major: 1, minor: 5))
+        #expect(RemoteProtocolVersion.current == .init(major: 1, minor: 6))
     }
 
     @Test func soundMixerRequiresProtocolMinorThree() throws {
@@ -44,7 +44,7 @@ struct RemoteCoreTests {
 
     @Test func systemMonitorRequiresProtocolMinorFour() {
         #expect(RemoteProtocolVersion(major: 1, minor: 3).supportsSystemMonitorRemote == false)
-        #expect(RemoteProtocolVersion.current == .init(major: 1, minor: 5))
+        #expect(RemoteProtocolVersion.current == .init(major: 1, minor: 6))
         #expect(RemoteProtocolVersion.current.supportsSystemMonitorRemote)
     }
 
@@ -133,7 +133,7 @@ struct RemoteCoreTests {
 
         #expect(legacy.supportsCodexUsageRemote == false)
         #expect(current.supportsCodexUsageRemote)
-        #expect(RemoteProtocolVersion.current == current)
+        #expect(RemoteProtocolVersion.current.supportsCodexUsageRemote)
         #expect(current.negotiated(with: legacy) == legacy)
     }
 
@@ -190,9 +190,9 @@ struct RemoteCoreTests {
 
     @Test func protocolMinorNegotiatesWithoutSendingNewMessagesToLegacyPeers() {
         let legacy = RemoteProtocolVersion(major: 1, minor: 0)
-        let future = RemoteProtocolVersion(major: 1, minor: 5)
+        let future = RemoteProtocolVersion(major: 1, minor: 7)
 
-        #expect(RemoteProtocolVersion.current == .init(major: 1, minor: 5))
+        #expect(RemoteProtocolVersion.current == .init(major: 1, minor: 6))
         #expect(RemoteProtocolVersion.current.negotiated(with: legacy) == legacy)
         #expect(legacy.supportsAuthenticatedRevocation == false)
         #expect(RemoteProtocolVersion.current.supportsAuthenticatedRevocation)

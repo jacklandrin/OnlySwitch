@@ -1,5 +1,5 @@
 public struct RemoteProtocolVersion: Codable, Equatable, Sendable {
-    public static let current = Self(major: 1, minor: 5)
+    public static let current = Self(major: 1, minor: 6)
 
     public let major: UInt16
     public let minor: UInt16
@@ -26,4 +26,6 @@ public struct RemoteProtocolVersion: Codable, Equatable, Sendable {
     public var supportsSystemMonitorRemote: Bool { minor >= 4 }
     /// Codex usage messages are only valid after both peers negotiated this capability.
     public var supportsCodexUsageRemote: Bool { minor >= 5 }
+    /// Aphrodite library transfer messages require bounded chunk support.
+    public var supportsAphroditeRemote: Bool { minor >= 6 }
 }

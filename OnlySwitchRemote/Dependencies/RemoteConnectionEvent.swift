@@ -23,6 +23,7 @@ enum RemoteConnectionEvent: Equatable, Sendable {
     case action(UUID, RemoteActionResult)
     case soundMixer(UUID, RemoteSoundMixerSnapshot)
     case systemMonitor(UUID, SystemMonitorSnapshot)
+    case aphroditeLibraryChanged(UUID, UInt64)
 }
 
 enum DiscoveryFailure: Equatable, Sendable {

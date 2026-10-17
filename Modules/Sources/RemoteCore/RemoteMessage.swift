@@ -147,6 +147,10 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
     case systemMonitorSnapshot(SystemMonitorSnapshot)
     case codexUsageRequest(RemoteCodexUsageRequest)
     case codexUsageResult(RemoteCodexUsageResult)
+    case aphroditeLibraryRequest
+    case aphroditeLibraryManifest(AphroditeRemoteLibraryManifest)
+    case aphroditeDocumentChunk(AphroditeRemoteDocumentChunk)
+    case aphroditeTransferComplete(UUID)
     case ping(UInt64)
     case pong(UInt64)
     case credentialRevoked
@@ -191,6 +195,10 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
         case systemMonitorSnapshot
         case codexUsageRequest
         case codexUsageResult
+        case aphroditeLibraryRequest
+        case aphroditeLibraryManifest
+        case aphroditeDocumentChunk
+        case aphroditeTransferComplete
         case ping
         case pong
         case credentialRevoked
@@ -260,6 +268,14 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
             self = .codexUsageRequest(try container.decode(RemoteCodexUsageRequest.self, forKey: .payload))
         case .codexUsageResult:
             self = .codexUsageResult(try container.decode(RemoteCodexUsageResult.self, forKey: .payload))
+        case .aphroditeLibraryRequest:
+            self = .aphroditeLibraryRequest
+        case .aphroditeLibraryManifest:
+            self = .aphroditeLibraryManifest(try container.decode(AphroditeRemoteLibraryManifest.self, forKey: .payload))
+        case .aphroditeDocumentChunk:
+            self = .aphroditeDocumentChunk(try container.decode(AphroditeRemoteDocumentChunk.self, forKey: .payload))
+        case .aphroditeTransferComplete:
+            self = .aphroditeTransferComplete(try container.decode(UUID.self, forKey: .payload))
         case .ping:
             self = .ping(try container.decode(UInt64.self, forKey: .payload))
         case .pong:
@@ -358,6 +374,17 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
         case let .codexUsageResult(result):
             try container.encode(Kind.codexUsageResult, forKey: .type)
             try container.encode(result, forKey: .payload)
+        case .aphroditeLibraryRequest:
+            try container.encode(Kind.aphroditeLibraryRequest, forKey: .type)
+        case let .aphroditeLibraryManifest(manifest):
+            try container.encode(Kind.aphroditeLibraryManifest, forKey: .type)
+            try container.encode(manifest, forKey: .payload)
+        case let .aphroditeDocumentChunk(chunk):
+            try container.encode(Kind.aphroditeDocumentChunk, forKey: .type)
+            try container.encode(chunk, forKey: .payload)
+        case let .aphroditeTransferComplete(transferID):
+            try container.encode(Kind.aphroditeTransferComplete, forKey: .type)
+            try container.encode(transferID, forKey: .payload)
         case let .ping(nonce):
             try container.encode(Kind.ping, forKey: .type)
             try container.encode(nonce, forKey: .payload)

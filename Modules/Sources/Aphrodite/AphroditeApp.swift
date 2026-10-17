@@ -1,5 +1,6 @@
 import Foundation
 import OnlyAgent
+import RemoteCore
 
 public struct AphroditeApp: Codable, Equatable, Identifiable, Sendable {
     public let id: UUID
@@ -65,7 +66,7 @@ public struct AphroditeLibrary: Codable, Equatable, Sendable {
 }
 
 public enum AphroditeHTMLExtractor {
-    public static let maximumDocumentBytes = 1_048_576
+    public static let maximumDocumentBytes = AphroditeRemoteHTMLValidator.maximumDocumentBytes
 
     public enum Error: Swift.Error, Equatable {
         case missingCompleteDocument
@@ -75,10 +76,7 @@ public enum AphroditeHTMLExtractor {
     public static func extract(_ response: String) throws -> String {
         guard response.utf8.count <= maximumDocumentBytes else { throw Error.documentTooLarge }
         let candidate = fencedDocument(in: response) ?? response
-        let trimmed = candidate.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard let expression = try? NSRegularExpression(
-            pattern: #"(?is)^\s*(?:<!doctype\s+html[^>]*>\s*)?<html\b[^>]*>.*</html>\s*$"#
-        ), expression.firstMatch(in: trimmed, range: NSRange(trimmed.startIndex..., in: trimmed)) != nil else {
+        guard let trimmed = AphroditeRemoteHTMLValidator.validated(candidate) else {
             throw Error.missingCompleteDocument
         }
         return trimmed

@@ -27,6 +27,9 @@ struct RemoteAppView: View {
                             RemoteCodexUsageView(store: store.scope(state: \.codexUsage, action: \.codexUsage))
                                 .ignoresSafeArea(edges: .bottom)
                                 .tag(RemoteAppPage.codexUsage)
+                            RemoteAphroditeView(store: store.scope(state: \.aphrodite, action: \.aphrodite))
+                                .ignoresSafeArea(edges: .bottom)
+                                .tag(RemoteAppPage.aphrodite)
                         }
                         .tabViewStyle(.page(indexDisplayMode: .never))
                         .ignoresSafeArea(edges: .bottom)
@@ -58,7 +61,7 @@ struct RemoteAppView: View {
                                     selectedMacID: store.selectedMacID,
                                     select: { store.send(.macSelected($0)) }
                                 )
-                                if store.selectedPage != .codexUsage {
+                                if store.selectedPage == .controls || store.selectedPage == .systemMonitor {
                                     Button(
                                         store.selectedPage == .systemMonitor
                                             ? "Configure System Monitor"
@@ -104,6 +107,9 @@ struct RemoteAppView: View {
                 RemoteSystemMonitorConfigurationView(store: configurationStore)
             }
             .modifier(ConfigurationSheetPresentation())
+        }
+        .sheet(item: $store.scope(state: \.$paywall, action: \.paywall)) { paywallStore in
+            RemotePaywallView(store: paywallStore)
         }
         .safeAreaInset(edge: .top, spacing: 0) {
             if let issue = store.rootIssue {

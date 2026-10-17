@@ -74,6 +74,16 @@ struct GlobalSettingsView: View {
                 }
             }
 
+            Section("OnlyRemote Plus") {
+                Button {
+                    store.send(.membershipTapped)
+                } label: {
+                    settingsRowLabel("View OnlyRemote Plus", systemImage: "sparkles")
+                }
+                .buttonStyle(.plain)
+                .accessibilityHint("Shows information about OnlyRemote Plus")
+            }
+
             Section("Help & Feedback") {
                 NavigationLink {
                     HowToUseView()

@@ -4,6 +4,53 @@ import Network
 import RemoteCore
 import RemoteTransport
 
+struct RemoteAphroditeTransferAccumulator: Sendable {
+    let manifest: AphroditeRemoteLibraryManifest
+    private var chunks: [UUID: [Int: Data]] = [:]
+
+    init(manifest: AphroditeRemoteLibraryManifest) {
+        self.manifest = manifest
+    }
+
+    mutating func append(_ chunk: AphroditeRemoteDocumentChunk) throws {
+        guard chunk.transferID == manifest.transferID,
+              let descriptor = manifest.documents.first(where: { $0.appID == chunk.appID }),
+              chunk.index < descriptor.chunkCount,
+              chunks[chunk.appID]?[chunk.index] == nil,
+              (chunks[chunk.appID]?.values.reduce(0) { $0 + $1.count } ?? 0) + chunk.data.count <= descriptor.byteCount else {
+            throw AphroditeRemoteValidationError.invalidChunk
+        }
+        chunks[chunk.appID, default: [:]][chunk.index] = chunk.data
+    }
+
+    func complete() throws -> AphroditeRemoteLibrarySnapshot {
+        let decoder = JSONDecoder()
+        let apps = try manifest.documents.map { descriptor in
+            guard let documentChunks = chunks[descriptor.appID], documentChunks.count == descriptor.chunkCount else {
+                throw AphroditeRemoteValidationError.invalidChunk
+            }
+            var bytes = Data()
+            bytes.reserveCapacity(descriptor.byteCount)
+            for index in 0..<descriptor.chunkCount {
+                guard let chunk = documentChunks[index], bytes.count + chunk.count <= descriptor.byteCount else {
+                    throw AphroditeRemoteValidationError.invalidChunk
+                }
+                bytes.append(chunk)
+            }
+            guard bytes.count == descriptor.byteCount,
+                  Data(SHA256.hash(data: bytes)) == descriptor.sha256 else {
+                throw AphroditeRemoteValidationError.invalidDescriptor
+            }
+            let tool = try decoder.decode(AphroditePersonalTool.self, from: bytes)
+            guard tool.id == descriptor.appID, tool.title == descriptor.title, tool.updatedAt == descriptor.updatedAt else {
+                throw AphroditeRemoteValidationError.invalidDescriptor
+            }
+            return tool
+        }
+        return try AphroditeRemoteLibrarySnapshot(revision: manifest.revision, apps: apps).validated()
+    }
+}
+
 extension RemoteConnectionClient {
     static var live: Self {
         let runtime = RemoteConnectionRuntime(
@@ -197,6 +244,7 @@ actor RemoteConnectionRuntime {
     private var generation: UInt64 = 0
     private var foregrounded = true
     private var foregroundLifecycleGeneration: UInt64 = 0
+    private var aphroditeTransfers: [UUID: RemoteAphroditeTransferAccumulator] = [:]
 
     init(
         persistence: RemotePersistenceClient,
@@ -495,6 +543,7 @@ actor RemoteConnectionRuntime {
         generation &+= 1
         connectionTask?.cancel()
         connectionTask = nil
+        aphroditeTransfers.removeAll()
         let previousSession = session
         session = pending.session
         sessionToken = pending.sessionToken
@@ -507,6 +556,7 @@ actor RemoteConnectionRuntime {
         try? await persistence.saveCatalog(pending.macID, pending.catalog.revision, pending.catalog.controls)
         pending.session.startReceiving()
         try? await pending.session.requestSoundMixerIfSupported()
+        try? await pending.session.requestAphroditeLibraryIfSupported()
         if let previousSession {
             try? await previousSession.setSystemMonitorStreaming(false)
             await closeSession(previousSession)
@@ -650,6 +700,7 @@ actor RemoteConnectionRuntime {
         pairingTask = nil
         pairingToken = nil
         pendingRevocation = nil
+        aphroditeTransfers.removeAll()
 
         let detachedSession = selected?.id == id ? session : nil
         if selected?.id == id { selected = nil }
@@ -859,6 +910,7 @@ actor RemoteConnectionRuntime {
                 eventHub.yield(.authenticated(mac.id))
                 connected.startReceiving()
                 try? await connected.requestSoundMixerIfSupported()
+                try? await connected.requestAphroditeLibraryIfSupported()
                 do {
                     try await catalogRequest(connected)
                 } catch {
@@ -971,6 +1023,7 @@ actor RemoteConnectionRuntime {
                 try? await persistence.saveCatalog(mac.id, catalog.revision, catalog.controls)
                 recovered.startReceiving()
                 try? await recovered.requestSoundMixerIfSupported()
+                try? await recovered.requestAphroditeLibraryIfSupported()
                 finalizingTransactionID = nil
                 return true
             } catch {
@@ -1067,6 +1120,25 @@ actor RemoteConnectionRuntime {
             eventHub.yield(.soundMixer(macID, snapshot))
         case let .systemMonitorSnapshot(snapshot):
             eventHub.yield(.systemMonitor(macID, snapshot))
+        case let .aphroditeLibraryManifest(manifest):
+            let currentRevision = (try? await persistence.loadAphroditeLibrary(macID))?.revision
+            guard currentRevision.map({ $0 < manifest.revision }) ?? true else { return }
+            aphroditeTransfers = [manifest.transferID: .init(manifest: manifest)]
+        case let .aphroditeDocumentChunk(chunk):
+            guard var transfer = aphroditeTransfers[chunk.transferID] else { return }
+            do {
+                try transfer.append(chunk)
+                aphroditeTransfers[chunk.transferID] = transfer
+            } catch {
+                aphroditeTransfers[chunk.transferID] = nil
+            }
+        case let .aphroditeTransferComplete(transferID):
+            guard let transfer = aphroditeTransfers.removeValue(forKey: transferID),
+                  let snapshot = try? transfer.complete() else { return }
+            do {
+                try await persistence.replaceAphroditeLibrary(macID, snapshot)
+                eventHub.yield(.aphroditeLibraryChanged(macID, snapshot.revision))
+            } catch { return }
         case let .catalogChanged(revision):
             eventHub.yield(.catalogInvalidated(macID, revision))
             guard let activeSession = session else { return }
@@ -1112,6 +1184,7 @@ actor RemoteConnectionRuntime {
             eventMacID: macID,
             eventToken: token
         ) else { return }
+        aphroditeTransfers.removeAll()
         eventHub.yield(.offline(macID, Self.safeMessage(error)))
         if let selected { await select(selected) }
     }
@@ -1648,6 +1721,10 @@ actor RemoteClientSession {
     func requestSoundMixerIfSupported() async throws {
         guard protocolVersion.supportsSoundMixerRemote else { return }
         try await sendMessage(.soundMixerSnapshotRequest)
+    }
+    func requestAphroditeLibraryIfSupported() async throws {
+        guard protocolVersion.supportsAphroditeRemote else { return }
+        try await sendMessage(.aphroditeLibraryRequest)
     }
     func sendSoundMixer(_ command: RemoteSoundMixerCommand) async throws {
         guard protocolVersion.supportsSoundMixerRemote else {

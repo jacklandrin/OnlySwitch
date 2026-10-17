@@ -33,6 +33,7 @@ struct GlobalSettingsFeature {
         case selectMac(UUID)
         case manageMac(UUID)
         case keepScreenAwakeToggled(Bool)
+        case membershipTapped
         case pairing(PresentationAction<PairingFeature.Action>)
         case management(PresentationAction<MacManagementFeature.Action>)
         case foregroundChanged(Bool)
@@ -46,6 +47,7 @@ struct GlobalSettingsFeature {
         case selectedMacChanged(PairedMac)
         case macForgotten(UUID)
         case allMacsRemoved
+        case openMembership
     }
 
     var body: some ReducerOf<Self> {
@@ -71,6 +73,9 @@ struct GlobalSettingsFeature {
                 return .run { _ in
                     await idleTimer.savePreference(isEnabled)
                 }
+
+            case .membershipTapped:
+                return .send(.delegate(.openMembership))
 
             case let .pairing(.presented(.delegate(.paired(mac)))):
                 state.pairing = nil

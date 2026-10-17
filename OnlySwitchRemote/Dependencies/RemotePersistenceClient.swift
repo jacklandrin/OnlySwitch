@@ -142,6 +142,10 @@ struct RemotePersistenceClient: Sendable {
     var saveStatuses: @Sendable (UUID, [RemoteControlStatus]) async throws -> Void = { _, _ in throw RemoteDependencyError.unimplemented }
     var replaceStatusSnapshot: @Sendable (UUID, [RemoteControlStatus]) async throws -> Void = { _, _ in throw RemoteDependencyError.unimplemented }
     var mergeStatus: @Sendable (UUID, RemoteControlStatus) async throws -> Void = { _, _ in throw RemoteDependencyError.unimplemented }
+    var loadAphroditeLibrary: @Sendable (UUID) async throws -> AphroditeRemoteLibrarySnapshot? = { _ in nil }
+    var replaceAphroditeLibrary: @Sendable (UUID, AphroditeRemoteLibrarySnapshot) async throws -> Void = { _, _ in
+        throw RemoteDependencyError.unimplemented
+    }
     var markMacTombstoned: @Sendable (UUID) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
     var preparePairingState: @Sendable (PairedMac, UUID, Data) async throws -> PreparedPairingPersistenceRecord = { _, _, _ in
         throw RemoteDependencyError.unimplemented
@@ -192,6 +196,8 @@ extension RemotePersistenceClient {
             saveStatuses: { await store.mergeSnapshot($1, for: $0) },
             replaceStatusSnapshot: { await store.setStatuses($1, for: $0) },
             mergeStatus: { await store.mergeStatus($1, for: $0) },
+            loadAphroditeLibrary: { await store.loadAphroditeLibrary($0) },
+            replaceAphroditeLibrary: { try await store.replaceAphroditeLibrary($1, for: $0) },
             markMacTombstoned: { await store.markTombstoned($0) },
             preparePairingState: { try await store.preparePairingState($0, transactionID: $1, credentialVerifier: $2) },
             loadPreparedPairingState: { await store.preparedPairingState },
@@ -240,6 +246,10 @@ extension RemotePersistenceClient {
             saveStatuses: { try await store.mergeStatusSnapshot($1, macID: $0) },
             replaceStatusSnapshot: { try await store.save($1, macID: $0, name: "statuses.json") },
             mergeStatus: { try await store.mergeStatus($1, macID: $0) },
+            loadAphroditeLibrary: { try await store.load(AphroditeRemoteLibrarySnapshot.self, macID: $0, name: "aphrodite-library.json") },
+            replaceAphroditeLibrary: { macID, snapshot in
+                try await store.replaceAphroditeLibrary(snapshot, macID: macID)
+            },
             markMacTombstoned: { try await store.markTombstoned($0) },
             preparePairingState: { try await store.preparePairingState($0, transactionID: $1, credentialVerifier: $2) },
             loadPreparedPairingState: { try await store.loadPreparedPairingState() },
@@ -295,6 +305,7 @@ private actor InMemoryRemotePersistenceStore {
     var systemMonitorLayouts: [UUID: MacSystemMonitorLayout] = [:]
     var catalogs: [UUID: RemoteCatalogCache] = [:]
     var statuses: [UUID: [RemoteControlStatus]] = [:]
+    var aphroditeLibraries: [UUID: AphroditeRemoteLibrarySnapshot] = [:]
     var tombstones: Set<UUID> { envelope.tombstonedMacIDs }
 
     init(beforeAppStateCommit: @escaping @Sendable (RemoteAppPersistenceIntent) throws -> Void) {
@@ -374,6 +385,15 @@ private actor InMemoryRemotePersistenceStore {
         values.append(value)
         statuses[id] = values
     }
+    func loadAphroditeLibrary(_ id: UUID) -> AphroditeRemoteLibrarySnapshot? {
+        tombstones.contains(id) ? nil : aphroditeLibraries[id]
+    }
+    func replaceAphroditeLibrary(_ value: AphroditeRemoteLibrarySnapshot, for id: UUID) throws {
+        guard tombstones.contains(id) == false else { return }
+        let value = try value.validated()
+        if let current = aphroditeLibraries[id], current.revision >= value.revision { return }
+        aphroditeLibraries[id] = value
+    }
     func forget(_ id: UUID) {
         envelope.tombstonedMacIDs.insert(id)
         envelope.pairedMacs.removeAll { $0.id == id }
@@ -382,6 +402,7 @@ private actor InMemoryRemotePersistenceStore {
         systemMonitorLayouts[id] = nil
         catalogs[id] = nil
         statuses[id] = nil
+        aphroditeLibraries[id] = nil
     }
 
     func markTombstoned(_ id: UUID) { envelope.tombstonedMacIDs.insert(id) }
@@ -637,6 +658,13 @@ actor RemoteFilePersistenceStore {
         let directory = directory(for: macID)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         try encoder.encode(value).write(to: directory.appendingPathComponent(name), options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication])
+    }
+
+    func replaceAphroditeLibrary(_ snapshot: AphroditeRemoteLibrarySnapshot, macID: UUID) throws {
+        let validated = try snapshot.validated()
+        if let current = try load(AphroditeRemoteLibrarySnapshot.self, macID: macID, name: "aphrodite-library.json"),
+           current.revision >= validated.revision { return }
+        try save(validated, macID: macID, name: "aphrodite-library.json")
     }
 
     func mergeStatus(_ status: RemoteControlStatus, macID: UUID) throws {

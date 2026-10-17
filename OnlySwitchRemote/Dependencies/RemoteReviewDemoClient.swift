@@ -498,6 +498,8 @@ extension RemotePersistenceClient {
             saveStatuses: { await runtime.setStatuses($1, for: $0) },
             replaceStatusSnapshot: { await runtime.setStatuses($1, for: $0) },
             mergeStatus: { await runtime.mergeStatus($1, for: $0) },
+            loadAphroditeLibrary: { _ in nil },
+            replaceAphroditeLibrary: { _, _ in },
             markMacTombstoned: { await runtime.markTombstoned($0) },
             preparePairingState: { await runtime.preparePairingState($0, transactionID: $1, credentialVerifier: $2) },
             loadPreparedPairingState: { await runtime.loadPreparedPairingState() },

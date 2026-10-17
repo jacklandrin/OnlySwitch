@@ -1,4 +1,5 @@
 import CryptoKit
+import Aphrodite
 import Foundation
 import Network
 import RemoteCore
@@ -110,6 +111,7 @@ actor RemotePeerSession {
     private let authenticationConfirmed: @Sendable (UUID, UUID) async -> Bool
     private let systemMonitorSnapshots: @Sendable () -> AsyncThrowingStream<SystemMonitorSnapshot, Error>
     private let codexUsage: @Sendable (Bool) async -> Result<RemoteCodexUsageSnapshot, RemoteProtocolError>
+    private let aphroditeSnapshotMessages: @Sendable () async throws -> [RemoteMessage]
     private let authenticationResultSender: AuthenticationResultSender
     private let commitStageReached: @Sendable (RemotePairingCommitStage) async -> Void
     private let ended: @Sendable (UUID) async -> Void
@@ -123,6 +125,7 @@ actor RemotePeerSession {
     private var systemMonitorTask: Task<Void, Never>?
     private var codexUsageTask: Task<Void, Never>?
     private var codexUsageGeneration: UInt64 = 0
+    private var aphroditeChangesTask: Task<Void, Never>?
 
     init(
         id: UUID = UUID(),
@@ -148,6 +151,9 @@ actor RemotePeerSession {
         systemMonitorSnapshots: @escaping @Sendable () -> AsyncThrowingStream<SystemMonitorSnapshot, Error>,
         codexUsage: @escaping @Sendable (Bool) async -> Result<RemoteCodexUsageSnapshot, RemoteProtocolError> = { _ in
             .failure(.init(code: .actionNotSupported, message: "Codex usage is unavailable"))
+        },
+        aphroditeSnapshotMessages: @escaping @Sendable () async throws -> [RemoteMessage] = {
+            try await RemoteAphroditeSnapshotProvider.liveMessages()
         },
         authenticationResultSender: @escaping AuthenticationResultSender = { operation in
             try await operation()
@@ -178,6 +184,7 @@ actor RemotePeerSession {
         self.authenticationConfirmed = authenticationConfirmed
         self.systemMonitorSnapshots = systemMonitorSnapshots
         self.codexUsage = codexUsage
+        self.aphroditeSnapshotMessages = aphroditeSnapshotMessages
         self.authenticationResultSender = authenticationResultSender
         self.commitStageReached = commitStageReached
         self.ended = ended
@@ -202,6 +209,8 @@ actor RemotePeerSession {
         stopSystemMonitorStreaming()
         codexUsageTask?.cancel()
         codexUsageTask = nil
+        aphroditeChangesTask?.cancel()
+        aphroditeChangesTask = nil
         state = .closed
         await io.cancel()
         await ended(id)
@@ -214,6 +223,8 @@ actor RemotePeerSession {
         stopSystemMonitorStreaming()
         codexUsageTask?.cancel()
         codexUsageTask = nil
+        aphroditeChangesTask?.cancel()
+        aphroditeChangesTask = nil
         state = .closed
         await io.cancel()
         await ended(id)
@@ -531,6 +542,7 @@ actor RemotePeerSession {
         try requireAwaitingAuthentication()
         authenticatedCredential = credential
         state = .authenticated(client.deviceID)
+        startAphroditeChangeObservation()
         advertisedCatalogRevision = advertisedCatalog.revision
         guard await authenticationConfirmed(id, client.deviceID) else {
             throw RemoteProtocolError(code: .authenticationFailed, message: "Credential was revoked")
@@ -690,6 +702,7 @@ actor RemotePeerSession {
         try requireCommitting(committed.id, transactionID: command.transactionID)
         authenticatedCredential = committed.credential
         state = .authenticated(committed.id)
+        startAphroditeChangeObservation()
 
         // A monitor refresh can be skipped while this peer is still committing.
         // Re-read after the synchronous state transition so every revision is
@@ -795,6 +808,11 @@ actor RemotePeerSession {
                 guard Task.isCancelled == false else { return }
                 try? await self?.finishCodexUsage(requestID: request.requestID, generation: generation, result: result)
             }
+        case .aphroditeLibraryRequest:
+            guard negotiatedVersion?.supportsAphroditeRemote == true else {
+                throw RemoteProtocolError(code: .actionNotSupported, message: "Aphrodite sharing requires a newer OnlyRemote")
+            }
+            try await sendAphroditeSnapshotIfSupported()
         case let .pairingCommit(command):
             let status = try await credentialStore.transactionStatus(
                 command.transactionID,
@@ -836,6 +854,24 @@ actor RemotePeerSession {
             try await sendEncrypted(.pong(nonce))
         default:
             throw RemoteProtocolError(code: .invalidFrame, message: "Message is not valid in authenticated state")
+        }
+    }
+
+    private func sendAphroditeSnapshotIfSupported() async throws {
+        guard case .authenticated = state, negotiatedVersion?.supportsAphroditeRemote == true else { return }
+        for message in try await aphroditeSnapshotMessages() {
+            try Task.checkCancellation()
+            try await sendEncrypted(message)
+        }
+    }
+
+    private func startAphroditeChangeObservation() {
+        aphroditeChangesTask?.cancel()
+        aphroditeChangesTask = Task { [weak self] in
+            for await _ in NotificationCenter.default.notifications(named: .aphroditeLibraryChanged) {
+                guard Task.isCancelled == false else { return }
+                try? await self?.sendAphroditeSnapshotIfSupported()
+            }
         }
     }
 
