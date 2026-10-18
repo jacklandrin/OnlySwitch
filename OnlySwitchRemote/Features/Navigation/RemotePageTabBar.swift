@@ -8,6 +8,7 @@ struct RemotePageTabBar: View {
     static let minimumTouchHeight: CGFloat = 44
     static let contentBottomInset = minimumTouchHeight + 4
     static let maximumWidth: CGFloat = 390
+    static let horizontalPadding: CGFloat = 16
 
     @Binding var selection: RemoteAppPage
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -55,6 +56,7 @@ struct RemotePageTabBar: View {
         }
         .shadow(color: .black.opacity(0.10), radius: 10, y: 3)
         .frame(maxWidth: Self.maximumWidth)
+        .padding(.horizontal, Self.horizontalPadding)
         .frame(maxWidth: .infinity)
     }
 
