@@ -17,22 +17,27 @@ struct RemoteAppView: View {
                     ZStack(alignment: .bottom) {
                         DashboardBackground()
 
-                        TabView(selection: pageSelection) {
-                            DashboardView(store: store.scope(state: \.dashboard, action: \.dashboard))
-                                .ignoresSafeArea(edges: .bottom)
-                                .tag(RemoteAppPage.controls)
-                            RemoteSystemMonitorView(store: store.scope(state: \.systemMonitor, action: \.systemMonitor))
-                                .ignoresSafeArea(edges: .bottom)
-                                .tag(RemoteAppPage.systemMonitor)
-                            RemoteCodexUsageView(store: store.scope(state: \.codexUsage, action: \.codexUsage))
-                                .ignoresSafeArea(edges: .bottom)
-                                .tag(RemoteAppPage.codexUsage)
+                        if store.selectedPage == .aphrodite, store.aphrodite.selectedApp != nil {
                             RemoteAphroditeView(store: store.scope(state: \.aphrodite, action: \.aphrodite))
                                 .ignoresSafeArea(edges: .bottom)
-                                .tag(RemoteAppPage.aphrodite)
+                        } else {
+                            TabView(selection: pageSelection) {
+                                DashboardView(store: store.scope(state: \.dashboard, action: \.dashboard))
+                                    .ignoresSafeArea(edges: .bottom)
+                                    .tag(RemoteAppPage.controls)
+                                RemoteSystemMonitorView(store: store.scope(state: \.systemMonitor, action: \.systemMonitor))
+                                    .ignoresSafeArea(edges: .bottom)
+                                    .tag(RemoteAppPage.systemMonitor)
+                                RemoteCodexUsageView(store: store.scope(state: \.codexUsage, action: \.codexUsage))
+                                    .ignoresSafeArea(edges: .bottom)
+                                    .tag(RemoteAppPage.codexUsage)
+                                RemoteAphroditeView(store: store.scope(state: \.aphrodite, action: \.aphrodite))
+                                    .ignoresSafeArea(edges: .bottom)
+                                    .tag(RemoteAppPage.aphrodite)
+                            }
+                            .tabViewStyle(.page(indexDisplayMode: .never))
+                            .ignoresSafeArea(edges: .bottom)
                         }
-                        .tabViewStyle(.page(indexDisplayMode: .never))
-                        .ignoresSafeArea(edges: .bottom)
 
                         RemotePageTabBar(selection: pageSelection)
                             .padding(.bottom, 4)
