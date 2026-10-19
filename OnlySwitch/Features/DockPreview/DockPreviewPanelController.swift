@@ -30,7 +30,12 @@ final class DockPreviewPanelController {
         )
         panel.backgroundColor = .clear
         panel.isOpaque = false
-        panel.hasShadow = true
+        if #available(macOS 26.0, *) {
+            // Glass supplies its own depth; a window shadow adds an offset contour.
+            panel.hasShadow = false
+        } else {
+            panel.hasShadow = true
+        }
         panel.level = .floating
         panel.hidesOnDeactivate = false
         panel.isReleasedWhenClosed = false
@@ -90,7 +95,9 @@ final class DockPreviewPanelController {
                 fallback: preview.screenFrame
             )
         )
-        panel.setFrame(frame, display: true)
+        // Keep glass rendering away from the transparent window's backing edge.
+        let inset = DockPreviewView.renderingInset
+        panel.setFrame(frame.insetBy(dx: -inset, dy: -inset), display: true)
         updatePreviewFrame(frame)
         panel.makeKeyAndOrderFront(nil)
     }

@@ -4,6 +4,8 @@ import Extensions
 import SwiftUI
 
 struct DockPreviewView: View {
+    static let renderingInset: CGFloat = 16
+
     let store: StoreOf<DockPreviewFeature>
 
     var body: some View {
@@ -38,6 +40,7 @@ struct DockPreviewView: View {
                                 }
                             }
                             .padding(12)
+                            .frame(maxHeight: .infinity)
                         }
                         .scrollIndicators(.hidden)
                         if store.status == .activationFailed {
@@ -63,6 +66,8 @@ struct DockPreviewView: View {
                 .onHover { hovering in
                     if !hovering { store.send(.pointerExited) }
                 }
+                // Leave room for the glass edge outside the card's layout bounds.
+                .padding(Self.renderingInset)
             }
         }
     }
