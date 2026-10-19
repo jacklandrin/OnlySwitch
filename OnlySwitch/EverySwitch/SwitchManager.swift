@@ -115,6 +115,9 @@ final class SwitchManager: @unchecked Sendable {
         }
         var discoveredTypes = Set<SwitchType>()
 
+        if !UserDefaults.standard.bool(forKey: UserDefaults.Key.didInstallClaudeUsageSwitch) {
+            discoveredTypes.insert(.claudeUsage)
+        }
         if !UserDefaults.standard.bool(forKey: UserDefaults.Key.didInstallCodexUsageSwitch) {
             discoveredTypes.insert(.codexUsage)
         }
@@ -132,6 +135,9 @@ final class SwitchManager: @unchecked Sendable {
 
         visibleTypes.formUnion(discoveredTypes)
         SwitchVisibilityState.setVisibleTypes(visibleTypes, in: .standard)
+        if discoveredTypes.contains(.claudeUsage) {
+            UserDefaults.standard.set(true, forKey: UserDefaults.Key.didInstallClaudeUsageSwitch)
+        }
         if discoveredTypes.contains(.codexUsage) {
             UserDefaults.standard.set(true, forKey: UserDefaults.Key.didInstallCodexUsageSwitch)
         }

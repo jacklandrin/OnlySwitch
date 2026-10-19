@@ -18,7 +18,7 @@ struct RemotePageTabBar: View {
     var body: some View {
         GeometryReader { proxy in
             let spacing: CGFloat = 4
-            let count: CGFloat = 4
+            let count: CGFloat = 5
             let width = max(0, (proxy.size.width - spacing * (count - 1)) / count)
             ZStack(alignment: .leading) {
                 Capsule()
@@ -30,7 +30,8 @@ struct RemotePageTabBar: View {
                 HStack(spacing: spacing) {
                     tabButton(.controls, title: "Controls", symbol: "switch.2")
                     tabButton(.systemMonitor, title: "System Monitor", symbol: "waveform.path.ecg")
-                    tabButton(.codexUsage, title: "Codex Usage", symbol: RemoteCodexUsagePresentation.tabSymbol)
+                    tabButton(.codexUsage, title: "Codex Usage", imageName: RemoteCodexUsagePresentation.tabImageName)
+                    tabButton(.claudeUsage, title: "Claude Usage", imageName: RemoteClaudeUsagePresentation.tabImageName)
                     tabButton(.aphrodite, title: "Aphrodite", symbol: "sparkles.rectangle.stack")
                 }
             }
@@ -61,10 +62,25 @@ struct RemotePageTabBar: View {
     }
 
     private func tabButton(_ page: RemoteAppPage, title: LocalizedStringKey, symbol: String) -> some View {
+        tabButton(page, title: title) { Image(systemName: symbol) }
+    }
+
+    /// Tab with a template brand logo from the asset catalog, sized to match the SF Symbol tabs.
+    private func tabButton(_ page: RemoteAppPage, title: LocalizedStringKey, imageName: String) -> some View {
+        tabButton(page, title: title) {
+            Image(imageName)
+                .renderingMode(.template)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 20, height: 20)
+        }
+    }
+
+    private func tabButton<Icon: View>(_ page: RemoteAppPage, title: LocalizedStringKey, @ViewBuilder icon: () -> Icon) -> some View {
         Button {
             selection = page
         } label: {
-            Label(title, systemImage: symbol)
+            Label { Text(title) } icon: { icon() }
                 .labelStyle(.iconOnly)
                 .font(.body.weight(.semibold))
                 .foregroundStyle(selection == page ? .primary : .secondary)
@@ -84,7 +100,8 @@ private extension RemoteAppPage {
         case .controls: 0
         case .systemMonitor: 1
         case .codexUsage: 2
-        case .aphrodite: 3
+        case .claudeUsage: 3
+        case .aphrodite: 4
         }
     }
 }

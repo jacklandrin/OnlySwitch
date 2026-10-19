@@ -75,6 +75,7 @@ public enum SwitchType: String, CaseIterable, Sendable {
     case systemMonitor
     case aphrodite
     case dockPreview
+    case claudeUsage
 
     public var legacyIdentifier: UInt64 {
         switch self {
@@ -123,6 +124,7 @@ public enum SwitchType: String, CaseIterable, Sendable {
         case .systemMonitor: 4_398_046_511_104
         case .aphrodite: 8_796_093_022_208
         case .dockPreview: 17_592_186_044_416
+        case .claudeUsage: 35_184_372_088_832
         }
     }
 
@@ -409,11 +411,17 @@ public enum SwitchType: String, CaseIterable, Sendable {
                 onImage: NSImage(systemSymbolName: "dock.rectangle"),
                 offImage: NSImage(systemSymbolName: "dock.rectangle")
             )
+        case .claudeUsage:
+            return SwitchBarInfo(
+                title: "Claude Usage",
+                onImage: NSImage(named: "claude_logo"),
+                offImage: NSImage(named: "claude_logo")
+            )
         case .codexUsage:
             return SwitchBarInfo(
                 title: "Codex Usage",
-                onImage: NSImage(systemSymbolName: "gauge.with.dots.needle.50percent"),
-                offImage: NSImage(systemSymbolName: "gauge.with.dots.needle.50percent"),
+                onImage: NSImage(named: "openai_logo"),
+                offImage: NSImage(named: "openai_logo"),
                 category: .tool
             )
         case .reverseScrollDirection:

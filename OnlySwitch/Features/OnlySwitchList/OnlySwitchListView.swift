@@ -40,6 +40,7 @@ struct OnlySwitchListView: View {
     @State private var maximumPanelHeight = NSScreen.main?.visibleFrame.height ?? CGFloat(700)
     @State private var presentedPanelHeight: CGFloat?
     @State private var aphroditeStore: StoreOf<AphroditeReducer>
+    @AppStorage(UserDefaults.Key.showClaudeUsageTab) private var showClaudeUsageTab = true
     @AppStorage(UserDefaults.Key.showCodexUsageTab) private var showCodexUsageTab = true
     @AppStorage(UserDefaults.Key.showSystemMonitorTab) private var showSystemMonitorTab = true
     @AppStorage(UserDefaults.Key.showAphroditeTab) private var showAphroditeTab = true
@@ -94,6 +95,10 @@ struct OnlySwitchListView: View {
                             SoundMixerPanelView()
                         case .systemMonitor:
                             SystemMonitorPanelContainer()
+                        case .claudeUsage:
+                            if #available(macOS 14.0, *) {
+                                ClaudeUsagePanelContainer(managesScrolling: false)
+                            }
                         case .codexUsage:
                             if #available(macOS 14.0, *) {
                                 CodexUsagePanelContainer(managesScrolling: false)
@@ -557,6 +562,7 @@ struct OnlySwitchListView: View {
             soundMixer: soundMixerVM.enabled,
             systemMonitor: showSystemMonitorTab,
             codexUsage: showCodexUsageTab,
+            claudeUsage: showClaudeUsageTab,
             aphrodite: showAphroditeTab
         )
     }

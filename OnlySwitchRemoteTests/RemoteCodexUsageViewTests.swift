@@ -4,8 +4,9 @@ import RemoteCore
 @testable import OnlySwitchRemote
 
 struct RemoteCodexUsageViewTests {
-    @Test func tabUsesTheSameUsageGaugeSymbolAsOnlySwitch() {
-        #expect(RemoteCodexUsagePresentation.tabSymbol == "gauge.with.dots.needle.50percent")
+    @Test func tabsUseTheSameBrandLogosAsOnlySwitch() {
+        #expect(RemoteCodexUsagePresentation.tabImageName == "openai_logo")
+        #expect(RemoteClaudeUsagePresentation.tabImageName == "claude_logo")
     }
 
     @Test func compactIPhoneAlwaysUsesOneColumn() {

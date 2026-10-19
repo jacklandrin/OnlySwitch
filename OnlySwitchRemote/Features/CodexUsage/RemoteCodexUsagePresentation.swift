@@ -9,7 +9,8 @@ enum RemoteCodexUsageLayout {
 }
 
 enum RemoteCodexUsagePresentation {
-    static let tabSymbol = "gauge.with.dots.needle.50percent"
+    /// Same OpenAI logo as the Codex Usage tab in OnlySwitch.
+    static let tabImageName = "openai_logo"
 
     static func percentage(_ quota: CodexQuotaWindowDTO?) -> String {
         quota.map { "\($0.remainingPercent)%" } ?? String(localized: "Unavailable")

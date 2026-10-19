@@ -93,6 +93,8 @@ extension SwitchType {
             return SoundMixerSwitch.shared
         case .desktopPet:
             return DesktopPetSwitch()
+        case .claudeUsage:
+            return ClaudeUsageSwitch()
         case .codexUsage:
             return CodexUsageSwitch()
         case .reverseScrollDirection:

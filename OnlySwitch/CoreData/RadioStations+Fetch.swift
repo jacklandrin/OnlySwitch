@@ -19,6 +19,7 @@ extension RadioStations {
 
     /// Adds stations whose URL isn't stored yet, so re-importing a backup never duplicates.
     static func restore(_ stations: [RadioStationBackup]) throws {
+        try PersistenceController.shared.requireStore()
         let context = PersistenceController.shared.container.viewContext
         for station in stations where station.url.isValidURL && !existence(url: station.url) {
             let radio = RadioStations(context: context)

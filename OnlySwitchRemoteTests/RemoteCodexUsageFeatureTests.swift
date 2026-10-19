@@ -206,6 +206,7 @@ struct RemoteCodexUsageRootIntegrationTests {
         await store.receive(.codexUsage(.visibilityChanged(true))) {
             $0.codexUsage.isVisible = true
         }
+        await store.receive(.claudeUsage(.visibilityChanged(false)))
     }
 
     @Test func authenticatedSessionIdentityIsForwardedToCodexChild() async {
@@ -222,6 +223,10 @@ struct RemoteCodexUsageRootIntegrationTests {
         await store.receive(.codexUsage(.contextChanged(macID: macID, sessionID: sessionID))) {
             $0.codexUsage.selectedMacID = macID
             $0.codexUsage.authenticatedSessionID = sessionID
+        }
+        await store.receive(.claudeUsage(.contextChanged(macID: macID, sessionID: sessionID))) {
+            $0.claudeUsage.selectedMacID = macID
+            $0.claudeUsage.authenticatedSessionID = sessionID
         }
     }
 

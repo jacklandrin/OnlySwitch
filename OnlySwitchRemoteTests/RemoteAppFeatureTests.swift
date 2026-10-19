@@ -110,6 +110,7 @@ struct RemoteAppFeatureTests {
             $0.systemMonitor.isStreaming = false
         }
         await store.receive(.codexUsage(.visibilityChanged(false)))
+        await store.receive(.claudeUsage(.visibilityChanged(false)))
         #expect(store.state.controlsConfiguration == nil)
         #expect(store.state.monitorConfiguration == nil)
         #expect(store.state.paywall == nil)
@@ -124,6 +125,7 @@ struct RemoteAppFeatureTests {
         await store.send(.pageSelected(.aphrodite)) { $0.selectedPage = .aphrodite }
         await store.receive(.systemMonitor(.visibilityChanged(false)))
         await store.receive(.codexUsage(.visibilityChanged(false))) { $0.codexUsage.isVisible = false }
+        await store.receive(.claudeUsage(.visibilityChanged(false)))
         #expect(store.state.path.isEmpty)
         #expect(store.state.paywall == nil)
     }
@@ -181,6 +183,7 @@ struct RemoteAppFeatureTests {
     }
 
     @Test func returningToAnActiveMonitorPageRestartsItsVisibleStream() async {
+        let (streamingGate, releaseStreaming) = AsyncStream<Void>.makeStream()
         var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
         state.pairedMacs = [studio]
         state.selectedMacID = studio.id
@@ -190,8 +193,10 @@ struct RemoteAppFeatureTests {
         state.systemMonitor.isVisible = false
         let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
             $0.remoteConnection.setForegrounded = { _ in }
+            $0.remoteIdleTimer.setIdleTimerDisabled = { _ in }
             $0.remoteConnection.setSystemMonitorStreaming = { enabled in
                 #expect(enabled)
+                for await _ in streamingGate { break }
             }
         }
 
@@ -201,10 +206,14 @@ struct RemoteAppFeatureTests {
         await store.receive(.systemMonitor(.visibilityChanged(true))) {
             $0.systemMonitor.isVisible = true
         }
+        await store.receive(.codexUsage(.visibilityChanged(false)))
+        await store.receive(.claudeUsage(.visibilityChanged(false)))
+        await store.receive(.lifecycleResponse(1))
+        releaseStreaming.yield(())
+        releaseStreaming.finish()
         await store.receive(.systemMonitor(.streamingResponse(.success(true)))) {
             $0.systemMonitor.isStreaming = true
         }
-        await store.receive(.lifecycleResponse(1))
     }
 
     @Test func rootForwardsSelectedMacStatusIntoDashboard() async {
@@ -1236,11 +1245,15 @@ struct RemoteAppFeatureTests {
             $0.isForegrounded = false
             $0.lifecycleGeneration = 1
         }
+        await store.receive(.codexUsage(.visibilityChanged(false)))
+        await store.receive(.claudeUsage(.visibilityChanged(false)))
         await store.receive(.lifecycleResponse(1))
         await store.send(.scenePhaseChanged(true)) {
             $0.isForegrounded = true
             $0.lifecycleGeneration = 2
         }
+        await store.receive(.codexUsage(.visibilityChanged(false)))
+        await store.receive(.claudeUsage(.visibilityChanged(false)))
         await store.receive(.lifecycleResponse(2))
         #expect(await recorder.values == [false, true])
         #expect(await idleTimer.values == [false, true])

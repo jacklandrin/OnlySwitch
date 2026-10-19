@@ -119,6 +119,15 @@ class RadioPlayerItemViewModel:CommonPlayerItem, ObservableObject, Identifiable 
     }
     
     func storeEditedData() {
+        do {
+            try PersistenceController.shared.requireStore()
+        } catch {
+            NotificationCenter.default.post(
+                name: .illegalRadioInfoNotification,
+                object: error.localizedDescription
+            )
+            return
+        }
         self.isPlaying = false
         let station = RadioStations.fetchRequest(by: id).first
         if let station = station {

@@ -1,6 +1,2756 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Showing the last successful update" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zobrazuje se poslední úspěšná aktualizace"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Letzte erfolgreiche Aktualisierung wird angezeigt"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Showing the last successful update"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se muestra la última actualización correcta"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ipinapakita ang huling matagumpay na update"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Affichage de la dernière mise à jour réussie"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prikazuje se posljednje uspješno ažuriranje"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visualizzazione dell’ultimo aggiornamento riuscito"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最後に成功した更新を表示しています"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "마지막으로 성공한 업데이트를 표시합니다"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "De laatste geslaagde update wordt weergegeven"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyświetlanie ostatniej udanej aktualizacji"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exibindo a última atualização bem-sucedida"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Показано последнее успешное обновление"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zobrazuje sa posledná úspešná aktualizácia"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waxaa la muujinayaa cusboonaysiintii ugu dambaysay ee guulaysatay"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Son başarılı güncelleme gösteriliyor"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Показано останнє успішне оновлення"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在显示上次成功更新的结果"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在顯示上次成功更新的結果"
+          }
+        }
+      }
+    },
+    "Allow Keychain access, then refresh usage." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Povolte přístup ke Klíčence a obnovte využití."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erlaube den Schlüsselbundzugriff und aktualisiere dann die Nutzung."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow Keychain access, then refresh usage."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permite el acceso al llavero y actualiza el uso."
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Payagan ang access sa Keychain, pagkatapos ay i-refresh ang paggamit."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autorisez l’accès au trousseau, puis actualisez l’utilisation."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dopustite pristup privjesku ključeva pa osvježite potrošnju."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Consenti l’accesso al Portachiavi, poi aggiorna l’utilizzo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "キーチェーンへのアクセスを許可してから使用量を更新してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "키체인 접근을 허용한 다음 사용량을 새로 고치세요."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sta toegang tot Sleutelhanger toe en vernieuw het gebruik."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zezwól na dostęp do pęku kluczy, a następnie odśwież zużycie."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permita o acesso às Chaves e atualize o uso."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Разрешите доступ к Связке ключей и обновите данные об использовании."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Povoľte prístup ku Kľúčenke a obnovte využitie."
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oggolow gelitaanka Keychain, ka dibna cusboonaysii isticmaalka."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anahtar Zinciri erişimine izin verin, ardından kullanımı yenileyin."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Дозвольте доступ до В’язки ключів, а потім оновіть дані про використання."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请允许访问钥匙串，然后刷新用量。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "請允許存取鑰匙圈，然後重新整理用量。"
+          }
+        }
+      }
+    },
+    "Claude" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude"
+          }
+        }
+      }
+    },
+    "Claude Usage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Využití Claude"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude-Nutzung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude Usage"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uso de Claude"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paggamit ng Claude"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilisation de Claude"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Korištenje Claudea"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilizzo di Claude"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claudeの使用状況"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude 사용량"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude-gebruik"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Użycie Claudea"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uso do Claude"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Использование Claude"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Využitie Claude"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Isticmaalka Claude"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude Kullanımı"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Використання Claude"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude 使用情况"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude 使用情況"
+          }
+        }
+      }
+    },
+    "Claude returned an unreadable usage response." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude vrátil nečitelnou odpověď o využití."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude hat eine unlesbare Nutzungsantwort zurückgegeben."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude returned an unreadable usage response."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude devolvió una respuesta de uso ilegible."
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nagbalik ang Claude ng hindi nababasang tugon sa paggamit."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude a renvoyé une réponse d’utilisation illisible."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude je vratio nečitljiv odgovor o upotrebi."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude ha restituito una risposta sull’utilizzo illeggibile."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claudeから読み取れない使用状況の応答が返されました。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude에서 읽을 수 없는 사용량 응답을 반환했습니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude heeft een onleesbaar gebruiksantwoord geretourneerd."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude zwrócił nieczytelną odpowiedź dotyczącą użycia."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Claude retornou uma resposta de uso ilegível."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude вернул нечитаемый ответ с данными об использовании."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude vrátil nečitateľnú odpoveď o využití."
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude wuxuu soo celiyay jawaab isticmaal oo aan la akhriyi karin."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude okunamayan bir kullanım yanıtı döndürdü."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude повернув нечитабельну відповідь із даними про використання."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude 返回了无法读取的使用情况响应。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude 傳回了無法讀取的使用情況回應。"
+          }
+        }
+      }
+    },
+    "Claude usage is rate limited. Try again later." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Požadavky na využití Claude jsou omezeny. Zkuste to později."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Abfrage der Claude-Nutzung ist begrenzt. Versuche es später erneut."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude usage is rate limited. Try again later."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La consulta del uso de Claude está limitada. Inténtalo más tarde."
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nalimitahan ang mga kahilingan sa paggamit ng Claude. Subukan muli mamaya."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La consultation de l’utilisation de Claude est limitée. Réessayez plus tard."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Broj zahtjeva za potrošnju Claudea je ograničen. Pokušajte kasnije."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le richieste sull’utilizzo di Claude sono limitate. Riprova più tardi."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude使用量の取得がレート制限されています。しばらくしてから再試行してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude 사용량 요청이 제한되었습니다. 나중에 다시 시도하세요."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Het opvragen van Claude-gebruik is beperkt. Probeer het later opnieuw."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Liczba zapytań o zużycie Claude jest ograniczona. Spróbuj ponownie później."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "As consultas de uso do Claude estão limitadas. Tente novamente mais tarde."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Превышен лимит запросов данных об использовании Claude. Повторите позже."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Počet požiadaviek na využitie Claude je obmedzený. Skúste to neskôr."
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Codsiyada isticmaalka Claude waa la xaddiday. Mar kale isku day goor dambe."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude kullanım sorguları sınırlandırıldı. Daha sonra tekrar deneyin."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Перевищено ліміт запитів даних про використання Claude. Спробуйте пізніше."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude 用量请求过于频繁，请稍后重试。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude 用量請求過於頻繁，請稍後再試。"
+          }
+        }
+      }
+    },
+    "Claude usage is temporarily unavailable." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Využití Claude je dočasně nedostupné."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Claude-Nutzung ist vorübergehend nicht verfügbar."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Claude usage is temporarily unavailable."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El uso de Claude no está disponible temporalmente."
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pansamantalang hindi available ang paggamit ng Claude."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’utilisation de Claude est temporairement indisponible."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Korištenje Claudea privremeno nije dostupno."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’utilizzo di Claude è temporaneamente non disponibile."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claudeの使用状況は一時的に利用できません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude 사용량을 일시적으로 사용할 수 없습니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude-gebruik is tijdelijk niet beschikbaar."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Użycie Claudea jest tymczasowo niedostępne."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O uso do Claude está temporariamente indisponível."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Данные об использовании Claude временно недоступны."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Využitie Claude je dočasne nedostupné."
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Isticmaalka Claude si ku meel gaar ah looma heli karo."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude kullanımı geçici olarak kullanılamıyor."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Дані про використання Claude тимчасово недоступні."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude 用量暂时不可用。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude 用量暫時無法使用。"
+          }
+        }
+      },
+      "extractionState" : "manual"
+    },
+    "Claude usage unavailable" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Využití Claude není k dispozici"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude-Nutzung nicht verfügbar"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude usage unavailable"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El uso de Claude no está disponible"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hindi available ang paggamit ng Claude"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilisation de Claude indisponible"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upotreba Claudea nije dostupna"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilizzo di Claude non disponibile"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claudeの使用状況を利用できません"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude 사용량을 확인할 수 없음"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude-gebruik niet beschikbaar"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Użycie Claude jest niedostępne"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uso do Claude indisponível"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Данные об использовании Claude недоступны"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Využitie Claude nie je k dispozícii"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Isticmaalka Claude lama heli karo"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude kullanımı kullanılamıyor"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Дані про використання Claude недоступні"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude 使用情况不可用"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude 使用情況無法使用"
+          }
+        }
+      }
+    },
+    "Connect to the selected Mac to view Claude usage." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Připojte se k vybranému Macu a zobrazte využití Claude."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbinde dich mit dem ausgewählten Mac, um die Claude-Nutzung anzuzeigen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Connect to the selected Mac to view Claude usage."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conéctate al Mac seleccionado para ver el uso de Claude."
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kumonekta sa napiling Mac para makita ang paggamit ng Claude."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connectez-vous au Mac sélectionné pour afficher l’utilisation de Claude."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Povežite se s odabranim Macom za prikaz korištenja Claudea."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connettiti al Mac selezionato per vedere l’utilizzo di Claude."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claudeの使用状況を表示するには、選択したMacに接続してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude 사용량을 보려면 선택한 Mac에 연결하세요."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maak verbinding met de geselecteerde Mac om Claude-gebruik te bekijken."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Połącz się z wybranym Makiem, aby wyświetlić użycie Claudea."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conecte-se ao Mac selecionado para ver o uso do Claude."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подключитесь к выбранному Mac, чтобы просмотреть использование Claude."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pripojte sa k vybranému Macu a zobrazte využitie Claude."
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ku xidh Mac-ga la doortay si aad u aragto isticmaalka Claude."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude kullanımını görmek için seçili Mac’e bağlanın."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Під’єднайтеся до вибраного Mac, щоб переглянути використання Claude."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "连接到所选 Mac 以查看 Claude 用量。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "連線至所選 Mac 以檢視 Claude 用量。"
+          }
+        }
+      },
+      "extractionState" : "manual"
+    },
+    "Extra usage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dodatečné využití"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zusätzliche Nutzung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extra usage"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uso adicional"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Karagdagang paggamit"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilisation supplémentaire"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dodatna potrošnja"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilizzo extra"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "追加使用量"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "추가 사용량"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extra gebruik"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dodatkowe zużycie"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uso adicional"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Дополнительное использование"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dodatočné využitie"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Isticmaal dheeraad ah"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ek kullanım"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Додаткове використання"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "额外用量"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "額外用量"
+          }
+        }
+      }
+    },
+    "Extra usage information is unavailable." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informace o dodatečném využití nejsou k dispozici."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informationen zur zusätzlichen Nutzung sind nicht verfügbar."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extra usage information is unavailable."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La información del uso adicional no está disponible."
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hindi available ang impormasyon sa karagdagang paggamit."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les informations sur l’utilisation supplémentaire sont indisponibles."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Podaci o dodatnoj potrošnji nisu dostupni."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le informazioni sull’utilizzo extra non sono disponibili."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "追加使用量の情報を取得できません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "추가 사용량 정보를 사용할 수 없습니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informatie over extra gebruik is niet beschikbaar."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informacje o dodatkowym zużyciu są niedostępne."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "As informações de uso adicional não estão disponíveis."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сведения о дополнительном использовании недоступны."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informácie o dodatočnom využití nie sú k dispozícii."
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Macluumaadka isticmaalka dheeraadka ah lama heli karo."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ek kullanım bilgileri kullanılamıyor."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Відомості про додаткове використання недоступні."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法获取额外用量信息。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法取得額外用量資訊。"
+          }
+        }
+      }
+    },
+    "Extra usage is disabled." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dodatečné využití je vypnuto."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die zusätzliche Nutzung ist deaktiviert."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extra usage is disabled."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El uso adicional está desactivado."
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Naka-disable ang karagdagang paggamit."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’utilisation supplémentaire est désactivée."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dodatna potrošnja je isključena."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’utilizzo extra è disattivato."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "追加使用量は無効です。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "추가 사용량이 비활성화되어 있습니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extra gebruik is uitgeschakeld."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dodatkowe zużycie jest wyłączone."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O uso adicional está desativado."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Дополнительное использование отключено."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dodatočné využitie je vypnuté."
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Isticmaalka dheeraadka ah waa dansan yahay."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ek kullanım devre dışı."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Додаткове використання вимкнено."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "额外用量已停用。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "額外用量已停用。"
+          }
+        }
+      }
+    },
+    "Loading Claude usage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Načítání využití Claude"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude-Nutzung wird geladen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading Claude usage"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cargando uso de Claude"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nilo-load ang paggamit ng Claude"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chargement de l’utilisation de Claude"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Učitavanje upotrebe Claudea"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Caricamento dell’utilizzo di Claude"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claudeの使用状況を読み込み中"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude 사용량 불러오는 중"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude-gebruik laden"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wczytywanie użycia Claude"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carregando o uso do Claude"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Загрузка данных об использовании Claude"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Načítava sa využitie Claude"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waxaa la soo rarayaa isticmaalka Claude"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude kullanımı yükleniyor"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Завантаження даних про використання Claude"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在加载 Claude 使用情况"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在載入 Claude 使用情況"
+          }
+        }
+      }
+    },
+    "No signed-in Claude Code installation was found." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nebyla nalezena žádná instalace Claude Codeu s přihlášeným účtem."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Es wurde keine angemeldete Claude Code-Installation gefunden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No signed-in Claude Code installation was found."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontró ninguna instalación de Claude Code con sesión iniciada."
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Walang nakitang installation ng Claude Code na naka-sign in."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune installation de Claude Code connectée n’a été trouvée."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nije pronađena instalacija Claude Code s prijavljenim računom."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non è stata trovata alcuna installazione di Claude Code con accesso effettuato."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "サインイン済みのClaude Codeインストールが見つかりませんでした。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "로그인된 Claude Code 설치를 찾지 못했습니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Er is geen aangemelde Claude Code-installatie gevonden."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie znaleziono instalacji Claude Code z zalogowanym kontem."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nenhuma instalação do Claude Code com sessão iniciada foi encontrada."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не найдена установка Claude Code с выполненным входом."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nenašla sa žiadna inštalácia Claude Codeu s prihláseným účtom."
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lama helin rakibid Claude Code ah oo la galay."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oturum açılmış bir Claude Code yüklemesi bulunamadı."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не знайдено інсталяцію Claude Code із виконаним входом."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未找到已登录的 Claude Code 安装。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "找不到已登入的 Claude Code 安裝項目。"
+          }
+        }
+      }
+    },
+    "No usage limits were reported for this account." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pro tento účet nebyly hlášeny žádné limity využití."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Für dieses Konto wurden keine Nutzungslimits gemeldet."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No usage limits were reported for this account."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se han indicado límites de uso para esta cuenta."
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Walang iniulat na limitasyon sa paggamit para sa account na ito."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune limite d’utilisation n’a été indiquée pour ce compte."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Za ovaj račun nisu prijavljena ograničenja potrošnje."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non sono stati segnalati limiti di utilizzo per questo account."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このアカウントの使用制限は報告されていません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 계정에 보고된 사용량 한도가 없습니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Er zijn geen gebruikslimieten gemeld voor dit account."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie zgłoszono limitów zużycia dla tego konta."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nenhum limite de uso foi informado para esta conta."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Для этой учётной записи не указаны ограничения использования."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pre tento účet neboli hlásené žiadne limity využitia."
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Koontadan lagama soo sheegin xad isticmaal."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu hesap için kullanım sınırı bildirilmedi."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Для цього облікового запису не вказано обмежень використання."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此账户未返回用量限额。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此帳號未傳回用量上限。"
+          }
+        }
+      }
+    },
+    "OnlySwitch couldn’t load Claude usage from the selected Mac." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch nemohl načíst využití Claude z vybraného Macu."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch konnte die Claude-Nutzung vom ausgewählten Mac nicht laden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "OnlySwitch couldn’t load Claude usage from the selected Mac."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch no pudo cargar el uso de Claude desde el Mac seleccionado."
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hindi ma-load ng OnlySwitch ang paggamit ng Claude mula sa napiling Mac."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch n’a pas pu charger l’utilisation de Claude depuis le Mac sélectionné."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch nije mogao učitati korištenje Claudea s odabranog Maca."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch non ha potuto caricare l’utilizzo di Claude dal Mac selezionato."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選択したMacからClaudeの使用状況を読み込めませんでした。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch가 선택한 Mac에서 Claude 사용량을 불러올 수 없습니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch kon het Claude-gebruik niet laden van de geselecteerde Mac."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch nie mógł wczytać użycia Claudea z wybranego Maca."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O OnlySwitch não conseguiu carregar o uso do Claude do Mac selecionado."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch не удалось загрузить данные об использовании Claude с выбранного Mac."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch nemohol načítať využitie Claude z vybraného Macu."
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch kama soo rogi karin isticmaalka Claude Mac-ga la doortay."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch seçili Mac’ten Claude kullanımını yükleyemedi."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch не вдалося завантажити дані про використання Claude із вибраного Mac."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch 无法从所选 Mac 载入 Claude 用量。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch 無法從所選 Mac 載入 Claude 用量。"
+          }
+        }
+      },
+      "extractionState" : "manual"
+    },
+    "Sign in to Claude Code on the selected Mac, then try again." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přihlaste se ke Claude Codeu na vybraném Macu a zkuste to znovu."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Melde dich auf dem ausgewählten Mac bei Claude Code an und versuche es erneut."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Sign in to Claude Code on the selected Mac, then try again."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inicia sesión en Claude Code en el Mac seleccionado e inténtalo de nuevo."
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mag-sign in sa Claude Code sa napiling Mac, pagkatapos ay subukan muli."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connectez-vous à Claude Code sur le Mac sélectionné, puis réessayez."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prijavite se u Claude Code na odabranom Macu pa pokušajte ponovno."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accedi a Claude Code sul Mac selezionato, poi riprova."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選択したMacでClaude Codeにサインインして、もう一度お試しください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "선택한 Mac에서 Claude Code에 로그인한 후 다시 시도하세요."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Log in bij Claude Code op de geselecteerde Mac en probeer het opnieuw."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaloguj się do Claude Code na wybranym Macu i spróbuj ponownie."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inicie sessão no Claude Code no Mac selecionado e tente novamente."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Войдите в Claude Code на выбранном Mac и повторите попытку."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prihláste sa do Claude Codeu na vybranom Macu a skúste to znova."
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude Code ka gal Mac-ga la doortay, ka dibna mar kale isku day."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seçili Mac’te Claude Code’a giriş yapıp yeniden deneyin."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Увійдіть у Claude Code на вибраному Mac і повторіть спробу."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在所选 Mac 上登录 Claude Code，然后重试。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在所選 Mac 上登入 Claude Code，然後再試一次。"
+          }
+        }
+      },
+      "extractionState" : "manual"
+    },
+    "Sign in to Claude Code, then refresh usage." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přihlaste se do Claude Code a obnovte využití."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Melde dich bei Claude Code an und aktualisiere dann die Nutzung."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in to Claude Code, then refresh usage."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inicia sesión en Claude Code y actualiza el uso."
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mag-sign in sa Claude Code, pagkatapos ay i-refresh ang paggamit."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connectez-vous à Claude Code, puis actualisez l’utilisation."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prijavite se u Claude Code pa osvježite potrošnju."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accedi a Claude Code, poi aggiorna l’utilizzo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude Codeにログインしてから使用量を更新してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude Code에 로그인한 다음 사용량을 새로 고치세요."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Log in bij Claude Code en vernieuw het gebruik."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaloguj się do Claude Code, a następnie odśwież zużycie."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entre no Claude Code e atualize o uso."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Войдите в Claude Code и обновите данные об использовании."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prihláste sa do Claude Code a obnovte využitie."
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gal Claude Code, ka dibna cusboonaysii isticmaalka."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude Code’a giriş yapın, ardından kullanımı yenileyin."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Увійдіть у Claude Code, а потім оновіть дані про використання."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请登录 Claude Code，然后刷新用量。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "請登入 Claude Code，然後重新整理用量。"
+          }
+        }
+      }
+    },
+    "Unable to refresh Claude usage." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Využití Claude nelze aktualizovat."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Claude-Nutzung kann nicht aktualisiert werden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to refresh Claude usage."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se puede actualizar el uso de Claude."
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hindi ma-refresh ang paggamit ng Claude."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible d’actualiser l’utilisation de Claude."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nije moguće osvježiti podatke o upotrebi Claudea."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossibile aggiornare l’utilizzo di Claude."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claudeの使用状況を更新できません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude 사용량을 새로 고칠 수 없습니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kan Claude-gebruik niet vernieuwen."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie można odświeżyć danych użycia Claude."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi possível atualizar o uso do Claude."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не удалось обновить данные об использовании Claude."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Využitie Claude sa nedá obnoviť."
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lama cusboonaysiin karo isticmaalka Claude."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude kullanımı yenilenemiyor."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не вдалося оновити дані про використання Claude."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法刷新 Claude 使用情况。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法重新整理 Claude 使用情況。"
+          }
+        }
+      }
+    },
+    "Update OnlySwitch on the selected Mac to use Claude Usage." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktualizujte OnlySwitch na vybraném Macu, abyste mohli používat Využití Claude."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktualisiere OnlySwitch auf dem ausgewählten Mac, um Claude-Nutzung zu verwenden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Update OnlySwitch on the selected Mac to use Claude Usage."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualiza OnlySwitch en el Mac seleccionado para usar Uso de Claude."
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I-update ang OnlySwitch sa napiling Mac para magamit ang Paggamit ng Claude."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mettez à jour OnlySwitch sur le Mac sélectionné pour utiliser Utilisation de Claude."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ažurirajte OnlySwitch na odabranom Macu za korištenje Korištenja Claudea."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aggiorna OnlySwitch sul Mac selezionato per usare Utilizzo di Claude."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claudeの使用状況を使うには、選択したMacのOnlySwitchをアップデートしてください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude 사용량을 사용하려면 선택한 Mac에서 OnlySwitch를 업데이트하세요."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Werk OnlySwitch bij op de geselecteerde Mac om Claude-gebruik te gebruiken."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uaktualnij OnlySwitch na wybranym Macu, aby korzystać z Użycia Claudea."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atualize o OnlySwitch no Mac selecionado para usar o Uso do Claude."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Обновите OnlySwitch на выбранном Mac, чтобы использовать раздел «Использование Claude»."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktualizujte OnlySwitch na vybranom Macu, aby ste mohli používať Využitie Claude."
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ku cusboonaysii OnlySwitch Mac-ga la doortay si aad u isticmaasho Isticmaalka Claude."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude Kullanımı’nı kullanmak için seçili Mac’te OnlySwitch’i güncelleyin."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Оновіть OnlySwitch на вибраному Mac, щоб користуватися розділом «Використання Claude»."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更新所选 Mac 上的 OnlySwitch 以使用“Claude 用量”。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更新所選 Mac 上的 OnlySwitch 以使用「Claude 用量」。"
+          }
+        }
+      },
+      "extractionState" : "manual"
+    },
+    "Uses your existing Claude Code session" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Používá vaše stávající přihlášení do Claude Code"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verwendet deine bestehende Claude Code-Sitzung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uses your existing Claude Code session"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usa tu sesión actual de Claude Code"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ginagamit ang kasalukuyan mong session sa Claude Code"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilise votre session Claude Code existante"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Koristi vašu postojeću sesiju Claude Codea"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usa la tua sessione esistente di Claude Code"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "既存のClaude Codeセッションを使用します"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기존 Claude Code 세션을 사용합니다"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gebruikt je bestaande Claude Code-sessie"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Korzysta z istniejącej sesji Claude Code"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usa sua sessão atual do Claude Code"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Использует текущий сеанс Claude Code"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Používa vaše existujúce prihlásenie do Claude Code"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waxay isticmaashaa fadhigaaga Claude Code ee jira"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mevcut Claude Code oturumunuzu kullanır"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Використовує поточний сеанс Claude Code"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用现有的 Claude Code 登录会话"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用現有的 Claude Code 登入工作階段"
+          }
+        }
+      }
+    },
+    "Your Claude session needs to be refreshed." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vaši relaci Claude je třeba obnovit."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deine Claude-Sitzung muss aktualisiert werden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your Claude session needs to be refreshed."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tu sesión de Claude debe actualizarse."
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kailangang i-refresh ang session mo sa Claude."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Votre session Claude doit être actualisée."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vašu sesiju Claudea treba osvježiti."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La sessione Claude deve essere aggiornata."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claudeセッションを更新する必要があります。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude 세션을 새로 고쳐야 합니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je Claude-sessie moet worden vernieuwd."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sesja Claude wymaga odświeżenia."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sua sessão do Claude precisa ser atualizada."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Необходимо обновить сеанс Claude."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vašu reláciu Claude treba obnoviť."
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fadhigaaga Claude wuxuu u baahan yahay in la cusboonaysiiyo."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude oturumunuzun yenilenmesi gerekiyor."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Потрібно оновити сеанс Claude."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "您的 Claude 会话需要刷新。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "您的 Claude 工作階段需要重新整理。"
+          }
+        }
+      }
+    },
     "Subscribe" : {
       "extractionState" : "manual",
       "localizations" : {

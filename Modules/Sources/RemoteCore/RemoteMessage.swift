@@ -147,6 +147,8 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
     case systemMonitorSnapshot(SystemMonitorSnapshot)
     case codexUsageRequest(RemoteCodexUsageRequest)
     case codexUsageResult(RemoteCodexUsageResult)
+    case claudeUsageRequest(RemoteClaudeUsageRequest)
+    case claudeUsageResult(RemoteClaudeUsageResult)
     case aphroditeLibraryRequest
     case aphroditeLibraryManifest(AphroditeRemoteLibraryManifest)
     case aphroditeDocumentChunk(AphroditeRemoteDocumentChunk)
@@ -195,6 +197,8 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
         case systemMonitorSnapshot
         case codexUsageRequest
         case codexUsageResult
+        case claudeUsageRequest
+        case claudeUsageResult
         case aphroditeLibraryRequest
         case aphroditeLibraryManifest
         case aphroditeDocumentChunk
@@ -268,6 +272,10 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
             self = .codexUsageRequest(try container.decode(RemoteCodexUsageRequest.self, forKey: .payload))
         case .codexUsageResult:
             self = .codexUsageResult(try container.decode(RemoteCodexUsageResult.self, forKey: .payload))
+        case .claudeUsageRequest:
+            self = .claudeUsageRequest(try container.decode(RemoteClaudeUsageRequest.self, forKey: .payload))
+        case .claudeUsageResult:
+            self = .claudeUsageResult(try container.decode(RemoteClaudeUsageResult.self, forKey: .payload))
         case .aphroditeLibraryRequest:
             self = .aphroditeLibraryRequest
         case .aphroditeLibraryManifest:
@@ -373,6 +381,12 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
             try container.encode(request, forKey: .payload)
         case let .codexUsageResult(result):
             try container.encode(Kind.codexUsageResult, forKey: .type)
+            try container.encode(result, forKey: .payload)
+        case let .claudeUsageRequest(request):
+            try container.encode(Kind.claudeUsageRequest, forKey: .type)
+            try container.encode(request, forKey: .payload)
+        case let .claudeUsageResult(result):
+            try container.encode(Kind.claudeUsageResult, forKey: .type)
             try container.encode(result, forKey: .payload)
         case .aphroditeLibraryRequest:
             try container.encode(Kind.aphroditeLibraryRequest, forKey: .type)

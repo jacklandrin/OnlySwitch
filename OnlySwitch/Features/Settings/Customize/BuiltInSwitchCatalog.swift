@@ -62,7 +62,7 @@ enum BuiltInSwitchCatalog {
             .cleanupAndStorage
 
         case .keepAwake, .bluetooth, .pomodoroTimer, .lowpowerMode, .fkey,
-             .aiCommender, .authenticator, .codexUsage, .systemMonitor,
+             .aiCommender, .authenticator, .codexUsage, .claudeUsage, .systemMonitor,
              .aphrodite:
             .productivityAndTools
 

@@ -35,6 +35,9 @@ struct RemoteAppView: View {
                                 RemoteCodexUsageView(store: store.scope(state: \.codexUsage, action: \.codexUsage))
                                     .ignoresSafeArea(edges: .bottom)
                                     .tag(RemoteAppPage.codexUsage)
+                                RemoteClaudeUsageView(store: store.scope(state: \.claudeUsage, action: \.claudeUsage))
+                                    .ignoresSafeArea(edges: .bottom)
+                                    .tag(RemoteAppPage.claudeUsage)
                                 RemoteAphroditeAccessView(
                                     accessStore: store.scope(state: \.aphroditeAccess, action: \.aphroditeAccess),
                                     toolsStore: store.scope(state: \.aphrodite, action: \.aphrodite)

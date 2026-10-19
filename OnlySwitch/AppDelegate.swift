@@ -244,6 +244,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         // Workaround for issue [#147](https://github.com/jacklandrin/OnlySwitch/issues/147)
         NSApp.setActivationPolicy(.accessory)
 
+        if let error = PersistenceController.shared.loadError {
+            NSAlert(error: error).runModal()
+        }
+
         Task { @MainActor [weak self] in
             await Task.yield()
             self?.onlyRemoteCampaignController.presentIfNeeded()

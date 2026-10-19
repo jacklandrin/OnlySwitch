@@ -27,6 +27,7 @@ extension EvolutionCommandEntity {
     /// Stores commands without running them. The privileged operation is re-derived from the
     /// compiled allowlist, so an imported file can't grant itself privileged-helper access.
     static func restore(_ commands: [[String: String]]) throws {
+        try PersistenceController.shared.requireStore()
         for command in commands {
             guard
                 let id = command["id"].flatMap(UUID.init(uuidString:)),
@@ -53,6 +54,7 @@ extension EvolutionCommandEntity {
     }
 
     static func addItem(item: EvolutionItem) throws {
+        try PersistenceController.shared.requireStore()
         let entity = try EvolutionCommandEntity.fetchRequest(by: item.id) ?? EvolutionCommandEntity(context: context)
 
         if item.controlType == .Button {
@@ -137,6 +139,7 @@ extension EvolutionCommandEntity {
     }
 
     static func updateIcon(name: String, by id: UUID) throws {
+        try PersistenceController.shared.requireStore()
         let entity = try EvolutionCommandEntity.fetchRequest(by: id)
         guard let entity else {
             throw EvolutionError.noneEntity
@@ -146,6 +149,7 @@ extension EvolutionCommandEntity {
     }
 
     static func removeItem(by id: UUID) throws {
+        try PersistenceController.shared.requireStore()
         guard let entity = try fetchRequest(by: id) else {
             throw EvolutionError.deleteFailed
         }

@@ -10,6 +10,7 @@ enum SectionBar {
         case soundMixer
         case systemMonitor
         case codexUsage
+        case claudeUsage
         case aphrodite
 
         var title: String {
@@ -19,6 +20,7 @@ enum SectionBar {
             case .soundMixer: "Sound Mixer".localized()
             case .systemMonitor: "System Monitor".localized()
             case .codexUsage: "Codex Usage".localized()
+            case .claudeUsage: "Claude Usage".localized()
             case .aphrodite: "Aphrodite".localized()
             }
         }
@@ -30,7 +32,17 @@ enum SectionBar {
             case .soundMixer: "slider.horizontal.3"
             case .systemMonitor: "waveform.path.ecg"
             case .codexUsage: "gauge.with.dots.needle.50percent"
+            case .claudeUsage: "gauge.with.dots.needle.50percent"
             case .aphrodite: "sparkles.rectangle.stack"
+            }
+        }
+
+        /// Brand logo from the app asset catalog; sections without one use `symbolName`.
+        var assetName: String? {
+            switch self {
+            case .codexUsage: "openai_logo"
+            case .claudeUsage: "claude_logo"
+            case .controls, .authenticator, .soundMixer, .systemMonitor, .aphrodite: nil
             }
         }
     }
@@ -40,6 +52,7 @@ enum SectionBar {
         soundMixer: Bool,
         systemMonitor: Bool,
         codexUsage: Bool,
+        claudeUsage: Bool = false,
         aphrodite: Bool = false
     ) -> [Section] {
         var sections: [Section] = [.controls]
@@ -47,12 +60,31 @@ enum SectionBar {
         if soundMixer { sections.append(.soundMixer) }
         if systemMonitor { sections.append(.systemMonitor) }
         if codexUsage { sections.append(.codexUsage) }
+        if claudeUsage { sections.append(.claudeUsage) }
         if aphrodite { sections.append(.aphrodite) }
         return sections
     }
 
     static func shouldShowBar(for sections: [Section]) -> Bool {
         sections.count > 1
+    }
+}
+
+/// Tab icon: an SF Symbol, or a template brand logo sized to sit next to the symbols.
+struct SectionBarIcon: View {
+    let section: SectionBar.Section
+    let logoSize: CGFloat
+
+    var body: some View {
+        if let assetName = section.assetName {
+            Image(assetName)
+                .renderingMode(.template)
+                .resizable()
+                .scaledToFit()
+                .frame(width: logoSize, height: logoSize)
+        } else {
+            Image(systemName: section.symbolName)
+        }
     }
 }
 
@@ -133,7 +165,7 @@ struct SystemMonitorSectionBar: View {
                 selection = section
             }
         } label: {
-            Label(section.title, systemImage: section.symbolName)
+            Label { Text(section.title) } icon: { SectionBarIcon(section: section, logoSize: 16) }
                 .labelStyle(.iconOnly)
                 .font(.body.weight(.semibold))
                 .foregroundStyle(selection == section ? .primary : .secondary)

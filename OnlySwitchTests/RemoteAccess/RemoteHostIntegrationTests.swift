@@ -63,6 +63,59 @@ struct RemoteHostIntegrationTests {
     }
 
     @Test(.timeLimit(.minutes(1)))
+    func authenticatedClaudeUsageReturnsCorrelatedEncryptedSnapshot() async throws {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let snapshot = RemoteClaudeUsageSnapshot(
+            account: .init(email: "person@example.com", plan: "Plus"),
+            session: .init(remainingPercent: 72, resetAt: nil),
+            weekly: nil,
+            models: [],
+            extraUsage: nil,
+            fetchedAt: Date(timeIntervalSince1970: 1_800_000_000)
+        )
+        let host = RemoteHost.testing(
+            catalog: [], router: router, pairingCode: "ABCDEFGH2345",
+            claudeUsage: {
+                return .success(snapshot)
+            }
+        )
+        let endpoint = try await host.startForTesting(port: 0)
+        defer { Task { await host.stop() } }
+        let client = try await RemoteHostTestClient.connect(to: endpoint)
+        try await client.pair(code: "ABCDEFGH2345")
+        let request = RemoteClaudeUsageRequest(requestID: UUID())
+        let result = try await client.requestClaudeUsage(request)
+        #expect(result.requestID == request.requestID)
+        #expect(try result.result.get() == snapshot)
+        await client.close()
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func legacyClaudeRequestReturnsUpgradeWithoutInvokingProvider() async throws {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let host = RemoteHost.testing(
+            catalog: [], router: router, pairingCode: "ABCDEFGH2345",
+            claudeUsage: {
+                Issue.record("A legacy peer must not invoke Claude usage")
+                return .failure(.init(code: .executionFailed, message: "Unexpected request"))
+            }
+        )
+        let endpoint = try await host.startForTesting(port: 0)
+        defer { Task { await host.stop() } }
+        let client = try await RemoteHostTestClient.connect(to: endpoint, version: .init(major: 1, minor: 6))
+        try await client.pair(code: "ABCDEFGH2345")
+        let request = RemoteClaudeUsageRequest(requestID: UUID())
+        let result = try await client.requestClaudeUsage(request)
+        #expect(result.requestID == request.requestID)
+        guard case let .failure(error) = result.result else {
+            Issue.record("Expected an upgrade response")
+            return
+        }
+        #expect(error.code == .upgradeRequired)
+        await client.close()
+    }
+
+    @Test(.timeLimit(.minutes(1)))
     func authenticatedSystemMonitorSubscriptionStreamsAndCancelsDeterministically() async throws {
         let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
         let snapshot = SystemMonitorSnapshot(

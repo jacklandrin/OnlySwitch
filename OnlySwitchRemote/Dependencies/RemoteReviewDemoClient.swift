@@ -467,6 +467,19 @@ extension RemoteConnectionClient {
                     ))
                 )
             },
+            fetchClaudeUsage: { invocation in
+                let snapshot = await runtime.connectionSnapshot()
+                guard invocation.macID == snapshot.authenticatedMacID, invocation.sessionID == snapshot.authenticatedSessionID else {
+                    throw RemoteProtocolError(code: .authenticationFailed, message: "The selected Mac session changed")
+                }
+                return .init(requestID: invocation.request.requestID, result: .success(.init(
+                    account: .init(email: "review@example.com", plan: "Pro"),
+                    session: .init(remainingPercent: 75, resetAt: Date(timeIntervalSince1970: 1_800_003_600)),
+                    weekly: .init(remainingPercent: 64, resetAt: Date(timeIntervalSince1970: 1_800_604_800)),
+                    models: [.init(id: "seven_day_sonnet", name: "Sonnet", quota: .init(remainingPercent: 90, resetAt: nil))],
+                    extraUsage: .init(isEnabled: false, used: nil, limit: nil, currency: nil, utilization: nil),
+                    fetchedAt: Date(timeIntervalSince1970: 1_800_000_000)) ))
+            },
             sendSoundMixer: { _ in },
             setSystemMonitorStreaming: { _ in },
             setForegrounded: { _ in }

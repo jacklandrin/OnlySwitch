@@ -23,6 +23,7 @@ actor RemoteHost {
     private let commitStageReached: @Sendable (RemotePairingCommitStage) async -> Void
     private let authenticatedSessionObserver: @Sendable () -> Void
     private let systemMonitorSnapshots: @Sendable () -> AsyncThrowingStream<SystemMonitorSnapshot, Error>
+    private let claudeUsage: @Sendable () async -> Result<RemoteClaudeUsageSnapshot, RemoteProtocolError>
     private let codexUsage: @Sendable (Bool) async -> Result<RemoteCodexUsageSnapshot, RemoteProtocolError>
     private var eventContinuations: [
         UUID: AsyncStream<RemoteHostEvent>.Continuation
@@ -57,7 +58,8 @@ actor RemoteHost {
         systemMonitorSnapshots: @escaping @Sendable () -> AsyncThrowingStream<SystemMonitorSnapshot, Error> = {
             MacSystemMonitorCollector.liveClient().snapshots()
         },
-        codexUsage: @escaping @Sendable (Bool) async -> Result<RemoteCodexUsageSnapshot, RemoteProtocolError> = RemoteCodexUsageProvider.live.fetch
+        codexUsage: @escaping @Sendable (Bool) async -> Result<RemoteCodexUsageSnapshot, RemoteProtocolError> = RemoteCodexUsageProvider.live.fetch,
+        claudeUsage: @escaping @Sendable () async -> Result<RemoteClaudeUsageSnapshot, RemoteProtocolError> = RemoteClaudeUsageProvider.live.fetch
     ) {
         self.credentialStore = credentialStore
         self.catalogProvider = catalogProvider
@@ -74,6 +76,7 @@ actor RemoteHost {
         self.authenticatedSessionObserver = authenticatedSessionObserver
         self.systemMonitorSnapshots = systemMonitorSnapshots
         self.codexUsage = codexUsage
+        self.claudeUsage = claudeUsage
         self.statusScheduler = RemoteStatusScheduler(provider: catalogProvider)
         self.catalogMonitor = RemoteCatalogMonitor(provider: catalogProvider)
     }
@@ -106,6 +109,9 @@ actor RemoteHost {
         },
         codexUsage: @escaping @Sendable (Bool) async -> Result<RemoteCodexUsageSnapshot, RemoteProtocolError> = { _ in
             .failure(.init(code: .actionNotSupported, message: "Codex usage is unavailable"))
+        },
+        claudeUsage: @escaping @Sendable () async -> Result<RemoteClaudeUsageSnapshot, RemoteProtocolError> = {
+            .failure(.init(code: .actionNotSupported, message: "Claude usage is unavailable"))
         }
     ) -> RemoteHost {
         let fixedProvider = RemoteCatalogProvider(
@@ -140,7 +146,8 @@ actor RemoteHost {
             commitStageReached: commitStageReached,
             authenticatedSessionObserver: authenticatedSessionObserver,
             systemMonitorSnapshots: systemMonitorSnapshots,
-            codexUsage: codexUsage
+            codexUsage: codexUsage,
+            claudeUsage: claudeUsage
         )
     }
 
@@ -439,6 +446,7 @@ actor RemoteHost {
             },
             systemMonitorSnapshots: systemMonitorSnapshots,
             codexUsage: codexUsage,
+            claudeUsage: claudeUsage,
             authenticationResultSender: authenticationResultSender,
             commitStageReached: commitStageReached,
             ended: { [weak self] id in await self?.sessionEnded(id) },

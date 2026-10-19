@@ -78,6 +78,8 @@ public extension UserDefaults {
         //Sticker
         public static let sticker = "stickerKey"
         //OnlyAgent
+        public static let showClaudeUsageTab = "showClaudeUsageTabKey"
+        public static let didInstallClaudeUsageSwitch = "didInstallClaudeUsageSwitchKey"
         public static let showCodexUsageTab = "showCodexUsageTabKey"
         public static let didInstallCodexUsageSwitch = "didInstallCodexUsageSwitchKey"
         public static let showAphroditeTab = "showAphroditeTabKey"
@@ -128,7 +130,7 @@ public extension UserDefaults {
             autoDimScreenTime, dimScreenPercent, syncExternalBrightness,
             nightShiftStrength, nightShiftStartDate, nightShiftEndDate, isNightShiftScheduleOn,
             sticker,
-            showCodexUsageTab, showAphroditeTab, currentAIModel, ollamaUrl, openAIHost,
+            showCodexUsageTab, showClaudeUsageTab, showAphroditeTab, currentAIModel, ollamaUrl, openAIHost,
             keyLightBrightness,
             authenticatorEnabled,
             ScreenSaverInterval, checkUpdateOnLaunch, hideMenuAfterRunning, canPlayEffectSound,

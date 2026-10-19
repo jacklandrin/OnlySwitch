@@ -110,6 +110,7 @@ actor RemotePeerSession {
     private let authenticationAuthorized: @Sendable (UUID, UUID) async -> Bool
     private let authenticationConfirmed: @Sendable (UUID, UUID) async -> Bool
     private let systemMonitorSnapshots: @Sendable () -> AsyncThrowingStream<SystemMonitorSnapshot, Error>
+    private let claudeUsage: @Sendable () async -> Result<RemoteClaudeUsageSnapshot, RemoteProtocolError>
     private let codexUsage: @Sendable (Bool) async -> Result<RemoteCodexUsageSnapshot, RemoteProtocolError>
     private let aphroditeSnapshotMessages: @Sendable () async throws -> [RemoteMessage]
     private let authenticationResultSender: AuthenticationResultSender
@@ -123,6 +124,8 @@ actor RemotePeerSession {
     private var negotiatedVersion: RemoteProtocolVersion?
     private var advertisedCatalogRevision: UInt64?
     private var systemMonitorTask: Task<Void, Never>?
+    private var claudeUsageTask: Task<Void, Never>?
+    private var claudeUsageGeneration: UInt64 = 0
     private var codexUsageTask: Task<Void, Never>?
     private var codexUsageGeneration: UInt64 = 0
     private var aphroditeChangesTask: Task<Void, Never>?
@@ -151,6 +154,9 @@ actor RemotePeerSession {
         systemMonitorSnapshots: @escaping @Sendable () -> AsyncThrowingStream<SystemMonitorSnapshot, Error>,
         codexUsage: @escaping @Sendable (Bool) async -> Result<RemoteCodexUsageSnapshot, RemoteProtocolError> = { _ in
             .failure(.init(code: .actionNotSupported, message: "Codex usage is unavailable"))
+        },
+        claudeUsage: @escaping @Sendable () async -> Result<RemoteClaudeUsageSnapshot, RemoteProtocolError> = {
+            .failure(.init(code: .actionNotSupported, message: "Claude usage is unavailable"))
         },
         aphroditeSnapshotMessages: @escaping @Sendable () async throws -> [RemoteMessage] = {
             try await RemoteAphroditeSnapshotProvider.liveMessages()
@@ -184,6 +190,7 @@ actor RemotePeerSession {
         self.authenticationConfirmed = authenticationConfirmed
         self.systemMonitorSnapshots = systemMonitorSnapshots
         self.codexUsage = codexUsage
+        self.claudeUsage = claudeUsage
         self.aphroditeSnapshotMessages = aphroditeSnapshotMessages
         self.authenticationResultSender = authenticationResultSender
         self.commitStageReached = commitStageReached
@@ -209,6 +216,9 @@ actor RemotePeerSession {
         stopSystemMonitorStreaming()
         codexUsageTask?.cancel()
         codexUsageTask = nil
+        claudeUsageTask?.cancel()
+        claudeUsageTask = nil
+        claudeUsageGeneration &+= 1
         aphroditeChangesTask?.cancel()
         aphroditeChangesTask = nil
         state = .closed
@@ -223,6 +233,9 @@ actor RemotePeerSession {
         stopSystemMonitorStreaming()
         codexUsageTask?.cancel()
         codexUsageTask = nil
+        claudeUsageTask?.cancel()
+        claudeUsageTask = nil
+        claudeUsageGeneration &+= 1
         aphroditeChangesTask?.cancel()
         aphroditeChangesTask = nil
         state = .closed
@@ -808,6 +821,20 @@ actor RemotePeerSession {
                 guard Task.isCancelled == false else { return }
                 try? await self?.finishCodexUsage(requestID: request.requestID, generation: generation, result: result)
             }
+        case let .claudeUsageRequest(request):
+            guard negotiatedVersion?.supportsClaudeUsageRemote == true else {
+                let error = RemoteProtocolError(code: .upgradeRequired, message: "Claude Usage requires a newer OnlySwitch")
+                try await sendEncrypted(.claudeUsageResult(.init(requestID: request.requestID, result: .failure(error))))
+                return
+            }
+            claudeUsageGeneration &+= 1
+            let generation = claudeUsageGeneration
+            claudeUsageTask?.cancel()
+            claudeUsageTask = Task { [weak self, claudeUsage] in
+                let result = await claudeUsage()
+                guard Task.isCancelled == false else { return }
+                try? await self?.finishClaudeUsage(requestID: request.requestID, generation: generation, result: result)
+            }
         case .aphroditeLibraryRequest:
             guard negotiatedVersion?.supportsAphroditeRemote == true else {
                 throw RemoteProtocolError(code: .actionNotSupported, message: "Aphrodite sharing requires a newer OnlyRemote")
@@ -883,6 +910,16 @@ actor RemotePeerSession {
         guard generation == codexUsageGeneration, case .authenticated = state else { return }
         codexUsageTask = nil
         try await sendEncrypted(.codexUsageResult(.init(requestID: requestID, result: result)))
+    }
+
+    private func finishClaudeUsage(
+        requestID: UUID,
+        generation: UInt64,
+        result: Result<RemoteClaudeUsageSnapshot, RemoteProtocolError>
+    ) async throws {
+        guard generation == claudeUsageGeneration, case .authenticated = state else { return }
+        claudeUsageTask = nil
+        try await sendEncrypted(.claudeUsageResult(.init(requestID: requestID, result: result)))
     }
 
     private func sendCatalog() async throws {

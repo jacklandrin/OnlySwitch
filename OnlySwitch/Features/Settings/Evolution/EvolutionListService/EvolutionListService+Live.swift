@@ -13,6 +13,7 @@ extension EvolutionListService: DependencyKey {
     static let liveValue = Self(
         loadEvolutionList: {
             try await MainActor.run {
+                try PersistenceController.shared.requireStore()
                 let entities = try EvolutionCommandEntity.fetchResult()
                 let context = PersistenceController
                     .shared

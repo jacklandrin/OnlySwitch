@@ -92,6 +92,12 @@ final class RadioStationSwitch:SwitchProvider, @unchecked Sendable {
     }
     
     func setDefaultRadioStations() {
+        do {
+            try PersistenceController.shared.requireStore()
+        } catch {
+            NSLog("OnlySwitch default radio stations could not be saved: %@", error as NSError)
+            return
+        }
         if firstRadioRun() {
             guard let managedObjectContext = managedObjectContext else {
                 fatalError("No Managed Object Context Available")

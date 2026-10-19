@@ -213,6 +213,14 @@ actor RemoteHostTestClient {
         return result
     }
 
+    func requestClaudeUsage(_ request: RemoteClaudeUsageRequest) async throws -> RemoteClaudeUsageResult {
+        try await sendEncrypted(.claudeUsageRequest(request))
+        guard case let .claudeUsageResult(result) = try await receiveEncrypted() else {
+            throw RemoteProtocolError(code: .invalidFrame, message: "Expected Claude usage result")
+        }
+        return result
+    }
+
     func sendTransaction(_ message: RemoteMessage) async throws {
         switch message {
         case .pairingCommit, .pairingAbort, .pairingStatusRequest:
