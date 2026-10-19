@@ -8,11 +8,15 @@ struct RemotePaywallFeature {
         var product: RemoteSubscriptionProduct?
         var isLoading = false
         var isRestoring = false
+        var isPurchasing = false
+        var purchasePending = false
+        var entitlementGeneration: UInt64 = 0
         var entitlement: RemoteSubscriptionEntitlement = .inactive
         var issue: Issue?
         var restoreCompleted = false
 
-        var canPurchase: Bool { false }
+        var isBusy: Bool { isLoading || isRestoring || isPurchasing }
+        var canPurchase: Bool { product != nil && isBusy == false && entitlement == .inactive }
     }
 
     enum Action: Equatable {
@@ -20,8 +24,12 @@ struct RemotePaywallFeature {
         case retryTapped
         case productResponse(ProductResult)
         case entitlementResponse(RemoteSubscriptionEntitlement)
+        case entitlementSnapshotResponse(UInt64, RemoteSubscriptionEntitlement)
+        case authoritativeEntitlementUpdated(RemoteSubscriptionEntitlement)
         case restoreTapped
         case restoreResponse(RestoreResult)
+        case purchaseTapped
+        case purchaseResponse(PurchaseResult)
     }
 
     enum ProductResult: Equatable, Sendable {
@@ -34,10 +42,17 @@ struct RemotePaywallFeature {
         case failure
     }
 
+    enum PurchaseResult: Equatable, Sendable {
+        case success(RemoteSubscriptionPurchaseResult)
+        case failure(RemoteSubscriptionPurchaseError)
+    }
+
     enum Issue: Equatable, Sendable {
         case productUnavailable
         case productLoadFailed
         case restoreFailed
+        case purchaseFailed
+        case verificationFailed
     }
 
     @Dependency(\.remoteSubscription) var subscription
@@ -47,24 +62,29 @@ struct RemotePaywallFeature {
         Reduce { state, action in
             switch action {
             case .task, .retryTapped:
-                guard state.isLoading == false, state.isRestoring == false else { return .none }
+                guard state.isPurchasing == false, state.isRestoring == false else { return .none }
+                if case .retryTapped = action, state.isLoading { return .none }
                 state.isLoading = true
                 state.issue = nil
                 state.restoreCompleted = false
+                let generation = state.entitlementGeneration
                 return .concatenate(
                     .run { [subscription] send in
                         do {
-                            await send(.productResponse(.success(try await subscription.loadProduct())))
+                            let product = try await subscription.loadProduct()
+                            guard Task.isCancelled == false else { return }
+                            await send(.productResponse(.success(product)))
                         } catch is CancellationError {
                             return
                         } catch {
+                            guard Task.isCancelled == false else { return }
                             await send(.productResponse(.failure))
                         }
                     },
                     .run { [subscription] send in
                         let entitlement = await subscription.currentEntitlement()
                         guard Task.isCancelled == false else { return }
-                        await send(.entitlementResponse(entitlement))
+                        await send(.entitlementSnapshotResponse(generation, entitlement))
                     }
                 )
                 .cancellable(id: CancelID.load, cancelInFlight: true)
@@ -85,8 +105,22 @@ struct RemotePaywallFeature {
                 state.entitlement = entitlement
                 return .none
 
+            case let .entitlementSnapshotResponse(generation, entitlement):
+                guard generation == state.entitlementGeneration else { return .none }
+                state.entitlement = entitlement
+                return .none
+
+            case let .authoritativeEntitlementUpdated(entitlement):
+                state.entitlementGeneration &+= 1
+                state.entitlement = entitlement
+                if case .active = entitlement {
+                    state.purchasePending = false
+                    state.issue = nil
+                }
+                return .none
+
             case .restoreTapped:
-                guard state.isRestoring == false, state.isLoading == false else { return .none }
+                guard state.isBusy == false else { return .none }
                 state.isRestoring = true
                 state.issue = nil
                 state.restoreCompleted = false
@@ -113,6 +147,39 @@ struct RemotePaywallFeature {
             case .restoreResponse(.failure):
                 state.isRestoring = false
                 state.issue = .restoreFailed
+                return .none
+
+            case .purchaseTapped:
+                guard state.canPurchase else { return .none }
+                state.isPurchasing = true
+                state.purchasePending = false
+                state.issue = nil
+                state.restoreCompleted = false
+                return .concatenate(
+                    .cancel(id: CancelID.load),
+                    .run { [subscription] send in
+                        do {
+                            await send(.purchaseResponse(.success(try await subscription.purchase())))
+                        } catch is CancellationError {
+                            await send(.purchaseResponse(.success(.cancelled)))
+                        } catch let error as RemoteSubscriptionPurchaseError {
+                            await send(.purchaseResponse(.failure(error)))
+                        } catch {
+                            await send(.purchaseResponse(.failure(.purchaseFailed)))
+                        }
+                    }
+                )
+
+            case let .purchaseResponse(.success(result)):
+                state.isPurchasing = false
+                state.purchasePending = result == .pending
+                if case let .purchased(entitlement) = result { state.entitlement = entitlement }
+                return .none
+
+            case let .purchaseResponse(.failure(error)):
+                state.isPurchasing = false
+                state.issue = error == .verificationFailed ? .verificationFailed :
+                    error == .productUnavailable ? .productUnavailable : .purchaseFailed
                 return .none
             }
         }

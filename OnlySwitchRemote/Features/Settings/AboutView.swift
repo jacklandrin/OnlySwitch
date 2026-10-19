@@ -6,6 +6,10 @@ struct AboutView: View {
             Section {
                 LabeledContent("Version", value: versionDescription)
                 LabeledContent("Copyright", value: "© 2021–2026 Jacklandrin")
+                Link(destination: URL(string: "https://github.com/jacklandrin/OnlySwitch")!) {
+                    Label("GitHub", systemImage: "chevron.left.forwardslash.chevron.right")
+                }
+                .foregroundStyle(.primary)
                 Link(destination: URL(string: "https://onlyswitch.click/#/privacy-policy")!) {
                     Label("Privacy Policy", systemImage: "hand.raised")
                 }

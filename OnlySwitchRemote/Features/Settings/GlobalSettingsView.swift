@@ -88,7 +88,7 @@ struct GlobalSettingsView: View {
                 NavigationLink {
                     HowToUseView()
                 } label: {
-                    Label("How to Use", systemImage: "questionmark.circle")
+                    settingsRowLabel("How to Use", systemImage: "questionmark.circle")
                 }
 
                 Link(destination: Self.reviewURL) {
@@ -101,9 +101,19 @@ struct GlobalSettingsView: View {
                 NavigationLink {
                     AboutView()
                 } label: {
-                    Label("About", systemImage: "info.circle")
+                    settingsRowLabel("About", systemImage: "info.circle")
                 }
             }
+
+            #if DEBUG
+            Section {
+                NavigationLink {
+                    RemoteDebugMenuView(store: store.scope(state: \.debugMenu, action: \.debugMenu))
+                } label: {
+                    settingsRowLabel("Debug Menu", systemImage: "ladybug")
+                }
+            }
+            #endif
 
             Section("Recommended Apps") {
                 Link(destination: URL(string: "https://apps.apple.com/us/app/id1590006394")!) {

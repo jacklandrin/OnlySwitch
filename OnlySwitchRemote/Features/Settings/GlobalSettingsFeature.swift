@@ -5,6 +5,9 @@ import Foundation
 struct GlobalSettingsFeature {
     @ObservableState
     struct State: Equatable {
+        #if DEBUG
+        var debugMenu = RemoteDebugMenuFeature.State()
+        #endif
         let isSetupRequired: Bool
         var isKeepingScreenAwake: Bool
         var pairedMacs: IdentifiedArrayOf<PairedMac>
@@ -29,6 +32,9 @@ struct GlobalSettingsFeature {
     }
 
     enum Action: Equatable {
+        #if DEBUG
+        case debugMenu(RemoteDebugMenuFeature.Action)
+        #endif
         case pairNewMacTapped
         case selectMac(UUID)
         case manageMac(UUID)
@@ -51,8 +57,16 @@ struct GlobalSettingsFeature {
     }
 
     var body: some ReducerOf<Self> {
+        #if DEBUG
+        Scope(state: \.debugMenu, action: \.debugMenu) { RemoteDebugMenuFeature() }
+        #endif
         Reduce { state, action in
             switch action {
+            #if DEBUG
+            case .debugMenu:
+                return .none
+            #endif
+
             case .pairNewMacTapped:
                 state.pairing = PairingFeature.State()
                 return .none

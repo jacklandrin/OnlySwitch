@@ -485,6 +485,12 @@
 		F3AF000000000000000000003 /* OnlyRemoteCampaignFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AF000000000000000000023 /* OnlyRemoteCampaignFeature.swift */; };
 		F3AF000000000000000000004 /* OnlyRemoteCampaignView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AF000000000000000000024 /* OnlyRemoteCampaignView.swift */; };
 		F3AF000000000000000000005 /* OnlyRemoteCampaignWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AF000000000000000000025 /* OnlyRemoteCampaignWindowController.swift */; };
+		F5BC00000000000000000200 /* RemoteAphroditeAccessFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5BC00000000000000000100 /* RemoteAphroditeAccessFeature.swift */; };
+		F5BC00000000000000000201 /* RemoteAphroditeAccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5BC00000000000000000101 /* RemoteAphroditeAccessView.swift */; };
+		F5BC00000000000000000202 /* RemoteDebugMenuFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5BC00000000000000000102 /* RemoteDebugMenuFeature.swift */; };
+		F5BC00000000000000000203 /* RemoteDebugMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5BC00000000000000000103 /* RemoteDebugMenuView.swift */; };
+		F5BC00000000000000000320 /* Sharing in Frameworks */ = {isa = PBXBuildFile; productRef = F5BC00000000000000000310 /* Sharing */; };
+		F5BC00000000000000000321 /* Sharing in Frameworks */ = {isa = PBXBuildFile; productRef = F5BC00000000000000000311 /* Sharing */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1005,6 +1011,10 @@
 		F3AF000000000000000000024 /* OnlyRemoteCampaignView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyRemoteCampaignView.swift; sourceTree = "<group>"; };
 		F3AF000000000000000000025 /* OnlyRemoteCampaignWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyRemoteCampaignWindowController.swift; sourceTree = "<group>"; };
 		F3BB00000000000000000001 /* OnlySwitch 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "OnlySwitch 2.xcdatamodel"; sourceTree = "<group>"; };
+		F5BC00000000000000000100 /* RemoteAphroditeAccessFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAphroditeAccessFeature.swift; sourceTree = "<group>"; };
+		F5BC00000000000000000101 /* RemoteAphroditeAccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAphroditeAccessView.swift; sourceTree = "<group>"; };
+		F5BC00000000000000000102 /* RemoteDebugMenuFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteDebugMenuFeature.swift; sourceTree = "<group>"; };
+		F5BC00000000000000000103 /* RemoteDebugMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteDebugMenuView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1071,6 +1081,7 @@
 			files = (
 				F3AB00000000000000000003 /* SwiftNavigation in Frameworks */,
 				F3A300000000000000000026 /* ComposableArchitecture in Frameworks */,
+				F5BC00000000000000000320 /* Sharing in Frameworks */,
 				F3A300000000000000000027 /* RemoteCore in Frameworks */,
 				F3A300000000000000000028 /* RemoteTransport in Frameworks */,
 				F3A30000000000000000002C /* CasePaths in Frameworks */,
@@ -1089,6 +1100,7 @@
 				F3AB00000000000000000004 /* SwiftNavigation in Frameworks */,
 				F3AB00000000000000000005 /* Dependencies in Frameworks */,
 				F3A300000000000000000029 /* ComposableArchitecture in Frameworks */,
+				F5BC00000000000000000321 /* Sharing in Frameworks */,
 				F3A30000000000000000002A /* RemoteCore in Frameworks */,
 				F3A30000000000000000002B /* RemoteTransport in Frameworks */,
 				F3A900000000000000000009 /* IdentifiedCollections in Frameworks */,
@@ -2363,7 +2375,9 @@
 			isa = PBXGroup;
 			children = (
 				F4AB00000000000000000012 /* RemotePaywallFeature.swift */,
+				F5BC00000000000000000100 /* RemoteAphroditeAccessFeature.swift */,
 				F4AB00000000000000000013 /* RemotePaywallView.swift */,
+				F5BC00000000000000000101 /* RemoteAphroditeAccessView.swift */,
 			);
 			path = Subscription;
 			sourceTree = "<group>";
@@ -2390,7 +2404,9 @@
 			isa = PBXGroup;
 			children = (
 				DABA00000000000000000022 /* GlobalSettingsFeature.swift */,
+				F5BC00000000000000000102 /* RemoteDebugMenuFeature.swift */,
 				DABA00000000000000000023 /* GlobalSettingsView.swift */,
+				F5BC00000000000000000103 /* RemoteDebugMenuView.swift */,
 				F3A900000000000000000025 /* SettingsFeature.swift */,
 				F3A900000000000000000026 /* SettingsView.swift */,
 				F3AD00000000000000000021 /* HowToUseView.swift */,
@@ -2554,6 +2570,7 @@
 			name = OnlySwitchRemote;
 			packageProductDependencies = (
 				F3A300000000000000000030 /* ComposableArchitecture */,
+				F5BC00000000000000000310 /* Sharing */,
 				F3A300000000000000000031 /* RemoteCore */,
 				F3A300000000000000000032 /* RemoteTransport */,
 				F3A300000000000000000037 /* CasePaths */,
@@ -2584,6 +2601,7 @@
 			packageProductDependencies = (
 				F3AE00000000000000000003 /* Clocks */,
 				F3A300000000000000000033 /* ComposableArchitecture */,
+				F5BC00000000000000000311 /* Sharing */,
 				F3A300000000000000000034 /* RemoteCore */,
 				F3A300000000000000000035 /* RemoteTransport */,
 				F3A900000000000000000030 /* IdentifiedCollections */,
@@ -3160,7 +3178,9 @@
 				F3A300000000000000000022 /* RemoteAppView.swift in Sources */,
 				F4AB00000000000000000001 /* RemoteSubscriptionClient.swift in Sources */,
 				F4AB00000000000000000002 /* RemotePaywallFeature.swift in Sources */,
+				F5BC00000000000000000200 /* RemoteAphroditeAccessFeature.swift in Sources */,
 				F4AB00000000000000000003 /* RemotePaywallView.swift in Sources */,
+				F5BC00000000000000000201 /* RemoteAphroditeAccessView.swift in Sources */,
 				F4AB00000000000000000004 /* RemoteAphroditeView.swift in Sources */,
 				F4AC00000000000000000001 /* RemoteAphroditeFeature.swift in Sources */,
 				B220A0000000000000000002 /* RemoteAppShellFeature.swift in Sources */,
@@ -3183,7 +3203,9 @@
 				F3A900000000000000000005 /* SettingsFeature.swift in Sources */,
 				F3A900000000000000000006 /* SettingsView.swift in Sources */,
 				DABA00000000000000000002 /* GlobalSettingsFeature.swift in Sources */,
+				F5BC00000000000000000202 /* RemoteDebugMenuFeature.swift in Sources */,
 				DABA00000000000000000003 /* GlobalSettingsView.swift in Sources */,
+				F5BC00000000000000000203 /* RemoteDebugMenuView.swift in Sources */,
 				DABA00000000000000000004 /* RemoteIdleTimerClient.swift in Sources */,
 				F3AD00000000000000000001 /* HowToUseView.swift in Sources */,
 				F3AD00000000000000000002 /* AboutView.swift in Sources */,
@@ -4166,6 +4188,8 @@
 			package = F3AE00000000000000000002 /* XCRemoteSwiftPackageReference "swift-clocks" */;
 			productName = Clocks;
 		};
+		F5BC00000000000000000310 /* Sharing */ = {isa = XCSwiftPackageProductDependency; productName = Sharing; };
+		F5BC00000000000000000311 /* Sharing */ = {isa = XCSwiftPackageProductDependency; productName = Sharing; };
 /* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */

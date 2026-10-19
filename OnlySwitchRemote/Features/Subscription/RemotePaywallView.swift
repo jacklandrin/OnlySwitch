@@ -2,7 +2,10 @@ import ComposableArchitecture
 import SwiftUI
 
 struct RemotePaywallView: View {
+    enum Presentation { case sheet, inline }
+
     let store: StoreOf<RemotePaywallFeature>
+    var presentation: Presentation = .sheet
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
 
@@ -10,43 +13,48 @@ struct RemotePaywallView: View {
     private let termsURL = URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!
 
     var body: some View {
-        NavigationStack {
-            ZStack {
-                paywallBackground
-                ScrollView {
-                    VStack(spacing: 20) {
-                        hero
-                        serviceCard
-                        priceCard
-                        billingCard
-                        actionCard
-                        legalLinks
-                    }
-                    .frame(maxWidth: 620)
-                    .padding()
+        Group {
+            if presentation == .sheet {
+                NavigationStack {
+                    content
+                        .navigationTitle("OnlyRemote Plus")
+                        .navigationBarTitleDisplayMode(.inline)
+                        .toolbar {
+                            ToolbarItem(placement: .topBarTrailing) {
+                                Button("Close", systemImage: "xmark") { dismiss() }
+                                    .labelStyle(.iconOnly)
+                                    .accessibilityHint("Closes OnlyRemote Plus")
+                                    .disabled(store.isPurchasing || store.isRestoring)
+                            }
+                        }
                 }
-            }
-            .navigationTitle("OnlyRemote Plus")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Close", systemImage: "xmark") { dismiss() }
-                        .labelStyle(.iconOnly)
-                        .accessibilityHint("Closes the OnlyRemote Plus preview")
-                }
+            } else {
+                content
             }
         }
+        .interactiveDismissDisabled(store.isPurchasing || store.isRestoring)
         .task { await store.send(.task).finish() }
     }
 
-    private var paywallBackground: some View {
-        LinearGradient(
-            colors: [Color.accentColor.opacity(0.22), Color.purple.opacity(0.12), Color(.systemBackground)],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
-        .ignoresSafeArea()
-        .accessibilityHidden(true)
+    private var content: some View {
+        ZStack {
+            if presentation == .sheet {
+                RemotePaywallBackground()
+            }
+            ScrollView {
+                VStack(spacing: 20) {
+                    hero
+                    serviceCard
+                    priceCard
+                    billingCard
+                    actionCard
+                    legalLinks
+                }
+                .frame(maxWidth: 620)
+                .frame(maxWidth: .infinity)
+                .padding()
+            }
+        }
     }
 
     private var hero: some View {
@@ -58,10 +66,7 @@ struct RemotePaywallView: View {
             Text("OnlyRemote Plus")
                 .font(.largeTitle.bold())
                 .multilineTextAlignment(.center)
-            Text("Subscription Preview")
-                .font(.headline)
-                .foregroundStyle(.secondary)
-            Text("Aphrodite is not available in this version. Subscriptions cannot be purchased yet.")
+            Text("Aphrodite requires an active OnlyRemote Plus subscription.")
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
         }
@@ -72,9 +77,9 @@ struct RemotePaywallView: View {
         VStack(alignment: .leading, spacing: 12) {
             Label("Aphrodite personal tools", systemImage: "wand.and.stars")
                 .font(.title3.bold())
-            Text("Use your personal Aphrodite tools in OnlyRemote when Aphrodite becomes available.")
+            Text("Sync personal tools from OnlySwitch on your Mac and use saved tools offline.")
                 .foregroundStyle(.secondary)
-            Label("Aphrodite is not available in this version.", systemImage: "clock.badge.exclamationmark")
+            Label("Create tools on your Mac. Run them on your iPhone or iPad.", systemImage: "desktopcomputer.and.iphone")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
         }
@@ -90,7 +95,7 @@ struct RemotePaywallView: View {
                 Text(price)
                     .font(.system(.largeTitle, design: .rounded).bold())
                     .foregroundStyle(.primary)
-                Text("When available, this subscription will renew automatically at \(price) per month until canceled.")
+                Text("This subscription renews automatically at \(price) per month until canceled.")
                     .font(.headline)
                     .multilineTextAlignment(.center)
             } else {
@@ -109,7 +114,7 @@ struct RemotePaywallView: View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Billing and cancellation")
                 .font(.headline)
-            Text("When subscriptions become available, payment will be charged to your Apple Account at confirmation of purchase. Subscriptions renew automatically unless canceled at least 24 hours before the end of the current period. Your account will be charged for renewal within 24 hours before the current period ends. Manage or cancel subscriptions in your App Store account settings.")
+            Text("Payment will be charged to your Apple Account at confirmation of purchase. Subscriptions renew automatically unless canceled at least 24 hours before the end of the current period. Your account will be charged for renewal within 24 hours before the current period ends. Manage or cancel subscriptions in your App Store account settings.")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
         }
@@ -119,12 +124,29 @@ struct RemotePaywallView: View {
 
     private var actionCard: some View {
         VStack(spacing: 12) {
-            Button("Subscriptions Not Yet Available") { }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
-                .frame(maxWidth: .infinity)
+            if store.entitlement == .inactive, store.product != nil {
+                Button {
+                    store.send(.purchaseTapped)
+                } label: {
+                    Group {
+                        if store.isPurchasing {
+                            ProgressView("Purchasing…")
+                                .tint(.white)
+                        } else if let price = store.product?.displayPrice {
+                            Text("Subscribe for \(price) per month")
+                        } else {
+                            Text("Subscribe")
+                        }
+                    }
+                    .font(.headline)
+                    .frame(maxWidth: .infinity, minHeight: 44)
+                    .padding(.horizontal, 12)
+                    .foregroundStyle(Color.white)
+                    .background(Color(red: 0.05, green: 0.32, blue: 0.7), in: Capsule())
+                }
+                .buttonStyle(.plain)
                 .disabled(store.canPurchase == false)
-                .accessibilityHint("Purchases are unavailable in this version")
+            }
 
             Button {
                 store.send(.restoreTapped)
@@ -139,7 +161,14 @@ struct RemotePaywallView: View {
             }
             .buttonStyle(.bordered)
             .controlSize(.large)
-            .disabled(store.isLoading || store.isRestoring)
+            .disabled(store.isBusy)
+
+            if store.isPurchasing || store.isRestoring {
+                Text("Please wait for your purchase or restoration to finish before closing.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            }
 
             statusView
         }
@@ -153,18 +182,23 @@ struct RemotePaywallView: View {
                 .font(.footnote)
                 .foregroundStyle(issue == .productUnavailable ? Color.secondary : Color.orange)
                 .multilineTextAlignment(.center)
-            if issue == .productLoadFailed {
+            if issue == .productLoadFailed || issue == .productUnavailable {
                 Button("Try Again") { store.send(.retryTapped) }
-                    .disabled(store.isLoading || store.isRestoring)
+                    .disabled(store.isBusy)
             }
-        } else if store.restoreCompleted {
+        } else if store.purchasePending {
+            Text("Your purchase is pending approval. Access will unlock when the purchase is completed.")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+        } else if store.restoreCompleted || store.entitlement != .inactive {
             switch store.entitlement {
             case .inactive:
                 Text("No active subscription found.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             case .active:
-                Text("Active subscription found. Aphrodite remains unavailable in this version.")
+                Text("Active subscription found. Aphrodite is ready to use.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
@@ -182,15 +216,41 @@ struct RemotePaywallView: View {
     }
 }
 
+struct RemotePaywallBackground: View {
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+    @Environment(\.colorSchemeContrast) private var colorSchemeContrast
+
+    var body: some View {
+        Group {
+            if reduceTransparency || colorSchemeContrast == .increased {
+                Color(.systemBackground)
+            } else {
+                LinearGradient(
+                    colors: [Color.accentColor.opacity(0.22), Color.purple.opacity(0.12), Color(.systemBackground)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            }
+        }
+        .ignoresSafeArea()
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
+    }
+}
+
 private extension RemotePaywallFeature.Issue {
     var message: LocalizedStringResource {
         switch self {
         case .productUnavailable:
-            "Subscription information is unavailable. Purchases remain disabled."
+            "Subscription information is unavailable. Please try again."
         case .productLoadFailed:
             "Subscription information couldn’t be loaded."
         case .restoreFailed:
             "Purchases couldn’t be restored. Please try again."
+        case .purchaseFailed:
+            "The subscription couldn’t be purchased. Please try again."
+        case .verificationFailed:
+            "Your purchase couldn’t be verified. Please try again."
         }
     }
 }

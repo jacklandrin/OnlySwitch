@@ -15,9 +15,13 @@ struct RemoteAppView: View {
             } else {
                 NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
                     ZStack(alignment: .bottom) {
-                        DashboardBackground()
+                        if store.selectedPage == .aphrodite, store.aphroditeAccess.canAccess == false {
+                            RemotePaywallBackground()
+                        } else {
+                            DashboardBackground()
+                        }
 
-                        if store.selectedPage == .aphrodite, store.aphrodite.selectedApp != nil {
+                        if store.selectedPage == .aphrodite, store.aphroditeAccess.canAccess, store.aphrodite.selectedApp != nil {
                             RemoteAphroditeView(store: store.scope(state: \.aphrodite, action: \.aphrodite))
                                 .ignoresSafeArea(edges: .bottom)
                         } else {
@@ -31,7 +35,10 @@ struct RemoteAppView: View {
                                 RemoteCodexUsageView(store: store.scope(state: \.codexUsage, action: \.codexUsage))
                                     .ignoresSafeArea(edges: .bottom)
                                     .tag(RemoteAppPage.codexUsage)
-                                RemoteAphroditeView(store: store.scope(state: \.aphrodite, action: \.aphrodite))
+                                RemoteAphroditeAccessView(
+                                    accessStore: store.scope(state: \.aphroditeAccess, action: \.aphroditeAccess),
+                                    toolsStore: store.scope(state: \.aphrodite, action: \.aphrodite)
+                                )
                                     .ignoresSafeArea(edges: .bottom)
                                     .tag(RemoteAppPage.aphrodite)
                             }
@@ -139,8 +146,13 @@ struct RemoteAppView: View {
             }
         }
         .task { await store.send(.task).finish() }
+        .task { await store.send(.aphroditeAccess(.task)).finish() }
+        .onChange(of: store.selectedPage) { _, page in
+            if page == .aphrodite { store.send(.aphroditeAccess(.refresh)) }
+        }
         .onChange(of: scenePhase, initial: true) { _, phase in
             store.send(.scenePhaseChanged(phase == .active))
+            if phase == .active { store.send(.aphroditeAccess(.refresh)) }
         }
     }
 

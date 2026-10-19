@@ -24,6 +24,7 @@ struct RemoteAppFeature {
         var systemMonitor = RemoteSystemMonitorFeature.State()
         var codexUsage = RemoteCodexUsageFeature.State()
         var aphrodite = RemoteAphroditeFeature.State()
+        var aphroditeAccess = RemoteAphroditeAccessFeature.State()
         var systemMonitorLayoutGeneration: UInt64 = 0
         var connectedMacIDs: Set<UUID> = []
         var activeSessionID: UUID?
@@ -127,6 +128,7 @@ struct RemoteAppFeature {
         case systemMonitor(RemoteSystemMonitorFeature.Action)
         case codexUsage(RemoteCodexUsageFeature.Action)
         case aphrodite(RemoteAphroditeFeature.Action)
+        case aphroditeAccess(RemoteAphroditeAccessFeature.Action)
         case requiredGlobalSettings(GlobalSettingsFeature.Action)
         case controlsConfiguration(PresentationAction<SettingsFeature.Action>)
         case monitorConfiguration(PresentationAction<RemoteSystemMonitorConfigurationFeature.Action>)
@@ -150,6 +152,7 @@ struct RemoteAppFeature {
         Scope(state: \.systemMonitor, action: \.systemMonitor) { RemoteSystemMonitorFeature() }
         Scope(state: \.codexUsage, action: \.codexUsage) { RemoteCodexUsageFeature() }
         Scope(state: \.aphrodite, action: \.aphrodite) { RemoteAphroditeFeature() }
+        Scope(state: \.aphroditeAccess, action: \.aphroditeAccess) { RemoteAphroditeAccessFeature() }
         Reduce { state, action in
             switch action {
             case .task:
@@ -468,6 +471,18 @@ struct RemoteAppFeature {
                     .send(.codexUsage(.visibilityChanged(page == .codexUsage && state.isForegrounded)))
                 )
 
+            case let .paywall(.presented(.restoreResponse(.success(entitlement)))),
+                 let .paywall(.presented(.purchaseResponse(.success(.purchased(entitlement))))):
+                return .send(.aphroditeAccess(.entitlementUpdated(entitlement)))
+
+            case .aphroditeAccess(.entitlementResponse), .aphroditeAccess(.entitlementUpdated),
+                 .aphroditeAccess(.entitlementExpired):
+                let entitlement = state.aphroditeAccess.entitlement
+                state.paywall?.entitlement = entitlement
+                if case .active = entitlement { state.paywall?.purchasePending = false }
+                guard state.paywall != nil else { return .none }
+                return .send(.paywall(.presented(.authoritativeEntitlementUpdated(entitlement))))
+
             case .membershipTapped:
                 state.paywall = .init()
                 return .none
@@ -592,7 +607,7 @@ struct RemoteAppFeature {
                 state.systemMonitor.layout = layout
                 return .none
 
-            case .dashboard, .systemMonitor, .codexUsage, .aphrodite, .requiredGlobalSettings,
+            case .dashboard, .systemMonitor, .codexUsage, .aphrodite, .aphroditeAccess, .requiredGlobalSettings,
                  .controlsConfiguration, .monitorConfiguration, .paywall, .path:
                 return .none
             }

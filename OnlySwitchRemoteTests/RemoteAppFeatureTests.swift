@@ -9,6 +9,65 @@ struct RemoteAppFeatureTests {
     private let studio = PairedMac(id: UUID(uuidString: "00000000-0000-0000-0000-000000000101")!, displayName: "Studio", lastEndpointDescription: nil, lastConnectedAt: nil, requiresPairing: false)
     private let laptop = PairedMac(id: UUID(uuidString: "00000000-0000-0000-0000-000000000102")!, displayName: "Laptop", lastEndpointDescription: nil, lastConnectedAt: nil, requiresPairing: false)
 
+    @Test func settingsPurchaseUpdatesAphroditeMembershipImmediately() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.paywall = .init(isPurchasing: true)
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+        await store.send(.paywall(.presented(.purchaseResponse(.success(.purchased(.active(expirationDate: nil))))))) {
+            $0.paywall?.isPurchasing = false
+            $0.paywall?.entitlement = .active(expirationDate: nil)
+        }
+        await store.receive(.aphroditeAccess(.entitlementUpdated(.active(expirationDate: nil)))) {
+            $0.aphroditeAccess.entitlement = .active(expirationDate: nil)
+            $0.aphroditeAccess.paywall.entitlement = .active(expirationDate: nil)
+            $0.aphroditeAccess.refreshGeneration = 1
+        }
+        await store.receive(.paywall(.presented(.authoritativeEntitlementUpdated(.active(expirationDate: nil))))) {
+            $0.paywall?.entitlementGeneration = 1
+        }
+        #expect(store.state.aphroditeAccess.canAccess)
+    }
+
+    @Test func settingsRestoreUpdatesAphroditeMembership() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.paywall = .init(isRestoring: true)
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+        await store.send(.paywall(.presented(.restoreResponse(.success(.active(expirationDate: nil)))))) {
+            $0.paywall?.isRestoring = false
+            $0.paywall?.entitlement = .active(expirationDate: nil)
+            $0.paywall?.restoreCompleted = true
+        }
+        await store.receive(.aphroditeAccess(.entitlementUpdated(.active(expirationDate: nil)))) {
+            $0.aphroditeAccess.entitlement = .active(expirationDate: nil)
+            $0.aphroditeAccess.paywall.entitlement = .active(expirationDate: nil)
+            $0.aphroditeAccess.refreshGeneration = 1
+        }
+        await store.receive(.paywall(.presented(.authoritativeEntitlementUpdated(.active(expirationDate: nil))))) {
+            $0.paywall?.entitlementGeneration = 1
+        }
+        #expect(store.state.aphroditeAccess.canAccess)
+    }
+
+    @Test func approvedPendingPurchaseUpdatesBothPaywalls() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.paywall = .init(purchasePending: true)
+        state.aphroditeAccess.paywall.purchasePending = true
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+        await store.send(.aphroditeAccess(.entitlementUpdated(.active(expirationDate: nil)))) {
+            $0.aphroditeAccess.entitlement = .active(expirationDate: nil)
+            $0.aphroditeAccess.paywall.entitlement = .active(expirationDate: nil)
+            $0.aphroditeAccess.paywall.purchasePending = false
+            $0.aphroditeAccess.refreshGeneration = 1
+            $0.paywall?.entitlement = .active(expirationDate: nil)
+            $0.paywall?.purchasePending = false
+        }
+        await store.receive(.paywall(.presented(.authoritativeEntitlementUpdated(.active(expirationDate: nil))))) {
+            $0.paywall?.entitlementGeneration = 1
+        }
+        #expect(store.state.paywall?.canPurchase == false)
+        #expect(store.state.aphroditeAccess.canAccess)
+    }
+
     @Test func membershipPresentationAndDismissalPreserveSetup() async {
         let store = TestStore(initialState: RemoteAppFeature.State(hasCompletedInitialSetup: false)) { RemoteAppFeature() }
         await store.send(.membershipTapped) { $0.paywall = .init() }
