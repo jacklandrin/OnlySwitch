@@ -36,7 +36,8 @@ final class Preferences: @unchecked Sendable {
             let repaired = SystemMonitorPreferences(
                 enabledPanelMetrics: stored.preferences.enabledPanelMetrics,
                 menuBarMetrics: stored.preferences.menuBarMetrics,
-                refreshInterval: stored.preferences.refreshInterval
+                refreshInterval: stored.preferences.refreshInterval,
+                isCompactMode: stored.preferences.isCompactMode
             )
             if repaired != stored.preferences {
                 storeSystemMonitorPreferences(repaired, in: defaults)
@@ -47,7 +48,8 @@ final class Preferences: @unchecked Sendable {
             let repaired = SystemMonitorPreferences(
                 enabledPanelMetrics: newValue.enabledPanelMetrics,
                 menuBarMetrics: newValue.menuBarMetrics,
-                refreshInterval: newValue.refreshInterval
+                refreshInterval: newValue.refreshInterval,
+                isCompactMode: newValue.isCompactMode
             )
             storeSystemMonitorPreferences(repaired, in: .standard)
             NotificationCenter.default.post(name: .systemMonitorPreferencesChanged, object: repaired)

@@ -14,6 +14,10 @@ struct SystemMonitorSettingsView: View {
                 }
 
             Section {
+                Toggle("Compact mode".localized(), isOn: viewModel.compactModeBinding)
+            }
+
+            Section {
                 ForEach(SystemMonitorMetric.allCases, id: \.self) { metric in
                     Toggle(metric.displayTitleKey.localized(), isOn: viewModel.panelMetricBinding(for: metric))
                 }

@@ -316,15 +316,32 @@ public struct SystemMonitorPreferences: Codable, Equatable, Sendable {
     public var enabledPanelMetrics: Set<SystemMonitorMetric>
     public var menuBarMetrics: Set<SystemMonitorMetric>
     public var refreshInterval: TimeInterval
+    public var isCompactMode: Bool
 
     public init(
         enabledPanelMetrics: Set<SystemMonitorMetric> = Set(SystemMonitorMetric.allCases),
         menuBarMetrics: Set<SystemMonitorMetric> = [],
-        refreshInterval: TimeInterval = 1
+        refreshInterval: TimeInterval = 1,
+        isCompactMode: Bool = false
     ) {
         self.enabledPanelMetrics = enabledPanelMetrics
         self.menuBarMetrics = menuBarMetrics
         self.refreshInterval = max(refreshInterval, 1)
+        self.isCompactMode = isCompactMode
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case enabledPanelMetrics, menuBarMetrics, refreshInterval, isCompactMode
+    }
+
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.init(
+            enabledPanelMetrics: try container.decode(Set<SystemMonitorMetric>.self, forKey: .enabledPanelMetrics),
+            menuBarMetrics: try container.decode(Set<SystemMonitorMetric>.self, forKey: .menuBarMetrics),
+            refreshInterval: try container.decode(TimeInterval.self, forKey: .refreshInterval),
+            isCompactMode: try container.decodeIfPresent(Bool.self, forKey: .isCompactMode) ?? false
+        )
     }
 
     public var requiresBackgroundSampling: Bool { menuBarMetrics.isEmpty == false }

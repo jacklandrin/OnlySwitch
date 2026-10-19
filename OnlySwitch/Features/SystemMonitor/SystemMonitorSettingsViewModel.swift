@@ -21,6 +21,13 @@ final class SystemMonitorSettingsViewModel: ObservableObject {
         )
     }
 
+    var compactModeBinding: Binding<Bool> {
+        Binding(
+            get: { self.preferences.isCompactMode },
+            set: { value in self.updatePreferences { $0.isCompactMode = value } }
+        )
+    }
+
     func menuBarMetricBinding(for metric: SystemMonitorMetric) -> Binding<Bool> {
         Binding(
             get: { self.preferences.menuBarMetrics.contains(metric) },

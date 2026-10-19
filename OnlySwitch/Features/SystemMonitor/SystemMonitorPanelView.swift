@@ -190,10 +190,14 @@ struct SystemMonitorPanelView: View {
     var body: some View {
         @Bindable var store = store
 
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: preferences.isCompactMode ? 6 : 12) {
             if let snapshot = store.snapshot {
                 ForEach(visibleMetrics, id: \.self) { metric in
-                    metricCard(metric, snapshot: snapshot, store: $store)
+                    if preferences.isCompactMode {
+                        SystemMonitorCompactMetricView(metric: metric, snapshot: snapshot)
+                    } else {
+                        metricCard(metric, snapshot: snapshot, store: $store)
+                    }
                 }
             } else if let failure = store.lastFailure {
                 ContentUnavailableView(

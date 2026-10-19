@@ -1,6 +1,31 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Compact mode" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : { "stringUnit" : { "state" : "translated", "value" : "Kompaktní režim" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Kompaktmodus" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Compact mode" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Modo compacto" } },
+        "fil" : { "stringUnit" : { "state" : "translated", "value" : "Compact na mode" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Mode compact" } },
+        "hr" : { "stringUnit" : { "state" : "translated", "value" : "Kompaktni način" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Modalità compatta" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "コンパクトモード" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "간결한 모드" } },
+        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Compacte modus" } },
+        "pl" : { "stringUnit" : { "state" : "translated", "value" : "Tryb kompaktowy" } },
+        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Modo compacto" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Компактный режим" } },
+        "sk" : { "stringUnit" : { "state" : "translated", "value" : "Kompaktný režim" } },
+        "so" : { "stringUnit" : { "state" : "translated", "value" : "Habka kooban" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Kompakt mod" } },
+        "uk" : { "stringUnit" : { "state" : "translated", "value" : "Компактний режим" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "紧凑模式" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "精簡模式" } }
+      }
+    },
     "Activate %@" : {
       "extractionState" : "manual",
       "localizations" : {
