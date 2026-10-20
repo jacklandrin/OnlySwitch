@@ -19,7 +19,11 @@ final class OnlyRemoteCampaignWindowController: NSWindowController, NSWindowDele
         store: StoreOf<OnlyRemoteCampaignFeature> = Store(
             initialState: OnlyRemoteCampaignFeature.State()
         ) {
+#if DEBUG
+            OnlyRemoteCampaignFeature(forcePresentation: true)
+#else
             OnlyRemoteCampaignFeature()
+#endif
         }
     ) {
         self.store = store

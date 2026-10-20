@@ -19,6 +19,8 @@ struct OnlyRemoteCampaignFeature {
         case showQRCodeTapped
     }
 
+    var forcePresentation = false
+
     private enum CancelID { case loading }
     @Dependency(\.onlyRemoteCampaign) var campaign
 
@@ -29,6 +31,7 @@ struct OnlyRemoteCampaignFeature {
                 guard !state.hasChecked, !state.isLoading, state.document == nil, !state.isPresented else { return .none }
                 state.hasChecked = true
                 state.isLoading = true
+                let forcePresentation = forcePresentation
                 return .run { send in
                     do {
                         let manifest = try await campaign.fetchLatest()
@@ -36,7 +39,7 @@ struct OnlyRemoteCampaignFeature {
                             await send(.campaignLoaded(nil))
                             return
                         }
-                        if let acknowledged = campaign.acknowledgedVersion(),
+                        if !forcePresentation, let acknowledged = campaign.acknowledgedVersion(),
                            OnlyRemoteCampaignManifest(date: acknowledged, file: acknowledged + ".html").isValid,
                            acknowledged >= manifest.date {
                             await send(.campaignLoaded(nil))
@@ -62,6 +65,7 @@ struct OnlyRemoteCampaignFeature {
                 guard let document = state.document, document.manifest.date == date,
                       !state.isPresented else { return .none }
                 state.isPresented = true
+                guard !forcePresentation else { return .none }
                 return .run { _ in await campaign.markAcknowledged(date) }
 
             case let .pageFailed(date):

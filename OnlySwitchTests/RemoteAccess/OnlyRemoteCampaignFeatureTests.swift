@@ -222,12 +222,74 @@ struct OnlyRemoteCampaignFeatureTests {
         #expect(await recorder.acknowledgedVersions.isEmpty)
     }
 
+    @Test(arguments: ["2026-10-20", "2026-10-21"])
+    func forcedPresentationLoadsLatestHTMLDespiteAcknowledgedDate(acknowledgedDate: String) async {
+        let recorder = OnlyRemoteCampaignRecorder(
+            manifest: manifest, html: html, acknowledgedVersion: acknowledgedDate
+        )
+        let store = makeStore(recorder, forcePresentation: true)
+        let document = OnlyRemoteCampaignDocument(manifest: manifest, html: html)
+
+        await store.send(.launch) {
+            $0.hasChecked = true
+            $0.isLoading = true
+        }
+        await store.receive(.campaignLoaded(document)) {
+            $0.isLoading = false
+            $0.document = document
+        }
+        await store.finish()
+
+        #expect(await recorder.htmlFetchCount == 1)
+        #expect(await recorder.acknowledgedVersions.isEmpty)
+        #expect(store.state.isPresented == false)
+
+        await store.send(.pageLoaded(manifest.date)) { $0.isPresented = true }
+        await store.finish()
+
+        #expect(await recorder.acknowledgedVersions.isEmpty,
+                "A forced debug preview must preserve the release acknowledgement date.")
+    }
+
+    @Test(arguments: [OnlyRemoteCampaignRecorder.Failure.manifest, .html])
+    func forcedPresentationRequestFailureRemainsSilent(failure: OnlyRemoteCampaignRecorder.Failure) async {
+        let recorder = OnlyRemoteCampaignRecorder(
+            manifest: manifest, html: html, acknowledgedVersion: manifest.date, failure: failure
+        )
+        let store = makeStore(recorder, forcePresentation: true)
+
+        await store.send(.launch) {
+            $0.hasChecked = true
+            $0.isLoading = true
+        }
+        await store.receive(.campaignLoaded(nil)) { $0.isLoading = false }
+        await store.finish()
+
+        #expect(store.state.document == nil)
+        #expect(store.state.isPresented == false)
+        #expect(await recorder.acknowledgedVersions.isEmpty)
+    }
+
+    @Test
+    func forcedPresentationStillChecksOnlyOncePerSession() async {
+        let recorder = OnlyRemoteCampaignRecorder(manifest: manifest, html: html)
+        var state = OnlyRemoteCampaignFeature.State()
+        state.hasChecked = true
+        let store = makeStore(recorder, state: state, forcePresentation: true)
+
+        await store.send(.launch)
+        await store.finish()
+
+        #expect(await recorder.manifestFetchCount == 0)
+    }
+
     private func makeStore(
         _ recorder: OnlyRemoteCampaignRecorder,
-        state: OnlyRemoteCampaignFeature.State = .init()
+        state: OnlyRemoteCampaignFeature.State = .init(),
+        forcePresentation: Bool = false
     ) -> TestStore<OnlyRemoteCampaignFeature.State, OnlyRemoteCampaignFeature.Action> {
         TestStore(initialState: state) {
-            OnlyRemoteCampaignFeature()
+            OnlyRemoteCampaignFeature(forcePresentation: forcePresentation)
         } withDependencies: {
             $0.onlyRemoteCampaign = recorder.client
         }
