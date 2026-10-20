@@ -1,15 +1,19 @@
 import AppKit
+import Combine
 import ComposableArchitecture
 import Extensions
 import SwiftUI
+import Utilities
 
-private let campaignWindowContentSize = NSSize(width: 460, height: 440)
+private let campaignWindowContentSize = NSSize(width: 520, height: 560)
 private let qrCodeWindowContentSize = NSSize(width: 400, height: 440)
 
 @MainActor
 final class OnlyRemoteCampaignWindowController: NSWindowController, NSWindowDelegate {
     private let store: StoreOf<OnlyRemoteCampaignFeature>
-    private var didEvaluateCampaign = false
+    private var documentObservation: AnyCancellable?
+    private var renderer: OnlyRemoteCampaignView?
+    private var renderingDate: String?
 
     init(
         store: StoreOf<OnlyRemoteCampaignFeature> = Store(
@@ -19,61 +23,84 @@ final class OnlyRemoteCampaignWindowController: NSWindowController, NSWindowDele
         }
     ) {
         self.store = store
-
         let window = NSWindow(
             contentRect: NSRect(origin: .zero, size: campaignWindowContentSize),
-            styleMask: [.titled, .closable, .fullSizeContentView],
+            styleMask: [.titled, .closable, .resizable],
             backing: .buffered,
             defer: false
         )
-        window.title = "OnlyRemote for iPhone and iPad".localized()
+        window.title = "OnlySwitch · OnlyRemote"
+        window.minSize = NSSize(width: 480, height: 500)
         window.titlebarAppearsTransparent = true
-        window.isMovableByWindowBackground = true
         window.isReleasedWhenClosed = false
-
         super.init(window: window)
-
         window.delegate = self
-        window.contentViewController = NSHostingController(
-            rootView: OnlyRemoteCampaignView(
-                store: store,
-                closeWindow: { [weak self] in
-                    self?.close()
-                },
-                showQRCode: {
-                    QRCodeWindowController.shared.show(
-                        url: QRCodeWindowController.onlyRemoteQRCodeURL
-                    )
-                }
-            )
+        documentObservation = store.publisher.document.removeDuplicates().sink { [weak self] document in
+            self?.render(document)
+        }
+        NotificationCenter.default.addObserver(
+            self, selector: #selector(updateLanguage), name: .changeSettings, object: nil
         )
     }
 
     @available(*, unavailable)
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
     func presentIfNeeded() {
-        guard !didEvaluateCampaign else { return }
-        didEvaluateCampaign = true
+        store.send(.launch)
+    }
 
-#if DEBUG
-        store.send(.launch(forcePresentation: true))
-#else
-        store.send(.launch(forcePresentation: false))
-#endif
-        guard store.isPresented, let window else { return }
+    private func render(_ document: OnlyRemoteCampaignDocument?) {
+        guard let document else {
+            renderingDate = nil
+            renderer?.stopLoading()
+            renderer = nil
+            window?.contentView = nil
+            close()
+            return
+        }
+        guard renderingDate != document.manifest.date else { return }
+        let date = document.manifest.date
+        renderingDate = date
+        let view = OnlyRemoteCampaignView(
+            language: LanguageManager.sharedManager.currentLang,
+            onLoaded: { [weak self] in self?.presentLoadedDocument(date: date) },
+            onFailed: { [weak self] in
+                guard let self, self.renderingDate == date else { return }
+                self.store.send(.pageFailed(date))
+            },
+            onDownload: { [weak self] in self?.store.send(.showQRCodeTapped) }
+        )
+        renderer = view
+        window?.contentView = view
+        view.loadHTMLString(document.html, baseURL: nil)
+    }
 
-        window.title = "OnlyRemote for iPhone and iPad".localized()
+    private func presentLoadedDocument(date: String) {
+        guard renderingDate == date, store.document?.manifest.date == date,
+              !store.isPresented, let window else { return }
+        updateLanguage()
+        let screen = NSScreen.screens.first { $0.frame.contains(NSEvent.mouseLocation) } ?? NSScreen.main
+        let available = screen?.visibleFrame.size ?? campaignWindowContentSize
+        let size = NSSize(
+            width: min(campaignWindowContentSize.width, available.width),
+            height: min(campaignWindowContentSize.height, available.height)
+        )
+        window.setContentSize(size)
+        centerOnCurrentScreen(window)
         NSApp.activate(ignoringOtherApps: true)
         showWindow(nil)
         window.makeKeyAndOrderFront(nil)
-        centerWhenPresented(window, contentSize: campaignWindowContentSize)
+        // Only acknowledge a page after WebKit finished and the window was made visible.
+        store.send(.pageLoaded(date))
+    }
+
+    @objc private func updateLanguage() {
+        renderer?.updateLanguage(LanguageManager.sharedManager.currentLang)
     }
 
     func windowWillClose(_ notification: Notification) {
-        if store.isPresented {
+        if store.document != nil {
             store.send(.dismissTapped)
         }
     }

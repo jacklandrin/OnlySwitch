@@ -4,63 +4,81 @@ import ComposableArchitecture
 struct OnlyRemoteCampaignFeature {
     @ObservableState
     struct State: Equatable {
+        var hasChecked = false
+        var isLoading = false
+        var document: OnlyRemoteCampaignDocument?
         var isPresented = false
-        var isOpeningRemoteAccessSettings = false
     }
 
     enum Action: Equatable {
-        case launch(forcePresentation: Bool)
+        case launch
+        case campaignLoaded(OnlyRemoteCampaignDocument?)
+        case pageLoaded(String)
+        case pageFailed(String)
         case dismissTapped
-        case downloadTapped
         case showQRCodeTapped
-        case openRemoteAccessSettingsTapped
     }
 
+    private enum CancelID { case loading }
     @Dependency(\.onlyRemoteCampaign) var campaign
 
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-            case let .launch(forcePresentation):
-                state.isPresented = forcePresentation || campaign.acknowledgedVersion() != campaign.currentVersion()
+            case .launch:
+                guard !state.hasChecked, !state.isLoading, state.document == nil, !state.isPresented else { return .none }
+                state.hasChecked = true
+                state.isLoading = true
+                return .run { send in
+                    do {
+                        let manifest = try await campaign.fetchLatest()
+                        guard manifest.isValid else {
+                            await send(.campaignLoaded(nil))
+                            return
+                        }
+                        if let acknowledged = campaign.acknowledgedVersion(),
+                           OnlyRemoteCampaignManifest(date: acknowledged, file: acknowledged + ".html").isValid,
+                           acknowledged >= manifest.date {
+                            await send(.campaignLoaded(nil))
+                            return
+                        }
+                        let html = try await campaign.fetchHTML(manifest)
+                        try Task.checkCancellation()
+                        await send(.campaignLoaded(.init(manifest: manifest, html: html)))
+                    } catch {
+                        guard !Task.isCancelled else { return }
+                        await send(.campaignLoaded(nil))
+                    }
+                }
+                .cancellable(id: CancelID.loading)
+
+            case let .campaignLoaded(document):
+                guard state.isLoading else { return .none }
+                state.isLoading = false
+                state.document = document
+                return .none
+
+            case let .pageLoaded(date):
+                guard let document = state.document, document.manifest.date == date,
+                      !state.isPresented else { return .none }
+                state.isPresented = true
+                return .run { _ in await campaign.markAcknowledged(date) }
+
+            case let .pageFailed(date):
+                guard state.document?.manifest.date == date else { return .none }
+                state.document = nil
+                state.isPresented = false
                 return .none
 
             case .dismissTapped:
-                guard state.isPresented else { return .none }
+                state.document = nil
                 state.isPresented = false
-                let version = campaign.currentVersion()
-                return .run { _ in
-                    await campaign.markAcknowledged(version)
-                }
-
-            case .downloadTapped:
-                guard state.isPresented else { return .none }
-                state.isPresented = false
-                let version = campaign.currentVersion()
-                return .run { _ in
-                    await campaign.markAcknowledged(version)
-                    await campaign.openAppStore()
-                }
+                state.isLoading = false
+                return .cancel(id: CancelID.loading)
 
             case .showQRCodeTapped:
                 guard state.isPresented else { return .none }
-                state.isPresented = false
-                let version = campaign.currentVersion()
-                return .run { _ in
-                    await campaign.markAcknowledged(version)
-                }
-
-            case .openRemoteAccessSettingsTapped:
-                guard state.isPresented else { return .none }
-                state.isPresented = false
-                // The window controller consults this synchronously while it closes,
-                // keeping the app active until Settings has been brought forward.
-                state.isOpeningRemoteAccessSettings = true
-                let version = campaign.currentVersion()
-                return .run { _ in
-                    await campaign.markAcknowledged(version)
-                    await campaign.openRemoteAccessSettings()
-                }
+                return .run { _ in await campaign.showQRCode() }
             }
         }
     }

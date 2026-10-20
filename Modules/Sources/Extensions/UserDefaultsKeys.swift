@@ -107,6 +107,7 @@ public extension UserDefaults {
         public static let checkUpdateOnLaunch = "checkUpdateOnLaunchKey"
         public static let hideMenuAfterRunning = "hideMenuAfterRunningKey"
         public static let canPlayEffectSound = "canPlayESKey"
+        public static let onlySwitchLaunchCampaignAcknowledgedDate = "onlySwitchLaunchCampaignAcknowledgedDateKey"
         public static let onlyRemoteCampaignAcknowledgedVersion = "onlyRemoteCampaignAcknowledgedVersionKey"
 
         /// `UserDefaults.standard` keys included in a settings backup.
