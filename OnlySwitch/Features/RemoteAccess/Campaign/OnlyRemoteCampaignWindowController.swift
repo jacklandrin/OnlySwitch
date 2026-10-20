@@ -27,7 +27,7 @@ final class OnlyRemoteCampaignWindowController: NSWindowController, NSWindowDele
         }
     ) {
         self.store = store
-        let window = NSWindow(
+        let window = OnlyRemoteCampaignWindow(
             contentRect: NSRect(origin: .zero, size: campaignWindowContentSize),
             styleMask: [.titled, .closable, .resizable],
             backing: .buffered,
@@ -82,7 +82,7 @@ final class OnlyRemoteCampaignWindowController: NSWindowController, NSWindowDele
 
     private func presentLoadedDocument(date: String) {
         guard renderingDate == date, store.document?.manifest.date == date,
-              !store.isPresented, let window else { return }
+              !store.isPresented, let window = window as? OnlyRemoteCampaignWindow else { return }
         updateLanguage()
         let screen = NSScreen.screens.first { $0.frame.contains(NSEvent.mouseLocation) } ?? NSScreen.main
         let available = screen?.visibleFrame.size ?? campaignWindowContentSize
@@ -92,9 +92,8 @@ final class OnlyRemoteCampaignWindowController: NSWindowController, NSWindowDele
         )
         window.setContentSize(size)
         centerOnCurrentScreen(window)
-        NSApp.activate(ignoringOtherApps: true)
         showWindow(nil)
-        window.makeKeyAndOrderFront(nil)
+        window.bringToFront()
         // Only acknowledge a page after WebKit finished and the window was made visible.
         store.send(.pageLoaded(date))
     }
@@ -118,7 +117,7 @@ final class QRCodeWindowController: NSWindowController {
     )!
 
     private init() {
-        let window = QRCodeWindow(
+        let window = OnlyRemoteCampaignWindow(
             contentRect: NSRect(origin: .zero, size: qrCodeWindowContentSize),
             styleMask: [.borderless],
             backing: .buffered,
@@ -135,20 +134,52 @@ final class QRCodeWindowController: NSWindowController {
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
     func show(url: URL) {
-        guard let window else { return }
+        guard let window = window as? OnlyRemoteCampaignWindow else { return }
         window.contentViewController = NSHostingController(
             rootView: QRCodeView(url: url, close: { [weak self] in self?.close() })
         )
-        NSApp.activate(ignoringOtherApps: true)
         showWindow(nil)
-        window.makeKeyAndOrderFront(nil)
+        window.bringToFront()
         centerWhenPresented(window, contentSize: qrCodeWindowContentSize)
     }
 }
 
-private final class QRCodeWindow: NSWindow {
+@MainActor
+final class OnlyRemoteCampaignWindow: NSWindow {
+    private var observesApplicationDeactivation = false
+
     override var canBecomeKey: Bool { true }
     override var canBecomeMain: Bool { true }
+
+    func bringToFront() {
+        if !observesApplicationDeactivation {
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(applicationDidResignActive),
+                name: NSApplication.didResignActiveNotification,
+                object: nil
+            )
+            observesApplicationDeactivation = true
+        }
+        level = .mainMenu
+        NSApp.activate(ignoringOtherApps: true)
+        makeKeyAndOrderFront(nil)
+        orderFrontRegardless()
+    }
+
+    override func resignKey() {
+        super.resignKey()
+        level = .normal
+    }
+
+    override func close() {
+        level = .normal
+        super.close()
+    }
+
+    @objc private func applicationDidResignActive() {
+        level = .normal
+    }
 }
 
 @MainActor

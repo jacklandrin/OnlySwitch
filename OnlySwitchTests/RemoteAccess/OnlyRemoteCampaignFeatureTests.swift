@@ -1,3 +1,4 @@
+import AppKit
 import ComposableArchitecture
 import Testing
 @testable import OnlySwitch
@@ -421,5 +422,59 @@ struct OnlyRemoteCampaignWebViewTests {
 
         #expect(language == "zh-Hans")
         #expect(webView.window == nil)
+    }
+}
+
+
+@MainActor
+struct OnlyRemoteCampaignWindowTests {
+    @Test
+    func campaignWindowAppearsAboveExistingPanelsAndDemotesWhenFocusEnds() throws {
+        let app = NSApplication.shared
+        let frame = NSRect(x: 80, y: 80, width: 320, height: 240)
+        let coveringPanel = NSWindow(
+            contentRect: frame,
+            styleMask: [.titled, .closable],
+            backing: .buffered,
+            defer: false
+        )
+        let campaignWindow = OnlyRemoteCampaignWindow(
+            contentRect: frame,
+            styleMask: [.titled, .closable],
+            backing: .buffered,
+            defer: false
+        )
+        coveringPanel.isReleasedWhenClosed = false
+        campaignWindow.isReleasedWhenClosed = false
+        defer {
+            campaignWindow.close()
+            coveringPanel.close()
+        }
+        coveringPanel.level = .mainMenu
+        coveringPanel.orderFrontRegardless()
+
+        campaignWindow.bringToFront()
+
+        #expect(campaignWindow.level == .mainMenu)
+        #expect(campaignWindow.isVisible)
+        #expect(campaignWindow.canBecomeKey)
+        let orderedWindows = app.orderedWindows
+        let campaignIndex = try #require(orderedWindows.firstIndex { $0 === campaignWindow })
+        let coveringIndex = try #require(orderedWindows.firstIndex { $0 === coveringPanel })
+        #expect(campaignIndex < coveringIndex,
+                "The campaign must appear above an existing OnlySwitch panel at the same level.")
+
+        campaignWindow.resignKey()
+        #expect(campaignWindow.level == .normal)
+
+        campaignWindow.bringToFront()
+        NotificationCenter.default.post(name: NSApplication.didResignActiveNotification, object: app)
+        #expect(campaignWindow.level == .normal,
+                "App deactivation must demote the window even if it never became key.")
+
+        campaignWindow.bringToFront()
+        campaignWindow.close()
+        #expect(campaignWindow.level == .normal)
+        #expect(campaignWindow.isVisible == false)
     }
 }
