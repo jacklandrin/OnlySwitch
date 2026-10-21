@@ -404,6 +404,7 @@
 		DABA00000000000000000002 /* GlobalSettingsFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA00000000000000000022 /* GlobalSettingsFeature.swift */; };
 		DABA00000000000000000003 /* GlobalSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA00000000000000000023 /* GlobalSettingsView.swift */; };
 		DABA00000000000000000004 /* RemoteIdleTimerClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA00000000000000000024 /* RemoteIdleTimerClient.swift */; };
+		FECA00000000000000000102 /* RemoteTabPreferencesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = FECA00000000000000000202 /* RemoteTabPreferencesClient.swift */; };
 		F3A300000000000000000020 /* OnlySwitchRemoteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A300000000000000000010 /* OnlySwitchRemoteApp.swift */; };
 		F3A300000000000000000021 /* RemoteAppFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A300000000000000000011 /* RemoteAppFeature.swift */; };
 		F3A300000000000000000022 /* RemoteAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A300000000000000000012 /* RemoteAppView.swift */; };
@@ -448,6 +449,7 @@
 		F3A800000000000000000002 /* RemoteConnectionClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A800000000000000000022 /* RemoteConnectionClientTests.swift */; };
 		F3A800000000000000000003 /* PairedMac.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A800000000000000000023 /* PairedMac.swift */; };
 		F3A800000000000000000004 /* MacDashboardLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A800000000000000000024 /* MacDashboardLayout.swift */; };
+		FECA00000000000000000101 /* RemoteTabConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = FECA00000000000000000201 /* RemoteTabConfiguration.swift */; };
 		F3A800000000000000000005 /* RemotePersistenceClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A800000000000000000025 /* RemotePersistenceClient.swift */; };
 		F3A800000000000000000006 /* RemoteKeychainClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A800000000000000000026 /* RemoteKeychainClient.swift */; };
 		F3A800000000000000000007 /* RemoteConnectionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A800000000000000000027 /* RemoteConnectionCoordinator.swift */; };
@@ -955,6 +957,7 @@
 		DABA00000000000000000022 /* GlobalSettingsFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSettingsFeature.swift; sourceTree = "<group>"; };
 		DABA00000000000000000023 /* GlobalSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSettingsView.swift; sourceTree = "<group>"; };
 		DABA00000000000000000024 /* RemoteIdleTimerClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteIdleTimerClient.swift; sourceTree = "<group>"; };
+		FECA00000000000000000202 /* RemoteTabPreferencesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteTabPreferencesClient.swift; sourceTree = "<group>"; };
 		F3A300000000000000000003 /* OnlySwitchRemote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnlySwitchRemote.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3A300000000000000000004 /* OnlySwitchRemoteTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnlySwitchRemoteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3A300000000000000000010 /* OnlySwitchRemoteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlySwitchRemoteApp.swift; sourceTree = "<group>"; };
@@ -994,6 +997,7 @@
 		F3A800000000000000000022 /* RemoteConnectionClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConnectionClientTests.swift; sourceTree = "<group>"; };
 		F3A800000000000000000023 /* PairedMac.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairedMac.swift; sourceTree = "<group>"; };
 		F3A800000000000000000024 /* MacDashboardLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacDashboardLayout.swift; sourceTree = "<group>"; };
+		FECA00000000000000000201 /* RemoteTabConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteTabConfiguration.swift; sourceTree = "<group>"; };
 		F3A800000000000000000025 /* RemotePersistenceClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemotePersistenceClient.swift; sourceTree = "<group>"; };
 		F3A800000000000000000026 /* RemoteKeychainClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteKeychainClient.swift; sourceTree = "<group>"; };
 		F3A800000000000000000027 /* RemoteConnectionCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConnectionCoordinator.swift; sourceTree = "<group>"; };
@@ -2364,6 +2368,7 @@
 			children = (
 				F3A800000000000000000023 /* PairedMac.swift */,
 				F3A800000000000000000024 /* MacDashboardLayout.swift */,
+				FECA00000000000000000201 /* RemoteTabConfiguration.swift */,
 				C0E000000000000000000021 /* MacSystemMonitorLayout.swift */,
 			);
 			path = Models;
@@ -2380,6 +2385,7 @@
 				F3A80000000000000000002A /* RemoteConnectionClient+Live.swift */,
 				B210A0000000000000000021 /* RemoteSystemSettingsClient.swift */,
 				DABA00000000000000000024 /* RemoteIdleTimerClient.swift */,
+				FECA00000000000000000202 /* RemoteTabPreferencesClient.swift */,
 				B220A0000000000000000021 /* RemoteReviewDemoClient.swift */,
 				F4AB00000000000000000011 /* RemoteSubscriptionClient.swift */,
 			);
@@ -3226,6 +3232,7 @@
 				B220A0000000000000000006 /* ReviewDemoScreen.swift in Sources */,
 				F3A800000000000000000003 /* PairedMac.swift in Sources */,
 				F3A800000000000000000004 /* MacDashboardLayout.swift in Sources */,
+				FECA00000000000000000101 /* RemoteTabConfiguration.swift in Sources */,
 				F3A800000000000000000005 /* RemotePersistenceClient.swift in Sources */,
 				F3A800000000000000000006 /* RemoteKeychainClient.swift in Sources */,
 				F3A800000000000000000007 /* RemoteConnectionCoordinator.swift in Sources */,
@@ -3243,6 +3250,7 @@
 				DABA00000000000000000003 /* GlobalSettingsView.swift in Sources */,
 				F5BC00000000000000000203 /* RemoteDebugMenuView.swift in Sources */,
 				DABA00000000000000000004 /* RemoteIdleTimerClient.swift in Sources */,
+				FECA00000000000000000102 /* RemoteTabPreferencesClient.swift in Sources */,
 				F3AD00000000000000000001 /* HowToUseView.swift in Sources */,
 				F3AD00000000000000000002 /* AboutView.swift in Sources */,
 				F3AA00000000000000000003 /* MacManagementFeature.swift in Sources */,

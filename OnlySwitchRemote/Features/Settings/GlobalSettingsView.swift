@@ -74,6 +74,21 @@ struct GlobalSettingsView: View {
                 }
             }
 
+            Section("Tabs") {
+                Toggle("System Monitor", isOn: Binding(
+                    get: { store.tabConfiguration.showsSystemMonitor },
+                    set: { store.send(.tabVisibilityChanged(.systemMonitor, $0)) }
+                ))
+                Toggle("Codex Usage", isOn: Binding(
+                    get: { store.tabConfiguration.showsCodexUsage },
+                    set: { store.send(.tabVisibilityChanged(.codexUsage, $0)) }
+                ))
+                Toggle("Claude Usage", isOn: Binding(
+                    get: { store.tabConfiguration.showsClaudeUsage },
+                    set: { store.send(.tabVisibilityChanged(.claudeUsage, $0)) }
+                ))
+            }
+
             Section("OnlyRemote Plus") {
                 Button {
                     store.send(.membershipTapped)

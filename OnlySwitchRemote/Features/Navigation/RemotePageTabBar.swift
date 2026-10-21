@@ -11,6 +11,7 @@ struct RemotePageTabBar: View {
     static let horizontalPadding: CGFloat = 16
 
     @Binding var selection: RemoteAppPage
+    var configuration = RemoteTabConfiguration()
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     @Environment(\.colorSchemeContrast) private var contrast
@@ -18,20 +19,26 @@ struct RemotePageTabBar: View {
     var body: some View {
         GeometryReader { proxy in
             let spacing: CGFloat = 4
-            let count: CGFloat = 5
+            let count = CGFloat(configuration.visiblePages.count)
             let width = max(0, (proxy.size.width - spacing * (count - 1)) / count)
             ZStack(alignment: .leading) {
                 Capsule()
                     .fill(Color.accentColor.opacity(0.18))
                     .overlay { Capsule().stroke(Color.accentColor.opacity(0.45)) }
                     .frame(width: width, height: Self.visualHeight)
-                    .offset(x: CGFloat(selection.index) * (width + spacing))
+                    .offset(x: CGFloat(configuration.visiblePages.firstIndex(of: selection) ?? 0) * (width + spacing))
                     .accessibilityHidden(true)
                 HStack(spacing: spacing) {
                     tabButton(.controls, title: "Controls", symbol: "switch.2")
-                    tabButton(.systemMonitor, title: "System Monitor", symbol: "waveform.path.ecg")
-                    tabButton(.codexUsage, title: "Codex Usage", imageName: RemoteCodexUsagePresentation.tabImageName)
-                    tabButton(.claudeUsage, title: "Claude Usage", imageName: RemoteClaudeUsagePresentation.tabImageName)
+                    if configuration.showsSystemMonitor {
+                        tabButton(.systemMonitor, title: "System Monitor", symbol: "waveform.path.ecg")
+                    }
+                    if configuration.showsCodexUsage {
+                        tabButton(.codexUsage, title: "Codex Usage", imageName: RemoteCodexUsagePresentation.tabImageName)
+                    }
+                    if configuration.showsClaudeUsage {
+                        tabButton(.claudeUsage, title: "Claude Usage", imageName: RemoteClaudeUsagePresentation.tabImageName)
+                    }
                     tabButton(.aphrodite, title: "Aphrodite", symbol: "sparkles.rectangle.stack")
                 }
             }
@@ -91,17 +98,5 @@ struct RemotePageTabBar: View {
         .accessibilityLabel(Text(title))
         .accessibilityAddTraits(selection == page ? .isSelected : [])
         .accessibilityHint("Shows this page")
-    }
-}
-
-private extension RemoteAppPage {
-    var index: Int {
-        switch self {
-        case .controls: 0
-        case .systemMonitor: 1
-        case .codexUsage: 2
-        case .claudeUsage: 3
-        case .aphrodite: 4
-        }
     }
 }

@@ -9,6 +9,7 @@ struct GlobalSettingsFeature {
         var debugMenu = RemoteDebugMenuFeature.State()
         #endif
         let isSetupRequired: Bool
+        var tabConfiguration: RemoteTabConfiguration
         var isKeepingScreenAwake: Bool
         var pairedMacs: IdentifiedArrayOf<PairedMac>
         var selectedMacID: UUID?
@@ -18,12 +19,14 @@ struct GlobalSettingsFeature {
 
         init(
             isSetupRequired: Bool = false,
+            tabConfiguration: RemoteTabConfiguration = RemoteTabPreferencesClient.preferenceSeed(),
             isKeepingScreenAwake: Bool = RemoteIdleTimerClient.preferenceSeed(),
             pairedMacs: IdentifiedArrayOf<PairedMac> = [],
             selectedMacID: UUID? = nil,
             connectionStatuses: [UUID: MacConnectionStatus] = [:]
         ) {
             self.isSetupRequired = isSetupRequired
+            self.tabConfiguration = tabConfiguration
             self.isKeepingScreenAwake = isKeepingScreenAwake
             self.pairedMacs = pairedMacs
             self.selectedMacID = selectedMacID
@@ -39,6 +42,7 @@ struct GlobalSettingsFeature {
         case selectMac(UUID)
         case manageMac(UUID)
         case keepScreenAwakeToggled(Bool)
+        case tabVisibilityChanged(RemoteAppPage, Bool)
         case membershipTapped
         case pairing(PresentationAction<PairingFeature.Action>)
         case management(PresentationAction<MacManagementFeature.Action>)
@@ -47,6 +51,7 @@ struct GlobalSettingsFeature {
     }
 
     @Dependency(\.remoteIdleTimer) var idleTimer
+    @Dependency(\.remoteTabPreferences) var tabPreferences
 
     enum Delegate: Equatable {
         case paired(PairedMac)
@@ -54,6 +59,7 @@ struct GlobalSettingsFeature {
         case macForgotten(UUID)
         case allMacsRemoved
         case openMembership
+        case tabConfigurationChanged(RemoteTabConfiguration)
     }
 
     var body: some ReducerOf<Self> {
@@ -87,6 +93,12 @@ struct GlobalSettingsFeature {
                 return .run { _ in
                     await idleTimer.savePreference(isEnabled)
                 }
+
+            case let .tabVisibilityChanged(page, isVisible):
+                guard page != .controls, page != .aphrodite else { return .none }
+                state.tabConfiguration.setVisibility(isVisible, for: page)
+                tabPreferences.save(state.tabConfiguration)
+                return .send(.delegate(.tabConfigurationChanged(state.tabConfiguration)))
 
             case .membershipTapped:
                 return .send(.delegate(.openMembership))

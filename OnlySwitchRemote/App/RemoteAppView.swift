@@ -29,15 +29,21 @@ struct RemoteAppView: View {
                                 DashboardView(store: store.scope(state: \.dashboard, action: \.dashboard))
                                     .ignoresSafeArea(edges: .bottom)
                                     .tag(RemoteAppPage.controls)
-                                RemoteSystemMonitorView(store: store.scope(state: \.systemMonitor, action: \.systemMonitor))
-                                    .ignoresSafeArea(edges: .bottom)
-                                    .tag(RemoteAppPage.systemMonitor)
-                                RemoteCodexUsageView(store: store.scope(state: \.codexUsage, action: \.codexUsage))
-                                    .ignoresSafeArea(edges: .bottom)
-                                    .tag(RemoteAppPage.codexUsage)
-                                RemoteClaudeUsageView(store: store.scope(state: \.claudeUsage, action: \.claudeUsage))
-                                    .ignoresSafeArea(edges: .bottom)
-                                    .tag(RemoteAppPage.claudeUsage)
+                                if store.tabConfiguration.showsSystemMonitor {
+                                    RemoteSystemMonitorView(store: store.scope(state: \.systemMonitor, action: \.systemMonitor))
+                                        .ignoresSafeArea(edges: .bottom)
+                                        .tag(RemoteAppPage.systemMonitor)
+                                }
+                                if store.tabConfiguration.showsCodexUsage {
+                                    RemoteCodexUsageView(store: store.scope(state: \.codexUsage, action: \.codexUsage))
+                                        .ignoresSafeArea(edges: .bottom)
+                                        .tag(RemoteAppPage.codexUsage)
+                                }
+                                if store.tabConfiguration.showsClaudeUsage {
+                                    RemoteClaudeUsageView(store: store.scope(state: \.claudeUsage, action: \.claudeUsage))
+                                        .ignoresSafeArea(edges: .bottom)
+                                        .tag(RemoteAppPage.claudeUsage)
+                                }
                                 RemoteAphroditeAccessView(
                                     accessStore: store.scope(state: \.aphroditeAccess, action: \.aphroditeAccess),
                                     toolsStore: store.scope(state: \.aphrodite, action: \.aphrodite)
@@ -49,7 +55,7 @@ struct RemoteAppView: View {
                             .ignoresSafeArea(edges: .bottom)
                         }
 
-                        RemotePageTabBar(selection: pageSelection)
+                        RemotePageTabBar(selection: pageSelection, configuration: store.tabConfiguration)
                             .padding(.bottom, 4)
                     }
                         .toolbarBackground(.hidden, for: .navigationBar)

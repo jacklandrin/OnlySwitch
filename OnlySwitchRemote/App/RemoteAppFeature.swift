@@ -22,6 +22,7 @@ struct RemoteAppFeature {
         var selectedMacID: UUID?
         var dashboard = DashboardFeature.State()
         var selectedPage: RemoteAppPage = .controls
+        var tabConfiguration: RemoteTabConfiguration
         var systemMonitor = RemoteSystemMonitorFeature.State()
         var codexUsage = RemoteCodexUsageFeature.State()
         var claudeUsage = RemoteClaudeUsageFeature.State()
@@ -47,12 +48,14 @@ struct RemoteAppFeature {
 
         init(
             hasCompletedInitialSetup: Bool,
+            tabConfiguration: RemoteTabConfiguration = RemoteTabPreferencesClient.preferenceSeed(),
             persistenceWriterID: UUID = UUID()
         ) {
             self.hasCompletedInitialSetup = hasCompletedInitialSetup
+            self.tabConfiguration = tabConfiguration
             self.persistenceWriterID = persistenceWriterID
             if hasCompletedInitialSetup == false {
-                requiredGlobalSettings = .init(isSetupRequired: true)
+                requiredGlobalSettings = .init(isSetupRequired: true, tabConfiguration: tabConfiguration)
             }
         }
 
@@ -212,7 +215,7 @@ struct RemoteAppFeature {
                 ) else {
                     state.selectedMacID = nil
                     state.path.removeAll()
-                    state.requiredGlobalSettings = .init(isSetupRequired: true)
+                    state.requiredGlobalSettings = .init(isSetupRequired: true, tabConfiguration: state.tabConfiguration)
                     syncSettingsState(&state)
                     state.hasCompletedInitialSetup = false
                     var effects: [Effect<Action>] = [
@@ -397,6 +400,7 @@ struct RemoteAppFeature {
             case .globalSettingsButtonTapped:
                 guard state.requiredGlobalSettings == nil else { return .none }
                 state.path.append(.globalSettings(.init(
+                    tabConfiguration: state.tabConfiguration,
                     isKeepingScreenAwake: state.isKeepingScreenAwake,
                     pairedMacs: state.pairedMacs,
                     selectedMacID: state.selectedMacID,
@@ -469,10 +473,10 @@ struct RemoteAppFeature {
                 return .none
 
             case let .pageSelected(page):
-                guard state.selectedPage != page else { return .none }
+                guard state.tabConfiguration.visiblePages.contains(page), state.selectedPage != page else { return .none }
                 state.selectedPage = page
                 return .merge(
-                    .send(.systemMonitor(.visibilityChanged(page == .systemMonitor))),
+                    .send(.systemMonitor(.visibilityChanged(page == .systemMonitor && state.isForegrounded))),
                     .send(.codexUsage(.visibilityChanged(page == .codexUsage && state.isForegrounded))), .send(.claudeUsage(.visibilityChanged(page == .claudeUsage && state.isForegrounded)))
                 )
 
@@ -511,6 +515,19 @@ struct RemoteAppFeature {
                 guard needsSynchronization else { return .none }
                 syncDashboardState(&state)
                 return .send(.dashboard(.task))
+
+            case let .requiredGlobalSettings(.delegate(.tabConfigurationChanged(configuration))),
+                 let .path(.element(_, action: .globalSettings(.delegate(.tabConfigurationChanged(configuration))))):
+                state.tabConfiguration = configuration
+                state.requiredGlobalSettings?.tabConfiguration = configuration
+                for id in state.path.ids {
+                    if case var .globalSettings(settings) = state.path[id: id] {
+                        settings.tabConfiguration = configuration
+                        state.path[id: id] = .globalSettings(settings)
+                    }
+                }
+                guard configuration.visiblePages.contains(state.selectedPage) == false else { return .none }
+                return .send(.pageSelected(.controls))
 
             case let .requiredGlobalSettings(.delegate(.paired(mac))):
                 state.requiredGlobalSettings = nil
@@ -571,7 +588,7 @@ struct RemoteAppFeature {
                 state.connectedMacIDs.removeAll()
                 state.selectedMacID = nil
                 state.path.removeAll()
-                state.requiredGlobalSettings = .init(isSetupRequired: true)
+                state.requiredGlobalSettings = .init(isSetupRequired: true, tabConfiguration: state.tabConfiguration)
                 state.hasCompletedInitialSetup = false
                 invalidateMetadataRefresh(state: &state)
                 return .merge(
@@ -599,7 +616,7 @@ struct RemoteAppFeature {
                 state.connectedMacIDs.removeAll()
                 state.selectedMacID = nil
                 state.path.removeAll()
-                state.requiredGlobalSettings = .init(isSetupRequired: true)
+                state.requiredGlobalSettings = .init(isSetupRequired: true, tabConfiguration: state.tabConfiguration)
                 state.hasCompletedInitialSetup = false
                 invalidateMetadataRefresh(state: &state)
                 return .merge(

@@ -1837,3 +1837,88 @@ private actor ReverseAtomicAppStateSaver {
         firstSaveContinuation = nil
     }
 }
+
+@MainActor
+struct RemoteAppTabConfigurationTests {
+    @Test(arguments: [RemoteAppPage.systemMonitor, .codexUsage, .claudeUsage])
+    func hidingSelectedTabReturnsToControlsAndStopsVisibility(page: RemoteAppPage) async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true, tabConfiguration: .init())
+        state.selectedPage = page
+        state.systemMonitor.isVisible = page == .systemMonitor
+        state.systemMonitor.isStreaming = page == .systemMonitor
+        state.codexUsage.isVisible = page == .codexUsage
+        state.claudeUsage.isVisible = page == .claudeUsage
+        state.codexUsage.isLoading = page == .codexUsage
+        state.claudeUsage.isLoading = page == .claudeUsage
+        if page == .codexUsage { state.codexUsage.activeRequestID = UUID() }
+        if page == .claudeUsage { state.claudeUsage.activeRequestID = UUID() }
+        var configuration = state.tabConfiguration
+        configuration.setVisibility(false, for: page)
+        let expected = configuration
+        state.path.append(.globalSettings(.init(tabConfiguration: .init())))
+        let id = state.path.ids[0]
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+        await store.send(.path(.element(id: id, action: .globalSettings(.delegate(.tabConfigurationChanged(expected)))))) {
+            $0.tabConfiguration = expected
+            $0.path[id: id] = .globalSettings(.init(tabConfiguration: expected))
+        }
+        await store.receive(.pageSelected(.controls)) { $0.selectedPage = .controls }
+        if page == .systemMonitor {
+            await store.receive(.systemMonitor(.visibilityChanged(false))) {
+                $0.systemMonitor.isVisible = false
+                $0.systemMonitor.isStreaming = false
+            }
+        } else {
+            await store.receive(.systemMonitor(.visibilityChanged(false)))
+        }
+        if page == .codexUsage {
+            await store.receive(.codexUsage(.visibilityChanged(false))) {
+                $0.codexUsage.isVisible = false
+                $0.codexUsage.requestGeneration = 1
+                $0.codexUsage.isLoading = false
+                $0.codexUsage.activeRequestID = nil
+            }
+        } else {
+            await store.receive(.codexUsage(.visibilityChanged(false)))
+        }
+        if page == .claudeUsage {
+            await store.receive(.claudeUsage(.visibilityChanged(false))) {
+                $0.claudeUsage.isVisible = false
+                $0.claudeUsage.requestGeneration = 1
+                $0.claudeUsage.isLoading = false
+                $0.claudeUsage.activeRequestID = nil
+            }
+        } else {
+            await store.receive(.claudeUsage(.visibilityChanged(false)))
+        }
+        await store.send(.pageSelected(page))
+    }
+
+    @Test func configurationPersistsAcrossSettingsReopeningAndRequiredSetup() async {
+        let configuration = RemoteTabConfiguration(showsSystemMonitor: false, showsCodexUsage: true, showsClaudeUsage: false)
+        let store = TestStore(initialState: RemoteAppFeature.State(hasCompletedInitialSetup: true, tabConfiguration: configuration)) {
+            RemoteAppFeature()
+        }
+        await store.send(.globalSettingsButtonTapped) {
+            $0.path.append(.globalSettings(.init(tabConfiguration: configuration, isKeepingScreenAwake: $0.isKeepingScreenAwake)))
+        }
+        let id = store.state.path.ids[0]
+        await store.send(.path(.popFrom(id: id))) { $0.path.removeAll() }
+        await store.send(.globalSettingsButtonTapped) {
+            $0.path.append(.globalSettings(.init(tabConfiguration: configuration, isKeepingScreenAwake: $0.isKeepingScreenAwake)))
+        }
+        let requiredState = RemoteAppFeature.State(hasCompletedInitialSetup: false, tabConfiguration: configuration)
+        #expect(requiredState.requiredGlobalSettings?.tabConfiguration == configuration)
+        let requiredStore = TestStore(initialState: requiredState) { RemoteAppFeature() }
+        await requiredStore.send(.requiredGlobalSettings(.tabVisibilityChanged(.codexUsage, false))) {
+            $0.requiredGlobalSettings?.tabConfiguration.showsCodexUsage = false
+        }
+        var hidden = configuration
+        hidden.showsCodexUsage = false
+        let expected = hidden
+        await requiredStore.receive(.requiredGlobalSettings(.delegate(.tabConfigurationChanged(expected)))) {
+            $0.tabConfiguration = expected
+        }
+        #expect(requiredStore.state.requiredGlobalSettings?.isSetupRequired == true)
+    }
+}
