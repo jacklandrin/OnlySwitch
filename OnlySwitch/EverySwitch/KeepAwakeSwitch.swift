@@ -38,6 +38,9 @@ final class KeepAwakeSwitch: SwitchProvider, @unchecked Sendable {
     private var endDate:Double = Preferences
         .shared
         .autoStopKeepAwakeEndDate
+    private var stopOnSleep:Bool = Preferences
+        .shared
+        .autoStopKeepAwakeOnSleep
     
     private var timerCounter = 0
     
@@ -59,6 +62,7 @@ final class KeepAwakeSwitch: SwitchProvider, @unchecked Sendable {
         }
         
         setSettingNotification()
+        setSleepNotification()
         setTimer()
     }
     
@@ -81,6 +85,19 @@ final class KeepAwakeSwitch: SwitchProvider, @unchecked Sendable {
             strongSelf.endDate = Preferences
                 .shared
                 .autoStopKeepAwakeEndDate
+            strongSelf.stopOnSleep = Preferences
+                .shared
+                .autoStopKeepAwakeOnSleep
+        }
+    }
+    
+    // The assertion blocks idle sleep, so a sleep while it is held was initiated by the user
+    // (Apple menu, lid, power button, `pmset sleepnow`).
+    private func setSleepNotification() {
+        NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.willSleepNotification, object: nil, queue: .main) { [weak self] _ in
+            guard let strongSelf = self, strongSelf.stopOnSleep, strongSelf.preventedSleep else {return}
+            try? strongSelf.switchOff()
+            NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: strongSelf.type)
         }
     }
     

@@ -63,6 +63,15 @@ class KeepAwakeSettingVM: ObservableObject {
         }
     }
     
+    var stopOnSleep:Bool {
+        get {
+            preferences.autoStopKeepAwakeOnSleep
+        }
+        set {
+            preferences.autoStopKeepAwakeOnSleep = newValue
+        }
+    }
+    
     var isTomorrow:Bool {
         endDate.timeIntervalSince1970 <= startDate.timeIntervalSince1970
     }
