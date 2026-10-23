@@ -142,6 +142,7 @@ struct SettingsBackupTests {
         #expect(SettingsBackup.isExportablePreference(UserDefaults.Key.canPlayEffectSound))
         #expect(SettingsBackup.isExportablePreference(UserDefaults.Key.menubarIcon))
         #expect(SettingsBackup.isExportablePreference(UserDefaults.Key.KeepAwakeKey))
+        #expect(SettingsBackup.isExportablePreference(UserDefaults.Key.autoStopKeepAwakeOnSleep))
         #expect(SettingsBackup.isExportablePreference(UserDefaults.Key.nightShiftStrength))
         #expect(SettingsBackup.isExportablePreference(UserDefaults.Key.SwitchState))
         #expect(SettingsBackup.isExportablePreference(UserDefaults.Key.orderWeight))
