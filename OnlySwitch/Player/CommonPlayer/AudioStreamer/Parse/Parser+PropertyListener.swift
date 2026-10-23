@@ -25,7 +25,9 @@ func ParserPropertyChangeCallback(_ context: UnsafeMutableRawPointer,
         os_log("Data format: %@", log: Parser.loggerPropertyListenerCallback, type: .debug, String(describing: parser.dataFormat))
         
     case kAudioFileStreamProperty_AudioDataPacketCount:
-        GetPropertyValue(&parser.packetCount, streamID, propertyID)
+        var packetCount: UInt64 = 0
+        GetPropertyValue(&packetCount, streamID, propertyID)
+        parser.packetCount = packetCount
         os_log("Packet count: %i", log: Parser.loggerPropertyListenerCallback, type: .debug, parser.packetCount)
 
     default:

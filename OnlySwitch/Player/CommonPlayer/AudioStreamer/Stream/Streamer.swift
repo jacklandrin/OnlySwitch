@@ -214,7 +214,7 @@ class Streamer: Streaming, @unchecked Sendable {
         downloader.stop()
         playerNode.stop()
         engine.stop()
-        reader?.parser.packets.removeAll()
+        reader?.parser.withPackets { $0.removeAll() }
         // Update the state
         state = .stopped
     }
@@ -293,7 +293,7 @@ class Streamer: Streaming, @unchecked Sendable {
             return
         }
 
-        guard (parser?.packets.count)! > 512 else {
+        guard reader.parser.withPackets({ $0.count }) > 512 else {
             return
         }
         

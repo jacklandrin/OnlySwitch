@@ -30,15 +30,27 @@ public class Reader: Reading {
     /// A `DispatchQueue` used to ensure any operations we do changing the current packet index is thread-safe
     private let queue = DispatchQueue(label: "com.fastlearner.streamer")
     
+    // Accessed only on the reader queue (or by its synchronous converter callback).
+    var converterInputData: UnsafeMutableRawPointer?
+    var converterInputDescription: UnsafeMutablePointer<AudioStreamPacketDescription>?
+
+    func releaseConverterInput() {
+        converterInputData?.deallocate()
+        converterInputData = nil
+        converterInputDescription?.deinitialize(count: 1)
+        converterInputDescription?.deallocate()
+        converterInputDescription = nil
+    }
+
     // MARK: - Lifecycle
     
     deinit {
-        guard AudioConverterDispose(converter!) == noErr else {
+        if let converter, AudioConverterDispose(converter) != noErr {
             os_log("Failed to dispose of audio converter", log: Reader.logger, type: .error)
-            return
         }
+        releaseConverterInput()
     }
-    
+
     public required init(parser: Parsing, readFormat: AVAudioFormat) throws {
         self.parser = parser
         
@@ -73,9 +85,6 @@ public class Reader: Reading {
         try queue.sync {
             let context = unsafeBitCast(self, to: UnsafeMutableRawPointer.self)
             let status = AudioConverterFillComplexBuffer(converter!, ReaderConverterCallback, context, &packets, buffer.mutableAudioBufferList, nil)
-            if #unavailable(macOS 13) {
-                cleanupConverterGarbage()
-            }
             
             guard status == noErr else {
 //                AudioConverterReset(self.converter!);

@@ -10,8 +10,6 @@ import Foundation
 import AVFoundation
 import os.log
 
-let parserQueue = DispatchQueue(label: "com.fastlearner.streamer.parser",attributes: .concurrent)
-
 func ParserPacketCallback(_ context: UnsafeMutableRawPointer, _ byteCount: UInt32, _ packetCount: UInt32, _ data: UnsafeRawPointer, _ packetDescriptions: UnsafeMutablePointer<AudioStreamPacketDescription>) {
     let decriptions:UnsafeMutablePointer<AudioStreamPacketDescription>? = packetDescriptions
     ParserPacketCallback(context, byteCount, packetCount, data, decriptions)
@@ -29,7 +27,7 @@ func ParserPacketCallback(_ context: UnsafeMutableRawPointer, _ byteCount: UInt3
     }
     
     
-    parserQueue.sync {
+    parser.withPackets { packets in
         /// Iterate through the packets and store the data appropriately
         if isCompressed {
             for i in 0 ..< Int(packetCount) {
@@ -37,7 +35,7 @@ func ParserPacketCallback(_ context: UnsafeMutableRawPointer, _ byteCount: UInt3
                 let packetStart = Int(packetDescription.mStartOffset)
                 let packetSize = Int(packetDescription.mDataByteSize)
                 let packetData = Data(bytes: data.advanced(by: packetStart), count: packetSize)
-                parser.packets.append((packetData, packetDescription))
+                packets.append((packetData, packetDescription))
             }
         } else {
             let format = dataFormat.streamDescription.pointee
@@ -46,7 +44,7 @@ func ParserPacketCallback(_ context: UnsafeMutableRawPointer, _ byteCount: UInt3
                 let packetStart = i * bytesPerPacket
                 let packetSize = bytesPerPacket
                 let packetData = Data(bytes: data.advanced(by: packetStart), count: packetSize)
-                parser.packets.append((packetData, nil))
+                packets.append((packetData, nil))
             }
         }
         

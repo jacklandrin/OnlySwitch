@@ -25,6 +25,11 @@ public protocol Parsing: AnyObject {
     
     /// An array of duples, each index presenting a parsed audio packet. For compressed formats each packet of data should contain a `AudioStreamPacketDescription`, which describes the start offset and length of the audio data)
     var packets: [(Data, AudioStreamPacketDescription?)] { get set }
+
+    /// Access or mutate the packet buffer as one operation. Concurrent parsers must
+    /// synchronize this operation with packet production and buffer clearing.
+    /// The body must not access the parser's packet properties recursively.
+    func withPackets<Result>(_ body: (inout [(Data, AudioStreamPacketDescription?)]) -> Result) -> Result
     
     /// The total number of frames (expressed in the data format)
     var totalFrameCount: AVAudioFrameCount? { get }
@@ -61,6 +66,10 @@ public protocol Parsing: AnyObject {
 
 // Usually these methods are gonna be calculated using the same way everytime so here are the default implementations that should work 99% of the time relative to the properties defined. 
 extension Parsing {
+
+    public func withPackets<Result>(_ body: (inout [(Data, AudioStreamPacketDescription?)]) -> Result) -> Result {
+        body(&packets)
+    }
     
     public var duration: TimeInterval? {
         guard let sampleRate = dataFormat?.sampleRate else {

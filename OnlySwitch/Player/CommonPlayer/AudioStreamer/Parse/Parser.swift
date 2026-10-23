@@ -18,23 +18,51 @@ public class Parser: Parsing {
     
     // MARK: - Parsing props
     
-    public internal(set) var dataFormat: AVAudioFormat?
-    public var packets = [(Data, AudioStreamPacketDescription?)]()
+    // Protect packet storage and parser metadata on the download and playback threads.
+    private let stateLock = NSLock()
+    private let parseLock = NSLock()
+    private var storedDataFormat: AVAudioFormat?
+    private var storedPackets = [(Data, AudioStreamPacketDescription?)]()
+    private var storedFrameCount: UInt64 = 0
+    private var storedPacketCount: UInt64 = 0
+
+    private func withState<Result>(_ body: () -> Result) -> Result {
+        stateLock.lock()
+        defer { stateLock.unlock() }
+        return body()
+    }
+
+    public internal(set) var dataFormat: AVAudioFormat? {
+        get { withState { storedDataFormat } }
+        set { withState { storedDataFormat = newValue } }
+    }
+    public var packets: [(Data, AudioStreamPacketDescription?)] {
+        get { withState { storedPackets } }
+        set { withState { storedPackets = newValue } }
+    }
+    public func withPackets<Result>(_ body: (inout [(Data, AudioStreamPacketDescription?)]) -> Result) -> Result {
+        withState { body(&storedPackets) }
+    }
     public var totalPacketCount: AVAudioPacketCount? {
-        guard let _ = dataFormat else {
-            return nil
+        withState {
+            guard storedDataFormat != nil else { return nil }
+            return max(AVAudioPacketCount(storedPacketCount), AVAudioPacketCount(storedPackets.count))
         }
-        
-        return max(AVAudioPacketCount(packetCount), AVAudioPacketCount(packets.count))
     }
     
     // MARK: - Properties
     
     /// A `UInt64` corresponding to the total frame count parsed by the Audio File Stream Services
-    public internal(set) var frameCount: UInt64 = 0
+    public internal(set) var frameCount: UInt64 {
+        get { withState { storedFrameCount } }
+        set { withState { storedFrameCount = newValue } }
+    }
     
     /// A `UInt64` corresponding to the total packet count parsed by the Audio File Stream Services
-    public internal(set) var packetCount: UInt64 = 0
+    public internal(set) var packetCount: UInt64 {
+        get { withState { storedPacketCount } }
+        set { withState { storedPacketCount = newValue } }
+    }
     
     /// The `AudioFileStreamID` used by the Audio File Stream Services for converting the binary data into audio packets
     fileprivate var streamID: AudioFileStreamID?
@@ -50,10 +78,17 @@ public class Parser: Parsing {
             throw ParserError.streamCouldNotOpen
         }
     }
+
+    deinit {
+        if let streamID { AudioFileStreamClose(streamID) }
+    }
     
     // MARK: - Methods
     
     public func parse(data: Data) throws {
+        guard !data.isEmpty else { return }
+        parseLock.lock()
+        defer { parseLock.unlock() }
 //        os_log("%@ - %d", log: Parser.logger, type: .debug, #function, #line)
         
         let streamID = self.streamID!
