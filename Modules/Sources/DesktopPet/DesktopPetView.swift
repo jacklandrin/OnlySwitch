@@ -7,17 +7,20 @@ public struct DesktopPetView: View {
     private let isDragging: Bool
     private let isControlPresented: Bool
     private let pomodoroState: DesktopPetPomodoroState?
+    private let isMusicPlaying: Bool
 
     public init(
         isActive: Bool = true,
         isDragging: Bool = false,
         isControlPresented: Bool = false,
-        pomodoroState: DesktopPetPomodoroState? = nil
+        pomodoroState: DesktopPetPomodoroState? = nil,
+        isMusicPlaying: Bool = false
     ) {
         self.isActive = isActive
         self.isDragging = isDragging
         self.isControlPresented = isControlPresented
         self.pomodoroState = pomodoroState
+        self.isMusicPlaying = isMusicPlaying
     }
 
     public var body: some View {
@@ -36,7 +39,8 @@ public struct DesktopPetView: View {
                 pomodoroState: pomodoroState,
                 isActive: isActive,
                 isDragging: isDragging,
-                reduceMotion: reduceMotion
+                reduceMotion: reduceMotion,
+                isMusicPlaying: isMusicPlaying
             )
 
             ZStack(alignment: .top) {
@@ -45,7 +49,8 @@ public struct DesktopPetView: View {
                     pomodoroPhase: pomodoroState?.phase,
                     isControlPresented: isControlPresented,
                     isDragging: isDragging,
-                    reduceMotion: reduceMotion
+                    reduceMotion: reduceMotion,
+                    isMusicPlaying: isMusicPlaying
                 )
                 .frame(
                     width: DesktopPetMetrics.artworkSize.width,

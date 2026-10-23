@@ -15,8 +15,19 @@ enum DesktopPetMetrics {
         height: 28
     )
 
-    static func canvasSize(for state: DesktopPetPomodoroState?) -> CGSize {
-        state == nil ? canvasSize : pomodoroCanvasSize
+    static func canvasSize(
+        for state: DesktopPetPomodoroState?,
+        showsPlayback: Bool = false
+    ) -> CGSize {
+        let petSize = state == nil ? canvasSize : pomodoroCanvasSize
+        return CGSize(
+            width: petSize.width,
+            height: petSize.height + (showsPlayback ? playbackLaneHeight(for: state) : 0)
+        )
+    }
+
+    static func playbackLaneHeight(for state: DesktopPetPomodoroState?) -> CGFloat {
+        state == nil ? 16 : 32
     }
 
     static func artworkVerticalOffset(for state: DesktopPetPomodoroState?) -> CGFloat {

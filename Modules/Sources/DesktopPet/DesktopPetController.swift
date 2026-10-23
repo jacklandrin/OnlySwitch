@@ -1,5 +1,6 @@
 import AppKit
 import SwiftUI
+import ComposableArchitecture
 
 @MainActor
 public final class DesktopPetController: NSObject {
@@ -20,6 +21,7 @@ public final class DesktopPetController: NSObject {
     private let onActivate: @MainActor () -> Void
     private let onClose: @MainActor () -> Void
     private let panel: DesktopPetPanel
+    private let playbackStore: StoreOf<DesktopPetPlaybackFeature>
     private let presentation = DesktopPetPresentation()
     private var dragStartOrigin: CGPoint?
     private var dragStartMouseLocation: CGPoint?
@@ -27,8 +29,14 @@ public final class DesktopPetController: NSObject {
 
     public init(
         onActivate: @escaping @MainActor () -> Void,
-        onClose: @escaping @MainActor () -> Void = {}
+        onClose: @escaping @MainActor () -> Void = {},
+        playbackClient: DesktopPetPlaybackClient = .init()
     ) {
+        playbackStore = Store(initialState: DesktopPetPlaybackFeature.State()) {
+            DesktopPetPlaybackFeature()
+        } withDependencies: {
+            $0.desktopPetPlayback = playbackClient
+        }
         self.onActivate = onActivate
         self.onClose = onClose
         panel = DesktopPetPanel(
@@ -57,7 +65,7 @@ public final class DesktopPetController: NSObject {
         panel.setFrame(
             DesktopPetLayout.resizedFramePreservingCenter(
                 panel.frame,
-                to: DesktopPetMetrics.canvasSize(for: pomodoroState)
+                to: DesktopPetMetrics.canvasSize(for: pomodoroState, showsPlayback: playbackStore.source != nil)
             ),
             display: false
         )
@@ -69,11 +77,33 @@ public final class DesktopPetController: NSObject {
     }
 
     public func hide() {
+        clearPlayback()
         saveFrame()
         presentation.isActive = false
         presentation.isDragging = false
         isVisible = false
         panel.orderOut(nil)
+    }
+
+    public func refreshPlayback() {
+        guard isVisible else { return }
+        playbackStore.send(.refresh)
+    }
+
+    public func clearPlayback() {
+        playbackStore.send(.clear)
+    }
+
+    private func resizeForPlayback(_ showsPlayback: Bool) {
+        panel.setFrame(
+            DesktopPetLayout.resizedFramePreservingCenter(
+                panel.frame,
+                to: DesktopPetMetrics.canvasSize(for: pomodoroState, showsPlayback: showsPlayback)
+            ),
+            display: isVisible
+        )
+        constrainPanelToVisibleScreen()
+        saveFrame()
     }
 
     public func setControlPresented(_ isPresented: Bool) {
@@ -88,7 +118,7 @@ public final class DesktopPetController: NSObject {
         panel.setFrame(
             DesktopPetLayout.resizedFramePreservingCenter(
                 panel.frame,
-                to: DesktopPetMetrics.canvasSize(for: state)
+                to: DesktopPetMetrics.canvasSize(for: state, showsPlayback: playbackStore.source != nil)
             ),
             display: isVisible
         )
@@ -121,6 +151,10 @@ public final class DesktopPetController: NSObject {
                 },
                 onDragEnded: { [weak self] value in
                     self?.dragEnded(value)
+                },
+                playbackStore: playbackStore,
+                onPlaybackVisibilityChanged: { [weak self] isShown in
+                    self?.resizeForPlayback(isShown)
                 },
                 onClose: { [weak self] in
                     self?.close()

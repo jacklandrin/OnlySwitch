@@ -6,6 +6,7 @@ struct DesktopPetArtwork: View {
     let isControlPresented: Bool
     let isDragging: Bool
     let reduceMotion: Bool
+    var isMusicPlaying = false
 
     var body: some View {
         ZStack {
@@ -115,6 +116,14 @@ struct DesktopPetArtwork: View {
                 .frame(width: 9, height: 9)
                 .blur(radius: 1)
                 .offset(x: -31, y: -29)
+
+            if isMusicPlaying {
+                DesktopPetMusicEqualizer(
+                    pulse: motion.musicPulse,
+                    counterPulse: motion.musicCounterPulse
+                )
+                .offset(y: 31)
+            }
         }
         .scaleEffect(isDragging ? 1.04 : 1)
         .rotationEffect(.degrees(motion.rotationDegrees))

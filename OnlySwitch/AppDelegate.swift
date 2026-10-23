@@ -307,7 +307,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             },
             onClose: {
                 Preferences.shared.showDesktopPet = false
-            }
+            },
+            playbackClient: .appLive
         )
         desktopPetController = controller
         onlyControlWindow.outsideClickExclusionWindowNumbers = [controller.windowNumber]
@@ -388,6 +389,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
 
         if let desktopPetController {
             applyDesktopPetPomodoroState(nil, to: desktopPetController)
+            desktopPetController.clearPlayback()
         }
     }
 
@@ -397,6 +399,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
               controller.isVisible
         else { return }
 
+        controller.refreshPlayback()
         let state = await PomodoroTimerSwitch.shared.desktopPetState()
 
         guard !Task.isCancelled,

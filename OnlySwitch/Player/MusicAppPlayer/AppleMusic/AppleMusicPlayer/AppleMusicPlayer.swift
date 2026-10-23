@@ -76,6 +76,12 @@ extension AppleMusicPlayer:MusicPlayer {
         return true
     }
     
+    @MainActor
+    func nextTrack() {
+        guard isRunning, playbackState == .playing else { return }
+        applemusicApp.nextTrack?()
+    }
+
     func pause() -> Bool {
         guard isRunning else {return false}
         applemusicApp.pause?()

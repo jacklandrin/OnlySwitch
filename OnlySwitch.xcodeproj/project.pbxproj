@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F3A9000000000000000000B1 /* DesktopPetPlaybackLive.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A9000000000000000000B2 /* DesktopPetPlaybackLive.swift */; };
 		0406E0222CA09F930007AFC2 /* OnlyControlClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406E0212CA09F8C0007AFC2 /* OnlyControlClient.swift */; };
 		0406E0242CA0BC460007AFC2 /* RefreshNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406E0232CA0BC460007AFC2 /* RefreshNotification.swift */; };
 		0406EDC42ACB3EE80015F4D0 /* EvolutionMarket.json in Resources */ = {isa = PBXBuildFile; fileRef = 0406EDC32ACB3EE80015F4D0 /* EvolutionMarket.json */; };
@@ -302,6 +303,7 @@
 		CD2200010000000000000001 /* XcodeCleanerSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2200020000000000000001 /* XcodeCleanerSwitch.swift */; };
 		CD3200010000000000000001 /* AppUninstallerSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3200020000000000000001 /* AppUninstallerSwitch.swift */; };
 		CD2200030000000000000001 /* XcodeCleanerSwitchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2200040000000000000001 /* XcodeCleanerSwitchTests.swift */; };
+		A0D100010000000000000001 /* AudioStreamingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D100020000000000000001 /* AudioStreamingTests.swift */; };
 		CD3200030000000000000001 /* AppUninstallerSwitchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3200040000000000000001 /* AppUninstallerSwitchTests.swift */; };
 		AF1000050000000000000001 /* AphroditeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF1000040000000000000001 /* AphroditeSwitch.swift */; };
 		B1C100000000000000000002 /* BuiltInSwitchCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C100000000000000000001 /* BuiltInSwitchCatalog.swift */; };
@@ -579,6 +581,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		F3A9000000000000000000B2 /* DesktopPetPlaybackLive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesktopPetPlaybackLive.swift; sourceTree = "<group>"; };
 		0406E0212CA09F8C0007AFC2 /* OnlyControlClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyControlClient.swift; sourceTree = "<group>"; };
 		0406E0232CA0BC460007AFC2 /* RefreshNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshNotification.swift; sourceTree = "<group>"; };
 		0406EDC32ACB3EE80015F4D0 /* EvolutionMarket.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = EvolutionMarket.json; sourceTree = "<group>"; };
@@ -860,6 +863,7 @@
 		CD2200020000000000000001 /* XcodeCleanerSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodeCleanerSwitch.swift; sourceTree = "<group>"; };
 		CD3200020000000000000001 /* AppUninstallerSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUninstallerSwitch.swift; sourceTree = "<group>"; };
 		CD2200040000000000000001 /* XcodeCleanerSwitchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodeCleanerSwitchTests.swift; sourceTree = "<group>"; };
+		A0D100020000000000000001 /* AudioStreamingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioStreamingTests.swift; sourceTree = "<group>"; };
 		CD3200040000000000000001 /* AppUninstallerSwitchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUninstallerSwitchTests.swift; sourceTree = "<group>"; };
 		AF1000040000000000000001 /* AphroditeSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AphroditeSwitch.swift; sourceTree = "<group>"; };
 		B01000000000000000000001 /* OnlySwitch.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = OnlySwitch.xcconfig; sourceTree = "<group>"; };
@@ -1202,6 +1206,7 @@
 				C1A0B00518E9202600000001 /* PrivilegedOperations */,
 				F3A400000000000000000013 /* RemoteAccess */,
 				CD2200040000000000000001 /* XcodeCleanerSwitchTests.swift */,
+				A0D100020000000000000001 /* AudioStreamingTests.swift */,
 				CD3200040000000000000001 /* AppUninstallerSwitchTests.swift */,
 				B1C100000000000000000004 /* BuiltInSwitchCatalogTests.swift */,
 				C1A0F1000000000000000001 /* Support/TestMutex.swift */,
@@ -1490,6 +1495,7 @@
 				C1A0B00618E9202600000001 /* PrivilegedOperations */,
 				A9C70D052EE490B3000A2367 /* GoogleService-Info.plist */,
 				04447B5B2754F08000CD2900 /* AppDelegate.swift */,
+				F3A9000000000000000000B2 /* DesktopPetPlaybackLive.swift */,
 				04E238612A2C831F00CDD1FA /* CoreData */,
 				040CD2BD27579CEA002E0CC6 /* Info.plist */,
 				04A23B27275D607200B454C8 /* Header */,
@@ -2884,6 +2890,7 @@
 				CC1A00000000000000000001 /* ClaudeUsageIntegrationTests.swift in Sources */,
 				D0C100000000000000000017 /* DockPreviewFeatureTests.swift in Sources */,
 				CD2200030000000000000001 /* XcodeCleanerSwitchTests.swift in Sources */,
+				A0D100010000000000000001 /* AudioStreamingTests.swift in Sources */,
 				CD3200030000000000000001 /* AppUninstallerSwitchTests.swift in Sources */,
 				B1C100000000000000000005 /* BuiltInSwitchCatalogTests.swift in Sources */,
 				C1A0F1000000000000000002 /* Support/TestMutex.swift in Sources */,
@@ -3092,6 +3099,7 @@
 				047C1E762A24D1870061235D /* EvolutionCommandEditingView.swift in Sources */,
 				0493374E27625A1E00AE779A /* ParserError.swift in Sources */,
 				04447B5C2754F08000CD2900 /* AppDelegate.swift in Sources */,
+				F3A9000000000000000000B1 /* DesktopPetPlaybackLive.swift in Sources */,
 				0406EDCA2ACB57EA0015F4D0 /* EvolutionGalleryItemView.swift in Sources */,
 				047C1E5E2A2262640061235D /* EvolutionModel.swift in Sources */,
 				040C6EAA276B7D4500291DEB /* CustomizeVM.swift in Sources */,

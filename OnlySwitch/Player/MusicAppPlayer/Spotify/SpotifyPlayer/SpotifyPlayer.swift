@@ -75,6 +75,12 @@ extension SpotifyPlayer:MusicPlayer {
         return true
     }
     
+    @MainActor
+    func nextTrack() {
+        guard isRunning, playbackState == .playing else { return }
+        spotifyApp.nextTrack?()
+    }
+
     func pause() -> Bool {
         guard isRunning else { return false}
         spotifyApp.pause?()
