@@ -39,6 +39,9 @@ class StatusBarController {
     @UserDefaultValue(key: UserDefaults.Key.isMenubarCollapse, defaultValue: false)
     private var isMenubarCollapse:Bool
     private var hasOtherPopover = false
+    private let appearance: @MainActor () -> SwitchListAppearance
+    private let configuresSystemIntegrations: Bool
+    var listPreventsOutsideClickDismissal = false
 
     private var onlyControlWindow: OnlyControlWindow {
         OnlyControlWindow.shared
@@ -49,19 +52,24 @@ class StatusBarController {
     }
 
     var currentAppearance: SwitchListAppearance {
-        SwitchListAppearance(rawValue: Preferences.shared.currentAppearance) ?? .single
+        appearance()
     }
 
     var menubarCollaspable: Bool {
         Preferences.shared.menubarCollaspable
     }
 
-    init(_ popover: NSPopover) {
+    init(_ popover: NSPopover,
+         appearance: @escaping @MainActor () -> SwitchListAppearance = { SwitchListAppearance(rawValue: Preferences.shared.currentAppearance) ?? .single },
+         configuresSystemIntegrations: Bool = true) {
         self.popover = popover
+        self.appearance = appearance
+        self.configuresSystemIntegrations = configuresSystemIntegrations
 
         mainItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         Self.configureStatusItem(mainItem)
-        
+        guard configuresSystemIntegrations else { return }
+
         // macOS 26 Tahoe: Button might not be immediately available, retry if needed
         setupMainItemButtonWithRetry(image: currentMenubarIcon)
 
@@ -399,7 +407,11 @@ class StatusBarController {
             NotificationCenter.default.removeObserver(systemMonitorPreferencesObserver)
         }
         nativeVisibilityApplier?.invalidateSynchronously()
-        HideMenubarIconsSwitch.shared.clearTransition(owner: menuBarTransitionOwner)
+        if configuresSystemIntegrations {
+            HideMenubarIconsSwitch.shared.clearTransition(owner: menuBarTransitionOwner)
+        } else {
+            NSStatusBar.system.removeStatusItem(mainItem)
+        }
         if let markItem {
             NSStatusBar.system.removeStatusItem(markItem)
         }
@@ -447,7 +459,7 @@ class StatusBarController {
 
     @MainActor
     func hidePopover(_ sender: AnyObject?) {
-        if #available(macOS 26.2, *) {
+        if #available(macOS 26.2, *), configuresSystemIntegrations {
             let listAppearance = PreferencesObserver
                 .shared
                 .preferences
@@ -458,7 +470,7 @@ class StatusBarController {
             }
         }
         
-        if currentAppearance == .onlyControl || onlyControlWindow.isShowing {
+        if currentAppearance == .onlyControl || (configuresSystemIntegrations && onlyControlWindow.isShowing) {
             popover.performClose(sender)
             onlyControlWindow.hide()
         } else {
@@ -483,10 +495,11 @@ class StatusBarController {
             return
         }
 
-        let condition = currentAppearance == .onlyControl ? OnlyControlWindow.shared.isShowing : popover.isShown
-
-        if condition {
-            hidePopover(event)
+        if currentAppearance == .onlyControl {
+            guard onlyControlWindow.isShowing, !onlyControlWindow.preventsOutsideClickDismissal else { return }
+        } else {
+            guard popover.isShown, !listPreventsOutsideClickDismissal else { return }
         }
+        hidePopover(event)
     }
 }

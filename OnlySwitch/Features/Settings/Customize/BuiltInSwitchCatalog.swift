@@ -58,7 +58,7 @@ enum BuiltInSwitchCatalog {
              .topSticker, .desktopPet, .reverseScrollDirection, .dockPreview:
             .desktopAndFinder
 
-        case .xcodeCache, .emptyTrash, .emptyPasteboard, .ejectDiscs:
+        case .xcodeCache, .xcodeCleaner, .appUninstaller, .emptyTrash, .emptyPasteboard, .ejectDiscs:
             .cleanupAndStorage
 
         case .keepAwake, .bluetooth, .pomodoroTimer, .lowpowerMode, .fkey,

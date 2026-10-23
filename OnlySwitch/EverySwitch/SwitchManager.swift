@@ -127,6 +127,12 @@ final class SwitchManager: @unchecked Sendable {
         if !UserDefaults.standard.bool(forKey: UserDefaults.Key.didInstallSystemMonitorSwitch) {
             discoveredTypes.insert(.systemMonitor)
         }
+        if !UserDefaults.standard.bool(forKey: UserDefaults.Key.didInstallXcodeCleanerSwitch) {
+            discoveredTypes.insert(.xcodeCleaner)
+        }
+        if !UserDefaults.standard.bool(forKey: UserDefaults.Key.didInstallAppUninstallerSwitch) {
+            discoveredTypes.insert(.appUninstaller)
+        }
         if !UserDefaults.standard.bool(forKey: UserDefaults.Key.didInstallAphroditeSwitch) {
             discoveredTypes.insert(.aphrodite)
         }
@@ -146,6 +152,12 @@ final class SwitchManager: @unchecked Sendable {
         }
         if discoveredTypes.contains(.systemMonitor) {
             UserDefaults.standard.set(true, forKey: UserDefaults.Key.didInstallSystemMonitorSwitch)
+        }
+        if discoveredTypes.contains(.xcodeCleaner) {
+            UserDefaults.standard.set(true, forKey: UserDefaults.Key.didInstallXcodeCleanerSwitch)
+        }
+        if discoveredTypes.contains(.appUninstaller) {
+            UserDefaults.standard.set(true, forKey: UserDefaults.Key.didInstallAppUninstallerSwitch)
         }
         if discoveredTypes.contains(.aphrodite) {
             UserDefaults.standard.set(true, forKey: UserDefaults.Key.didInstallAphroditeSwitch)

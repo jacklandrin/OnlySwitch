@@ -110,6 +110,7 @@ final class RemoteCommandRouter: Sendable {
         guard let rawValue = UInt64(request.controlID.value),
               String(rawValue) == request.controlID.value,
               let type = SwitchType(legacyIdentifier: rawValue),
+              type != .xcodeCleaner && type != .appUninstaller,
               let control = resolveBuiltIn(rawValue),
               control.type == type else {
             throw controlNotFound("Control not found")

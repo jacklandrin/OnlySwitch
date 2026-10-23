@@ -1,0 +1,13 @@
+round=0 variant=current milliseconds=1326.42 bytes=39936000
+round=0 variant=prefetch-id milliseconds=53.39 bytes=39936000
+round=1 variant=prefetch-id milliseconds=52.82 bytes=39936000
+round=1 variant=current milliseconds=1312.48 bytes=39936000
+round=2 variant=current milliseconds=1272.82 bytes=39936000
+round=2 variant=prefetch-id milliseconds=48.59 bytes=39936000
+round=3 variant=prefetch-id milliseconds=47.57 bytes=39936000
+round=3 variant=current milliseconds=1221.55 bytes=39936000
+round=4 variant=current milliseconds=1230.96 bytes=39936000
+round=4 variant=prefetch-id milliseconds=48.16 bytes=39936000
+round=5 variant=prefetch-id milliseconds=47.06 bytes=39936000
+round=5 variant=current milliseconds=1840.82 bytes=39936000
+current median ms=1272.821791; prefetched median ms=48.159167; improvement percent=96.21634644059924

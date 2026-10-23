@@ -101,6 +101,10 @@ extension SwitchType {
             return ReverseScrollDirectionSwitch()
         case .systemMonitor:
             return SystemMonitorSwitch()
+        case .xcodeCleaner:
+            return XcodeCleanerSwitch()
+        case .appUninstaller:
+            return AppUninstallerSwitch()
         case .aphrodite:
             return AphroditeSwitch()
         case .dockPreview:

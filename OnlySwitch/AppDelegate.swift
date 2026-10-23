@@ -202,10 +202,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         KeychainMigration.migrateAPIKeysIfNeeded()
         //for issue #11
         closeWindow()
-        let contentView = OnlySwitchListView { [weak self] size in
-            guard let self, self.popover.contentSize != size else { return }
-            self.popover.contentSize = size
-        }
+        let contentView = OnlySwitchListView(
+            onPanelSizeChange: { [weak self] size in
+                guard let self, self.popover.contentSize != size else { return }
+                self.popover.contentSize = size
+            },
+            onOutsideClickRetentionChanged: { [weak self] retainsOutsideClicks in
+                self?.statusBar?.listPreventsOutsideClickDismissal = retainsOutsideClicks
+            }
+        )
             .environmentObject(switchVM)
         let apperearance = SwitchListAppearance(rawValue: currentAppearance)
 

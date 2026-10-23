@@ -54,6 +54,11 @@ public extension UserDefaults {
         public static let systemMonitorPreferences = "systemMonitorPreferencesKey"
         public static let showSystemMonitorTab = "showSystemMonitorTabKey"
         public static let didInstallSystemMonitorSwitch = "didInstallSystemMonitorSwitchKey"
+        // Xcode Cleaner
+        public static let showAppUninstallerTab = "showAppUninstallerTabKey"
+        public static let didInstallAppUninstallerSwitch = "didInstallAppUninstallerSwitchKey"
+        public static let showXcodeCleanerTab = "showXcodeCleanerTabKey"
+        public static let didInstallXcodeCleanerSwitch = "didInstallXcodeCleanerSwitchKey"
         //BackNoises
         public static let backNoisesTrack = "backNoisesTrackKey"
         public static let automaticallyStopPlayNoiseTime = "automaticallyStopPlayNoiseTimeKey"
@@ -125,7 +130,7 @@ public extension UserDefaults {
             shortcutsDic,
             orderWeight, onlyControlOrderWeight,
             soundMixerEnabled,
-            systemMonitorPreferences, showSystemMonitorTab,
+            systemMonitorPreferences, showSystemMonitorTab, showXcodeCleanerTab, showAppUninstallerTab,
             backNoisesTrack, automaticallyStopPlayNoiseTime,
             autoStopKeepAwakeMode, autoStopKeepAwakeTime, autoStopKeepAwakeStartDate, autoStopKeepAwakeEndDate, KeepAwakeKey,
             autoDimScreenTime, dimScreenPercent, syncExternalBrightness,

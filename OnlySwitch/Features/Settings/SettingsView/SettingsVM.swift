@@ -9,6 +9,8 @@ import Foundation
 import SwiftUI
 import ComposableArchitecture
 import Aphrodite
+import XcodeCleaner
+import AppUninstaller
 
 enum SettingsItem: String, CaseIterable {
     case General = "General"
@@ -21,6 +23,8 @@ enum SettingsItem: String, CaseIterable {
     case Radio = "Radio"
     case Authenticator = "Authenticator"
     case SystemMonitor = "System Monitor"
+    case XcodeCleaner = "Xcode Cleaner"
+    case AppUninstaller = "App Uninstaller"
     case PomodoroTimer = "Pomodoro Timer"
     case HideMenubarIcons = "Hide Menu Bar Icons"
     case BackNoises = "Back Noises"
@@ -75,6 +79,14 @@ class SettingsVM: ObservableObject {
 
     lazy var aphroditeStore = Store(initialState: AphroditeReducer.State()) {
         AphroditeReducer()
+    }
+
+    lazy var xcodeCleanerStore = Store(initialState: XcodeCleanerFeature.State()) {
+        XcodeCleanerFeature()
+    }
+
+    lazy var appUninstallerStore = Store(initialState: AppUninstallerFeature.State()) {
+        AppUninstallerFeature()
     }
 
     init() {

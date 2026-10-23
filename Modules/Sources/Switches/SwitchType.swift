@@ -76,6 +76,8 @@ public enum SwitchType: String, CaseIterable, Sendable {
     case aphrodite
     case dockPreview
     case claudeUsage
+    case xcodeCleaner
+    case appUninstaller
 
     public var legacyIdentifier: UInt64 {
         switch self {
@@ -125,6 +127,8 @@ public enum SwitchType: String, CaseIterable, Sendable {
         case .aphrodite: 8_796_093_022_208
         case .dockPreview: 17_592_186_044_416
         case .claudeUsage: 35_184_372_088_832
+        case .xcodeCleaner: 70_368_744_177_664
+        case .appUninstaller: 140_737_488_355_328
         }
     }
 
@@ -435,6 +439,20 @@ public enum SwitchType: String, CaseIterable, Sendable {
                 title: "System Monitor",
                 onImage: NSImage(systemSymbolName: "waveform.path.ecg"),
                 offImage: NSImage(systemSymbolName: "waveform.path.ecg"),
+                category: .tool
+            )
+        case .appUninstaller:
+            return SwitchBarInfo(
+                title: "App Uninstaller",
+                onImage: NSImage(systemSymbolName: "trash.fill"),
+                offImage: NSImage(systemSymbolName: "trash"),
+                category: .cleanup
+            )
+        case .xcodeCleaner:
+            return SwitchBarInfo(
+                title: "Xcode Cleaner",
+                onImage: NSImage(systemSymbolName: "hammer.fill"),
+                offImage: NSImage(systemSymbolName: "hammer"),
                 category: .tool
             )
         case .aphrodite:

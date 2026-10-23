@@ -10,6 +10,8 @@ let package = Package(
         .iOS(.v18)
     ],
     products: [
+        .library(name: "XcodeCleaner", targets: ["XcodeCleaner"]),
+        .library(name: "AppUninstaller", targets: ["AppUninstaller"]),
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "Extensions",
@@ -79,6 +81,7 @@ let package = Package(
         )
     ],
     dependencies: [
+        .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.9.2"),
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", exact: "1.26.2"),
         .package(url: "https://github.com/pointfreeco/swift-sharing", exact: "2.10.0"),
         .package(url: "https://github.com/gonzalezreal/swift-markdown-ui", exact: "2.3.1"),
@@ -90,6 +93,10 @@ let package = Package(
         .package(url: "https://github.com/timazed/CodexKit", revision: "85c410cc1f3adfd256c7e43bbe978ce892b27408")
     ],
     targets: [
+        .target(name: "AppUninstaller", dependencies: ["Extensions", .product(name: "ComposableArchitecture", package: "swift-composable-architecture"), .product(name: "Dependencies", package: "swift-dependencies")]),
+        .testTarget(name: "AppUninstallerTests", dependencies: ["AppUninstaller", .product(name: "ComposableArchitecture", package: "swift-composable-architecture")]),
+        .target(name: "XcodeCleaner", dependencies: ["Extensions", .product(name: "Dependencies", package: "swift-dependencies"), .product(name: "ComposableArchitecture", package: "swift-composable-architecture")]),
+        .testTarget(name: "XcodeCleanerTests", dependencies: ["XcodeCleaner", .product(name: "ComposableArchitecture", package: "swift-composable-architecture")]),
         .target(
             name: "Extensions",
             dependencies: [

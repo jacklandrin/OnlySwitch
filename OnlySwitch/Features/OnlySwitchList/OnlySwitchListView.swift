@@ -15,6 +15,8 @@ import Switches
 import Utilities
 import OnlyAgent
 import Aphrodite
+import XcodeCleaner
+import AppUninstaller
 
 enum Focusable: Hashable {
   case none
@@ -23,6 +25,7 @@ enum Focusable: Hashable {
 
 struct OnlySwitchListView: View {
     private let onPanelSizeChange: @MainActor (CGSize) -> Void
+    private let onOutsideClickRetentionChanged: @MainActor (Bool) -> Void
     @EnvironmentObject var switchVM:SwitchListVM
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.accessibilityReduceMotion) private var accessibilityReduceMotion
@@ -44,14 +47,17 @@ struct OnlySwitchListView: View {
     @AppStorage(UserDefaults.Key.showCodexUsageTab) private var showCodexUsageTab = true
     @AppStorage(UserDefaults.Key.showSystemMonitorTab) private var showSystemMonitorTab = true
     @AppStorage(UserDefaults.Key.showAphroditeTab) private var showAphroditeTab = true
+    @AppStorage(UserDefaults.Key.showXcodeCleanerTab) private var showXcodeCleanerTab = true
+    @AppStorage(UserDefaults.Key.showAppUninstallerTab) private var showAppUninstallerTab = true
 
     let columns = [
         GridItem(.fixed(Layout.popoverWidth - 40)),
         GridItem(.fixed(Layout.popoverWidth - 40))
     ]
 
-    init(onPanelSizeChange: @escaping @MainActor (CGSize) -> Void = { _ in }) {
+    init(onPanelSizeChange: @escaping @MainActor (CGSize) -> Void = { _ in }, onOutsideClickRetentionChanged: @escaping @MainActor (Bool) -> Void = { _ in }) {
         self.onPanelSizeChange = onPanelSizeChange
+        self.onOutsideClickRetentionChanged = onOutsideClickRetentionChanged
         _aphroditeStore = State(initialValue: Store(initialState: .init()) { AphroditeReducer() })
     }
     
@@ -103,6 +109,12 @@ struct OnlySwitchListView: View {
                             if #available(macOS 14.0, *) {
                                 CodexUsagePanelContainer(managesScrolling: false)
                             }
+                        case .xcodeCleaner:
+                            XcodeCleanerView(store: SettingsVM.shared.xcodeCleanerStore, managesScrolling: false, compactPresentation: true)
+                                .id(languageManager.currentLang)
+                        case .appUninstaller:
+                            AppUninstallerView(store: SettingsVM.shared.appUninstallerStore, managesScrolling: false, compactPresentation: true)
+                                .id(languageManager.currentLang)
                         case .aphrodite:
                             if #available(macOS 26.0, *) {
                                 AphroditePanelView(
@@ -154,6 +166,9 @@ struct OnlySwitchListView: View {
         .onChange(of: sections) { _ in
             reconcileSectionSelection()
         }
+        .onChange(of: selectedSection) { section in
+            onOutsideClickRetentionChanged(!section.allowsOutsideClickDismissal)
+        }
         .onPreferenceChange(PanelContentHeightKey.self) { measuredContentHeight = $0.isFinite && $0 >= 0 ? $0 : nil }
         .onPreferenceChange(PanelChromeHeightKey.self) { measuredChromeHeight = $0 + 15 }
         .background(PanelScreenHeightReader { maximumPanelHeight = $0 })
@@ -171,7 +186,10 @@ struct OnlySwitchListView: View {
         .onChange(of: accessibilityReduceMotion) { _ in
             updatePresentedPanelHeight(to: adaptivePanelHeight)
         }
-        .onAppear { presentedPanelHeight = adaptivePanelHeight }
+        .onAppear {
+            presentedPanelHeight = adaptivePanelHeight
+            onOutsideClickRetentionChanged(!selectedSection.allowsOutsideClickDismissal)
+        }
     }
     
     var singleSwitchList: some View {
@@ -563,7 +581,9 @@ struct OnlySwitchListView: View {
             systemMonitor: showSystemMonitorTab,
             codexUsage: showCodexUsageTab,
             claudeUsage: showClaudeUsageTab,
-            aphrodite: showAphroditeTab
+            aphrodite: showAphroditeTab,
+            xcodeCleaner: showXcodeCleanerTab,
+            appUninstaller: showAppUninstallerTab
         )
     }
 

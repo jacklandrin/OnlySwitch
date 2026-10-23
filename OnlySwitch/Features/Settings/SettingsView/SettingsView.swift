@@ -10,10 +10,15 @@ import Aphrodite
 import Authenticator
 import Utilities
 import OnlyAgent
+import XcodeCleaner
+import AppUninstaller
+import Extensions
 
 struct SettingsView: View {
     @StateObject var settingVM = SettingsVM.shared
     @ObservedObject var langManager = LanguageManager.sharedManager
+    @AppStorage(UserDefaults.Key.showXcodeCleanerTab) private var showXcodeCleanerTab = true
+    @AppStorage(UserDefaults.Key.showAppUninstallerTab) private var showAppUninstallerTab = true
 
     init(settingItem: Binding<SettingsItem?> = .constant(nil)) {
         if let item = settingItem.wrappedValue {
@@ -82,6 +87,30 @@ struct SettingsView: View {
 
             case .Authenticator:
                 AuthenticatorSettingsView()
+
+            case .XcodeCleaner:
+                VStack(spacing: 0) {
+                    Toggle("Xcode Cleaner Show Tab".localized(), isOn: $showXcodeCleanerTab)
+                        .toggleStyle(.switch)
+                        .padding(.horizontal, 24).padding(.top, 18).padding(.bottom, 6)
+                        .onChange(of: showXcodeCleanerTab) { _ in
+                            NotificationCenter.default.post(name: .changeSettings, object: nil)
+                        }
+                    XcodeCleanerView(store: settingVM.xcodeCleanerStore)
+                        .id(langManager.currentLang)
+                }
+
+            case .AppUninstaller:
+                VStack(spacing: 0) {
+                    Toggle("App Uninstaller Show Tab".localized(), isOn: $showAppUninstallerTab)
+                        .toggleStyle(.switch)
+                        .padding(.horizontal, 24).padding(.top, 18).padding(.bottom, 6)
+                        .onChange(of: showAppUninstallerTab) { _ in
+                            NotificationCenter.default.post(name: .changeSettings, object: nil)
+                        }
+                    AppUninstallerView(store: settingVM.appUninstallerStore)
+                        .id(langManager.currentLang)
+                }
 
             case .SystemMonitor:
                 SystemMonitorSettingsView()

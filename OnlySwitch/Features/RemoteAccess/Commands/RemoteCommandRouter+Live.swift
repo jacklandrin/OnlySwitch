@@ -40,7 +40,8 @@ extension RemoteCommandRouter {
     static var live: RemoteCommandRouter {
         RemoteCommandRouter(
             resolveBuiltIn: { rawValue in
-                SwitchType(legacyIdentifier: rawValue)?.getNewSwitchInstance()
+                guard let type = SwitchType(legacyIdentifier: rawValue), type != .xcodeCleaner && type != .appUninstaller else { return nil }
+                return type.getNewSwitchInstance()
             },
             installedShortcutNames: {
                 Set(await ShortcutsSettingVM.shared.getAllInstalledShortcutName() ?? [])

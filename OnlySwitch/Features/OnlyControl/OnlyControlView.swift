@@ -17,6 +17,8 @@ import Foundation
 import SystemMonitor
 import OnlyAgent
 import Aphrodite
+import XcodeCleaner
+import AppUninstaller
 import Utilities
 
 struct OnlyControlView: View {
@@ -26,12 +28,15 @@ struct OnlyControlView: View {
     @ObservedObject private var authenticatorStore = AuthenticatorStore.shared
     @ObservedObject private var soundMixerVM = SoundMixerVM.shared
     @State private var currentDate = Date()
+    @ObservedObject private var languageManager = LanguageManager.sharedManager
     @State private var aphroditeStore: StoreOf<AphroditeReducer>
     @State private var sectionViewportHeight: CGFloat?
     @AppStorage(UserDefaults.Key.showClaudeUsageTab) private var showClaudeUsageTab = true
     @AppStorage(UserDefaults.Key.showCodexUsageTab) private var showCodexUsageTab = true
     @AppStorage(UserDefaults.Key.showSystemMonitorTab) private var showSystemMonitorTab = true
     @AppStorage(UserDefaults.Key.showAphroditeTab) private var showAphroditeTab = true
+    @AppStorage(UserDefaults.Key.showXcodeCleanerTab) private var showXcodeCleanerTab = true
+    @AppStorage(UserDefaults.Key.showAppUninstallerTab) private var showAppUninstallerTab = true
     
     private let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
 
@@ -114,6 +119,12 @@ struct OnlyControlView: View {
                 claudeUsagePage
             case .codexUsage:
                 codexUsagePage
+            case .xcodeCleaner:
+                XcodeCleanerView(store: SettingsVM.shared.xcodeCleanerStore, managesScrolling: false)
+                    .id(languageManager.currentLang)
+            case .appUninstaller:
+                AppUninstallerView(store: SettingsVM.shared.appUninstallerStore, managesScrolling: false)
+                    .id(languageManager.currentLang)
             case .aphrodite:
                 aphroditePage
         }
@@ -243,7 +254,9 @@ struct OnlyControlView: View {
             systemMonitor: showSystemMonitorTab,
             codexUsage: showCodexUsageTab,
             claudeUsage: showClaudeUsageTab,
-            aphrodite: showAphroditeTab
+            aphrodite: showAphroditeTab,
+            xcodeCleaner: showXcodeCleanerTab,
+            appUninstaller: showAppUninstallerTab
         )
     }
 }
@@ -349,6 +362,10 @@ final class OnlyControlWindow: NSWindow, NSWindowDelegate {
     } withDependencies: {
         $0.systemMonitor = MacSystemMonitorCollector.liveClient()
     }
+    var preventsOutsideClickDismissal: Bool {
+        !onlyControlStore.selectedSection.allowsOutsideClickDismissal
+    }
+
     private var globalMouseMonitor: Any?
     private var localMouseMonitor: Any?
     private var hideTask: Task<Void, Never>?
@@ -467,7 +484,7 @@ final class OnlyControlWindow: NSWindow, NSWindowDelegate {
             matching: [.leftMouseDown, .rightMouseDown]
         ) { [weak self] _ in
             Task { @MainActor in
-                self?.hide()
+                self?.dismissForOutsideClick()
             }
         }
 
@@ -497,6 +514,11 @@ final class OnlyControlWindow: NSWindow, NSWindowDelegate {
               !outsideClickExclusionWindowNumbers.contains(event.windowNumber) else {
             return
         }
+        dismissForOutsideClick()
+    }
+
+    private func dismissForOutsideClick() {
+        guard !preventsOutsideClickDismissal else { return }
         hide()
     }
 

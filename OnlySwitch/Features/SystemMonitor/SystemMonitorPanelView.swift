@@ -12,6 +12,10 @@ enum SectionBar {
         case codexUsage
         case claudeUsage
         case aphrodite
+        case xcodeCleaner
+        case appUninstaller
+
+        var allowsOutsideClickDismissal: Bool { self != .appUninstaller }
 
         var title: String {
             switch self {
@@ -22,6 +26,8 @@ enum SectionBar {
             case .codexUsage: "Codex Usage".localized()
             case .claudeUsage: "Claude Usage".localized()
             case .aphrodite: "Aphrodite".localized()
+            case .xcodeCleaner: "Xcode Cleaner".localized()
+            case .appUninstaller: "App Uninstaller".localized()
             }
         }
 
@@ -34,6 +40,8 @@ enum SectionBar {
             case .codexUsage: "gauge.with.dots.needle.50percent"
             case .claudeUsage: "gauge.with.dots.needle.50percent"
             case .aphrodite: "sparkles.rectangle.stack"
+            case .xcodeCleaner: "hammer.fill"
+            case .appUninstaller: "trash.fill"
             }
         }
 
@@ -42,7 +50,7 @@ enum SectionBar {
             switch self {
             case .codexUsage: "openai_logo"
             case .claudeUsage: "claude_logo"
-            case .controls, .authenticator, .soundMixer, .systemMonitor, .aphrodite: nil
+            case .controls, .authenticator, .soundMixer, .systemMonitor, .aphrodite, .xcodeCleaner, .appUninstaller: nil
             }
         }
     }
@@ -53,7 +61,9 @@ enum SectionBar {
         systemMonitor: Bool,
         codexUsage: Bool,
         claudeUsage: Bool = false,
-        aphrodite: Bool = false
+        aphrodite: Bool = false,
+        xcodeCleaner: Bool = false,
+        appUninstaller: Bool = false
     ) -> [Section] {
         var sections: [Section] = [.controls]
         if authenticator { sections.append(.authenticator) }
@@ -62,6 +72,8 @@ enum SectionBar {
         if codexUsage { sections.append(.codexUsage) }
         if claudeUsage { sections.append(.claudeUsage) }
         if aphrodite { sections.append(.aphrodite) }
+        if xcodeCleaner { sections.append(.xcodeCleaner) }
+        if appUninstaller { sections.append(.appUninstaller) }
         return sections
     }
 
