@@ -50,6 +50,16 @@ To control OnlySwitch from an iPhone or iPad, install [OnlyRemote from the App S
   <img alt="OnlyRemote App Store QR code" src="https://raw.githubusercontent.com/jacklandrin/OnlySwitch/main/OnlySwitch/Resource/Ads/OnlyRemoteQRCode.jpeg" width="160" />
 </p>
 
+## What's new in 3.2.0
+
+- **Tailscale:** Connect or disconnect, manage accounts and exit nodes, and copy your Mac's Tailscale IP. Requires the official Tailscale client.
+- **Xcode Cleaner:** Scan, review, and clean selected DerivedData, caches, and simulator-related items.
+- **App Uninstaller:** Review an application and matching related files, then move selected items to Trash.
+- **Desktop Pet:** Skip to the next track or radio station and see playback animations for Apple Music, Spotify, and Radio.
+- **Keep Awake:** Enable **Turn off after sleep** to turn off Keep Awake when you manually put your Mac to sleep.
+- **OnlyRemote tabs:** Choose which System Monitor, Codex Usage, and Claude Usage tabs appear under **Settings → Tabs**. Controls and Aphrodite remain available.
+- **Bug fixes:** Fixed a radio audio callback race and missing Czech switch subtitles.
+
 ## What's new in 3.0.0
 
 - **Aphrodite:** Describe a mini app in natural language, choose a configured AI provider and model, then generate, run, edit, save, share, or import it. Aphrodite requires macOS 26 or later and uses the model-provider settings configured in OnlySwitch.
@@ -69,8 +79,8 @@ To control OnlySwitch from an iPhone or iPad, install [OnlyRemote from the App S
 - Customize which controls appear and arrange them to fit your workflow.
 - Use Apple Widgets on macOS Sonoma and later, including Evolution controls.
 - Open the compact **Only Control** interface for a focused control panel.
-- Pair OnlyRemote for local-network control from iPhone or iPad.
-- Enable the optional Desktop Pet, drag it anywhere, and click it to show or dismiss Only Control.
+- Pair OnlyRemote for local-network control from iPhone or iPad, and choose which optional tabs to show.
+- Enable the optional Desktop Pet, drag it anywhere, click it to show or dismiss Only Control, and use its next-track or next-station control while music plays.
 
 <p align="center">
   <img alt="Switch availability in the macOS menu bar" src="https://github.com/jacklandrin/OnlySwitch/assets/3782279/11c89e33-2007-4913-b320-47c188538b68" />
@@ -105,8 +115,24 @@ To control OnlySwitch from an iPhone or iPad, install [OnlyRemote from the App S
 | Only Agent | finished | Authenticator | finished |
 | Sound Mixer | finished | Natural Scrolling | finished |
 | Show desktop pet | finished | Codex Usage | finished |
+| Tailscale | requires official client | Xcode Cleaner | controls tab visibility |
+| App Uninstaller | controls tab visibility | | |
 
 Switches can be added to or removed from the list.
+
+### Tailscale
+
+Install and set up the official Tailscale client, then open **OnlySwitch Settings → Tailscale** to manage saved accounts, exit nodes, and supported network preferences. The **Tailscale** switch connects or disconnects the active account; its connected subtitle lets you copy your Mac's Tailscale IP.
+
+### Xcode Cleaner
+
+Open **OnlySwitch Settings → Xcode Cleaner**, or enable its tab in the menu-bar list or Only Control. Scan your development data, review the selected items, and confirm cleanup. Supported items include DerivedData, Xcode and SwiftPM caches, simulator caches and logs, simulator devices and runtimes, and DeviceSupport files. Source projects and archives are excluded. The **Xcode Cleaner** switch controls tab visibility; toggling it does not delete files.
+
+### App Uninstaller
+
+Open **OnlySwitch Settings → App Uninstaller**, or enable its tab in the menu-bar list or Only Control. Drop an app or choose one, review the application and matching related files, then confirm which items to move to Trash. Discovery covers supported locations matched by bundle identifier, so the results may not include every related file. The **App Uninstaller** switch controls tab visibility; toggling it does not uninstall an app.
+
+Tailscale, Xcode Cleaner, and App Uninstaller are local Mac features and are unavailable in Only Widget or OnlyRemote.
 
 ### Shortcuts Gallery
 
@@ -202,7 +228,7 @@ Codex Usage is an optional built-in tab showing the signed-in Codex account's pl
 
 ### Only Widget
 
-Only Widget can be configured with any built-in switch or button and placed on the desktop or in Notification Center. Clicking a widget triggers the corresponding control. Evolution is supported in widgets.
+Only Widget can be configured with supported built-in switches and buttons and placed on the desktop or in Notification Center. Clicking a widget triggers the corresponding control. Evolution is supported in widgets.
 
 <img width="370" alt="Only Widget" src="https://github.com/jacklandrin/OnlySwitch/assets/3782279/0c1be202-9e5f-41dd-b62d-52d5a7147139">
 
