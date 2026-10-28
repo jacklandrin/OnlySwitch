@@ -14,7 +14,7 @@ extension RemoteCatalogProvider {
         now: @escaping @MainActor @Sendable () -> Date = Date.init
     ) {
         catalog = {
-            let builtInDescriptors = builtIns().filter { $0 != .aphrodite && $0 != .dockPreview && $0 != .xcodeCleaner && $0 != .appUninstaller }.map { type in
+            let builtInDescriptors = builtIns().filter { $0 != .aphrodite && $0 != .dockPreview && $0 != .xcodeCleaner && $0 != .appUninstaller && $0 != .tailscale }.map { type in
                 Self.descriptor(for: type, control: makeBuiltIn(type))
             }
             let shortcutDescriptors = await shortcutNames().map(Self.descriptor(forShortcut:))
@@ -28,7 +28,7 @@ extension RemoteCatalogProvider {
                 guard let rawValue = UInt64(id.value),
                       String(rawValue) == id.value,
                       let type = SwitchType(legacyIdentifier: rawValue),
-                      type != .xcodeCleaner && type != .appUninstaller,
+                      type != .xcodeCleaner && type != .appUninstaller && type != .tailscale,
                       type != .aphrodite,
                       type != .dockPreview,
                       builtIns().contains(type) else {
@@ -190,7 +190,7 @@ extension RemoteCatalogProvider {
 
     @MainActor
     static func availability(for type: SwitchType, control: SwitchProvider) -> RemoteControlAvailability {
-        guard type != .xcodeCleaner && type != .appUninstaller else { return .unavailable("Not available on this Mac") }
+        guard type != .xcodeCleaner && type != .appUninstaller && type != .tailscale else { return .unavailable("Not available on this Mac") }
         guard control.isVisible() else {
             return .unavailable(unavailableReason(for: type))
         }

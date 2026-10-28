@@ -11,6 +11,7 @@ import ComposableArchitecture
 import Aphrodite
 import XcodeCleaner
 import AppUninstaller
+import Tailscale
 
 enum SettingsItem: String, CaseIterable {
     case General = "General"
@@ -25,6 +26,7 @@ enum SettingsItem: String, CaseIterable {
     case SystemMonitor = "System Monitor"
     case XcodeCleaner = "Xcode Cleaner"
     case AppUninstaller = "App Uninstaller"
+    case Tailscale = "Tailscale"
     case PomodoroTimer = "Pomodoro Timer"
     case HideMenubarIcons = "Hide Menu Bar Icons"
     case BackNoises = "Back Noises"
@@ -87,6 +89,10 @@ class SettingsVM: ObservableObject {
 
     lazy var appUninstallerStore = Store(initialState: AppUninstallerFeature.State()) {
         AppUninstallerFeature()
+    }
+
+    lazy var tailscaleStore = Store(initialState: TailscaleFeature.State()) {
+        TailscaleFeature()
     }
 
     init() {

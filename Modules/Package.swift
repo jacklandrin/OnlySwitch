@@ -10,6 +10,7 @@ let package = Package(
         .iOS(.v18)
     ],
     products: [
+        .library(name: "Tailscale", targets: ["Tailscale"]),
         .library(name: "XcodeCleaner", targets: ["XcodeCleaner"]),
         .library(name: "AppUninstaller", targets: ["AppUninstaller"]),
         // Products define the executables and libraries a package produces, making them visible to other packages.
@@ -93,6 +94,8 @@ let package = Package(
         .package(url: "https://github.com/timazed/CodexKit", revision: "85c410cc1f3adfd256c7e43bbe978ce892b27408")
     ],
     targets: [
+        .target(name: "Tailscale", dependencies: ["Extensions", .product(name: "ComposableArchitecture", package: "swift-composable-architecture"), .product(name: "Dependencies", package: "swift-dependencies")]),
+        .testTarget(name: "TailscaleTests", dependencies: ["Tailscale", "Switches", .product(name: "ComposableArchitecture", package: "swift-composable-architecture")]),
         .target(name: "AppUninstaller", dependencies: ["Extensions", .product(name: "ComposableArchitecture", package: "swift-composable-architecture"), .product(name: "Dependencies", package: "swift-dependencies")]),
         .testTarget(name: "AppUninstallerTests", dependencies: ["AppUninstaller", .product(name: "ComposableArchitecture", package: "swift-composable-architecture")]),
         .target(name: "XcodeCleaner", dependencies: ["Extensions", .product(name: "Dependencies", package: "swift-dependencies"), .product(name: "ComposableArchitecture", package: "swift-composable-architecture")]),

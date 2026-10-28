@@ -78,6 +78,7 @@ public enum SwitchType: String, CaseIterable, Sendable {
     case claudeUsage
     case xcodeCleaner
     case appUninstaller
+    case tailscale
 
     public var legacyIdentifier: UInt64 {
         switch self {
@@ -129,6 +130,7 @@ public enum SwitchType: String, CaseIterable, Sendable {
         case .claudeUsage: 35_184_372_088_832
         case .xcodeCleaner: 70_368_744_177_664
         case .appUninstaller: 140_737_488_355_328
+        case .tailscale: 281_474_976_710_656
         }
     }
 
@@ -439,6 +441,13 @@ public enum SwitchType: String, CaseIterable, Sendable {
                 title: "System Monitor",
                 onImage: NSImage(systemSymbolName: "waveform.path.ecg"),
                 offImage: NSImage(systemSymbolName: "waveform.path.ecg"),
+                category: .tool
+            )
+        case .tailscale:
+            return SwitchBarInfo(
+                title: "Tailscale",
+                onImage: NSImage(systemSymbolName: "network"),
+                offImage: NSImage(systemSymbolName: "network"),
                 category: .tool
             )
         case .appUninstaller:

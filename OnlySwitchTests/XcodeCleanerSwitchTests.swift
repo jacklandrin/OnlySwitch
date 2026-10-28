@@ -54,7 +54,7 @@ struct XcodeCleanerSwitchTests {
     @Test func stableIdentityMetadataAndBackupEligibilityRemainExplicit() {
         #expect(SwitchType.xcodeCleaner.legacyIdentifier == 70_368_744_177_664)
         #expect(SwitchType(legacyIdentifier: 70_368_744_177_664) == .xcodeCleaner)
-        #expect(SwitchType.allCases.dropLast().last == .xcodeCleaner)
+        #expect(SwitchType.allCases.firstIndex(of: .xcodeCleaner) == SwitchType.allCases.firstIndex(of: .claudeUsage).map { $0 + 1 })
         #expect(Set(SwitchType.allCases.map(\.legacyIdentifier)).count == SwitchType.allCases.count)
         #expect(SwitchType.claudeUsage.legacyIdentifier == 35_184_372_088_832)
         #expect(SwitchType.xcodeCache.legacyIdentifier == 2_048)

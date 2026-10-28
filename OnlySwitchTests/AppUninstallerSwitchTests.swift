@@ -55,7 +55,7 @@ struct AppUninstallerSwitchTests {
     @Test func stableIdentityMetadataAndBackupEligibilityRemainExplicit() {
         #expect(SwitchType.appUninstaller.legacyIdentifier == 140_737_488_355_328)
         #expect(SwitchType(legacyIdentifier: 140_737_488_355_328) == .appUninstaller)
-        #expect(SwitchType.allCases.last == .appUninstaller)
+        #expect(SwitchType.allCases.firstIndex(of: .appUninstaller) == SwitchType.allCases.firstIndex(of: .xcodeCleaner).map { $0 + 1 })
         #expect(Set(SwitchType.allCases.map(\.legacyIdentifier)).count == SwitchType.allCases.count)
         #expect(SwitchType.xcodeCleaner.legacyIdentifier == 70_368_744_177_664)
         #expect(SwitchType.claudeUsage.legacyIdentifier == 35_184_372_088_832)

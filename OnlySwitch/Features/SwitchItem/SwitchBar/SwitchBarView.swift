@@ -122,6 +122,15 @@ struct SwitchBarView: View {
                     },
                     secondaryButton: .cancel()
                 )
+            case .openTailscaleSettings:
+                Alert(
+                    title: Text("Tailscale Operation Failed".localized()),
+                    message: Text(switchOption.info.localized()),
+                    primaryButton: .default(Text("Tailscale Settings".localized())) {
+                        switchOption.openTailscaleSettings()
+                    },
+                    secondaryButton: .cancel()
+                )
             }
         }
     }

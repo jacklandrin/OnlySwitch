@@ -63,7 +63,7 @@ enum BuiltInSwitchCatalog {
 
         case .keepAwake, .bluetooth, .pomodoroTimer, .lowpowerMode, .fkey,
              .aiCommender, .authenticator, .codexUsage, .claudeUsage, .systemMonitor,
-             .aphrodite:
+             .aphrodite, .tailscale:
             .productivityAndTools
 
         @unknown default:

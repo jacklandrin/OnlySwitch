@@ -93,6 +93,7 @@ enum RemoteIconAdapter {
         case .reverseScrollDirection: "computermouse"
         case .systemMonitor: "waveform.path.ecg"
         case .xcodeCleaner: "hammer.fill"
+        case .tailscale: "network"
         case .appUninstaller: "trash.fill"
         case .aphrodite: "sparkles.rectangle.stack"
         }

@@ -299,12 +299,15 @@
 		A9F007CA2EC3D9BD002D9AB0 /* Design in Frameworks */ = {isa = PBXBuildFile; productRef = A9F007C92EC3D9BD002D9AB0 /* Design */; };
 		CD2100010000000000000001 /* XcodeCleaner in Frameworks */ = {isa = PBXBuildFile; productRef = CD2100020000000000000001 /* XcodeCleaner */; };
 		CD3100010000000000000001 /* AppUninstaller in Frameworks */ = {isa = PBXBuildFile; productRef = CD3100020000000000000001 /* AppUninstaller */; };
+		CD4100010000000000000001 /* Tailscale in Frameworks */ = {isa = PBXBuildFile; productRef = CD4100020000000000000001 /* Tailscale */; };
 		AF1000010000000000000001 /* Aphrodite in Frameworks */ = {isa = PBXBuildFile; productRef = AF1000020000000000000001 /* Aphrodite */; };
 		CD2200010000000000000001 /* XcodeCleanerSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2200020000000000000001 /* XcodeCleanerSwitch.swift */; };
 		CD3200010000000000000001 /* AppUninstallerSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3200020000000000000001 /* AppUninstallerSwitch.swift */; };
+		CD4200010000000000000001 /* TailscaleSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4200020000000000000001 /* TailscaleSwitch.swift */; };
 		CD2200030000000000000001 /* XcodeCleanerSwitchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2200040000000000000001 /* XcodeCleanerSwitchTests.swift */; };
 		A0D100010000000000000001 /* AudioStreamingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D100020000000000000001 /* AudioStreamingTests.swift */; };
 		CD3200030000000000000001 /* AppUninstallerSwitchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3200040000000000000001 /* AppUninstallerSwitchTests.swift */; };
+		CD4200030000000000000001 /* TailscaleSwitchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4200040000000000000001 /* TailscaleSwitchTests.swift */; };
 		AF1000050000000000000001 /* AphroditeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF1000040000000000000001 /* AphroditeSwitch.swift */; };
 		B1C100000000000000000002 /* BuiltInSwitchCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C100000000000000000001 /* BuiltInSwitchCatalog.swift */; };
 		B1C100000000000000000005 /* BuiltInSwitchCatalogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C100000000000000000004 /* BuiltInSwitchCatalogTests.swift */; };
@@ -862,9 +865,11 @@
 		A9C70D052EE490B3000A2367 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		CD2200020000000000000001 /* XcodeCleanerSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodeCleanerSwitch.swift; sourceTree = "<group>"; };
 		CD3200020000000000000001 /* AppUninstallerSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUninstallerSwitch.swift; sourceTree = "<group>"; };
+		CD4200020000000000000001 /* TailscaleSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TailscaleSwitch.swift; sourceTree = "<group>"; };
 		CD2200040000000000000001 /* XcodeCleanerSwitchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodeCleanerSwitchTests.swift; sourceTree = "<group>"; };
 		A0D100020000000000000001 /* AudioStreamingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioStreamingTests.swift; sourceTree = "<group>"; };
 		CD3200040000000000000001 /* AppUninstallerSwitchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUninstallerSwitchTests.swift; sourceTree = "<group>"; };
+		CD4200040000000000000001 /* TailscaleSwitchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TailscaleSwitchTests.swift; sourceTree = "<group>"; };
 		AF1000040000000000000001 /* AphroditeSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AphroditeSwitch.swift; sourceTree = "<group>"; };
 		B01000000000000000000001 /* OnlySwitch.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = OnlySwitch.xcconfig; sourceTree = "<group>"; };
 		B01000000000000000000002 /* OnlySwitchRemote.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = OnlySwitchRemote.xcconfig; sourceTree = "<group>"; };
@@ -1097,6 +1102,7 @@
 				AF1000010000000000000001 /* Aphrodite in Frameworks */,
 				CD2100010000000000000001 /* XcodeCleaner in Frameworks */,
 				CD3100010000000000000001 /* AppUninstaller in Frameworks */,
+				CD4100010000000000000001 /* Tailscale in Frameworks */,
 				04581DB6276506B9008ADF30 /* AlertToast in Frameworks */,
 				043316DE2B7168940078B867 /* Extensions in Frameworks */,
 				043E5D6D2757DADB00ADC004 /* AVFoundation.framework in Frameworks */,
@@ -1208,6 +1214,7 @@
 				CD2200040000000000000001 /* XcodeCleanerSwitchTests.swift */,
 				A0D100020000000000000001 /* AudioStreamingTests.swift */,
 				CD3200040000000000000001 /* AppUninstallerSwitchTests.swift */,
+				CD4200040000000000000001 /* TailscaleSwitchTests.swift */,
 				B1C100000000000000000004 /* BuiltInSwitchCatalogTests.swift */,
 				C1A0F1000000000000000001 /* Support/TestMutex.swift */,
 				B82700022700000000C0DE01 /* MenuBarIconHidingTests.swift */,
@@ -1232,6 +1239,7 @@
 				CBDE00000000000000000000 /* ClaudeUsageSwitch.swift */,
 				CD2200020000000000000001 /* XcodeCleanerSwitch.swift */,
 				CD3200020000000000000001 /* AppUninstallerSwitch.swift */,
+				CD4200020000000000000001 /* TailscaleSwitch.swift */,
 				AF1000040000000000000001 /* AphroditeSwitch.swift */,
 				B98500000000000000000001 /* SystemMonitorSwitch.swift */,
 				B99000000000000000000001 /* ReverseScrollDirectionSwitch.swift */,
@@ -2570,6 +2578,7 @@
 				AF1000020000000000000001 /* Aphrodite */,
 				CD2100020000000000000001 /* XcodeCleaner */,
 				CD3100020000000000000001 /* AppUninstaller */,
+				CD4100020000000000000001 /* Tailscale */,
 				A1D201012F0B000200BEEF01 /* PureColorView */,
 				A1D201022F0B000200BEEF01 /* StickerView */,
 				A1D201032F0B000200BEEF01 /* Authenticator */,
@@ -2892,6 +2901,7 @@
 				CD2200030000000000000001 /* XcodeCleanerSwitchTests.swift in Sources */,
 				A0D100010000000000000001 /* AudioStreamingTests.swift in Sources */,
 				CD3200030000000000000001 /* AppUninstallerSwitchTests.swift in Sources */,
+				CD4200030000000000000001 /* TailscaleSwitchTests.swift in Sources */,
 				B1C100000000000000000005 /* BuiltInSwitchCatalogTests.swift in Sources */,
 				C1A0F1000000000000000002 /* Support/TestMutex.swift in Sources */,
 				CADE00000000000000000001 /* RemoteCodexUsageProviderTests.swift in Sources */,
@@ -3149,6 +3159,7 @@
 				CBDF00000000000000000000 /* ClaudeUsageSwitch.swift in Sources */,
 				CD2200010000000000000001 /* XcodeCleanerSwitch.swift in Sources */,
 				CD3200010000000000000001 /* AppUninstallerSwitch.swift in Sources */,
+				CD4200010000000000000001 /* TailscaleSwitch.swift in Sources */,
 				AF1000050000000000000001 /* AphroditeSwitch.swift in Sources */,
 				B98500000000000000000003 /* SystemMonitorSwitch.swift in Sources */,
 				B99000000000000000000003 /* ReverseScrollDirectionSwitch.swift in Sources */,
@@ -4184,6 +4195,10 @@
 		CD3100020000000000000001 /* AppUninstaller */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AppUninstaller;
+		};
+		CD4100020000000000000001 /* Tailscale */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Tailscale;
 		};
 		AF1000020000000000000001 /* Aphrodite */ = {
 			isa = XCSwiftPackageProductDependency;

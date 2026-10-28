@@ -8,11 +8,13 @@
 import SwiftUI
 import Switches
 import Sharing
+import Tailscale
 
 class SwitchBarVM : BarProvider, ObservableObject, @MainActor SwitchDelegate {
     enum PrivilegedHelperRecovery: Hashable, Identifiable {
         case install
         case openSystemSettings
+        case openTailscaleSettings
 
         var id: Self { self }
     }
@@ -143,6 +145,12 @@ class SwitchBarVM : BarProvider, ObservableObject, @MainActor SwitchDelegate {
             }
         } catch {
             model.processing = false
+            if switchType == .tailscale {
+                model.isOn = await switchOperator.currentStatus()
+                model.info = TailscaleError.sanitized(error).localizationKey
+                privilegedHelperRecovery = .openTailscaleSettings
+                return
+            }
             guard switchType == .lowpowerMode,
                   let error = error as? PrivilegedOperationClientError else { return }
             switch error {
@@ -154,6 +162,13 @@ class SwitchBarVM : BarProvider, ObservableObject, @MainActor SwitchDelegate {
                 break
             }
         }
+    }
+
+    @MainActor
+    func openTailscaleSettings() {
+        SettingsVM.shared.selection = .Tailscale
+        OpenWindows.Setting.open()
+        privilegedHelperRecovery = nil
     }
 
     @MainActor

@@ -8,6 +8,7 @@
 import AppKit
 import Defines
 import Switches
+import Tailscale
 
 extension SwitchType {
     @MainActor
@@ -109,6 +110,8 @@ extension SwitchType {
             return AphroditeSwitch()
         case .dockPreview:
             return DockPreviewSwitch()
+        case .tailscale:
+            return TailscaleSwitch()
         }
     }
     
@@ -116,6 +119,17 @@ extension SwitchType {
     func doSwitch() {
         Task { @MainActor in
             let switchOperator = getNewSwitchInstance()
+            if self == .tailscale {
+                do {
+                    let isOn = await switchOperator.currentStatus()
+                    try await switchOperator.operateSwitch(isOn: !isOn)
+                } catch {
+                    SettingsVM.shared.selection = .Tailscale
+                    SettingsVM.shared.tailscaleStore.send(.externalFailure(TailscaleError.sanitized(error)))
+                    OpenWindows.Setting.open()
+                }
+                return
+            }
             let controlType = barInfo().controlType
             if controlType == .Switch || controlType == .Player {
                 let status = await switchOperator.currentStatus()

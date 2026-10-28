@@ -133,6 +133,9 @@ final class SwitchManager: @unchecked Sendable {
         if !UserDefaults.standard.bool(forKey: UserDefaults.Key.didInstallAppUninstallerSwitch) {
             discoveredTypes.insert(.appUninstaller)
         }
+        if !UserDefaults.standard.bool(forKey: UserDefaults.Key.didInstallTailscaleSwitch) {
+            discoveredTypes.insert(.tailscale)
+        }
         if !UserDefaults.standard.bool(forKey: UserDefaults.Key.didInstallAphroditeSwitch) {
             discoveredTypes.insert(.aphrodite)
         }
@@ -158,6 +161,9 @@ final class SwitchManager: @unchecked Sendable {
         }
         if discoveredTypes.contains(.appUninstaller) {
             UserDefaults.standard.set(true, forKey: UserDefaults.Key.didInstallAppUninstallerSwitch)
+        }
+        if discoveredTypes.contains(.tailscale) {
+            UserDefaults.standard.set(true, forKey: UserDefaults.Key.didInstallTailscaleSwitch)
         }
         if discoveredTypes.contains(.aphrodite) {
             UserDefaults.standard.set(true, forKey: UserDefaults.Key.didInstallAphroditeSwitch)

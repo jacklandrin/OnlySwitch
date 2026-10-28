@@ -12,6 +12,7 @@ import Utilities
 import OnlyAgent
 import XcodeCleaner
 import AppUninstaller
+import Tailscale
 import Extensions
 
 struct SettingsView: View {
@@ -111,6 +112,16 @@ struct SettingsView: View {
                     AppUninstallerView(store: settingVM.appUninstallerStore)
                         .id(langManager.currentLang)
                 }
+
+            case .Tailscale:
+                TailscaleSettingsView(store: settingVM.tailscaleStore)
+                    .id(langManager.currentLang)
+                    .onReceive(NotificationCenter.default.publisher(for: .changeSettings)) { _ in
+                        settingVM.tailscaleStore.send(.refresh)
+                    }
+                    .onChange(of: settingVM.tailscaleStore.snapshot?.connection) { _, _ in
+                        NotificationCenter.default.post(name: .changeSettings, object: nil)
+                    }
 
             case .SystemMonitor:
                 SystemMonitorSettingsView()

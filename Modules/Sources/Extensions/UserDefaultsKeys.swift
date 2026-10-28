@@ -39,6 +39,7 @@ public extension UserDefaults {
         public static let autoCollapseMenubarTime = "autoCollapseMenubarTimeKey"
         public static let menubarCollapsable = "menubarCollapsableKey"
         //Switch
+        public static let didInstallTailscaleSwitch = "didInstallTailscaleSwitchKey"
         public static let SwitchState = "SwitchStateKey"
         public static let didInstallReverseScrollDirectionSwitch = "didInstallReverseScrollDirectionSwitchKey"
         public static let reverseScrollDirectionEnabled = "reverseScrollDirectionEnabledKey"
