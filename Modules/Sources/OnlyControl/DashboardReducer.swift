@@ -25,10 +25,12 @@ public struct DashboardReducer {
         case onEndedMove
         case onTapItem(String)
         case didTapItem(String)
+        case copySubtitle(String)
         case delegate(Delegate)
 
         public enum Delegate: Equatable {
             case didTapItem(String)
+            case copySubtitle(String)
             case orderChanged
         }
     }
@@ -54,6 +56,7 @@ public struct DashboardReducer {
                     if let item = state.items.first(where: {$0.id == id}) {
                         var newItem = item
                         newItem.opacity = 0.7
+                        newItem.copyableSubtitle = false
                         state.items = IdentifiedArray(uniqueElements: state.items.map { $0.id == id ? newItem : $0 })
                     }
                     return .none
@@ -62,11 +65,18 @@ public struct DashboardReducer {
                     if let item = state.items.first(where: {$0.id == id}), item.controlType != .Button {
                         var newItem = item
                         newItem.status.toggle()
+                        newItem.copyableSubtitle = false
                         newItem.opacity = 1.0
                         state.items = IdentifiedArray(uniqueElements: state.items.map { $0.id == id ? newItem : $0 })
                     }
 
                     return .send(.delegate(.didTapItem(id)))
+
+                case let .copySubtitle(id):
+                    guard let item = state.items[id: id], item.copyableSubtitle,
+                          let subtitle = item.subtitle,
+                          !subtitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return .none }
+                    return .send(.delegate(.copySubtitle(id)))
 
                 case .delegate:
                     return .none

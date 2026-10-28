@@ -67,7 +67,6 @@ actor TailscaleCoordinator {
             guard !before.requiresAuthentication else { throw TailscaleError.authenticationRequired }
             let values = try await readPreferences(path)
             guard values[preference] != nil else { throw TailscaleError.unsupported }
-            if preference == .allowLANAccess, !before.hasExitNode { throw TailscaleError.unsupported }
         case .disconnect, .login: break
         case .forAccount: preconditionFailure("baseOperation unwraps account scope")
         }

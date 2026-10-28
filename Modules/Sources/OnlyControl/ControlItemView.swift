@@ -15,9 +15,13 @@ public struct ControlItemView: View {
     @Environment(\.colorScheme) private var colorScheme
     @State var isLargeSize = false
     let viewState: ControlItemViewState
+    private let onActivate: (() -> Void)?
+    private let onCopySubtitle: (() -> Void)?
 
-    public init(viewState: ControlItemViewState) {
+    public init(viewState: ControlItemViewState, onActivate: (() -> Void)? = nil, onCopySubtitle: (() -> Void)? = nil) {
         self.viewState = viewState
+        self.onActivate = onActivate
+        self.onCopySubtitle = onCopySubtitle
     }
 
     public var body: some View {
@@ -29,44 +33,63 @@ public struct ControlItemView: View {
                     .shadow(radius: 4)
             )
             .overlay {
-                VStack(spacing: 3) {
-                    Image(nsImage: NSImage(data: viewState.iconData)!)
-                        .renderingMode(viewState.usesTemplateIconRendering ? .template : .original)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(
-                            width: viewState.subtitle == nil ? 30 : 26,
-                            height: viewState.subtitle == nil ? 30 : 26
-                        )
-                        .foregroundStyle(iconColor(isOn: viewState.status))
-                        .accessibilityHidden(true)
-
-                    Text(viewState.title)
-                        .multilineTextAlignment(.center)
-                        .font(.caption)
-                        .lineLimit(2)
-                        .padding(.horizontal, 4)
-                        .foregroundStyle(textColor(isOn: viewState.status))
-
-                    if let subtitle = viewState.subtitle {
-                        Text(subtitle)
-                            .multilineTextAlignment(.center)
-                            .font(.caption)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.65)
-                            .padding(.horizontal, 4)
-                            .foregroundStyle(Color(nsColor: .secondaryLabelColor))
+                if viewState.copyableSubtitle, let subtitle = viewState.subtitle, let onCopySubtitle {
+                    VStack(spacing: 3) {
+                        Button { onActivate?() } label: {
+                            iconAndTitle.frame(maxWidth: .infinity, maxHeight: .infinity)
+                                .contentShape(.rect)
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(viewState.title)
+                        Button(action: onCopySubtitle) { subtitleLabel(subtitle) }
+                            .buttonStyle(.plain)
+                            .help("Copy".localized())
+                            .accessibilityLabel("Copy".localized())
+                            .accessibilityValue(subtitle)
                     }
+                    .padding(.vertical, 8)
+                    .accessibilityElement(children: .contain)
+                } else {
+                    VStack(spacing: 3) {
+                        iconAndTitle
+                        if let subtitle = viewState.subtitle { subtitleLabel(subtitle) }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .contentShape(.rect)
+                    .onTapGesture { onActivate?() }
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel(viewState.title)
+                    .accessibilityValue(viewState.subtitle ?? "")
+                    .accessibilityAddTraits(.isButton)
+                    .accessibilityAction { onActivate?() }
                 }
-                .accessibilityElement(children: .ignore)
-                .accessibilityLabel(viewState.title)
-                .accessibilityValue(viewState.subtitle ?? "")
             }
             .frame(width: 85, height: 85)
             .foregroundColor(
                 backgroundColor(isOn: viewState.status)
             )
             .animation(.easeIn(duration: 0.2), value: viewState.status)
+    }
+
+    private var iconAndTitle: some View {
+        VStack(spacing: 3) {
+            Image(nsImage: NSImage(data: viewState.iconData)!)
+                .renderingMode(viewState.usesTemplateIconRendering ? .template : .original)
+                .resizable().scaledToFit()
+                .frame(width: viewState.subtitle == nil ? 30 : 26, height: viewState.subtitle == nil ? 30 : 26)
+                .foregroundStyle(iconColor(isOn: viewState.status))
+                .accessibilityHidden(true)
+            Text(viewState.title)
+                .multilineTextAlignment(.center).font(.caption).lineLimit(2)
+                .padding(.horizontal, 4)
+                .foregroundStyle(textColor(isOn: viewState.status))
+        }
+    }
+
+    private func subtitleLabel(_ subtitle: String) -> some View {
+        Text(subtitle).multilineTextAlignment(.center).font(.caption).lineLimit(1)
+            .minimumScaleFactor(0.65).padding(.horizontal, 4)
+            .foregroundStyle(Color(nsColor: viewState.status ? .darkGray : .secondaryLabelColor))
     }
 
     private func backgroundColor(isOn: Bool) -> Color {

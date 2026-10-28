@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 import Switches
 import Sharing
 import Tailscale
@@ -71,6 +72,20 @@ class SwitchBarVM : BarProvider, ObservableObject, @MainActor SwitchDelegate {
         return model.info
     }
 
+    @MainActor var copyableInfo: String? { copyableInformation(matching: model.info) }
+
+    @MainActor func copyInfo(displayedInfo: String? = nil) async {
+        guard let address = copyableInformation(matching: displayedInfo ?? model.info) else { return }
+        _ = await pasteboard.copy(address)
+    }
+
+    @MainActor private func copyableInformation(matching displayedInfo: String) -> String? {
+        guard switchType == .tailscale, !processing, !operationInFlight, !hasFailedOperation, isOn,
+              let address = (switchOperator as? TailscaleSwitch)?.copyableIPAddress,
+              displayedInfo == address else { return nil }
+        return address
+    }
+
     var weight: Int {
         get {
             return model.weight
@@ -87,12 +102,22 @@ class SwitchBarVM : BarProvider, ObservableObject, @MainActor SwitchDelegate {
     @Published private var model = SwitchBarModel()
     @Published private(set) var switchOperator:SwitchProvider
     @Published var privilegedHelperRecovery: PrivilegedHelperRecovery?
+    private let pasteboard: RemotePasteboardClient
+    let copyTarget: SwitchBarCopyTarget
+    @MainActor private var refreshGeneration = 0
+    @MainActor private var operationInFlight = false
+    @MainActor private var hasFailedOperation = false
     
     @MainActor
-    init(switchOperator: SwitchProvider) {
+    init(switchOperator: SwitchProvider, pasteboard: RemotePasteboardClient? = nil) {
+        let copyTarget = SwitchBarCopyTarget()
+        self.copyTarget = copyTarget
+        @Dependency(\.remotePasteboard) var defaultPasteboard
+        self.pasteboard = pasteboard ?? defaultPasteboard
         self.switchOperator = switchOperator
         self.switchOperator.delegate = self
         model.isHidden = !switchOperator.isVisible()
+        copyTarget.owner = self
     }
     
     @MainActor
@@ -109,43 +134,50 @@ class SwitchBarVM : BarProvider, ObservableObject, @MainActor SwitchDelegate {
     
     @MainActor
     func refreshAsync() {
-        self.model.processing = true
-        Task {
-            let _isOn = await self.switchOperator.currentStatus()
-            var _info = ""
-            if self.switchType != .airPods {
-                _info = await self.switchOperator.currentInfo()
-            }
-            Task { @MainActor in
-                if self.switchType == .airPods {
-                    _info = await self.switchOperator.currentInfo()
-                }
-                self.model.processing = false
-                self.model.isOn = _isOn
-                self.model.info = _info
-            }
-        }
+        Task { await refresh() }
+    }
+
+    @MainActor
+    func refresh() async {
+        guard !operationInFlight else { return }
+        refreshGeneration += 1
+        let ticket = refreshGeneration
+        model.processing = true
+        let isOn = await switchOperator.currentStatus()
+        let information = await switchOperator.currentInfo()
+        guard ticket == refreshGeneration, !operationInFlight else { return }
+        model.isOn = isOn
+        model.info = information
+        hasFailedOperation = false
+        model.processing = false
     }
     
     @MainActor
     func doSwitch(isOn: Bool) async {
+        guard !operationInFlight else { return }
+        operationInFlight = true
+        refreshGeneration += 1
+        defer {
+            operationInFlight = false
+            model.processing = false
+        }
         model.processing = true
         do {
             _ = try await switchOperator.operateSwitch(isOn: isOn)
             self.model.isOn = isOn
-            self.model.processing = false
-            if info != "" {
+            if info != "" || switchType == .tailscale {
                 _ = await switchOperator.currentStatus()
                 model.info = await switchOperator.currentInfo()
             }
+            hasFailedOperation = false
             if hideMenuAfterRunningShared
                 && switchType.barInfo().controlType == .Button
                 && switchType.barInfo().category == .none {
                 NotificationCenter.default.post(name: .shouldHidePopover, object: nil)
             }
         } catch {
-            model.processing = false
             if switchType == .tailscale {
+                hasFailedOperation = true
                 model.isOn = await switchOperator.currentStatus()
                 model.info = TailscaleError.sanitized(error).localizationKey
                 privilegedHelperRecovery = .openTailscaleSettings
@@ -193,5 +225,16 @@ class SwitchBarVM : BarProvider, ObservableObject, @MainActor SwitchDelegate {
     func shouldRefreshIfNeed(aSwitch:SwitchProvider) {
         guard switchOperator === aSwitch else {return}
         refreshAsync()
+    }
+}
+
+/// A sendable capability whose VM reference is only read on the main actor.
+/// Reducer effects capture this target rather than transferring mutable VM state.
+@MainActor
+final class SwitchBarCopyTarget {
+    weak var owner: SwitchBarVM?
+
+    func copy(_ displayedInfo: String) async {
+        await owner?.copyInfo(displayedInfo: displayedInfo)
     }
 }

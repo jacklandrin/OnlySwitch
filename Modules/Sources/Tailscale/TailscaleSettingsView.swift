@@ -154,7 +154,7 @@ public struct TailscaleSettingsView: View {
                     if let value = snapshot.preferences[preference] {
                         Toggle(preference.localizationKey.localized(), isOn: Binding(get: { value }, set: { store.send(.preferenceChanged(preference, $0)) }))
                             .toggleStyle(.checkbox)
-                            .disabled(store.isBusy || snapshot.connection.requiresAuthentication || (preference == .allowLANAccess && !snapshot.connection.hasExitNode))
+                            .disabled(store.isBusy || snapshot.connection.requiresAuthentication)
                     }
                 }
                 Text("Tailscale Subnets Notice".localized()).font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)

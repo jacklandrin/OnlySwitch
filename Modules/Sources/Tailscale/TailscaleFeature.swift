@@ -83,8 +83,7 @@ public struct TailscaleFeature {
                 return perform(.renew, state: &state)
             case .preferenceChanged(let preference, let enabled):
                 guard let snapshot = state.snapshot, snapshot.preferencesAvailable,
-                      snapshot.preferences[preference] != nil, !snapshot.connection.requiresAuthentication,
-                      preference != .allowLANAccess || snapshot.connection.hasExitNode else { return .none }
+                      snapshot.preferences[preference] != nil, !snapshot.connection.requiresAuthentication else { return .none }
                 return perform(.setPreference(preference, enabled), state: &state)
             case .cancelLogin:
                 guard state.mutation?.isAuthorization == true else { return .none }

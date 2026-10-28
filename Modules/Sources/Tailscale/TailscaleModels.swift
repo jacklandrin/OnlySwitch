@@ -1,4 +1,5 @@
 #if os(macOS)
+import Darwin
 import Foundation
 
 public struct TailscaleAccount: Equatable, Identifiable, Sendable {
@@ -46,10 +47,32 @@ public struct TailscaleConnection: Equatable, Sendable {
     public var tailnet: String?
     public var expiry: Date?
     public var hasExitNode: Bool
-    public init(status: Status, displayName: String? = nil, email: String? = nil, tailnet: String? = nil, expiry: Date? = nil, hasExitNode: Bool = false) {
-        self.status = status; self.displayName = displayName; self.email = email; self.tailnet = tailnet; self.expiry = expiry; self.hasExitNode = hasExitNode
+    public var primaryIPAddress: String?
+    public init(status: Status, displayName: String? = nil, email: String? = nil, tailnet: String? = nil, expiry: Date? = nil, hasExitNode: Bool = false, primaryIPAddress: String? = nil) {
+        self.status = status; self.displayName = displayName; self.email = email; self.tailnet = tailnet; self.expiry = expiry; self.hasExitNode = hasExitNode; self.primaryIPAddress = primaryIPAddress
     }
     public var requiresAuthentication: Bool { status == .needsLogin || status == .needsMachineAuth }
+
+    /// Accept only complete native IP literals. Callers may validate injected or
+    /// hand-built snapshots through the same boundary before offering a copy.
+    public static func validatedIPAddress(_ value: String?) -> String? {
+        guard let value, !value.isEmpty, value.utf8.count < INET6_ADDRSTRLEN,
+              value.utf8.allSatisfy({ byte in
+                  (48...57).contains(byte) || (65...70).contains(byte) || (97...102).contains(byte) || byte == 46 || byte == 58
+              }) else { return nil }
+        // Darwin accepts some zero-padded IPv4 components. Exclude those
+        // ambiguous forms, including a dotted IPv4 suffix inside IPv6.
+        if value.contains(".") {
+            let dotted = value.split(separator: ":", omittingEmptySubsequences: false).last ?? ""
+            let octets = dotted.split(separator: ".", omittingEmptySubsequences: false)
+            guard octets.count == 4, octets.allSatisfy({ !$0.isEmpty && ($0.count == 1 || $0.first != "0") }) else { return nil }
+        }
+        var ipv4 = in_addr(), ipv6 = in6_addr()
+        let valid = value.withCString {
+            inet_pton(AF_INET, $0, &ipv4) == 1 || inet_pton(AF_INET6, $0, &ipv6) == 1
+        }
+        return valid ? value : nil
+    }
 }
 
 public struct TailscaleSnapshot: Equatable, Sendable {

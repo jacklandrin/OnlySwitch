@@ -12,6 +12,7 @@ import Defines
 import Switches
 import Extensions
 import SystemMonitor
+import Tailscale
 
 @Reducer
 struct OnlyControlReducer {
@@ -75,7 +76,7 @@ struct OnlyControlReducer {
         case hideControl
         case updateItems([BarProvider], [ControlItemViewState], [SwitchBarVM])
         case updateItem(ControlItemViewState)
-        case updateSecondaryInformation(id: String, subtitle: String?)
+        case updateSecondaryInformation(id: String, subtitle: String?, copyable: Bool = false)
         case openSettings
         case dashboardAction(DashboardReducer.Action)
         case refreshAirPodsBattery
@@ -173,12 +174,18 @@ struct OnlyControlReducer {
                                 info: info,
                                 isAirPods: false
                             )
-                            await send(.updateSecondaryInformation(id: request.id, subtitle: subtitle))
+                            let address = await (request.provider as? TailscaleSwitch)?.copyableIPAddress
+                            await send(.updateSecondaryInformation(id: request.id, subtitle: subtitle, copyable: address != nil && address == subtitle))
                         }
                     }
 
-                case let .updateSecondaryInformation(id, subtitle):
+                case let .updateSecondaryInformation(id, subtitle, copyable):
                     state.dashboard.items[id: id]?.subtitle = subtitle
+                    let isCopyable = copyable
+                        && state.dashboard.items[id: id]?.status == true
+                        && id == String(SwitchType.tailscale.legacyIdentifier)
+                        && TailscaleConnection.validatedIPAddress(subtitle) != nil
+                    state.dashboard.items[id: id]?.copyableSubtitle = isCopyable
                     return .none
 
                 case let .updateItem(item):
@@ -200,6 +207,14 @@ struct OnlyControlReducer {
                         evolutionControl.doSwitch()
                     }
                     return .none
+
+                case let .dashboardAction(.delegate(.copySubtitle(id))):
+                    guard let item = state.dashboard.items[id: id], item.copyableSubtitle, item.status,
+                          let subtitle = item.subtitle,
+                          let control = state.switchList.first(where: { $0.id == id }),
+                          control.switchType == .tailscale else { return .none }
+                    let target = control.copyTarget
+                    return .run { _ in await target.copy(subtitle) }
 
                 case .openSettings:
                     Task { @MainActor in
@@ -259,8 +274,12 @@ struct OnlyControlReducer {
         .run { @MainActor send in
             let switches = client.fetchSwitchList()
             for switchControl in switches {
-                let isOn = await switchControl.switchOperator.currentStatus()
-                switchControl.isOn = isOn
+                if switchControl.switchType == .tailscale {
+                    await switchControl.refresh()
+                } else {
+                    let isOn = await switchControl.switchOperator.currentStatus()
+                    switchControl.isOn = isOn
+                }
             }
             let shortcuts = client.fetchShortcutsList()
             let evolutions = client.fetchEvolutionList()

@@ -15,7 +15,7 @@ public enum TailscaleCLI {
 
     public static func decodeStatus(_ data: Data) throws -> TailscaleConnection {
         struct Status: Decodable {
-            struct Node: Decodable { var UserID: Int64?; var KeyExpiry: String?; var Expired: Bool? }
+            struct Node: Decodable { var UserID: Int64?; var KeyExpiry: String?; var Expired: Bool?; var TailscaleIPs: [String]? }
             struct User: Decodable { var DisplayName: String?; var LoginName: String? }
             struct Tailnet: Decodable { var Name: String? }
             struct Exit: Decodable { var ID: String? }
@@ -24,6 +24,7 @@ public enum TailscaleCLI {
             var User: [String: User]?
             var CurrentTailnet: Tailnet?
             var ExitNodeStatus: Exit?
+            var TailscaleIPs: [String]?
         }
         do {
             let value = try JSONDecoder().decode(Status.self, from: data)
@@ -43,8 +44,16 @@ public enum TailscaleCLI {
                 formatter.formatOptions.insert(.withFractionalSeconds)
                 return formatter.date(from: string)
             }
-            return .init(status: status, displayName: user?.DisplayName, email: user?.LoginName, tailnet: value.CurrentTailnet?.Name, expiry: expiry, hasExitNode: value.ExitNodeStatus?.ID != nil)
+            let address = primaryIPAddress(in: value.TailscaleIPs) ?? primaryIPAddress(in: value.Self?.TailscaleIPs)
+            return .init(status: status, displayName: user?.DisplayName, email: user?.LoginName, tailnet: value.CurrentTailnet?.Name, expiry: expiry, hasExitNode: value.ExitNodeStatus?.ID != nil, primaryIPAddress: address)
         } catch { throw TailscaleError.invalidResponse }
+    }
+
+    private static func primaryIPAddress(in addresses: [String]?) -> String? {
+        let valid = (addresses ?? []).compactMap { TailscaleConnection.validatedIPAddress($0) }
+        // Every valid literal without a colon is native IPv4. A dotted IPv4
+        // suffix inside an IPv6 literal must remain in the IPv6 preference tier.
+        return valid.first(where: { !$0.contains(":") }) ?? valid.first
     }
 
     public static func decodePreferences(_ data: Data) throws -> [TailscalePreference: Bool] {

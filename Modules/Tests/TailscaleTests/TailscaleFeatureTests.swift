@@ -7,6 +7,38 @@ import Testing
 @MainActor
 @Suite(.timeLimit(.minutes(1)))
 struct TailscaleFeatureTests {
+    @Test(arguments: [false, true])
+    func localNetworkPreferenceCanBeSavedBeforeSelectingAnExitNode(desired: Bool) async {
+        let recorder = TailscaleOperationRecorder()
+        var before = TailscaleFixtures.snapshot()
+        before.connection.hasExitNode = false
+        before.preferences[.allowLANAccess] = !desired
+        var after = before
+        after.preferences[.allowLANAccess] = desired
+        let confirmed = after
+        var initial = TailscaleFeature.State()
+        initial.snapshot = before
+        initial.selectedAccountID = "home"
+        let store = TestStore(initialState: initial) { TailscaleFeature() } withDependencies: {
+            $0.tailscaleClient.perform = { await recorder.record($0) }
+            $0.tailscaleClient.snapshot = { confirmed }
+        }
+        store.exhaustivity = .off
+        await store.send(.preferenceChanged(.allowLANAccess, desired))
+        let expected = TailscaleOperation.forAccount("home", .setPreference(.allowLANAccess, desired))
+        #expect(store.state.mutation == expected, "Saving this preference must not require choosing an exit node")
+        // Avoid waiting for a response that the old prerequisite never starts.
+        guard store.state.mutation == expected else { return }
+        await store.receive(\.operationCompleted)
+        await store.receive(\.snapshotResponse)
+        #expect(await recorder.operations == [expected])
+        #expect(store.state.snapshot?.preferences[.allowLANAccess] == desired)
+        #expect(store.state.snapshot?.connection.hasExitNode == false)
+        #expect(store.state.selectedAccountID == "home")
+        #expect(store.state.mutation == nil)
+        await store.finish()
+    }
+
     @Test func cancellingAuthorizationWaitsForOwnedCommandThenRefreshes() async {
         let gate = TailscaleFeatureGate()
         let (waiting, signal) = AsyncStream<Void>.makeStream()

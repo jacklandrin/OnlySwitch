@@ -48,10 +48,11 @@ public struct DashboardView: View {
     private var grid: some View {
         LazyVGrid(columns: columns, spacing: 20) {
             ReorderableForeach(store.items.elements, active: $active) { item in
-                ControlItemView(viewState: item)
-                    .onTapGesture {
-                        handleTap(item)
-                    }
+                ControlItemView(
+                    viewState: item,
+                    onActivate: { handleTap(item) },
+                    onCopySubtitle: item.copyableSubtitle ? { store.send(.copySubtitle(item.id)) } : nil
+                )
                     .popover(isPresented: detailBinding(for: item)) {
                         AuthenticatorControlPopover {
                             presentedDetailID = nil

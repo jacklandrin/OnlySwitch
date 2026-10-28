@@ -34,7 +34,17 @@ struct SwitchBarView: View {
             } else if switchOption.switchType == .pomodoroTimer {
                 TimerCountDownView(ptswitch: switchOption.switchOperator as! PomodoroTimerSwitch)
             }
-            else {
+            else if let address = switchOption.copyableInfo {
+                Button {
+                    Task { await switchOption.copyInfo(displayedInfo: address) }
+                } label: {
+                    Text(address).foregroundStyle(.secondary).lineLimit(1).truncationMode(.middle)
+                }
+                .buttonStyle(.plain)
+                .help("Copy".localized())
+                .accessibilityLabel("Copy".localized())
+                .accessibilityValue(address)
+            } else {
                 Text(switchOption.info.localized())
                     .foregroundColor(.gray)
             }

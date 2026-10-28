@@ -14,6 +14,7 @@ public struct ControlItemViewState: Equatable, Hashable, Identifiable {
     public var id: String
     public var title: String
     public var subtitle: String?
+    public var copyableSubtitle: Bool
     public var detail: ControlItemDetail?
     public var weight: Int
     public var unitType: UnitType
@@ -26,6 +27,7 @@ public struct ControlItemViewState: Equatable, Hashable, Identifiable {
         id: String,
         title: String,
         subtitle: String? = nil,
+        copyableSubtitle: Bool = false,
         detail: ControlItemDetail? = nil,
         iconData: Data,
         controlType: ControlType,
@@ -36,6 +38,7 @@ public struct ControlItemViewState: Equatable, Hashable, Identifiable {
         self.id = id
         self.title = title
         self.subtitle = subtitle
+        self.copyableSubtitle = copyableSubtitle
         self.detail = detail
         self.iconData = iconData
         self.controlType = controlType

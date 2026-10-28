@@ -4,6 +4,78 @@ import Testing
 @testable import Tailscale
 
 struct TailscaleCLITests {
+    @Test func localIPv4WinsOverIPv6AndPeerAddresses() throws {
+        let json = #"{"BackendState":"Running","TailscaleIPs":["fd7a:115c:a1e0::1","100.101.102.103"],"Self":{"TailscaleIPs":["100.9.9.9"]},"Peer":{"other":{"TailscaleIPs":["100.1.1.1"]}},"ExitNodeStatus":{"TailscaleIPs":["100.2.2.2"]}}"#
+        let connection = try TailscaleCLI.decodeStatus(Data(json.utf8))
+        #expect(connection.primaryIPAddress == "100.101.102.103")
+    }
+
+    @Test func localIPv6IsUsedWhenNoIPv4IsAvailable() throws {
+        let json = #"{"BackendState":"Running","TailscaleIPs":["fd7a:115c:a1e0::1234"]}"#
+        #expect(try TailscaleCLI.decodeStatus(Data(json.utf8)).primaryIPAddress == "fd7a:115c:a1e0::1234")
+    }
+
+    @Test func selfAddressesAreACompatibilityFallback() throws {
+        let json = #"{"BackendState":"Running","Self":{"TailscaleIPs":["fd7a:115c:a1e0::2","100.10.20.30"]}}"#
+        #expect(try TailscaleCLI.decodeStatus(Data(json.utf8)).primaryIPAddress == "100.10.20.30")
+    }
+
+    @Test func validTopLevelListWinsOverSelfEvenWhenItHasOnlyIPv6() throws {
+        let json = #"{"BackendState":"Running","TailscaleIPs":["fd7a:115c:a1e0::1"],"Self":{"TailscaleIPs":["100.10.20.30"]}}"#
+        #expect(try TailscaleCLI.decodeStatus(Data(json.utf8)).primaryIPAddress == "fd7a:115c:a1e0::1")
+    }
+
+    @Test func invalidTopLevelListFallsBackToValidSelfAddresses() throws {
+        let json = #"{"BackendState":"Running","TailscaleIPs":["100.1.1.999"],"Self":{"TailscaleIPs":["100.10.20.30"]}}"#
+        #expect(try TailscaleCLI.decodeStatus(Data(json.utf8)).primaryIPAddress == "100.10.20.30")
+    }
+
+    @Test(arguments: [
+        #"{"BackendState":"Running"}"#,
+        #"{"BackendState":"Running","TailscaleIPs":[]}"#,
+        #"{"BackendState":"Running","TailscaleIPs":["not an IP","100.1.1.999"]}"#,
+        #"{"BackendState":"Running","Peer":{"other":{"TailscaleIPs":["100.1.1.1"]}},"ExitNodeStatus":{"TailscaleIPs":["100.2.2.2"]}}"#
+    ])
+    func missingLocalAddressDoesNotInventAnAddressOrDisconnect(json: String) throws {
+        let connection = try TailscaleCLI.decodeStatus(Data(json.utf8))
+        #expect(connection.status == .running)
+        #expect(connection.primaryIPAddress == nil)
+    }
+
+    @Test(arguments: [
+        " 100.101.102.103", "100.101.102.103 ", "100.101.102.103\n", "100.1.1.1\u{0000}",
+        "example.com", "100.101.102.103:80", "100.101.102.103/32",
+        "[fd7a:115c:a1e0::1]", "fd7a:115c:a1e0::1%en0", "0100.101.102.103"
+    ])
+    func addressSelectionRejectsNonliteralOrDecoratedValues(invalid: String) throws {
+        let data = try JSONSerialization.data(withJSONObject: ["BackendState": "Running", "TailscaleIPs": [invalid]])
+        #expect(try TailscaleCLI.decodeStatus(data).primaryIPAddress == nil)
+    }
+
+    @Test func invalidEntriesDoNotHideALaterValidAddress() throws {
+        let json = #"{"BackendState":"Running","TailscaleIPs":["invalid","100.1.1.999","100.20.30.40"]}"#
+        #expect(try TailscaleCLI.decodeStatus(Data(json.utf8)).primaryIPAddress == "100.20.30.40")
+    }
+
+    @Test func mappedIPv6DoesNotOutrankANativeIPv4() throws {
+        let json = #"{"BackendState":"Running","TailscaleIPs":["::ffff:100.10.20.30","100.20.30.40","100.30.40.50"]}"#
+        #expect(try TailscaleCLI.decodeStatus(Data(json.utf8)).primaryIPAddress == "100.20.30.40")
+    }
+
+    @Test func publicValidationProtectsHandBuiltSnapshotsWithoutRewritingAddresses() {
+        #expect(TailscaleConnection.validatedIPAddress(nil) == nil)
+        #expect(TailscaleConnection.validatedIPAddress("100.20.30.40\u{0000}untrusted") == nil)
+        #expect(TailscaleConnection.validatedIPAddress("::ffff:0100.20.30.40") == nil)
+        #expect(TailscaleConnection.validatedIPAddress("fd7a:115c:a1e0::CAFE") == "fd7a:115c:a1e0::CAFE")
+    }
+
+    @Test func stoppedAddressDoesNotChangeItsBackendState() throws {
+        let json = #"{"BackendState":"Stopped","TailscaleIPs":["100.20.30.40"]}"#
+        let connection = try TailscaleCLI.decodeStatus(Data(json.utf8))
+        #expect(connection.status == .stopped)
+        #expect(connection.primaryIPAddress == "100.20.30.40")
+    }
+
     @Test func accountsKeepStableIdentityAcrossSharedEmails() throws {
         let json = #"[{"id":"personal","nickname":"Home","tailnet":"home.example","account":"a@example.com","selected":false},{"id":"work","nickname":"Work","tailnet":"work.example","account":"a@example.com","selected":true}]"#
         let accounts = try TailscaleCLI.decodeAccounts(Data(json.utf8))

@@ -32,6 +32,29 @@ private actor TailscaleFakeDaemon {
 struct TailscaleCoordinatorTests {
     private let path = URL(fileURLWithPath: "/test/official-tailscale")
 
+    @Test(arguments: [false, true], ["", "existing-exit-node"])
+    func savingLocalNetworkPreferenceDoesNotRequireOrChangeExitNode(desired: Bool, exitNodeID: String) async throws {
+        let daemon = TailscaleLANPreferenceDaemon(initialValue: !desired, exitNodeID: exitNodeID)
+        let coordinator = TailscaleCoordinator(candidates: [path], exists: { _ in true }, run: { _, args, _, _ in
+            await daemon.response(args)
+        })
+        do {
+            try await coordinator.perform(.forAccount("home", .setPreference(.allowLANAccess, desired)))
+        } catch {
+            Issue.record("An available LAN preference must be saveable with or without an exit node: \(error)")
+        }
+        let calls = await daemon.calls
+        let writes = calls.filter { $0 != ["status", "--json", "--peers=false"] && $0 != ["switch", "--list", "--json"] && $0 != ["get", "--json"] }
+        #expect(writes == [["set", "--exit-node-allow-lan-access=\(desired)"]])
+        #expect(!calls.contains { $0.first == "up" || $0.first == "down" || ($0.first == "switch" && $0 != ["switch", "--list", "--json"]) })
+        #expect(!writes.flatMap { $0 }.contains { $0 == "--exit-node" || $0.hasPrefix("--exit-node=") })
+        let snapshot = try await coordinator.snapshot()
+        #expect(snapshot.preferences[.allowLANAccess] == desired)
+        #expect(snapshot.connection.hasExitNode == !exitNodeID.isEmpty)
+        #expect(snapshot.accounts.first(where: \.isActive)?.id == "home")
+        #expect(daemon.exitNodeID == exitNodeID)
+    }
+
     @Test func officialShellLauncherCannotBeSelectedAsAnOwnedCLI() async throws {
         let fixture = try TailscaleProcessFixture(script: #"/Applications/Tailscale.app/Contents/MacOS/tailscale "$@""#)
         defer { fixture.remove() }
@@ -125,6 +148,33 @@ struct TailscaleCoordinatorTests {
         signal.finish()
         for await url in opened { urls.append(url) }
         #expect(urls.map(\.absoluteString) == ["https://login.tailscale.com/a/test-token"])
+    }
+}
+
+/// Only the LAN Boolean can change; exit-node and account selection are fixed.
+private actor TailscaleLANPreferenceDaemon {
+    private var value: Bool
+    let exitNodeID: String
+    private(set) var calls: [[String]] = []
+    init(initialValue: Bool, exitNodeID: String) {
+        value = initialValue
+        self.exitNodeID = exitNodeID
+    }
+    func response(_ arguments: [String]) -> TailscaleCommandResult {
+        calls.append(arguments)
+        if arguments == ["status", "--json", "--peers=false"] {
+            let exit = exitNodeID.isEmpty ? "" : ",\"ExitNodeStatus\":{\"ID\":\"\(exitNodeID)\"}"
+            return .init(exitCode: 0, stdout: "{\"BackendState\":\"Running\"\(exit)}")
+        }
+        if arguments == ["switch", "--list", "--json"] {
+            return .init(exitCode: 0, stdout: #"[{"id":"home","nickname":"Home","tailnet":"example","account":"a@example.com","selected":true}]"#)
+        }
+        if arguments == ["get", "--json"] {
+            return .init(exitCode: 0, stdout: "{\"exit-node-allow-lan-access\":\(value),\"exit-node\":\"\(exitNodeID)\"}")
+        }
+        if arguments == ["set", "--exit-node-allow-lan-access=true"] { value = true; return .init(exitCode: 0) }
+        if arguments == ["set", "--exit-node-allow-lan-access=false"] { value = false; return .init(exitCode: 0) }
+        return .init(exitCode: 1)
     }
 }
 #endif

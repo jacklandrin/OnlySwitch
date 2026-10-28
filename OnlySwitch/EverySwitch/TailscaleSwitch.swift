@@ -57,7 +57,12 @@ final class TailscaleSwitch: SwitchProvider, Sendable {
 
     @MainActor func currentInfo() async -> String {
         if confirmed == nil && failure == nil { _ = await currentStatus() }
-        return failure?.localizationKey ?? confirmed?.connection.status.localizationKey ?? TailscaleError.unavailable.localizationKey
+        return failure?.localizationKey ?? copyableIPAddress ?? confirmed?.connection.status.localizationKey ?? TailscaleError.unavailable.localizationKey
+    }
+
+    @MainActor var copyableIPAddress: String? {
+        guard !mutationInFlight, failure == nil, confirmed?.connection.status == .running else { return nil }
+        return TailscaleConnection.validatedIPAddress(confirmed?.connection.primaryIPAddress)
     }
 
     @MainActor func operateSwitch(isOn: Bool) async throws {
