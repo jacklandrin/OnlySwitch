@@ -254,6 +254,14 @@ final class Preferences: @unchecked Sendable {
         }
     }
 
+    @UserDefaultValue(key: UserDefaults.Key.autoStopKeepAwakeOnSleep, defaultValue: false)
+    var autoStopKeepAwakeOnSleep:Bool
+    {
+        didSet {
+            NotificationCenter.default.post(name: .changeKeepAwakeSetting, object: nil)
+        }
+    }
+
     // MARK: - Dim Screen
 
     @UserDefaultValue(key: UserDefaults.Key.autoDimScreenTime, defaultValue: 0)

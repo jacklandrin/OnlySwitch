@@ -57,6 +57,18 @@ struct KeepAwakeSettingView: View {
                     Text("Tomorrow".localized())
                 }
             }
+            
+            // MARK: - Sleep Section
+            Section {
+                Toggle(isOn: $vm.stopOnSleep) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Turn off after sleep".localized())
+                        Text("Keep Awake turns off when you put your Mac to sleep.".localized())
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+            }
         }
         .formStyle(.grouped)
     }
