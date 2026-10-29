@@ -6,7 +6,9 @@
 //
 
 import AppKit
+import AudioToolbox
 import CoreAudio
+import DisplayDDC
 import Extensions
 import Switches
 import SoundMixerEQ
@@ -44,14 +46,62 @@ struct SoundMixerService {
         _ = try? await app.setVolumeCommand(value.clampedToVolume).runAppleScript()
     }
 
-    /// The system output volume in `0...100`, or `nil` if it could not be read.
-    func systemVolume() async -> Int? {
-        guard let raw = try? await VolumeCMD.getOutput.runAppleScript() else { return nil }
-        return Int(raw.trimmingCharacters(in: .whitespacesAndNewlines))
+    /// How the master slider reaches the current output device.
+    enum SystemVolumeControl: Equatable {
+        /// macOS owns the device's volume.
+        case system
+        /// The device has no macOS volume; its display is controlled over DDC/CI.
+        case display(audioDeviceName: String)
+        /// Neither macOS nor DDC can change this device's volume.
+        case unavailable
     }
 
-    func setSystemVolume(_ value: Int) async {
-        _ = try? await (VolumeCMD.setOutput + String(value.clampedToVolume)).runAppleScript()
+    /// The output volume in `0...100` and how it was reached. `value` is `nil` if it could not be read.
+    func systemVolume() async -> (control: SystemVolumeControl, value: Int?) {
+        switch Self.systemVolumeControl() {
+        case .system:
+            guard let raw = try? await VolumeCMD.getOutput.runAppleScript() else { return (.system, nil) }
+            return (.system, Int(raw.trimmingCharacters(in: .whitespacesAndNewlines)))
+        case let .display(name):
+            guard let value = await DDCDisplayController.shared.speakerVolume(forAudioDeviceNamed: name) else {
+                return (.unavailable, nil)
+            }
+            return (.display(audioDeviceName: name), value)
+        case .unavailable:
+            return (.unavailable, nil)
+        }
+    }
+
+    func setSystemVolume(_ value: Int, via control: SystemVolumeControl) async {
+        switch control {
+        case .system:
+            _ = try? await (VolumeCMD.setOutput + String(value.clampedToVolume)).runAppleScript()
+        case let .display(name):
+            await DDCDisplayController.shared.setSpeakerVolume(value.clampedToVolume, forAudioDeviceNamed: name)
+        case .unavailable:
+            break
+        }
+    }
+
+    /// DisplayPort/HDMI monitors usually expose no volume to macOS (`output volume` is
+    /// `missing value`), but many accept DDC/CI from the Mac instead.
+    private static func systemVolumeControl() -> SystemVolumeControl {
+        guard let device = defaultOutputDeviceID() else { return .system }
+        var address = AudioObjectPropertyAddress(
+            mSelector: kAudioHardwareServiceDeviceProperty_VirtualMainVolume,
+            mScope: kAudioDevicePropertyScopeOutput,
+            mElement: kAudioObjectPropertyElementMain)
+        var settable: DarwinBoolean = false
+        if AudioObjectHasProperty(device, &address),
+           AudioObjectIsPropertySettable(device, &address, &settable) == noErr, settable.boolValue {
+            return .system
+        }
+        // Only display audio: another device (e.g. a Thunderbolt interface) must never fall back
+        // to changing a connected monitor's volume.
+        guard transportType(of: device).map({ [kAudioDeviceTransportTypeDisplayPort,
+                                               kAudioDeviceTransportTypeHDMI].contains($0) }) == true,
+              let name = deviceName(of: device) else { return .unavailable }
+        return .display(audioDeviceName: name)
     }
 
     // MARK: - Output device
@@ -223,16 +273,19 @@ struct SoundMixerService {
         return name.isEmpty ? nil : name
     }
 
-    private static func symbolName(for device: AudioObjectID) -> String {
+    private static func transportType(of device: AudioObjectID) -> UInt32? {
         var address = AudioObjectPropertyAddress(
             mSelector: kAudioDevicePropertyTransportType,
             mScope: kAudioObjectPropertyScopeGlobal,
             mElement: kAudioObjectPropertyElementMain)
         var dataSize = UInt32(MemoryLayout<UInt32>.size)
         var transport: UInt32 = 0
-        guard AudioObjectGetPropertyData(device, &address, 0, nil, &dataSize, &transport) == noErr else {
-            return "hifispeaker.fill"
-        }
+        guard AudioObjectGetPropertyData(device, &address, 0, nil, &dataSize, &transport) == noErr else { return nil }
+        return transport
+    }
+
+    private static func symbolName(for device: AudioObjectID) -> String {
+        guard let transport = transportType(of: device) else { return "hifispeaker.fill" }
         switch transport {
         case kAudioDeviceTransportTypeBuiltIn:   return "laptopcomputer"
         case kAudioDeviceTransportTypeBluetooth,

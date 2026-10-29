@@ -9,6 +9,7 @@ import AppKit
 import ComposableArchitecture
 import SoundMixerEQ
 import CoreAudio
+import DisplayDDC
 import Extensions
 import RemoteCore
 import SwiftUI
@@ -50,7 +51,11 @@ final class SoundMixerVM: ObservableObject {
         didSet {
             lifecycleRevision += 1
             UserDefaults.standard.set(enabled, forKey: UserDefaults.Key.soundMixerEnabled)
-            guard !enabled else { return }
+            guard !enabled else {
+                Task { await refresh() }
+                return
+            }
+            updateVolumeKeyInterception()
             stopAutoRefresh()
             rows = []
             equalizerStore.send(.sourcesChanged([]))
@@ -63,6 +68,21 @@ final class SoundMixerVM: ObservableObject {
 
     @Published var rows: [AppRow] = []
     @Published var systemVolume: Double = 50
+    /// False when the output device's volume can be changed neither by macOS nor over DDC.
+    @Published var isSystemVolumeAvailable = true
+    private var systemVolumeControl: SoundMixerService.SystemVolumeControl = .system
+    /// DDC reads occasionally fail, e.g. while another app talks to the display at the same time.
+    private var missedDisplayVolumeReads = 0
+    /// True while volume keys should drive the display but Accessibility is not granted yet.
+    @Published var needsAccessibilityForVolumeKeys = false
+    private lazy var volumeKeyTap = DisplayVolumeKeyTap { [weak self] key, fine in
+        self?.handleVolumeKey(key, fine: fine)
+    }
+    private lazy var volumeHUD = DisplayVolumeHUD()
+    private var displayVolumeBeforeMute: Double = 50
+    private var didPromptAccessibilityForVolumeKeys = false
+    // Only mutated on the main actor during init; read once in deinit after the last release.
+    nonisolated(unsafe) private var accessibilityObserver: NSObjectProtocol?
     /// The current default output device, shown in the panel's "Output" section.
     @Published var outputDevice: SoundMixerService.OutputDevice?
 
@@ -123,12 +143,28 @@ final class SoundMixerVM: ObservableObject {
             }
         }
         observeRunningApps()
+        // Granting Accessibility in System Settings must start the volume keys without a restart.
+        accessibilityObserver = DistributedNotificationCenter.default().addObserver(
+            forName: NSNotification.Name("com.apple.accessibility.api"), object: nil, queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                // The trust state settles shortly after the notification.
+                try? await Task.sleep(for: .milliseconds(500))
+                guard let self, self.needsAccessibilityForVolumeKeys else { return }
+                self.updateVolumeKeyInterception()
+            }
+        }
+        // Display volume keys must follow the output without the panel ever being opened.
+        if enabled { Task { await refresh() } }
     }
 
     deinit {
         let center = NSWorkspace.shared.notificationCenter
         for observer in workspaceObservers {
             center.removeObserver(observer)
+        }
+        if let accessibilityObserver {
+            DistributedNotificationCenter.default().removeObserver(accessibilityObserver)
         }
     }
 
@@ -218,9 +254,20 @@ final class SoundMixerVM: ObservableObject {
         let revision = lifecycleRevision
         defer { isRefreshing = false }
 
-        let sys = await service.systemVolume()
-        guard enabled, revision == lifecycleRevision, !Task.isCancelled, !isInteracting else { return }
-        if let sys { systemVolume = Double(sys) }
+        // Skip the device read while a write is queued; a DDC read would return the old value.
+        if volumeWriters[Self.systemVolumeKey] == nil {
+            let sys = await service.systemVolume()
+            guard enabled, revision == lifecycleRevision, !Task.isCancelled, !isInteracting else { return }
+            if case .display = systemVolumeControl, sys.control == .unavailable, missedDisplayVolumeReads < 1 {
+                missedDisplayVolumeReads += 1
+            } else {
+                missedDisplayVolumeReads = 0
+                systemVolumeControl = sys.control
+                isSystemVolumeAvailable = sys.control != .unavailable
+                if let value = sys.value { systemVolume = Double(value) }
+            }
+            updateVolumeKeyInterception()
+        }
 
         refreshRoutingDevices()
 
@@ -429,9 +476,45 @@ final class SoundMixerVM: ObservableObject {
     /// Same one-way flow as the per-app sliders.
     func updateSystemVolume(_ value: Double, live: Bool) {
         isInteracting = live
+        guard isSystemVolumeAvailable else { return }
         systemVolume = value
         let service = service
-        scheduleWrite(Int(value), key: Self.systemVolumeKey) { await service.setSystemVolume($0) }
+        let control = systemVolumeControl
+        scheduleWrite(Int(value.rounded()), key: Self.systemVolumeKey) { await service.setSystemVolume($0, via: control) }
+    }
+
+    /// Volume keys drive the display only while its volume is reached over DDC; otherwise the tap
+    /// is stopped and macOS handles the keys itself.
+    private func updateVolumeKeyInterception() {
+        let wantsKeys: Bool
+        if enabled, case .display = systemVolumeControl { wantsKeys = true } else { wantsKeys = false }
+        volumeKeyTap.interceptsVolumeKeys = wantsKeys
+        guard wantsKeys else {
+            if volumeKeyTap.isRunning { volumeKeyTap.stop() }
+            needsAccessibilityForVolumeKeys = false
+            return
+        }
+        if !volumeKeyTap.isRunning {
+            let options = ["AXTrustedCheckOptionPrompt": !didPromptAccessibilityForVolumeKeys] as CFDictionary
+            didPromptAccessibilityForVolumeKeys = true
+            if AXIsProcessTrustedWithOptions(options) { _ = volumeKeyTap.start() }
+        }
+        needsAccessibilityForVolumeKeys = !volumeKeyTap.isRunning
+    }
+
+    private func handleVolumeKey(_ key: VolumeKeyEvent.Key, fine: Bool) {
+        guard enabled, isSystemVolumeAvailable, case let .display(name) = systemVolumeControl else { return }
+        var level = DisplayVolumeLevel(volume: systemVolume, volumeBeforeMute: displayVolumeBeforeMute)
+        level.apply(key, fine: fine)
+        displayVolumeBeforeMute = level.volumeBeforeMute
+        updateSystemVolume(level.volume, live: false)
+        volumeHUD.show(volume: level.volume, isMuted: level.isMuted, onScreenNamed: name)
+    }
+
+    func openAccessibilitySettings() {
+        guard let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")
+        else { return }
+        NSWorkspace.shared.open(url)
     }
 
     /// Opens the system Sound settings, so the panel can stand in for "Sound Settings…".

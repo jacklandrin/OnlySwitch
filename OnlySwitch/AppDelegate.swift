@@ -200,6 +200,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         Task { await remoteAccessController.startIfEnabled() }
         // Migrate API keys from UserDefaults to Keychain if needed
         KeychainMigration.migrateAPIKeysIfNeeded()
+        // Display volume keys must work before the Sound Mixer panel is ever opened.
+        _ = SoundMixerVM.shared
         //for issue #11
         closeWindow()
         let contentView = OnlySwitchListView(

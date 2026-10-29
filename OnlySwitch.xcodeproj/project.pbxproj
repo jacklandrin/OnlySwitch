@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		CDE100010000000000000001 /* SoundMixerEQ in Frameworks */ = {isa = PBXBuildFile; productRef = CDE100020000000000000001 /* SoundMixerEQ */; };
+		CDE200010000000000000001 /* DisplayDDC in Frameworks */ = {isa = PBXBuildFile; productRef = CDE200020000000000000001 /* DisplayDDC */; };
 		0406E0222CA09F930007AFC2 /* OnlyControlClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406E0212CA09F8C0007AFC2 /* OnlyControlClient.swift */; };
 		0406E0242CA0BC460007AFC2 /* RefreshNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406E0232CA0BC460007AFC2 /* RefreshNotification.swift */; };
 		0406EDC42ACB3EE80015F4D0 /* EvolutionMarket.json in Resources */ = {isa = PBXBuildFile; fileRef = 0406EDC32ACB3EE80015F4D0 /* EvolutionMarket.json */; };
@@ -406,6 +407,9 @@
 		D0C100000000000000000018 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = D0C100000000000000000008 /* InfoPlist.xcstrings */; };
 		D35C00012F12000100D35C01 /* DesktopPet in Frameworks */ = {isa = PBXBuildFile; productRef = D35C00022F12000100D35C01 /* DesktopPet */; };
 		D418A0C2EBC2CD7CCD451615 /* SoundMixerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E43EF22E4BA4D2E63E454D7 /* SoundMixerService.swift */; };
+		D5E1A0010000000000000001 /* DisplayVolumeKeyTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E1A0020000000000000001 /* DisplayVolumeKeyTap.swift */; };
+		D5E1A0010000000000000002 /* DisplayVolumeHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E1A0020000000000000002 /* DisplayVolumeHUD.swift */; };
+		D5E1A0010000000000000003 /* DisplayVolumeHUDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E1A0020000000000000003 /* DisplayVolumeHUDView.swift */; };
 		DABA00000000000000000002 /* GlobalSettingsFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA00000000000000000022 /* GlobalSettingsFeature.swift */; };
 		DABA00000000000000000003 /* GlobalSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA00000000000000000023 /* GlobalSettingsView.swift */; };
 		DABA00000000000000000004 /* RemoteIdleTimerClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA00000000000000000024 /* RemoteIdleTimerClient.swift */; };
@@ -850,6 +854,9 @@
 		0DDC000000000000000000A3 /* ExternalDisplayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalDisplayManager.swift; sourceTree = "<group>"; };
 		0DDC000000000000000000A4 /* BrightnessSyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrightnessSyncManager.swift; sourceTree = "<group>"; };
 		1E43EF22E4BA4D2E63E454D7 /* SoundMixerService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoundMixerService.swift; sourceTree = "<group>"; };
+		D5E1A0020000000000000001 /* DisplayVolumeKeyTap.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DisplayVolumeKeyTap.swift; sourceTree = "<group>"; };
+		D5E1A0020000000000000002 /* DisplayVolumeHUD.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DisplayVolumeHUD.swift; sourceTree = "<group>"; };
+		D5E1A0020000000000000003 /* DisplayVolumeHUDView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DisplayVolumeHUDView.swift; sourceTree = "<group>"; };
 		35AD1FCF5024EAC8DC9C8E5E /* SystemAudioMixer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SystemAudioMixer.swift; sourceTree = "<group>"; };
 		643A9AC4ED24AE501343396D /* SoundMixerModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoundMixerModel.swift; sourceTree = "<group>"; };
 		A0D100020000000000000001 /* AudioStreamingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioStreamingTests.swift; sourceTree = "<group>"; };
@@ -1105,6 +1112,7 @@
 				CD3100010000000000000001 /* AppUninstaller in Frameworks */,
 				CD4100010000000000000001 /* Tailscale in Frameworks */,
 				CDE100010000000000000001 /* SoundMixerEQ in Frameworks */,
+				CDE200010000000000000001 /* DisplayDDC in Frameworks */,
 				04581DB6276506B9008ADF30 /* AlertToast in Frameworks */,
 				043316DE2B7168940078B867 /* Extensions in Frameworks */,
 				043E5D6D2757DADB00ADC004 /* AVFoundation.framework in Frameworks */,
@@ -2216,6 +2224,9 @@
 			children = (
 				643A9AC4ED24AE501343396D /* SoundMixerModel.swift */,
 				1E43EF22E4BA4D2E63E454D7 /* SoundMixerService.swift */,
+				D5E1A0020000000000000001 /* DisplayVolumeKeyTap.swift */,
+				D5E1A0020000000000000002 /* DisplayVolumeHUD.swift */,
+				D5E1A0020000000000000003 /* DisplayVolumeHUDView.swift */,
 				A47E483C8C562DBBD024C25A /* SoundMixerVM.swift */,
 				B3552BA772DD63DAD7EE8CF2 /* SoundMixerPanelView.swift */,
 				35AD1FCF5024EAC8DC9C8E5E /* SystemAudioMixer.swift */,
@@ -2582,6 +2593,7 @@
 				CD3100020000000000000001 /* AppUninstaller */,
 				CD4100020000000000000001 /* Tailscale */,
 				CDE100020000000000000001 /* SoundMixerEQ */,
+				CDE200020000000000000001 /* DisplayDDC */,
 				A1D201012F0B000200BEEF01 /* PureColorView */,
 				A1D201022F0B000200BEEF01 /* StickerView */,
 				A1D201032F0B000200BEEF01 /* Authenticator */,
@@ -2968,6 +2980,9 @@
 				B82710062700000000C0DE01 /* MenuBarClientCoreBridge.m in Sources */,
 				6EC8A6CD714CA458603A0C05 /* SoundMixerModel.swift in Sources */,
 				D418A0C2EBC2CD7CCD451615 /* SoundMixerService.swift in Sources */,
+				D5E1A0010000000000000001 /* DisplayVolumeKeyTap.swift in Sources */,
+				D5E1A0010000000000000002 /* DisplayVolumeHUD.swift in Sources */,
+				D5E1A0010000000000000003 /* DisplayVolumeHUDView.swift in Sources */,
 				C2CE44CA134851106759FA13 /* SoundMixerVM.swift in Sources */,
 				732FB599FA7E3F9BEEF45DD9 /* SoundMixerPanelView.swift in Sources */,
 				2B346BE56384C700F4046FC4 /* SystemAudioMixer.swift in Sources */,
@@ -4096,6 +4111,10 @@
 		CDE100020000000000000001 /* SoundMixerEQ */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SoundMixerEQ;
+		};
+		CDE200020000000000000001 /* DisplayDDC */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DisplayDDC;
 		};
 		041B17882AD841EE0032919B /* Sparkle */ = {
 			isa = XCSwiftPackageProductDependency;

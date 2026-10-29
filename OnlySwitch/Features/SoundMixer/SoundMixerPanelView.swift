@@ -63,8 +63,30 @@ struct SoundMixerPanelView: View {
                         label: "Sound".localized(),
                         onChange: { vm.updateSystemVolume($0, live: true) },
                         onCommit: { vm.updateSystemVolume($0, live: false) })
+            .disabled(!vm.isSystemVolumeAvailable)
+            .allowsHitTesting(vm.isSystemVolumeAvailable)
+            .opacity(vm.isSystemVolumeAvailable ? 1 : 0.4)
             .padding(.horizontal, 15)
             .padding(.top, 10)
+
+            if !vm.isSystemVolumeAvailable {
+                Text("This output device doesn't support volume control".localized())
+                    .font(.system(size: 12))
+                    .foregroundColor(.gray)
+                    .padding(.horizontal, 15)
+            }
+
+            if vm.needsAccessibilityForVolumeKeys {
+                HStack(spacing: 6) {
+                    Text("Allow Accessibility access to use the volume keys with this display".localized())
+                        .font(.system(size: 12))
+                        .foregroundColor(.gray)
+                    Button("Open System Settings".localized()) { vm.openAccessibilitySettings() }
+                        .buttonStyle(.link)
+                        .font(.system(size: 12))
+                }
+                .padding(.horizontal, 15)
+            }
 
             if vm.rows.isEmpty {
                 Text("No controllable apps are running".localized())
