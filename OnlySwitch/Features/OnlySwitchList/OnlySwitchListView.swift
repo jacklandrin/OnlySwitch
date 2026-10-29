@@ -83,7 +83,12 @@ struct OnlySwitchListView: View {
                         bottomBar.opacity(0.7).padding(.top, 20)
                     }
                     if SectionBar.shouldShowBar(for: sections) {
-                        SystemMonitorSectionBar(sections: sections, selection: $selectedSection)
+                        SystemMonitorSectionBar(
+                            sections: sections,
+                            selection: $selectedSection,
+                            visibleSegmentLimit: SwitchListAppearance(rawValue: switchVM.currentAppearance) == .single
+                                ? SectionBar.singleColumnVisibleSegmentLimit : nil
+                        )
                             .padding(.top, 12)
                             .padding(.bottom, 2)
                     }
