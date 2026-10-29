@@ -75,7 +75,7 @@ extension RemoteCatalogProvider {
     @MainActor
     static var live: RemoteCatalogProvider {
         RemoteCatalogProvider(
-            builtIns: { SwitchType.allCases },
+            builtIns: { SwitchType.offeredCases },
             makeBuiltIn: { $0.getNewSwitchInstance() },
             shortcutNames: { await ShortcutsSettingVM.shared.getAllInstalledShortcutName() ?? [] },
             evolutions: { try await EvolutionListService.liveValue.loadEvolutionList() },

@@ -10,10 +10,6 @@ final class SystemMonitorSettingsViewModel: ObservableObject {
         self.preferences = preferences
     }
 
-    func systemMonitorTabVisibilityDidChange() {
-        NotificationCenter.default.post(name: .changeSettings, object: nil)
-    }
-
     func panelMetricBinding(for metric: SystemMonitorMetric) -> Binding<Bool> {
         Binding(
             get: { self.preferences.enabledPanelMetrics.contains(metric) },

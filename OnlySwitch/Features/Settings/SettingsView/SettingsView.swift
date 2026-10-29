@@ -22,8 +22,6 @@ struct SettingsView: View {
     @StateObject var settingVM = SettingsVM.shared
     @ObservedObject var langManager = LanguageManager.sharedManager
     @Environment(\.colorScheme) private var colorScheme
-    @AppStorage(UserDefaults.Key.showXcodeCleanerTab) private var showXcodeCleanerTab = true
-    @AppStorage(UserDefaults.Key.showAppUninstallerTab) private var showAppUninstallerTab = true
 
     init(settingItem: Binding<SettingsItem?> = .constant(nil)) {
         if let item = settingItem.wrappedValue {
@@ -95,49 +93,15 @@ struct SettingsView: View {
 
             case .XcodeCleaner:
                 ScrollView {
-                    VStack(spacing: 0) {
-                        Form {
-                            Section {
-                                Toggle("Xcode Cleaner Show Tab".localized(), isOn: $showXcodeCleanerTab)
-                                    .onChange(of: showXcodeCleanerTab) { _ in
-                                        NotificationCenter.default.post(name: .changeSettings, object: nil)
-                                    }
-                            }
-                        }
-                        .formStyle(.grouped)
-                        .contentMargins(.horizontal, 24, for: .scrollContent)
-                        .tint(colorScheme == .dark ? .mint : .accentColor)
-                        .scrollDisabled(true)
-                        .frame(height: 76)
-                        .frame(maxWidth: 900)
-                        .frame(maxWidth: .infinity)
-                        XcodeCleanerView(store: settingVM.xcodeCleanerStore, managesScrolling: false)
-                            .id(langManager.currentLang)
-                    }
+                    XcodeCleanerView(store: settingVM.xcodeCleanerStore, managesScrolling: false)
+                        .id(langManager.currentLang)
                 }
                 .background(.background)
 
             case .AppUninstaller:
                 ScrollView {
-                    VStack(spacing: 0) {
-                        Form {
-                            Section {
-                                Toggle("App Uninstaller Show Tab".localized(), isOn: $showAppUninstallerTab)
-                                    .onChange(of: showAppUninstallerTab) { _ in
-                                        NotificationCenter.default.post(name: .changeSettings, object: nil)
-                                    }
-                            }
-                        }
-                        .formStyle(.grouped)
-                        .contentMargins(.horizontal, 24, for: .scrollContent)
-                        .tint(colorScheme == .dark ? .mint : .accentColor)
-                        .scrollDisabled(true)
-                        .frame(height: 76)
-                        .frame(maxWidth: 900)
-                        .frame(maxWidth: .infinity)
-                        AppUninstallerView(store: settingVM.appUninstallerStore, managesScrolling: false)
-                            .id(langManager.currentLang)
-                    }
+                    AppUninstallerView(store: settingVM.appUninstallerStore, managesScrolling: false)
+                        .id(langManager.currentLang)
                 }
                 .background(.background)
 
@@ -180,6 +144,9 @@ struct SettingsView: View {
 
             case .Customize:
                 CustomizeView()
+
+            case .Tabs:
+                TabVisibilitySettingsView()
 
             case .HideMenubarIcons:
                 HideMenubarIconsSettingView()
@@ -237,8 +204,8 @@ struct SettingsView: View {
 
 }
 
-/// Tab visibility, the opt-in system screenshot takeover and the collection folder. Toggling collection is a
-/// `ScreenshotsFeature` action; the view only reflects `captureStatus`.
+/// The tab shortcut (disabled while the tab is hidden on the Tabs page), the opt-in system screenshot takeover
+/// and the collection folder. Toggling collection is a `ScreenshotsFeature` action; the view only reflects `captureStatus`.
 private struct ScreenshotsSettingsControls: View {
     let store: StoreOf<ScreenshotsFeature>
     let folderPath: String
@@ -246,15 +213,6 @@ private struct ScreenshotsSettingsControls: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            HStack {
-                Text("Screenshots Show Tab".localized())
-                Spacer(minLength: 12)
-                Toggle("Screenshots Show Tab".localized(), isOn: $showScreenshotsTab)
-                    .labelsHidden()
-                    .toggleStyle(.switch)
-            }
-            .padding(12)
-            Divider().padding(.horizontal, 12)
             HStack {
                 Text("Open Screenshots Tab".localized())
                 Spacer(minLength: 12)
@@ -295,9 +253,6 @@ private struct ScreenshotsSettingsControls: View {
             .padding(12)
         }
         .background(.quaternary.opacity(0.5), in: .rect(cornerRadius: 10))
-        .onChange(of: showScreenshotsTab) { _, _ in
-            NotificationCenter.default.post(name: .changeSettings, object: nil)
-        }
     }
 
     private func setCollecting(_ isOn: Bool) { store.send(.captureToggleChanged(isOn)) }

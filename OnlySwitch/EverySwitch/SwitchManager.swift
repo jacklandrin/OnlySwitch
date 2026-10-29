@@ -79,7 +79,7 @@ final class SwitchManager: @unchecked Sendable {
     }
 
     func visibleSwitchTypes() -> Set<SwitchType> {
-        visibleTypesIncludingNewDiscoveries()
+        visibleTypesIncludingNewDiscoveries().subtracting(SwitchType.deprecatedTabVisibilitySwitches)
     }
 
     func isVisible(_ type: SwitchType) -> Bool {

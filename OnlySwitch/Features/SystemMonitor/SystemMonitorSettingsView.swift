@@ -4,15 +4,9 @@ import SystemMonitor
 
 struct SystemMonitorSettingsView: View {
     @StateObject private var viewModel = SystemMonitorSettingsViewModel()
-    @AppStorage(UserDefaults.Key.showSystemMonitorTab) private var showSystemMonitorTab = true
 
     var body: some View {
         Form {
-            Toggle("Show System Monitor tab".localized(), isOn: $showSystemMonitorTab)
-                .onChange(of: showSystemMonitorTab) {
-                    viewModel.systemMonitorTabVisibilityDidChange()
-                }
-
             Section {
                 Toggle("Compact mode".localized(), isOn: viewModel.compactModeBinding)
             }

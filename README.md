@@ -112,13 +112,10 @@ To control OnlySwitch from an iPhone or iPad, install [OnlyRemote from the App S
 | Dim Screen | finished | Eject Discs | finished |
 | Hide Windows | partially finished | True Tone | finished |
 | Top Sticker | partially finished | Key Light | finished |
-| Only Agent | finished | Authenticator | finished |
-| Sound Mixer | finished | Natural Scrolling | finished |
-| Show desktop pet | finished | Codex Usage | finished |
-| Tailscale | requires official client | Xcode Cleaner | controls tab visibility |
-| App Uninstaller | controls tab visibility | | |
+| Only Agent | finished | Natural Scrolling | finished |
+| Show desktop pet | finished | Tailscale | requires official client |
 
-Switches can be added to or removed from the list.
+Switches can be added to or removed from the list. Optional tabs (Authenticator, Sound Mixer, System Monitor, Codex Usage, Claude Usage, Aphrodite, Xcode Cleaner, App Uninstaller, and Screenshots) are shown or hidden under **OnlySwitch Settings → Tabs**.
 
 ### Tailscale
 
@@ -126,11 +123,11 @@ Install and set up the official Tailscale client, then open **OnlySwitch Setting
 
 ### Xcode Cleaner
 
-Open **OnlySwitch Settings → Xcode Cleaner**, or enable its tab in the menu-bar list or Only Control. Scan your development data, review the selected items, and confirm cleanup. Supported items include DerivedData, Xcode and SwiftPM caches, simulator caches and logs, simulator devices and runtimes, and DeviceSupport files. Source projects and archives are excluded. The **Xcode Cleaner** switch controls tab visibility; toggling it does not delete files.
+Open **OnlySwitch Settings → Xcode Cleaner**, or show its tab in the menu-bar list or Only Control from **Settings → Tabs**. Scan your development data, review the selected items, and confirm cleanup. Supported items include DerivedData, Xcode and SwiftPM caches, simulator caches and logs, simulator devices and runtimes, and DeviceSupport files. Source projects and archives are excluded.
 
 ### App Uninstaller
 
-Open **OnlySwitch Settings → App Uninstaller**, or enable its tab in the menu-bar list or Only Control. Drop an app or choose one, review the application and matching related files, then confirm which items to move to Trash. Discovery covers supported locations matched by bundle identifier, so the results may not include every related file. The **App Uninstaller** switch controls tab visibility; toggling it does not uninstall an app.
+Open **OnlySwitch Settings → App Uninstaller**, or show its tab in the menu-bar list or Only Control from **Settings → Tabs**. Drop an app or choose one, review the application and matching related files, then confirm which items to move to Trash. Discovery covers supported locations matched by bundle identifier, so the results may not include every related file.
 
 Tailscale, Xcode Cleaner, and App Uninstaller are local Mac features and are unavailable in Only Widget or OnlyRemote.
 
@@ -220,7 +217,7 @@ When a process is associated with a regular macOS application, click its row in 
 
 ### Codex Usage
 
-Codex Usage is an optional built-in tab showing the signed-in Codex account's plan, remaining five-hour and weekly usage, reset times, available credits, and reset-credit information. Enable the **Codex Usage** switch to show it in OnlySwitch and Only Control. It uses the existing local Codex sign-in, so OnlySwitch does not require a separate sign-in.
+Codex Usage is an optional built-in tab showing the signed-in Codex account's plan, remaining five-hour and weekly usage, reset times, available credits, and reset-credit information. Turn on **Codex Usage** under **OnlySwitch Settings → Tabs** to show it in OnlySwitch and Only Control. It uses the existing local Codex sign-in, so OnlySwitch does not require a separate sign-in.
 
 <p align="center">
   <img alt="Codex Usage" src="https://github.com/user-attachments/assets/dad0f898-fe19-4df4-be7f-9db278ba5334" width="30%" />

@@ -8,7 +8,6 @@ import Extensions
 @available(macOS 26.0, *)
 public struct AphroditeSettingsView: View {
     private let store: StoreOf<AphroditeReducer>
-    @AppStorage(UserDefaults.Key.showAphroditeTab) private var isVisible = true
     @Environment(\.colorScheme) private var colorScheme
     public init(store: StoreOf<AphroditeReducer>) { self.store = store }
 
@@ -23,8 +22,6 @@ public struct AphroditeSettingsView: View {
 
     private var libraryForm: some View {
         Form {
-            Toggle("Show Aphrodite tab".localized(), isOn: $isVisible)
-                .onChange(of: isVisible) { _ in NotificationCenter.default.post(name: .changeSettings, object: nil) }
             Section {
                 TextEditor(text: Binding(get: { store.prompt }, set: { store.send(.promptChanged($0)) }))
                     .aphroditeTextEditorInset()

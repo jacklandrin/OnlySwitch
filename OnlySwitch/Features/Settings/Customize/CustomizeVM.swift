@@ -19,7 +19,7 @@ class CustomizeVM:ObservableObject {
     @Published var showErrorToast = false
     init() {
         let visibleTypes = SwitchManager.shared.visibleSwitchTypes()
-        for type in SwitchType.allCases {
+        for type in SwitchType.offeredCases {
             let isVisible = visibleTypes.contains(type)
             allSwitches.append(CustomizeItem(type: type, toggle: isVisible, error: { [weak self] info in
                 guard let strongSelf = self else {return}

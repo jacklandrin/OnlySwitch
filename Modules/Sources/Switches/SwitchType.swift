@@ -476,6 +476,24 @@ public enum SwitchType: String, CaseIterable, Sendable {
     
 }
 
+extension SwitchType {
+    /// Switches that only showed or hid a popover tab. Tab visibility is managed on the Tabs settings page,
+    /// so these cases stay for stored identifiers but are no longer offered as switches.
+    public static let deprecatedTabVisibilitySwitches: Set<SwitchType> = [
+        .authenticator, .soundMixer, .systemMonitor, .codexUsage,
+        .claudeUsage, .aphrodite, .xcodeCleaner, .appUninstaller,
+    ]
+
+    public var isDeprecatedTabVisibilitySwitch: Bool {
+        Self.deprecatedTabVisibilitySwitches.contains(self)
+    }
+
+    /// Built-in switches that can still be shown in the switch list, widgets and the remote catalog.
+    public static var offeredCases: [SwitchType] {
+        allCases.filter { !$0.isDeprecatedTabVisibilitySwitch }
+    }
+}
+
 public let switchTypeCount = SwitchType.allCases.count
 
 public enum ControlType: String, Codable, Sendable{

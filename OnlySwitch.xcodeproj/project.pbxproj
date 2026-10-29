@@ -521,6 +521,9 @@
 		F5BC00000000000000000321 /* Sharing in Frameworks */ = {isa = PBXBuildFile; productRef = F5BC00000000000000000311 /* Sharing */; };
 		FECA00000000000000000101 /* RemoteTabConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = FECA00000000000000000201 /* RemoteTabConfiguration.swift */; };
 		FECA00000000000000000102 /* RemoteTabPreferencesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = FECA00000000000000000202 /* RemoteTabPreferencesClient.swift */; };
+		TB5A00000000000000000002 /* TabVisibilitySettingsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = TB5A00000000000000000001 /* TabVisibilitySettingsVM.swift */; };
+		TB5A00000000000000000004 /* TabVisibilitySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = TB5A00000000000000000003 /* TabVisibilitySettingsView.swift */; };
+		TB5A00000000000000000006 /* TabVisibilitySettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = TB5A00000000000000000005 /* TabVisibilitySettingsTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1069,6 +1072,9 @@
 		F5BC00000000000000000103 /* RemoteDebugMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteDebugMenuView.swift; sourceTree = "<group>"; };
 		FECA00000000000000000201 /* RemoteTabConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteTabConfiguration.swift; sourceTree = "<group>"; };
 		FECA00000000000000000202 /* RemoteTabPreferencesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteTabPreferencesClient.swift; sourceTree = "<group>"; };
+		TB5A00000000000000000001 /* TabVisibilitySettingsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabVisibilitySettingsVM.swift; sourceTree = "<group>"; };
+		TB5A00000000000000000003 /* TabVisibilitySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabVisibilitySettingsView.swift; sourceTree = "<group>"; };
+		TB5A00000000000000000005 /* TabVisibilitySettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabVisibilitySettingsTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1226,6 +1232,7 @@
 				C1A0B00518E9202600000001 /* PrivilegedOperations */,
 				F3A400000000000000000013 /* RemoteAccess */,
 				CD2200040000000000000001 /* XcodeCleanerSwitchTests.swift */,
+				TB5A00000000000000000005 /* TabVisibilitySettingsTests.swift */,
 				A0D100020000000000000001 /* AudioStreamingTests.swift */,
 				CD3200040000000000000001 /* AppUninstallerSwitchTests.swift */,
 				CD5200040000000000000001 /* ScreenshotsSectionTests.swift */,
@@ -1858,6 +1865,8 @@
 			children = (
 				049337912762BA3200AE779A /* SettingsView.swift */,
 				04581DAF2764CBCF008ADF30 /* SettingsVM.swift */,
+				TB5A00000000000000000003 /* TabVisibilitySettingsView.swift */,
+				TB5A00000000000000000001 /* TabVisibilitySettingsVM.swift */,
 			);
 			path = SettingsView;
 			sourceTree = "<group>";
@@ -2920,6 +2929,7 @@
 				CC1A00000000000000000001 /* ClaudeUsageIntegrationTests.swift in Sources */,
 				D0C100000000000000000017 /* DockPreviewFeatureTests.swift in Sources */,
 				CD2200030000000000000001 /* XcodeCleanerSwitchTests.swift in Sources */,
+				TB5A00000000000000000006 /* TabVisibilitySettingsTests.swift in Sources */,
 				A0D100010000000000000001 /* AudioStreamingTests.swift in Sources */,
 				CD3200030000000000000001 /* AppUninstallerSwitchTests.swift in Sources */,
 				CD5200030000000000000001 /* ScreenshotsSectionTests.swift in Sources */,
@@ -3190,6 +3200,8 @@
 				B99000000000000000000003 /* ReverseScrollDirectionSwitch.swift in Sources */,
 				04819CD52BBC8A6700645A0C /* KeyLightSwitch.swift in Sources */,
 				04581DB02764CBCF008ADF30 /* SettingsVM.swift in Sources */,
+				TB5A00000000000000000004 /* TabVisibilitySettingsView.swift in Sources */,
+				TB5A00000000000000000002 /* TabVisibilitySettingsVM.swift in Sources */,
 				04E03B06275FEBE200EA5FB9 /* AirPodsBatteryView.swift in Sources */,
 				04EB1CD62781299A00C612AB /* ShortcutsBarVM.swift in Sources */,
 				0447E36B2B71746E00D07B9A /* TrueToneSwitch.swift in Sources */,

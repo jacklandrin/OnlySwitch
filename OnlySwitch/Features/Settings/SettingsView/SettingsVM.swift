@@ -20,6 +20,7 @@ import Tailscale
 enum SettingsItem: String, CaseIterable {
     case General = "General"
     case Customize = "Customize"
+    case Tabs = "Tabs"
     case Shortcuts = "Shortcuts"
     case Evolution = "Evolution"
     case ModelProviders = "Model Providers"
