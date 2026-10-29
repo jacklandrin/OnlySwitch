@@ -66,6 +66,8 @@ public extension UserDefaults {
         public static let screenshotsCaptureEnabled = "screenshotsCaptureEnabledKey"
         /// Machine specific backup of `com.apple.screencapture` values; intentionally not exportable.
         public static let screenshotsPreviousCaptureSettings = "screenshotsPreviousCaptureSettingsKey"
+        /// Machine specific backup of the Simulator screenshot save location; intentionally not exportable.
+        public static let screenshotsPreviousSimulatorLocation = "screenshotsPreviousSimulatorLocationKey"
         //BackNoises
         public static let backNoisesTrack = "backNoisesTrackKey"
         public static let automaticallyStopPlayNoiseTime = "automaticallyStopPlayNoiseTimeKey"

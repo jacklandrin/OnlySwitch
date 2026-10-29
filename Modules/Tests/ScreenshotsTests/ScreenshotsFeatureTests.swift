@@ -17,6 +17,7 @@ final class ScreenshotsCallRecorder: Sendable {
     let editors = LockIsolated<[UUID]>([])
     let toggles = LockIsolated<[Bool]>([])
     let folderReveals = LockIsolated(0)
+    let externalCollections = LockIsolated(0)
 }
 
 func screenshotURL(_ id: UUID) -> URL { URL(fileURLWithPath: "/OnlySwitchFixture/\(id.uuidString).png") }
@@ -54,7 +55,8 @@ extension ScreenshotsClient {
             disableCapture: { recorder.toggles.withValue { $0.append(false) } },
             copyToPasteboard: { url in recorder.copied.withValue { $0.append(url) }; return copyResult },
             openInDefaultApp: { url in recorder.opened.withValue { $0.append(url) } },
-            revealFolder: { recorder.folderReveals.withValue { $0 += 1 } }
+            revealFolder: { recorder.folderReveals.withValue { $0 += 1 } },
+            collectExternalCaptures: { recorder.externalCollections.withValue { $0 += 1 } }
         )
     }
 }
@@ -105,7 +107,10 @@ struct ScreenshotsFeatureTests {
         let store = makeStore(.init(), client: .fixture(recorder, known: loaded + [captured], load: { loaded }, captures: { stream }, captureStatus: { .active }),
                               presentation: .fixture(recorder, reveals: false), clock: clock)
         await store.send(.task) { $0.hasStarted = true }
-        await store.receive(\.captureStatusLoaded) { $0.captureStatus = .active }
+        await store.receive(\.captureStatusLoaded) {
+            $0.captureStatus = .active
+            $0.isCollectingExternalCaptures = true
+        }
         await store.receive(\.libraryLoaded) { $0.items = [self.newer, self.older] }
         await store.receive(\.fileURLsResolved) { $0.fileURLs = [self.newer.id: screenshotURL(self.newer.id), self.older.id: screenshotURL(self.older.id)] }
         await store.send(.task)
@@ -380,7 +385,7 @@ struct ScreenshotsFeatureTests {
         let recorder = ScreenshotsCallRecorder()
         let store = makeStore(started([], status: .disabled), client: .fixture(recorder, captureStatus: { .active }), presentation: .fixture(recorder))
         await store.send(.captureToggleChanged(true)) { $0.captureStatus = .active }
-        await store.receive(\.captureStatusLoaded)
+        await store.receive(\.captureStatusLoaded) { $0.isCollectingExternalCaptures = true }
         #expect(recorder.toggles.value == [true])
     }
 
@@ -399,6 +404,30 @@ struct ScreenshotsFeatureTests {
         await store.send(.captureToggleChanged(true)) { $0.captureStatus = .active }
         await store.receive(\.captureFailed) { $0.error = failure }
         await store.receive(\.captureStatusLoaded) { $0.captureStatus = .disabled }
+    }
+
+    @Test func enabledStatusStartsExternalCollectionOnce() async {
+        let recorder = ScreenshotsCallRecorder()
+        let store = makeStore(started([], status: .disabled), client: .fixture(recorder), presentation: .fixture(recorder))
+        await store.send(.captureStatusLoaded(.changedElsewhere)) {
+            $0.captureStatus = .changedElsewhere
+            $0.isCollectingExternalCaptures = true
+        }
+        await store.send(.captureStatusLoaded(.active)) { $0.captureStatus = .active }
+        await store.finish()
+        #expect(recorder.externalCollections.value == 1)
+    }
+
+    @Test func disabledStatusStopsExternalCollection() async {
+        let recorder = ScreenshotsCallRecorder()
+        var state = started([], status: .active)
+        state.isCollectingExternalCaptures = true
+        let store = makeStore(state, client: .fixture(recorder), presentation: .fixture(recorder))
+        await store.send(.captureStatusLoaded(.disabled)) {
+            $0.captureStatus = .disabled
+            $0.isCollectingExternalCaptures = false
+        }
+        #expect(recorder.externalCollections.value == 0)
     }
 }
 #endif

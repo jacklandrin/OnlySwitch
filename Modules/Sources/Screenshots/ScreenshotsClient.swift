@@ -22,6 +22,9 @@ public struct ScreenshotsClient: Sendable {
     public var copyToPasteboard: @MainActor @Sendable (URL) -> Bool
     public var openInDefaultApp: @MainActor @Sendable (URL) -> Void
     public var revealFolder: @MainActor @Sendable () -> Void
+    /// Moves captures from apps whose save location cannot be redirected (Xcode's Device Hub) into the library
+    /// folder. Runs until cancelled; the feature runs it only while collection is on.
+    public var collectExternalCaptures: @Sendable () async -> Void
 
     public init(
         folderURL: @escaping @Sendable () -> URL,
@@ -37,12 +40,13 @@ public struct ScreenshotsClient: Sendable {
         disableCapture: @escaping @Sendable () async throws -> Void,
         copyToPasteboard: @escaping @MainActor @Sendable (URL) -> Bool,
         openInDefaultApp: @escaping @MainActor @Sendable (URL) -> Void,
-        revealFolder: @escaping @MainActor @Sendable () -> Void
+        revealFolder: @escaping @MainActor @Sendable () -> Void,
+        collectExternalCaptures: @escaping @Sendable () async -> Void = {}
     ) {
         self.folderURL = folderURL; self.load = load; self.captures = captures; self.setPinned = setPinned; self.trash = trash
         self.replaceImage = replaceImage; self.fileURL = fileURL; self.thumbnail = thumbnail; self.captureStatus = captureStatus
         self.enableCapture = enableCapture; self.disableCapture = disableCapture; self.copyToPasteboard = copyToPasteboard
-        self.openInDefaultApp = openInDefaultApp; self.revealFolder = revealFolder
+        self.openInDefaultApp = openInDefaultApp; self.revealFolder = revealFolder; self.collectExternalCaptures = collectExternalCaptures
     }
 }
 
@@ -58,10 +62,16 @@ extension ScreenshotsClient: DependencyKey {
         let watcher = ScreenshotFolderWatcher(folder: folder)
         let thumbnails = ScreenshotThumbnailCache()
         let preferences = ScreenCapturePreferences.live(folder: folder)
+        let simulatorPreferences = SimulatorScreenshotPreferences.live(folder: folder)
+        let desktop = FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first ?? FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Desktop", isDirectory: true)
+        let deviceHubImporter = DeviceHubScreenshotImporter(source: desktop, destination: folder)
         return Self(
             folderURL: { folder },
             load: {
                 try? FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+                // Collection enabled before the Simulator takeover existed: redirect it once. Later changes made
+                // elsewhere are respected because the backup then exists.
+                if preferences.isEnabled, !simulatorPreferences.isEnabled { try? simulatorPreferences.enable() }
                 return try await library.load()
             },
             captures: {
@@ -87,8 +97,19 @@ extension ScreenshotsClient: DependencyKey {
             fileURL: { await library.fileURL($0) },
             thumbnail: { url, maxPixel, revision in thumbnails.thumbnail(for: url, maxPixel: maxPixel, revision: revision) },
             captureStatus: { preferences.status(enabledFlag: preferences.isEnabled) },
-            enableCapture: { try preferences.enable() },
-            disableCapture: { try preferences.disable() },
+            enableCapture: {
+                try preferences.enable()
+                do { try simulatorPreferences.enable() } catch {
+                    try? preferences.disable()
+                    throw error
+                }
+            },
+            disableCapture: {
+                // Attempt both so one failure does not leave the other redirected.
+                let systemResult = Result { try preferences.disable() }
+                try simulatorPreferences.disable()
+                try systemResult.get()
+            },
             copyToPasteboard: { url in
                 guard let image = NSImage(contentsOf: url) else { return false }
                 let pasteboard = NSPasteboard.general
@@ -96,7 +117,8 @@ extension ScreenshotsClient: DependencyKey {
                 return pasteboard.writeObjects([url as NSURL, image])
             },
             openInDefaultApp: { url in NSWorkspace.shared.open(url) },
-            revealFolder: { NSWorkspace.shared.activateFileViewerSelecting([folder]) }
+            revealFolder: { NSWorkspace.shared.activateFileViewerSelecting([folder]) },
+            collectExternalCaptures: { await deviceHubImporter.run() }
         )
     }
 
@@ -114,7 +136,8 @@ extension ScreenshotsClient: DependencyKey {
         disableCapture: { reportIssue("Unimplemented: ScreenshotsClient.disableCapture") },
         copyToPasteboard: { _ in reportIssue("Unimplemented: ScreenshotsClient.copyToPasteboard"); return false },
         openInDefaultApp: { _ in reportIssue("Unimplemented: ScreenshotsClient.openInDefaultApp") },
-        revealFolder: { reportIssue("Unimplemented: ScreenshotsClient.revealFolder") }
+        revealFolder: { reportIssue("Unimplemented: ScreenshotsClient.revealFolder") },
+        collectExternalCaptures: { reportIssue("Unimplemented: ScreenshotsClient.collectExternalCaptures") }
     )
 }
 

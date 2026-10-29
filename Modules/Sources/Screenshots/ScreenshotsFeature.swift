@@ -22,6 +22,8 @@ public struct ScreenshotsFeature {
         public var captureStatus: ScreenshotCaptureStatus = .disabled
         public var error: ScreenshotFailure?
         public var hasStarted = false
+        /// True while the external-capture (Device Hub) effect has been started for the current enabled period.
+        public var isCollectingExternalCaptures = false
         public init() {}
         public var deletableCount: Int { items.filter { !$0.isPinned }.count }
     }
@@ -57,7 +59,7 @@ public struct ScreenshotsFeature {
     @Dependency(\.screenshotsClient) var client
     @Dependency(\.screenshotPresentationClient) var presentation
     @Dependency(\.continuousClock) var clock
-    private enum CancelID { case captures, flightTimeout, flight, copyFeedback }
+    private enum CancelID { case captures, externalCaptures, flightTimeout, flight, copyFeedback }
     static let flightTimeout: Duration = .seconds(1.5)
     static let copyFeedbackDuration: Duration = .seconds(1.2)
 
@@ -204,7 +206,14 @@ public struct ScreenshotsFeature {
                 }
             case let .captureStatusLoaded(status):
                 state.captureStatus = status
-                return .none
+                if status == .disabled {
+                    guard state.isCollectingExternalCaptures else { return .none }
+                    state.isCollectingExternalCaptures = false
+                    return .cancel(id: CancelID.externalCaptures)
+                }
+                guard !state.isCollectingExternalCaptures else { return .none }
+                state.isCollectingExternalCaptures = true
+                return .run { [client] _ in await client.collectExternalCaptures() }.cancellable(id: CancelID.externalCaptures)
             case let .captureFailed(failure):
                 state.error = failure
                 // Revert the optimistic toggle to whatever the system actually has now.
