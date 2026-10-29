@@ -18,6 +18,10 @@
 	<true/>
 	<key>com.apple.security.personal-information.photos-library</key>
 	<true/>
+	<key>keychain-access-groups</key>
+	<array>
+		<string>$(AppIdentifierPrefix)jacklandrin.OnlySwitch</string>
+	</array>
 	<key>com.apple.security.temporary-exception.apple-events</key>
 	<array>
 		<string>com.apple.systemevents</string>

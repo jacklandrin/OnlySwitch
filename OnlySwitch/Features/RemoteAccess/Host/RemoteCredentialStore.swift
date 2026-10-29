@@ -586,13 +586,39 @@ actor RemoteCredentialStore {
         RemoteProtocolError(code: .authenticationFailed, message: "Pairing transaction is unavailable")
     }
 
+    // The legacy file-based keychain guards each item with an ACL bound to the creating code
+    // signature, so every rebuild or signing-identity change re-prompts for the login password.
+    // Signed builds carry a keychain access group and can use the Data Protection keychain,
+    // which has no per-item ACL prompts; unsigned builds fall back to the legacy keychain.
+    private static let usesDataProtectionKeychain: Bool = {
+        guard let task = SecTaskCreateFromSelf(nil) else { return false }
+        return SecTaskCopyValueForEntitlement(
+            task,
+            "keychain-access-groups" as CFString,
+            nil
+        ) != nil
+    }()
+
     private static func baseQuery(service: String, account: String? = nil) -> [CFString: Any] {
+        keychainQuery(
+            service: service,
+            account: account,
+            usesDataProtectionKeychain: usesDataProtectionKeychain
+        )
+    }
+
+    static func keychainQuery(
+        service: String,
+        account: String? = nil,
+        usesDataProtectionKeychain: Bool
+    ) -> [CFString: Any] {
         var query: [CFString: Any] = [
             kSecClass: kSecClassGenericPassword,
             kSecAttrService: service,
             kSecAttrSynchronizable: kCFBooleanFalse as Any
         ]
         if let account { query[kSecAttrAccount] = account }
+        if usesDataProtectionKeychain { query[kSecUseDataProtectionKeychain] = true }
         return query
     }
 

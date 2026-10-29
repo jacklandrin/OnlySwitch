@@ -1,4 +1,5 @@
 import Foundation
+import Security
 import RemoteTransport
 import Testing
 @testable import OnlySwitch
@@ -24,6 +25,25 @@ struct RemoteCredentialStoreTests {
             throw error
         }
         try await store.delete(device.id)
+    }
+
+    @Test
+    func keychainQueryOptsIntoDataProtectionKeychainWhenEntitled() {
+        let entitled = RemoteCredentialStore.keychainQuery(
+            service: "service",
+            account: "account",
+            usesDataProtectionKeychain: true
+        )
+        #expect(entitled[kSecUseDataProtectionKeychain] as? Bool == true)
+        #expect(entitled[kSecAttrService] as? String == "service")
+        #expect(entitled[kSecAttrAccount] as? String == "account")
+
+        let legacy = RemoteCredentialStore.keychainQuery(
+            service: "service",
+            usesDataProtectionKeychain: false
+        )
+        #expect(legacy[kSecUseDataProtectionKeychain] == nil)
+        #expect(legacy[kSecAttrAccount] == nil)
     }
 
     @Test
