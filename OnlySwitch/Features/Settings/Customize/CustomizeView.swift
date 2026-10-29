@@ -26,15 +26,6 @@ struct CustomizeView: View {
         VStack(alignment: .leading) {
             Text("To add or remove any switches on list".localized())
                 .padding(10)
-            TextField(
-                "Search Built-In Switches".localized(),
-                text: $searchText
-            )
-            .textFieldStyle(.roundedBorder)
-            .accessibilityLabel(Text("Search Built-In Switches".localized()))
-            .environment(\.locale, Locale(identifier: currentLanguage))
-            .padding(.horizontal, 10)
-
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 16) {
                     if sections.isEmpty {
@@ -74,6 +65,12 @@ struct CustomizeView: View {
             Divider()
                 .padding(.bottom, 10)
         }
+        .searchable(
+            text: $searchText,
+            placement: .toolbar,
+            prompt: Text("Search Built-In Switches".localized())
+        )
+        .environment(\.locale, Locale(identifier: currentLanguage))
         .toast(isPresenting: $customizeVM.showErrorToast) {
             AlertToast(displayMode: .alert,
                        type: .error(.red),

@@ -18,6 +18,7 @@ import Extensions
 struct SettingsView: View {
     @StateObject var settingVM = SettingsVM.shared
     @ObservedObject var langManager = LanguageManager.sharedManager
+    @Environment(\.colorScheme) private var colorScheme
     @AppStorage(UserDefaults.Key.showXcodeCleanerTab) private var showXcodeCleanerTab = true
     @AppStorage(UserDefaults.Key.showAppUninstallerTab) private var showAppUninstallerTab = true
 
@@ -90,28 +91,52 @@ struct SettingsView: View {
                 AuthenticatorSettingsView()
 
             case .XcodeCleaner:
-                VStack(spacing: 0) {
-                    Toggle("Xcode Cleaner Show Tab".localized(), isOn: $showXcodeCleanerTab)
-                        .toggleStyle(.switch)
-                        .padding(.horizontal, 24).padding(.top, 18).padding(.bottom, 6)
-                        .onChange(of: showXcodeCleanerTab) { _ in
-                            NotificationCenter.default.post(name: .changeSettings, object: nil)
+                ScrollView {
+                    VStack(spacing: 0) {
+                        Form {
+                            Section {
+                                Toggle("Xcode Cleaner Show Tab".localized(), isOn: $showXcodeCleanerTab)
+                                    .onChange(of: showXcodeCleanerTab) { _ in
+                                        NotificationCenter.default.post(name: .changeSettings, object: nil)
+                                    }
+                            }
                         }
-                    XcodeCleanerView(store: settingVM.xcodeCleanerStore)
-                        .id(langManager.currentLang)
+                        .formStyle(.grouped)
+                        .contentMargins(.horizontal, 24, for: .scrollContent)
+                        .tint(colorScheme == .dark ? .mint : .accentColor)
+                        .scrollDisabled(true)
+                        .frame(height: 76)
+                        .frame(maxWidth: 900)
+                        .frame(maxWidth: .infinity)
+                        XcodeCleanerView(store: settingVM.xcodeCleanerStore, managesScrolling: false)
+                            .id(langManager.currentLang)
+                    }
                 }
+                .background(.background)
 
             case .AppUninstaller:
-                VStack(spacing: 0) {
-                    Toggle("App Uninstaller Show Tab".localized(), isOn: $showAppUninstallerTab)
-                        .toggleStyle(.switch)
-                        .padding(.horizontal, 24).padding(.top, 18).padding(.bottom, 6)
-                        .onChange(of: showAppUninstallerTab) { _ in
-                            NotificationCenter.default.post(name: .changeSettings, object: nil)
+                ScrollView {
+                    VStack(spacing: 0) {
+                        Form {
+                            Section {
+                                Toggle("App Uninstaller Show Tab".localized(), isOn: $showAppUninstallerTab)
+                                    .onChange(of: showAppUninstallerTab) { _ in
+                                        NotificationCenter.default.post(name: .changeSettings, object: nil)
+                                    }
+                            }
                         }
-                    AppUninstallerView(store: settingVM.appUninstallerStore)
-                        .id(langManager.currentLang)
+                        .formStyle(.grouped)
+                        .contentMargins(.horizontal, 24, for: .scrollContent)
+                        .tint(colorScheme == .dark ? .mint : .accentColor)
+                        .scrollDisabled(true)
+                        .frame(height: 76)
+                        .frame(maxWidth: 900)
+                        .frame(maxWidth: .infinity)
+                        AppUninstallerView(store: settingVM.appUninstallerStore, managesScrolling: false)
+                            .id(langManager.currentLang)
+                    }
                 }
+                .background(.background)
 
             case .Tailscale:
                 TailscaleSettingsView(store: settingVM.tailscaleStore)
