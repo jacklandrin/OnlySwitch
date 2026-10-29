@@ -289,6 +289,150 @@ struct DockPreviewFeatureTests {
     }
 
     @Test
+    func onlyAppleMusicAndSpotifyGetMediaControls() {
+        #expect(DockPreviewMediaPlayer(bundleIdentifier: "com.apple.Music") == .appleMusic)
+        #expect(DockPreviewMediaPlayer(bundleIdentifier: "com.spotify.client") == .spotify)
+        #expect(DockPreviewMediaPlayer(bundleIdentifier: "com.apple.TextEdit") == nil)
+        #expect(DockPreviewMediaPlayer(bundleIdentifier: nil) == nil)
+    }
+
+    @Test
+    func mediaAppWithoutWindowsShowsControlsOnlyPreview() async {
+        let hover = DockHoverEvent(
+            pid: 7, appName: "Spotify", itemFrame: .zero, screenFrame: .zero, mediaPlayer: .spotify
+        )
+        let store = TestStore(initialState: .init(
+            isEnabled: true, authorization: .authorized, isObserving: true,
+            hoverGeneration: 1, hover: hover, status: .loading
+        )) { DockPreviewFeature() } withDependencies: {
+            $0.dockPreview.isMediaPlaying = { _ in true }
+        }
+
+        await store.send(.windowsLoaded(generation: 1, hover: hover, result: .success([]))) {
+            $0.preview = .init(generation: 1, appName: "Spotify", itemFrame: .zero,
+                               screenFrame: .zero, windows: [], mediaPlayer: .spotify)
+            $0.status = .idle
+        }
+        await store.receive(\.mediaPlaybackLoaded) {
+            $0.preview?.isMediaPlaying = true
+        }
+        await store.finish()
+    }
+
+    @Test
+    func windowListingFailureKeepsMediaControlsAvailable() async {
+        let hover = DockHoverEvent(
+            pid: 7, appName: "Music", itemFrame: .zero, screenFrame: .zero, mediaPlayer: .appleMusic
+        )
+        let store = TestStore(initialState: .init(
+            isEnabled: true, authorization: .authorized, isObserving: true,
+            hoverGeneration: 1, hover: hover, status: .loading
+        )) { DockPreviewFeature() }
+
+        await store.send(.windowsLoaded(generation: 1, hover: hover, result: .failure(.windowListing))) {
+            $0.preview = .init(generation: 1, appName: "Music", itemFrame: .zero,
+                               screenFrame: .zero, windows: [], mediaPlayer: .appleMusic)
+            $0.status = .captureFailed
+        }
+        await store.receive(\.mediaPlaybackLoaded)
+        await store.finish()
+    }
+
+    @Test
+    func playPauseTogglesImmediatelyThenSyncsWithThePlayer() async {
+        let commands = LockIsolated<[DockPreviewMediaCommand]>([])
+        let store = TestStore(initialState: .init(
+            isEnabled: true, authorization: .authorized, isObserving: true, hoverGeneration: 1,
+            preview: .init(generation: 1, appName: "Music", itemFrame: .zero,
+                           screenFrame: .zero, windows: [], mediaPlayer: .appleMusic)
+        )) { DockPreviewFeature() } withDependencies: {
+            $0.continuousClock = ImmediateClock()
+            $0.dockPreview.sendMediaCommand = { player, command in
+                #expect(player == .appleMusic)
+                commands.withValue { $0.append(command) }
+            }
+            $0.dockPreview.isMediaPlaying = { _ in false }
+        }
+
+        await store.send(.mediaCommandTapped(.playPause)) {
+            $0.preview?.isMediaPlaying = true
+        }
+        // The player refused to start, so the button falls back to its real state.
+        await store.receive(\.mediaPlaybackLoaded) {
+            $0.preview?.isMediaPlaying = false
+        }
+        #expect(commands.value == [.playPause])
+        await store.finish()
+    }
+
+    @Test
+    func trackSkipsSendCommandsWithoutTogglingPlayback() async {
+        let commands = LockIsolated<[DockPreviewMediaCommand]>([])
+        let store = TestStore(initialState: .init(
+            isEnabled: true, authorization: .authorized, isObserving: true, hoverGeneration: 1,
+            preview: .init(generation: 1, appName: "Spotify", itemFrame: .zero, screenFrame: .zero,
+                           windows: [], mediaPlayer: .spotify, isMediaPlaying: true)
+        )) { DockPreviewFeature() } withDependencies: {
+            $0.continuousClock = ImmediateClock()
+            $0.dockPreview.sendMediaCommand = { _, command in commands.withValue { $0.append(command) } }
+            $0.dockPreview.isMediaPlaying = { _ in true }
+        }
+
+        await store.send(.mediaCommandTapped(.previousTrack))
+        await store.receive(\.mediaPlaybackLoaded)
+        await store.send(.mediaCommandTapped(.nextTrack))
+        await store.receive(\.mediaPlaybackLoaded)
+        #expect(commands.value == [.previousTrack, .nextTrack])
+        await store.finish()
+    }
+
+    @Test
+    func mediaCommandsAreIgnoredForOtherApps() async {
+        let store = TestStore(initialState: .init(
+            isEnabled: true, authorization: .authorized, isObserving: true, hoverGeneration: 1,
+            preview: .init(generation: 1, appName: "TextEdit", itemFrame: .zero, screenFrame: .zero,
+                           windows: [.init(id: 1, title: "Doc", pid: 42, frame: .zero, isActivatable: true)])
+        )) { DockPreviewFeature() } withDependencies: {
+            $0.dockPreview.sendMediaCommand = { _, _ in Issue.record("Unexpected media command") }
+        }
+
+        await store.send(.mediaCommandTapped(.playPause))
+        await store.finish()
+    }
+
+    @Test
+    func playbackStateFromAnOlderPreviewIsDiscarded() async {
+        let store = TestStore(initialState: .init(
+            isEnabled: true, authorization: .authorized, isObserving: true, hoverGeneration: 2,
+            preview: .init(generation: 2, appName: "Music", itemFrame: .zero,
+                           screenFrame: .zero, windows: [], mediaPlayer: .appleMusic)
+        )) { DockPreviewFeature() }
+
+        await store.send(.mediaPlaybackLoaded(generation: 1, isPlaying: true))
+        #expect(store.state.preview?.isMediaPlaying == false)
+    }
+
+    @Test
+    func mediaControlsAddRoomBelowThePreview() {
+        let base = DockPreviewFeature.State.Preview(
+            generation: 1, appName: "Music", itemFrame: .zero, screenFrame: .zero, windows: []
+        )
+        var controlsOnly = base
+        controlsOnly.mediaPlayer = .appleMusic
+        #expect(DockPreviewPanelController.size(for: controlsOnly, status: .idle) == CGSize(width: 240, height: 52))
+
+        var withWindow = controlsOnly
+        withWindow.windows = [.init(id: 1, title: "Music", pid: 7, frame: .zero, isActivatable: true)]
+        #expect(DockPreviewPanelController.size(for: withWindow, status: .idle) == CGSize(width: 214, height: 204))
+
+        var plainWindow = base
+        plainWindow.windows = withWindow.windows
+        #expect(DockPreviewPanelController.size(for: plainWindow, status: .idle) == CGSize(width: 214, height: 164))
+        #expect(DockPreviewPanelController.size(for: base, status: .captureFailed) == CGSize(width: 240, height: 52))
+        #expect(DockPreviewPanelController.size(for: controlsOnly, status: .captureFailed) == CGSize(width: 240, height: 92))
+    }
+
+    @Test
     func sideDockNearBottomPlacesPanelBesideTheIcon() {
         let frame = DockPreviewPanelController.frame(
             size: CGSize(width: 240, height: 164),

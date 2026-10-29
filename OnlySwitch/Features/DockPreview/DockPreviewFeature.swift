@@ -21,6 +21,8 @@ struct DockPreviewFeature {
             var itemFrame: CGRect
             var screenFrame: CGRect
             var windows: [DockPreviewWindow]
+            var mediaPlayer: DockPreviewMediaPlayer? = nil
+            var isMediaPlaying = false
         }
 
         var isEnabled = false
@@ -42,6 +44,8 @@ struct DockPreviewFeature {
         case thumbnailLoaded(generation: UInt64, windowID: CGWindowID, result: Result<Data, DockPreviewFailure>)
         case windowTapped(CGWindowID)
         case activationFinished(succeeded: Bool)
+        case mediaPlaybackLoaded(generation: UInt64, isPlaying: Bool)
+        case mediaCommandTapped(DockPreviewMediaCommand)
         case permissionHelpPresented
         case escapePressed
         case pointerExited
@@ -54,9 +58,11 @@ struct DockPreviewFeature {
         case catalog
         case captures
         case activation
+        case media
     }
 
     @Dependency(\.dockPreview) var client
+    @Dependency(\.continuousClock) var clock
 
     var body: some ReducerOf<Self> {
         Reduce { state, action in
@@ -112,7 +118,7 @@ struct DockPreviewFeature {
                 state.preview = nil
                 guard let hover else {
                     state.status = .idle
-                    return .merge(.cancel(id: CancelID.catalog), .cancel(id: CancelID.captures))
+                    return cancelPreviewEffects()
                 }
                 let generation = state.hoverGeneration
                 state.status = .loading
@@ -144,10 +150,11 @@ struct DockPreviewFeature {
                         appName: currentHover.appName,
                         itemFrame: currentHover.itemFrame,
                         screenFrame: currentHover.screenFrame,
-                        windows: windows
+                        windows: windows,
+                        mediaPlayer: currentHover.mediaPlayer
                     )
                     state.status = .idle
-                    return .run { send in
+                    let captures: Effect<Action> = .run { send in
                         for window in windows {
                             try Task.checkCancellation()
                             do {
@@ -166,11 +173,25 @@ struct DockPreviewFeature {
                         }
                     }
                     .cancellable(id: CancelID.captures, cancelInFlight: true)
+                    return .merge(captures, loadMediaPlayback(state.preview))
 
                 case .success:
-                    state.preview = nil
+                    // Media players keep their controls even with every window closed.
+                    guard let mediaPlayer = currentHover.mediaPlayer else {
+                        state.preview = nil
+                        state.status = .idle
+                        return .none
+                    }
+                    state.preview = .init(
+                        generation: generation,
+                        appName: currentHover.appName,
+                        itemFrame: currentHover.itemFrame,
+                        screenFrame: currentHover.screenFrame,
+                        windows: [],
+                        mediaPlayer: mediaPlayer
+                    )
                     state.status = .idle
-                    return .none
+                    return loadMediaPlayback(state.preview)
 
                 case .failure:
                     state.preview = .init(
@@ -178,10 +199,11 @@ struct DockPreviewFeature {
                         appName: currentHover.appName,
                         itemFrame: currentHover.itemFrame,
                         screenFrame: currentHover.screenFrame,
-                        windows: []
+                        windows: [],
+                        mediaPlayer: currentHover.mediaPlayer
                     )
                     state.status = .captureFailed
-                    return .none
+                    return loadMediaPlayback(state.preview)
                 }
 
             case let .thumbnailLoaded(generation, windowID, result):
@@ -213,6 +235,28 @@ struct DockPreviewFeature {
                 state.status = succeeded ? .idle : .activationFailed
                 return .none
 
+            case let .mediaPlaybackLoaded(generation, isPlaying):
+                guard state.preview?.generation == generation else { return .none }
+                state.preview?.isMediaPlaying = isPlaying
+                return .none
+
+            case let .mediaCommandTapped(command):
+                guard let preview = state.preview,
+                      let mediaPlayer = preview.mediaPlayer
+                else { return .none }
+                if command == .playPause {
+                    state.preview?.isMediaPlaying.toggle()
+                }
+                let generation = preview.generation
+                return .run { send in
+                    await client.sendMediaCommand(mediaPlayer, command)
+                    // Players publish their new state asynchronously after a command.
+                    try await clock.sleep(for: .milliseconds(300))
+                    let isPlaying = await client.isMediaPlaying(mediaPlayer)
+                    await send(.mediaPlaybackLoaded(generation: generation, isPlaying: isPlaying))
+                }
+                .cancellable(id: CancelID.media, cancelInFlight: true)
+
             case .permissionHelpPresented:
                 state.showPermissionHelp = false
                 return .none
@@ -221,14 +265,14 @@ struct DockPreviewFeature {
                 state.hoverGeneration &+= 1
                 state.preview = nil
                 state.status = .idle
-                return .merge(.cancel(id: CancelID.catalog), .cancel(id: CancelID.captures))
+                return cancelPreviewEffects()
 
             case .pointerExited:
                 state.hoverGeneration &+= 1
                 state.hover = nil
                 state.preview = nil
                 state.status = .idle
-                return .merge(.cancel(id: CancelID.catalog), .cancel(id: CancelID.captures))
+                return cancelPreviewEffects()
 
             case let .previewFrameChanged(frame):
                 return .run { _ in await client.updatePreviewFrame(frame) }
@@ -261,8 +305,27 @@ struct DockPreviewFeature {
             .cancel(id: CancelID.catalog),
             .cancel(id: CancelID.captures),
             .cancel(id: CancelID.activation),
+            .cancel(id: CancelID.media),
             .run { _ in await client.stop() }
         )
+    }
+
+    private func cancelPreviewEffects() -> Effect<Action> {
+        .merge(
+            .cancel(id: CancelID.catalog),
+            .cancel(id: CancelID.captures),
+            .cancel(id: CancelID.media)
+        )
+    }
+
+    private func loadMediaPlayback(_ preview: State.Preview?) -> Effect<Action> {
+        guard let preview, let mediaPlayer = preview.mediaPlayer else { return .none }
+        let generation = preview.generation
+        return .run { send in
+            let isPlaying = await client.isMediaPlaying(mediaPlayer)
+            await send(.mediaPlaybackLoaded(generation: generation, isPlaying: isPlaying))
+        }
+        .cancellable(id: CancelID.media, cancelInFlight: true)
     }
 
     private func clear(_ state: inout State) {

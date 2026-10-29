@@ -16,6 +16,26 @@ struct DockHoverEvent: Equatable, Sendable {
     var appName: String
     var itemFrame: CGRect
     var screenFrame: CGRect
+    var mediaPlayer: DockPreviewMediaPlayer? = nil
+}
+
+enum DockPreviewMediaPlayer: Equatable, Sendable {
+    case appleMusic
+    case spotify
+
+    init?(bundleIdentifier: String?) {
+        switch bundleIdentifier {
+        case "com.apple.Music": self = .appleMusic
+        case "com.spotify.client": self = .spotify
+        default: return nil
+        }
+    }
+}
+
+enum DockPreviewMediaCommand: Equatable, Sendable {
+    case previousTrack
+    case playPause
+    case nextTrack
 }
 
 // At the observer's 80 ms interval, three equal direct hits avoid anchoring

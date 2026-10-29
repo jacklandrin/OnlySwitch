@@ -12,6 +12,8 @@ struct DockPreviewClient: Sendable {
     var capture: @MainActor @Sendable (DockPreviewWindow) async throws -> Data
     var activate: @MainActor @Sendable (DockPreviewWindow) async throws -> Void
     var updatePreviewFrame: @MainActor @Sendable (CGRect?) -> Void
+    var isMediaPlaying: @MainActor @Sendable (DockPreviewMediaPlayer) -> Bool
+    var sendMediaCommand: @MainActor @Sendable (DockPreviewMediaPlayer, DockPreviewMediaCommand) -> Void
     var persistEnabled: @MainActor @Sendable (Bool) -> Void
     var stop: @MainActor @Sendable () async -> Void
 }
@@ -25,6 +27,8 @@ extension DockPreviewClient: DependencyKey, TestDependencyKey {
         capture: { _ in Data() },
         activate: { _ in },
         updatePreviewFrame: { _ in },
+        isMediaPlaying: { _ in false },
+        sendMediaCommand: { _, _ in },
         persistEnabled: { _ in },
         stop: {}
     )
@@ -37,6 +41,8 @@ extension DockPreviewClient: DependencyKey, TestDependencyKey {
         capture: { try await DockPreviewRuntime.shared.capture($0) },
         activate: { try await DockPreviewRuntime.shared.activate($0) },
         updatePreviewFrame: { DockPreviewRuntime.shared.updatePreviewFrame($0) },
+        isMediaPlaying: { DockPreviewMediaRuntime.isPlaying($0) },
+        sendMediaCommand: { DockPreviewMediaRuntime.send($1, to: $0) },
         persistEnabled: { Preferences.shared.dockPreviewEnabled = $0 },
         stop: { await DockPreviewRuntime.shared.stop() }
     )
@@ -268,7 +274,8 @@ private final class DockPreviewRuntime {
             pid: application.processIdentifier,
             appName: application.localizedName ?? url.deletingPathExtension().lastPathComponent,
             itemFrame: appKitRect(fromAccessibilityRect: itemFrame),
-            screenFrame: screen.visibleFrame
+            screenFrame: screen.visibleFrame,
+            mediaPlayer: DockPreviewMediaPlayer(bundleIdentifier: application.bundleIdentifier)
         )
     }
 
@@ -373,6 +380,56 @@ private final class DockPreviewRuntime {
             width: rect.width,
             height: rect.height
         )
+    }
+}
+
+@MainActor
+private enum DockPreviewMediaRuntime {
+    /// Hovering must never launch a player or ask for Automation permission;
+    /// without permission, the switches' cached notification state is used.
+    static func isPlaying(_ player: DockPreviewMediaPlayer) -> Bool {
+        guard let application = runningApplication(player) else { return false }
+        let target = NSAppleEventDescriptor(processIdentifier: application.processIdentifier)
+        let canAutomate = AEDeterminePermissionToAutomateTarget(
+            target.aeDesc, typeWildCard, typeWildCard, false
+        ) == noErr
+        switch player {
+        case .appleMusic:
+            guard let musicPlayer = AppleMusicSwitch.shared.player else { return false }
+            return (canAutomate ? musicPlayer.playbackState : AppleMusicSwitch.shared.state).isActiveState
+        case .spotify:
+            guard let spotifyPlayer = SpotifySwitch.shared.player else { return false }
+            return (canAutomate ? spotifyPlayer.playbackState : SpotifySwitch.shared.state).isActiveState
+        }
+    }
+
+    /// Commands must never launch a player that quit while the preview was open.
+    static func send(_ command: DockPreviewMediaCommand, to player: DockPreviewMediaPlayer) {
+        guard runningApplication(player) != nil else { return }
+        switch player {
+        case .appleMusic:
+            guard let music = AppleMusicSwitch.shared.player?.applemusicApp else { return }
+            switch command {
+            case .previousTrack: music.previousTrack?()
+            case .playPause: music.playpause?()
+            case .nextTrack: music.nextTrack?()
+            }
+        case .spotify:
+            guard let spotify = SpotifySwitch.shared.player?.spotifyApp else { return }
+            switch command {
+            case .previousTrack: spotify.previousTrack?()
+            case .playPause: spotify.playpause?()
+            case .nextTrack: spotify.nextTrack?()
+            }
+        }
+    }
+
+    private static func runningApplication(_ player: DockPreviewMediaPlayer) -> NSRunningApplication? {
+        let bundleIdentifier = switch player {
+        case .appleMusic: "com.apple.Music"
+        case .spotify: "com.spotify.client"
+        }
+        return NSRunningApplication.runningApplications(withBundleIdentifier: bundleIdentifier).first
     }
 }
 

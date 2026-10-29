@@ -78,15 +78,13 @@ final class DockPreviewPanelController {
         }
 
         guard let preview,
-              !preview.windows.isEmpty || status == .captureFailed else {
+              !preview.windows.isEmpty || status == .captureFailed || preview.mediaPlayer != nil else {
             panel.orderOut(nil)
             updatePreviewFrame(nil)
             return
         }
 
-        let width = preview.windows.isEmpty ? 240 : min(CGFloat(preview.windows.count) * 190 + 24, 784)
-        let height: CGFloat = preview.windows.isEmpty ? 52 : (status == .activationFailed ? 190 : 164)
-        let size = CGSize(width: width, height: height)
+        let size = Self.size(for: preview, status: status)
         let frame = Self.frame(
             size: size,
             item: preview.itemFrame,
@@ -100,6 +98,21 @@ final class DockPreviewPanelController {
         panel.setFrame(frame.insetBy(dx: -inset, dy: -inset), display: true)
         updatePreviewFrame(frame)
         panel.makeKeyAndOrderFront(nil)
+    }
+
+    static func size(
+        for preview: DockPreviewFeature.State.Preview,
+        status: DockPreviewFeature.State.Status
+    ) -> CGSize {
+        let hasMedia = preview.mediaPlayer != nil
+        guard !preview.windows.isEmpty else {
+            guard status == .captureFailed else { return CGSize(width: 240, height: 52) }
+            return CGSize(width: 240, height: hasMedia ? 52 + DockPreviewView.mediaControlsHeight : 52)
+        }
+        let width = min(CGFloat(preview.windows.count) * 190 + 24, 784)
+        var height: CGFloat = status == .activationFailed ? 190 : 164
+        if hasMedia { height += DockPreviewView.mediaControlsHeight }
+        return CGSize(width: width, height: height)
     }
 
     static func frame(size: CGSize, item: CGRect, visibleScreen: CGRect) -> CGRect {
