@@ -10,4 +10,5 @@ import KeyboardShortcuts
 
 extension KeyboardShortcuts.Name {
     static let invokePopoverShortcutsName = Self("invokePopover")
+    static let openScreenshotsTab = Self("openScreenshotsTab")
 }

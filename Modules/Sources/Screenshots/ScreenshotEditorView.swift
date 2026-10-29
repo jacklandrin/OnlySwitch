@@ -285,6 +285,7 @@ private struct ScreenshotEditorCanvas: View {
                         .shadow(color: .black.opacity(0.18), radius: 6, y: 2)
                     ScreenshotAnnotationOverlay(
                         geometry: geometry,
+                        blurredImage: image.blurredImage,
                         annotations: store.document.annotations + (store.draft.map { [$0] } ?? []),
                         crop: store.draftCrop ?? store.document.crop
                     )
@@ -330,42 +331,41 @@ private struct ScreenshotCanvasGeometry {
     }
 }
 
-/// Committed + draft annotations drawn with the renderer's own CoreGraphics routine (so the preview matches the
-/// saved file); blur regions are previewed as hatched rectangles and the crop as a dimmed outside region.
+/// Blur patches use the cached renderer image; vectors are drawn afterward, matching saved output order.
+/// Crop remains a dimmed outside region so the source coordinates stay stable while editing.
 private struct ScreenshotAnnotationOverlay: View {
     let geometry: ScreenshotCanvasGeometry
+    let blurredImage: CGImage?
     let annotations: [ScreenshotAnnotation]
     let crop: CGRect?
 
     var body: some View {
         Canvas { context, size in
             let transform = CGAffineTransform(translationX: geometry.fitted.minX, y: geometry.fitted.minY).scaledBy(x: geometry.scale, y: geometry.scale)
+            var blurMask = Path()
             for annotation in annotations {
                 if case let .blur(rect) = annotation {
-                    drawBlurPreview(rect.standardized.applying(transform), in: &context)
-                } else {
-                    context.withCGContext { cg in
-                        cg.concatenate(transform)
-                        ScreenshotRenderer.draw(annotation, in: cg)
-                    }
+                    let region = rect.standardized.applying(transform).intersection(geometry.fitted)
+                    if !region.isEmpty { blurMask.addRect(region) }
+                }
+            }
+            var blurredContext = context
+            blurredContext.clip(to: blurMask)
+            if let blurredImage {
+                blurredContext.draw(Image(decorative: blurredImage, scale: 1), in: geometry.fitted)
+            } else {
+                // A failed preview must not leave the selected source text visible.
+                blurredContext.fill(Path(geometry.fitted), with: .color(.gray))
+            }
+            for annotation in annotations {
+                if case .blur = annotation { continue }
+                context.withCGContext { cg in
+                    cg.concatenate(transform)
+                    ScreenshotRenderer.draw(annotation, in: cg)
                 }
             }
             if let crop { drawCrop(crop.standardized.applying(transform), size: size, in: &context) }
         }
-    }
-
-    private func drawBlurPreview(_ rect: CGRect, in context: inout GraphicsContext) {
-        context.fill(Path(rect), with: .color(.gray.opacity(0.35)))
-        var hatch = Path()
-        var x = rect.minX - rect.height
-        while x < rect.maxX {
-            hatch.move(to: CGPoint(x: x, y: rect.maxY)); hatch.addLine(to: CGPoint(x: x + rect.height, y: rect.minY))
-            x += 8
-        }
-        var clipped = context
-        clipped.clip(to: Path(rect))
-        clipped.stroke(hatch, with: .color(.white.opacity(0.55)), lineWidth: 1)
-        context.stroke(Path(rect), with: .color(.white.opacity(0.8)), style: StrokeStyle(lineWidth: 1, dash: [4, 3]))
     }
 
     private func drawCrop(_ rect: CGRect, size: CGSize, in context: inout GraphicsContext) {

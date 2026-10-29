@@ -173,6 +173,11 @@ struct ScreenshotEditorFeatureTests {
             $0.image = ScreenshotEditorImage(cgImage: try #require(ScreenshotRenderer.loadImage(at: url)), fileURL: url, type: .png)
             $0.document.pixelSize = self.size
         }
+        let previewBlur = try #require(store.state.image?.blurredImage)
+        #expect(previewBlur.width == 100 && previewBlur.height == 80)
+        let loadedSource = try #require(ScreenshotRenderer.loadImage(at: url))
+        let expectedBlur = try #require(ScreenshotRenderer.blurredImage(loadedSource))
+        #expect(PixelBuffer(previewBlur).bytes == PixelBuffer(expectedBlur).bytes)
         await store.send(.task)
 
         var missing = ScreenshotsClient.testValue

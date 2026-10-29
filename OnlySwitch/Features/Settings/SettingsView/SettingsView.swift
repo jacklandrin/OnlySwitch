@@ -16,6 +16,7 @@ import ComposableArchitecture
 import Screenshots
 import Tailscale
 import Extensions
+import KeyboardShortcuts
 
 struct SettingsView: View {
     @StateObject var settingVM = SettingsVM.shared
@@ -253,6 +254,15 @@ private struct ScreenshotsSettingsControls: View {
                     .toggleStyle(.switch)
             }
             .padding(12)
+            Divider().padding(.horizontal, 12)
+            HStack {
+                Text("Open Screenshots Tab".localized())
+                Spacer(minLength: 12)
+                KeyboardShortcuts.Recorder(for: .openScreenshotsTab)
+                    .accessibilityLabel(Text("Open Screenshots Tab".localized()))
+            }
+            .padding(12)
+            .disabled(!showScreenshotsTab)
             Divider().padding(.horizontal, 12)
             VStack(alignment: .leading, spacing: 6) {
                 HStack {

@@ -382,6 +382,9 @@ final class OnlyControlWindow: NSWindow, NSWindowDelegate {
     var preventsOutsideClickDismissal: Bool {
         !onlyControlStore.selectedSection.allowsOutsideClickDismissal
     }
+    var selectedSection: SectionBar.Section {
+        onlyControlStore.selectedSection
+    }
 
     private var globalMouseMonitor: Any?
     private var localMouseMonitor: Any?

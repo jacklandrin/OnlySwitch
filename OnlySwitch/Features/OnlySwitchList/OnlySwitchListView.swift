@@ -27,6 +27,7 @@ enum Focusable: Hashable {
 struct OnlySwitchListView: View {
     private let onPanelSizeChange: @MainActor (CGSize) -> Void
     private let onOutsideClickRetentionChanged: @MainActor (Bool) -> Void
+    private let onSectionSelectionChanged: @MainActor (SectionBar.Section) -> Void
     @EnvironmentObject var switchVM:SwitchListVM
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.accessibilityReduceMotion) private var accessibilityReduceMotion
@@ -58,9 +59,10 @@ struct OnlySwitchListView: View {
         GridItem(.fixed(Layout.popoverWidth - 40))
     ]
 
-    init(onPanelSizeChange: @escaping @MainActor (CGSize) -> Void = { _ in }, onOutsideClickRetentionChanged: @escaping @MainActor (Bool) -> Void = { _ in }) {
+    init(onPanelSizeChange: @escaping @MainActor (CGSize) -> Void = { _ in }, onOutsideClickRetentionChanged: @escaping @MainActor (Bool) -> Void = { _ in }, onSectionSelectionChanged: @escaping @MainActor (SectionBar.Section) -> Void = { _ in }) {
         self.onPanelSizeChange = onPanelSizeChange
         self.onOutsideClickRetentionChanged = onOutsideClickRetentionChanged
+        self.onSectionSelectionChanged = onSectionSelectionChanged
         _aphroditeStore = State(initialValue: Store(initialState: .init()) { AphroditeReducer() })
     }
     
@@ -176,6 +178,7 @@ struct OnlySwitchListView: View {
             reconcileSectionSelection()
         }
         .onChange(of: selectedSection) { section in
+            onSectionSelectionChanged(section)
             onOutsideClickRetentionChanged(!section.allowsOutsideClickDismissal)
         }
         .onPreferenceChange(PanelContentHeightKey.self) { measuredContentHeight = $0.isFinite && $0 >= 0 ? $0 : nil }
@@ -198,6 +201,7 @@ struct OnlySwitchListView: View {
         .onAppear {
             consumeScreenshotSectionReveal()
             presentedPanelHeight = adaptivePanelHeight
+            onSectionSelectionChanged(selectedSection)
             onOutsideClickRetentionChanged(!selectedSection.allowsOutsideClickDismissal)
         }
     }

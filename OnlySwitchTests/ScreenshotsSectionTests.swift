@@ -3,12 +3,18 @@ import ComposableArchitecture
 import Defines
 import Extensions
 import Foundation
+import KeyboardShortcuts
 import Screenshots
 import Testing
 @testable import OnlySwitch
 
 @MainActor
 struct ScreenshotsSectionTests {
+    @Test func screenshotShortcutHasIndependentPersistentIdentity() {
+        #expect(KeyboardShortcuts.Name.openScreenshotsTab.rawValue == "openScreenshotsTab")
+        #expect(KeyboardShortcuts.Name.openScreenshotsTab != .invokePopoverShortcutsName)
+    }
+
     @Test func screenshotsAndUninstallerRetainOutsideClicks() {
         for section in SectionBar.sections(authenticator: true, soundMixer: true, systemMonitor: true, codexUsage: true,
                                            claudeUsage: true, aphrodite: true, xcodeCleaner: true, appUninstaller: true, screenshots: true) {
@@ -80,6 +86,72 @@ struct ScreenshotsSectionTests {
         defaults.set(true, forKey: UserDefaults.Key.showScreenshotsTab)
         #expect(client.revealScreenshotsSection())
         #expect(posts.withLock { $0 } == 2)
+    }
+
+    @Test func screenshotShortcutRevealDoesNotRequireCaptureCollection() throws {
+        let suite = "ScreenshotsSectionTests.\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        defaults.set(true, forKey: UserDefaults.Key.showScreenshotsTab)
+        defaults.set(false, forKey: UserDefaults.Key.screenshotsCaptureEnabled)
+        let center = NotificationCenter()
+        let posts = TestMutex(0)
+        let observer = center.addObserver(forName: .revealScreenshotsSection, object: nil, queue: nil) { _ in posts.withLock { $0 += 1 } }
+        defer { center.removeObserver(observer) }
+        let revealStore = Store(initialState: ScreenshotSectionRevealFeature.State()) { ScreenshotSectionRevealFeature() }
+        let client = ScreenshotPresentationClient.app(defaults: defaults, notificationCenter: center, revealStore: revealStore, appearance: { .single })
+
+        #expect(client.revealScreenshotsSection())
+        #expect(revealStore.pendingHost == .popover)
+        #expect(posts.withLock { $0 } == 1)
+        #expect(defaults.bool(forKey: UserDefaults.Key.screenshotsCaptureEnabled) == false)
+    }
+
+    @Test func screenshotShortcutDecisionUsesExactSectionAndVisibility() {
+        for section in [SectionBar.Section.controls, .appUninstaller, .screenshots] {
+            for shown in [false, true] {
+                #expect(ScreenshotShortcutAction.resolve(tabVisible: false, hostShown: shown, selectedSection: section) == .none)
+                let expected: ScreenshotShortcutAction = shown && section == .screenshots ? .hide : .reveal
+                #expect(ScreenshotShortcutAction.resolve(tabVisible: true, hostShown: shown, selectedSection: section) == expected)
+            }
+        }
+    }
+
+    @Test func screenshotShortcutClosesOnlyShownScreenshotsAndOtherwiseReveals() throws {
+        let suite = "ScreenshotsSectionTests.\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        defaults.set(true, forKey: UserDefaults.Key.showScreenshotsTab)
+        for section in [SectionBar.Section.controls, .appUninstaller, .screenshots] {
+            for shown in [false, true] {
+                let popover = ScreenshotsPopoverSpy(isShown: shown)
+                let controller = StatusBarController(popover, appearance: { .single }, configuresSystemIntegrations: false)
+                controller.listSelectedSection = section
+                let reveals = TestMutex(0)
+                var presentation = ScreenshotPresentationClient.testValue
+                presentation.revealScreenshotsSection = { reveals.withLock { $0 += 1 }; return true }
+                controller.toggleScreenshotsSection(defaults: defaults, presentation: presentation)
+                let closes = shown && section == .screenshots
+                #expect(popover.closeCount == (closes ? 1 : 0))
+                #expect(reveals.withLock { $0 } == (closes ? 0 : 1))
+            }
+        }
+    }
+
+    @Test func hiddenScreenshotsShortcutNeitherClosesNorReveals() throws {
+        let suite = "ScreenshotsSectionTests.\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        defaults.set(false, forKey: UserDefaults.Key.showScreenshotsTab)
+        let popover = ScreenshotsPopoverSpy(isShown: true)
+        let controller = StatusBarController(popover, appearance: { .single }, configuresSystemIntegrations: false)
+        controller.listSelectedSection = .screenshots
+        let reveals = TestMutex(0)
+        var presentation = ScreenshotPresentationClient.testValue
+        presentation.revealScreenshotsSection = { reveals.withLock { $0 += 1 }; return true }
+        controller.toggleScreenshotsSection(defaults: defaults, presentation: presentation)
+        #expect(popover.closeCount == 0)
+        #expect(reveals.withLock { $0 } == 0)
     }
 
     @Test func screenshotRevealBeforeMountRemainsPendingUntilMatchingHostConsumes() async {

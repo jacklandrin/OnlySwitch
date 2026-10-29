@@ -12,6 +12,18 @@ import SwiftUI
 import Foundation
 import ComposableArchitecture
 import SystemMonitor
+import Screenshots
+
+enum ScreenshotShortcutAction: Equatable {
+    case none
+    case hide
+    case reveal
+
+    static func resolve(tabVisible: Bool, hostShown: Bool, selectedSection: SectionBar.Section) -> Self {
+        guard tabVisible else { return .none }
+        return hostShown && selectedSection == .screenshots ? .hide : .reveal
+    }
+}
 
 @MainActor
 class StatusBarController {
@@ -42,6 +54,7 @@ class StatusBarController {
     private let appearance: @MainActor () -> SwitchListAppearance
     private let configuresSystemIntegrations: Bool
     var listPreventsOutsideClickDismissal = false
+    var listSelectedSection: SectionBar.Section = .controls
 
     private var onlyControlWindow: OnlyControlWindow {
         OnlyControlWindow.shared
@@ -434,6 +447,27 @@ class StatusBarController {
         }
     }
     
+    /// The keyboard shortcut closes only an already-visible Screenshots section. Captures continue to use
+    /// the reveal-only client, so taking another screenshot never closes the host.
+    func toggleScreenshotsSection(defaults: UserDefaults = .standard, presentation: ScreenshotPresentationClient = .app) {
+        let tabVisible = defaults.object(forKey: UserDefaults.Key.showScreenshotsTab) as? Bool ?? true
+        guard tabVisible else { return }
+        let isOnlyControl = currentAppearance == .onlyControl
+        let action = ScreenshotShortcutAction.resolve(
+            tabVisible: tabVisible,
+            hostShown: isOnlyControl ? onlyControlWindow.isShowing : popover.isShown,
+            selectedSection: isOnlyControl ? onlyControlWindow.selectedSection : listSelectedSection
+        )
+        switch action {
+        case .none:
+            break
+        case .hide:
+            hidePopover(nil)
+        case .reveal:
+            _ = presentation.revealScreenshotsSection()
+        }
+    }
+
     /// A new screenshot asks for the list: show the current host if it is hidden. The host consumes its
     /// pending section request when it appears, even if it did not exist when the notification was posted.
     func revealScreenshotsHost() {

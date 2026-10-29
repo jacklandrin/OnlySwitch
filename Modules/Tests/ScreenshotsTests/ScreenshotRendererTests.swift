@@ -81,8 +81,37 @@ struct ScreenshotRendererTests {
             let value = output.pixel(x, y).r
             #expect(value > 60 && value < 195, "pixel (\(x), \(y)) = \(value) is not blurred")
         }
-        #expect(ScreenshotRenderer.blurRadius(for: size) == 12)
-        #expect(ScreenshotRenderer.blurRadius(for: CGSize(width: 2000, height: 1000)) == 30)
+    }
+
+    @Test func blurSuppressesCoarseHighContrastContent() throws {
+        let source = try fixtureImage(width: 800, height: 600) { context in
+            context.setFillColor(red: 0, green: 0, blue: 0, alpha: 1)
+            for x in stride(from: 0, to: 800, by: 128) {
+                context.fill(CGRect(x: x, y: 0, width: 64, height: 600))
+            }
+        }
+        let region = CGRect(x: 128, y: 128, width: 384, height: 256)
+        let output = PixelBuffer(try #require(ScreenshotRenderer.render(source, document: .init(pixelSize: CGSize(width: 800, height: 600), annotations: [.blur(region)]))))
+        let dark = Int(output.pixel(288, 300).r)
+        let light = Int(output.pixel(352, 300).r)
+        #expect(abs(light - dark) < 45, "64px details remain too legible: dark=\(dark), light=\(light)")
+        #expect(output.pixel(32, 300) == PixelBuffer(source).pixel(32, 300))
+    }
+
+    @Test func cachedFullImageBlurMatchesSavedRegionPixels() throws {
+        let source = try fixtureImage(width: 320, height: 240) { context in
+            context.setFillColor(red: 0, green: 0, blue: 0, alpha: 1)
+            context.fill(CGRect(x: 20, y: 30, width: 160, height: 60))
+            context.setFillColor(red: 0, green: 0.5, blue: 1, alpha: 1)
+            context.fill(CGRect(x: 60, y: 150, width: 210, height: 70))
+        }
+        let region = CGRect(x: 40, y: 25, width: 180, height: 80)
+        let cached = PixelBuffer(try #require(ScreenshotRenderer.blurredImage(source)))
+        let saved = PixelBuffer(try #require(ScreenshotRenderer.render(source, document: .init(pixelSize: CGSize(width: 320, height: 240), annotations: [.blur(region)]))))
+        #expect(cached.width == 320 && cached.height == 240)
+        for y in 26..<104 { for x in 41..<219 {
+            #expect(saved.pixel(x, y) == cached.pixel(x, y), "preview/save blur mismatch at (\(x),\(y))")
+        } }
     }
 
     @Test func cropProducesCroppedSizeAndOrigin() throws {

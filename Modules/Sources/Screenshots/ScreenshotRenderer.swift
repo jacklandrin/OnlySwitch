@@ -25,18 +25,17 @@ public enum ScreenshotRenderer {
             return nil
         }
         if !blurRegions.isEmpty {
-            let source = CIImage(cgImage: image)
-            let ciContext = CIContext(options: [.workingColorSpace: NSNull(), .cacheIntermediates: false])
-            let filter = CIFilter.gaussianBlur()
-            filter.radius = Float(blurRadius(for: CGSize(width: width, height: height)))
-            filter.inputImage = source.clampedToExtent()
-            guard let blurred = filter.outputImage else { return nil }
+            guard let blurred = blurredImage(image) else { return nil }
+            context.saveGState()
+            context.beginPath()
             for region in blurRegions {
-                // Core Image and the unflipped bitmap context share a bottom-left origin.
+                // Annotation coordinates are top-left; the unflipped bitmap context is bottom-left.
                 let target = CGRect(x: region.minX, y: CGFloat(height) - region.maxY, width: region.width, height: region.height)
-                guard let patch = ciContext.createCGImage(blurred, from: target, format: .RGBA8, colorSpace: space) else { return nil }
-                context.draw(patch, in: target)
+                context.addRect(target)
             }
+            context.clip()
+            context.draw(blurred, in: full)
+            context.restoreGState()
         }
 
         context.translateBy(x: 0, y: CGFloat(height))
@@ -72,7 +71,20 @@ public enum ScreenshotRenderer {
         return CGImageSourceCreateImageAtIndex(source, 0, [kCGImageSourceShouldCacheImmediately: true] as CFDictionary)
     }
 
-    static func blurRadius(for size: CGSize) -> CGFloat { max(12, 0.03 * min(size.width, size.height)) }
+    /// One full-resolution Gaussian image shared by saved output and the editor's cached preview.
+    public static func blurredImage(_ image: CGImage) -> CGImage? {
+        guard image.width > 0, image.height > 0 else { return nil }
+        let source = CIImage(cgImage: image)
+        let context = CIContext(options: [.workingColorSpace: NSNull(), .cacheIntermediates: false])
+        let filter = CIFilter.gaussianBlur()
+        filter.radius = Float(blurRadius(for: CGSize(width: image.width, height: image.height)))
+        filter.inputImage = source.clampedToExtent()
+        guard let output = filter.outputImage else { return nil }
+        let space = image.colorSpace.flatMap { $0.supportsOutput && $0.model == .rgb ? $0 : nil } ?? CGColorSpace(name: CGColorSpace.sRGB)!
+        return context.createCGImage(output, from: source.extent, format: .RGBA8, colorSpace: space)
+    }
+
+    static func blurRadius(for size: CGSize) -> CGFloat { max(64, 0.08 * min(size.width, size.height)) }
     static func arrowHeadLength(for lineWidth: CGFloat) -> CGFloat { max(12, lineWidth * 4) }
 
     /// Expects a top-left-origin (flipped) context.

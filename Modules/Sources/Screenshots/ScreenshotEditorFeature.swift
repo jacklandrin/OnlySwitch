@@ -11,7 +11,11 @@ public final class ScreenshotEditorImage: Equatable, @unchecked Sendable {
     public let fileURL: URL
     /// Encoding type for Save: the original file's type.
     public let type: UTType
-    public init(cgImage: CGImage, fileURL: URL, type: UTType) { self.cgImage = cgImage; self.fileURL = fileURL; self.type = type }
+    /// Generated once when loading, so live blur rectangles never filter the source on every drag.
+    public let blurredImage: CGImage?
+    public init(cgImage: CGImage, fileURL: URL, type: UTType, blurredImage: CGImage? = nil) {
+        self.cgImage = cgImage; self.fileURL = fileURL; self.type = type; self.blurredImage = blurredImage
+    }
     public var pixelSize: CGSize { CGSize(width: cgImage.width, height: cgImage.height) }
     public static func == (lhs: ScreenshotEditorImage, rhs: ScreenshotEditorImage) -> Bool {
         lhs === rhs || (lhs.fileURL == rhs.fileURL && lhs.pixelSize == rhs.pixelSize && lhs.type == rhs.type)
@@ -81,10 +85,10 @@ public struct ScreenshotEditorFeature {
                 state.isLoading = true
                 let id = state.itemID
                 return .run { [client] send in
-                    guard let url = await client.fileURL(id), let image = ScreenshotRenderer.loadImage(at: url) else {
+                    guard let url = await client.fileURL(id), let image = await Self.loadImage(at: url) else {
                         await send(.imageLoaded(.failure(ScreenshotFailure(key: ScreenshotFailure.notFoundKey, itemID: id)))); return
                     }
-                    await send(.imageLoaded(.success(ScreenshotEditorImage(cgImage: image, fileURL: url, type: ScreenshotRenderer.outputType(for: url)))))
+                    await send(.imageLoaded(.success(image)))
                 }
             case let .imageLoaded(.success(image)):
                 state.isLoading = false
@@ -137,8 +141,7 @@ public struct ScreenshotEditorFeature {
                 let id = state.itemID, document = state.document
                 return .run { [client] send in
                     let failure = ScreenshotFailure(key: ScreenshotFailure.saveFailedKey, itemID: id)
-                    guard let rendered = ScreenshotRenderer.render(image.cgImage, document: document),
-                          let data = ScreenshotRenderer.encode(rendered, as: image.type) else {
+                    guard let data = await Self.encodedImage(image, document: document) else {
                         await send(.saveResponse(.failure(failure))); return
                     }
                     do { await send(.saveResponse(.success(try await client.replaceImage(id, data)))) }
@@ -162,6 +165,19 @@ public struct ScreenshotEditorFeature {
                 return .none
             }
         }
+    }
+
+    @concurrent
+    private static func loadImage(at url: URL) async -> ScreenshotEditorImage? {
+        guard let image = ScreenshotRenderer.loadImage(at: url) else { return nil }
+        return ScreenshotEditorImage(cgImage: image, fileURL: url, type: ScreenshotRenderer.outputType(for: url),
+                                     blurredImage: ScreenshotRenderer.blurredImage(image))
+    }
+
+    @concurrent
+    private static func encodedImage(_ image: ScreenshotEditorImage, document: ScreenshotEditDocument) async -> Data? {
+        guard let rendered = ScreenshotRenderer.render(image.cgImage, document: document) else { return nil }
+        return ScreenshotRenderer.encode(rendered, as: image.type)
     }
 
     private func clamp(_ point: CGPoint, _ state: State) -> CGPoint {

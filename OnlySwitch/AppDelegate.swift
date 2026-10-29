@@ -211,6 +211,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             },
             onOutsideClickRetentionChanged: { [weak self] retainsOutsideClicks in
                 self?.statusBar?.listPreventsOutsideClickDismissal = retainsOutsideClicks
+            },
+            onSectionSelectionChanged: { [weak self] section in
+                self?.statusBar?.listSelectedSection = section
             }
         )
             .environmentObject(switchVM)
@@ -449,6 +452,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     private func registerShortcut() {
         KeyboardShortcuts.onKeyDown(for: .invokePopoverShortcutsName) {
             NotificationCenter.default.post(name: .togglePopover, object: nil)
+        }
+
+        KeyboardShortcuts.onKeyDown(for: .openScreenshotsTab) { [weak self] in
+            self?.statusBar?.toggleScreenshotsSection()
         }
 
         CustomizeVM.shared.allSwitches.forEach{ item in
