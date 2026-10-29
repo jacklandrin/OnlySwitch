@@ -93,6 +93,7 @@ actor RemoteHost {
         router: RemoteCommandRouter,
         pairingCode: String,
         peerDeadlines: RemotePeerDeadlines = .init(),
+        credentialStore: RemoteCredentialStore? = nil,
         listenerFactory: @escaping @Sendable (NWEndpoint.Port) throws -> NWListener = {
             try NWListener(using: .tcp, on: $0)
         },
@@ -134,7 +135,7 @@ actor RemoteHost {
         )
         let provider = injectedCatalogProvider ?? fixedProvider
         return RemoteHost(
-            credentialStore: .inMemory(finalizeRepairObserver: finalizeRepairObserver),
+            credentialStore: credentialStore ?? .inMemory(finalizeRepairObserver: finalizeRepairObserver),
             catalogProvider: provider,
             router: router,
             fixedPairingCode: pairingCode,
@@ -295,11 +296,12 @@ actor RemoteHost {
         advertise: Bool
     ) async throws -> NWEndpoint {
         if listener != nil { await stop() }
-        try await credentialStore.recoverExpiredTransactions()
         startCatalogObservationIfNeeded()
         let generation = lifecycle.beginStart()
         publish(.statusChanged(.starting))
         do {
+            // Keychain failures must surface as a failed status; otherwise the host silently never advertises.
+            try await credentialStore.recoverExpiredTransactions()
             let port = configuration.port == 0 ? NWEndpoint.Port.any : NWEndpoint.Port(rawValue: configuration.port)!
             let listener = try listenerFactory(port)
             self.listener = listener

@@ -171,6 +171,9 @@ actor RemoteConnectionRuntime {
             default:
                 return .browserUnavailable
             }
+        case let .dns(code) where code == DNSServiceErrorType(kDNSServiceErr_PolicyDenied):
+            // A denied Local Network permission reaches the browser as a Bonjour policy error.
+            return .localNetworkAccessNeeded
         case .dns, .tls:
             return .browserUnavailable
         @unknown default:

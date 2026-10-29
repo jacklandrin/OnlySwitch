@@ -1,6 +1,7 @@
 import Foundation
 import Network
 import RemoteCore
+import Security
 import Testing
 @testable import OnlySwitch
 
@@ -392,6 +393,35 @@ struct RemoteHostStartFailureTests {
 
         var failure: HostStatus?
         while let event = await replacementEvents.next() {
+            if case let .statusChanged(status) = event, case .failed = status {
+                failure = status
+                break
+            }
+        }
+        #expect(failure == .failed("Remote access could not start"))
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func credentialRecoveryFailurePublishesFailureWithoutAdvertising() async {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let host = RemoteHost.testing(
+            catalog: [],
+            router: router,
+            pairingCode: "123456",
+            credentialStore: .inMemory(beforeTransactionRecovery: {
+                throw RemoteCredentialStore.Error.keychain(errSecAuthFailed)
+            }),
+            listenerFactory: { _ in throw StartTestError.listener }
+        )
+        var events = await host.events().makeAsyncIterator()
+
+        // The recovery error, not StartTestError.listener, proves no listener was created.
+        await #expect(throws: RemoteCredentialStore.Error.keychain(errSecAuthFailed)) {
+            try await host.start(configuration: .init(displayName: "Test"))
+        }
+
+        var failure: HostStatus?
+        while let event = await events.next() {
             if case let .statusChanged(status) = event, case .failed = status {
                 failure = status
                 break

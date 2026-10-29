@@ -30,6 +30,17 @@ struct RemoteConnectionClientTests {
         )
     }
 
+    @Test func bonjourPolicyDenialIsClassifiedAsLocalNetworkAccessNeeded() {
+        #expect(
+            RemoteConnectionRuntime.discoveryFailure(for: .dns(DNSServiceErrorType(kDNSServiceErr_PolicyDenied)))
+                == .localNetworkAccessNeeded
+        )
+        #expect(
+            RemoteConnectionRuntime.discoveryFailure(for: .dns(DNSServiceErrorType(kDNSServiceErr_Unknown)))
+                == .browserUnavailable
+        )
+    }
+
     @Test func offlineDiscoveryErrorIsClassifiedAsNetworkUnavailable() {
         #expect(
             RemoteConnectionRuntime.discoveryFailure(for: .posix(.ENETDOWN))

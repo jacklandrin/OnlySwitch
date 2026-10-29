@@ -69,6 +69,7 @@ actor RemoteCredentialStore {
     private let backend: Backend
     private let finalizeRepairObserver: @Sendable (UUID) -> Void
     private let beforeRevocationDelete: @Sendable () throws -> Void
+    private let beforeTransactionRecovery: @Sendable () throws -> Void
     private var records: [UUID: PairedRemoteDevice] = [:]
     private var revocationVerifiers: [UUID: Data] = [:]
     private var preparedReplacements: [UUID: PreparedReplacement] = [:]
@@ -78,6 +79,7 @@ actor RemoteCredentialStore {
         backend: Backend,
         finalizeRepairObserver: @escaping @Sendable (UUID) -> Void = { _ in },
         beforeRevocationDelete: @escaping @Sendable () throws -> Void = {},
+        beforeTransactionRecovery: @escaping @Sendable () throws -> Void = {},
         records: [UUID: PairedRemoteDevice] = [:],
         revocationVerifiers: [UUID: Data] = [:],
         preparedReplacements: [UUID: PreparedReplacement] = [:]
@@ -85,6 +87,7 @@ actor RemoteCredentialStore {
         self.backend = backend
         self.finalizeRepairObserver = finalizeRepairObserver
         self.beforeRevocationDelete = beforeRevocationDelete
+        self.beforeTransactionRecovery = beforeTransactionRecovery
         self.records = records
         self.revocationVerifiers = revocationVerifiers
         self.preparedReplacements = preparedReplacements
@@ -96,12 +99,14 @@ actor RemoteCredentialStore {
 
     static func inMemory(
         finalizeRepairObserver: @escaping @Sendable (UUID) -> Void = { _ in },
-        beforeRevocationDelete: @escaping @Sendable () throws -> Void = {}
+        beforeRevocationDelete: @escaping @Sendable () throws -> Void = {},
+        beforeTransactionRecovery: @escaping @Sendable () throws -> Void = {}
     ) -> RemoteCredentialStore {
         RemoteCredentialStore(
             backend: .memory,
             finalizeRepairObserver: finalizeRepairObserver,
-            beforeRevocationDelete: beforeRevocationDelete
+            beforeRevocationDelete: beforeRevocationDelete,
+            beforeTransactionRecovery: beforeTransactionRecovery
         )
     }
 
@@ -272,6 +277,7 @@ actor RemoteCredentialStore {
     }
 
     func recoverExpiredTransactions(now: Date = .now) throws {
+        try beforeTransactionRecovery()
         let transactions = try loadPreparedReplacements()
         for var transaction in transactions.values {
             switch transaction.state {
