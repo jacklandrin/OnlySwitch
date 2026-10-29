@@ -42,8 +42,86 @@ struct RemoteCredentialStoreTests {
             service: "service",
             usesDataProtectionKeychain: false
         )
-        #expect(legacy[kSecUseDataProtectionKeychain] == nil)
+        #expect(legacy[kSecUseDataProtectionKeychain] as? Bool == false)
         #expect(legacy[kSecAttrAccount] == nil)
+    }
+
+    @Test(.enabled(if: RemoteCredentialStore.usesDataProtectionKeychain))
+    func liveStoreMigratesLegacyKeychainDevices() async throws {
+        let service = "RemoteCredentialStoreTests.\(UUID().uuidString)"
+        let device = PairedRemoteDevice(
+            id: UUID(),
+            name: "iPhone",
+            credential: Data(repeating: 12, count: 32),
+            createdAt: .now,
+            lastConnectedAt: nil
+        )
+        var legacyItem = RemoteCredentialStore.keychainQuery(
+            service: service,
+            account: device.id.uuidString,
+            usesDataProtectionKeychain: false
+        )
+        legacyItem[kSecValueData] = try JSONEncoder().encode(device)
+        #expect(SecItemAdd(legacyItem as CFDictionary, nil) == errSecSuccess)
+        legacyItem[kSecValueData] = nil
+
+        let store = RemoteCredentialStore.live(service: service)
+        defer {
+            SecItemDelete(legacyItem as CFDictionary)
+        }
+        do {
+            #expect(try await store.load(device.id) == device)
+            #expect(SecItemCopyMatching(legacyItem as CFDictionary, nil) == errSecItemNotFound)
+        } catch {
+            try? await store.delete(device.id)
+            throw error
+        }
+        try await store.delete(device.id)
+    }
+
+    @Test(.enabled(if: RemoteCredentialStore.usesDataProtectionKeychain))
+    func legacyMigrationKeepsExistingDataProtectionItem() async throws {
+        let service = "RemoteCredentialStoreTests.\(UUID().uuidString)"
+        let id = UUID()
+        let current = PairedRemoteDevice(
+            id: id,
+            name: "Current",
+            credential: Data(repeating: 13, count: 32),
+            createdAt: .now,
+            lastConnectedAt: nil
+        )
+        let stale = PairedRemoteDevice(
+            id: id,
+            name: "Stale",
+            credential: Data(repeating: 14, count: 32),
+            createdAt: .distantPast,
+            lastConnectedAt: nil
+        )
+        let store = RemoteCredentialStore.live(service: service)
+        try await store.save(current)
+
+        var legacyItem = RemoteCredentialStore.keychainQuery(
+            service: service,
+            account: id.uuidString,
+            usesDataProtectionKeychain: false
+        )
+        legacyItem[kSecValueData] = try JSONEncoder().encode(stale)
+        #expect(SecItemAdd(legacyItem as CFDictionary, nil) == errSecSuccess)
+        legacyItem[kSecValueData] = nil
+        defer {
+            SecItemDelete(legacyItem as CFDictionary)
+        }
+
+        RemoteCredentialStore.migrateLegacyItems(service: service)
+
+        do {
+            #expect(try await store.load(id) == current)
+            #expect(SecItemCopyMatching(legacyItem as CFDictionary, nil) == errSecItemNotFound)
+        } catch {
+            try? await store.delete(id)
+            throw error
+        }
+        try await store.delete(id)
     }
 
     @Test

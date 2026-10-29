@@ -1,4 +1,5 @@
 import Foundation
+import os
 import RemoteCore
 import RemoteTransport
 import Security
@@ -590,7 +591,7 @@ actor RemoteCredentialStore {
     // signature, so every rebuild or signing-identity change re-prompts for the login password.
     // Signed builds carry a keychain access group and can use the Data Protection keychain,
     // which has no per-item ACL prompts; unsigned builds fall back to the legacy keychain.
-    private static let usesDataProtectionKeychain: Bool = {
+    static let usesDataProtectionKeychain: Bool = {
         guard let task = SecTaskCreateFromSelf(nil) else { return false }
         return SecTaskCopyValueForEntitlement(
             task,
@@ -599,12 +600,56 @@ actor RemoteCredentialStore {
         ) != nil
     }()
 
+    private static let migratedServices = OSAllocatedUnfairLock(initialState: Set<String>())
+
     private static func baseQuery(service: String, account: String? = nil) -> [CFString: Any] {
-        keychainQuery(
+        if usesDataProtectionKeychain { migrateLegacyItemsIfNeeded(service: service) }
+        return keychainQuery(
             service: service,
             account: account,
             usesDataProtectionKeychain: usesDataProtectionKeychain
         )
+    }
+
+    // Items paired before the Data Protection keychain switch live in the legacy keychain, which
+    // the Data Protection queries cannot see. Move them over once per service and process so
+    // existing pairings and the installation ID survive the upgrade. Items already present in the
+    // Data Protection keychain win, and failures are left in place to be retried on next launch.
+    private static func migrateLegacyItemsIfNeeded(service: String) {
+        migratedServices.withLock { migrated in
+            guard migrated.insert(service).inserted else { return }
+            migrateLegacyItems(service: service)
+        }
+    }
+
+    static func migrateLegacyItems(service: String) {
+        var listQuery = keychainQuery(service: service, usesDataProtectionKeychain: false)
+        listQuery[kSecMatchLimit] = kSecMatchLimitAll
+        listQuery[kSecReturnAttributes] = true
+        var result: CFTypeRef?
+        guard SecItemCopyMatching(listQuery as CFDictionary, &result) == errSecSuccess else { return }
+        let items = (result as? [[CFString: Any]]) ?? (result as? [CFString: Any]).map { [$0] } ?? []
+
+        for account in items.compactMap({ $0[kSecAttrAccount] as? String }) {
+            let legacyQuery = keychainQuery(
+                service: service,
+                account: account,
+                usesDataProtectionKeychain: false
+            )
+            var dataQuery = legacyQuery
+            dataQuery[kSecMatchLimit] = kSecMatchLimitOne
+            dataQuery[kSecReturnData] = true
+            var data: CFTypeRef?
+            guard SecItemCopyMatching(dataQuery as CFDictionary, &data) == errSecSuccess,
+                  let data = data as? Data else { continue }
+
+            var insert = keychainQuery(service: service, account: account, usesDataProtectionKeychain: true)
+            insert[kSecValueData] = data
+            insert[kSecAttrAccessible] = kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
+            let addStatus = SecItemAdd(insert as CFDictionary, nil)
+            guard addStatus == errSecSuccess || addStatus == errSecDuplicateItem else { continue }
+            SecItemDelete(legacyQuery as CFDictionary)
+        }
     }
 
     static func keychainQuery(
@@ -618,7 +663,7 @@ actor RemoteCredentialStore {
             kSecAttrSynchronizable: kCFBooleanFalse as Any
         ]
         if let account { query[kSecAttrAccount] = account }
-        if usesDataProtectionKeychain { query[kSecUseDataProtectionKeychain] = true }
+        query[kSecUseDataProtectionKeychain] = usesDataProtectionKeychain
         return query
     }
 
