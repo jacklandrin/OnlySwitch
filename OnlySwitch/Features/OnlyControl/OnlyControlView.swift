@@ -138,7 +138,7 @@ struct OnlyControlView: View {
 
     private var soundMixerPage: some View {
         VStack(spacing: 0) {
-            SoundMixerPanelView(initiallyExpanded: true).padding(.vertical, 8)
+            SoundMixerPanelView().padding(.vertical, 8)
         }
     }
 

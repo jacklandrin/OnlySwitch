@@ -6,6 +6,8 @@
 //
 
 import AppKit
+import ComposableArchitecture
+import SoundMixerEQ
 import CoreAudio
 import Extensions
 import RemoteCore
@@ -46,10 +48,13 @@ final class SoundMixerVM: ObservableObject {
     /// the mixer is turned on and off like every other switch instead of through its own setting.
     @Published var enabled: Bool {
         didSet {
+            lifecycleRevision += 1
             UserDefaults.standard.set(enabled, forKey: UserDefaults.Key.soundMixerEnabled)
             guard !enabled else { return }
             stopAutoRefresh()
             rows = []
+            equalizerStore.send(.sourcesChanged([]))
+            outputRoutingStore.send(.sourcesChanged([]))
             if #available(macOS 14.4, *) {
                 systemMixer?.releaseAllTaps()
             }
@@ -61,6 +66,30 @@ final class SoundMixerVM: ObservableObject {
     /// The current default output device, shown in the panel's "Output" section.
     @Published var outputDevice: SoundMixerService.OutputDevice?
 
+    /// A single retained store serves both menu-bar hosts. Effects resolve current handles here,
+    /// never in SwiftUI or in persistent feature state.
+    lazy var equalizerStore: StoreOf<EqualizerFeature> = {
+        let store = Store(initialState: EqualizerFeature.State()) { EqualizerFeature() } withDependencies: {
+            $0.equalizerClient.apply = { [weak self] id, settings in
+                self?.applyEqualizer(settings, for: id) ?? .pending
+            }
+        }
+        store.send(.load)
+        return store
+    }()
+
+    lazy var outputRoutingStore: StoreOf<OutputRoutingFeature> = {
+        let store = Store(initialState: OutputRoutingFeature.State()) { OutputRoutingFeature() } withDependencies: {
+            $0.outputRoutingClient.apply = { [weak self] id, selection in
+                self?.applyOutputRoute(selection, for: id) ?? .pending
+            }
+        }
+        store.send(.load)
+        store.send(.devicesChanged(service.outputEndpoints().map(\.device)))
+        return store
+    }()
+
+    private var lifecycleRevision = 0
     private let service = SoundMixerService()
     /// Stored type-erased so the class stays available below macOS 14.4 (scriptable apps still work).
     private var systemMixerBox: AnyObject?
@@ -86,7 +115,12 @@ final class SoundMixerVM: ObservableObject {
     private init() {
         enabled = UserDefaults.standard.bool(forKey: UserDefaults.Key.soundMixerEnabled)
         if #available(macOS 14.4, *) {
-            systemMixerBox = SystemAudioMixer()
+            let mixer = SystemAudioMixer()
+            systemMixerBox = mixer
+            mixer.onOutputDevicesChanged = { [weak self] in
+                self?.refreshRoutingDevices()
+                Task { [weak self] in await self?.refresh() }
+            }
         }
         observeRunningApps()
     }
@@ -181,13 +215,14 @@ final class SoundMixerVM: ObservableObject {
         // tearing down the same taps.
         guard !isRefreshing else { return }
         isRefreshing = true
+        let revision = lifecycleRevision
         defer { isRefreshing = false }
 
-        if let sys = await service.systemVolume() {
-            systemVolume = Double(sys)
-        }
+        let sys = await service.systemVolume()
+        guard enabled, revision == lifecycleRevision, !Task.isCancelled, !isInteracting else { return }
+        if let sys { systemVolume = Double(sys) }
 
-        outputDevice = service.currentOutputDevice()
+        refreshRoutingDevices()
 
         var newRows: [AppRow] = []
 
@@ -196,6 +231,7 @@ final class SoundMixerVM: ObservableObject {
         let scriptableBundleIDs = Set(scriptable.map { $0.app.bundleID })
         for entry in scriptable {
             let volume = await service.volume(of: entry.app) ?? 0
+            guard enabled, revision == lifecycleRevision, !Task.isCancelled, !isInteracting else { return }
             let previous = rows.first { $0.id == entry.app.bundleID }
             let restore = volume > 0 ? Double(volume) : (previous?.volumeBeforeMute ?? 50)
             newRows.append(
@@ -212,7 +248,14 @@ final class SoundMixerVM: ObservableObject {
 
         // Any other app currently playing audio (e.g. a browser) → volume via a process tap.
         if #available(macOS 14.4, *), let mixer = systemMixer {
-            for audioApp in mixer.audioPlayingApps(excludingBundleIDs: scriptableBundleIDs) {
+            let audioApps = mixer.audioPlayingApps(excludingBundleIDs: [])
+            for index in newRows.indices {
+                if let audio = audioApps.first(where: { $0.bundleID == newRows[index].id }) {
+                    newRows[index].pid = audio.pid
+                    newRows[index].processObjectIDs = audio.processObjectIDs
+                }
+            }
+            for audioApp in audioApps where !scriptableBundleIDs.contains(audioApp.bundleID ?? "") {
                 let id = audioApp.bundleID ?? "pid-\(audioApp.pid)"
                 let previous = rows.first { $0.id == id }
                 newRows.append(
@@ -231,15 +274,60 @@ final class SoundMixerVM: ObservableObject {
 
         // Only publish real changes. Reassigning every two seconds relaid out the whole popover
         // under the pointer, which churned SwiftUI's focus tracking for no gain.
-        if Self.signature(of: newRows) != Self.signature(of: rows) {
-            rows = newRows
+        if Self.signature(of: newRows) != Self.signature(of: rows) { rows = newRows }
+        let supported: Bool
+        if #available(macOS 14.4, *) { supported = true } else { supported = false }
+        let sources = rows.map {
+            EqualizerFeature.Source(id: $0.id, isPersistent: !$0.id.hasPrefix("pid-"), isSupported: supported,
+                                    isAvailable: $0.pid != nil && !$0.processObjectIDs.isEmpty)
         }
+        outputRoutingStore.send(.sourcesChanged(sources))
+        equalizerStore.send(.sourcesChanged(sources))
+    }
+
+    private func applyEqualizer(_ settings: EqualizerSettings, for id: String) -> EqualizerFeature.Status {
+        guard enabled else { return .pending }
+        guard #available(macOS 14.4, *), let mixer = systemMixer else { return .unsupported }
+        guard let row = rows.first(where: { $0.id == id }), let pid = row.pid,
+              !row.processObjectIDs.isEmpty else { return .pending }
+        // Native/scriptable volume is already applied upstream. Its EQ chain must use unity gain.
+        let gain = row.control == .scriptable ? 1 : row.volume / 100
+        guard mixer.setConfiguration(gain: gain, settings: settings, pid: pid,
+                                     processObjectIDs: row.processObjectIDs, live: false,
+                                     routing: outputRoutingStore.withState { $0.selection(for: id) }) else { return .unavailable }
+        if settings.isFlat { return .flat }
+        return mixer.isReceivingAudio(pid: pid) ? .active : .waitingForAudio
+    }
+
+    private func refreshRoutingDevices() {
+        outputDevice = service.currentOutputDevice()
+        let devices = service.outputEndpoints().map(\.device)
+        if outputRoutingStore.withState({ $0.devices }) != devices {
+            outputRoutingStore.send(.devicesChanged(devices))
+        }
+    }
+
+    private func applyOutputRoute(_ selection: OutputRouteSelection, for id: String) -> OutputRoutingFeature.Status {
+        guard enabled else { return .pending }
+        guard #available(macOS 14.4, *), let mixer = systemMixer else { return .unsupported }
+        guard let row = rows.first(where: { $0.id == id }), let pid = row.pid,
+              !row.processObjectIDs.isEmpty else { return .pending }
+        let resolution = OutputRouteResolution(selection: selection, devices: service.outputEndpoints().map(\.device))
+        let gain = row.control == .scriptable ? 1 : row.volume / 100
+        let applied = mixer.setConfiguration(gain: gain, settings: equalizerStore.withState { $0.settings(for: id) },
+                                             pid: pid, processObjectIDs: row.processObjectIDs, live: false,
+                                             routing: selection)
+        if resolution.isWaiting { return .waitingForDevices }
+        guard applied else { return .unavailable }
+        if selection.followsSystem { return .followingSystem }
+        if !resolution.missingUIDs.isEmpty { return .partial }
+        return mixer.isReceivingAudio(pid: pid) ? .active : .pending
     }
 
     /// Everything the panel actually draws. Icons and the backing handles are left out: they follow
     /// from the id, and `NSImage` is not comparable in any cheap way.
     private static func signature(of rows: [AppRow]) -> [String] {
-        rows.map { "\($0.id)|\($0.name)|\(Int($0.volume))|\($0.isMuted)|\($0.processObjectIDs)" }
+        rows.map { "\($0.id)|\($0.name)|\(Int($0.volume))|\($0.isMuted)|\($0.pid ?? 0)|\($0.processObjectIDs)" }
     }
 
     // MARK: - Interaction
@@ -274,8 +362,10 @@ final class SoundMixerVM: ObservableObject {
         case .systemTap:
             // The tap's own callback applies the gain, so there is no round-trip to rate-limit.
             guard #available(macOS 14.4, *), let mixer = systemMixer, let pid = rows[index].pid else { return }
-            mixer.setVolume(rows[index].volume / 100, pid: pid,
-                            processObjectIDs: rows[index].processObjectIDs, live: live)
+            mixer.setConfiguration(gain: rows[index].volume / 100,
+                                   settings: equalizerStore.withState { $0.settings(for: id) }, pid: pid,
+                                   processObjectIDs: rows[index].processObjectIDs, live: live,
+                                   routing: outputRoutingStore.withState { $0.selection(for: id) })
         }
     }
 

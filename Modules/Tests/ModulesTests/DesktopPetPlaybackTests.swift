@@ -15,41 +15,88 @@ struct DesktopPetPlaybackTests {
         PlaybackSelectionCase(sources: [.appleMusic, .spotify, .radio], expected: .appleMusic)
     ])
     func refreshChoosesPlayingSourceByPriority(selection: PlaybackSelectionCase) async {
-        let sources = selection.sources
+        let statuses = playing(selection.sources)
         let store = TestStore(initialState: DesktopPetPlaybackFeature.State()) {
             DesktopPetPlaybackFeature()
         } withDependencies: {
-            $0.desktopPetPlayback.playingSources = { sources }
+            $0.desktopPetPlayback.statuses = { statuses }
         }
 
         await store.send(.refresh) {
             $0.isEnabled = true
         }
         if let expected = selection.expected {
-            await store.receive(.sourcesUpdated(sources)) {
+            await store.receive(.statusesUpdated(statuses)) {
                 $0.source = expected
+                $0.isPlaying = true
             }
         } else {
-            await store.receive(.sourcesUpdated(sources))
+            await store.receive(.statusesUpdated(statuses))
         }
     }
 
-    @Test func refreshHidesButtonWhenPlaybackStops() async {
-        let store = TestStore(initialState: enabledState(source: .spotify)) {
+    @Test func refreshPrefersPlayingSourceOverPausedSource() async {
+        let store = TestStore(initialState: enabledState(source: .appleMusic, isPlaying: false)) {
             DesktopPetPlaybackFeature()
-        } withDependencies: {
-            $0.desktopPetPlayback.playingSources = { [] }
         }
 
-        await store.send(.refresh)
-        await store.receive(.sourcesUpdated([])) {
+        await store.send(.statusesUpdated([.appleMusic: .paused, .spotify: .playing])) {
+            $0.source = .spotify
+            $0.isPlaying = true
+        }
+    }
+
+    @Test func refreshShowsPausedSourceWithPlayControl() async {
+        let store = TestStore(initialState: enabledState(source: .spotify)) {
+            DesktopPetPlaybackFeature()
+        }
+
+        await store.send(.statusesUpdated([.spotify: .paused])) {
+            $0.isPlaying = false
+        }
+    }
+
+    @Test func refreshKeepsDisplayedPausedSourceInsteadOfSwitching() async {
+        let store = TestStore(initialState: enabledState(source: .spotify, isPlaying: false)) {
+            DesktopPetPlaybackFeature()
+        }
+
+        await store.send(.statusesUpdated([.appleMusic: .paused, .spotify: .paused]))
+    }
+
+    @Test func refreshToleratesBriefGapDuringTrackChange() async {
+        let store = TestStore(initialState: enabledState(source: .appleMusic)) {
+            DesktopPetPlaybackFeature()
+        }
+
+        await store.send(.statusesUpdated([:])) {
+            $0.missedRefreshCount = 1
+        }
+        await store.send(.statusesUpdated([.appleMusic: .playing])) {
+            $0.missedRefreshCount = 0
+        }
+    }
+
+    @Test func refreshHidesControlsWhenPlaybackStops() async {
+        let store = TestStore(initialState: enabledState(source: .spotify)) {
+            DesktopPetPlaybackFeature()
+        }
+
+        for count in 1...DesktopPetPlaybackFeature.missedRefreshLimit {
+            await store.send(.statusesUpdated([:])) {
+                $0.missedRefreshCount = count
+            }
+        }
+        await store.send(.statusesUpdated([:])) {
             $0.source = nil
+            $0.isPlaying = false
+            $0.missedRefreshCount = 0
         }
     }
 
     @Test(arguments: DesktopPetPlaybackSource.allCases)
-    func nextAdvancesOnlyTheDisplayedPlayingSource(source: DesktopPetPlaybackSource) async {
-        let playback = PlaybackFixture(sources: Set(DesktopPetPlaybackSource.allCases))
+    func nextAdvancesDisplayedSource(source: DesktopPetPlaybackSource) async {
+        let playback = PlaybackFixture(statuses: [source: .playing])
         let store = TestStore(initialState: enabledState(source: source)) {
             DesktopPetPlaybackFeature()
         } withDependencies: {
@@ -57,20 +104,14 @@ struct DesktopPetPlaybackTests {
         }
 
         await store.send(.nextTapped)
-        if source == .appleMusic {
-            await store.receive(.sourcesUpdated(playback.sources))
-        } else {
-            await store.receive(.sourcesUpdated(playback.sources)) {
-                $0.source = .appleMusic
-            }
-        }
+        await store.receive(.statusesUpdated(playback.statuses))
 
-        #expect(playback.advancedSources == [source])
+        #expect(playback.commands == [.next(source)])
     }
 
-    @Test(arguments: [Set<DesktopPetPlaybackSource>(), [.spotify, .radio]])
-    func staleButtonDoesNotAdvanceAnotherSource(sources: Set<DesktopPetPlaybackSource>) async {
-        let playback = PlaybackFixture(sources: sources)
+    @Test func nextIsNotGatedOnATransientStatusRead() async {
+        // Apple Music can briefly report no playing state, e.g. while it is in the background.
+        let playback = PlaybackFixture(statuses: [:])
         let store = TestStore(initialState: enabledState(source: .appleMusic)) {
             DesktopPetPlaybackFeature()
         } withDependencies: {
@@ -78,15 +119,104 @@ struct DesktopPetPlaybackTests {
         }
 
         await store.send(.nextTapped)
-        await store.receive(.sourcesUpdated(sources)) {
-            $0.source = sources.isEmpty ? nil : .spotify
+        await store.receive(.statusesUpdated([:])) {
+            $0.missedRefreshCount = 1
         }
 
-        #expect(playback.advancedSources.isEmpty)
+        #expect(playback.commands == [.next(.appleMusic)])
     }
 
-    @Test func nextWithoutDisplayedSourceDoesNothing() async {
-        let playback = PlaybackFixture(sources: [.radio])
+    @Test func nextAdvancesPausedSource() async {
+        let playback = PlaybackFixture(statuses: [.spotify: .paused])
+        let store = TestStore(initialState: enabledState(source: .spotify, isPlaying: false)) {
+            DesktopPetPlaybackFeature()
+        } withDependencies: {
+            $0.desktopPetPlayback = playback.client
+        }
+
+        await store.send(.nextTapped)
+        await store.receive(.statusesUpdated(playback.statuses))
+
+        #expect(playback.commands == [.next(.spotify)])
+    }
+
+    @Test(arguments: DesktopPetPlaybackSource.allCases)
+    func playPausePausesPlayingSource(source: DesktopPetPlaybackSource) async {
+        let playback = PlaybackFixture(statuses: [source: .playing])
+        playback.onCommand = { playback.statuses = source == .radio ? [:] : [source: .paused] }
+        let store = TestStore(initialState: enabledState(source: source)) {
+            DesktopPetPlaybackFeature()
+        } withDependencies: {
+            $0.desktopPetPlayback = playback.client
+        }
+
+        await store.send(.playPauseTapped) {
+            $0.isPlaying = false
+            $0.pausedSource = source
+        }
+        await store.receive(.statusesUpdated(playback.statuses))
+
+        #expect(playback.commands == [.pause(source)])
+    }
+
+    @Test func pausedRadioStaysAvailableToResume() async {
+        let playback = PlaybackFixture(statuses: [.radio: .playing])
+        playback.onCommand = {
+            playback.statuses = playback.commands.last == .play(.radio) ? [.radio: .playing] : [:]
+        }
+        let store = TestStore(initialState: enabledState(source: .radio)) {
+            DesktopPetPlaybackFeature()
+        } withDependencies: {
+            $0.desktopPetPlayback = playback.client
+        }
+
+        await store.send(.playPauseTapped) {
+            $0.isPlaying = false
+            $0.pausedSource = .radio
+        }
+        await store.receive(.statusesUpdated([:]))
+        await store.send(.playPauseTapped) {
+            $0.isPlaying = true
+            $0.pausedSource = nil
+        }
+        await store.receive(.statusesUpdated([.radio: .playing]))
+
+        #expect(playback.commands == [.pause(.radio), .play(.radio)])
+    }
+
+    @Test func pausedSourceIsReplacedWhenAnotherSourcePlays() async {
+        var state = enabledState(source: .radio, isPlaying: false)
+        state.pausedSource = .radio
+        let store = TestStore(initialState: state) {
+            DesktopPetPlaybackFeature()
+        }
+
+        await store.send(.statusesUpdated([.spotify: .playing])) {
+            $0.source = .spotify
+            $0.isPlaying = true
+            $0.pausedSource = nil
+        }
+    }
+
+    @Test func playPauseResumesPausedSource() async {
+        let playback = PlaybackFixture(statuses: [.appleMusic: .paused])
+        playback.onCommand = { playback.statuses = [.appleMusic: .playing] }
+        let store = TestStore(initialState: enabledState(source: .appleMusic, isPlaying: false)) {
+            DesktopPetPlaybackFeature()
+        } withDependencies: {
+            $0.desktopPetPlayback = playback.client
+        }
+
+        await store.send(.playPauseTapped) {
+            $0.isPlaying = true
+        }
+        await store.receive(.statusesUpdated(playback.statuses))
+
+        #expect(playback.commands == [.play(.appleMusic)])
+    }
+
+    @Test func commandsWithoutDisplayedSourceDoNothing() async {
+        let playback = PlaybackFixture(statuses: [.radio: .playing])
         let store = TestStore(initialState: enabledState(source: nil)) {
             DesktopPetPlaybackFeature()
         } withDependencies: {
@@ -94,14 +224,17 @@ struct DesktopPetPlaybackTests {
         }
 
         await store.send(.nextTapped)
+        await store.send(.playPauseTapped)
 
-        #expect(playback.advancedSources.isEmpty)
-        #expect(playback.sourceReadCount == 0)
+        #expect(playback.commands.isEmpty)
+        #expect(playback.statusReadCount == 0)
     }
 
     @Test func clearDisablesPlaybackAndIgnoresLateUpdates() async {
-        let playback = PlaybackFixture(sources: [.radio])
-        let store = TestStore(initialState: enabledState(source: .radio)) {
+        var state = enabledState(source: .radio, isPlaying: false)
+        state.pausedSource = .radio
+        let playback = PlaybackFixture(statuses: [.radio: .playing])
+        let store = TestStore(initialState: state) {
             DesktopPetPlaybackFeature()
         } withDependencies: {
             $0.desktopPetPlayback = playback.client
@@ -109,20 +242,32 @@ struct DesktopPetPlaybackTests {
 
         await store.send(.clear) {
             $0.source = nil
+            $0.pausedSource = nil
             $0.isEnabled = false
         }
-        await store.send(.sourcesUpdated([.radio]))
+        await store.send(.statusesUpdated([.radio: .playing]))
         await store.send(.nextTapped)
+        await store.send(.playPauseTapped)
 
-        #expect(playback.advancedSources.isEmpty)
-        #expect(playback.sourceReadCount == 0)
+        #expect(playback.commands.isEmpty)
+        #expect(playback.statusReadCount == 0)
     }
 
-    private func enabledState(source: DesktopPetPlaybackSource?) -> DesktopPetPlaybackFeature.State {
+    private func enabledState(
+        source: DesktopPetPlaybackSource?,
+        isPlaying: Bool = true
+    ) -> DesktopPetPlaybackFeature.State {
         var state = DesktopPetPlaybackFeature.State()
         state.isEnabled = true
         state.source = source
+        state.isPlaying = source != nil && isPlaying
         return state
+    }
+
+    private func playing(
+        _ sources: Set<DesktopPetPlaybackSource>
+    ) -> [DesktopPetPlaybackSource: DesktopPetPlaybackStatus] {
+        Dictionary(uniqueKeysWithValues: sources.map { ($0, .playing) })
     }
 }
 
@@ -131,23 +276,37 @@ struct PlaybackSelectionCase: Sendable {
     let expected: DesktopPetPlaybackSource?
 }
 
+private enum PlaybackCommand: Equatable {
+    case next(DesktopPetPlaybackSource)
+    case play(DesktopPetPlaybackSource)
+    case pause(DesktopPetPlaybackSource)
+}
+
 @MainActor
 private final class PlaybackFixture {
-    var sources: Set<DesktopPetPlaybackSource>
-    var advancedSources: [DesktopPetPlaybackSource] = []
-    var sourceReadCount = 0
+    var statuses: [DesktopPetPlaybackSource: DesktopPetPlaybackStatus]
+    var commands: [PlaybackCommand] = []
+    var statusReadCount = 0
+    var onCommand: () -> Void = {}
 
-    init(sources: Set<DesktopPetPlaybackSource>) {
-        self.sources = sources
+    init(statuses: [DesktopPetPlaybackSource: DesktopPetPlaybackStatus]) {
+        self.statuses = statuses
     }
 
     var client: DesktopPetPlaybackClient {
         DesktopPetPlaybackClient(
-            playingSources: {
-                self.sourceReadCount += 1
-                return self.sources
+            statuses: {
+                self.statusReadCount += 1
+                return self.statuses
             },
-            next: { self.advancedSources.append($0) }
+            next: { self.record(.next($0)) },
+            play: { self.record(.play($0)) },
+            pause: { self.record(.pause($0)) }
         )
+    }
+
+    private func record(_ command: PlaybackCommand) {
+        commands.append(command)
+        onCommand()
     }
 }

@@ -10,6 +10,7 @@ let package = Package(
         .iOS(.v18)
     ],
     products: [
+        .library(name: "SoundMixerEQ", targets: ["SoundMixerEQ"]),
         .library(name: "Tailscale", targets: ["Tailscale"]),
         .library(name: "XcodeCleaner", targets: ["XcodeCleaner"]),
         .library(name: "AppUninstaller", targets: ["AppUninstaller"]),
@@ -94,6 +95,9 @@ let package = Package(
         .package(url: "https://github.com/timazed/CodexKit", revision: "85c410cc1f3adfd256c7e43bbe978ce892b27408")
     ],
     targets: [
+        .target(name: "CSoundMixerEQ"),
+        .target(name: "SoundMixerEQ", dependencies: ["CSoundMixerEQ", .product(name: "ComposableArchitecture", package: "swift-composable-architecture"), .product(name: "Dependencies", package: "swift-dependencies")]),
+        .testTarget(name: "SoundMixerEQTests", dependencies: ["SoundMixerEQ", "CSoundMixerEQ", .product(name: "ComposableArchitecture", package: "swift-composable-architecture")]),
         .target(name: "Tailscale", dependencies: ["Extensions", .product(name: "ComposableArchitecture", package: "swift-composable-architecture"), .product(name: "Dependencies", package: "swift-dependencies")]),
         .testTarget(name: "TailscaleTests", dependencies: ["Tailscale", "Switches", .product(name: "ComposableArchitecture", package: "swift-composable-architecture")]),
         .target(name: "AppUninstaller", dependencies: ["Extensions", .product(name: "ComposableArchitecture", package: "swift-composable-architecture"), .product(name: "Dependencies", package: "swift-dependencies")]),

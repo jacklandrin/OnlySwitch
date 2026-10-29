@@ -1,361 +1,410 @@
-//
-//  SystemAudioMixer.swift
-//  OnlySwitch
-//
-//  Created by OnlySwitch on 2026/07/13.
-//
-
 import AppKit
 import AudioToolbox
 import CoreAudio
+import CSoundMixerEQ
 import Darwin
+import SoundMixerEQ
 
-/// Detects apps that are currently playing audio and adjusts the volume of any of them through
-/// Core Audio process taps (macOS 14.4+).
-///
-/// Unlike ``SoundMixerService`` (which only reaches scriptable media apps), this works for
-/// *any* app that outputs audio — including browsers such as Chrome. There is no public API for
-/// an app's output level, so the tap routes that app's audio through a private aggregate device
-/// and scales the samples itself: continuous gain `0...1`, of which muting is just the `0` case.
+/// Shared owner of private process-tap chains. All control operations stay on the main actor;
+/// the IOProc calls only the preallocated C processor.
 @available(macOS 14.4, *)
 @MainActor
 final class SystemAudioMixer {
-
     struct AudioApp: Identifiable {
-        /// Every audio process belonging to the app. Browsers play through helper processes and
-        /// can have several at once (one per tab), so a tap has to cover all of them.
         var processObjectIDs: [AudioObjectID]
         let pid: pid_t
         let bundleID: String?
         var name: String
         var icon: NSImage?
-        /// 0...100. Always 100 while no tap is active — the app's audio is then untouched.
         var volume: Double
         var id: pid_t { pid }
     }
 
-    /// State shared with the realtime callback. Raw memory on purpose: the callback runs on Core
-    /// Audio's realtime thread and must not touch the Swift runtime (no ARC, no allocation).
-    private struct TapState {
-        /// Where the gain should be, 0...1. Written by the main actor, read by the callback.
-        var targetGain: Float
-        /// Where the gain currently is. Ramped towards `targetGain` to avoid audible clicks.
-        var currentGain: Float
-        /// False when the tap's format is not Float32 — then the callback can only silence.
-        var canScale: Bool
-        /// Set once a non-zero sample arrives. Without the audio-capture permission macOS hands
-        /// out silence rather than an error, and this is the only way to tell the two apart.
-        var sawAudio: Bool
-        /// Set by ``teardown(_:)`` before the device is stopped. `AudioDeviceStop` returns before
-        /// the IO thread is guaranteed to be done, so a callback can still arrive afterwards and
-        /// must then touch nothing.
-        var isRetired: Bool
-    }
-
-    /// A tap, the aggregate device that makes it effective, and the state its callback reads.
-    ///
-    /// A tap on its own does nothing at all — creating it succeeds, and the app keeps playing. It
-    /// only takes effect once it runs inside a *started* aggregate device, which is why each entry
-    /// owns a device and an IOProc rather than just a tap id.
-    ///
-    /// Deliberately plain data: it is handed between the main actor and the realtime thread, so
-    /// nothing in here may be reference-counted.
+    /// No ARC-backed fields: teardown may also run from deinit outside the main actor.
     private struct AppTap {
         let tapID: AudioObjectID
         let aggregateID: AudioObjectID
         let procID: AudioDeviceIOProcID
-        let state: UnsafeMutablePointer<TapState>
-        /// Order-independent fingerprint of the processes this tap was built to cover. A tap only
-        /// reaches the processes named at creation, so when the app's set changes (a new browser
-        /// tab) the tap must be rebuilt — comparing fingerprints is all that takes.
-        ///
-        /// A fingerprint rather than the `[AudioObjectID]` itself, because an Array is a
-        /// reference-counted buffer and this struct must stay free of those: it is copied around
-        /// a `nonisolated(unsafe)` dictionary and handed to `nonisolated` teardown code. Holding
-        /// the array here is what crashed the app while releasing a tap.
+        let state: OpaquePointer
         let processSignature: UInt64
+        let outputSignature: Int
+        let sampleRate: Double
+    }
+    private struct Configuration {
+        var gain: Double
+        var processes: [AudioObjectID]
+        var settings: EqualizerSettings
+        var routing: OutputRouteSelection
+        var ownerBundleID: String?
+        var ownerLaunchDate: Date?
+    }
+    nonisolated(unsafe) private var muteTaps: [pid_t: AppTap] = [:]
+    private var configurations: [pid_t: Configuration] = [:]
+    // Keep callback allocations retired for the process lifetime. A callback can arrive after
+    // AudioDeviceStop; its atomic retirement gate must remain readable even then.
+    nonisolated(unsafe) private static var retiredStates: [OpaquePointer] = []
+    private nonisolated static let retiredStatesLock = NSLock()
+    nonisolated(unsafe) private var outputListener: AudioObjectPropertyListenerBlock?
+    nonisolated(unsafe) private var deviceListeners: [AudioObjectID: AudioObjectPropertyListenerBlock] = [:]
+    private var endpointSnapshot: [SoundMixerService.OutputEndpoint] = []
+    var onOutputDevicesChanged: (@MainActor () -> Void)?
+
+    init() {
+        endpointSnapshot = SoundMixerService().outputEndpoints()
+        let listener: AudioObjectPropertyListenerBlock = { [weak self] _, _ in
+            Task { @MainActor [weak self] in self?.handleDeviceChange() }
+        }
+        outputListener = listener
+        for selector in [kAudioHardwarePropertyDefaultOutputDevice, kAudioHardwarePropertyDevices] {
+            var address = AudioObjectPropertyAddress(mSelector: selector, mScope: kAudioObjectPropertyScopeGlobal,
+                                                     mElement: kAudioObjectPropertyElementMain)
+            AudioObjectAddPropertyListenerBlock(AudioObjectID(kAudioObjectSystemObject), &address, .main, listener)
+        }
+        updateDeviceListeners()
     }
 
-    /// Order-independent fingerprint of a set of audio process ids.
-    private nonisolated static func signature(of ids: [AudioObjectID]) -> UInt64 {
-        var sum: UInt64 = 0
-        var xor: UInt64 = 0
-        for id in ids {
-            let mixed = UInt64(id) &* 0x9E37_79B9_7F4A_7C15
-            sum = sum &+ mixed
-            xor ^= mixed
+    deinit {
+        if let outputListener {
+            for selector in [kAudioHardwarePropertyDefaultOutputDevice, kAudioHardwarePropertyDevices] {
+                var address = AudioObjectPropertyAddress(mSelector: selector, mScope: kAudioObjectPropertyScopeGlobal,
+                                                         mElement: kAudioObjectPropertyElementMain)
+                AudioObjectRemovePropertyListenerBlock(AudioObjectID(kAudioObjectSystemObject), &address, .main, outputListener)
+            }
         }
+        for (device, listener) in deviceListeners {
+            Self.removeDeviceListener(listener, from: device)
+        }
+        for tap in muteTaps.values { Self.teardown(tap) }
+    }
+
+    private func updateDeviceListeners() {
+        let ids = SoundMixerService().outputObservationDeviceIDs()
+        for id in Array(deviceListeners.keys) where !ids.contains(id) {
+            if let listener = deviceListeners.removeValue(forKey: id) { Self.removeDeviceListener(listener, from: id) }
+        }
+        for id in ids where deviceListeners[id] == nil {
+            let listener: AudioObjectPropertyListenerBlock = { [weak self] _, _ in
+                Task { @MainActor [weak self] in self?.handleDeviceChange() }
+            }
+            deviceListeners[id] = listener
+            for selector in [kAudioDevicePropertyNominalSampleRate, kAudioDevicePropertyDeviceIsAlive,
+                             kAudioDevicePropertyStreamFormat, kAudioDevicePropertyStreamConfiguration] {
+                var address = Self.deviceListenerAddress(selector)
+                AudioObjectAddPropertyListenerBlock(id, &address, .main, listener)
+            }
+        }
+    }
+    private nonisolated static func deviceListenerAddress(_ selector: AudioObjectPropertySelector) -> AudioObjectPropertyAddress {
+        AudioObjectPropertyAddress(mSelector: selector,
+            mScope: selector == kAudioDevicePropertyStreamFormat || selector == kAudioDevicePropertyStreamConfiguration
+                ? kAudioDevicePropertyScopeOutput : kAudioObjectPropertyScopeGlobal,
+            mElement: kAudioObjectPropertyElementMain)
+    }
+    private nonisolated static func removeDeviceListener(_ listener: @escaping AudioObjectPropertyListenerBlock, from device: AudioObjectID) {
+        for selector in [kAudioDevicePropertyNominalSampleRate, kAudioDevicePropertyDeviceIsAlive,
+                         kAudioDevicePropertyStreamFormat, kAudioDevicePropertyStreamConfiguration] {
+            var address = deviceListenerAddress(selector)
+            AudioObjectRemovePropertyListenerBlock(device, &address, .main, listener)
+        }
+    }
+    private func handleDeviceChange() {
+        let endpoints = SoundMixerService().outputEndpoints()
+        // Ignore our own aggregate add/remove notifications. Failed setup must not retry itself
+        // forever through kAudioHardwarePropertyDevices notifications.
+        // Listener maintenance is independent of the usable endpoint snapshot: dead devices
+        // remain observed until HAL actually removes their object IDs.
+        updateDeviceListeners()
+        guard endpoints != endpointSnapshot else { return }
+        endpointSnapshot = endpoints
+        for (pid, config) in Array(configurations) {
+            _ = setConfiguration(gain: config.gain, settings: config.settings, pid: pid,
+                                 processObjectIDs: config.processes, live: false, routing: config.routing)
+        }
+        onOutputDevicesChanged?()
+    }
+
+    private nonisolated static func signature(of ids: [AudioObjectID]) -> UInt64 {
+        var sum: UInt64 = 0, xor: UInt64 = 0
+        for id in ids { let mixed = UInt64(id) &* 0x9E37_79B9_7F4A_7C15; sum = sum &+ mixed; xor ^= mixed }
         return sum ^ (xor &* 31) ^ UInt64(ids.count)
     }
 
-    /// Active mute taps keyed by the owning app's pid.
-    /// `nonisolated(unsafe)`: only mutated on the main actor; read once in `deinit`.
-    nonisolated(unsafe) private var muteTaps: [pid_t: AppTap] = [:]
-
-    /// Retired tap states, deliberately never freed.
-    ///
-    /// Core Audio gives no point at which the IO thread is provably finished with the block, and
-    /// the block dereferences this pointer on every buffer. Freeing it lets a late callback write
-    /// into released memory, which is what took the app down while a slider was being dragged.
-    ///
-    /// The cost is a `TapState` per tap teardown. A tap is built once per app and rebuilt only
-    /// when that app's set of audio processes changes, so this is a handful of 16-byte
-    /// allocations in a long session — cheap enough that no reclamation scheme is worth the risk
-    /// of getting the timing wrong again.
-    nonisolated(unsafe) private static var retiredStates: [UnsafeMutablePointer<TapState>] = []
-    private nonisolated static let retiredStatesLock = NSLock()
-
-    deinit {
-        for (_, tap) in muteTaps {
-            Self.teardown(tap)
-        }
-    }
-
-    // MARK: - Enumeration
-
-    /// Apps that are currently outputting audio (plus any we are actively muting), excluding our
-    /// own process and the given bundle ids (used to avoid duplicating scriptable apps).
     func audioPlayingApps(excludingBundleIDs excluded: Set<String>) -> [AudioApp] {
         let ownPID = ProcessInfo.processInfo.processIdentifier
         var byApp: [pid_t: AudioApp] = [:]
-
         for object in Self.processObjectIDs() {
-            guard let pid = Self.pidProperty(of: object) else { continue }
-
-            // Audio is rarely played by the app the user sees: browsers use one helper process per
-            // tab, other apps use XPC services. Both must be reported as the owning app.
-            guard let owner = Self.owningApplication(of: pid), owner.processIdentifier != ownPID else { continue }
+            guard let pid = Self.pidProperty(of: object), let owner = Self.owningApplication(of: pid),
+                  owner.processIdentifier != ownPID else { continue }
             let bundleID = owner.bundleIdentifier
             if let bundleID, excluded.contains(bundleID) { continue }
-
-            // A tapped process reports no output of its own, so keep every process of a tapped app —
-            // otherwise it would vanish from the list and could never be turned back up.
+            if let config = configurations[owner.processIdentifier],
+               config.ownerBundleID != bundleID || config.ownerLaunchDate != owner.launchDate {
+                destroyTap(for: owner.processIdentifier)
+                configurations[owner.processIdentifier] = nil
+            }
             let tap = muteTaps[owner.processIdentifier]
-            guard tap != nil || Self.boolProperty(kAudioProcessPropertyIsRunningOutput, of: object) else { continue }
-
-            byApp[owner.processIdentifier, default:
-                AudioApp(processObjectIDs: [],
-                         pid: owner.processIdentifier,
-                         bundleID: bundleID,
-                         name: owner.localizedName ?? bundleID ?? "pid \(owner.processIdentifier)",
-                         icon: owner.icon,
-                         volume: tap.map { Double($0.state.pointee.targetGain) * 100 } ?? 100)
+            let retained = configurations[owner.processIdentifier].map {
+                EqualizerTapPolicy.requiresTap(gain: $0.gain, settings: $0.settings, hasExplicitRoute: !$0.routing.followsSystem)
+            } ?? false
+            guard tap != nil || retained || Self.boolProperty(kAudioProcessPropertyIsRunningOutput, of: object) else { continue }
+            byApp[owner.processIdentifier, default: AudioApp(processObjectIDs: [], pid: owner.processIdentifier,
+                bundleID: bundleID, name: owner.localizedName ?? bundleID ?? "pid \(owner.processIdentifier)",
+                icon: owner.icon, volume: tap.map { Double(OSEQGetGain($0.state)) * 100 }
+                    ?? configurations[owner.processIdentifier].map { $0.gain * 100 } ?? 100)
             ].processObjectIDs.append(object)
         }
-
-        // Drop taps of apps that are gone entirely. Iterate a copy: `destroyTap` mutates `muteTaps`.
-        for pid in Array(muteTaps.keys) where byApp[pid] == nil {
-            destroyTap(for: pid)
+        for pid in Set(muteTaps.keys).union(configurations.keys) {
+            guard NSRunningApplication(processIdentifier: pid)?.isTerminated != false else { continue }
+            destroyTap(for: pid); configurations[pid] = nil
         }
-
         return byApp.values.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
     }
 
-    // MARK: - Volume
-
-    /// Sets `volume` (0...1) for every given process.
-    ///
-    /// Pass `live: true` while a slider is being dragged. Building or tearing down a tap creates or
-    /// destroys a private aggregate device, which takes long enough to stall the main thread, so on
-    /// the live path an existing tap only ever gets a new target: one Core Audio setup per app
-    /// instead of one per mouse movement.
-    ///
-    /// Once the user lets go, full volume tears the tap down again — leaving the audio untouched is
-    /// both cheaper and safer than routing it through us for nothing.
     func setVolume(_ volume: Double, pid: pid_t, processObjectIDs: [AudioObjectID], live: Bool) {
-        let gain = Float(min(1, max(0, volume)))
+        _ = setConfiguration(gain: volume, settings: configurations[pid]?.settings ?? .flat,
+                             pid: pid, processObjectIDs: processObjectIDs, live: live,
+                             routing: configurations[pid]?.routing ?? .init())
+    }
 
+    @discardableResult
+    func setConfiguration(gain: Double, settings: EqualizerSettings, pid: pid_t,
+                          processObjectIDs: [AudioObjectID], live: Bool, routing: OutputRouteSelection = .init()) -> Bool {
+        let gain = gain.isFinite ? min(1, max(0, gain)) : 1
+        let previous = configurations[pid]
+        let owner = NSRunningApplication(processIdentifier: pid)
+        if let previous, previous.ownerBundleID != owner?.bundleIdentifier || previous.ownerLaunchDate != owner?.launchDate {
+            destroyTap(for: pid); configurations[pid] = nil; return false
+        }
+        configurations[pid] = Configuration(gain: gain, processes: processObjectIDs, settings: settings, routing: routing,
+                                            ownerBundleID: owner?.bundleIdentifier, ownerLaunchDate: owner?.launchDate)
+        let needsTap = EqualizerTapPolicy.requiresTap(gain: gain, settings: settings, hasExplicitRoute: !routing.followsSystem)
+        if !needsTap && !live { destroyTap(for: pid); return true }
+        let endpoints = SoundMixerService().outputEndpoints()
+        let resolution = OutputRouteResolution(selection: routing, devices: endpoints.map(\.device))
+        let outputs = endpoints.filter { resolution.onlineUIDs.contains($0.device.id) }
+        guard !outputs.isEmpty else { destroyTap(for: pid); return false }
+        var hasher = Hasher()
+        for output in outputs {
+            hasher.combine(output.objectID); hasher.combine(output.device.id)
+            hasher.combine(output.sampleRate); hasher.combine(output.device.channelCount)
+            hasher.combine(output.formatSignature)
+        }
+        let outputSignature = hasher.finalize()
         if let tap = muteTaps[pid] {
-            // Hot path. No allocation and no Core Audio call: the callback ramps to the new target.
-            if live {
-                tap.state.pointee.targetGain = gain
-                return
+            if tap.processSignature == Self.signature(of: processObjectIDs), tap.outputSignature == outputSignature {
+                OSEQSetGain(tap.state, Float(gain))
+                if previous?.settings != settings { EqualizerDSP.publish(settings, sampleRate: tap.sampleRate, to: tap.state) }
+                return true
             }
-            if gain < 1, tap.processSignature == Self.signature(of: processObjectIDs) {
-                tap.state.pointee.targetGain = gain
-                return
-            }
-            // Settled at full volume, or the app gained or lost an audio process (a new browser
-            // tab) so the tap no longer covers it. A tap only reaches the processes named at
-            // creation, so in both cases it has to go.
             destroyTap(for: pid)
         }
-
-        guard gain < 1, !processObjectIDs.isEmpty else { return }
-        muteTaps[pid] = Self.makeAppTap(pid: pid, processObjectIDs: processObjectIDs, gain: gain)
+        guard needsTap || live, !processObjectIDs.isEmpty else { return !needsTap }
+        // Device reconnects may happen long after a source exited. Never reuse a stale PID/audio
+        // object association when restoring its desired route from the listener.
+        guard NSRunningApplication(processIdentifier: pid)?.isTerminated == false else {
+            configurations[pid] = nil; return false
+        }
+        guard processObjectIDs.allSatisfy({ object in
+            guard let processPID = Self.pidProperty(of: object), let owner = Self.owningApplication(of: processPID) else { return false }
+            return owner.processIdentifier == pid
+        }) else {
+            // The owner still exists, but a browser/helper may be rebuilding its audio object.
+            // Keep gain/EQ/routing intent until refresh supplies its new process handles.
+            return false
+        }
+        guard let tap = Self.makeAppTap(pid: pid, processObjectIDs: processObjectIDs, gain: Float(gain),
+                                        settings: settings, outputs: outputs, outputSignature: outputSignature) else { return false }
+        muteTaps[pid] = tap
+        return true
     }
 
-    /// Whether `pid`'s tap is actually receiving audio. `false` while nothing plays, but also when
-    /// the audio-capture permission is missing — macOS then delivers silence instead of an error.
-    func isReceivingAudio(pid: pid_t) -> Bool {
-        muteTaps[pid]?.state.pointee.sawAudio ?? false
-    }
-
-    /// Hands every app back its untouched audio. Without this, turning the mixer off would leave
-    /// an app stuck at whatever gain it had, with no interface left to raise it again.
+    func isReceivingAudio(pid: pid_t) -> Bool { muteTaps[pid].map { OSEQSawAudio($0.state) } ?? false }
     func releaseAllTaps() {
-        // Iterate a copy: `destroyTap` mutates `muteTaps`.
-        for pid in Array(muteTaps.keys) {
-            destroyTap(for: pid)
-        }
+        configurations.removeAll()
+        for pid in Array(muteTaps.keys) { destroyTap(for: pid) }
     }
-
     private func destroyTap(for pid: pid_t) {
         guard let tap = muteTaps.removeValue(forKey: pid) else { return }
         Self.teardown(tap)
     }
 
-    /// Builds the whole chain: a muting tap, an aggregate device around the current output device
-    /// that carries it, and a running IOProc. Returns `nil` — having cleaned up whatever was
-    /// already created — if any step fails.
-    ///
-    /// `nonisolated` is load-bearing: the IOProc block below would otherwise inherit this type's
-    /// main-actor isolation, and Core Audio calls it on a realtime thread. The resulting isolation
-    /// check traps (`SIGTRAP`) on the very first audio callback.
-    private nonisolated static func makeAppTap(pid: pid_t, processObjectIDs: [AudioObjectID],
-                                              gain: Float) -> AppTap? {
-        // Its own array, built here: whatever CATapDescription does with what it is handed, it
-        // must not be able to reach a buffer the caller still holds in its rows.
+    private nonisolated static func makeAppTap(pid: pid_t, processObjectIDs: [AudioObjectID], gain: Float,
+                                               settings: EqualizerSettings, outputs: [SoundMixerService.OutputEndpoint],
+                                               outputSignature: Int) -> AppTap? {
         let description = CATapDescription(stereoMixdownOfProcesses: processObjectIDs.map { $0 })
         description.muteBehavior = .muted
-        description.name = "OnlySwitch-mute-\(pid)"
+        description.name = "OnlySwitch-audio-\(pid)"
         description.isPrivate = true
-
         var tapID = AudioObjectID(kAudioObjectUnknown)
-        guard AudioHardwareCreateProcessTap(description, &tapID) == noErr, tapID != kAudioObjectUnknown else {
-            return nil
-        }
+        guard AudioHardwareCreateProcessTap(description, &tapID) == noErr, tapID != kAudioObjectUnknown else { return nil }
         guard let tapUID = stringProperty(kAudioTapPropertyUID, of: tapID),
-              let output = defaultOutputDevice(),
-              let outputUID = stringProperty(kAudioDevicePropertyDeviceUID, of: output) else {
-            AudioHardwareDestroyProcessTap(tapID)
-            return nil
+              let outputUID = outputs.first?.device.id,
+              let format = tapFormat(of: tapID), supported(format) else {
+            AudioHardwareDestroyProcessTap(tapID); return nil
         }
-
-        // The UID must be unique per device: reusing one that still exists fails with 'nope',
-        // which silently broke every re-tap.
         let aggregate: [String: Any] = [
-            kAudioAggregateDeviceNameKey: "OnlySwitch Mute \(pid)",
-            kAudioAggregateDeviceUIDKey: "com.onlyswitch.mute.\(pid).\(UUID().uuidString)",
+            kAudioAggregateDeviceNameKey: "OnlySwitch Audio \(pid)",
+            kAudioAggregateDeviceUIDKey: "com.onlyswitch.audio.\(pid).\(UUID().uuidString)",
             kAudioAggregateDeviceMainSubDeviceKey: outputUID,
             kAudioAggregateDeviceIsPrivateKey: true,
             kAudioAggregateDeviceIsStackedKey: false,
             kAudioAggregateDeviceTapAutoStartKey: true,
-            kAudioAggregateDeviceSubDeviceListKey: [[kAudioSubDeviceUIDKey: outputUID]],
-            kAudioAggregateDeviceTapListKey: [[
-                kAudioSubTapDriftCompensationKey: true,
-                kAudioSubTapUIDKey: tapUID,
-            ]],
+            kAudioAggregateDeviceSubDeviceListKey: outputs.enumerated().map { index, endpoint in
+                [kAudioSubDeviceUIDKey: endpoint.device.id, kAudioSubDeviceDriftCompensationKey: index == 0 ? 0 : 1] as [String: Any]
+            },
+            kAudioAggregateDeviceTapListKey: [[kAudioSubTapDriftCompensationKey: true, kAudioSubTapUIDKey: tapUID]],
         ]
         var aggregateID = AudioObjectID(kAudioObjectUnknown)
         guard AudioHardwareCreateAggregateDevice(aggregate as CFDictionary, &aggregateID) == noErr,
-              aggregateID != kAudioObjectUnknown else {
-            AudioHardwareDestroyProcessTap(tapID)
-            return nil
+              aggregateID != kAudioObjectUnknown else { AudioHardwareDestroyProcessTap(tapID); return nil }
+        // An output device can also expose a microphone. Never interpret those hardware
+        // input channels as the process tap or accidentally play them through the speakers.
+        guard let inputFormat = stereoInputFormat(aggregateID),
+              let layout = outputLayout(aggregateID, selected: outputs, sampleRate: inputFormat.mSampleRate),
+              let state = layout.ranges.withUnsafeBufferPointer({
+                  OSEQCreateRouted(inputFormat.mSampleRate, 2, $0.baseAddress, UInt32($0.count), UInt32(layout.channelCount))
+              }) else {
+            AudioHardwareDestroyAggregateDevice(aggregateID); AudioHardwareDestroyProcessTap(tapID); return nil
         }
-
-        // Scaling reinterprets the bytes as Float32. Verify that rather than assume it — "float"
-        // alone is not enough (Float64 would be 8 bytes per sample), so require 32-bit too. On a
-        // format we do not understand we would emit noise, so fall back to silencing.
-        let canScale = tapFormat(of: tapID).map {
-            $0.mFormatFlags & kAudioFormatFlagIsFloat != 0 && $0.mBitsPerChannel == 32
-        } ?? false
-
-        let state = UnsafeMutablePointer<TapState>.allocate(capacity: 1)
-        state.initialize(to: TapState(targetGain: gain, currentGain: gain, canScale: canScale,
-                                      sawAudio: false, isRetired: false))
-
-        // The device must actually run for the tap to take effect. The callback reads the app's
-        // audio, scales it, and writes it to the real output — that is the whole volume control.
+        OSEQSetGain(state, gain)
+        EqualizerDSP.publish(settings, sampleRate: inputFormat.mSampleRate, to: state)
         var procID: AudioDeviceIOProcID?
-        let ioStatus = AudioDeviceCreateIOProcIDWithBlock(&procID, aggregateID, nil) {
-            _, inInputData, _, outOutputData, _ in
-            // A callback can still arrive after the device was stopped; the state is then stale.
-            guard !state.pointee.isRetired else { return }
-
-            let outputs = UnsafeMutableAudioBufferListPointer(outOutputData)
-            let target = state.pointee.targetGain
-
-            // Silent path: no samples needed, so this works even without the capture permission.
-            guard target > 0, state.pointee.canScale else {
-                for index in 0..<outputs.count {
-                    guard let data = outputs[index].mData else { continue }
-                    memset(data, 0, Int(outputs[index].mDataByteSize))
-                }
-                state.pointee.currentGain = 0
-                return
-            }
-
-            let inputs = UnsafeMutableAudioBufferListPointer(UnsafeMutablePointer(mutating: inInputData))
-            // Every buffer is one channel of the *same* frames, so each has to ramp over the same
-            // span. Carrying the cursor from one buffer into the next left the second channel at
-            // the target value from its first sample, which is audible as the image jumping sides.
-            let startGain = state.pointee.currentGain
-            var endGain = startGain
-            var heard = false
-
-            for index in 0..<outputs.count {
-                guard let destination = outputs[index].mData else { continue }
-                let outBytes = Int(outputs[index].mDataByteSize)
-                guard index < inputs.count, let source = inputs[index].mData else {
-                    memset(destination, 0, outBytes)
-                    continue
-                }
-                let bytes = min(Int(inputs[index].mDataByteSize), outBytes)
-                let count = bytes / MemoryLayout<Float>.size
-                let src = source.assumingMemoryBound(to: Float.self)
-                let dst = destination.assumingMemoryBound(to: Float.self)
-                // Ramp across the buffer instead of jumping: a hard gain change clicks audibly.
-                let step = count > 0 ? (target - startGain) / Float(count) : 0
-                var g = startGain
-                for frame in 0..<count {
-                    g += step
-                    let sample = src[frame]
-                    if sample != 0 { heard = true }
-                    dst[frame] = sample * g
-                }
-                endGain = g
-                // Never leave the remainder of an output buffer stale.
-                if outBytes > bytes {
-                    memset(destination.advanced(by: bytes), 0, outBytes - bytes)
-                }
-            }
-            state.pointee.currentGain = endGain
-            if heard { state.pointee.sawAudio = true }
+        let status = AudioDeviceCreateIOProcIDWithBlock(&procID, aggregateID, nil) { _, input, _, output, _ in
+            OSEQProcessAudioBuffers(state, input, output)
         }
-        guard ioStatus == noErr, let procID else {
-            retire(state)
-            AudioHardwareDestroyAggregateDevice(aggregateID)
-            AudioHardwareDestroyProcessTap(tapID)
-            return nil
+        guard status == noErr, let procID else {
+            retire(state); AudioHardwareDestroyAggregateDevice(aggregateID); AudioHardwareDestroyProcessTap(tapID); return nil
         }
         guard AudioDeviceStart(aggregateID, procID) == noErr else {
-            retire(state)
-            AudioDeviceDestroyIOProcID(aggregateID, procID)
-            AudioHardwareDestroyAggregateDevice(aggregateID)
-            AudioHardwareDestroyProcessTap(tapID)
-            return nil
+            retire(state); AudioDeviceDestroyIOProcID(aggregateID, procID)
+            AudioHardwareDestroyAggregateDevice(aggregateID); AudioHardwareDestroyProcessTap(tapID); return nil
         }
         return AppTap(tapID: tapID, aggregateID: aggregateID, procID: procID, state: state,
-                      processSignature: signature(of: processObjectIDs))
+                      processSignature: signature(of: processObjectIDs), outputSignature: outputSignature,
+                      sampleRate: inputFormat.mSampleRate)
     }
 
-    /// `nonisolated`: only touches Core Audio C calls, and `deinit` has to reach it.
+    private nonisolated static func supported(_ format: AudioStreamBasicDescription) -> Bool {
+        format.mFormatID == kAudioFormatLinearPCM && format.mFormatFlags & kAudioFormatFlagIsFloat != 0
+        && format.mFormatFlags & kAudioFormatFlagIsBigEndian == 0 && format.mBitsPerChannel == 32
+        && format.mChannelsPerFrame == 2 && format.mSampleRate.isFinite && format.mSampleRate > 0
+        && format.mBytesPerFrame == (format.mFormatFlags & kAudioFormatFlagIsNonInterleaved != 0 ? 4 : 8)
+    }
+
+    /// Accept only an unambiguous stereo tap input. Full-duplex devices whose hardware inputs
+    /// are included in the aggregate fail setup and retain their original audio routing.
+    private nonisolated static func stereoInputFormat(_ device: AudioObjectID) -> AudioStreamBasicDescription? {
+        var address = AudioObjectPropertyAddress(mSelector: kAudioDevicePropertyStreamConfiguration,
+                                                 mScope: kAudioDevicePropertyScopeInput,
+                                                 mElement: kAudioObjectPropertyElementMain)
+        var size: UInt32 = 0
+        guard AudioObjectGetPropertyDataSize(device, &address, 0, nil, &size) == noErr,
+              size >= MemoryLayout<AudioBufferList>.size else { return nil }
+        let storage = UnsafeMutableRawPointer.allocate(byteCount: Int(size), alignment: MemoryLayout<AudioBufferList>.alignment)
+        defer { storage.deallocate() }
+        guard AudioObjectGetPropertyData(device, &address, 0, nil, &size, storage) == noErr else { return nil }
+        let list = storage.assumingMemoryBound(to: AudioBufferList.self)
+        let count = Int(list.pointee.mNumberBuffers)
+        guard count > 0, count <= 2,
+              Int(size) >= MemoryLayout<AudioBufferList>.size + (count - 1) * MemoryLayout<AudioBuffer>.size else { return nil }
+        let buffers = UnsafeMutableAudioBufferListPointer(list)
+        guard buffers.allSatisfy({ $0.mNumberChannels > 0 }),
+              buffers.reduce(0, { $0 + $1.mNumberChannels }) == 2 else { return nil }
+        address.mSelector = kAudioDevicePropertyStreamFormat
+        var format = AudioStreamBasicDescription()
+        size = UInt32(MemoryLayout<AudioStreamBasicDescription>.size)
+        guard AudioObjectGetPropertyData(device, &address, 0, nil, &size, &format) == noErr,
+              supported(format) else { return nil }
+        return format
+    }
+
+    /// Confirm the actual active-subdevice order and aggregate streams before freezing the C map.
+    /// A list with the right total but unknown device ordering is not enough to safely fan out.
+    private nonisolated static func outputLayout(_ aggregate: AudioObjectID,
+                                                  selected: [SoundMixerService.OutputEndpoint],
+                                                  sampleRate: Double) -> (ranges: [OSEQOutputRange], channelCount: Int)? {
+        guard !selected.isEmpty, selected.count <= 16,
+              let active = objectList(kAudioAggregateDevicePropertyActiveSubDeviceList, of: aggregate,
+                                      scope: kAudioObjectPropertyScopeGlobal), active.count == selected.count else { return nil }
+        var ranges: [OSEQOutputRange] = []
+        var total = 0
+        var seen = Set<String>()
+        for id in active {
+            guard let uid = stringProperty(kAudioDevicePropertyDeviceUID, of: id),
+                  let endpoint = selected.first(where: { $0.objectID == id && $0.device.id == uid }),
+                  seen.insert(uid).inserted, (1...64).contains(endpoint.device.channelCount) else { return nil }
+            ranges.append(OSEQOutputRange(firstChannel: UInt32(total), channelCount: UInt32(endpoint.device.channelCount)))
+            total += endpoint.device.channelCount
+        }
+        guard total > 0, total <= 1024 else { return nil }
+        var address = AudioObjectPropertyAddress(mSelector: kAudioDevicePropertyStreamConfiguration,
+                                                 mScope: kAudioDevicePropertyScopeOutput,
+                                                 mElement: kAudioObjectPropertyElementMain)
+        var size: UInt32 = 0
+        guard AudioObjectGetPropertyDataSize(aggregate, &address, 0, nil, &size) == noErr,
+              size >= MemoryLayout<AudioBufferList>.size, size <= 65_536 else { return nil }
+        let storage = UnsafeMutableRawPointer.allocate(byteCount: Int(size), alignment: MemoryLayout<AudioBufferList>.alignment)
+        defer { storage.deallocate() }
+        guard AudioObjectGetPropertyData(aggregate, &address, 0, nil, &size, storage) == noErr else { return nil }
+        let list = storage.assumingMemoryBound(to: AudioBufferList.self)
+        let count = Int(list.pointee.mNumberBuffers)
+        guard count > 0, count <= 1024,
+              Int(size) >= MemoryLayout<AudioBufferList>.size + (count - 1) * MemoryLayout<AudioBuffer>.size else { return nil }
+        let buffers = UnsafeMutableAudioBufferListPointer(list)
+        guard buffers.allSatisfy({ (1...64).contains($0.mNumberChannels) }),
+              buffers.reduce(0, { $0 + Int($1.mNumberChannels) }) == total,
+              let streams = objectList(kAudioDevicePropertyStreams, of: aggregate, scope: kAudioDevicePropertyScopeOutput),
+              !streams.isEmpty else { return nil }
+        var streamChannels = 0
+        for stream in streams {
+            address = AudioObjectPropertyAddress(mSelector: kAudioStreamPropertyVirtualFormat,
+                                                 mScope: kAudioObjectPropertyScopeGlobal,
+                                                 mElement: kAudioObjectPropertyElementMain)
+            var format = AudioStreamBasicDescription()
+            size = UInt32(MemoryLayout<AudioStreamBasicDescription>.size)
+            guard AudioObjectGetPropertyData(stream, &address, 0, nil, &size, &format) == noErr,
+                  format.mFormatID == kAudioFormatLinearPCM, format.mFormatFlags & kAudioFormatFlagIsFloat != 0,
+                  format.mFormatFlags & kAudioFormatFlagIsBigEndian == 0, format.mBitsPerChannel == 32,
+                  (1...64).contains(format.mChannelsPerFrame), format.mSampleRate == sampleRate,
+                  format.mBytesPerFrame == (format.mFormatFlags & kAudioFormatFlagIsNonInterleaved != 0
+                    ? 4 : 4 * format.mChannelsPerFrame) else { return nil }
+            streamChannels += Int(format.mChannelsPerFrame)
+        }
+        guard streamChannels == total else { return nil }
+        return (ranges, total)
+    }
+
+    private nonisolated static func objectList(_ selector: AudioObjectPropertySelector, of object: AudioObjectID,
+                                               scope: AudioObjectPropertyScope) -> [AudioObjectID]? {
+        var address = AudioObjectPropertyAddress(mSelector: selector, mScope: scope, mElement: kAudioObjectPropertyElementMain)
+        var size: UInt32 = 0
+        guard AudioObjectGetPropertyDataSize(object, &address, 0, nil, &size) == noErr,
+              size > 0, size <= 65_536 else { return nil }
+        var result = [AudioObjectID](repeating: 0, count: Int(size) / MemoryLayout<AudioObjectID>.size)
+        guard !result.isEmpty, AudioObjectGetPropertyData(object, &address, 0, nil, &size, &result) == noErr else { return nil }
+        return result
+    }
+
+    private nonisolated static func sampleRate(of device: AudioObjectID) -> Double? {
+        var address = AudioObjectPropertyAddress(mSelector: kAudioDevicePropertyNominalSampleRate,
+                                                 mScope: kAudioObjectPropertyScopeGlobal,
+                                                 mElement: kAudioObjectPropertyElementMain)
+        var rate: Double = 0
+        var size = UInt32(MemoryLayout<Double>.size)
+        guard AudioObjectGetPropertyData(device, &address, 0, nil, &size, &rate) == noErr, rate.isFinite, rate > 0 else { return nil }
+        return rate
+    }
+
     private nonisolated static func teardown(_ tap: AppTap) {
-        // Retire first: from here on a callback that is already in flight does nothing.
         retire(tap.state)
         AudioDeviceStop(tap.aggregateID, tap.procID)
         AudioDeviceDestroyIOProcID(tap.aggregateID, tap.procID)
         AudioHardwareDestroyAggregateDevice(tap.aggregateID)
         AudioHardwareDestroyProcessTap(tap.tapID)
     }
-
-    /// Marks a tap's state dead and keeps the allocation. See ``retiredStates``.
-    private nonisolated static func retire(_ state: UnsafeMutablePointer<TapState>) {
-        state.pointee.isRetired = true
-        retiredStatesLock.lock()
-        retiredStates.append(state)
-        retiredStatesLock.unlock()
+    private nonisolated static func retire(_ state: OpaquePointer) {
+        OSEQRetire(state)
+        retiredStatesLock.lock(); retiredStates.append(state); retiredStatesLock.unlock()
     }
 
     // MARK: - Process ownership

@@ -496,7 +496,7 @@ struct OnlySwitchListView: View {
             }).buttonStyle(.plain)
                 .padding(10)
                 .help(Text("Sort".localized()))
-                .isHidden(SwitchListAppearance(rawValue: switchVM.currentAppearance) == .dual)
+                .isHidden(selectedSection != .controls || SwitchListAppearance(rawValue: switchVM.currentAppearance) == .dual)
             
             Spacer()
             if playerItem.streamInfo == "" {

@@ -1,15 +1,21 @@
 import Dependencies
 
 public struct DesktopPetPlaybackClient: Sendable {
-    public var playingSources: @MainActor @Sendable () -> Set<DesktopPetPlaybackSource>
+    public var statuses: @MainActor @Sendable () -> [DesktopPetPlaybackSource: DesktopPetPlaybackStatus]
     public var next: @MainActor @Sendable (DesktopPetPlaybackSource) -> Void
+    public var play: @MainActor @Sendable (DesktopPetPlaybackSource) -> Void
+    public var pause: @MainActor @Sendable (DesktopPetPlaybackSource) -> Void
 
     public init(
-        playingSources: @escaping @MainActor @Sendable () -> Set<DesktopPetPlaybackSource> = { [] },
-        next: @escaping @MainActor @Sendable (DesktopPetPlaybackSource) -> Void = { _ in }
+        statuses: @escaping @MainActor @Sendable () -> [DesktopPetPlaybackSource: DesktopPetPlaybackStatus] = { [:] },
+        next: @escaping @MainActor @Sendable (DesktopPetPlaybackSource) -> Void = { _ in },
+        play: @escaping @MainActor @Sendable (DesktopPetPlaybackSource) -> Void = { _ in },
+        pause: @escaping @MainActor @Sendable (DesktopPetPlaybackSource) -> Void = { _ in }
     ) {
-        self.playingSources = playingSources
+        self.statuses = statuses
         self.next = next
+        self.play = play
+        self.pause = pause
     }
 }
 

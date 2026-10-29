@@ -77,7 +77,8 @@ extension SpotifyPlayer:MusicPlayer {
     
     @MainActor
     func nextTrack() {
-        guard isRunning, playbackState == .playing else { return }
+        // Paused players can skip too, and the playing state can lag behind a background player.
+        guard isRunning else { return }
         spotifyApp.nextTrack?()
     }
 

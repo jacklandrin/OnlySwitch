@@ -12,9 +12,11 @@ struct DesktopPetRootView: View {
     var body: some View {
         VStack(spacing: 0) {
             if playbackStore.source != nil {
-                DesktopPetPlaybackButton {
-                    playbackStore.send(.nextTapped)
-                }
+                DesktopPetPlaybackControls(
+                    isPlaying: playbackStore.isPlaying,
+                    onPlayPause: { playbackStore.send(.playPauseTapped) },
+                    onNext: { playbackStore.send(.nextTapped) }
+                )
                 .padding(.top, 2)
                 .frame(
                     height: DesktopPetMetrics.playbackLaneHeight(for: presentation.pomodoroState),
@@ -34,7 +36,7 @@ struct DesktopPetRootView: View {
             isDragging: presentation.isDragging,
             isControlPresented: presentation.isControlPresented,
             pomodoroState: presentation.pomodoroState,
-            isMusicPlaying: playbackStore.source != nil
+            isMusicPlaying: playbackStore.isPlaying
         )
         .contentShape(
             .interaction,

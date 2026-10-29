@@ -6,24 +6,17 @@
 //
 
 import Defines
+import SoundMixerEQ
 import SwiftUI
 import Utilities
 
 // MARK: - Panel
 
-/// The mixer inside the switch list popover, built like ``AuthenticatorPanelView``: a header row
-/// that expands in place. There is no menu bar item and no settings page for it, so the whole
-/// feature lives behind the one icon OnlySwitch already owns.
+/// The Sound Mixer tab always shows its content. Each source independently discloses its EQ.
 struct SoundMixerPanelView: View {
 
     @ObservedObject private var vm = SoundMixerVM.shared
     @ObservedObject private var languageManager = LanguageManager.sharedManager
-    @State private var isExpanded: Bool
-
-    init(initiallyExpanded: Bool = false) {
-        _isExpanded = State(initialValue: initiallyExpanded)
-    }
-
     var body: some View {
         VStack(spacing: 0) {
             headerRow
@@ -31,9 +24,7 @@ struct SoundMixerPanelView: View {
                 .opacity(0.25)
                 .frame(height: 1)
 
-            if isExpanded {
-                content
-            }
+            content
         }
         // Polls while the popover is open, so the header count is right before expanding too.
         .onAppear { vm.startAutoRefresh() }
@@ -48,18 +39,8 @@ struct SoundMixerPanelView: View {
                 .foregroundColor(.accentColor)
                 .padding(.trailing, 8)
 
-            Button {
-                withAnimation(.spring()) { isExpanded.toggle() }
-            } label: {
-                HStack(spacing: 6) {
-                    Text("Sound Mixer".localized())
-                        .font(.system(size: 14))
-                    Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
-                        .font(.system(size: 12, weight: .semibold))
-                        .foregroundColor(.secondary)
-                }
-            }
-            .buttonStyle(.plain)
+            Text("Sound Mixer".localized())
+                .font(.system(size: 14))
 
             Text(appSummary)
                 .foregroundColor(.gray)
@@ -70,10 +51,6 @@ struct SoundMixerPanelView: View {
         }
         .padding(.horizontal, 15)
         .padding(.top, 8)
-        .contentShape(Rectangle())
-        .onTapGesture {
-            withAnimation(.spring()) { isExpanded.toggle() }
-        }
         .frame(height: 45)
     }
 
@@ -107,7 +84,7 @@ struct SoundMixerPanelView: View {
             }
 
             if let device = vm.outputDevice {
-                sectionHeader("Output".localized())
+                sectionHeader("System Output".localized())
                 outputRow(device)
             }
 
@@ -135,34 +112,49 @@ struct SoundMixerPanelView: View {
     // MARK: Rows
 
     private func appRow(_ row: SoundMixerVM.AppRow) -> some View {
-        HStack(spacing: 10) {
-            appIcon(row.icon)
+        let expanded = vm.equalizerStore.apps[row.id]?.isExpanded ?? false
+        return VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 10) {
+                appIcon(row.icon)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(row.name).font(.system(size: 11)).lineLimit(1)
+                    MixerSlider(value: row.volume, height: 12, leadingSymbol: nil, trailingSymbol: nil,
+                                label: row.name,
+                                onChange: { vm.updateVolume($0, for: row.id, live: true) },
+                                onCommit: { vm.updateVolume($0, for: row.id, live: false) })
+                }
+                Button {
+                    vm.toggleMute(for: row.id)
+                } label: {
+                    Image(systemName: row.isMuted ? "speaker.slash.fill" : "speaker.fill")
+                        .font(.system(size: 10))
+                        .foregroundStyle(row.isMuted ? .secondary : .primary)
+                        .frame(width: 16, height: 20)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(Text(row.isMuted ? "Unmute".localized() : "Mute".localized()))
 
-            VStack(alignment: .leading, spacing: 4) {
-                Text(row.name)
-                    .font(.system(size: 11))
-                    .lineLimit(1)
-
-                MixerSlider(value: row.volume,
-                            height: 12,
-                            leadingSymbol: nil,
-                            trailingSymbol: nil,
-                            label: row.name,
-                            onChange: { vm.updateVolume($0, for: row.id, live: true) },
-                            onCommit: { vm.updateVolume($0, for: row.id, live: false) })
+                Button {
+                    vm.equalizerStore.send(.toggleExpanded(row.id))
+                } label: {
+                    Image(systemName: expanded ? "chevron.down" : "chevron.right")
+                        .font(.system(size: 10, weight: .semibold))
+                        .foregroundStyle(.secondary)
+                        .frame(width: 20, height: 24)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .help(String(format: "Equalizer for %@".localized(), row.name))
+                .accessibilityLabel(Text(String(format: "Equalizer for %@".localized(), row.name)))
+                .accessibilityValue(Text(expanded ? "Expanded".localized() : "Collapsed".localized()))
             }
-
-            Button {
-                vm.toggleMute(for: row.id)
-            } label: {
-                Image(systemName: row.isMuted ? "speaker.slash.fill" : "speaker.fill")
-                    .font(.system(size: 10))
-                    .foregroundColor(row.isMuted ? .secondary : .primary)
-                    .frame(width: 16, height: 16)
-                    .contentShape(Rectangle())
+            OutputRoutingView(store: vm.outputRoutingStore, appID: row.id, appName: row.name,
+                              localize: { $0.localized() })
+                .padding(.leading, 34)
+            if expanded {
+                EqualizerView(store: vm.equalizerStore, appID: row.id, localize: { $0.localized() })
             }
-            .buttonStyle(.plain)
-            .accessibilityLabel(Text(row.isMuted ? "Unmute".localized() : "Mute".localized()))
         }
     }
 
