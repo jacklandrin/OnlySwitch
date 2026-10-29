@@ -381,6 +381,16 @@ class StatusBarController {
         }
 
         NotificationCenter.default.addObserver(
+            forName: .revealScreenshotsSection,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                self?.revealScreenshotsHost()
+            }
+        }
+
+        NotificationCenter.default.addObserver(
             forName: .menubarCollapsable,
             object: nil,
             queue: .main
@@ -424,6 +434,15 @@ class StatusBarController {
         }
     }
     
+    /// A new screenshot asks for the list: show the current host if it is hidden. The host consumes its
+    /// pending section request when it appears, even if it did not exist when the notification was posted.
+    func revealScreenshotsHost() {
+        guard !hasOtherPopover else { return }
+        let isShowing = currentAppearance == .onlyControl ? onlyControlWindow.isShowing : popover.isShown
+        guard !isShowing else { return }
+        showPopover(nil)
+    }
+
     func showPopover(_ sender: AnyObject?) {
         // Ensure we're on the main thread for UI operations
         guard Thread.isMainThread else {

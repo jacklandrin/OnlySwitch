@@ -220,6 +220,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         popover.contentViewController = NSHostingController(rootView: contentView)
 
         statusBar = StatusBarController(popover)
+        // Collect screenshots (and reveal/fly new captures) before any list host has appeared.
+        SettingsVM.shared.screenshotsStore.send(.task)
         setupDesktopPet()
         setupDockPreview()
 

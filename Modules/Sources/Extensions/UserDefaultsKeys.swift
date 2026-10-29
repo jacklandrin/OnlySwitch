@@ -60,6 +60,12 @@ public extension UserDefaults {
         public static let didInstallAppUninstallerSwitch = "didInstallAppUninstallerSwitchKey"
         public static let showXcodeCleanerTab = "showXcodeCleanerTabKey"
         public static let didInstallXcodeCleanerSwitch = "didInstallXcodeCleanerSwitchKey"
+        // Screenshots
+        public static let showScreenshotsTab = "showScreenshotsTabKey"
+        /// Machine specific (system screenshot settings takeover); intentionally not exportable.
+        public static let screenshotsCaptureEnabled = "screenshotsCaptureEnabledKey"
+        /// Machine specific backup of `com.apple.screencapture` values; intentionally not exportable.
+        public static let screenshotsPreviousCaptureSettings = "screenshotsPreviousCaptureSettingsKey"
         //BackNoises
         public static let backNoisesTrack = "backNoisesTrackKey"
         public static let automaticallyStopPlayNoiseTime = "automaticallyStopPlayNoiseTimeKey"
@@ -132,7 +138,7 @@ public extension UserDefaults {
             shortcutsDic,
             orderWeight, onlyControlOrderWeight,
             soundMixerEnabled,
-            systemMonitorPreferences, showSystemMonitorTab, showXcodeCleanerTab, showAppUninstallerTab,
+            systemMonitorPreferences, showSystemMonitorTab, showXcodeCleanerTab, showAppUninstallerTab, showScreenshotsTab,
             backNoisesTrack, automaticallyStopPlayNoiseTime,
             autoStopKeepAwakeMode, autoStopKeepAwakeTime, autoStopKeepAwakeStartDate, autoStopKeepAwakeEndDate, autoStopKeepAwakeOnSleep, KeepAwakeKey,
             autoDimScreenTime, dimScreenPercent, syncExternalBrightness,

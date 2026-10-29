@@ -14,8 +14,9 @@ enum SectionBar {
         case aphrodite
         case xcodeCleaner
         case appUninstaller
+        case screenshots
 
-        var allowsOutsideClickDismissal: Bool { self != .appUninstaller }
+        var allowsOutsideClickDismissal: Bool { self != .appUninstaller && self != .screenshots }
 
         var title: String {
             switch self {
@@ -28,6 +29,7 @@ enum SectionBar {
             case .aphrodite: "Aphrodite".localized()
             case .xcodeCleaner: "Xcode Cleaner".localized()
             case .appUninstaller: "App Uninstaller".localized()
+            case .screenshots: "Screenshots".localized()
             }
         }
 
@@ -42,6 +44,7 @@ enum SectionBar {
             case .aphrodite: "sparkles.rectangle.stack"
             case .xcodeCleaner: "hammer.fill"
             case .appUninstaller: "trash.fill"
+            case .screenshots: "photo.on.rectangle.angled"
             }
         }
 
@@ -50,7 +53,7 @@ enum SectionBar {
             switch self {
             case .codexUsage: "openai_logo"
             case .claudeUsage: "claude_logo"
-            case .controls, .authenticator, .soundMixer, .systemMonitor, .aphrodite, .xcodeCleaner, .appUninstaller: nil
+            case .controls, .authenticator, .soundMixer, .systemMonitor, .aphrodite, .xcodeCleaner, .appUninstaller, .screenshots: nil
             }
         }
     }
@@ -63,7 +66,8 @@ enum SectionBar {
         claudeUsage: Bool = false,
         aphrodite: Bool = false,
         xcodeCleaner: Bool = false,
-        appUninstaller: Bool = false
+        appUninstaller: Bool = false,
+        screenshots: Bool = false
     ) -> [Section] {
         var sections: [Section] = [.controls]
         if authenticator { sections.append(.authenticator) }
@@ -74,6 +78,7 @@ enum SectionBar {
         if aphrodite { sections.append(.aphrodite) }
         if xcodeCleaner { sections.append(.xcodeCleaner) }
         if appUninstaller { sections.append(.appUninstaller) }
+        if screenshots { sections.append(.screenshots) }
         return sections
     }
 

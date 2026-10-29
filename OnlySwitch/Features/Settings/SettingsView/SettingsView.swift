@@ -12,6 +12,8 @@ import Utilities
 import OnlyAgent
 import XcodeCleaner
 import AppUninstaller
+import ComposableArchitecture
+import Screenshots
 import Tailscale
 import Extensions
 
@@ -138,6 +140,21 @@ struct SettingsView: View {
                 }
                 .background(.background)
 
+            case .Screenshots:
+                ScrollView {
+                    VStack(spacing: 0) {
+                        ScreenshotsSettingsControls(store: settingVM.screenshotsStore, folderPath: settingVM.screenshotsFolderURL.path)
+                            .padding(.horizontal, 24)
+                            .padding(.top, 20)
+                            .frame(maxWidth: 900)
+                            .frame(maxWidth: .infinity)
+                            .tint(colorScheme == .dark ? .mint : .accentColor)
+                        ScreenshotsView(store: settingVM.screenshotsStore, resolvesFlightTarget: false)
+                            .id(langManager.currentLang)
+                    }
+                }
+                .background(.background)
+
             case .Tailscale:
                 TailscaleSettingsView(store: settingVM.tailscaleStore)
                     .id(langManager.currentLang)
@@ -217,6 +234,64 @@ struct SettingsView: View {
         }
     }
 
+}
+
+/// Tab visibility, the opt-in system screenshot takeover and the collection folder. Toggling collection is a
+/// `ScreenshotsFeature` action; the view only reflects `captureStatus`.
+private struct ScreenshotsSettingsControls: View {
+    let store: StoreOf<ScreenshotsFeature>
+    let folderPath: String
+    @AppStorage(UserDefaults.Key.showScreenshotsTab) private var showScreenshotsTab = true
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack {
+                Text("Screenshots Show Tab".localized())
+                Spacer(minLength: 12)
+                Toggle("Screenshots Show Tab".localized(), isOn: $showScreenshotsTab)
+                    .labelsHidden()
+                    .toggleStyle(.switch)
+            }
+            .padding(12)
+            Divider().padding(.horizontal, 12)
+            VStack(alignment: .leading, spacing: 6) {
+                HStack {
+                    Text("Collect System Screenshots".localized())
+                    Spacer(minLength: 12)
+                    Toggle("Collect System Screenshots".localized(), isOn: Binding(get: { store.captureStatus != .disabled }, set: setCollecting))
+                        .labelsHidden()
+                        .toggleStyle(.switch)
+                }
+                Text("Screenshots Capture Explanation".localized())
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(12)
+            Divider().padding(.horizontal, 12)
+            HStack(spacing: 8) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Screenshots Folder".localized())
+                    Text(folderPath)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+                        .textSelection(.enabled)
+                }
+                Spacer(minLength: 12)
+                Button("Show in Finder".localized(), action: revealFolder)
+            }
+            .padding(12)
+        }
+        .background(.quaternary.opacity(0.5), in: .rect(cornerRadius: 10))
+        .onChange(of: showScreenshotsTab) { _, _ in
+            NotificationCenter.default.post(name: .changeSettings, object: nil)
+        }
+    }
+
+    private func setCollecting(_ isOn: Bool) { store.send(.captureToggleChanged(isOn)) }
+    private func revealFolder() { store.send(.revealFolderTapped) }
 }
 
 #if DEBUG

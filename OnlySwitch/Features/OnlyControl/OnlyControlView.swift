@@ -19,6 +19,7 @@ import OnlyAgent
 import Aphrodite
 import XcodeCleaner
 import AppUninstaller
+import Screenshots
 import Utilities
 
 struct OnlyControlView: View {
@@ -30,6 +31,7 @@ struct OnlyControlView: View {
     @State private var currentDate = Date()
     @ObservedObject private var languageManager = LanguageManager.sharedManager
     @State private var aphroditeStore: StoreOf<AphroditeReducer>
+    private let screenshotSectionRevealStore = SettingsVM.shared.screenshotSectionRevealStore
     @State private var sectionViewportHeight: CGFloat?
     @AppStorage(UserDefaults.Key.showClaudeUsageTab) private var showClaudeUsageTab = true
     @AppStorage(UserDefaults.Key.showCodexUsageTab) private var showCodexUsageTab = true
@@ -37,6 +39,7 @@ struct OnlyControlView: View {
     @AppStorage(UserDefaults.Key.showAphroditeTab) private var showAphroditeTab = true
     @AppStorage(UserDefaults.Key.showXcodeCleanerTab) private var showXcodeCleanerTab = true
     @AppStorage(UserDefaults.Key.showAppUninstallerTab) private var showAppUninstallerTab = true
+    @AppStorage(UserDefaults.Key.showScreenshotsTab) private var showScreenshotsTab = true
     
     private let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
 
@@ -98,10 +101,20 @@ struct OnlyControlView: View {
             .onChange(of: sections) { availableSections in
                 store.send(.availableSectionsChanged(availableSections))
             }
+            .onAppear(perform: consumeScreenshotSectionReveal)
+            .onChange(of: screenshotSectionRevealStore.pendingHost) { _, _ in
+                consumeScreenshotSectionReveal()
+            }
             .onPreferenceChange(OnlyControlSectionViewportHeightKey.self) { height in
                 sectionViewportHeight = height.isFinite && height > 0 ? height : nil
             }
         }
+    }
+
+    private func consumeScreenshotSectionReveal() {
+        guard screenshotSectionRevealStore.pendingHost == .onlyControl else { return }
+        if sections.contains(.screenshots) { store.send(.selectedSectionChanged(.screenshots)) }
+        screenshotSectionRevealStore.send(.consumed(.onlyControl))
     }
 
     @ViewBuilder
@@ -124,6 +137,9 @@ struct OnlyControlView: View {
                     .id(languageManager.currentLang)
             case .appUninstaller:
                 AppUninstallerView(store: SettingsVM.shared.appUninstallerStore, managesScrolling: false)
+                    .id(languageManager.currentLang)
+            case .screenshots:
+                ScreenshotsView(store: SettingsVM.shared.screenshotsStore)
                     .id(languageManager.currentLang)
             case .aphrodite:
                 aphroditePage
@@ -256,7 +272,8 @@ struct OnlyControlView: View {
             claudeUsage: showClaudeUsageTab,
             aphrodite: showAphroditeTab,
             xcodeCleaner: showXcodeCleanerTab,
-            appUninstaller: showAppUninstallerTab
+            appUninstaller: showAppUninstallerTab,
+            screenshots: showScreenshotsTab
         )
     }
 }

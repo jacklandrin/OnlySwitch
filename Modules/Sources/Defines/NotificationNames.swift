@@ -35,4 +35,6 @@ public extension Notification.Name {
     static let changeNightShiftSetting = Notification.Name(rawValue: "changeNightShiftSetting")
     static let systemMonitorPreferencesChanged = Notification.Name(rawValue: "systemMonitorPreferencesChanged")
     static let toggleSplitSettingsWindow = Notification.Name(rawValue: "toggleSplitSettingsWindow")
+    /// A new screenshot arrived: show a list host and select the Screenshots section.
+    static let revealScreenshotsSection = Notification.Name(rawValue: "revealScreenshotsSection")
 }

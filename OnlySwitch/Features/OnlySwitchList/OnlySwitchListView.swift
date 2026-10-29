@@ -17,6 +17,7 @@ import OnlyAgent
 import Aphrodite
 import XcodeCleaner
 import AppUninstaller
+import Screenshots
 
 enum Focusable: Hashable {
   case none
@@ -43,12 +44,14 @@ struct OnlySwitchListView: View {
     @State private var maximumPanelHeight = NSScreen.main?.visibleFrame.height ?? CGFloat(700)
     @State private var presentedPanelHeight: CGFloat?
     @State private var aphroditeStore: StoreOf<AphroditeReducer>
+    private let screenshotSectionRevealStore = SettingsVM.shared.screenshotSectionRevealStore
     @AppStorage(UserDefaults.Key.showClaudeUsageTab) private var showClaudeUsageTab = true
     @AppStorage(UserDefaults.Key.showCodexUsageTab) private var showCodexUsageTab = true
     @AppStorage(UserDefaults.Key.showSystemMonitorTab) private var showSystemMonitorTab = true
     @AppStorage(UserDefaults.Key.showAphroditeTab) private var showAphroditeTab = true
     @AppStorage(UserDefaults.Key.showXcodeCleanerTab) private var showXcodeCleanerTab = true
     @AppStorage(UserDefaults.Key.showAppUninstallerTab) private var showAppUninstallerTab = true
+    @AppStorage(UserDefaults.Key.showScreenshotsTab) private var showScreenshotsTab = true
 
     let columns = [
         GridItem(.fixed(Layout.popoverWidth - 40)),
@@ -115,6 +118,9 @@ struct OnlySwitchListView: View {
                         case .appUninstaller:
                             AppUninstallerView(store: SettingsVM.shared.appUninstallerStore, managesScrolling: false, compactPresentation: true)
                                 .id(languageManager.currentLang)
+                        case .screenshots:
+                            ScreenshotsView(store: SettingsVM.shared.screenshotsStore, compactPresentation: true)
+                                .id(languageManager.currentLang)
                         case .aphrodite:
                             if #available(macOS 26.0, *) {
                                 AphroditePanelView(
@@ -163,6 +169,9 @@ struct OnlySwitchListView: View {
         .onReceive(NotificationCenter.default.publisher(for: .toggleMenubarCollapse, object: nil)) { _ in
             switchVM.refreshSingleSwitchStatus(type: .hideMenubarIcons)
         }
+        .onChange(of: screenshotSectionRevealStore.pendingHost) { _, _ in
+            consumeScreenshotSectionReveal()
+        }
         .onChange(of: sections) { _ in
             reconcileSectionSelection()
         }
@@ -187,9 +196,16 @@ struct OnlySwitchListView: View {
             updatePresentedPanelHeight(to: adaptivePanelHeight)
         }
         .onAppear {
+            consumeScreenshotSectionReveal()
             presentedPanelHeight = adaptivePanelHeight
             onOutsideClickRetentionChanged(!selectedSection.allowsOutsideClickDismissal)
         }
+    }
+
+    private func consumeScreenshotSectionReveal() {
+        guard screenshotSectionRevealStore.pendingHost == .popover else { return }
+        if sections.contains(.screenshots) { selectedSection = .screenshots }
+        screenshotSectionRevealStore.send(.consumed(.popover))
     }
     
     var singleSwitchList: some View {
@@ -583,7 +599,8 @@ struct OnlySwitchListView: View {
             claudeUsage: showClaudeUsageTab,
             aphrodite: showAphroditeTab,
             xcodeCleaner: showXcodeCleanerTab,
-            appUninstaller: showAppUninstallerTab
+            appUninstaller: showAppUninstallerTab,
+            screenshots: showScreenshotsTab
         )
     }
 

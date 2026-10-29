@@ -120,7 +120,7 @@ struct AppUninstallerSwitchTests {
 
     @Test func onlyUninstallerRetainsPanelForExternalAppDragging() {
         for section in SectionBar.Section.allCases {
-            #expect(section.allowsOutsideClickDismissal == (section != .appUninstaller))
+            #expect(section.allowsOutsideClickDismissal == ![.appUninstaller, .screenshots].contains(section))
         }
     }
 
@@ -128,6 +128,7 @@ struct AppUninstallerSwitchTests {
         let store = TestStore(initialState: OnlyControlReducer.State(selectedSection: .appUninstaller)) { OnlyControlReducer() }
         #expect(!store.state.selectedSection.allowsOutsideClickDismissal)
         await store.send(.selectedSectionChanged(.controls)) { $0.selectedSection = .controls }
+        await store.receive(\.systemMonitor.visibilityChanged)
         #expect(store.state.selectedSection.allowsOutsideClickDismissal)
     }
 
