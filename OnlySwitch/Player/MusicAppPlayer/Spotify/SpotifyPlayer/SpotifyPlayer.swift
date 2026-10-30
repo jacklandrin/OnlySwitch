@@ -16,6 +16,8 @@ class SpotifyPlayer{
         spotifyApp.isRunning ?? false
     }
     weak var delegate:MusicPlayerDelegate?
+    /// Track from the last playback notification, readable without Automation permission.
+    private(set) var notifiedTrack: (name: String?, artist: String?)?
     
     required init?(){
         guard let player = SBApplication(bundleIdentifier: "com.spotify.client") else {return nil}
@@ -39,6 +41,9 @@ class SpotifyPlayer{
         guard let userInfo = notification.userInfo,
               let playerState = userInfo["Player State"] as? String
         else { return }
+        notifiedTrack = playerState == "Stopped"
+            ? nil
+            : (userInfo["Name"] as? String, userInfo["Artist"] as? String)
         
         switch playerState {
         case "Paused":

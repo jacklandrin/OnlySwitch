@@ -8,6 +8,7 @@
 import AppKit
 import ComposableArchitecture
 import Defines
+import Design
 import Authenticator
 import SwiftUI
 import LaunchAtLogin

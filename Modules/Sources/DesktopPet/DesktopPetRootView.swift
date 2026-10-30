@@ -12,6 +12,8 @@ struct DesktopPetRootView: View {
     var body: some View {
         VStack(spacing: 0) {
             if playbackStore.source != nil {
+                DesktopPetNowPlayingLabel(nowPlaying: playbackStore.nowPlaying)
+                    .frame(height: DesktopPetMetrics.nowPlayingLaneHeight, alignment: .top)
                 DesktopPetPlaybackControls(
                     isPlaying: playbackStore.isPlaying,
                     onPlayPause: { playbackStore.send(.playPauseTapped) },

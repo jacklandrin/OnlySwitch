@@ -26,6 +26,34 @@ extension DesktopPetPlaybackClient {
             }
             return statuses
         },
+        nowPlaying: { source in
+            switch source {
+            case .appleMusic:
+                guard let player = AppleMusicSwitch.shared.player else { return nil }
+                return track(
+                    bundleID: appleMusicBundleID,
+                    notified: player.notifiedTrack,
+                    current: {
+                        let track = player.applemusicApp.currentTrack
+                        return (track?.name, track?.artist)
+                    }
+                )
+            case .spotify:
+                guard let player = SpotifySwitch.shared.player else { return nil }
+                return track(
+                    bundleID: spotifyBundleID,
+                    notified: player.notifiedTrack,
+                    current: {
+                        let track = player.spotifyApp.currentTrack
+                        return (track?.name, track?.artist)
+                    }
+                )
+            case .radio:
+                guard Preferences.shared.radioEnable else { return nil }
+                let item = RadioStationSwitch.shared.playerItem
+                return .radio(stationName: item.title, streamInfo: item.streamInfo)
+            }
+        },
         next: { source in
             switch source {
             case .appleMusic:
@@ -83,14 +111,8 @@ extension DesktopPetPlaybackClient {
         cachedState: MusicPlaybackState,
         currentState: () -> MusicPlaybackState
     ) -> DesktopPetPlaybackStatus? {
-        guard let application = NSRunningApplication.runningApplications(
-            withBundleIdentifier: bundleID
-        ).first else { return nil }
-        let target = NSAppleEventDescriptor(processIdentifier: application.processIdentifier)
-        let permission = AEDeterminePermissionToAutomateTarget(
-            target.aeDesc, typeWildCard, typeWildCard, false
-        )
-        switch permission == noErr ? currentState() : cachedState {
+        guard let canAutomate = canAutomate(bundleID: bundleID) else { return nil }
+        switch canAutomate ? currentState() : cachedState {
         case .playing, .fastForwarding, .rewinding, .reposition:
             return .playing
         case .paused:
@@ -98,5 +120,31 @@ extension DesktopPetPlaybackClient {
         case .stopped:
             return nil
         }
+    }
+
+    @MainActor
+    private static func track(
+        bundleID: String,
+        notified: (name: String?, artist: String?)?,
+        current: () -> (name: String?, artist: String?)
+    ) -> DesktopPetNowPlaying? {
+        guard let canAutomate = canAutomate(bundleID: bundleID) else { return nil }
+        let nowPlaying = { (track: (name: String?, artist: String?)?) in
+            track.flatMap { DesktopPetNowPlaying.track(name: $0.name, artist: $0.artist) }
+        }
+        // Players can briefly report an empty current track, e.g. while changing tracks.
+        return (canAutomate ? nowPlaying(current()) : nil) ?? nowPlaying(notified)
+    }
+
+    /// `nil` when the player is not running. Never prompts for Automation permission.
+    @MainActor
+    private static func canAutomate(bundleID: String) -> Bool? {
+        guard let application = NSRunningApplication.runningApplications(
+            withBundleIdentifier: bundleID
+        ).first else { return nil }
+        let target = NSAppleEventDescriptor(processIdentifier: application.processIdentifier)
+        return AEDeterminePermissionToAutomateTarget(
+            target.aeDesc, typeWildCard, typeWildCard, false
+        ) == noErr
     }
 }

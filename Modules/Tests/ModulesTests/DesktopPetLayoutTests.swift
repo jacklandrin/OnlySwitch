@@ -53,17 +53,17 @@ struct DesktopPetLayoutTests {
         )
     }
 
-    @Test func playbackUsesCompactLaneAboveThePet() {
+    @Test func playbackUsesNowPlayingAndControlLanesAboveThePet() {
         let size = DesktopPetMetrics.canvasSize(for: nil, showsPlayback: true)
 
-        #expect(size == CGSize(width: 152, height: 176))
+        #expect(size == CGSize(width: 152, height: 212))
     }
 
     @Test func playbackAndPomodoroLanesCanCoexist() {
         let pomodoro = DesktopPetPomodoroState(phase: .focus, remainingTime: "24:59")
         let size = DesktopPetMetrics.canvasSize(for: pomodoro, showsPlayback: true)
 
-        #expect(size == CGSize(width: 152, height: 220))
+        #expect(size == CGSize(width: 152, height: 256))
         #expect(
             DesktopPetMetrics.canvasSize(for: pomodoro, showsPlayback: false)
                 == DesktopPetMetrics.pomodoroCanvasSize

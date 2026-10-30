@@ -115,7 +115,6 @@
 		0456C92D2ACB700000DB7898 /* EvolutionGalleryService+Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456C92C2ACB700000DB7898 /* EvolutionGalleryService+Test.swift */; };
 		04581DB02764CBCF008ADF30 /* SettingsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04581DAF2764CBCF008ADF30 /* SettingsVM.swift */; };
 		04581DB6276506B9008ADF30 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = 04581DB5276506B9008ADF30 /* AlertToast */; };
-		04581DBB27651EF1008ADF30 /* RollingText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04581DBA27651EF1008ADF30 /* RollingText.swift */; };
 		04581DBD27653C35008ADF30 /* AirPodsSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04581DBC27653C35008ADF30 /* AirPodsSettingView.swift */; };
 		04581DBF27653C4A008ADF30 /* AirPodsSettingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04581DBE27653C4A008ADF30 /* AirPodsSettingVM.swift */; };
 		04581DC12765522A008ADF30 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04581DC02765522A008ADF30 /* AboutView.swift */; };
@@ -734,7 +733,6 @@
 		0456C92A2ACB69C400DB7898 /* EvolutionGalleryAdaptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionGalleryAdaptor.swift; sourceTree = "<group>"; };
 		0456C92C2ACB700000DB7898 /* EvolutionGalleryService+Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EvolutionGalleryService+Test.swift"; sourceTree = "<group>"; };
 		04581DAF2764CBCF008ADF30 /* SettingsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVM.swift; sourceTree = "<group>"; };
-		04581DBA27651EF1008ADF30 /* RollingText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RollingText.swift; sourceTree = "<group>"; };
 		04581DBC27653C35008ADF30 /* AirPodsSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPodsSettingView.swift; sourceTree = "<group>"; };
 		04581DBE27653C4A008ADF30 /* AirPodsSettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPodsSettingVM.swift; sourceTree = "<group>"; };
 		04581DC02765522A008ADF30 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
@@ -1891,7 +1889,6 @@
 				04447B5D2754F08000CD2900 /* OnlySwitchListView.swift */,
 				04447B712754FE3800CD2900 /* SwitchListVM.swift */,
 				04B25454283C06C700D253E2 /* SwitchListModel.swift */,
-				04581DBA27651EF1008ADF30 /* RollingText.swift */,
 				04FB3E5F288D49E100F3B5E1 /* SettingsWindow.swift */,
 			);
 			path = OnlySwitchList;
@@ -3272,7 +3269,6 @@
 				0427364927C1A5430068108F /* SpotifyBridge.swift in Sources */,
 				0406EDD12ACB65C50015F4D0 /* EvolutionGalleryService.swift in Sources */,
 				0451766B27C284D600006BA0 /* iTunesScripting.swift in Sources */,
-				04581DBB27651EF1008ADF30 /* RollingText.swift in Sources */,
 				0493374427625A1E00AE779A /* AudioPlayer.swift in Sources */,
 				0447E3532B71746E00D07B9A /* MuteMicSwitch.swift in Sources */,
 				047C1E652A2297490061235D /* Evolution+Dependencies.swift in Sources */,

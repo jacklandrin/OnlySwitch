@@ -12,6 +12,8 @@ let appleMusicStateChangedNotification = NSNotification.Name("com.apple.Music.pl
 
 class AppleMusicPlayer {
     weak var delegate:MusicPlayerDelegate?
+    /// Track from the last playback notification, readable without Automation permission.
+    private(set) var notifiedTrack: (name: String?, artist: String?)?
     var applemusicApp:iTunesApplication
     
     required init?() {
@@ -36,6 +38,9 @@ class AppleMusicPlayer {
         guard let userInfo = notification.userInfo,
               let playerState = userInfo["Player State"] as? String
         else { return }
+        notifiedTrack = playerState == "Stopped"
+            ? nil
+            : (userInfo["Name"] as? String, userInfo["Artist"] as? String)
         
         switch playerState {
         case "Paused":

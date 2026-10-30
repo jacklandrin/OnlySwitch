@@ -12,6 +12,7 @@ import ComposableArchitecture
 import SwiftUI
 import OnlyControl
 import Defines
+import Design
 import Extensions
 import Foundation
 import SystemMonitor

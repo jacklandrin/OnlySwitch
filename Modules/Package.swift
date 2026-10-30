@@ -221,7 +221,10 @@ let package = Package(
         ),
         .target(
             name: "DesktopPet",
-            dependencies: [.product(name: "ComposableArchitecture", package: "swift-composable-architecture")]
+            dependencies: [
+                "Design",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ]
         ),
         .target(
             name: "RemoteCore"
