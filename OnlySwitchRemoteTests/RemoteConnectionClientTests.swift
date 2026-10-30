@@ -474,6 +474,288 @@ struct RemoteConnectionClientTests {
         await session.close()
     }
 
+    @Test(.timeLimit(.minutes(1)), arguments: [UInt16(7), 8])
+    func soundMixerTabMessagesRequireProtocolEight(minor: UInt16) async throws {
+        let macID = UUID()
+        let credential = Data(repeating: 19, count: 32)
+        let listener = try NWListener(using: .tcp, on: .any)
+        let (connections, connectionContinuation) = AsyncStream.makeStream(
+            of: NWConnection.self,
+            bufferingPolicy: .bufferingOldest(1)
+        )
+        listener.newConnectionHandler = { connectionContinuation.yield($0) }
+        try await start(listener)
+        defer {
+            connectionContinuation.finish()
+            listener.cancel()
+        }
+        let port = try #require(listener.port)
+        let server = Task {
+            var iterator = connections.makeAsyncIterator()
+            let connection = try #require(await iterator.next())
+            let io = RemoteConnectionIO(connection: connection)
+            try await io.start()
+            guard case let .clientHello(hello)? = (try await io.receive()).plaintext else {
+                throw TestProtocolError.unexpectedMessage
+            }
+            let key = P256.KeyAgreement.PrivateKey()
+            let serverHello = ServerHello(
+                version: .init(major: 1, minor: minor),
+                macID: macID,
+                macName: "Studio",
+                ephemeralPublicKey: key.publicKey.rawRepresentation,
+                challenge: Data(repeating: 9, count: 32)
+            )
+            try await io.send(.plaintext(.serverHello(serverHello)))
+            let transcript = try RemoteHandshakeCrypto.transcript(client: hello, server: serverHello)
+            let crypto = try makeServerCrypto(key: key, hello: hello, credential: credential, transcript: transcript)
+            guard case .authenticationProof = try await receiveEncrypted(io: io, crypto: crypto) else {
+                throw TestProtocolError.unexpectedMessage
+            }
+            try await io.send(.encrypted(try crypto.seal(.authenticationResult(.success(.init(
+                sessionID: UUID(),
+                catalogRevision: 1
+            ))))))
+            if minor >= 8 {
+                #expect(try await receiveEncrypted(io: io, crypto: crypto) == .soundMixerSubscriptionUpdate(true))
+                #expect(try await receiveEncrypted(io: io, crypto: crypto) == .soundMixerCommand(.resetAppEqualizer(id: "a")))
+            }
+            #expect(try await receiveEncrypted(io: io, crypto: crypto) == .soundMixerCommand(.setAppVolume(id: "a", volume: 10)))
+            await io.cancel()
+        }
+        let session = try await RemoteClientSession.authenticate(
+            endpoint: .hostPort(host: .ipv4(.loopback), port: port),
+            expectedMacID: macID,
+            credential: credential,
+            deviceID: UUID(),
+            deviceName: "Test iPad",
+            event: { _ in }
+        )
+        if minor >= 8 {
+            try await session.setSoundMixerStreaming(true)
+            try await session.sendSoundMixer(.resetAppEqualizer(id: "a"))
+        } else {
+            for operation in [
+                { try await session.setSoundMixerStreaming(true) },
+                { try await session.sendSoundMixer(.resetAppEqualizer(id: "a")) },
+                { try await session.sendSoundMixer(.toggleAppOutputDevice(id: "a", deviceID: "dev")) },
+            ] as [@Sendable () async throws -> Void] {
+                do {
+                    try await operation()
+                    Issue.record("1.8-only Sound Mixer messages must not be sent to a 1.7 Mac.")
+                } catch let error as RemoteProtocolError {
+                    #expect(error.code == .upgradeRequired)
+                }
+            }
+        }
+        try await session.sendSoundMixer(.setAppVolume(id: "a", volume: 10))
+        try await server.value
+        await session.close()
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func connectingNoLongerRequestsALegacySoundMixerSnapshot() async throws {
+        let macID = UUID()
+        let server = try await PairingLoopbackServer.start(
+            macID: macID,
+            code: "ABCDEFGH2345",
+            credential: Data(repeating: 71, count: 32),
+            stayConnected: true
+        )
+        defer { server.cancel() }
+        let runtime = RemoteConnectionRuntime(persistence: .inMemory(), keychain: .inMemory(), deviceID: UUID())
+        _ = try await runtime.prepareAndFinalizeForTest(
+            .init(id: macID, displayName: "Studio", endpoint: server.endpoint, protocolVersion: .current),
+            code: "ABCDEFGH2345",
+            deviceName: "Test iPhone"
+        )
+
+        try await runtime.setSoundMixerStreaming(true)
+        var messages = await server.receivedMessages
+        for _ in 0 ..< 200 where messages.contains(.soundMixerSubscriptionUpdate(true)) == false {
+            try await Task.sleep(for: .milliseconds(10))
+            messages = await server.receivedMessages
+        }
+
+        #expect(messages.contains(.soundMixerSubscriptionUpdate(true)))
+        #expect(messages.contains(.soundMixerSnapshotRequest) == false)
+        await runtime.setForegrounded(false)
+    }
+
+    @Test func reviewDemoStreamsAndUpdatesSoundMixer() async throws {
+        let runtime = RemoteReviewDemoRuntime()
+        let connection = RemoteConnectionClient.reviewDemo(runtime: runtime)
+        let eventTask = Task { () -> [RemoteConnectionEvent?] in
+            var events = connection.events().makeAsyncIterator()
+            return [await events.next(), await events.next()]
+        }
+        await Task.yield()
+
+        try await connection.setSoundMixerStreaming(true)
+        try await connection.sendSoundMixer(.setAppVolume(id: "com.apple.Music", volume: 25))
+        let received = await eventTask.value
+
+        guard case let .soundMixer(macID, initial)? = received.first,
+              case let .soundMixer(_, updated)? = received.last else {
+            Issue.record("Demo Sound Mixer streaming must publish snapshots.")
+            return
+        }
+        #expect(macID == RemoteReviewDemoRuntime.studioMacID)
+        #expect(initial.apps.count == 2)
+        #expect(initial.outputDevices.count == 2)
+        #expect(initial.apps.first?.equalizer != nil)
+        #expect(updated.revision > initial.revision)
+        #expect(updated.apps.first { $0.id == "com.apple.Music" }?.volume == 25)
+    }
+
+    @Test(.timeLimit(.minutes(1)), arguments: [UInt16(7), 8])
+    func brightnessMessagesRequireProtocolEight(minor: UInt16) async throws {
+        let macID = UUID()
+        let credential = Data(repeating: 21, count: 32)
+        let brightness = RemoteBrightnessSnapshot(revision: 4, displays: [
+            .init(id: 1, name: "Built-in Retina Display", control: .native, level: 0.6, hasError: false),
+        ])
+        let listener = try NWListener(using: .tcp, on: .any)
+        let (connections, connectionContinuation) = AsyncStream.makeStream(
+            of: NWConnection.self,
+            bufferingPolicy: .bufferingOldest(1)
+        )
+        listener.newConnectionHandler = { connectionContinuation.yield($0) }
+        try await start(listener)
+        defer {
+            connectionContinuation.finish()
+            listener.cancel()
+        }
+        let port = try #require(listener.port)
+        let server = Task {
+            var iterator = connections.makeAsyncIterator()
+            let connection = try #require(await iterator.next())
+            let io = RemoteConnectionIO(connection: connection)
+            try await io.start()
+            guard case let .clientHello(hello)? = (try await io.receive()).plaintext else {
+                throw TestProtocolError.unexpectedMessage
+            }
+            let key = P256.KeyAgreement.PrivateKey()
+            let serverHello = ServerHello(
+                version: .init(major: 1, minor: minor),
+                macID: macID,
+                macName: "Studio",
+                ephemeralPublicKey: key.publicKey.rawRepresentation,
+                challenge: Data(repeating: 9, count: 32)
+            )
+            try await io.send(.plaintext(.serverHello(serverHello)))
+            let transcript = try RemoteHandshakeCrypto.transcript(client: hello, server: serverHello)
+            let crypto = try makeServerCrypto(key: key, hello: hello, credential: credential, transcript: transcript)
+            guard case .authenticationProof = try await receiveEncrypted(io: io, crypto: crypto) else {
+                throw TestProtocolError.unexpectedMessage
+            }
+            try await io.send(.encrypted(try crypto.seal(.authenticationResult(.success(.init(
+                sessionID: UUID(),
+                catalogRevision: 1
+            ))))))
+            if minor >= 8 {
+                #expect(try await receiveEncrypted(io: io, crypto: crypto) == .brightnessSubscriptionUpdate(true))
+                try await io.send(.encrypted(try crypto.seal(.brightnessSnapshot(brightness))))
+                #expect(try await receiveEncrypted(io: io, crypto: crypto) == .brightnessCommand(.setLevel(displayID: 1, level: 0.3)))
+            } else {
+                #expect(try await receiveEncrypted(io: io, crypto: crypto) == .catalogRequest)
+            }
+            await io.cancel()
+        }
+        let (events, eventContinuation) = AsyncStream.makeStream(of: RemoteMessage.self)
+        let session = try await RemoteClientSession.authenticate(
+            endpoint: .hostPort(host: .ipv4(.loopback), port: port),
+            expectedMacID: macID,
+            credential: credential,
+            deviceID: UUID(),
+            deviceName: "Test iPad",
+            event: { eventContinuation.yield($0) }
+        )
+        session.startReceiving()
+        if minor >= 8 {
+            try await session.setBrightnessStreaming(true)
+            var eventIterator = events.makeAsyncIterator()
+            #expect(await eventIterator.next() == .brightnessSnapshot(brightness))
+            try await session.sendBrightness(.setLevel(displayID: 1, level: 0.3))
+        } else {
+            for operation in [
+                { try await session.setBrightnessStreaming(true) },
+                { try await session.sendBrightness(.setLevel(displayID: 1, level: 0.3)) },
+            ] as [@Sendable () async throws -> Void] {
+                do {
+                    try await operation()
+                    Issue.record("Brightness messages must not be sent to a 1.7 Mac.")
+                } catch let error as RemoteProtocolError {
+                    #expect(error.code == .upgradeRequired)
+                }
+            }
+            try await session.requestCatalog()
+        }
+        eventContinuation.finish()
+        try await server.value
+        await session.close()
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func runtimeMapsBrightnessSnapshotsToConnectionEvents() async throws {
+        let macID = UUID()
+        let brightness = RemoteBrightnessSnapshot(revision: 2, displays: [
+            .init(id: 7, name: "Studio Display", control: .ddc, level: 0.5, hasError: false),
+        ])
+        let server = try await PairingLoopbackServer.start(
+            macID: macID,
+            code: "ABCDEFGH2345",
+            credential: Data(repeating: 72, count: 32),
+            stayConnected: true,
+            brightnessSnapshotOnSubscribe: brightness
+        )
+        defer { server.cancel() }
+        let runtime = RemoteConnectionRuntime(persistence: .inMemory(), keychain: .inMemory(), deviceID: UUID())
+        let eventTask = Task { () -> RemoteConnectionEvent? in
+            for await event in runtime.makeConnectionEventStream() {
+                if case .brightness = event { return event }
+            }
+            return nil
+        }
+        defer { eventTask.cancel() }
+        _ = try await runtime.prepareAndFinalizeForTest(
+            .init(id: macID, displayName: "Studio", endpoint: server.endpoint, protocolVersion: .current),
+            code: "ABCDEFGH2345",
+            deviceName: "Test iPhone"
+        )
+
+        try await runtime.setBrightnessStreaming(true)
+
+        #expect(await eventTask.value == .brightness(macID, brightness))
+        #expect(await server.receivedMessages.contains(.brightnessSubscriptionUpdate(true)))
+        await runtime.setForegrounded(false)
+    }
+
+    @Test func reviewDemoStreamsAndUpdatesBrightness() async throws {
+        let runtime = RemoteReviewDemoRuntime()
+        let connection = RemoteConnectionClient.reviewDemo(runtime: runtime)
+        let eventTask = Task { () -> [RemoteConnectionEvent?] in
+            var events = connection.events().makeAsyncIterator()
+            return [await events.next(), await events.next()]
+        }
+        await Task.yield()
+
+        try await connection.setBrightnessStreaming(true)
+        try await connection.sendBrightness(.setLevel(displayID: 2, level: 0.25))
+        let received = await eventTask.value
+
+        guard case let .brightness(macID, initial)? = received.first,
+              case let .brightness(_, updated)? = received.last else {
+            Issue.record("Demo Brightness streaming must publish snapshots.")
+            return
+        }
+        #expect(macID == RemoteReviewDemoRuntime.studioMacID)
+        #expect(initial.displays.map(\.control) == [.native, .ddc])
+        #expect(initial.displays.map(\.level) == [0.7, 0.5])
+        #expect(updated.revision > initial.revision)
+        #expect(updated.displays.first { $0.id == 2 }?.level == 0.25)
+    }
+
     @Test(.timeLimit(.minutes(1)))
     func existingCredentialAuthenticatesWithoutPairing() async throws {
         let macID = UUID()
@@ -2145,7 +2427,8 @@ private final class PairingLoopbackServer: @unchecked Sendable {
         catalogRevision: UInt64 = 1,
         catalogGate: OperationGate? = nil,
         dropCommitReply: Bool = false,
-        awaitOneMessageAfterCommit: Bool = false
+        awaitOneMessageAfterCommit: Bool = false,
+        brightnessSnapshotOnSubscribe: RemoteBrightnessSnapshot? = nil
     ) async throws -> PairingLoopbackServer {
         let listener = try NWListener(using: .tcp, on: .any)
         let (connections, continuation) = AsyncStream.makeStream(
@@ -2256,7 +2539,11 @@ private final class PairingLoopbackServer: @unchecked Sendable {
                     _ = try? await io.receive()
                 } else if stayConnected {
                     while Task.isCancelled == false {
-                        _ = try await io.receive()
+                        let message = try await receive(io: io, crypto: sessionCrypto)
+                        await messages.record(message)
+                        if message == .brightnessSubscriptionUpdate(true), let brightnessSnapshotOnSubscribe {
+                            try await io.send(.encrypted(try sessionCrypto.seal(.brightnessSnapshot(brightnessSnapshotOnSubscribe))))
+                        }
                     }
                 } else if awaitOneMessageAfterCommit {
                     _ = try? await io.receive()

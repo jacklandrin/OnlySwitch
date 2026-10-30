@@ -17,15 +17,17 @@ struct RemoteAppFeatureTests {
             $0.paywall?.isPurchasing = false
             $0.paywall?.entitlement = .active(expirationDate: nil)
         }
-        await store.receive(.aphroditeAccess(.entitlementUpdated(.active(expirationDate: nil)))) {
-            $0.aphroditeAccess.entitlement = .active(expirationDate: nil)
-            $0.aphroditeAccess.paywall.entitlement = .active(expirationDate: nil)
-            $0.aphroditeAccess.refreshGeneration = 1
+        await store.receive(.plusAccess(.entitlementUpdated(.active(expirationDate: nil)))) {
+            $0.plusAccess.entitlement = .active(expirationDate: nil)
+            $0.plusAccess.paywall.entitlement = .active(expirationDate: nil)
+            $0.plusAccess.refreshGeneration = 1
         }
+        await store.receive(.soundMixer(.entitlementChanged(true))) { $0.soundMixer.isEntitled = true }
+        await store.receive(.brightness(.entitlementChanged(true))) { $0.brightness.isEntitled = true }
         await store.receive(.paywall(.presented(.authoritativeEntitlementUpdated(.active(expirationDate: nil))))) {
             $0.paywall?.entitlementGeneration = 1
         }
-        #expect(store.state.aphroditeAccess.canAccess)
+        #expect(store.state.plusAccess.canAccess)
     }
 
     @Test func settingsRestoreUpdatesAphroditeMembership() async {
@@ -37,35 +39,39 @@ struct RemoteAppFeatureTests {
             $0.paywall?.entitlement = .active(expirationDate: nil)
             $0.paywall?.restoreCompleted = true
         }
-        await store.receive(.aphroditeAccess(.entitlementUpdated(.active(expirationDate: nil)))) {
-            $0.aphroditeAccess.entitlement = .active(expirationDate: nil)
-            $0.aphroditeAccess.paywall.entitlement = .active(expirationDate: nil)
-            $0.aphroditeAccess.refreshGeneration = 1
+        await store.receive(.plusAccess(.entitlementUpdated(.active(expirationDate: nil)))) {
+            $0.plusAccess.entitlement = .active(expirationDate: nil)
+            $0.plusAccess.paywall.entitlement = .active(expirationDate: nil)
+            $0.plusAccess.refreshGeneration = 1
         }
+        await store.receive(.soundMixer(.entitlementChanged(true))) { $0.soundMixer.isEntitled = true }
+        await store.receive(.brightness(.entitlementChanged(true))) { $0.brightness.isEntitled = true }
         await store.receive(.paywall(.presented(.authoritativeEntitlementUpdated(.active(expirationDate: nil))))) {
             $0.paywall?.entitlementGeneration = 1
         }
-        #expect(store.state.aphroditeAccess.canAccess)
+        #expect(store.state.plusAccess.canAccess)
     }
 
     @Test func approvedPendingPurchaseUpdatesBothPaywalls() async {
         var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
         state.paywall = .init(purchasePending: true)
-        state.aphroditeAccess.paywall.purchasePending = true
+        state.plusAccess.paywall.purchasePending = true
         let store = TestStore(initialState: state) { RemoteAppFeature() }
-        await store.send(.aphroditeAccess(.entitlementUpdated(.active(expirationDate: nil)))) {
-            $0.aphroditeAccess.entitlement = .active(expirationDate: nil)
-            $0.aphroditeAccess.paywall.entitlement = .active(expirationDate: nil)
-            $0.aphroditeAccess.paywall.purchasePending = false
-            $0.aphroditeAccess.refreshGeneration = 1
+        await store.send(.plusAccess(.entitlementUpdated(.active(expirationDate: nil)))) {
+            $0.plusAccess.entitlement = .active(expirationDate: nil)
+            $0.plusAccess.paywall.entitlement = .active(expirationDate: nil)
+            $0.plusAccess.paywall.purchasePending = false
+            $0.plusAccess.refreshGeneration = 1
             $0.paywall?.entitlement = .active(expirationDate: nil)
             $0.paywall?.purchasePending = false
         }
+        await store.receive(.soundMixer(.entitlementChanged(true))) { $0.soundMixer.isEntitled = true }
+        await store.receive(.brightness(.entitlementChanged(true))) { $0.brightness.isEntitled = true }
         await store.receive(.paywall(.presented(.authoritativeEntitlementUpdated(.active(expirationDate: nil))))) {
             $0.paywall?.entitlementGeneration = 1
         }
         #expect(store.state.paywall?.canPurchase == false)
-        #expect(store.state.aphroditeAccess.canAccess)
+        #expect(store.state.plusAccess.canAccess)
     }
 
     @Test func membershipPresentationAndDismissalPreserveSetup() async {
@@ -103,6 +109,7 @@ struct RemoteAppFeatureTests {
         state.systemMonitor.isStreaming = true
         let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
             $0.remoteConnection.setSystemMonitorStreaming = { #expect($0 == false) }
+            $0.remoteSubscription.currentEntitlement = { .inactive }
         }
         await store.send(.pageSelected(.aphrodite)) { $0.selectedPage = .aphrodite }
         await store.receive(.systemMonitor(.visibilityChanged(false))) {
@@ -111,6 +118,8 @@ struct RemoteAppFeatureTests {
         }
         await store.receive(.codexUsage(.visibilityChanged(false)))
         await store.receive(.claudeUsage(.visibilityChanged(false)))
+        await store.receive(.plusAccess(.refresh)) { $0.plusAccess.refreshGeneration = 1 }
+        await store.receive(.plusAccess(.entitlementResponse(1, .inactive)))
         #expect(store.state.controlsConfiguration == nil)
         #expect(store.state.monitorConfiguration == nil)
         #expect(store.state.paywall == nil)
@@ -121,13 +130,117 @@ struct RemoteAppFeatureTests {
         var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
         state.selectedPage = .codexUsage
         state.codexUsage.isVisible = true
-        let store = TestStore(initialState: state) { RemoteAppFeature() }
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remoteSubscription.currentEntitlement = { .inactive }
+        }
         await store.send(.pageSelected(.aphrodite)) { $0.selectedPage = .aphrodite }
         await store.receive(.systemMonitor(.visibilityChanged(false)))
         await store.receive(.codexUsage(.visibilityChanged(false))) { $0.codexUsage.isVisible = false }
         await store.receive(.claudeUsage(.visibilityChanged(false)))
+        await store.receive(.plusAccess(.refresh)) { $0.plusAccess.refreshGeneration = 1 }
+        await store.receive(.plusAccess(.entitlementResponse(1, .inactive)))
         #expect(store.state.path.isEmpty)
         #expect(store.state.paywall == nil)
+    }
+
+    @Test(arguments: [RemoteAppPage.soundMixer, .brightness, .aphrodite])
+    func selectingPlusPageRefreshesPlusAccess(page: RemoteAppPage) async {
+        let store = TestStore(initialState: RemoteAppFeature.State(hasCompletedInitialSetup: true, tabConfiguration: .init())) {
+            RemoteAppFeature()
+        } withDependencies: {
+            $0.remoteSubscription.currentEntitlement = { .inactive }
+        }
+        await store.send(.pageSelected(page)) { $0.selectedPage = page }
+        await store.receive(.systemMonitor(.visibilityChanged(false)))
+        if page == .soundMixer {
+            await store.receive(.soundMixer(.visibilityChanged(true))) { $0.soundMixer.isVisible = true }
+        }
+        if page == .brightness {
+            await store.receive(.brightness(.visibilityChanged(true))) { $0.brightness.isVisible = true }
+        }
+        await store.receive(.codexUsage(.visibilityChanged(false)))
+        await store.receive(.claudeUsage(.visibilityChanged(false)))
+        await store.receive(.plusAccess(.refresh)) { $0.plusAccess.refreshGeneration = 1 }
+        await store.receive(.plusAccess(.entitlementResponse(1, .inactive)))
+    }
+
+    @Test func soundMixerStreamsOnlyWhileVisibleForegroundedAndEntitled() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true, tabConfiguration: .init())
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.soundMixer.selectedMacID = studio.id
+        state.soundMixer.connectionState = .authenticated
+        let streaming = LockIsolated<[Bool]>([])
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remoteConnection.setSoundMixerStreaming = { enabled in streaming.withValue { $0.append(enabled) } }
+            $0.remoteConnection.setForegrounded = { _ in }
+            $0.remoteIdleTimer.setIdleTimerDisabled = { _ in }
+            $0.remoteSubscription.currentEntitlement = { .active(expirationDate: nil) }
+        }
+        store.exhaustivity = .off
+
+        await store.send(.pageSelected(.soundMixer))
+        await store.receive(.soundMixer(.visibilityChanged(true)))
+        await store.receive(.soundMixer(.entitlementChanged(true)))
+        await store.receive(.soundMixer(.streamingResponse(.success(true))))
+        #expect(store.state.soundMixer.isStreaming)
+
+        let snapshot = RemoteSoundMixerSnapshot(revision: 1, isEnabled: true, systemVolume: 30, output: nil, apps: [])
+        await store.send(.connectionEvent(.soundMixer(studio.id, snapshot)))
+        await store.receive(.soundMixer(.connectionEvent(.soundMixer(studio.id, snapshot))))
+        #expect(store.state.soundMixer.snapshot == snapshot)
+
+        await store.send(.scenePhaseChanged(false))
+        await store.receive(.soundMixer(.visibilityChanged(false)))
+        await store.finish()
+        #expect(store.state.soundMixer.isStreaming == false)
+        #expect(streaming.value == [true, false])
+    }
+
+    @Test func brightnessStreamsOnlyWhileVisibleForegroundedAndEntitled() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true, tabConfiguration: .init())
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.brightness.selectedMacID = studio.id
+        state.brightness.connectionState = .authenticated
+        let streaming = LockIsolated<[Bool]>([])
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remoteConnection.setBrightnessStreaming = { enabled in streaming.withValue { $0.append(enabled) } }
+            $0.remoteConnection.setForegrounded = { _ in }
+            $0.remoteIdleTimer.setIdleTimerDisabled = { _ in }
+            $0.remoteSubscription.currentEntitlement = { .active(expirationDate: nil) }
+        }
+        store.exhaustivity = .off
+
+        await store.send(.pageSelected(.brightness))
+        await store.receive(.brightness(.visibilityChanged(true)))
+        await store.receive(.brightness(.entitlementChanged(true)))
+        await store.receive(.brightness(.streamingResponse(.success(true))))
+        #expect(store.state.brightness.isStreaming)
+        #expect(store.state.soundMixer.isVisible == false)
+
+        let snapshot = RemoteBrightnessSnapshot(revision: 1, displays: [
+            .init(id: 1, name: "Built-in Retina Display", control: .native, level: 0.7, hasError: false),
+        ])
+        await store.send(.connectionEvent(.brightness(studio.id, snapshot)))
+        await store.receive(.brightness(.connectionEvent(.brightness(studio.id, snapshot))))
+        #expect(store.state.brightness.snapshot == snapshot)
+
+        await store.send(.scenePhaseChanged(false))
+        await store.receive(.brightness(.visibilityChanged(false)))
+        await store.finish()
+        #expect(store.state.brightness.isStreaming == false)
+        #expect(streaming.value == [true, false])
+    }
+
+    @Test func paywallBackgroundShowsOnlyForPlusPagesWithoutAccess() {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.plusAccess.entitlement = .inactive
+        #expect(state.showsPaywallBackground(for: .brightness))
+        #expect(state.showsPaywallBackground(for: .soundMixer))
+        #expect(state.showsPaywallBackground(for: .controls) == false)
+        state.plusAccess.entitlement = .active(expirationDate: nil)
+        #expect(state.showsPaywallBackground(for: .brightness) == false)
     }
 
     @Test func pageSelectionSynchronizesMonitorVisibilityWithSwipeablePages() async {
@@ -1891,6 +2004,27 @@ struct RemoteAppTabConfigurationTests {
         } else {
             await store.receive(.claudeUsage(.visibilityChanged(false)))
         }
+        await store.send(.pageSelected(page))
+    }
+
+    @Test(arguments: [RemoteAppPage.soundMixer, .brightness, .aphrodite])
+    func hidingSelectedPlusTabReturnsToControls(page: RemoteAppPage) async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true, tabConfiguration: .init())
+        state.selectedPage = page
+        var configuration = state.tabConfiguration
+        configuration.setVisibility(false, for: page)
+        let expected = configuration
+        state.path.append(.globalSettings(.init(tabConfiguration: .init())))
+        let id = state.path.ids[0]
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+        await store.send(.path(.element(id: id, action: .globalSettings(.delegate(.tabConfigurationChanged(expected)))))) {
+            $0.tabConfiguration = expected
+            $0.path[id: id] = .globalSettings(.init(tabConfiguration: expected))
+        }
+        await store.receive(.pageSelected(.controls)) { $0.selectedPage = .controls }
+        await store.receive(.systemMonitor(.visibilityChanged(false)))
+        await store.receive(.codexUsage(.visibilityChanged(false)))
+        await store.receive(.claudeUsage(.visibilityChanged(false)))
         await store.send(.pageSelected(page))
     }
 

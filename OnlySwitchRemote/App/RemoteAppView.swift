@@ -15,13 +15,13 @@ struct RemoteAppView: View {
             } else {
                 NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
                     ZStack(alignment: .bottom) {
-                        if store.selectedPage == .aphrodite, store.aphroditeAccess.canAccess == false {
+                        if store.state.showsPaywallBackground(for: store.selectedPage) {
                             RemotePaywallBackground()
                         } else {
                             DashboardBackground()
                         }
 
-                        if store.selectedPage == .aphrodite, store.aphroditeAccess.canAccess, store.aphrodite.selectedApp != nil {
+                        if store.selectedPage == .aphrodite, store.plusAccess.canAccess, store.aphrodite.selectedApp != nil {
                             RemoteAphroditeView(store: store.scope(state: \.aphrodite, action: \.aphrodite))
                                 .ignoresSafeArea(edges: .bottom)
                         } else {
@@ -34,6 +34,20 @@ struct RemoteAppView: View {
                                         .ignoresSafeArea(edges: .bottom)
                                         .tag(RemoteAppPage.systemMonitor)
                                 }
+                                if store.tabConfiguration.showsSoundMixer {
+                                    RemotePlusGateView(accessStore: plusAccessStore) {
+                                        RemoteSoundMixerView(store: store.scope(state: \.soundMixer, action: \.soundMixer))
+                                    }
+                                        .ignoresSafeArea(edges: .bottom)
+                                        .tag(RemoteAppPage.soundMixer)
+                                }
+                                if store.tabConfiguration.showsBrightness {
+                                    RemotePlusGateView(accessStore: plusAccessStore) {
+                                        RemoteBrightnessView(store: store.scope(state: \.brightness, action: \.brightness))
+                                    }
+                                        .ignoresSafeArea(edges: .bottom)
+                                        .tag(RemoteAppPage.brightness)
+                                }
                                 if store.tabConfiguration.showsCodexUsage {
                                     RemoteCodexUsageView(store: store.scope(state: \.codexUsage, action: \.codexUsage))
                                         .ignoresSafeArea(edges: .bottom)
@@ -44,12 +58,13 @@ struct RemoteAppView: View {
                                         .ignoresSafeArea(edges: .bottom)
                                         .tag(RemoteAppPage.claudeUsage)
                                 }
-                                RemoteAphroditeAccessView(
-                                    accessStore: store.scope(state: \.aphroditeAccess, action: \.aphroditeAccess),
-                                    toolsStore: store.scope(state: \.aphrodite, action: \.aphrodite)
-                                )
-                                    .ignoresSafeArea(edges: .bottom)
-                                    .tag(RemoteAppPage.aphrodite)
+                                if store.tabConfiguration.showsAphrodite {
+                                    RemotePlusGateView(accessStore: plusAccessStore) {
+                                        RemoteAphroditeView(store: store.scope(state: \.aphrodite, action: \.aphrodite))
+                                    }
+                                        .ignoresSafeArea(edges: .bottom)
+                                        .tag(RemoteAppPage.aphrodite)
+                                }
                             }
                             .tabViewStyle(.page(indexDisplayMode: .never))
                             .ignoresSafeArea(edges: .bottom)
@@ -155,14 +170,15 @@ struct RemoteAppView: View {
             }
         }
         .task { await store.send(.task).finish() }
-        .task { await store.send(.aphroditeAccess(.task)).finish() }
-        .onChange(of: store.selectedPage) { _, page in
-            if page == .aphrodite { store.send(.aphroditeAccess(.refresh)) }
-        }
+        .task { await store.send(.plusAccess(.task)).finish() }
         .onChange(of: scenePhase, initial: true) { _, phase in
             store.send(.scenePhaseChanged(phase == .active))
-            if phase == .active { store.send(.aphroditeAccess(.refresh)) }
+            if phase == .active { store.send(.plusAccess(.refresh)) }
         }
+    }
+
+    private var plusAccessStore: StoreOf<RemotePlusAccessFeature> {
+        store.scope(state: \.plusAccess, action: \.plusAccess)
     }
 
     private var pageSelection: Binding<RemoteAppPage> {

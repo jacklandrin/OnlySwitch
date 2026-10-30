@@ -69,6 +69,9 @@ struct RemoteConnectionClient: Sendable {
     var fetchClaudeUsage: @Sendable (RemoteClaudeUsageInvocation) async throws -> RemoteClaudeUsageResult = { _ in throw RemoteDependencyError.unimplemented }
     var sendSoundMixer: @Sendable (RemoteSoundMixerCommand) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
     var setSystemMonitorStreaming: @Sendable (Bool) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
+    var setSoundMixerStreaming: @Sendable (Bool) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
+    var setBrightnessStreaming: @Sendable (Bool) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
+    var sendBrightness: @Sendable (RemoteBrightnessCommand) async throws -> Void = { _ in throw RemoteDependencyError.unimplemented }
     var setForegrounded: @Sendable (Bool) async -> Void = { _ in }
 }
 

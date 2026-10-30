@@ -354,14 +354,14 @@ private actor RestoreGate {
 }
 
 @MainActor
-struct RemoteAphroditeAccessFeatureTests {
+struct RemotePlusAccessFeatureTests {
     @Test func inactiveUsersSeePaywallByDefault() {
-        #expect(RemoteAphroditeAccessFeature.State().canAccess == false)
+        #expect(RemotePlusAccessFeature.State().canAccess == false)
     }
 
     @Test func membershipRefreshDoesNotLoadProducts() async {
-        let store = TestStore(initialState: RemoteAphroditeAccessFeature.State()) {
-            RemoteAphroditeAccessFeature()
+        let store = TestStore(initialState: RemotePlusAccessFeature.State()) {
+            RemotePlusAccessFeature()
         } withDependencies: {
             $0.remoteSubscription.currentEntitlement = { .active(expirationDate: nil) }
             $0.remoteSubscription.loadProduct = { Issue.record("Access must not wait for product loading"); return nil }
@@ -376,7 +376,7 @@ struct RemoteAphroditeAccessFeatureTests {
 
     @Test func transactionUpdatesRefreshAccessAndRejectStaleResponse() async {
         let (stream, continuation) = AsyncStream<RemoteSubscriptionEntitlement>.makeStream()
-        let store = TestStore(initialState: RemoteAphroditeAccessFeature.State()) { RemoteAphroditeAccessFeature() } withDependencies: {
+        let store = TestStore(initialState: RemotePlusAccessFeature.State()) { RemotePlusAccessFeature() } withDependencies: {
             $0.remoteSubscription.currentEntitlement = { .inactive }
             $0.remoteSubscription.entitlementUpdates = { stream }
         }
@@ -402,9 +402,9 @@ struct RemoteAphroditeAccessFeatureTests {
     }
 
     @Test func revokedMembershipLocksAccess() async {
-        var state = RemoteAphroditeAccessFeature.State()
+        var state = RemotePlusAccessFeature.State()
         state.entitlement = .active(expirationDate: nil)
-        let store = TestStore(initialState: state) { RemoteAphroditeAccessFeature() }
+        let store = TestStore(initialState: state) { RemotePlusAccessFeature() }
         await store.send(.entitlementUpdated(.inactive)) {
             $0.entitlement = .inactive
             $0.refreshGeneration = 1
@@ -413,7 +413,7 @@ struct RemoteAphroditeAccessFeatureTests {
     }
 
     @Test func restoreUnlocksEmbeddedPaywallAndInvalidatesOldRefresh() async {
-        let store = TestStore(initialState: RemoteAphroditeAccessFeature.State()) { RemoteAphroditeAccessFeature() }
+        let store = TestStore(initialState: RemotePlusAccessFeature.State()) { RemotePlusAccessFeature() }
         await store.send(.paywall(.restoreResponse(.success(.active(expirationDate: nil))))) {
             $0.paywall.entitlement = .active(expirationDate: nil)
             $0.paywall.restoreCompleted = true
@@ -426,7 +426,7 @@ struct RemoteAphroditeAccessFeatureTests {
     }
 
     @Test func purchaseUnlocksEmbeddedPaywallAndInvalidatesOldRefresh() async {
-        let store = TestStore(initialState: RemoteAphroditeAccessFeature.State()) { RemoteAphroditeAccessFeature() }
+        let store = TestStore(initialState: RemotePlusAccessFeature.State()) { RemotePlusAccessFeature() }
         await store.send(.paywall(.purchaseResponse(.success(.purchased(.active(expirationDate: nil)))))) {
             $0.paywall.entitlement = .active(expirationDate: nil)
             $0.entitlement = .active(expirationDate: nil)
@@ -439,7 +439,7 @@ struct RemoteAphroditeAccessFeatureTests {
     @Test func membershipExpirationLocksWithoutTabSwitch() async {
         let clock = TestClock()
         let now = Date(timeIntervalSince1970: 2_000_000_000)
-        let store = TestStore(initialState: RemoteAphroditeAccessFeature.State()) { RemoteAphroditeAccessFeature() } withDependencies: {
+        let store = TestStore(initialState: RemotePlusAccessFeature.State()) { RemotePlusAccessFeature() } withDependencies: {
             $0.continuousClock = clock
             $0.date.now = now
         }
@@ -461,7 +461,7 @@ struct RemoteAphroditeAccessFeatureTests {
         let clock = TestClock()
         let gate = RestoreGate()
         let now = Date(timeIntervalSince1970: 2_000_000_000)
-        let store = TestStore(initialState: RemoteAphroditeAccessFeature.State()) { RemoteAphroditeAccessFeature() } withDependencies: {
+        let store = TestStore(initialState: RemotePlusAccessFeature.State()) { RemotePlusAccessFeature() } withDependencies: {
             $0.continuousClock = clock
             $0.date.now = now
             $0.remoteSubscription.currentEntitlement = { await gate.restore() }
@@ -486,11 +486,11 @@ struct RemoteAphroditeAccessFeatureTests {
 
     #if DEBUG
     @Test func bypassCanBeDisabledWithoutLosingMembershipState() async {
-        let store = TestStore(initialState: RemoteAphroditeAccessFeature.State()) { RemoteAphroditeAccessFeature() }
+        let store = TestStore(initialState: RemotePlusAccessFeature.State()) { RemotePlusAccessFeature() }
         let debug = TestStore(initialState: RemoteDebugMenuFeature.State()) { RemoteDebugMenuFeature() }
-        await debug.send(.bypassPaywallChanged(true)) { $0.$bypassAphroditePaywall.withLock { $0 = true } }
+        await debug.send(.bypassPaywallChanged(true)) { $0.$bypassPlusPaywall.withLock { $0 = true } }
         #expect(store.state.canAccess)
-        await debug.send(.bypassPaywallChanged(false)) { $0.$bypassAphroditePaywall.withLock { $0 = false } }
+        await debug.send(.bypassPaywallChanged(false)) { $0.$bypassPlusPaywall.withLock { $0 = false } }
         #expect(store.state.canAccess == false)
         #expect(store.state.entitlement == .inactive)
     }

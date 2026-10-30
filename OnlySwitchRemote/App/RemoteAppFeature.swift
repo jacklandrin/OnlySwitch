@@ -1,9 +1,11 @@
 import ComposableArchitecture
 import Foundation
 
-enum RemoteAppPage: Hashable, Sendable {
+enum RemoteAppPage: Hashable, Sendable, CaseIterable {
     case controls
     case systemMonitor
+    case soundMixer
+    case brightness
     case codexUsage
     case claudeUsage
     case aphrodite
@@ -24,10 +26,12 @@ struct RemoteAppFeature {
         var selectedPage: RemoteAppPage = .controls
         var tabConfiguration: RemoteTabConfiguration
         var systemMonitor = RemoteSystemMonitorFeature.State()
+        var soundMixer = RemoteSoundMixerFeature.State()
+        var brightness = RemoteBrightnessFeature.State()
         var codexUsage = RemoteCodexUsageFeature.State()
         var claudeUsage = RemoteClaudeUsageFeature.State()
         var aphrodite = RemoteAphroditeFeature.State()
-        var aphroditeAccess = RemoteAphroditeAccessFeature.State()
+        var plusAccess = RemotePlusAccessFeature.State()
         var systemMonitorLayoutGeneration: UInt64 = 0
         var connectedMacIDs: Set<UUID> = []
         var activeSessionID: UUID?
@@ -45,6 +49,10 @@ struct RemoteAppFeature {
         var pendingPersistenceIntent: RemoteAppPersistenceIntent?
         var isPersisting = false
         var rootIssue: RootIssue?
+
+        func showsPaywallBackground(for page: RemoteAppPage) -> Bool {
+            page.requiresPlus && plusAccess.canAccess == false
+        }
 
         init(
             hasCompletedInitialSetup: Bool,
@@ -131,10 +139,12 @@ struct RemoteAppFeature {
         case membershipTapped
         case dashboard(DashboardFeature.Action)
         case systemMonitor(RemoteSystemMonitorFeature.Action)
+        case soundMixer(RemoteSoundMixerFeature.Action)
+        case brightness(RemoteBrightnessFeature.Action)
         case codexUsage(RemoteCodexUsageFeature.Action)
         case claudeUsage(RemoteClaudeUsageFeature.Action)
         case aphrodite(RemoteAphroditeFeature.Action)
-        case aphroditeAccess(RemoteAphroditeAccessFeature.Action)
+        case plusAccess(RemotePlusAccessFeature.Action)
         case requiredGlobalSettings(GlobalSettingsFeature.Action)
         case controlsConfiguration(PresentationAction<SettingsFeature.Action>)
         case monitorConfiguration(PresentationAction<RemoteSystemMonitorConfigurationFeature.Action>)
@@ -156,10 +166,12 @@ struct RemoteAppFeature {
     var body: some ReducerOf<Self> {
         Scope(state: \.dashboard, action: \.dashboard) { DashboardFeature() }
         Scope(state: \.systemMonitor, action: \.systemMonitor) { RemoteSystemMonitorFeature() }
+        Scope(state: \.soundMixer, action: \.soundMixer) { RemoteSoundMixerFeature() }
+        Scope(state: \.brightness, action: \.brightness) { RemoteBrightnessFeature() }
         Scope(state: \.codexUsage, action: \.codexUsage) { RemoteCodexUsageFeature() }
         Scope(state: \.claudeUsage, action: \.claudeUsage) { RemoteClaudeUsageFeature() }
         Scope(state: \.aphrodite, action: \.aphrodite) { RemoteAphroditeFeature() }
-        Scope(state: \.aphroditeAccess, action: \.aphroditeAccess) { RemoteAphroditeAccessFeature() }
+        Scope(state: \.plusAccess, action: \.plusAccess) { RemotePlusAccessFeature() }
         Reduce { state, action in
             switch action {
             case .task:
@@ -321,7 +333,7 @@ struct RemoteAppFeature {
                     return .merge(forwardToDashboard(event, state: state), .send(.codexUsage(.contextChanged(macID: macID, sessionID: sessionID))), .send(.claudeUsage(.contextChanged(macID: macID, sessionID: sessionID))))
                 case let .aphroditeLibraryChanged(macID, _):
                     return .send(.aphrodite(.libraryChanged(macID)))
-                case .catalog, .catalogInvalidated, .statusSnapshot, .status, .action, .soundMixer, .systemMonitor:
+                case .catalog, .catalogInvalidated, .statusSnapshot, .status, .action, .soundMixer, .systemMonitor, .brightness:
                     return forwardToDashboard(event, state: state)
                 }
 
@@ -454,6 +466,8 @@ struct RemoteAppFeature {
                 } else if foregrounded, state.selectedPage == .systemMonitor {
                     effects.append(.send(.systemMonitor(.visibilityChanged(true))))
                 }
+                effects.append(soundMixerVisibility(state: state))
+                effects.append(brightnessVisibility(state: state))
                 effects.append(.send(.codexUsage(.visibilityChanged(foregrounded && state.selectedPage == .codexUsage))))
                 effects.append(.send(.claudeUsage(.visibilityChanged(foregrounded && state.selectedPage == .claudeUsage))))
                 effects.append(
@@ -473,24 +487,38 @@ struct RemoteAppFeature {
                 return .none
 
             case let .pageSelected(page):
-                guard state.tabConfiguration.visiblePages.contains(page), state.selectedPage != page else { return .none }
+                guard state.tabConfiguration.isVisible(page), state.selectedPage != page else { return .none }
                 state.selectedPage = page
                 return .merge(
                     .send(.systemMonitor(.visibilityChanged(page == .systemMonitor && state.isForegrounded))),
-                    .send(.codexUsage(.visibilityChanged(page == .codexUsage && state.isForegrounded))), .send(.claudeUsage(.visibilityChanged(page == .claudeUsage && state.isForegrounded)))
+                    soundMixerVisibility(state: state),
+                    brightnessVisibility(state: state),
+                    .send(.codexUsage(.visibilityChanged(page == .codexUsage && state.isForegrounded))), .send(.claudeUsage(.visibilityChanged(page == .claudeUsage && state.isForegrounded))),
+                    page.requiresPlus ? .send(.plusAccess(.refresh)) : .none
                 )
 
             case let .paywall(.presented(.restoreResponse(.success(entitlement)))),
                  let .paywall(.presented(.purchaseResponse(.success(.purchased(entitlement))))):
-                return .send(.aphroditeAccess(.entitlementUpdated(entitlement)))
+                return .send(.plusAccess(.entitlementUpdated(entitlement)))
 
-            case .aphroditeAccess(.entitlementResponse), .aphroditeAccess(.entitlementUpdated),
-                 .aphroditeAccess(.entitlementExpired):
-                let entitlement = state.aphroditeAccess.entitlement
+            case .plusAccess(.entitlementResponse), .plusAccess(.entitlementUpdated),
+                 .plusAccess(.entitlementExpired):
+                let entitlement = state.plusAccess.entitlement
                 state.paywall?.entitlement = entitlement
                 if case .active = entitlement { state.paywall?.purchasePending = false }
-                guard state.paywall != nil else { return .none }
-                return .send(.paywall(.presented(.authoritativeEntitlementUpdated(entitlement))))
+                let canAccess = state.plusAccess.canAccess
+                let soundMixerEntitlement: Effect<Action> = state.soundMixer.isEntitled == canAccess
+                    ? .none
+                    : .send(.soundMixer(.entitlementChanged(canAccess)))
+                let brightnessEntitlement: Effect<Action> = state.brightness.isEntitled == canAccess
+                    ? .none
+                    : .send(.brightness(.entitlementChanged(canAccess)))
+                guard state.paywall != nil else { return .merge(soundMixerEntitlement, brightnessEntitlement) }
+                return .merge(
+                    soundMixerEntitlement,
+                    brightnessEntitlement,
+                    .send(.paywall(.presented(.authoritativeEntitlementUpdated(entitlement))))
+                )
 
             case .membershipTapped:
                 state.paywall = .init()
@@ -526,7 +554,7 @@ struct RemoteAppFeature {
                         state.path[id: id] = .globalSettings(settings)
                     }
                 }
-                guard configuration.visiblePages.contains(state.selectedPage) == false else { return .none }
+                guard configuration.isVisible(state.selectedPage) == false else { return .none }
                 return .send(.pageSelected(.controls))
 
             case let .requiredGlobalSettings(.delegate(.paired(mac))):
@@ -629,7 +657,7 @@ struct RemoteAppFeature {
                 state.systemMonitor.layout = layout
                 return .none
 
-            case .dashboard, .systemMonitor, .codexUsage, .claudeUsage, .aphrodite, .aphroditeAccess, .requiredGlobalSettings,
+            case .dashboard, .systemMonitor, .soundMixer, .brightness, .codexUsage, .claudeUsage, .aphrodite, .plusAccess, .requiredGlobalSettings,
                  .controlsConfiguration, .monitorConfiguration, .paywall, .path:
                 return .none
             }
@@ -822,6 +850,8 @@ struct RemoteAppFeature {
             }
         }
         syncSystemMonitorState(&state)
+        syncSoundMixerState(&state)
+        syncBrightnessState(&state)
         guard state.dashboard.isActive else { return }
         syncDashboardState(&state)
     }
@@ -900,7 +930,77 @@ struct RemoteAppFeature {
         if state.systemMonitor.isVisible {
             effects.append(.send(.systemMonitor(.connectionEvent(event))))
         }
+        if state.soundMixer.isVisible {
+            effects.append(.send(.soundMixer(.connectionEvent(event))))
+        }
+        if state.brightness.isVisible {
+            effects.append(.send(.brightness(.connectionEvent(event))))
+        }
         return .merge(effects)
+    }
+
+    private func soundMixerVisibility(state: State) -> Effect<Action> {
+        let isVisible = state.isForegrounded && state.selectedPage == .soundMixer
+        guard state.soundMixer.isVisible != isVisible else { return .none }
+        return .send(.soundMixer(.visibilityChanged(isVisible)))
+    }
+
+    private func syncSoundMixerState(_ state: inout State) {
+        let selectedID = state.selectedMacID
+        if state.soundMixer.selectedMacID != selectedID {
+            state.soundMixer.selectedMacID = selectedID
+            state.soundMixer.snapshot = nil
+            state.soundMixer.expandedAppIDs = []
+            state.soundMixer.draftVolumes = [:]
+            state.soundMixer.draftGains = [:]
+            state.soundMixer.activeDrags = []
+            state.soundMixer.availabilityMessage = nil
+            state.soundMixer.commandError = nil
+            state.soundMixer.isStreamRequested = false
+            state.soundMixer.isStreaming = false
+        }
+        guard let selectedID else {
+            state.soundMixer.connectionState = .idle
+            return
+        }
+        if state.pairedMacs[id: selectedID]?.requiresPairing == true {
+            state.soundMixer.connectionState = .revoked
+        } else if state.connectedMacIDs.contains(selectedID) {
+            state.soundMixer.connectionState = .authenticated
+        } else if state.soundMixer.connectionState != .connecting {
+            state.soundMixer.connectionState = .offline(nil)
+        }
+    }
+
+    private func brightnessVisibility(state: State) -> Effect<Action> {
+        let isVisible = state.isForegrounded && state.selectedPage == .brightness
+        guard state.brightness.isVisible != isVisible else { return .none }
+        return .send(.brightness(.visibilityChanged(isVisible)))
+    }
+
+    private func syncBrightnessState(_ state: inout State) {
+        let selectedID = state.selectedMacID
+        if state.brightness.selectedMacID != selectedID {
+            state.brightness.selectedMacID = selectedID
+            state.brightness.snapshot = nil
+            state.brightness.draftLevels = [:]
+            state.brightness.activeDrags = []
+            state.brightness.availabilityMessage = nil
+            state.brightness.commandError = nil
+            state.brightness.isStreamRequested = false
+            state.brightness.isStreaming = false
+        }
+        guard let selectedID else {
+            state.brightness.connectionState = .idle
+            return
+        }
+        if state.pairedMacs[id: selectedID]?.requiresPairing == true {
+            state.brightness.connectionState = .revoked
+        } else if state.connectedMacIDs.contains(selectedID) {
+            state.brightness.connectionState = .authenticated
+        } else if state.brightness.connectionState != .connecting {
+            state.brightness.connectionState = .offline(nil)
+        }
     }
 
     private func loadSystemMonitorLayout(for macID: UUID, state: inout State) -> Effect<Action> {

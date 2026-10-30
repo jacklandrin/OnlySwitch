@@ -1,4 +1,5 @@
 import Foundation
+import os
 import RemoteCore
 import RemoteTransport
 import Testing
@@ -166,6 +167,212 @@ struct RemoteHostIntegrationTests {
 
         try await client.pair(code: "ABCDEFGH2345")
         #expect(try await client.catalog() == [])
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func soundMixerTabSubscriptionStreamsAndStopsForCurrentPeer() async throws {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let snapshot = Self.soundMixerSnapshot(revision: 1)
+        let probe = SystemMonitorStreamProbe()
+        let (stream, continuation) = AsyncThrowingStream.makeStream(
+            of: RemoteSoundMixerSnapshot.self,
+            throwing: Error.self
+        )
+        continuation.onTermination = { _ in
+            Task { await probe.recordCancellation() }
+        }
+        let host = RemoteHost.testing(
+            catalog: [],
+            router: router,
+            pairingCode: "ABCDEFGH2345",
+            soundMixerSnapshots: { stream }
+        )
+        let endpoint = try await host.startForTesting(port: 0)
+        defer {
+            continuation.finish()
+            Task { await host.stop() }
+        }
+        let client = try await RemoteHostTestClient.connect(to: endpoint, version: .init(major: 1, minor: 8))
+        try await client.pair(code: "ABCDEFGH2345")
+
+        try await client.sendMessage(.soundMixerSubscriptionUpdate(true))
+        continuation.yield(snapshot)
+        #expect(try await client.nextMessage() == .soundMixerSnapshot(snapshot))
+
+        try await client.sendMessage(.soundMixerSubscriptionUpdate(false))
+        await probe.waitForCancellation()
+        continuation.yield(Self.soundMixerSnapshot(revision: 2))
+        try await client.sendMessage(.ping(7))
+        #expect(try await client.nextMessage() == .pong(7))
+        await client.close()
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func legacySoundMixerTabSubscriptionIsRejectedWithoutStreaming() async throws {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let host = RemoteHost.testing(
+            catalog: [],
+            router: router,
+            pairingCode: "ABCDEFGH2345",
+            soundMixerSnapshots: {
+                Issue.record("A legacy peer must not start the Sound Mixer stream")
+                return AsyncThrowingStream { $0.finish() }
+            }
+        )
+        let endpoint = try await host.startForTesting(port: 0)
+        defer { Task { await host.stop() } }
+        let client = try await RemoteHostTestClient.connect(to: endpoint, version: .init(major: 1, minor: 7))
+        try await client.pair(code: "ABCDEFGH2345")
+
+        try await client.sendMessage(.soundMixerSubscriptionUpdate(true))
+        await #expect(throws: (any Error).self) {
+            _ = try await client.nextMessage()
+        }
+        await client.close()
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func legacySoundMixerCommandsKeepBasicControlsAndRejectTabCommands() async throws {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let snapshot = Self.soundMixerSnapshot(revision: 3)
+        let received = OSAllocatedUnfairLock<[RemoteSoundMixerCommand]>(initialState: [])
+        let host = RemoteHost.testing(
+            catalog: [],
+            router: router,
+            pairingCode: "ABCDEFGH2345",
+            soundMixerCommand: { command in
+                received.withLock { $0.append(command) }
+                return snapshot
+            }
+        )
+        let endpoint = try await host.startForTesting(port: 0)
+        defer { Task { await host.stop() } }
+        let client = try await RemoteHostTestClient.connect(to: endpoint, version: .init(major: 1, minor: 7))
+        try await client.pair(code: "ABCDEFGH2345")
+
+        try await client.sendMessage(.soundMixerCommand(.setAppVolume(id: "com.example.app", volume: 40)))
+        #expect(try await client.nextMessage() == .soundMixerSnapshot(snapshot))
+
+        try await client.sendMessage(.soundMixerCommand(.setAppEqualizerGain(id: "com.example.app", band: 2, gain: 6)))
+        await #expect(throws: (any Error).self) {
+            _ = try await client.nextMessage()
+        }
+        #expect(received.withLock { $0 } == [.setAppVolume(id: "com.example.app", volume: 40)])
+        await client.close()
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func brightnessSubscriptionStreamsForSessionAndCancelsOnSessionEnd() async throws {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let snapshot = Self.brightnessSnapshot(level: 0.4)
+        let probe = SystemMonitorStreamProbe()
+        let hostIDs = OSAllocatedUnfairLock<[UUID]>(initialState: [])
+        let (stream, continuation) = AsyncStream.makeStream(of: RemoteBrightnessSnapshot.self)
+        continuation.onTermination = { _ in
+            Task { await probe.recordCancellation() }
+        }
+        let host = RemoteHost.testing(
+            catalog: [],
+            router: router,
+            pairingCode: "ABCDEFGH2345",
+            brightnessSnapshots: { hostID in
+                hostIDs.withLock { $0.append(hostID) }
+                return stream
+            }
+        )
+        let endpoint = try await host.startForTesting(port: 0)
+        defer {
+            continuation.finish()
+            Task { await host.stop() }
+        }
+        let client = try await RemoteHostTestClient.connect(to: endpoint, version: .init(major: 1, minor: 8))
+        try await client.pair(code: "ABCDEFGH2345")
+
+        try await client.sendMessage(.brightnessSubscriptionUpdate(true))
+        continuation.yield(snapshot)
+        #expect(try await client.nextMessage() == .brightnessSnapshot(snapshot))
+        #expect(hostIDs.withLock { $0.count } == 1)
+
+        await client.close()
+        await probe.waitForCancellation()
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func brightnessCommandRepliesWithProviderSnapshot() async throws {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let snapshot = Self.brightnessSnapshot(level: 0.75)
+        let host = RemoteHost.testing(
+            catalog: [],
+            router: router,
+            pairingCode: "ABCDEFGH2345",
+            brightnessCommand: { command in
+                #expect(command == .setLevel(displayID: 1, level: 0.75))
+                return snapshot
+            }
+        )
+        let endpoint = try await host.startForTesting(port: 0)
+        defer { Task { await host.stop() } }
+        let client = try await RemoteHostTestClient.connect(to: endpoint, version: .init(major: 1, minor: 8))
+        try await client.pair(code: "ABCDEFGH2345")
+
+        try await client.sendMessage(.brightnessCommand(.setLevel(displayID: 1, level: 0.75)))
+        #expect(try await client.nextMessage() == .brightnessSnapshot(snapshot))
+        await client.close()
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func soundMixerCommandFailureKeepsSessionOpen() async throws {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let host = RemoteHost.testing(
+            catalog: [],
+            router: router,
+            pairingCode: "ABCDEFGH2345",
+            soundMixerCommand: { _ in
+                throw RemoteProtocolError(code: .controlNotFound, message: "App is gone")
+            }
+        )
+        let endpoint = try await host.startForTesting(port: 0)
+        defer { Task { await host.stop() } }
+        let client = try await RemoteHostTestClient.connect(to: endpoint, version: .init(major: 1, minor: 8))
+        try await client.pair(code: "ABCDEFGH2345")
+
+        try await client.sendMessage(.soundMixerCommand(.setAppEqualizerGain(id: "com.example.app", band: 2, gain: 6)))
+        try await client.sendMessage(.ping(11))
+        #expect(try await client.nextMessage() == .pong(11))
+        await client.close()
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func brightnessCommandFailureKeepsSessionOpen() async throws {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let host = RemoteHost.testing(
+            catalog: [],
+            router: router,
+            pairingCode: "ABCDEFGH2345",
+            brightnessCommand: { _ in
+                throw RemoteProtocolError(code: .controlUnavailable, message: "Display is not controllable")
+            }
+        )
+        let endpoint = try await host.startForTesting(port: 0)
+        defer { Task { await host.stop() } }
+        let client = try await RemoteHostTestClient.connect(to: endpoint, version: .init(major: 1, minor: 8))
+        try await client.pair(code: "ABCDEFGH2345")
+
+        try await client.sendMessage(.brightnessCommand(.setLevel(displayID: 1, level: 0.5)))
+        try await client.sendMessage(.ping(12))
+        #expect(try await client.nextMessage() == .pong(12))
+        await client.close()
+    }
+
+    private static func soundMixerSnapshot(revision: UInt64) -> RemoteSoundMixerSnapshot {
+        RemoteSoundMixerSnapshot(revision: revision, isEnabled: true, systemVolume: 50, output: nil, apps: [])
+    }
+
+    private static func brightnessSnapshot(level: Double) -> RemoteBrightnessSnapshot {
+        RemoteBrightnessSnapshot(
+            revision: 1,
+            displays: [.init(id: 1, name: "Built-in Display", control: .native, level: level, hasError: false)]
+        )
     }
 
     @Test

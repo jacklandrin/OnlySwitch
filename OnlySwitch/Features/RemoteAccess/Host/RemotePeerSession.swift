@@ -110,6 +110,10 @@ actor RemotePeerSession {
     private let authenticationAuthorized: @Sendable (UUID, UUID) async -> Bool
     private let authenticationConfirmed: @Sendable (UUID, UUID) async -> Bool
     private let systemMonitorSnapshots: @Sendable () -> AsyncThrowingStream<SystemMonitorSnapshot, Error>
+    private let soundMixerSnapshots: @Sendable () -> AsyncThrowingStream<RemoteSoundMixerSnapshot, Error>
+    private let soundMixerCommand: @Sendable (RemoteSoundMixerCommand) async throws -> RemoteSoundMixerSnapshot
+    private let brightnessSnapshots: @Sendable (UUID) -> AsyncStream<RemoteBrightnessSnapshot>
+    private let brightnessCommand: @Sendable (RemoteBrightnessCommand) async throws -> RemoteBrightnessSnapshot
     private let claudeUsage: @Sendable () async -> Result<RemoteClaudeUsageSnapshot, RemoteProtocolError>
     private let codexUsage: @Sendable (Bool) async -> Result<RemoteCodexUsageSnapshot, RemoteProtocolError>
     private let aphroditeSnapshotMessages: @Sendable () async throws -> [RemoteMessage]
@@ -124,6 +128,8 @@ actor RemotePeerSession {
     private var negotiatedVersion: RemoteProtocolVersion?
     private var advertisedCatalogRevision: UInt64?
     private var systemMonitorTask: Task<Void, Never>?
+    private var soundMixerTask: Task<Void, Never>?
+    private var brightnessTask: Task<Void, Never>?
     private var claudeUsageTask: Task<Void, Never>?
     private var claudeUsageGeneration: UInt64 = 0
     private var codexUsageTask: Task<Void, Never>?
@@ -152,6 +158,20 @@ actor RemotePeerSession {
         authenticationAuthorized: @escaping @Sendable (UUID, UUID) async -> Bool,
         authenticationConfirmed: @escaping @Sendable (UUID, UUID) async -> Bool,
         systemMonitorSnapshots: @escaping @Sendable () -> AsyncThrowingStream<SystemMonitorSnapshot, Error>,
+        soundMixerSnapshots: @escaping @Sendable () -> AsyncThrowingStream<RemoteSoundMixerSnapshot, Error> = {
+            AsyncThrowingStream {
+                $0.finish(throwing: RemoteProtocolError(code: .actionNotSupported, message: "Sound Mixer is unavailable"))
+            }
+        },
+        soundMixerCommand: @escaping @Sendable (RemoteSoundMixerCommand) async throws -> RemoteSoundMixerSnapshot = { _ in
+            throw RemoteProtocolError(code: .actionNotSupported, message: "Sound Mixer is unavailable")
+        },
+        brightnessSnapshots: @escaping @Sendable (UUID) -> AsyncStream<RemoteBrightnessSnapshot> = { _ in
+            AsyncStream { $0.finish() }
+        },
+        brightnessCommand: @escaping @Sendable (RemoteBrightnessCommand) async throws -> RemoteBrightnessSnapshot = { _ in
+            throw RemoteProtocolError(code: .actionNotSupported, message: "Brightness is unavailable")
+        },
         codexUsage: @escaping @Sendable (Bool) async -> Result<RemoteCodexUsageSnapshot, RemoteProtocolError> = { _ in
             .failure(.init(code: .actionNotSupported, message: "Codex usage is unavailable"))
         },
@@ -189,6 +209,10 @@ actor RemotePeerSession {
         self.authenticationAuthorized = authenticationAuthorized
         self.authenticationConfirmed = authenticationConfirmed
         self.systemMonitorSnapshots = systemMonitorSnapshots
+        self.soundMixerSnapshots = soundMixerSnapshots
+        self.soundMixerCommand = soundMixerCommand
+        self.brightnessSnapshots = brightnessSnapshots
+        self.brightnessCommand = brightnessCommand
         self.codexUsage = codexUsage
         self.claudeUsage = claudeUsage
         self.aphroditeSnapshotMessages = aphroditeSnapshotMessages
@@ -214,6 +238,8 @@ actor RemotePeerSession {
             await rollbackPendingPairingIfNeeded()
         }
         stopSystemMonitorStreaming()
+        stopSoundMixerStreaming()
+        stopBrightnessStreaming()
         codexUsageTask?.cancel()
         codexUsageTask = nil
         claudeUsageTask?.cancel()
@@ -231,6 +257,8 @@ actor RemotePeerSession {
             pendingPairing = nil
         }
         stopSystemMonitorStreaming()
+        stopSoundMixerStreaming()
+        stopBrightnessStreaming()
         codexUsageTask?.cancel()
         codexUsageTask = nil
         claudeUsageTask?.cancel()
@@ -786,15 +814,31 @@ actor RemotePeerSession {
                 try await sendEncrypted(.soundMixerSnapshot(await SoundMixerVM.shared.remoteSnapshot()))
             }
         case .soundMixerSnapshotRequest:
-            guard negotiatedVersion?.supportsSoundMixerRemote == true else {
-                throw RemoteProtocolError(code: .actionNotSupported, message: "Sound Mixer remote control requires a newer OnlySwitch")
-            }
+            try requireSoundMixer()
             try await sendEncrypted(.soundMixerSnapshot(await SoundMixerVM.shared.remoteSnapshot()))
         case let .soundMixerCommand(command):
-            guard negotiatedVersion?.supportsSoundMixerRemote == true else {
-                throw RemoteProtocolError(code: .actionNotSupported, message: "Sound Mixer remote control requires a newer OnlySwitch")
+            try requireSoundMixer()
+            if command.requiresSoundMixerTab { try requireSoundMixerTab() }
+            guard let snapshot = try await commandSnapshot({ try await soundMixerCommand(command) }) else { return }
+            try await sendEncrypted(.soundMixerSnapshot(snapshot))
+        case let .soundMixerSubscriptionUpdate(enabled):
+            try requireSoundMixerTab()
+            if enabled {
+                startSoundMixerStreaming()
+            } else {
+                stopSoundMixerStreaming()
             }
-            try await sendEncrypted(.soundMixerSnapshot(try await SoundMixerVM.shared.performRemoteCommand(command)))
+        case let .brightnessSubscriptionUpdate(enabled):
+            try requireBrightness()
+            if enabled {
+                startBrightnessStreaming()
+            } else {
+                stopBrightnessStreaming()
+            }
+        case let .brightnessCommand(command):
+            try requireBrightness()
+            guard let snapshot = try await commandSnapshot({ try await brightnessCommand(command) }) else { return }
+            try await sendEncrypted(.brightnessSnapshot(snapshot))
         case let .systemMonitorSubscriptionUpdate(enabled):
             guard negotiatedVersion?.supportsSystemMonitorRemote == true else {
                 throw RemoteProtocolError(
@@ -957,6 +1001,82 @@ actor RemotePeerSession {
     private func stopSystemMonitorStreaming() {
         systemMonitorTask?.cancel()
         systemMonitorTask = nil
+    }
+
+    /// Commands race against apps, devices, and displays disappearing on the Mac. A failed
+    /// command is dropped without a reply; the active subscription stream re-syncs the peer.
+    private func commandSnapshot<Snapshot: Sendable>(
+        _ perform: @Sendable () async throws -> Snapshot
+    ) async throws -> Snapshot? {
+        do {
+            return try await perform()
+        } catch is CancellationError {
+            throw CancellationError()
+        } catch {
+            return nil
+        }
+    }
+
+    private func requireSoundMixer() throws {
+        guard negotiatedVersion?.supportsSoundMixerRemote == true else {
+            throw RemoteProtocolError(code: .actionNotSupported, message: "Sound Mixer remote control requires a newer OnlySwitch")
+        }
+    }
+
+    private func requireSoundMixerTab() throws {
+        guard negotiatedVersion?.supportsSoundMixerTabRemote == true else {
+            throw RemoteProtocolError(code: .actionNotSupported, message: "Sound Mixer tab requires a newer OnlySwitch")
+        }
+    }
+
+    private func requireBrightness() throws {
+        guard negotiatedVersion?.supportsBrightnessRemote == true else {
+            throw RemoteProtocolError(code: .actionNotSupported, message: "Brightness remote control requires a newer OnlySwitch")
+        }
+    }
+
+    private func startSoundMixerStreaming() {
+        stopSoundMixerStreaming()
+        let snapshots = soundMixerSnapshots
+        soundMixerTask = Task { [weak self] in
+            do {
+                for try await snapshot in snapshots() {
+                    try Task.checkCancellation()
+                    guard let self else { return }
+                    try await self.sendEncrypted(.soundMixerSnapshot(snapshot))
+                }
+            } catch is CancellationError {
+            } catch {
+                // Mixer failures affect only the Sound Mixer tab; controls stay connected.
+            }
+        }
+    }
+
+    private func stopSoundMixerStreaming() {
+        soundMixerTask?.cancel()
+        soundMixerTask = nil
+    }
+
+    private func startBrightnessStreaming() {
+        stopBrightnessStreaming()
+        let snapshots = brightnessSnapshots
+        let hostID = id
+        brightnessTask = Task { [weak self] in
+            do {
+                for await snapshot in snapshots(hostID) {
+                    try Task.checkCancellation()
+                    guard let self else { return }
+                    try await self.sendEncrypted(.brightnessSnapshot(snapshot))
+                }
+            } catch {
+                // Send failures end only the brightness stream; the session loop handles disconnects.
+            }
+        }
+    }
+
+    private func stopBrightnessStreaming() {
+        brightnessTask?.cancel()
+        brightnessTask = nil
     }
 
     private func sendEncrypted(_ message: RemoteMessage) async throws {

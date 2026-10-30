@@ -179,6 +179,10 @@ actor RemoteHostTestClient {
         try await sendEncrypted(.systemMonitorSubscriptionUpdate(enabled))
     }
 
+    func sendMessage(_ message: RemoteMessage) async throws {
+        try await sendEncrypted(message)
+    }
+
     func nextStatus(for id: RemoteControlID) async throws -> RemoteControlStatus {
         while true {
             switch try await receiveEncrypted() {

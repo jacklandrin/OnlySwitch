@@ -5,7 +5,7 @@ import ComposableArchitecture
 struct RemoteDebugMenuFeature {
     @ObservableState
     struct State: Equatable {
-        @Shared(.appStorage("onlyremoteDebugBypassAphroditePaywall")) var bypassAphroditePaywall = false
+        @Shared(.appStorage("onlyremoteDebugBypassPlusPaywall")) var bypassPlusPaywall = false
     }
 
     enum Action: Equatable {
@@ -16,7 +16,7 @@ struct RemoteDebugMenuFeature {
         Reduce { state, action in
             switch action {
             case let .bypassPaywallChanged(enabled):
-                state.$bypassAphroditePaywall.withLock { $0 = enabled }
+                state.$bypassPlusPaywall.withLock { $0 = enabled }
                 return .none
             }
         }

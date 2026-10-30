@@ -343,10 +343,19 @@
 		B98500000000000000000003 /* SystemMonitorSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B98500000000000000000001 /* SystemMonitorSwitch.swift */; };
 		B99000000000000000000003 /* ReverseScrollDirectionSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99000000000000000000001 /* ReverseScrollDirectionSwitch.swift */; };
 		BA1000000000000000000005 /* SystemMonitorProcessActivation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1000000000000000000004 /* SystemMonitorProcessActivation.swift */; };
+		5DA700000000000000000201 /* RemoteSoundMixerFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA700000000000000000101 /* RemoteSoundMixerFeature.swift */; };
+		5DA700000000000000000202 /* RemoteSoundMixerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA700000000000000000102 /* RemoteSoundMixerView.swift */; };
+		5DA700000000000000000203 /* RemoteMixerSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA700000000000000000103 /* RemoteMixerSlider.swift */; };
+		5DA700000000000000000204 /* RemoteEqualizerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA700000000000000000104 /* RemoteEqualizerView.swift */; };
+		5DA700000000000000000205 /* RemoteSoundMixerFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA700000000000000000105 /* RemoteSoundMixerFeatureTests.swift */; };
+		B8A700000000000000000201 /* RemoteBrightnessFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A700000000000000000101 /* RemoteBrightnessFeature.swift */; };
+		B8A700000000000000000202 /* RemoteBrightnessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A700000000000000000102 /* RemoteBrightnessView.swift */; };
+		B8A700000000000000000203 /* RemoteBrightnessFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A700000000000000000103 /* RemoteBrightnessFeatureTests.swift */; };
 		C0D000000000000000000001 /* RemoteSystemMonitorFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D000000000000000000021 /* RemoteSystemMonitorFeature.swift */; };
 		C0D000000000000000000002 /* RemoteSystemMonitorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D000000000000000000022 /* RemoteSystemMonitorView.swift */; };
 		C0D000000000000000000003 /* RemoteSystemMonitorChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D000000000000000000023 /* RemoteSystemMonitorChartView.swift */; };
 		C0D000000000000000000004 /* RemotePageTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D000000000000000000024 /* RemotePageTabBar.swift */; };
+		A7AB00000000000000000103 /* RemoteAppPageIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7AB00000000000000000203 /* RemoteAppPageIcon.swift */; };
 		C0D000000000000000000005 /* RemoteSystemMonitorFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D000000000000000000025 /* RemoteSystemMonitorFeatureTests.swift */; };
 		C0D000000000000000000006 /* RemoteSystemMonitorViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D000000000000000000026 /* RemoteSystemMonitorViewTests.swift */; };
 		C0D000000000000000000007 /* RemoteSystemMonitorGaugeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D000000000000000000027 /* RemoteSystemMonitorGaugeView.swift */; };
@@ -420,6 +429,7 @@
 		D5E1A0010000000000000003 /* DisplayVolumeHUDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E1A0020000000000000003 /* DisplayVolumeHUDView.swift */; };
 		DABA00000000000000000002 /* GlobalSettingsFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA00000000000000000022 /* GlobalSettingsFeature.swift */; };
 		DABA00000000000000000003 /* GlobalSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA00000000000000000023 /* GlobalSettingsView.swift */; };
+		A7AB00000000000000000102 /* RemoteTabSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7AB00000000000000000202 /* RemoteTabSettingsView.swift */; };
 		DABA00000000000000000004 /* RemoteIdleTimerClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA00000000000000000024 /* RemoteIdleTimerClient.swift */; };
 		F3A300000000000000000020 /* OnlySwitchRemoteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A300000000000000000010 /* OnlySwitchRemoteApp.swift */; };
 		F3A300000000000000000021 /* RemoteAppFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A300000000000000000011 /* RemoteAppFeature.swift */; };
@@ -512,6 +522,7 @@
 		F4AA00000000000000000001 /* RemotePaywallFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AA00000000000000000014 /* RemotePaywallFeatureTests.swift */; };
 		F4AA00000000000000000002 /* RemoteSubscriptionClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AA00000000000000000015 /* RemoteSubscriptionClientTests.swift */; };
 		F4AA00000000000000000003 /* GlobalSettingsFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AA00000000000000000016 /* GlobalSettingsFeatureTests.swift */; };
+		A7AB00000000000000000104 /* RemoteTabConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7AB00000000000000000204 /* RemoteTabConfigurationTests.swift */; };
 		F4AB00000000000000000001 /* RemoteSubscriptionClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AB00000000000000000011 /* RemoteSubscriptionClient.swift */; };
 		F4AB00000000000000000002 /* RemotePaywallFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AB00000000000000000012 /* RemotePaywallFeature.swift */; };
 		F4AB00000000000000000003 /* RemotePaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AB00000000000000000013 /* RemotePaywallView.swift */; };
@@ -519,17 +530,24 @@
 		F4AC00000000000000000001 /* RemoteAphroditeFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AC00000000000000000011 /* RemoteAphroditeFeature.swift */; };
 		F4AC00000000000000000002 /* RemoteAphroditeSnapshotProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AC00000000000000000012 /* RemoteAphroditeSnapshotProvider.swift */; };
 		F4AE00171017000000000001 /* RemoteAphroditeFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE00171017000000000021 /* RemoteAphroditeFeatureTests.swift */; };
-		F5BC00000000000000000200 /* RemoteAphroditeAccessFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5BC00000000000000000100 /* RemoteAphroditeAccessFeature.swift */; };
-		F5BC00000000000000000201 /* RemoteAphroditeAccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5BC00000000000000000101 /* RemoteAphroditeAccessView.swift */; };
+		F5BC00000000000000000200 /* RemotePlusAccessFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5BC00000000000000000100 /* RemotePlusAccessFeature.swift */; };
+		F5BC00000000000000000201 /* RemotePlusGateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5BC00000000000000000101 /* RemotePlusGateView.swift */; };
 		F5BC00000000000000000202 /* RemoteDebugMenuFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5BC00000000000000000102 /* RemoteDebugMenuFeature.swift */; };
 		F5BC00000000000000000203 /* RemoteDebugMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5BC00000000000000000103 /* RemoteDebugMenuView.swift */; };
 		F5BC00000000000000000320 /* Sharing in Frameworks */ = {isa = PBXBuildFile; productRef = F5BC00000000000000000310 /* Sharing */; };
 		F5BC00000000000000000321 /* Sharing in Frameworks */ = {isa = PBXBuildFile; productRef = F5BC00000000000000000311 /* Sharing */; };
 		FECA00000000000000000101 /* RemoteTabConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = FECA00000000000000000201 /* RemoteTabConfiguration.swift */; };
+		A7AB00000000000000000101 /* RemoteAppPage+Presentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7AB00000000000000000201 /* RemoteAppPage+Presentation.swift */; };
 		FECA00000000000000000102 /* RemoteTabPreferencesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = FECA00000000000000000202 /* RemoteTabPreferencesClient.swift */; };
 		TB5A00000000000000000002 /* TabVisibilitySettingsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = TB5A00000000000000000001 /* TabVisibilitySettingsVM.swift */; };
 		TB5A00000000000000000004 /* TabVisibilitySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = TB5A00000000000000000003 /* TabVisibilitySettingsView.swift */; };
 		TB5A00000000000000000006 /* TabVisibilitySettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = TB5A00000000000000000005 /* TabVisibilitySettingsTests.swift */; };
+		SMRB00000000000000000002 /* SoundMixerRemoteBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = SMRB00000000000000000001 /* SoundMixerRemoteBridge.swift */; };
+		SMRB00000000000000000004 /* SoundMixerRemoteBridgeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = SMRB00000000000000000003 /* SoundMixerRemoteBridgeTests.swift */; };
+		OWNP00000000000000000002 /* OwnPlaybackSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = OWNP00000000000000000001 /* OwnPlaybackSource.swift */; };
+		OWNP00000000000000000004 /* OwnPlaybackSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OWNP00000000000000000003 /* OwnPlaybackSourceTests.swift */; };
+		RBPV00000000000000000002 /* RemoteBrightnessProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = RBPV00000000000000000001 /* RemoteBrightnessProvider.swift */; };
+		RBPV00000000000000000004 /* RemoteBrightnessProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = RBPV00000000000000000003 /* RemoteBrightnessProviderTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -927,10 +945,19 @@
 		B98500000000000000000001 /* SystemMonitorSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorSwitch.swift; sourceTree = "<group>"; };
 		B99000000000000000000001 /* ReverseScrollDirectionSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReverseScrollDirectionSwitch.swift; sourceTree = "<group>"; };
 		BA1000000000000000000004 /* SystemMonitorProcessActivation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorProcessActivation.swift; sourceTree = "<group>"; };
+		5DA700000000000000000101 /* RemoteSoundMixerFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSoundMixerFeature.swift; sourceTree = "<group>"; };
+		5DA700000000000000000102 /* RemoteSoundMixerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSoundMixerView.swift; sourceTree = "<group>"; };
+		5DA700000000000000000103 /* RemoteMixerSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteMixerSlider.swift; sourceTree = "<group>"; };
+		5DA700000000000000000104 /* RemoteEqualizerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteEqualizerView.swift; sourceTree = "<group>"; };
+		5DA700000000000000000105 /* RemoteSoundMixerFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSoundMixerFeatureTests.swift; sourceTree = "<group>"; };
+		B8A700000000000000000101 /* RemoteBrightnessFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteBrightnessFeature.swift; sourceTree = "<group>"; };
+		B8A700000000000000000102 /* RemoteBrightnessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteBrightnessView.swift; sourceTree = "<group>"; };
+		B8A700000000000000000103 /* RemoteBrightnessFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteBrightnessFeatureTests.swift; sourceTree = "<group>"; };
 		C0D000000000000000000021 /* RemoteSystemMonitorFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorFeature.swift; sourceTree = "<group>"; };
 		C0D000000000000000000022 /* RemoteSystemMonitorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorView.swift; sourceTree = "<group>"; };
 		C0D000000000000000000023 /* RemoteSystemMonitorChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorChartView.swift; sourceTree = "<group>"; };
 		C0D000000000000000000024 /* RemotePageTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemotePageTabBar.swift; sourceTree = "<group>"; };
+		A7AB00000000000000000203 /* RemoteAppPageIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAppPageIcon.swift; sourceTree = "<group>"; };
 		C0D000000000000000000025 /* RemoteSystemMonitorFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorFeatureTests.swift; sourceTree = "<group>"; };
 		C0D000000000000000000026 /* RemoteSystemMonitorViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorViewTests.swift; sourceTree = "<group>"; };
 		C0D000000000000000000027 /* RemoteSystemMonitorGaugeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorGaugeView.swift; sourceTree = "<group>"; };
@@ -993,6 +1020,7 @@
 		D0C100000000000000000008 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
 		DABA00000000000000000022 /* GlobalSettingsFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSettingsFeature.swift; sourceTree = "<group>"; };
 		DABA00000000000000000023 /* GlobalSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSettingsView.swift; sourceTree = "<group>"; };
+		A7AB00000000000000000202 /* RemoteTabSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteTabSettingsView.swift; sourceTree = "<group>"; };
 		DABA00000000000000000024 /* RemoteIdleTimerClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteIdleTimerClient.swift; sourceTree = "<group>"; };
 		F3A300000000000000000003 /* OnlySwitchRemote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnlySwitchRemote.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3A300000000000000000004 /* OnlySwitchRemoteTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnlySwitchRemoteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1070,6 +1098,7 @@
 		F4AA00000000000000000014 /* RemotePaywallFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemotePaywallFeatureTests.swift; sourceTree = "<group>"; };
 		F4AA00000000000000000015 /* RemoteSubscriptionClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSubscriptionClientTests.swift; sourceTree = "<group>"; };
 		F4AA00000000000000000016 /* GlobalSettingsFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSettingsFeatureTests.swift; sourceTree = "<group>"; };
+		A7AB00000000000000000204 /* RemoteTabConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteTabConfigurationTests.swift; sourceTree = "<group>"; };
 		F4AB00000000000000000011 /* RemoteSubscriptionClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSubscriptionClient.swift; sourceTree = "<group>"; };
 		F4AB00000000000000000012 /* RemotePaywallFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemotePaywallFeature.swift; sourceTree = "<group>"; };
 		F4AB00000000000000000013 /* RemotePaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemotePaywallView.swift; sourceTree = "<group>"; };
@@ -1077,15 +1106,22 @@
 		F4AC00000000000000000011 /* RemoteAphroditeFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAphroditeFeature.swift; sourceTree = "<group>"; };
 		F4AC00000000000000000012 /* RemoteAphroditeSnapshotProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAphroditeSnapshotProvider.swift; sourceTree = "<group>"; };
 		F4AE00171017000000000021 /* RemoteAphroditeFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAphroditeFeatureTests.swift; sourceTree = "<group>"; };
-		F5BC00000000000000000100 /* RemoteAphroditeAccessFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAphroditeAccessFeature.swift; sourceTree = "<group>"; };
-		F5BC00000000000000000101 /* RemoteAphroditeAccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAphroditeAccessView.swift; sourceTree = "<group>"; };
+		F5BC00000000000000000100 /* RemotePlusAccessFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemotePlusAccessFeature.swift; sourceTree = "<group>"; };
+		F5BC00000000000000000101 /* RemotePlusGateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemotePlusGateView.swift; sourceTree = "<group>"; };
 		F5BC00000000000000000102 /* RemoteDebugMenuFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteDebugMenuFeature.swift; sourceTree = "<group>"; };
 		F5BC00000000000000000103 /* RemoteDebugMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteDebugMenuView.swift; sourceTree = "<group>"; };
 		FECA00000000000000000201 /* RemoteTabConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteTabConfiguration.swift; sourceTree = "<group>"; };
+		A7AB00000000000000000201 /* RemoteAppPage+Presentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RemoteAppPage+Presentation.swift"; sourceTree = "<group>"; };
 		FECA00000000000000000202 /* RemoteTabPreferencesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteTabPreferencesClient.swift; sourceTree = "<group>"; };
 		TB5A00000000000000000001 /* TabVisibilitySettingsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabVisibilitySettingsVM.swift; sourceTree = "<group>"; };
 		TB5A00000000000000000003 /* TabVisibilitySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabVisibilitySettingsView.swift; sourceTree = "<group>"; };
 		TB5A00000000000000000005 /* TabVisibilitySettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabVisibilitySettingsTests.swift; sourceTree = "<group>"; };
+		SMRB00000000000000000001 /* SoundMixerRemoteBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundMixerRemoteBridge.swift; sourceTree = "<group>"; };
+		SMRB00000000000000000003 /* SoundMixerRemoteBridgeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundMixerRemoteBridgeTests.swift; sourceTree = "<group>"; };
+		OWNP00000000000000000001 /* OwnPlaybackSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OwnPlaybackSource.swift; sourceTree = "<group>"; };
+		OWNP00000000000000000003 /* OwnPlaybackSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OwnPlaybackSourceTests.swift; sourceTree = "<group>"; };
+		RBPV00000000000000000001 /* RemoteBrightnessProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteBrightnessProvider.swift; sourceTree = "<group>"; };
+		RBPV00000000000000000003 /* RemoteBrightnessProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteBrightnessProviderTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1257,6 +1293,9 @@
 				F3A400000000000000000013 /* RemoteAccess */,
 				CD2200040000000000000001 /* XcodeCleanerSwitchTests.swift */,
 				TB5A00000000000000000005 /* TabVisibilitySettingsTests.swift */,
+				SMRB00000000000000000003 /* SoundMixerRemoteBridgeTests.swift */,
+				OWNP00000000000000000003 /* OwnPlaybackSourceTests.swift */,
+				RBPV00000000000000000003 /* RemoteBrightnessProviderTests.swift */,
 				A0D100020000000000000001 /* AudioStreamingTests.swift */,
 				CD3200040000000000000001 /* AppUninstallerSwitchTests.swift */,
 				CD5200040000000000000001 /* ScreenshotsSectionTests.swift */,
@@ -2191,6 +2230,26 @@
 			path = SystemMonitor;
 			sourceTree = "<group>";
 		};
+		5DA700000000000000000010 /* SoundMixer */ = {
+			isa = PBXGroup;
+			children = (
+				5DA700000000000000000101 /* RemoteSoundMixerFeature.swift */,
+				5DA700000000000000000102 /* RemoteSoundMixerView.swift */,
+				5DA700000000000000000103 /* RemoteMixerSlider.swift */,
+				5DA700000000000000000104 /* RemoteEqualizerView.swift */,
+			);
+			path = SoundMixer;
+			sourceTree = "<group>";
+		};
+		B8A700000000000000000010 /* Brightness */ = {
+			isa = PBXGroup;
+			children = (
+				B8A700000000000000000101 /* RemoteBrightnessFeature.swift */,
+				B8A700000000000000000102 /* RemoteBrightnessView.swift */,
+			);
+			path = Brightness;
+			sourceTree = "<group>";
+		};
 		C0D000000000000000000010 /* SystemMonitor */ = {
 			isa = PBXGroup;
 			children = (
@@ -2210,6 +2269,7 @@
 			isa = PBXGroup;
 			children = (
 				C0D000000000000000000024 /* RemotePageTabBar.swift */,
+				A7AB00000000000000000203 /* RemoteAppPageIcon.swift */,
 			);
 			path = Navigation;
 			sourceTree = "<group>";
@@ -2267,6 +2327,8 @@
 				D5E1A0020000000000000002 /* DisplayVolumeHUD.swift */,
 				D5E1A0020000000000000003 /* DisplayVolumeHUDView.swift */,
 				A47E483C8C562DBBD024C25A /* SoundMixerVM.swift */,
+				SMRB00000000000000000001 /* SoundMixerRemoteBridge.swift */,
+				OWNP00000000000000000001 /* OwnPlaybackSource.swift */,
 				B3552BA772DD63DAD7EE8CF2 /* SoundMixerPanelView.swift */,
 				35AD1FCF5024EAC8DC9C8E5E /* SystemAudioMixer.swift */,
 			);
@@ -2352,6 +2414,7 @@
 				F4AA00000000000000000014 /* RemotePaywallFeatureTests.swift */,
 				F4AA00000000000000000015 /* RemoteSubscriptionClientTests.swift */,
 				F4AA00000000000000000016 /* GlobalSettingsFeatureTests.swift */,
+				A7AB00000000000000000204 /* RemoteTabConfigurationTests.swift */,
 				F4AE00171017000000000021 /* RemoteAphroditeFeatureTests.swift */,
 				F3A900000000000000000021 /* RemoteAppFeatureTests.swift */,
 				F3A900000000000000000022 /* PairingFeatureTests.swift */,
@@ -2360,6 +2423,8 @@
 				F3AB00000000000000000021 /* DashboardFeatureTests.swift */,
 				F3AB00000000000000000026 /* RemoteEndToEndTests.swift */,
 				C0D000000000000000000025 /* RemoteSystemMonitorFeatureTests.swift */,
+				5DA700000000000000000105 /* RemoteSoundMixerFeatureTests.swift */,
+				B8A700000000000000000103 /* RemoteBrightnessFeatureTests.swift */,
 				C0D000000000000000000026 /* RemoteSystemMonitorViewTests.swift */,
 				C0E000000000000000000025 /* RemoteSystemMonitorConfigurationFeatureTests.swift */,
 			);
@@ -2429,6 +2494,7 @@
 				F3A500000000000000000029 /* RemoteHostClient.swift */,
 				CADE00000000000000000022 /* RemoteCodexUsageProvider.swift */,
 				CBDE00000000000000000001 /* RemoteClaudeUsageProvider.swift */,
+				RBPV00000000000000000001 /* RemoteBrightnessProvider.swift */,
 				F3AC00000000000000000021 /* RemoteCatalogMonitor.swift */,
 				F3A600000000000000000022 /* RemoteHostLifecycle.swift */,
 			);
@@ -2451,6 +2517,7 @@
 				F3A800000000000000000023 /* PairedMac.swift */,
 				F3A800000000000000000024 /* MacDashboardLayout.swift */,
 				FECA00000000000000000201 /* RemoteTabConfiguration.swift */,
+				A7AB00000000000000000201 /* RemoteAppPage+Presentation.swift */,
 				C0E000000000000000000021 /* MacSystemMonitorLayout.swift */,
 			);
 			path = Models;
@@ -2482,6 +2549,8 @@
 				F3AB00000000000000000010 /* Dashboard */,
 				CADE00000000000000000010 /* CodexUsage */,
 				C0D000000000000000000010 /* SystemMonitor */,
+				5DA700000000000000000010 /* SoundMixer */,
+				B8A700000000000000000010 /* Brightness */,
 				C0D000000000000000000011 /* Navigation */,
 				F4AB00000000000000000020 /* Subscription */,
 				F4AB00000000000000000021 /* Aphrodite */,
@@ -2504,6 +2573,7 @@
 				DABA00000000000000000022 /* GlobalSettingsFeature.swift */,
 				F5BC00000000000000000102 /* RemoteDebugMenuFeature.swift */,
 				DABA00000000000000000023 /* GlobalSettingsView.swift */,
+				A7AB00000000000000000202 /* RemoteTabSettingsView.swift */,
 				F5BC00000000000000000103 /* RemoteDebugMenuView.swift */,
 				F3A900000000000000000025 /* SettingsFeature.swift */,
 				F3A900000000000000000026 /* SettingsView.swift */,
@@ -2546,9 +2616,9 @@
 			isa = PBXGroup;
 			children = (
 				F4AB00000000000000000012 /* RemotePaywallFeature.swift */,
-				F5BC00000000000000000100 /* RemoteAphroditeAccessFeature.swift */,
+				F5BC00000000000000000100 /* RemotePlusAccessFeature.swift */,
 				F4AB00000000000000000013 /* RemotePaywallView.swift */,
-				F5BC00000000000000000101 /* RemoteAphroditeAccessView.swift */,
+				F5BC00000000000000000101 /* RemotePlusGateView.swift */,
 			);
 			path = Subscription;
 			sourceTree = "<group>";
@@ -2956,6 +3026,9 @@
 				D0C100000000000000000017 /* DockPreviewFeatureTests.swift in Sources */,
 				CD2200030000000000000001 /* XcodeCleanerSwitchTests.swift in Sources */,
 				TB5A00000000000000000006 /* TabVisibilitySettingsTests.swift in Sources */,
+				SMRB00000000000000000004 /* SoundMixerRemoteBridgeTests.swift in Sources */,
+				OWNP00000000000000000004 /* OwnPlaybackSourceTests.swift in Sources */,
+				RBPV00000000000000000004 /* RemoteBrightnessProviderTests.swift in Sources */,
 				A0D100010000000000000001 /* AudioStreamingTests.swift in Sources */,
 				CD3200030000000000000001 /* AppUninstallerSwitchTests.swift in Sources */,
 				CD5200030000000000000001 /* ScreenshotsSectionTests.swift in Sources */,
@@ -3032,6 +3105,9 @@
 				D5E1A0010000000000000002 /* DisplayVolumeHUD.swift in Sources */,
 				D5E1A0010000000000000003 /* DisplayVolumeHUDView.swift in Sources */,
 				C2CE44CA134851106759FA13 /* SoundMixerVM.swift in Sources */,
+				SMRB00000000000000000002 /* SoundMixerRemoteBridge.swift in Sources */,
+				OWNP00000000000000000002 /* OwnPlaybackSource.swift in Sources */,
+				RBPV00000000000000000002 /* RemoteBrightnessProvider.swift in Sources */,
 				732FB599FA7E3F9BEEF45DD9 /* SoundMixerPanelView.swift in Sources */,
 				2B346BE56384C700F4046FC4 /* SystemAudioMixer.swift in Sources */,
 				F3A500000000000000000004 /* RemoteCredentialStore.swift in Sources */,
@@ -3329,9 +3405,9 @@
 				F3A300000000000000000022 /* RemoteAppView.swift in Sources */,
 				F4AB00000000000000000001 /* RemoteSubscriptionClient.swift in Sources */,
 				F4AB00000000000000000002 /* RemotePaywallFeature.swift in Sources */,
-				F5BC00000000000000000200 /* RemoteAphroditeAccessFeature.swift in Sources */,
+				F5BC00000000000000000200 /* RemotePlusAccessFeature.swift in Sources */,
 				F4AB00000000000000000003 /* RemotePaywallView.swift in Sources */,
-				F5BC00000000000000000201 /* RemoteAphroditeAccessView.swift in Sources */,
+				F5BC00000000000000000201 /* RemotePlusGateView.swift in Sources */,
 				F4AB00000000000000000004 /* RemoteAphroditeView.swift in Sources */,
 				F4AC00000000000000000001 /* RemoteAphroditeFeature.swift in Sources */,
 				B220A0000000000000000002 /* RemoteAppShellFeature.swift in Sources */,
@@ -3342,6 +3418,7 @@
 				F3A800000000000000000003 /* PairedMac.swift in Sources */,
 				F3A800000000000000000004 /* MacDashboardLayout.swift in Sources */,
 				FECA00000000000000000101 /* RemoteTabConfiguration.swift in Sources */,
+				A7AB00000000000000000101 /* RemoteAppPage+Presentation.swift in Sources */,
 				F3A800000000000000000005 /* RemotePersistenceClient.swift in Sources */,
 				F3A800000000000000000006 /* RemoteKeychainClient.swift in Sources */,
 				F3A800000000000000000007 /* RemoteConnectionCoordinator.swift in Sources */,
@@ -3357,6 +3434,7 @@
 				DABA00000000000000000002 /* GlobalSettingsFeature.swift in Sources */,
 				F5BC00000000000000000202 /* RemoteDebugMenuFeature.swift in Sources */,
 				DABA00000000000000000003 /* GlobalSettingsView.swift in Sources */,
+				A7AB00000000000000000102 /* RemoteTabSettingsView.swift in Sources */,
 				F5BC00000000000000000203 /* RemoteDebugMenuView.swift in Sources */,
 				DABA00000000000000000004 /* RemoteIdleTimerClient.swift in Sources */,
 				FECA00000000000000000102 /* RemoteTabPreferencesClient.swift in Sources */,
@@ -3374,11 +3452,18 @@
 				B23000000000000000000006 /* ControlTileIconView.swift in Sources */,
 				F3AB00000000000000000008 /* MacPickerView.swift in Sources */,
 				C0D000000000000000000001 /* RemoteSystemMonitorFeature.swift in Sources */,
+				5DA700000000000000000201 /* RemoteSoundMixerFeature.swift in Sources */,
+				5DA700000000000000000202 /* RemoteSoundMixerView.swift in Sources */,
+				5DA700000000000000000203 /* RemoteMixerSlider.swift in Sources */,
+				5DA700000000000000000204 /* RemoteEqualizerView.swift in Sources */,
+				B8A700000000000000000201 /* RemoteBrightnessFeature.swift in Sources */,
+				B8A700000000000000000202 /* RemoteBrightnessView.swift in Sources */,
 				C0D000000000000000000002 /* RemoteSystemMonitorView.swift in Sources */,
 				C0F000000000000000000001 /* RemoteSystemMonitorWaterfallLayout.swift in Sources */,
 				C0D000000000000000000003 /* RemoteSystemMonitorChartView.swift in Sources */,
 				C0D000000000000000000007 /* RemoteSystemMonitorGaugeView.swift in Sources */,
 				C0D000000000000000000004 /* RemotePageTabBar.swift in Sources */,
+				A7AB00000000000000000103 /* RemoteAppPageIcon.swift in Sources */,
 				C0E000000000000000000001 /* MacSystemMonitorLayout.swift in Sources */,
 				C0E000000000000000000002 /* RemoteSystemMonitorCardSurface.swift in Sources */,
 				C0E000000000000000000003 /* RemoteSystemMonitorConfigurationFeature.swift in Sources */,
@@ -3407,6 +3492,7 @@
 				F4AA00000000000000000001 /* RemotePaywallFeatureTests.swift in Sources */,
 				F4AA00000000000000000002 /* RemoteSubscriptionClientTests.swift in Sources */,
 				F4AA00000000000000000003 /* GlobalSettingsFeatureTests.swift in Sources */,
+				A7AB00000000000000000104 /* RemoteTabConfigurationTests.swift in Sources */,
 				F4AE00171017000000000001 /* RemoteAphroditeFeatureTests.swift in Sources */,
 				F3A900000000000000000001 /* RemoteAppFeatureTests.swift in Sources */,
 				F3A900000000000000000002 /* PairingFeatureTests.swift in Sources */,
@@ -3415,6 +3501,8 @@
 				F3AB00000000000000000001 /* DashboardFeatureTests.swift in Sources */,
 				F3AB00000000000000000009 /* RemoteEndToEndTests.swift in Sources */,
 				C0D000000000000000000005 /* RemoteSystemMonitorFeatureTests.swift in Sources */,
+				5DA700000000000000000205 /* RemoteSoundMixerFeatureTests.swift in Sources */,
+				B8A700000000000000000203 /* RemoteBrightnessFeatureTests.swift in Sources */,
 				C0D000000000000000000006 /* RemoteSystemMonitorViewTests.swift in Sources */,
 				C0E000000000000000000005 /* RemoteSystemMonitorConfigurationFeatureTests.swift in Sources */,
 			);

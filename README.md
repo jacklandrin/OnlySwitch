@@ -79,7 +79,8 @@ To control OnlySwitch from an iPhone or iPad, install [OnlyRemote from the App S
 - Customize which controls appear and arrange them to fit your workflow.
 - Use Apple Widgets on macOS Sonoma and later, including Evolution controls.
 - Open the compact **Only Control** interface for a focused control panel.
-- Pair OnlyRemote for local-network control from iPhone or iPad, and choose which optional tabs to show.
+- Pair OnlyRemote for local-network control from iPhone or iPad, and choose which optional tabs to show under OnlyRemote's **Settings → Tabs** (Controls is always shown).
+- With OnlyRemote Plus, use the **Sound Mixer** tab (per-app volume, mute, equalizer, and output routing) and the **Brightness** tab (per-display brightness) alongside Aphrodite. These tabs need the latest OnlySwitch on the Mac.
 - Enable the optional Desktop Pet, drag it anywhere, click it to show or dismiss Only Control, and use its next-track or next-station control while music plays.
 
 <p align="center">

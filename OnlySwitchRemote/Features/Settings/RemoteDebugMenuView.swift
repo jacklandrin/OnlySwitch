@@ -8,14 +8,14 @@ struct RemoteDebugMenuView: View {
     var body: some View {
         Form {
             Section {
-                Toggle("Bypass Aphrodite Paywall", isOn: Binding(
-                    get: { store.bypassAphroditePaywall },
+                Toggle("Bypass OnlyRemote Plus Paywall", isOn: Binding(
+                    get: { store.bypassPlusPaywall },
                     set: { store.send(.bypassPaywallChanged($0)) }
                 ))
             } header: {
                 Text("Feature Flags")
             } footer: {
-                Text("Show Aphrodite tools without an active subscription in Debug builds.")
+                Text("Show OnlyRemote Plus tabs without an active subscription in Debug builds.")
             }
         }
         .navigationTitle("Debug Menu")

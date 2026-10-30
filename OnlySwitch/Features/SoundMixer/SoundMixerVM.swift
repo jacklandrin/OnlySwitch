@@ -27,6 +27,8 @@ final class SoundMixerVM: ObservableObject {
         case scriptable
         /// Via a Core Audio process tap (any audio app, e.g. a browser).
         case systemTap
+        /// OnlySwitch's own player, via its volume preference. No EQ or output routing.
+        case ownPlayer
     }
 
     struct AppRow: Identifiable {
@@ -111,6 +113,7 @@ final class SoundMixerVM: ObservableObject {
 
     private var lifecycleRevision = 0
     private let service = SoundMixerService()
+    private let ownPlayback = OwnPlaybackSource.live
     /// Stored type-erased so the class stays available below macOS 14.4 (scriptable apps still work).
     private var systemMixerBox: AnyObject?
     // Only mutated on the main actor during init; read once in deinit after the last release.
@@ -209,32 +212,64 @@ final class SoundMixerVM: ObservableObject {
     /// The remote representation intentionally excludes Core Audio and scripting handles.
     func remoteSnapshot() async -> RemoteSoundMixerSnapshot {
         if enabled { await refresh() }
-        return RemoteSoundMixerSnapshot(
+        return SoundMixerRemoteBridge.snapshot(
             revision: UInt64(Date().timeIntervalSince1970 * 1_000),
             isEnabled: enabled,
             systemVolume: systemVolume,
+            isSystemVolumeAvailable: isSystemVolumeAvailable,
             output: outputDevice.map { .init(name: $0.name, symbolName: $0.symbolName) },
-            apps: enabled ? rows.map { .init(id: $0.id, name: $0.name, volume: $0.volume, isMuted: $0.isMuted) } : []
+            rows: rows.map { .init(id: $0.id, name: $0.name, volume: $0.volume, isMuted: $0.isMuted) },
+            equalizer: equalizerStore.withState { $0 },
+            routing: outputRoutingStore.withState { $0 }
         )
     }
 
     func performRemoteCommand(_ command: RemoteSoundMixerCommand) async throws -> RemoteSoundMixerSnapshot {
         guard enabled else { return await remoteSnapshot() }
-        switch command {
-        case let .setSystemVolume(value):
-            updateSystemVolume(min(100, max(0, value)), live: false)
-        case let .setAppVolume(id, value):
-            guard rows.contains(where: { $0.id == id }) else {
-                throw RemoteProtocolError(code: .controlNotFound, message: "Sound source is no longer available")
-            }
-            updateVolume(min(100, max(0, value)), for: id, live: false)
-        case let .setAppMuted(id, isMuted):
-            guard let row = rows.first(where: { $0.id == id }) else {
-                throw RemoteProtocolError(code: .controlNotFound, message: "Sound source is no longer available")
-            }
-            if row.isMuted != isMuted { toggleMute(for: id) }
+        let validated = try SoundMixerRemoteBridge.validate(
+            command,
+            rowIDs: Set(rows.map(\.id)),
+            routing: outputRoutingStore.withState { $0 }
+        )
+        switch validated {
+        case let .systemVolume(value):
+            updateSystemVolume(value, live: false)
+        case let .appVolume(id, value):
+            updateVolume(value, for: id, live: false)
+        case let .appMuted(id, isMuted):
+            if rows.first(where: { $0.id == id })?.isMuted != isMuted { toggleMute(for: id) }
+        case let .equalizerGain(id, band, gain):
+            equalizerStore.send(.setGain(id, band, gain))
+        case let .equalizerReset(id):
+            equalizerStore.send(.reset(id))
+        case let .toggleOutput(id, deviceID):
+            outputRoutingStore.send(.toggleDevice(id, deviceID))
+        case let .followSystem(id):
+            outputRoutingStore.send(.followSystem(id))
         }
         return await remoteSnapshot()
+    }
+
+    /// Polls while a remote Sound Mixer tab is subscribed and emits only snapshots whose content
+    /// changed. Cancelling the consumer cancels the polling task.
+    func remoteSnapshots(interval: Duration = .seconds(2)) -> AsyncThrowingStream<RemoteSoundMixerSnapshot, Error> {
+        AsyncThrowingStream { continuation in
+            let task = Task { @MainActor [weak self] in
+                var last: RemoteSoundMixerSnapshot?
+                // `guard let self` per iteration so the loop ends once the view model is gone.
+                while !Task.isCancelled {
+                    guard let self else { break }
+                    let next = await self.remoteSnapshot()
+                    if last.map({ !$0.hasSameContent(as: next) }) ?? true {
+                        continuation.yield(next)
+                        last = next
+                    }
+                    try? await Task.sleep(for: interval)
+                }
+                continuation.finish()
+            }
+            continuation.onTermination = { _ in task.cancel() }
+        }
     }
 
     // MARK: - Refresh
@@ -319,12 +354,18 @@ final class SoundMixerVM: ObservableObject {
             }
         }
 
+        if let own = Self.ownPlaybackRow(isPlaying: ownPlayback.isPlaying(), volume: ownPlayback.volume(),
+                                         previous: rows.first { $0.id == OwnPlaybackSource.rowID },
+                                         icon: NSApp.applicationIconImage) {
+            newRows.append(own)
+        }
+
         // Only publish real changes. Reassigning every two seconds relaid out the whole popover
         // under the pointer, which churned SwiftUI's focus tracking for no gain.
         if Self.signature(of: newRows) != Self.signature(of: rows) { rows = newRows }
         let supported: Bool
         if #available(macOS 14.4, *) { supported = true } else { supported = false }
-        let sources = rows.map {
+        let sources = rows.filter { $0.control != .ownPlayer }.map {
             EqualizerFeature.Source(id: $0.id, isPersistent: !$0.id.hasPrefix("pid-"), isSupported: supported,
                                     isAvailable: $0.pid != nil && !$0.processObjectIDs.isEmpty)
         }
@@ -413,6 +454,8 @@ final class SoundMixerVM: ObservableObject {
                                    settings: equalizerStore.withState { $0.settings(for: id) }, pid: pid,
                                    processObjectIDs: rows[index].processObjectIDs, live: live,
                                    routing: outputRoutingStore.withState { $0.selection(for: id) })
+        case .ownPlayer:
+            ownPlayback.setVolume(rows[index].volume)
         }
     }
 
@@ -440,7 +483,7 @@ final class SoundMixerVM: ObservableObject {
         switch rows[index].control {
         case .scriptable:
             toggleScriptableMute(at: index)
-        case .systemTap:
+        case .systemTap, .ownPlayer:
             toggleSystemMute(at: index)
         }
     }

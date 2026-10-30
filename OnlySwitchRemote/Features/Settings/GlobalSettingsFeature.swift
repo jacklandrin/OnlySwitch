@@ -95,7 +95,7 @@ struct GlobalSettingsFeature {
                 }
 
             case let .tabVisibilityChanged(page, isVisible):
-                guard page != .controls, page != .aphrodite else { return .none }
+                guard page.isAlwaysVisible == false, state.tabConfiguration.isVisible(page) != isVisible else { return .none }
                 state.tabConfiguration.setVisibility(isVisible, for: page)
                 tabPreferences.save(state.tabConfiguration)
                 return .send(.delegate(.tabConfigurationChanged(state.tabConfiguration)))

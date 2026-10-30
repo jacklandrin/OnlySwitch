@@ -145,6 +145,10 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
     case soundMixerCommand(RemoteSoundMixerCommand)
     case systemMonitorSubscriptionUpdate(Bool)
     case systemMonitorSnapshot(SystemMonitorSnapshot)
+    case soundMixerSubscriptionUpdate(Bool)
+    case brightnessSubscriptionUpdate(Bool)
+    case brightnessSnapshot(RemoteBrightnessSnapshot)
+    case brightnessCommand(RemoteBrightnessCommand)
     case codexUsageRequest(RemoteCodexUsageRequest)
     case codexUsageResult(RemoteCodexUsageResult)
     case claudeUsageRequest(RemoteClaudeUsageRequest)
@@ -195,6 +199,10 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
         case soundMixerCommand
         case systemMonitorSubscriptionUpdate
         case systemMonitorSnapshot
+        case soundMixerSubscriptionUpdate
+        case brightnessSubscriptionUpdate
+        case brightnessSnapshot
+        case brightnessCommand
         case codexUsageRequest
         case codexUsageResult
         case claudeUsageRequest
@@ -268,6 +276,14 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
             self = .systemMonitorSubscriptionUpdate(try container.decode(Bool.self, forKey: .payload))
         case .systemMonitorSnapshot:
             self = .systemMonitorSnapshot(try container.decode(SystemMonitorSnapshot.self, forKey: .payload))
+        case .soundMixerSubscriptionUpdate:
+            self = .soundMixerSubscriptionUpdate(try container.decode(Bool.self, forKey: .payload))
+        case .brightnessSubscriptionUpdate:
+            self = .brightnessSubscriptionUpdate(try container.decode(Bool.self, forKey: .payload))
+        case .brightnessSnapshot:
+            self = .brightnessSnapshot(try container.decode(RemoteBrightnessSnapshot.self, forKey: .payload))
+        case .brightnessCommand:
+            self = .brightnessCommand(try container.decode(RemoteBrightnessCommand.self, forKey: .payload))
         case .codexUsageRequest:
             self = .codexUsageRequest(try container.decode(RemoteCodexUsageRequest.self, forKey: .payload))
         case .codexUsageResult:
@@ -376,6 +392,18 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
         case let .systemMonitorSnapshot(snapshot):
             try container.encode(Kind.systemMonitorSnapshot, forKey: .type)
             try container.encode(snapshot, forKey: .payload)
+        case let .soundMixerSubscriptionUpdate(enabled):
+            try container.encode(Kind.soundMixerSubscriptionUpdate, forKey: .type)
+            try container.encode(enabled, forKey: .payload)
+        case let .brightnessSubscriptionUpdate(enabled):
+            try container.encode(Kind.brightnessSubscriptionUpdate, forKey: .type)
+            try container.encode(enabled, forKey: .payload)
+        case let .brightnessSnapshot(snapshot):
+            try container.encode(Kind.brightnessSnapshot, forKey: .type)
+            try container.encode(snapshot, forKey: .payload)
+        case let .brightnessCommand(command):
+            try container.encode(Kind.brightnessCommand, forKey: .type)
+            try container.encode(command, forKey: .payload)
         case let .codexUsageRequest(request):
             try container.encode(Kind.codexUsageRequest, forKey: .type)
             try container.encode(request, forKey: .payload)

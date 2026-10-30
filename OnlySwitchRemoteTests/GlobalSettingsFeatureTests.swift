@@ -33,22 +33,52 @@ struct GlobalSettingsTabTests {
         #expect(saved.value.count == 3)
         #expect(saved.value.first == .init(showsSystemMonitor: false))
         #expect(saved.value.last == expected)
-        #expect(expected.visiblePages == [.controls, .aphrodite])
+        #expect(expected.visiblePages == [.controls, .soundMixer, .brightness, .aphrodite])
         await store.send(.tabVisibilityChanged(.codexUsage, true)) { $0.tabConfiguration.showsCodexUsage = true }
         expected.showsCodexUsage = true
         await store.receive(.delegate(.tabConfigurationChanged(expected)))
         #expect(saved.value.last == expected)
-        #expect(expected.visiblePages == [.controls, .codexUsage, .aphrodite])
+        #expect(expected.visiblePages == [.controls, .soundMixer, .brightness, .codexUsage, .aphrodite])
     }
 
-    @Test func fixedTabsCannotBeHidden() async {
+    @Test func controlsCannotBeHidden() async {
+        let saved = LockIsolated<[RemoteTabConfiguration]>([])
         let store = TestStore(initialState: GlobalSettingsFeature.State(tabConfiguration: .init())) {
             GlobalSettingsFeature()
         } withDependencies: {
-            $0.remoteTabPreferences.save = { _ in Issue.record("Fixed tabs must not save a change") }
+            $0.remoteTabPreferences.save = { configuration in saved.withValue { $0.append(configuration) } }
         }
         await store.send(.tabVisibilityChanged(.controls, false))
-        await store.send(.tabVisibilityChanged(.aphrodite, false))
+        #expect(saved.value.isEmpty)
+        #expect(store.state.tabConfiguration.isVisible(.controls))
+    }
+
+    @Test func unchangedVisibilityDoesNotSaveOrNotify() async {
+        let saved = LockIsolated<[RemoteTabConfiguration]>([])
+        let store = TestStore(initialState: GlobalSettingsFeature.State(tabConfiguration: .init())) {
+            GlobalSettingsFeature()
+        } withDependencies: {
+            $0.remoteTabPreferences.save = { configuration in saved.withValue { $0.append(configuration) } }
+        }
+        await store.send(.tabVisibilityChanged(.brightness, true))
+        #expect(saved.value.isEmpty)
+    }
+
+    @Test(arguments: [RemoteAppPage.soundMixer, .brightness, .aphrodite])
+    func plusTabsCanBeHidden(page: RemoteAppPage) async {
+        let saved = LockIsolated<[RemoteTabConfiguration]>([])
+        let store = TestStore(initialState: GlobalSettingsFeature.State(tabConfiguration: .init())) {
+            GlobalSettingsFeature()
+        } withDependencies: {
+            $0.remoteTabPreferences.save = { configuration in saved.withValue { $0.append(configuration) } }
+        }
+        var expected = RemoteTabConfiguration()
+        expected.setVisibility(false, for: page)
+        let configuration = expected
+        await store.send(.tabVisibilityChanged(page, false)) { $0.tabConfiguration = configuration }
+        await store.receive(.delegate(.tabConfigurationChanged(configuration)))
+        #expect(saved.value == [configuration])
+        #expect(configuration.visiblePages.contains(page) == false)
     }
 
     @Test func preferencesDefaultToVisibleAndReloadSavedChoices() throws {

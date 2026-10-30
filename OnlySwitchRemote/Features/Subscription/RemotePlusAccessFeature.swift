@@ -2,19 +2,19 @@ import ComposableArchitecture
 import Foundation
 
 @Reducer
-struct RemoteAphroditeAccessFeature {
+struct RemotePlusAccessFeature {
     @ObservableState
     struct State: Equatable {
         var entitlement: RemoteSubscriptionEntitlement = .inactive
         var paywall = RemotePaywallFeature.State()
         var refreshGeneration: UInt64 = 0
         #if DEBUG
-        @Shared(.appStorage("onlyremoteDebugBypassAphroditePaywall")) var bypassAphroditePaywall = false
+        @Shared(.appStorage("onlyremoteDebugBypassPlusPaywall")) var bypassPlusPaywall = false
         #endif
 
         var canAccess: Bool {
             #if DEBUG
-            if bypassAphroditePaywall { return true }
+            if bypassPlusPaywall { return true }
             #endif
             if case .active = entitlement { return true }
             return false

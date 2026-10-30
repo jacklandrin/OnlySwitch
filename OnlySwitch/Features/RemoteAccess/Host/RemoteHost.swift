@@ -23,6 +23,10 @@ actor RemoteHost {
     private let commitStageReached: @Sendable (RemotePairingCommitStage) async -> Void
     private let authenticatedSessionObserver: @Sendable () -> Void
     private let systemMonitorSnapshots: @Sendable () -> AsyncThrowingStream<SystemMonitorSnapshot, Error>
+    private let soundMixerSnapshots: @Sendable () -> AsyncThrowingStream<RemoteSoundMixerSnapshot, Error>
+    private let soundMixerCommand: @Sendable (RemoteSoundMixerCommand) async throws -> RemoteSoundMixerSnapshot
+    private let brightnessSnapshots: @Sendable (UUID) -> AsyncStream<RemoteBrightnessSnapshot>
+    private let brightnessCommand: @Sendable (RemoteBrightnessCommand) async throws -> RemoteBrightnessSnapshot
     private let claudeUsage: @Sendable () async -> Result<RemoteClaudeUsageSnapshot, RemoteProtocolError>
     private let codexUsage: @Sendable (Bool) async -> Result<RemoteCodexUsageSnapshot, RemoteProtocolError>
     private var eventContinuations: [
@@ -58,6 +62,38 @@ actor RemoteHost {
         systemMonitorSnapshots: @escaping @Sendable () -> AsyncThrowingStream<SystemMonitorSnapshot, Error> = {
             MacSystemMonitorCollector.liveClient().snapshots()
         },
+        soundMixerSnapshots: @escaping @Sendable () -> AsyncThrowingStream<RemoteSoundMixerSnapshot, Error> = {
+            AsyncThrowingStream { continuation in
+                let task = Task { @MainActor in
+                    do {
+                        for try await snapshot in SoundMixerVM.shared.remoteSnapshots() {
+                            continuation.yield(snapshot)
+                        }
+                        continuation.finish()
+                    } catch {
+                        continuation.finish(throwing: error)
+                    }
+                }
+                continuation.onTermination = { _ in task.cancel() }
+            }
+        },
+        soundMixerCommand: @escaping @Sendable (RemoteSoundMixerCommand) async throws -> RemoteSoundMixerSnapshot = { command in
+            try await SoundMixerVM.shared.performRemoteCommand(command)
+        },
+        brightnessSnapshots: @escaping @Sendable (UUID) -> AsyncStream<RemoteBrightnessSnapshot> = { hostID in
+            AsyncStream { continuation in
+                let task = Task { @MainActor in
+                    for await snapshot in RemoteBrightnessProvider.shared.snapshots(hostID: hostID) {
+                        continuation.yield(snapshot)
+                    }
+                    continuation.finish()
+                }
+                continuation.onTermination = { _ in task.cancel() }
+            }
+        },
+        brightnessCommand: @escaping @Sendable (RemoteBrightnessCommand) async throws -> RemoteBrightnessSnapshot = { command in
+            try await MainActor.run { try RemoteBrightnessProvider.shared.perform(command) }
+        },
         codexUsage: @escaping @Sendable (Bool) async -> Result<RemoteCodexUsageSnapshot, RemoteProtocolError> = RemoteCodexUsageProvider.live.fetch,
         claudeUsage: @escaping @Sendable () async -> Result<RemoteClaudeUsageSnapshot, RemoteProtocolError> = RemoteClaudeUsageProvider.live.fetch
     ) {
@@ -75,6 +111,10 @@ actor RemoteHost {
         self.commitStageReached = commitStageReached
         self.authenticatedSessionObserver = authenticatedSessionObserver
         self.systemMonitorSnapshots = systemMonitorSnapshots
+        self.soundMixerSnapshots = soundMixerSnapshots
+        self.soundMixerCommand = soundMixerCommand
+        self.brightnessSnapshots = brightnessSnapshots
+        self.brightnessCommand = brightnessCommand
         self.codexUsage = codexUsage
         self.claudeUsage = claudeUsage
         self.statusScheduler = RemoteStatusScheduler(provider: catalogProvider)
@@ -107,6 +147,20 @@ actor RemoteHost {
         finalizeRepairObserver: @escaping @Sendable (UUID) -> Void = { _ in },
         systemMonitorSnapshots: @escaping @Sendable () -> AsyncThrowingStream<SystemMonitorSnapshot, Error> = {
             MacSystemMonitorCollector.liveClient().snapshots()
+        },
+        soundMixerSnapshots: @escaping @Sendable () -> AsyncThrowingStream<RemoteSoundMixerSnapshot, Error> = {
+            AsyncThrowingStream {
+                $0.finish(throwing: RemoteProtocolError(code: .actionNotSupported, message: "Sound Mixer is unavailable"))
+            }
+        },
+        soundMixerCommand: @escaping @Sendable (RemoteSoundMixerCommand) async throws -> RemoteSoundMixerSnapshot = { _ in
+            throw RemoteProtocolError(code: .actionNotSupported, message: "Sound Mixer is unavailable")
+        },
+        brightnessSnapshots: @escaping @Sendable (UUID) -> AsyncStream<RemoteBrightnessSnapshot> = { _ in
+            AsyncStream { $0.finish() }
+        },
+        brightnessCommand: @escaping @Sendable (RemoteBrightnessCommand) async throws -> RemoteBrightnessSnapshot = { _ in
+            throw RemoteProtocolError(code: .actionNotSupported, message: "Brightness is unavailable")
         },
         codexUsage: @escaping @Sendable (Bool) async -> Result<RemoteCodexUsageSnapshot, RemoteProtocolError> = { _ in
             .failure(.init(code: .actionNotSupported, message: "Codex usage is unavailable"))
@@ -147,6 +201,10 @@ actor RemoteHost {
             commitStageReached: commitStageReached,
             authenticatedSessionObserver: authenticatedSessionObserver,
             systemMonitorSnapshots: systemMonitorSnapshots,
+            soundMixerSnapshots: soundMixerSnapshots,
+            soundMixerCommand: soundMixerCommand,
+            brightnessSnapshots: brightnessSnapshots,
+            brightnessCommand: brightnessCommand,
             codexUsage: codexUsage,
             claudeUsage: claudeUsage
         )
@@ -447,6 +505,10 @@ actor RemoteHost {
                 ) ?? false
             },
             systemMonitorSnapshots: systemMonitorSnapshots,
+            soundMixerSnapshots: soundMixerSnapshots,
+            soundMixerCommand: soundMixerCommand,
+            brightnessSnapshots: brightnessSnapshots,
+            brightnessCommand: brightnessCommand,
             codexUsage: codexUsage,
             claudeUsage: claudeUsage,
             authenticationResultSender: authenticationResultSender,

@@ -29,17 +29,9 @@ struct RemotePageTabBar: View {
                     .offset(x: CGFloat(configuration.visiblePages.firstIndex(of: selection) ?? 0) * (width + spacing))
                     .accessibilityHidden(true)
                 HStack(spacing: spacing) {
-                    tabButton(.controls, title: "Controls", symbol: "switch.2")
-                    if configuration.showsSystemMonitor {
-                        tabButton(.systemMonitor, title: "System Monitor", symbol: "waveform.path.ecg")
+                    ForEach(configuration.visiblePages, id: \.self) { page in
+                        tabButton(page, title: page.title) { RemoteAppPageIcon(page: page) }
                     }
-                    if configuration.showsCodexUsage {
-                        tabButton(.codexUsage, title: "Codex Usage", imageName: RemoteCodexUsagePresentation.tabImageName)
-                    }
-                    if configuration.showsClaudeUsage {
-                        tabButton(.claudeUsage, title: "Claude Usage", imageName: RemoteClaudeUsagePresentation.tabImageName)
-                    }
-                    tabButton(.aphrodite, title: "Aphrodite", symbol: "sparkles.rectangle.stack")
                 }
             }
             .animation(reduceMotion ? nil : .smooth(duration: 0.28), value: selection)
@@ -66,21 +58,6 @@ struct RemotePageTabBar: View {
         .frame(maxWidth: Self.maximumWidth)
         .padding(.horizontal, Self.horizontalPadding)
         .frame(maxWidth: .infinity)
-    }
-
-    private func tabButton(_ page: RemoteAppPage, title: LocalizedStringKey, symbol: String) -> some View {
-        tabButton(page, title: title) { Image(systemName: symbol) }
-    }
-
-    /// Tab with a template brand logo from the asset catalog, sized to match the SF Symbol tabs.
-    private func tabButton(_ page: RemoteAppPage, title: LocalizedStringKey, imageName: String) -> some View {
-        tabButton(page, title: title) {
-            Image(imageName)
-                .renderingMode(.template)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 20, height: 20)
-        }
     }
 
     private func tabButton<Icon: View>(_ page: RemoteAppPage, title: LocalizedStringKey, @ViewBuilder icon: () -> Icon) -> some View {

@@ -74,6 +74,9 @@ extension RemoteConnectionClient {
             fetchClaudeUsage: { try await runtime.fetchClaudeUsage($0) },
             sendSoundMixer: { try await runtime.sendSoundMixer($0) },
             setSystemMonitorStreaming: { try await runtime.setSystemMonitorStreaming($0) },
+            setSoundMixerStreaming: { try await runtime.setSoundMixerStreaming($0) },
+            setBrightnessStreaming: { try await runtime.setBrightnessStreaming($0) },
+            sendBrightness: { try await runtime.sendBrightness($0) },
             setForegrounded: { await runtime.setForegrounded($0) }
         )
     }
@@ -559,7 +562,6 @@ actor RemoteConnectionRuntime {
         eventHub.yield(.catalog(pending.macID, pending.catalog.revision, pending.catalog.controls))
         try? await persistence.saveCatalog(pending.macID, pending.catalog.revision, pending.catalog.controls)
         pending.session.startReceiving()
-        try? await pending.session.requestSoundMixerIfSupported()
         try? await pending.session.requestAphroditeLibraryIfSupported()
         if let previousSession {
             try? await previousSession.setSystemMonitorStreaming(false)
@@ -791,6 +793,25 @@ actor RemoteConnectionRuntime {
         try await session.setSystemMonitorStreaming(enabled)
     }
 
+    func setSoundMixerStreaming(_ enabled: Bool) async throws {
+        guard let session else {
+            throw RemoteProtocolError(code: .authenticationFailed, message: "Mac is offline")
+        }
+        try await session.setSoundMixerStreaming(enabled)
+    }
+
+    func setBrightnessStreaming(_ enabled: Bool) async throws {
+        guard let session else {
+            throw RemoteProtocolError(code: .authenticationFailed, message: "Mac is offline")
+        }
+        try await session.setBrightnessStreaming(enabled)
+    }
+
+    func sendBrightness(_ command: RemoteBrightnessCommand) async throws {
+        guard let session else { throw RemoteProtocolError(code: .authenticationFailed, message: "Mac is offline") }
+        try await session.sendBrightness(command)
+    }
+
     func setForegrounded(_ value: Bool) async {
         foregroundLifecycleGeneration &+= 1
         let lifecycleGeneration = foregroundLifecycleGeneration
@@ -933,7 +954,6 @@ actor RemoteConnectionRuntime {
                 eventHub.yield(.sessionStarted(mac.id, newSessionToken))
                 eventHub.yield(.authenticated(mac.id))
                 connected.startReceiving()
-                try? await connected.requestSoundMixerIfSupported()
                 try? await connected.requestAphroditeLibraryIfSupported()
                 do {
                     try await catalogRequest(connected)
@@ -1046,7 +1066,6 @@ actor RemoteConnectionRuntime {
                 eventHub.yield(.catalog(mac.id, catalog.revision, catalog.controls))
                 try? await persistence.saveCatalog(mac.id, catalog.revision, catalog.controls)
                 recovered.startReceiving()
-                try? await recovered.requestSoundMixerIfSupported()
                 try? await recovered.requestAphroditeLibraryIfSupported()
                 finalizingTransactionID = nil
                 return true
@@ -1142,6 +1161,8 @@ actor RemoteConnectionRuntime {
             eventHub.yield(.action(macID, result))
         case let .soundMixerSnapshot(snapshot):
             eventHub.yield(.soundMixer(macID, snapshot))
+        case let .brightnessSnapshot(snapshot):
+            eventHub.yield(.brightness(macID, snapshot))
         case let .systemMonitorSnapshot(snapshot):
             eventHub.yield(.systemMonitor(macID, snapshot))
         case let .aphroditeLibraryManifest(manifest):
@@ -1743,10 +1764,6 @@ actor RemoteClientSession {
     }
 
     func requestCatalog() async throws { try await sendMessage(.catalogRequest) }
-    func requestSoundMixerIfSupported() async throws {
-        guard protocolVersion.supportsSoundMixerRemote else { return }
-        try await sendMessage(.soundMixerSnapshotRequest)
-    }
     func requestAphroditeLibraryIfSupported() async throws {
         guard protocolVersion.supportsAphroditeRemote else { return }
         try await sendMessage(.aphroditeLibraryRequest)
@@ -1755,8 +1772,31 @@ actor RemoteClientSession {
         guard protocolVersion.supportsSoundMixerRemote else {
             throw RemoteProtocolError(code: .actionNotSupported, message: "Sound Mixer remote control is unavailable on this Mac")
         }
+        if command.requiresSoundMixerTab, protocolVersion.supportsSoundMixerTabRemote == false {
+            throw Self.soundMixerUpgradeRequired
+        }
         try await sendMessage(.soundMixerCommand(command))
     }
+    func setSoundMixerStreaming(_ enabled: Bool) async throws {
+        guard protocolVersion.supportsSoundMixerTabRemote else { throw Self.soundMixerUpgradeRequired }
+        try await sendMessage(.soundMixerSubscriptionUpdate(enabled))
+    }
+    private static let soundMixerUpgradeRequired = RemoteProtocolError(
+        code: .upgradeRequired,
+        message: "Sound Mixer requires a newer OnlySwitch"
+    )
+    func setBrightnessStreaming(_ enabled: Bool) async throws {
+        guard protocolVersion.supportsBrightnessRemote else { throw Self.brightnessUpgradeRequired }
+        try await sendMessage(.brightnessSubscriptionUpdate(enabled))
+    }
+    func sendBrightness(_ command: RemoteBrightnessCommand) async throws {
+        guard protocolVersion.supportsBrightnessRemote else { throw Self.brightnessUpgradeRequired }
+        try await sendMessage(.brightnessCommand(command))
+    }
+    private static let brightnessUpgradeRequired = RemoteProtocolError(
+        code: .upgradeRequired,
+        message: "Brightness requires a newer OnlySwitch"
+    )
     func setSystemMonitorStreaming(_ enabled: Bool) async throws {
         guard protocolVersion.supportsSystemMonitorRemote else {
             throw RemoteProtocolError(
