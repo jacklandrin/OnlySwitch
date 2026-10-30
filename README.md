@@ -50,38 +50,18 @@ To control OnlySwitch from an iPhone or iPad, install [OnlyRemote from the App S
   <img alt="OnlyRemote App Store QR code" src="https://raw.githubusercontent.com/jacklandrin/OnlySwitch/main/OnlySwitch/Resource/Ads/OnlyRemoteQRCode.jpeg" width="160" />
 </p>
 
-## What's new in 3.2.0
-
-- **Tailscale:** Connect or disconnect, manage accounts and exit nodes, and copy your Mac's Tailscale IP. Requires the official Tailscale client.
-- **Xcode Cleaner:** Scan, review, and clean selected DerivedData, caches, and simulator-related items.
-- **App Uninstaller:** Review an application and matching related files, then move selected items to Trash.
-- **Desktop Pet:** Skip to the next track or radio station and see playback animations for Apple Music, Spotify, and Radio.
-- **Keep Awake:** Enable **Turn off after sleep** to turn off Keep Awake when you manually put your Mac to sleep.
-- **OnlyRemote tabs:** Choose which System Monitor, Codex Usage, and Claude Usage tabs appear under **Settings → Tabs**. Controls and Aphrodite remain available.
-- **Bug fixes:** Fixed a radio audio callback race and missing Czech switch subtitles.
-
-## What's new in 3.0.0
-
-- **Aphrodite:** Describe a mini app in natural language, choose a configured AI provider and model, then generate, run, edit, save, share, or import it. Aphrodite requires macOS 26 or later and uses the model-provider settings configured in OnlySwitch.
-- **Dock Preview:** Hover over a Dock app to see thumbnails of its open windows and click a thumbnail to activate that window. Enable the **Dock Preview** switch and grant Accessibility and Screen Recording permissions when prompted.
-- **Better switch customization:** Built-in switches are grouped by category and can be searched by name from the customization settings.
-- **Process activation:** Click a supported process in the System Monitor CPU or memory lists to bring its owning application to the front.
-
-<p align="center">
-  <img alt="How to create mini apps with Aphrodite" src="output/imagegen/aphrodite-guide.png" width="90%" />
-</p>
-
 ## Features
 
 ### Highlights
 
 - Import macOS Shortcuts into OnlySwitch and control switches and Shortcuts with keyboard shortcuts.
-- Customize which controls appear and arrange them to fit your workflow.
+- Customize which controls appear and arrange them to fit your workflow. Built-in switches are grouped by category and can be searched by name.
+- Manage every optional page from one place: **OnlySwitch Settings → Tabs** shows or hides tabs in the menu-bar list and Only Control.
 - Use Apple Widgets on macOS Sonoma and later, including Evolution controls.
 - Open the compact **Only Control** interface for a focused control panel.
-- Pair OnlyRemote for local-network control from iPhone or iPad, and choose which optional tabs to show under OnlyRemote's **Settings → Tabs** (Controls is always shown).
-- With OnlyRemote Plus, use the **Sound Mixer** tab (per-app volume, mute, equalizer, and output routing) and the **Brightness** tab (per-display brightness) alongside Aphrodite. These tabs need the latest OnlySwitch on the Mac.
-- Enable the optional Desktop Pet, drag it anywhere, click it to show or dismiss Only Control, and use its next-track or next-station control while music plays.
+- Control your Mac from iPhone or iPad with [OnlyRemote](#onlyremote).
+- Enable the optional Desktop Pet, drag it anywhere, click it to show or dismiss Only Control, and skip to the next track or radio station with playback animations for Apple Music, Spotify, and Radio.
+- Enable **Turn off after sleep** for Keep Awake to turn it off when you manually put your Mac to sleep.
 
 <p align="center">
   <img alt="Switch availability in the macOS menu bar" src="https://github.com/jacklandrin/OnlySwitch/assets/3782279/11c89e33-2007-4913-b320-47c188538b68" />
@@ -115,8 +95,31 @@ To control OnlySwitch from an iPhone or iPad, install [OnlyRemote from the App S
 | Top Sticker | partially finished | Key Light | finished |
 | Only Agent | finished | Natural Scrolling | finished |
 | Show desktop pet | finished | Tailscale | requires official client |
+| Dock Preview | requires Accessibility and Screen Recording | | |
 
-Switches can be added to or removed from the list. Optional tabs (Authenticator, Sound Mixer, System Monitor, Codex Usage, Claude Usage, Aphrodite, Xcode Cleaner, App Uninstaller, and Screenshots) are shown or hidden under **OnlySwitch Settings → Tabs**.
+Switches can be added to or removed from the list. Optional tabs (Authenticator, Sound Mixer, Brightness, Screenshots, System Monitor, Codex Usage, Claude Usage, Aphrodite, Xcode Cleaner, and App Uninstaller) are shown or hidden under **OnlySwitch Settings → Tabs**; switches that only toggled a tab have been replaced by this page.
+
+### Sound Mixer
+
+Sound Mixer sets the volume and mute state of each app that is playing audio. On macOS 14.4 or later, each app can also expand its own 10-band equalizer (−12 to +12 dB, with a flat reset) and route its audio to one or more output devices at the same time. Equalizer settings and output selections are remembered per app; selecting no output follows the system default. If every selected device is disconnected, the app's original audio is restored until a selected device returns.
+
+When the current output is an external display with speakers, the keyboard's volume up, volume down, and mute keys adjust the display's volume over DDC/CI and show a volume HUD. Holding Shift+Option steps in finer increments. Capturing these keys requires Accessibility permission.
+
+### Brightness
+
+The Brightness tab shows one slider per active display. OnlySwitch uses native brightness control for Apple displays, DDC/CI for compatible external monitors, and a software dimming overlay when hardware control is unavailable; each row shows which method is in use. Options under **OnlySwitch Settings → Display** add smooth transitions, combined hardware and software dimming for an extra-dark range, synchronization with the built-in display, and an opt-in zero software brightness.
+
+The keyboard's brightness keys adjust the external display under the pointer, using the same fine-step modifier as volume keys. On the built-in display, macOS behavior is unchanged. Software dimming changes image brightness rather than the physical backlight.
+
+### Screenshots
+
+The Screenshots tab collects your screenshots in one list. Enable **Collect System Screenshots** under **OnlySwitch Settings → Screenshots** to save system captures, iOS Simulator screenshots, and Xcode Device Hub screenshots to `~/Pictures/OnlySwitch Screenshots`; OnlySwitch backs up your previous screenshot settings and restores them when you turn collection off. New captures fly into the list automatically.
+
+Click a screenshot to copy it, double-click to open it, drag it out to share it, or pin it to the top of the list. The built-in editor adds pen strokes, rectangles, ellipses, arrows, and blur, with undo and redo; saving overwrites the original file in its original format. Deleting moves files to the Trash, and **Delete All** keeps pinned items. Assign an optional keyboard shortcut on the Screenshots settings page to open or close the tab. Clipboard-only captures and screen recordings are not collected.
+
+### Dock Preview
+
+Hover over an app in the Dock to see thumbnails of its open windows, then click a thumbnail to bring that window to the front. When you hover over Apple Music or Spotify, the preview also offers previous, play or pause, and next controls. Enable the **Dock Preview** switch and grant Accessibility and Screen Recording permissions when prompted.
 
 ### Tailscale
 
@@ -130,7 +133,7 @@ Open **OnlySwitch Settings → Xcode Cleaner**, or show its tab in the menu-bar 
 
 Open **OnlySwitch Settings → App Uninstaller**, or show its tab in the menu-bar list or Only Control from **Settings → Tabs**. Drop an app or choose one, review the application and matching related files, then confirm which items to move to Trash. Discovery covers supported locations matched by bundle identifier, so the results may not include every related file.
 
-Tailscale, Xcode Cleaner, and App Uninstaller are local Mac features and are unavailable in Only Widget or OnlyRemote.
+Screenshots, Dock Preview, Tailscale, Xcode Cleaner, and App Uninstaller are local Mac features and are unavailable in Only Widget or OnlyRemote.
 
 ### Shortcuts Gallery
 
@@ -192,6 +195,14 @@ Evolution supports two types:
 
 Every script must pass the built-in test before the Evolution can be saved.
 
+### Aphrodite
+
+Aphrodite builds mini apps from natural language. Describe what you want, choose a configured AI provider and model, then generate, run, edit, save, share, or import the result. Aphrodite requires macOS 26 or later and uses the model-provider settings configured in OnlySwitch.
+
+<p align="center">
+  <img alt="How to create mini apps with Aphrodite" src="output/imagegen/aphrodite-guide.png" width="90%" />
+</p>
+
 ### Only Agent and OpenClaw
 
 Only Agent lets you describe a task in English and generates AppleScript to control your Mac. When Agent mode is enabled, the generated script is executed immediately. Only Agent supports Ollama, OpenAI, and Gemini providers and requires macOS 26 or later. Provider-backed requests may send your prompt to the provider you select; review both the prompt and generated script before enabling immediate execution.
@@ -216,13 +227,23 @@ When a process is associated with a regular macOS application, click its row in 
   <img alt="OnlySwitch System Monitor" src="https://github.com/user-attachments/assets/ac8178f6-9f61-43be-a73b-a2103ac18ff7" width="30%" />
 </p>
 
-### Codex Usage
+### Codex Usage and Claude Usage
 
-Codex Usage is an optional built-in tab showing the signed-in Codex account's plan, remaining five-hour and weekly usage, reset times, available credits, and reset-credit information. Turn on **Codex Usage** under **OnlySwitch Settings → Tabs** to show it in OnlySwitch and Only Control. It uses the existing local Codex sign-in, so OnlySwitch does not require a separate sign-in.
+Codex Usage is an optional built-in tab showing the signed-in Codex account's plan, remaining five-hour and weekly usage, reset times, available credits, and reset-credit information. It uses the existing local Codex sign-in, so OnlySwitch does not require a separate sign-in.
+
+Claude Usage shows the Claude Code account's plan and its reported five-hour, weekly, model-specific, and extra usage. It reads your existing Claude Code sign-in; if the credentials have expired, sign in to Claude Code again.
+
+Turn on **Codex Usage** or **Claude Usage** under **OnlySwitch Settings → Tabs** to show them in OnlySwitch and Only Control.
 
 <p align="center">
   <img alt="Codex Usage" src="https://github.com/user-attachments/assets/dad0f898-fe19-4df4-be7f-9db278ba5334" width="30%" />
 </p>
+
+### OnlyRemote
+
+[OnlyRemote](https://apps.apple.com/us/app/onlyremote/id6793657946) controls OnlySwitch from iPhone or iPad over the local network. Open **iOS Remote** in OnlySwitch settings to enable access and pair a device. Choose which tabs appear under OnlyRemote's **Settings → Tabs**; Controls is always shown, while System Monitor, Codex Usage, Claude Usage, Sound Mixer, Brightness, and Aphrodite are optional.
+
+OnlyRemote Plus unlocks the **Sound Mixer** tab (per-app volume, mute, equalizer, and output routing), the **Brightness** tab (per-display brightness), and Aphrodite. The Sound Mixer and Brightness tabs need the latest OnlySwitch on the Mac. If the iPhone or iPad cannot find your Mac, both apps show the discovery error.
 
 ### Only Widget
 
