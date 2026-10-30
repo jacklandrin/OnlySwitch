@@ -14,6 +14,8 @@ class DisplayManager{
         displayIDs.filter{ self.isAppleDisplay(displayID: $0) }.first
     }
     
+    var primaryDisplayID: CGDirectDisplayID? { builtInDisplayID }
+
     var existBuiltInDisplay:Bool {
         builtInDisplayID != nil
     }
@@ -29,7 +31,7 @@ class DisplayManager{
         guard CGGetOnlineDisplayList(16, &onlineDisplayIDs, &displayCount) == .success else {
            return
         }
-        self.displayIDs = onlineDisplayIDs
+        self.displayIDs = Array(onlineDisplayIDs.prefix(Int(displayCount)))
     }
     
     func setBrightness(level:Float) {

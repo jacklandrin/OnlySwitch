@@ -78,3 +78,15 @@ struct DDCDisplayMatcherTests {
         #expect(DDCDisplayMatcher.index(forAudioDeviceNamed: "LG ULTRAFINE", displayNames: displayNames) == nil)
     }
 }
+
+struct DDCLuminanceTests {
+    @Test func luminanceUsesValidatedVCPReply() {
+        #expect(DDCPacket.readRequest(vcp: DDCPacket.luminance) == [0x82, 0x01, 0x10, 0xFD])
+        var reply: [UInt8] = [0x6E, 0x88, 0x02, 0, 0x10, 0, 0, 100, 0, 30, 0]
+        reply[10] = reply[0..<10].reduce(0x50, ^)
+        #expect(DDCPacket.parseReadReply(reply, vcp: DDCPacket.luminance) == DDCReading(current: 30, maximum: 100))
+        #expect(DDCPacket.parseReadReply(reply, vcp: DDCPacket.speakerVolume) == nil)
+        reply[10] ^= 1
+        #expect(DDCPacket.parseReadReply(reply, vcp: DDCPacket.luminance) == nil)
+    }
+}

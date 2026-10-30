@@ -18,6 +18,7 @@ import Aphrodite
 import XcodeCleaner
 import AppUninstaller
 import Screenshots
+import DisplayBrightness
 
 enum Focusable: Hashable {
   case none
@@ -53,6 +54,7 @@ struct OnlySwitchListView: View {
     @AppStorage(UserDefaults.Key.showXcodeCleanerTab) private var showXcodeCleanerTab = true
     @AppStorage(UserDefaults.Key.showAppUninstallerTab) private var showAppUninstallerTab = true
     @AppStorage(UserDefaults.Key.showScreenshotsTab) private var showScreenshotsTab = true
+    @AppStorage(UserDefaults.Key.showBrightnessTab) private var showBrightnessTab = true
 
     let columns = [
         GridItem(.fixed(Layout.popoverWidth - 40)),
@@ -124,6 +126,9 @@ struct OnlySwitchListView: View {
                                 .id(languageManager.currentLang)
                         case .appUninstaller:
                             AppUninstallerView(store: SettingsVM.shared.appUninstallerStore, managesScrolling: false, compactPresentation: true)
+                                .id(languageManager.currentLang)
+                        case .brightness:
+                            DisplayBrightnessView(store: SettingsVM.shared.brightnessStore, compact: true, managesScrolling: false)
                                 .id(languageManager.currentLang)
                         case .screenshots:
                             ScreenshotsView(store: SettingsVM.shared.screenshotsStore, compactPresentation: true)
@@ -609,7 +614,8 @@ struct OnlySwitchListView: View {
             aphrodite: showAphroditeTab,
             xcodeCleaner: showXcodeCleanerTab,
             appUninstaller: showAppUninstallerTab,
-            screenshots: showScreenshotsTab
+            screenshots: showScreenshotsTab,
+            brightness: showBrightnessTab
         )
     }
 

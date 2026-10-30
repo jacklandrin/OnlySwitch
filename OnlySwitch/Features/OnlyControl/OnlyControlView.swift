@@ -20,6 +20,7 @@ import Aphrodite
 import XcodeCleaner
 import AppUninstaller
 import Screenshots
+import DisplayBrightness
 import Utilities
 
 struct OnlyControlView: View {
@@ -40,6 +41,7 @@ struct OnlyControlView: View {
     @AppStorage(UserDefaults.Key.showXcodeCleanerTab) private var showXcodeCleanerTab = true
     @AppStorage(UserDefaults.Key.showAppUninstallerTab) private var showAppUninstallerTab = true
     @AppStorage(UserDefaults.Key.showScreenshotsTab) private var showScreenshotsTab = true
+    @AppStorage(UserDefaults.Key.showBrightnessTab) private var showBrightnessTab = true
     
     private let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
 
@@ -137,6 +139,9 @@ struct OnlyControlView: View {
                     .id(languageManager.currentLang)
             case .appUninstaller:
                 AppUninstallerView(store: SettingsVM.shared.appUninstallerStore, managesScrolling: false)
+                    .id(languageManager.currentLang)
+            case .brightness:
+                DisplayBrightnessView(store: SettingsVM.shared.brightnessStore, managesScrolling: false)
                     .id(languageManager.currentLang)
             case .screenshots:
                 ScreenshotsView(store: SettingsVM.shared.screenshotsStore)
@@ -273,7 +278,8 @@ struct OnlyControlView: View {
             aphrodite: showAphroditeTab,
             xcodeCleaner: showXcodeCleanerTab,
             appUninstaller: showAppUninstallerTab,
-            screenshots: showScreenshotsTab
+            screenshots: showScreenshotsTab,
+            brightness: showBrightnessTab
         )
     }
 }

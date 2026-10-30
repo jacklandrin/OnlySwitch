@@ -152,6 +152,24 @@ struct SettingsBackupTests {
         #expect(!SettingsBackup.isExportablePreference("remoteAccess.isEnabled"))
     }
 
+    @Test func brightnessPreferencesRoundTripWithoutLiveDisplayState() throws {
+        let keys = ["showBrightnessTabKey", "smoothBrightnessTransitionsKey",
+                    "combinedBrightnessDimmingKey", "allowZeroSoftwareBrightnessKey",
+                    "syncExternalBrightnessKey", "controlWithBrightnessKeysKey"]
+        let suite = "BrightnessBackupTests.\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        for key in keys { defaults.set(false, forKey: key) }
+        defaults.set(0.1, forKey: "brightnessLiveDisplayLevel")
+        let collected = SettingsBackup.collectPreferences(from: defaults)
+        for key in keys { #expect(collected[key] as? Bool == false) }
+        #expect(collected["brightnessLiveDisplayLevel"] == nil)
+        let backup = SettingsBackup(preferences: collected, sharedPreferences: [:],
+            radioStations: [], evolution: .init(preExecution: nil, commands: []))
+        let decoded = try SettingsBackup(data: backup.encoded())
+        for key in keys { #expect(decoded.preferences[key] as? Bool == false) }
+    }
+
     @Test func rejectsGarbageAndNewerVersions() throws {
         #expect(throws: SettingsBackupError.invalidFile) {
             try SettingsBackup(data: Data("not a plist".utf8))

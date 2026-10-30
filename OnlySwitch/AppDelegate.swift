@@ -277,6 +277,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     nonisolated static let aphroditeForegroundNotificationOptions: UNNotificationPresentationOptions = [.banner, .sound]
 
     func applicationWillTerminate(_ notification: Notification) {
+        DisplayBrightnessService.shared.stop()
         ReverseScrollDirectionController.shared.suspendForTermination()
         dockPreviewPanelController.stop()
         dockPreviewController.stop()

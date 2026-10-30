@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9D8D9B4DCEC4B3C90E2D61D9 /* DisplayBrightnessKeyboardController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEB9F9576C00B9708D0DADA /* DisplayBrightnessKeyboardController.swift */; };
+		217549FC82A1C95A0843C27E /* DisplayBrightnessKeyTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C34535B906CBDA47D280D10 /* DisplayBrightnessKeyTap.swift */; };
+		19AC3ED8B5434024778C8EA5 /* DisplayBrightnessLiveClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D5E22AEF1DE4F25E9219F2 /* DisplayBrightnessLiveClient.swift */; };
+		7C551C2904EA24E09A487BFE /* DisplayShadeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955D50C29BEF4BF17F770248 /* DisplayShadeController.swift */; };
+		4BE55DA1B55BBA22CCF4E310 /* DisplayBrightnessService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52660C8AAA3F5E6778721434 /* DisplayBrightnessService.swift */; };
+		CDB100010000000000000001 /* DisplayBrightness in Frameworks */ = {isa = PBXBuildFile; productRef = CDB100020000000000000001 /* DisplayBrightness */; };
 		CDE100010000000000000001 /* SoundMixerEQ in Frameworks */ = {isa = PBXBuildFile; productRef = CDE100020000000000000001 /* SoundMixerEQ */; };
 		CDE200010000000000000001 /* DisplayDDC in Frameworks */ = {isa = PBXBuildFile; productRef = CDE200020000000000000001 /* DisplayDDC */; };
 		0406E0222CA09F930007AFC2 /* OnlyControlClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406E0212CA09F8C0007AFC2 /* OnlyControlClient.swift */; };
@@ -594,6 +600,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		FEEB9F9576C00B9708D0DADA /* DisplayBrightnessKeyboardController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayBrightnessKeyboardController.swift; sourceTree = "<group>"; };
+		2C34535B906CBDA47D280D10 /* DisplayBrightnessKeyTap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayBrightnessKeyTap.swift; sourceTree = "<group>"; };
+		C3D5E22AEF1DE4F25E9219F2 /* DisplayBrightnessLiveClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayBrightnessLiveClient.swift; sourceTree = "<group>"; };
+		955D50C29BEF4BF17F770248 /* DisplayShadeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayShadeController.swift; sourceTree = "<group>"; };
+		52660C8AAA3F5E6778721434 /* DisplayBrightnessService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayBrightnessService.swift; sourceTree = "<group>"; };
 		0406E0212CA09F8C0007AFC2 /* OnlyControlClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyControlClient.swift; sourceTree = "<group>"; };
 		0406E0232CA0BC460007AFC2 /* RefreshNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshNotification.swift; sourceTree = "<group>"; };
 		0406EDC32ACB3EE80015F4D0 /* EvolutionMarket.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = EvolutionMarket.json; sourceTree = "<group>"; };
@@ -1123,6 +1134,7 @@
 				CD4100010000000000000001 /* Tailscale in Frameworks */,
 				CDE100010000000000000001 /* SoundMixerEQ in Frameworks */,
 				CDE200010000000000000001 /* DisplayDDC in Frameworks */,
+				CDB100010000000000000001 /* DisplayBrightness in Frameworks */,
 				04581DB6276506B9008ADF30 /* AlertToast in Frameworks */,
 				043316DE2B7168940078B867 /* Extensions in Frameworks */,
 				043E5D6D2757DADB00ADC004 /* AVFoundation.framework in Frameworks */,
@@ -1178,6 +1190,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CDB100030000000000000001 /* DisplayBrightness */ = {
+			isa = PBXGroup;
+			children = (
+				FEEB9F9576C00B9708D0DADA /* DisplayBrightnessKeyboardController.swift */,
+				2C34535B906CBDA47D280D10 /* DisplayBrightnessKeyTap.swift */,
+				52660C8AAA3F5E6778721434 /* DisplayBrightnessService.swift */,
+				955D50C29BEF4BF17F770248 /* DisplayShadeController.swift */,
+				C3D5E22AEF1DE4F25E9219F2 /* DisplayBrightnessLiveClient.swift */,
+			);
+			path = DisplayBrightness;
+			sourceTree = "<group>";
+		};
 		0406EDC22ACB3EBE0015F4D0 /* Evolution */ = {
 			isa = PBXGroup;
 			children = (
@@ -1399,6 +1423,7 @@
 		043E5D672757C85500ADC004 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				CDB100030000000000000001 /* DisplayBrightness */,
 				D0C100000000000000000031 /* DockPreview */,
 				B90000000000000000000010 /* SystemMonitor */,
 				F3A400000000000000000010 /* RemoteAccess */,
@@ -2609,6 +2634,7 @@
 				CD4100020000000000000001 /* Tailscale */,
 				CDE100020000000000000001 /* SoundMixerEQ */,
 				CDE200020000000000000001 /* DisplayDDC */,
+				CDB100020000000000000001 /* DisplayBrightness */,
 				A1D201012F0B000200BEEF01 /* PureColorView */,
 				A1D201022F0B000200BEEF01 /* StickerView */,
 				A1D201032F0B000200BEEF01 /* Authenticator */,
@@ -2998,6 +3024,11 @@
 				6EC8A6CD714CA458603A0C05 /* SoundMixerModel.swift in Sources */,
 				D418A0C2EBC2CD7CCD451615 /* SoundMixerService.swift in Sources */,
 				D5E1A0010000000000000001 /* DisplayVolumeKeyTap.swift in Sources */,
+				4BE55DA1B55BBA22CCF4E310 /* DisplayBrightnessService.swift in Sources */,
+				7C551C2904EA24E09A487BFE /* DisplayShadeController.swift in Sources */,
+				19AC3ED8B5434024778C8EA5 /* DisplayBrightnessLiveClient.swift in Sources */,
+				217549FC82A1C95A0843C27E /* DisplayBrightnessKeyTap.swift in Sources */,
+				9D8D9B4DCEC4B3C90E2D61D9 /* DisplayBrightnessKeyboardController.swift in Sources */,
 				D5E1A0010000000000000002 /* DisplayVolumeHUD.swift in Sources */,
 				D5E1A0010000000000000003 /* DisplayVolumeHUDView.swift in Sources */,
 				C2CE44CA134851106759FA13 /* SoundMixerVM.swift in Sources */,
@@ -4127,6 +4158,7 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		CDB100020000000000000001 /* DisplayBrightness */ = {isa = XCSwiftPackageProductDependency; productName = DisplayBrightness; };
 		CDE100020000000000000001 /* SoundMixerEQ */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SoundMixerEQ;

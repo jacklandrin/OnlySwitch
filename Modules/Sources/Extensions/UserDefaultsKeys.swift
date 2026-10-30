@@ -78,6 +78,12 @@ public extension UserDefaults {
         public static let autoStopKeepAwakeEndDate = "autoStopKeepAwakeEndDateKey"
         public static let autoStopKeepAwakeOnSleep = "autoStopKeepAwakeOnSleepKey"
         public static let KeepAwakeKey = "KeepAwakeKey"
+        // Display Brightness
+        public static let showBrightnessTab = "showBrightnessTabKey"
+        public static let smoothBrightnessTransitions = "smoothBrightnessTransitionsKey"
+        public static let combinedBrightnessDimming = "combinedBrightnessDimmingKey"
+        public static let controlWithBrightnessKeys = "controlWithBrightnessKeysKey"
+        public static let allowZeroSoftwareBrightness = "allowZeroSoftwareBrightnessKey"
         //Dim Screen
         public static let autoDimScreenTime = "autoDimScreenTimeKey"
         public static let dimScreenPercent = "dimScreenPercentKey"
@@ -144,6 +150,7 @@ public extension UserDefaults {
             backNoisesTrack, automaticallyStopPlayNoiseTime,
             autoStopKeepAwakeMode, autoStopKeepAwakeTime, autoStopKeepAwakeStartDate, autoStopKeepAwakeEndDate, autoStopKeepAwakeOnSleep, KeepAwakeKey,
             autoDimScreenTime, dimScreenPercent, syncExternalBrightness,
+            showBrightnessTab, smoothBrightnessTransitions, combinedBrightnessDimming, allowZeroSoftwareBrightness, controlWithBrightnessKeys,
             nightShiftStrength, nightShiftStartDate, nightShiftEndDate, isNightShiftScheduleOn,
             sticker,
             showCodexUsageTab, showClaudeUsageTab, showAphroditeTab, currentAIModel, ollamaUrl, openAIHost,

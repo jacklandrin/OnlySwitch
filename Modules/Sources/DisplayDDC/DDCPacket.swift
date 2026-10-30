@@ -2,6 +2,7 @@
 /// The display address (0x37) and host data address (0x51) are passed to the transport,
 /// so they are not part of these byte arrays.
 public enum DDCPacket {
+    public static let luminance: UInt8 = 0x10
     public static let speakerVolume: UInt8 = 0x62
 
     private static let displayAddress: UInt8 = 0x6E

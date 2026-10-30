@@ -65,6 +65,7 @@ extension SectionBar.Section {
         case .xcodeCleaner: UserDefaults.Key.showXcodeCleanerTab
         case .appUninstaller: UserDefaults.Key.showAppUninstallerTab
         case .screenshots: UserDefaults.Key.showScreenshotsTab
+        case .brightness: UserDefaults.Key.showBrightnessTab
         case .controls, .authenticator, .soundMixer: nil
         }
     }

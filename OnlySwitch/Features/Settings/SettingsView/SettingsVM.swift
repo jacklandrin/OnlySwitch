@@ -16,6 +16,7 @@ import Defines
 import Extensions
 import Screenshots
 import Tailscale
+import DisplayBrightness
 
 enum SettingsItem: String, CaseIterable {
     case General = "General"
@@ -46,6 +47,8 @@ enum SettingsItem: String, CaseIterable {
 
     var titleLocalizationKey: String {
         switch self {
+        case .DimScreen:
+            "Display"
         case .Customize:
             "Built-In"
         default:
@@ -112,6 +115,12 @@ class SettingsVM: ObservableObject {
     var screenshotsFolderURL: URL {
         @Dependency(\.screenshotsClient) var client
         return client.folderURL()
+    }
+
+    lazy var brightnessStore = Store(initialState: DisplayBrightnessFeature.State()) {
+        DisplayBrightnessFeature()
+    } withDependencies: {
+        $0.displayBrightnessClient = .app
     }
 
     lazy var tailscaleStore = Store(initialState: TailscaleFeature.State()) {

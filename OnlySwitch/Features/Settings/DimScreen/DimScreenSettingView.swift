@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import DisplayBrightness
 
 struct DimScreenSettingView: View {
     @StateObject var vm = DimScreenSettingVM()
@@ -30,22 +31,10 @@ struct DimScreenSettingView: View {
                 }
                 .pickerStyle(.menu)
             } header: {
-                Text("Brightness".localized())
+                Text("Dim Screen".localized())
             }
 
-            // MARK: - External Displays Section
-            Section {
-                Toggle(isOn: $vm.syncExternalBrightness) {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Sync external monitors".localized())
-                        Text("External monitors follow the built-in display's brightness (F1/F2) via DDC/CI.".localized())
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                }
-            } header: {
-                Text("External Displays".localized())
-            }
+            DisplayBrightnessSettingsView(store: SettingsVM.shared.brightnessStore)
         }
         .formStyle(.grouped)
     }

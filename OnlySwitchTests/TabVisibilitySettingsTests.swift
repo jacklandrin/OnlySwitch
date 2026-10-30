@@ -1,4 +1,5 @@
 import Defines
+import ComposableArchitecture
 import Extensions
 import Foundation
 import RemoteCore
@@ -11,10 +12,11 @@ struct TabVisibilitySettingsTests {
     @Test func everyOptionalTabIsManageableAndControlsIsNot() {
         #expect(SectionBar.Section.manageable == SectionBar.Section.allCases.filter { $0 != .controls })
         #expect(!SectionBar.Section.manageable.contains(.controls))
-        #expect(SectionBar.Section.manageable.count == 9)
+        #expect(SectionBar.Section.manageable.count == 10)
     }
 
     @Test func tabsBackedByDefaultsUseTheExistingSharedKeys() {
+        #expect(SectionBar.Section.brightness.visibilityDefaultsKey == UserDefaults.Key.showBrightnessTab)
         #expect(SectionBar.Section.systemMonitor.visibilityDefaultsKey == UserDefaults.Key.showSystemMonitorTab)
         #expect(SectionBar.Section.codexUsage.visibilityDefaultsKey == UserDefaults.Key.showCodexUsageTab)
         #expect(SectionBar.Section.claudeUsage.visibilityDefaultsKey == UserDefaults.Key.showClaudeUsageTab)
@@ -117,6 +119,31 @@ struct TabVisibilitySettingsTests {
         let result = await router.perform(.init(requestID: UUID(), controlID: .init(kind: .builtIn, value: id), action: .setState(false)))
         guard case let .failure(error) = result.result else { Issue.record("Deprecated tab switch was operated remotely"); return }
         #expect(error.code == .controlNotFound)
+    }
+
+    @Test func brightnessTabUsesSharedVisibilityAndDefaultsToVisible() throws {
+        let suite = "BrightnessTabTests.\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let client = TabVisibilityClient.defaults(defaults,
+            authenticatorEnabled: { false }, setAuthenticatorEnabled: { _ in },
+            soundMixerEnabled: { false }, setSoundMixerEnabled: { _ in })
+        #expect(client.isVisible(.brightness))
+        client.setVisible(false, .brightness)
+        #expect(defaults.object(forKey: UserDefaults.Key.showBrightnessTab) as? Bool == false)
+        let hidden = SectionBar.sections(authenticator: false, soundMixer: false,
+            systemMonitor: false, codexUsage: false, brightness: client.isVisible(.brightness))
+        #expect(hidden == [.controls])
+        client.setVisible(true, .brightness)
+        #expect(SectionBar.sections(authenticator: false, soundMixer: false,
+            systemMonitor: false, codexUsage: false, brightness: client.isVisible(.brightness)) == [.controls, .brightness])
+    }
+
+    @Test func hidingSelectedBrightnessReturnsOnlyControlToControls() async {
+        let store = TestStore(initialState: OnlyControlReducer.State(selectedSection: .brightness)) {
+            OnlyControlReducer()
+        }
+        await store.send(.availableSectionsChanged([.controls])) { $0.selectedSection = .controls }
     }
 
     @Test func tabsSettingsPageFollowsBuiltIn() {
