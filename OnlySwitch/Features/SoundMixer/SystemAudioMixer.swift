@@ -37,9 +37,52 @@ final class SystemAudioMixer {
         var routing: OutputRouteSelection
         var ownerBundleID: String?
         var ownerLaunchDate: Date?
+        var helperGeneration: UUID?
     }
     nonisolated(unsafe) private var muteTaps: [pid_t: AppTap] = [:]
     private var configurations: [pid_t: Configuration] = [:]
+    private struct PlaybackHelper {
+        let pid: pid_t
+        let generation: UUID
+        let isAlive: @MainActor () -> Bool
+    }
+    private var playbackHelper: PlaybackHelper?
+
+    /// Register only the child retained by the playback owner. A generation belongs to one
+    /// Process instance, so a recycled PID cannot inherit a previous player's tap.
+    @discardableResult
+    func configurePlaybackHelper(pid: pid_t, generation: UUID,
+                                 isAlive: @escaping @MainActor () -> Bool) -> Bool {
+        guard pid > 0, pid != ProcessInfo.processInfo.processIdentifier,
+              isAlive(), Self.parentPID(of: pid) == ProcessInfo.processInfo.processIdentifier else {
+            releasePlaybackHelper()
+            return false
+        }
+        if let previous = playbackHelper, previous.pid != pid || previous.generation != generation {
+            releasePlaybackHelper()
+        }
+        playbackHelper = PlaybackHelper(pid: pid, generation: generation, isAlive: isAlive)
+        return true
+    }
+
+    func releasePlaybackHelper() {
+        guard let helper = playbackHelper else { return }
+        destroyTap(for: helper.pid)
+        configurations[helper.pid] = nil
+        playbackHelper = nil
+    }
+
+    func playbackHelperProcessObjectIDs() -> [AudioObjectID] {
+        guard let helper = playbackHelper,
+              playbackHelperIsCurrent(pid: helper.pid, generation: helper.generation) else { return [] }
+        return Self.processObjectIDs().filter { Self.pidProperty(of: $0) == helper.pid }
+    }
+
+    private func playbackHelperIsCurrent(pid: pid_t, generation: UUID) -> Bool {
+        guard let helper = playbackHelper, helper.pid == pid, helper.generation == generation,
+              pid != ProcessInfo.processInfo.processIdentifier, helper.isAlive() else { return false }
+        return Self.parentPID(of: pid) == ProcessInfo.processInfo.processIdentifier
+    }
     // Keep callback allocations retired for the process lifetime. A callback can arrive after
     // AudioDeviceStop; its atomic retirement gate must remain readable even then.
     nonisolated(unsafe) private static var retiredStates: [OpaquePointer] = []
@@ -131,9 +174,14 @@ final class SystemAudioMixer {
 
     func audioPlayingApps(excludingBundleIDs excluded: Set<String>) -> [AudioApp] {
         let ownPID = ProcessInfo.processInfo.processIdentifier
+        if let helper = playbackHelper,
+           !playbackHelperIsCurrent(pid: helper.pid, generation: helper.generation) {
+            releasePlaybackHelper()
+        }
         var byApp: [pid_t: AudioApp] = [:]
         for object in Self.processObjectIDs() {
-            guard let pid = Self.pidProperty(of: object), let owner = Self.owningApplication(of: pid),
+            guard let pid = Self.pidProperty(of: object), pid != playbackHelper?.pid,
+                  let owner = Self.owningApplication(of: pid),
                   owner.processIdentifier != ownPID else { continue }
             let bundleID = owner.bundleIdentifier
             if let bundleID, excluded.contains(bundleID) { continue }
@@ -154,8 +202,13 @@ final class SystemAudioMixer {
             ].processObjectIDs.append(object)
         }
         for pid in Set(muteTaps.keys).union(configurations.keys) {
-            guard NSRunningApplication(processIdentifier: pid)?.isTerminated != false else { continue }
-            destroyTap(for: pid); configurations[pid] = nil
+            let alive: Bool
+            if let generation = configurations[pid]?.helperGeneration {
+                alive = playbackHelperIsCurrent(pid: pid, generation: generation)
+            } else {
+                alive = NSRunningApplication(processIdentifier: pid)?.isTerminated == false
+            }
+            if !alive { destroyTap(for: pid); configurations[pid] = nil }
         }
         return byApp.values.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
     }
@@ -169,14 +222,26 @@ final class SystemAudioMixer {
     @discardableResult
     func setConfiguration(gain: Double, settings: EqualizerSettings, pid: pid_t,
                           processObjectIDs: [AudioObjectID], live: Bool, routing: OutputRouteSelection = .init()) -> Bool {
+        // The host renders every processed app: tapping it would create an audio feedback loop.
+        guard pid != ProcessInfo.processInfo.processIdentifier else { return false }
+        let helperGeneration = playbackHelper.flatMap { $0.pid == pid ? $0.generation : nil }
+        if let helperGeneration,
+           !playbackHelperIsCurrent(pid: pid, generation: helperGeneration) {
+            destroyTap(for: pid); configurations[pid] = nil
+            return false
+        }
         let gain = gain.isFinite ? min(1, max(0, gain)) : 1
         let previous = configurations[pid]
         let owner = NSRunningApplication(processIdentifier: pid)
-        if let previous, previous.ownerBundleID != owner?.bundleIdentifier || previous.ownerLaunchDate != owner?.launchDate {
-            destroyTap(for: pid); configurations[pid] = nil; return false
+        if let previous {
+            let sameOwner = previous.helperGeneration == helperGeneration &&
+                (helperGeneration != nil || (previous.ownerBundleID == owner?.bundleIdentifier &&
+                                             previous.ownerLaunchDate == owner?.launchDate))
+            guard sameOwner else { destroyTap(for: pid); configurations[pid] = nil; return false }
         }
         configurations[pid] = Configuration(gain: gain, processes: processObjectIDs, settings: settings, routing: routing,
-                                            ownerBundleID: owner?.bundleIdentifier, ownerLaunchDate: owner?.launchDate)
+                                            ownerBundleID: owner?.bundleIdentifier, ownerLaunchDate: owner?.launchDate,
+                                            helperGeneration: helperGeneration)
         let needsTap = EqualizerTapPolicy.requiresTap(gain: gain, settings: settings, hasExplicitRoute: !routing.followsSystem)
         if !needsTap && !live { destroyTap(for: pid); return true }
         let endpoints = SoundMixerService().outputEndpoints()
@@ -190,6 +255,15 @@ final class SystemAudioMixer {
             hasher.combine(output.formatSignature)
         }
         let outputSignature = hasher.finalize()
+        // Validate the helper before the cached-tap fast path too. A dead child or stale HAL
+        // object must never continue rendering after a reconnect or PID reuse.
+        if helperGeneration != nil {
+            guard !processObjectIDs.isEmpty,
+                  processObjectIDs.allSatisfy({ Self.pidProperty(of: $0) == pid }) else {
+                destroyTap(for: pid)
+                return false
+            }
+        }
         if let tap = muteTaps[pid] {
             if tap.processSignature == Self.signature(of: processObjectIDs), tap.outputSignature == outputSignature {
                 OSEQSetGain(tap.state, Float(gain))
@@ -201,11 +275,13 @@ final class SystemAudioMixer {
         guard needsTap || live, !processObjectIDs.isEmpty else { return !needsTap }
         // Device reconnects may happen long after a source exited. Never reuse a stale PID/audio
         // object association when restoring its desired route from the listener.
-        guard NSRunningApplication(processIdentifier: pid)?.isTerminated == false else {
+        guard helperGeneration != nil || NSRunningApplication(processIdentifier: pid)?.isTerminated == false else {
             configurations[pid] = nil; return false
         }
         guard processObjectIDs.allSatisfy({ object in
-            guard let processPID = Self.pidProperty(of: object), let owner = Self.owningApplication(of: processPID) else { return false }
+            guard let processPID = Self.pidProperty(of: object) else { return false }
+            if helperGeneration != nil { return processPID == pid }
+            guard let owner = Self.owningApplication(of: processPID) else { return false }
             return owner.processIdentifier == pid
         }) else {
             // The owner still exists, but a browser/helper may be rebuilding its audio object.

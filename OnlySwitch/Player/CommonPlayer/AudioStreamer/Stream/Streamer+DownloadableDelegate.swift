@@ -12,14 +12,17 @@ import os.log
 extension Streamer: DownloadingDelegate {
     
     public func download(_ download: Downloading, completedWithError error: Error?) {
+        guard !isDisposed else { return }
         os_log("%@ - %d [error: %@]", log: Streamer.logger, type: .debug, #function, #line, String(describing: error?.localizedDescription))
         
         if let error = error, let url = download.url {
-            DispatchQueue.main.async { [unowned self] in
+            DispatchQueue.main.async { [weak self] in
+                guard let self, !self.isDisposed else { return }
                 self.delegate?.streamer(self, failedDownloadWithError: error, forURL: url)
             }
         } else if let url = download.url {
-            DispatchQueue.main.async { [unowned self] in
+            DispatchQueue.main.async { [weak self] in
+                guard let self, !self.isDisposed else { return }
                 self.delegate?.streamer(self, downloadComplete: url)
             }
         }
@@ -33,6 +36,7 @@ extension Streamer: DownloadingDelegate {
     }
     
     public func download(_ download: Downloading, didReceiveData data: Data, progress: Float) {
+        guard !isDisposed else { return }
 //        os_log("%@ - %d", log: Streamer.logger, type: .debug, #function, #line)
         
         guard let parser = parser else {

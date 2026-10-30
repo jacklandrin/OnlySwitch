@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+        OPHELP00000000000000005B /* PlaybackHelperEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = OPHELP00000000000000005A /* PlaybackHelperEngine.swift */; };
+        OPHELP00000000000000004B /* PlaybackHelperCommandWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = OPHELP00000000000000004A /* PlaybackHelperCommandWriter.swift */; };
+        OPHELP00000000000000003B /* PlaybackHelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = OPHELP00000000000000003A /* PlaybackHelperProtocol.swift */; };
+        OPHELP000000000000000001 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OPHELP000000000000000002 /* main.swift */; };
+        OPHELP000000000000000003 /* HostedAudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = OPHELP000000000000000004 /* HostedAudioPlayer.swift */; };
 		9D8D9B4DCEC4B3C90E2D61D9 /* DisplayBrightnessKeyboardController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEB9F9576C00B9708D0DADA /* DisplayBrightnessKeyboardController.swift */; };
 		217549FC82A1C95A0843C27E /* DisplayBrightnessKeyTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C34535B906CBDA47D280D10 /* DisplayBrightnessKeyTap.swift */; };
 		19AC3ED8B5434024778C8EA5 /* DisplayBrightnessLiveClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D5E22AEF1DE4F25E9219F2 /* DisplayBrightnessLiveClient.swift */; };
@@ -618,6 +623,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+        OPHELP00000000000000005A /* PlaybackHelperEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackHelperEngine.swift; sourceTree = "<group>"; };
+        OPHELP00000000000000004A /* PlaybackHelperCommandWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackHelperCommandWriter.swift; sourceTree = "<group>"; };
+        OPHELP00000000000000003A /* PlaybackHelperProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackHelperProtocol.swift; sourceTree = "<group>"; };
+        OPHELP000000000000000002 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+        OPHELP000000000000000004 /* HostedAudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostedAudioPlayer.swift; sourceTree = "<group>"; };
 		FEEB9F9576C00B9708D0DADA /* DisplayBrightnessKeyboardController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayBrightnessKeyboardController.swift; sourceTree = "<group>"; };
 		2C34535B906CBDA47D280D10 /* DisplayBrightnessKeyTap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayBrightnessKeyTap.swift; sourceTree = "<group>"; };
 		C3D5E22AEF1DE4F25E9219F2 /* DisplayBrightnessLiveClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayBrightnessLiveClient.swift; sourceTree = "<group>"; };
@@ -1412,6 +1422,10 @@
 				04DC6C5F28A46ECE00888BF9 /* CommonPlayer.swift */,
 				0493372727625A1E00AE779A /* AudioPlayer.swift */,
 				0493372A27625A1E00AE779A /* PlayerManager.swift */,
+                OPHELP000000000000000004 /* HostedAudioPlayer.swift */,
+                OPHELP00000000000000005A /* PlaybackHelperEngine.swift */,
+                OPHELP00000000000000004A /* PlaybackHelperCommandWriter.swift */,
+                OPHELP00000000000000003A /* PlaybackHelperProtocol.swift */,
 				0493372827625A1E00AE779A /* JLASAudioPlayer.swift */,
 				0493374327625A1E00AE779A /* JLASAudioPlayer+Streamer.swift */,
 				0493372927625A1E00AE779A /* JLAVAudioPlayer.swift */,
@@ -1589,6 +1603,7 @@
 				C1A0B00618E9202600000001 /* PrivilegedOperations */,
 				A9C70D052EE490B3000A2367 /* GoogleService-Info.plist */,
 				04447B5B2754F08000CD2900 /* AppDelegate.swift */,
+                OPHELP000000000000000002 /* main.swift */,
 				F3A9000000000000000000B2 /* DesktopPetPlaybackLive.swift */,
 				04E238612A2C831F00CDD1FA /* CoreData */,
 				040CD2BD27579CEA002E0CC6 /* Info.plist */,
@@ -3107,6 +3122,11 @@
 				C2CE44CA134851106759FA13 /* SoundMixerVM.swift in Sources */,
 				SMRB00000000000000000002 /* SoundMixerRemoteBridge.swift in Sources */,
 				OWNP00000000000000000002 /* OwnPlaybackSource.swift in Sources */,
+                OPHELP000000000000000001 /* main.swift in Sources */,
+                OPHELP000000000000000003 /* HostedAudioPlayer.swift in Sources */,
+                OPHELP00000000000000005B /* PlaybackHelperEngine.swift in Sources */,
+                OPHELP00000000000000004B /* PlaybackHelperCommandWriter.swift in Sources */,
+                OPHELP00000000000000003B /* PlaybackHelperProtocol.swift in Sources */,
 				RBPV00000000000000000002 /* RemoteBrightnessProvider.swift in Sources */,
 				732FB599FA7E3F9BEEF45DD9 /* SoundMixerPanelView.swift in Sources */,
 				2B346BE56384C700F4046FC4 /* SystemAudioMixer.swift in Sources */,

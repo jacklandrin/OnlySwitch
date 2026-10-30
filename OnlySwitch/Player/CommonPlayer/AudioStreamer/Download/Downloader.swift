@@ -118,4 +118,14 @@ public final class Downloader: NSObject, Downloading, @unchecked Sendable {
         state = .stopped
         task.cancel()
     }
+
+    /// A helper creates one downloader per track, so end URLSession's delegate ownership too.
+    func dispose() {
+        task?.cancel()
+        task = nil
+        delegate = nil
+        completionHandler = nil
+        progressHandler = nil
+        session.invalidateAndCancel()
+    }
 }

@@ -27,7 +27,7 @@ final class SoundMixerVM: ObservableObject {
         case scriptable
         /// Via a Core Audio process tap (any audio app, e.g. a browser).
         case systemTap
-        /// OnlySwitch's own player, via its volume preference. No EQ or output routing.
+        /// OnlySwitch's native volume, with isolated helper playback for EQ and routing.
         case ownPlayer
     }
 
@@ -63,6 +63,7 @@ final class SoundMixerVM: ObservableObject {
             equalizerStore.send(.sourcesChanged([]))
             outputRoutingStore.send(.sourcesChanged([]))
             if #available(macOS 14.4, *) {
+                systemMixer?.releasePlaybackHelper()
                 systemMixer?.releaseAllTaps()
             }
         }
@@ -118,6 +119,7 @@ final class SoundMixerVM: ObservableObject {
     private var systemMixerBox: AnyObject?
     // Only mutated on the main actor during init; read once in deinit after the last release.
     nonisolated(unsafe) private var workspaceObservers: [NSObjectProtocol] = []
+    nonisolated(unsafe) private var ownPlaybackObserver: NSObjectProtocol?
     private var autoRefreshTask: Task<Void, Never>?
     /// While the user drags a slider we must not rebuild rows underneath them.
     private var isInteracting = false
@@ -146,6 +148,11 @@ final class SoundMixerVM: ObservableObject {
             }
         }
         observeRunningApps()
+        ownPlaybackObserver = NotificationCenter.default.addObserver(
+            forName: .ownPlaybackStateChanged, object: nil, queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor [weak self] in await self?.refresh() }
+        }
         // Granting Accessibility in System Settings must start the volume keys without a restart.
         accessibilityObserver = DistributedNotificationCenter.default().addObserver(
             forName: NSNotification.Name("com.apple.accessibility.api"), object: nil, queue: .main
@@ -162,6 +169,7 @@ final class SoundMixerVM: ObservableObject {
     }
 
     deinit {
+        if let ownPlaybackObserver { NotificationCenter.default.removeObserver(ownPlaybackObserver) }
         let center = NSWorkspace.shared.notificationCenter
         for observer in workspaceObservers {
             center.removeObserver(observer)
@@ -305,6 +313,15 @@ final class SoundMixerVM: ObservableObject {
         }
 
         refreshRoutingDevices()
+        if #available(macOS 14.4, *), let mixer = systemMixer {
+            if ownPlayback.isPlaying(), let identity = ownPlayback.helperIdentity() {
+                let source = ownPlayback
+                mixer.configurePlaybackHelper(pid: identity.pid, generation: identity.generation,
+                                               isAlive: { source.ownsHelper(identity) })
+            } else {
+                mixer.releasePlaybackHelper()
+            }
+        }
 
         var newRows: [AppRow] = []
 
@@ -358,6 +375,8 @@ final class SoundMixerVM: ObservableObject {
                                          previous: rows.first { $0.id == OwnPlaybackSource.rowID },
                                          icon: NSApp.applicationIconImage) {
             newRows.append(own)
+        } else if #available(macOS 14.4, *) {
+            systemMixer?.releasePlaybackHelper()
         }
 
         // Only publish real changes. Reassigning every two seconds relaid out the whole popover
@@ -365,9 +384,9 @@ final class SoundMixerVM: ObservableObject {
         if Self.signature(of: newRows) != Self.signature(of: rows) { rows = newRows }
         let supported: Bool
         if #available(macOS 14.4, *) { supported = true } else { supported = false }
-        let sources = rows.filter { $0.control != .ownPlayer }.map {
+        let sources = rows.map {
             EqualizerFeature.Source(id: $0.id, isPersistent: !$0.id.hasPrefix("pid-"), isSupported: supported,
-                                    isAvailable: $0.pid != nil && !$0.processObjectIDs.isEmpty)
+                                    isAvailable: $0.control == .ownPlayer || ($0.pid != nil && !$0.processObjectIDs.isEmpty))
         }
         outputRoutingStore.send(.sourcesChanged(sources))
         equalizerStore.send(.sourcesChanged(sources))
@@ -376,6 +395,17 @@ final class SoundMixerVM: ObservableObject {
     private func applyEqualizer(_ settings: EqualizerSettings, for id: String) -> EqualizerFeature.Status {
         guard enabled else { return .pending }
         guard #available(macOS 14.4, *), let mixer = systemMixer else { return .unsupported }
+        if id == OwnPlaybackSource.rowID {
+            guard rows.contains(where: { $0.id == id }) else { return .pending }
+            guard let identity = ownPlayback.helperIdentity(), ownPlayback.ownsHelper(identity) else { return .pending }
+            let processes = mixer.playbackHelperProcessObjectIDs()
+            guard !processes.isEmpty else { return .pending }
+            guard mixer.setConfiguration(gain: 1, settings: settings, pid: identity.pid,
+                processObjectIDs: processes, live: false,
+                routing: outputRoutingStore.withState { $0.selection(for: id) }) else { return .unavailable }
+            if settings.isFlat { return .flat }
+            return mixer.isReceivingAudio(pid: identity.pid) ? .active : .waitingForAudio
+        }
         guard let row = rows.first(where: { $0.id == id }), let pid = row.pid,
               !row.processObjectIDs.isEmpty else { return .pending }
         // Native/scriptable volume is already applied upstream. Its EQ chain must use unity gain.
@@ -398,6 +428,21 @@ final class SoundMixerVM: ObservableObject {
     private func applyOutputRoute(_ selection: OutputRouteSelection, for id: String) -> OutputRoutingFeature.Status {
         guard enabled else { return .pending }
         guard #available(macOS 14.4, *), let mixer = systemMixer else { return .unsupported }
+        if id == OwnPlaybackSource.rowID {
+            guard rows.contains(where: { $0.id == id }) else { return .pending }
+            let resolution = OutputRouteResolution(selection: selection, devices: service.outputEndpoints().map(\.device))
+            guard let identity = ownPlayback.helperIdentity(), ownPlayback.ownsHelper(identity) else { return .pending }
+            let processes = mixer.playbackHelperProcessObjectIDs()
+            guard !processes.isEmpty else { return .pending }
+            let applied = mixer.setConfiguration(gain: 1,
+                settings: equalizerStore.withState { $0.settings(for: id) }, pid: identity.pid,
+                processObjectIDs: processes, live: false, routing: selection)
+            if resolution.isWaiting { return .waitingForDevices }
+            guard applied else { return .unavailable }
+            if selection.followsSystem { return .followingSystem }
+            if !resolution.missingUIDs.isEmpty { return .partial }
+            return mixer.isReceivingAudio(pid: identity.pid) ? .active : .pending
+        }
         guard let row = rows.first(where: { $0.id == id }), let pid = row.pid,
               !row.processObjectIDs.isEmpty else { return .pending }
         let resolution = OutputRouteResolution(selection: selection, devices: service.outputEndpoints().map(\.device))

@@ -18,7 +18,6 @@ import Extensions
 import DesktopPet
 import UserNotifications
 
-@main
 struct OnlySwitchApp: App {
     let persistenceController = PersistenceController.shared
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate

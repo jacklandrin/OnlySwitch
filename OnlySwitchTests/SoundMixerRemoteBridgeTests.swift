@@ -42,6 +42,43 @@ struct SoundMixerRemoteBridgeTests {
         #expect(snapshot.outputDevices.isEmpty)
     }
 
+    @Test func ownPlaybackSnapshotIncludesItsEqualizerAndOutputSelection() throws {
+        let own = OwnPlaybackSource.rowID
+        let source = EqualizerFeature.Source(id: own, isPersistent: true, isSupported: true, isAvailable: true)
+        var equalizer = EqualizerFeature.State()
+        equalizer.apps[own] = .init(source: source, settings: .init(gains: [4, -3]))
+        equalizer.apps[own]?.status = .active
+        var routing = routingState()
+        routing.apps[own] = .init(source: source, selection: .init(deviceUIDs: ["spk", "hp"]))
+        routing.apps[own]?.status = .active
+
+        let snapshot = SoundMixerRemoteBridge.snapshot(
+            revision: 10, isEnabled: true, systemVolume: 50, isSystemVolumeAvailable: true, output: nil,
+            rows: [.init(id: own, name: "OnlySwitch", volume: 35, isMuted: false)],
+            equalizer: equalizer, routing: routing
+        )
+        let app = try #require(snapshot.apps.first)
+        #expect(app.id == own)
+        #expect(app.volume == 35)
+        #expect(app.equalizer == .init(gains: [4, -3], status: .active))
+        #expect(app.routing == .init(selectedDeviceIDs: ["hp", "spk"], status: .active))
+    }
+
+    @Test func ownPlaybackProcessingCommandsAreAcceptedWhenItsSourceIsPresent() throws {
+        let own = OwnPlaybackSource.rowID
+        var routing = routingState()
+        routing.apps[own] = .init(source: .init(id: own, isPersistent: true, isSupported: true, isAvailable: true))
+
+        #expect(try SoundMixerRemoteBridge.validate(.setAppEqualizerGain(id: own, band: 1, gain: 5),
+                                                  rowIDs: [own], routing: routing) == .equalizerGain(own, 1, 5))
+        #expect(try SoundMixerRemoteBridge.validate(.resetAppEqualizer(id: own),
+                                                  rowIDs: [own], routing: routing) == .equalizerReset(own))
+        #expect(try SoundMixerRemoteBridge.validate(.toggleAppOutputDevice(id: own, deviceID: "hp"),
+                                                  rowIDs: [own], routing: routing) == .toggleOutput(own, "hp"))
+        #expect(try SoundMixerRemoteBridge.validate(.followSystemOutput(id: own),
+                                                  rowIDs: [own], routing: routing) == .followSystem(own))
+    }
+
     @Test func validationRejectsUnknownRowsBandsAndDevices() {
         let routing = routingState()
         #expect(throws: RemoteProtocolError.self) {

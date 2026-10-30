@@ -157,32 +157,25 @@ struct SoundMixerPanelView: View {
                 .buttonStyle(.plain)
                 .accessibilityLabel(Text(row.isMuted ? "Unmute".localized() : "Mute".localized()))
 
-                // OnlySwitch's own player has no process tap, so no EQ or routing; keep the column aligned.
-                if row.control == .ownPlayer {
-                    Color.clear.frame(width: 20, height: 24)
-                } else {
-                    Button {
-                        vm.equalizerStore.send(.toggleExpanded(row.id))
-                    } label: {
-                        Image(systemName: expanded ? "chevron.down" : "chevron.right")
-                            .font(.system(size: 10, weight: .semibold))
-                            .foregroundStyle(.secondary)
-                            .frame(width: 20, height: 24)
-                            .contentShape(Rectangle())
-                    }
-                    .buttonStyle(.plain)
-                    .help(String(format: "Equalizer for %@".localized(), row.name))
-                    .accessibilityLabel(Text(String(format: "Equalizer for %@".localized(), row.name)))
-                    .accessibilityValue(Text(expanded ? "Expanded".localized() : "Collapsed".localized()))
+                Button {
+                    vm.equalizerStore.send(.toggleExpanded(row.id))
+                } label: {
+                    Image(systemName: expanded ? "chevron.down" : "chevron.right")
+                        .font(.system(size: 10, weight: .semibold))
+                        .foregroundStyle(.secondary)
+                        .frame(width: 20, height: 24)
+                        .contentShape(Rectangle())
                 }
+                .buttonStyle(.plain)
+                .help(String(format: "Equalizer for %@".localized(), row.name))
+                .accessibilityLabel(Text(String(format: "Equalizer for %@".localized(), row.name)))
+                .accessibilityValue(Text(expanded ? "Expanded".localized() : "Collapsed".localized()))
             }
-            if row.control != .ownPlayer {
-                OutputRoutingView(store: vm.outputRoutingStore, appID: row.id, appName: row.name,
-                                  localize: { $0.localized() })
-                    .padding(.leading, 34)
-                if expanded {
-                    EqualizerView(store: vm.equalizerStore, appID: row.id, localize: { $0.localized() })
-                }
+            OutputRoutingView(store: vm.outputRoutingStore, appID: row.id, appName: row.name,
+                              localize: { $0.localized() })
+                .padding(.leading, 34)
+            if expanded {
+                EqualizerView(store: vm.equalizerStore, appID: row.id, localize: { $0.localized() })
             }
         }
     }

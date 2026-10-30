@@ -77,7 +77,7 @@ enum SoundMixerRemoteBridge {
             }
             return id
         }
-        // EQ and routing need a process tap; rows without one (OnlySwitch's own player) have no state here.
+        // Processing commands require a registered source, including OnlySwitch's isolated playback source.
         func processingRow(_ id: String) throws(RemoteProtocolError) -> String {
             let id = try row(id)
             guard routing.apps[id] != nil else {

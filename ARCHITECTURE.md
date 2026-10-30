@@ -146,6 +146,8 @@ EQ requires macOS 14.4 process taps; macOS 14.0–14.3 keeps native scripting vo
 
 Aggregate input must be an unambiguous stereo Float32 stream. Devices that add physical microphone inputs to the aggregate are rejected before starting IO, preserving original audio rather than treating microphone samples as the tapped app. Supporting those layouts requires explicit tap-stream identification.
 
+OnlySwitch's radio and background-noise source uses the stable `onlyswitch.own-playback` row identifier for EQ and output preferences. Its native player retains volume control upstream, while EQ and routing use unity gain. Playback runs in an owned child process of the app executable, dispatched before SwiftUI application initialization. Bounded local pipe messages carry playback intent, metadata and spectrum data; the child stops when its parent closes the pipe. The main process captures only that child's exact audio process IDs, authorizing the retained process's PID and per-launch generation before tap reuse and reconstruction. It never captures the host process, whose output includes other apps' processed audio. Stopping playback or disabling Mixer releases the child's tap; flat EQ and system-following output preserve native playback. OnlyRemote uses the same registered source and existing EQ/routing commands without a protocol change.
+
 
 ### Per-App Output Routing
 

@@ -9,6 +9,7 @@
 import AVFoundation
 import Foundation
 import os.log
+import os
 
 /// The `Streamer` is a concrete implementation of the `Streaming` protocol and is intended to provide a high-level, extendable class for streaming an audio file living at a URL on the internet. Subclasses can override the `attachNodes` and `connectNodes` methods to insert custom effects.
 class Streamer: Streaming, @unchecked Sendable {
@@ -63,6 +64,34 @@ class Streamer: Streaming, @unchecked Sendable {
     }
     var volumeRampTimer: Timer?
     var volumeRampTargetValue: Float?
+    private var volumeRampRevision = 0
+    private let disposalState = OSAllocatedUnfairLock(initialState: false)
+    var isDisposed: Bool { disposalState.withLock { $0 } }
+
+    /// Final teardown for helper track replacement; ordinary pause/stop remain reusable.
+    func dispose() {
+        let first = disposalState.withLock { disposed in
+            guard !disposed else { return false }
+            disposed = true
+            return true
+        }
+        guard first else { return }
+        stop()
+        timer?.invalidate()
+        timer = nil
+        engine.mainMixerNode.removeTap(onBus: 0)
+        downloader.delegate = nil
+        if let downloader = downloader as? Downloader { downloader.dispose() }
+        delegate = nil
+    }
+
+    func setUserVolume(_ value: Float) {
+        volumeRampRevision += 1
+        volumeRampTimer?.invalidate()
+        volumeRampTimer = nil
+        volumeRampTargetValue = nil
+        volume = value
+    }
 
     public var updatePCMBuffer:((AVAudioPCMBuffer) -> Void)?
     
@@ -99,13 +128,14 @@ class Streamer: Streaming, @unchecked Sendable {
         engine.mainMixerNode.installTap(onBus: 0, bufferSize: readBufferSize, format: nil, block: {[weak self](buffer, when) in
             guard let strongSelf = self else { return }
             buffer.frameLength = AVAudioFrameCount(strongSelf.readBufferSize)
-            strongSelf.delegate!.streamer(strongSelf, updateBuffer: buffer)
+            strongSelf.delegate?.streamer(strongSelf, updateBuffer: buffer)
 
         })
         
         commonPCMFormat = engine.mainMixerNode.outputFormat(forBus: 0)
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [weak self] in
+            guard let self, !self.isDisposed else { return }
             /// Use timer to schedule the buffers (this is not ideal, wish AVAudioEngine provided a pull-model for scheduling buffers)
             let interval = 1.0 / (self.readFormat.sampleRate / Double(self.readBufferSize))
             self.timer = Timer(timeInterval: interval / 2.0, repeats: true) {
@@ -166,7 +196,7 @@ class Streamer: Streaming, @unchecked Sendable {
         os_log("%@ - %d", log: Streamer.logger, type: .debug, #function, #line)
         
         // Check we're not already playing
-        guard !playerNode.isPlaying else {
+        guard !isDisposed, !playerNode.isPlaying else {
             return
         }
         
@@ -214,6 +244,10 @@ class Streamer: Streaming, @unchecked Sendable {
         downloader.stop()
         playerNode.stop()
         engine.stop()
+        volumeRampTimer?.invalidate()
+        volumeRampTimer = nil
+        volumeRampTargetValue = nil
+        volumeRampRevision += 1
         reader?.parser.withPackets { $0.removeAll() }
         // Update the state
         state = .stopped
@@ -264,8 +298,12 @@ class Streamer: Streaming, @unchecked Sendable {
     }
     
     func swellVolume(to newVolume: Float, duration: TimeInterval = 0.5) {
+        volumeRampRevision += 1
+        let revision = volumeRampRevision
+        guard newVolume > 0 else { setUserVolume(0); return }
         volumeRampTargetValue = newVolume
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(Int(duration*1000/2))) { [unowned self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(Int(duration*1000/2))) { [weak self] in
+            guard let self, self.state != .stopped, self.volumeRampRevision == revision else { return }
             self.volumeRampTimer?.invalidate()
             let timer = Timer(timeInterval: Double(Float((duration/2.0))/(newVolume * 10)), repeats: true) { timer in
                 if self.volume != newVolume {

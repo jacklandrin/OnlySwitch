@@ -18,11 +18,7 @@ final class PlayerManager: @unchecked Sendable {
     
     init() {
         
-        if soundWaveEffectDisplay {
-            self.player = JLASAudioPlayer()
-        } else {
-            self.player = JLAVAudioPlayer()
-        }
+        self.player = MainActor.assumeIsolated { HostedAudioPlayer() }
         
         if Preferences.shared.radioEnable {
             self.player.setupRemoteCommandCenter()
@@ -35,11 +31,7 @@ final class PlayerManager: @unchecked Sendable {
             self.player.currentPlayerItem?.isPlaying = false
             self.player.clearCommandCenter()
             
-            if soundWaveEffectDisplay {
-                self.player = JLASAudioPlayer()
-            } else {
-                self.player = JLAVAudioPlayer()
-            }
+            self.player = MainActor.assumeIsolated { HostedAudioPlayer() }
             self.player.currentPlayerItem = currentPlayerItem
             
             if Preferences.shared.radioEnable {

@@ -41,6 +41,10 @@ extension AudioPlayer {
     
     
     func setupRemoteCommandCenter() {
+        if let hosted = self as? HostedAudioPlayer {
+            MainActor.assumeIsolated { hosted.configureRemoteCommands() }
+            return
+        }
         setupNowPlaying()
         MPNowPlayingInfoCenter.default().playbackState = .paused
         let commandCenter = MPRemoteCommandCenter.shared();
