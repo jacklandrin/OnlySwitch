@@ -93,21 +93,30 @@ struct RemoteSoundMixerView: View {
         }
     }
 
+    private func speakerSymbol(isMuted: Bool, volume: Double) -> String {
+        if isMuted { return "speaker.slash.fill" }
+        if volume <= 0 { return "speaker.fill" }
+        if volume < 34 { return "speaker.wave.1.fill" }
+        if volume < 67 { return "speaker.wave.2.fill" }
+        return "speaker.wave.3.fill"
+    }
+
     private func appCard(_ app: RemoteSoundMixerApp, devices: [RemoteSoundMixerOutputDevice]) -> some View {
         let isExpanded = store.expandedAppIDs.contains(app.id)
+        let volume = store.state.volume(for: app.id) ?? app.volume
         return RemoteSystemMonitorCardSurface {
             VStack(alignment: .leading, spacing: 12) {
                 HStack(alignment: .center, spacing: 12) {
                     RemoteMixerSlider(
                         label: app.name,
-                        value: store.state.volume(for: app.id) ?? app.volume,
+                        value: volume,
                         isEnabled: store.canSendCommands,
                         onChange: { store.send(.volumeChanged(target: app.id, value: $0)) },
                         onEditingChanged: { if $0 == false { store.send(.volumeCommitted(target: app.id)) } }
                     )
                     Button(
                         app.isMuted ? "Unmute" : "Mute",
-                        systemImage: app.isMuted ? "speaker.slash.fill" : "speaker.fill"
+                        systemImage: speakerSymbol(isMuted: app.isMuted, volume: volume)
                     ) {
                         store.send(.muteToggled(appID: app.id))
                     }
@@ -122,7 +131,15 @@ struct RemoteSoundMixerView: View {
                         store.send(.expandedToggled(appID: app.id), animation: reduceMotion ? nil : .snappy)
                     } label: {
                         HStack {
-                            Text("Output & Equalizer")
+                            VStack(alignment: .leading, spacing: 3) {
+                                Text("Output & Equalizer")
+                                if let routing = app.routing {
+                                    outputSummary(routing, devices: devices)
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                        .lineLimit(2)
+                                }
+                            }
                             Spacer(minLength: 8)
                             Image(systemName: "chevron.down")
                                 .rotationEffect(.degrees(isExpanded ? 180 : 0))
@@ -149,39 +166,20 @@ struct RemoteSoundMixerView: View {
     private func expandedSection(_ app: RemoteSoundMixerApp, devices: [RemoteSoundMixerOutputDevice]) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             if let routing = app.routing {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Output Devices")
-                        .font(.subheadline.weight(.semibold))
-                    routeRow(
-                        title: Text("Follow System Output"),
-                        caption: nil,
-                        isSelected: routing.selectedDeviceIDs.isEmpty
-                    ) {
-                        store.send(.followSystemOutput(appID: app.id))
-                    }
-                    ForEach(devices) { device in
-                        routeRow(
-                            title: Text(verbatim: device.name),
-                            caption: device.isDefault ? Text("System Output") : nil,
-                            isSelected: routing.selectedDeviceIDs.contains(device.id)
-                        ) {
-                            store.send(.outputDeviceToggled(appID: app.id, deviceID: device.id))
-                        }
-                    }
-                    let knownIDs = Set(devices.map(\.id))
-                    ForEach(routing.selectedDeviceIDs.filter { knownIDs.contains($0) == false }, id: \.self) { deviceID in
-                        routeRow(title: Text("Unavailable output device"), caption: nil, isSelected: true) {
-                            store.send(.outputDeviceToggled(appID: app.id, deviceID: deviceID))
-                        }
-                    }
-                    if let message = routingStatusMessage(routing.status) {
-                        Text(message)
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                }
+                RemoteOutputDevicePicker(
+                    routing: routing,
+                    devices: devices,
+                    commandError: store.commandError,
+                    onFollowSystem: { store.send(.followSystemOutput(appID: app.id)) },
+                    onToggleDevice: { store.send(.outputDeviceToggled(appID: app.id, deviceID: $0)) }
+                )
                 .disabled(store.canSendCommands == false || routing.status == .unsupported)
+                if let message = routingStatusMessage(routing.status) {
+                    Text(message)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
             }
             if let equalizer = app.equalizer {
                 if app.routing != nil { Divider() }
@@ -197,33 +195,18 @@ struct RemoteSoundMixerView: View {
         }
     }
 
-    private func routeRow(
-        title: Text,
-        caption: Text?,
-        isSelected: Bool,
-        action: @escaping () -> Void
-    ) -> some View {
-        Button(action: action) {
-            HStack(spacing: 12) {
-                VStack(alignment: .leading, spacing: 2) {
-                    title
-                    if let caption {
-                        caption
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-                Spacer(minLength: 8)
-                Image(systemName: "checkmark")
-                    .foregroundStyle(.tint)
-                    .opacity(isSelected ? 1 : 0)
-                    .accessibilityHidden(true)
-            }
-            .frame(minHeight: 44)
-            .contentShape(.rect)
+    private func outputSummary(
+        _ routing: RemoteSoundMixerRouting,
+        devices: [RemoteSoundMixerOutputDevice]
+    ) -> Text {
+        if routing.selectedDeviceIDs.isEmpty {
+            let name = devices.first(where: \.isDefault)?.name
+            return Text(verbatim: String(localized: "Follow System Output") + (name.map { " · \($0)" } ?? ""))
         }
-        .buttonStyle(.plain)
-        .accessibilityAddTraits(isSelected ? .isSelected : [])
+        let names = routing.selectedDeviceIDs.map { id in
+            devices.first(where: { $0.id == id })?.name ?? String(localized: "Unavailable output device")
+        }
+        return Text(verbatim: names.joined(separator: " · "))
     }
 
     private func routingStatusMessage(_ status: RemoteSoundMixerRouting.Status) -> LocalizedStringKey? {
@@ -244,5 +227,97 @@ private struct RemoteUnavailableCard: View {
             Label(message, systemImage: "speaker.slash")
                 .foregroundStyle(.secondary)
         }
+    }
+}
+
+/// Presentation-only mode lets users browse devices before selecting the first one.
+/// An empty confirmed selection continues to mean "follow system" on the Mac.
+private struct RemoteOutputDevicePicker: View {
+    let routing: RemoteSoundMixerRouting
+    let devices: [RemoteSoundMixerOutputDevice]
+    let commandError: String?
+    let onFollowSystem: () -> Void
+    let onToggleDevice: (String) -> Void
+    @State private var isChoosingDevices: Bool?
+
+    private var showsDevices: Bool { isChoosingDevices ?? (routing.selectedDeviceIDs.isEmpty == false) }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Output Devices")
+                .font(.subheadline.weight(.semibold))
+            Picker("Output Devices", selection: Binding(
+                get: { showsDevices },
+                set: { choosing in
+                    isChoosingDevices = choosing
+                    if choosing == false { onFollowSystem() }
+                }
+            )) {
+                Text("Follow System").tag(false)
+                Text("Choose Devices").tag(true)
+            }
+            .pickerStyle(.segmented)
+
+            if showsDevices {
+                Text("Select up to 16 output devices")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                VStack(spacing: 4) {
+                    ForEach(devices) { device in
+                        deviceRow(
+                            id: device.id,
+                            title: Text(verbatim: device.name),
+                            caption: device.isDefault ? Text("System Output") : nil
+                        )
+                    }
+                    let knownIDs = Set(devices.map(\.id))
+                    ForEach(routing.selectedDeviceIDs.filter { knownIDs.contains($0) == false }, id: \.self) { id in
+                        deviceRow(id: id, title: Text("Unavailable output device"), caption: nil)
+                    }
+                }
+            } else if let device = devices.first(where: \.isDefault) {
+                Label {
+                    Text(verbatim: device.name)
+                } icon: {
+                    Image(systemName: "speaker.wave.2")
+                }
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+            }
+        }
+        .onChange(of: routing.selectedDeviceIDs) { _, _ in
+            isChoosingDevices = nil
+        }
+        .onChange(of: commandError) { _, error in
+            if error != nil { isChoosingDevices = nil }
+        }
+    }
+
+    private func deviceRow(id: String, title: Text, caption: Text?) -> some View {
+        let selected = routing.selectedDeviceIDs.contains(id)
+        return Button { onToggleDevice(id) } label: {
+            HStack(spacing: 12) {
+                Image(systemName: selected ? "checkmark.square.fill" : "square")
+                    .font(.title3)
+                    .foregroundStyle(selected ? Color.accentColor : Color.secondary)
+                    .accessibilityHidden(true)
+                VStack(alignment: .leading, spacing: 2) {
+                    title
+                    if let caption {
+                        caption.font(.caption).foregroundStyle(.secondary)
+                    }
+                }
+                Spacer(minLength: 0)
+            }
+            .padding(.horizontal, 12)
+            .frame(minHeight: 48)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(selected ? Color.accentColor.opacity(0.1) : Color.clear,
+                        in: RoundedRectangle(cornerRadius: 10))
+            .contentShape(.rect)
+        }
+        .buttonStyle(.plain)
+        .disabled(selected == false && routing.selectedDeviceIDs.count >= 16)
+        .accessibilityAddTraits(selected ? .isSelected : [])
     }
 }

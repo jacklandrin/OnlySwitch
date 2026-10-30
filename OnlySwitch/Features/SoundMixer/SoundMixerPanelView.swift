@@ -133,6 +133,14 @@ struct SoundMixerPanelView: View {
 
     // MARK: Rows
 
+    private func speakerSymbol(for row: SoundMixerVM.AppRow) -> String {
+        if row.isMuted { return "speaker.slash.fill" }
+        if row.volume <= 0 { return "speaker.fill" }
+        if row.volume < 34 { return "speaker.wave.1.fill" }
+        if row.volume < 67 { return "speaker.wave.2.fill" }
+        return "speaker.wave.3.fill"
+    }
+
     private func appRow(_ row: SoundMixerVM.AppRow) -> some View {
         let expanded = vm.equalizerStore.apps[row.id]?.isExpanded ?? false
         return VStack(alignment: .leading, spacing: 8) {
@@ -148,10 +156,10 @@ struct SoundMixerPanelView: View {
                 Button {
                     vm.toggleMute(for: row.id)
                 } label: {
-                    Image(systemName: row.isMuted ? "speaker.slash.fill" : "speaker.fill")
+                    Image(systemName: speakerSymbol(for: row))
                         .font(.system(size: 10))
                         .foregroundStyle(row.isMuted ? .secondary : .primary)
-                        .frame(width: 16, height: 20)
+                        .frame(width: 20, height: 20, alignment: .leading)
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)

@@ -29,16 +29,24 @@ struct RemoteEqualizerView: View {
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             }
-            ScrollView(.horizontal) {
-                HStack(spacing: 4) {
-                    ForEach(0 ..< RemoteSoundMixerEqualizer.bandCount, id: \.self) { band in
-                        bandSlider(band)
-                    }
+            // Spread bands across wide layouts; scroll when the row cannot fit at its minimum spacing.
+            ViewThatFits(in: .horizontal) {
+                bandRow
+                ScrollView(.horizontal) {
+                    bandRow
                 }
-                .frame(maxWidth: .infinity)
+                .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
             }
-            .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
             .disabled(isInteractive == false)
+        }
+    }
+
+    private var bandRow: some View {
+        HStack(spacing: 16) {
+            ForEach(0 ..< RemoteSoundMixerEqualizer.bandCount, id: \.self) { band in
+                bandSlider(band)
+                    .frame(minWidth: 44, maxWidth: .infinity)
+            }
         }
     }
 
@@ -82,7 +90,6 @@ struct RemoteEqualizerView: View {
                 .foregroundStyle(.secondary)
                 .accessibilityHidden(true)
         }
-        .frame(minWidth: 32)
     }
 
     private func frequencyText(_ band: Int) -> String {
