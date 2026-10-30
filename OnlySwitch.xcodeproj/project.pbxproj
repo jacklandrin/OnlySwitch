@@ -7,19 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-        OPHELP00000000000000005B /* PlaybackHelperEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = OPHELP00000000000000005A /* PlaybackHelperEngine.swift */; };
-        OPHELP00000000000000004B /* PlaybackHelperCommandWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = OPHELP00000000000000004A /* PlaybackHelperCommandWriter.swift */; };
-        OPHELP00000000000000003B /* PlaybackHelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = OPHELP00000000000000003A /* PlaybackHelperProtocol.swift */; };
-        OPHELP000000000000000001 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OPHELP000000000000000002 /* main.swift */; };
-        OPHELP000000000000000003 /* HostedAudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = OPHELP000000000000000004 /* HostedAudioPlayer.swift */; };
-		9D8D9B4DCEC4B3C90E2D61D9 /* DisplayBrightnessKeyboardController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEB9F9576C00B9708D0DADA /* DisplayBrightnessKeyboardController.swift */; };
-		217549FC82A1C95A0843C27E /* DisplayBrightnessKeyTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C34535B906CBDA47D280D10 /* DisplayBrightnessKeyTap.swift */; };
-		19AC3ED8B5434024778C8EA5 /* DisplayBrightnessLiveClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D5E22AEF1DE4F25E9219F2 /* DisplayBrightnessLiveClient.swift */; };
-		7C551C2904EA24E09A487BFE /* DisplayShadeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955D50C29BEF4BF17F770248 /* DisplayShadeController.swift */; };
-		4BE55DA1B55BBA22CCF4E310 /* DisplayBrightnessService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52660C8AAA3F5E6778721434 /* DisplayBrightnessService.swift */; };
-		CDB100010000000000000001 /* DisplayBrightness in Frameworks */ = {isa = PBXBuildFile; productRef = CDB100020000000000000001 /* DisplayBrightness */; };
-		CDE100010000000000000001 /* SoundMixerEQ in Frameworks */ = {isa = PBXBuildFile; productRef = CDE100020000000000000001 /* SoundMixerEQ */; };
-		CDE200010000000000000001 /* DisplayDDC in Frameworks */ = {isa = PBXBuildFile; productRef = CDE200020000000000000001 /* DisplayDDC */; };
 		0406E0222CA09F930007AFC2 /* OnlyControlClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406E0212CA09F8C0007AFC2 /* OnlyControlClient.swift */; };
 		0406E0242CA0BC460007AFC2 /* RefreshNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0406E0232CA0BC460007AFC2 /* RefreshNotification.swift */; };
 		0406EDC42ACB3EE80015F4D0 /* EvolutionMarket.json in Resources */ = {isa = PBXBuildFile; fileRef = 0406EDC32ACB3EE80015F4D0 /* EvolutionMarket.json */; };
@@ -291,9 +278,19 @@
 		0DDC000000000000000000B2 /* DDCControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC000000000000000000A2 /* DDCControl.m */; };
 		0DDC000000000000000000B3 /* ExternalDisplayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC000000000000000000A3 /* ExternalDisplayManager.swift */; };
 		0DDC000000000000000000B4 /* BrightnessSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDC000000000000000000A4 /* BrightnessSyncManager.swift */; };
+		19AC3ED8B5434024778C8EA5 /* DisplayBrightnessLiveClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D5E22AEF1DE4F25E9219F2 /* DisplayBrightnessLiveClient.swift */; };
+		217549FC82A1C95A0843C27E /* DisplayBrightnessKeyTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C34535B906CBDA47D280D10 /* DisplayBrightnessKeyTap.swift */; };
 		2B346BE56384C700F4046FC4 /* SystemAudioMixer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AD1FCF5024EAC8DC9C8E5E /* SystemAudioMixer.swift */; };
+		4BE55DA1B55BBA22CCF4E310 /* DisplayBrightnessService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52660C8AAA3F5E6778721434 /* DisplayBrightnessService.swift */; };
+		5DA700000000000000000201 /* RemoteSoundMixerFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA700000000000000000101 /* RemoteSoundMixerFeature.swift */; };
+		5DA700000000000000000202 /* RemoteSoundMixerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA700000000000000000102 /* RemoteSoundMixerView.swift */; };
+		5DA700000000000000000203 /* RemoteMixerSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA700000000000000000103 /* RemoteMixerSlider.swift */; };
+		5DA700000000000000000204 /* RemoteEqualizerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA700000000000000000104 /* RemoteEqualizerView.swift */; };
+		5DA700000000000000000205 /* RemoteSoundMixerFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA700000000000000000105 /* RemoteSoundMixerFeatureTests.swift */; };
 		6EC8A6CD714CA458603A0C05 /* SoundMixerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 643A9AC4ED24AE501343396D /* SoundMixerModel.swift */; };
 		732FB599FA7E3F9BEEF45DD9 /* SoundMixerPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3552BA772DD63DAD7EE8CF2 /* SoundMixerPanelView.swift */; };
+		7C551C2904EA24E09A487BFE /* DisplayShadeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955D50C29BEF4BF17F770248 /* DisplayShadeController.swift */; };
+		9D8D9B4DCEC4B3C90E2D61D9 /* DisplayBrightnessKeyboardController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEB9F9576C00B9708D0DADA /* DisplayBrightnessKeyboardController.swift */; };
 		A0D100010000000000000001 /* AudioStreamingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D100020000000000000001 /* AudioStreamingTests.swift */; };
 		A1D0E1092F0A000100BEEF01 /* AuthenticatorSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E00A2F0A000100BEEF01 /* AuthenticatorSwitch.swift */; };
 		A1D0E10A2F0A000100BEEF01 /* SoundMixerSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0E00B2F0A000100BEEF01 /* SoundMixerSwitch.swift */; };
@@ -301,6 +298,10 @@
 		A1D200012F0B000200BEEF01 /* PureColorView in Frameworks */ = {isa = PBXBuildFile; productRef = A1D201012F0B000200BEEF01 /* PureColorView */; };
 		A1D200022F0B000200BEEF01 /* StickerView in Frameworks */ = {isa = PBXBuildFile; productRef = A1D201022F0B000200BEEF01 /* StickerView */; };
 		A1D200032F0B000200BEEF01 /* Authenticator in Frameworks */ = {isa = PBXBuildFile; productRef = A1D201032F0B000200BEEF01 /* Authenticator */; };
+		A7AB00000000000000000101 /* RemoteAppPage+Presentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7AB00000000000000000201 /* RemoteAppPage+Presentation.swift */; };
+		A7AB00000000000000000102 /* RemoteTabSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7AB00000000000000000202 /* RemoteTabSettingsView.swift */; };
+		A7AB00000000000000000103 /* RemoteAppPageIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7AB00000000000000000203 /* RemoteAppPageIcon.swift */; };
+		A7AB00000000000000000104 /* RemoteTabConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7AB00000000000000000204 /* RemoteTabConfigurationTests.swift */; };
 		A93C8BE12ECA34D700D7CE52 /* AICommanderSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93C8BE02ECA34CB00D7CE52 /* AICommanderSwitch.swift */; };
 		A93C8BE42ECA376900D7CE52 /* OnlyAgent in Frameworks */ = {isa = PBXBuildFile; productRef = A93C8BE32ECA376900D7CE52 /* OnlyAgent */; };
 		A99F5CE9301140740029426A /* onlyswitch.icon in Resources */ = {isa = PBXBuildFile; fileRef = A99F5CE8301140740029426A /* onlyswitch.icon */; };
@@ -330,6 +331,9 @@
 		B82710042700000000C0DE01 /* MenuBarAccessibilityItemResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B82710122700000000C0DE01 /* MenuBarAccessibilityItemResolver.swift */; };
 		B82710062700000000C0DE01 /* MenuBarClientCoreBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = B82710142700000000C0DE01 /* MenuBarClientCoreBridge.m */; };
 		B82710312700000000C0DE01 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B82710322700000000C0DE01 /* Security.framework */; };
+		B8A700000000000000000201 /* RemoteBrightnessFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A700000000000000000101 /* RemoteBrightnessFeature.swift */; };
+		B8A700000000000000000202 /* RemoteBrightnessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A700000000000000000102 /* RemoteBrightnessView.swift */; };
+		B8A700000000000000000203 /* RemoteBrightnessFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A700000000000000000103 /* RemoteBrightnessFeatureTests.swift */; };
 		B90000000000000000000002 /* MacSystemMonitorCollectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90000000000000000000001 /* MacSystemMonitorCollectorTests.swift */; };
 		B90000000000000000000005 /* MacSystemMonitorCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90000000000000000000004 /* MacSystemMonitorCollector.swift */; };
 		B90000000000000000000007 /* SystemMonitor in Frameworks */ = {isa = PBXBuildFile; productRef = B90000000000000000000008 /* SystemMonitor */; };
@@ -348,19 +352,10 @@
 		B98500000000000000000003 /* SystemMonitorSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B98500000000000000000001 /* SystemMonitorSwitch.swift */; };
 		B99000000000000000000003 /* ReverseScrollDirectionSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99000000000000000000001 /* ReverseScrollDirectionSwitch.swift */; };
 		BA1000000000000000000005 /* SystemMonitorProcessActivation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1000000000000000000004 /* SystemMonitorProcessActivation.swift */; };
-		5DA700000000000000000201 /* RemoteSoundMixerFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA700000000000000000101 /* RemoteSoundMixerFeature.swift */; };
-		5DA700000000000000000202 /* RemoteSoundMixerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA700000000000000000102 /* RemoteSoundMixerView.swift */; };
-		5DA700000000000000000203 /* RemoteMixerSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA700000000000000000103 /* RemoteMixerSlider.swift */; };
-		5DA700000000000000000204 /* RemoteEqualizerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA700000000000000000104 /* RemoteEqualizerView.swift */; };
-		5DA700000000000000000205 /* RemoteSoundMixerFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA700000000000000000105 /* RemoteSoundMixerFeatureTests.swift */; };
-		B8A700000000000000000201 /* RemoteBrightnessFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A700000000000000000101 /* RemoteBrightnessFeature.swift */; };
-		B8A700000000000000000202 /* RemoteBrightnessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A700000000000000000102 /* RemoteBrightnessView.swift */; };
-		B8A700000000000000000203 /* RemoteBrightnessFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A700000000000000000103 /* RemoteBrightnessFeatureTests.swift */; };
 		C0D000000000000000000001 /* RemoteSystemMonitorFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D000000000000000000021 /* RemoteSystemMonitorFeature.swift */; };
 		C0D000000000000000000002 /* RemoteSystemMonitorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D000000000000000000022 /* RemoteSystemMonitorView.swift */; };
 		C0D000000000000000000003 /* RemoteSystemMonitorChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D000000000000000000023 /* RemoteSystemMonitorChartView.swift */; };
 		C0D000000000000000000004 /* RemotePageTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D000000000000000000024 /* RemotePageTabBar.swift */; };
-		A7AB00000000000000000103 /* RemoteAppPageIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7AB00000000000000000203 /* RemoteAppPageIcon.swift */; };
 		C0D000000000000000000005 /* RemoteSystemMonitorFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D000000000000000000025 /* RemoteSystemMonitorFeatureTests.swift */; };
 		C0D000000000000000000006 /* RemoteSystemMonitorViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D000000000000000000026 /* RemoteSystemMonitorViewTests.swift */; };
 		C0D000000000000000000007 /* RemoteSystemMonitorGaugeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D000000000000000000027 /* RemoteSystemMonitorGaugeView.swift */; };
@@ -412,12 +407,17 @@
 		CD3100010000000000000001 /* AppUninstaller in Frameworks */ = {isa = PBXBuildFile; productRef = CD3100020000000000000001 /* AppUninstaller */; };
 		CD3200010000000000000001 /* AppUninstallerSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3200020000000000000001 /* AppUninstallerSwitch.swift */; };
 		CD3200030000000000000001 /* AppUninstallerSwitchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3200040000000000000001 /* AppUninstallerSwitchTests.swift */; };
-		CD5100010000000000000001 /* Screenshots in Frameworks */ = {isa = PBXBuildFile; productRef = CD5100020000000000000001 /* Screenshots */; };
-		CD5200030000000000000001 /* ScreenshotsSectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD5200040000000000000001 /* ScreenshotsSectionTests.swift */; };
 		CD4100010000000000000001 /* Tailscale in Frameworks */ = {isa = PBXBuildFile; productRef = CD4100020000000000000001 /* Tailscale */; };
+		AD1000010000000000000001 /* RadioBrowser in Frameworks */ = {isa = PBXBuildFile; productRef = AD1000020000000000000001 /* RadioBrowser */; };
+		AD1000030000000000000001 /* RadioLibraryClient+App.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1000040000000000000001 /* RadioLibraryClient+App.swift */; };
 		CD4200010000000000000001 /* TailscaleSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4200020000000000000001 /* TailscaleSwitch.swift */; };
 		CD4200030000000000000001 /* TailscaleSwitchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4200040000000000000001 /* TailscaleSwitchTests.swift */; };
+		CD5100010000000000000001 /* Screenshots in Frameworks */ = {isa = PBXBuildFile; productRef = CD5100020000000000000001 /* Screenshots */; };
+		CD5200030000000000000001 /* ScreenshotsSectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD5200040000000000000001 /* ScreenshotsSectionTests.swift */; };
+		CDB100010000000000000001 /* DisplayBrightness in Frameworks */ = {isa = PBXBuildFile; productRef = CDB100020000000000000001 /* DisplayBrightness */; };
 		CDDA00000000000000000002 /* CoreData/PersistenceControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDDA00000000000000000001 /* CoreData/PersistenceControllerTests.swift */; };
+		CDE100010000000000000001 /* SoundMixerEQ in Frameworks */ = {isa = PBXBuildFile; productRef = CDE100020000000000000001 /* SoundMixerEQ */; };
+		CDE200010000000000000001 /* DisplayDDC in Frameworks */ = {isa = PBXBuildFile; productRef = CDE200020000000000000001 /* DisplayDDC */; };
 		D0C000022F0A000100BEEF01 /* DockPreviewSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C000002F0A000100BEEF01 /* DockPreviewSwitch.swift */; };
 		D0C100000000000000000011 /* DockPreviewModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C100000000000000000001 /* DockPreviewModels.swift */; };
 		D0C100000000000000000012 /* DockPreviewFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C100000000000000000002 /* DockPreviewFeature.swift */; };
@@ -434,7 +434,6 @@
 		D5E1A0010000000000000003 /* DisplayVolumeHUDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E1A0020000000000000003 /* DisplayVolumeHUDView.swift */; };
 		DABA00000000000000000002 /* GlobalSettingsFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA00000000000000000022 /* GlobalSettingsFeature.swift */; };
 		DABA00000000000000000003 /* GlobalSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA00000000000000000023 /* GlobalSettingsView.swift */; };
-		A7AB00000000000000000102 /* RemoteTabSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7AB00000000000000000202 /* RemoteTabSettingsView.swift */; };
 		DABA00000000000000000004 /* RemoteIdleTimerClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA00000000000000000024 /* RemoteIdleTimerClient.swift */; };
 		F3A300000000000000000020 /* OnlySwitchRemoteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A300000000000000000010 /* OnlySwitchRemoteApp.swift */; };
 		F3A300000000000000000021 /* RemoteAppFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A300000000000000000011 /* RemoteAppFeature.swift */; };
@@ -527,7 +526,6 @@
 		F4AA00000000000000000001 /* RemotePaywallFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AA00000000000000000014 /* RemotePaywallFeatureTests.swift */; };
 		F4AA00000000000000000002 /* RemoteSubscriptionClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AA00000000000000000015 /* RemoteSubscriptionClientTests.swift */; };
 		F4AA00000000000000000003 /* GlobalSettingsFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AA00000000000000000016 /* GlobalSettingsFeatureTests.swift */; };
-		A7AB00000000000000000104 /* RemoteTabConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7AB00000000000000000204 /* RemoteTabConfigurationTests.swift */; };
 		F4AB00000000000000000001 /* RemoteSubscriptionClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AB00000000000000000011 /* RemoteSubscriptionClient.swift */; };
 		F4AB00000000000000000002 /* RemotePaywallFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AB00000000000000000012 /* RemotePaywallFeature.swift */; };
 		F4AB00000000000000000003 /* RemotePaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AB00000000000000000013 /* RemotePaywallView.swift */; };
@@ -542,17 +540,21 @@
 		F5BC00000000000000000320 /* Sharing in Frameworks */ = {isa = PBXBuildFile; productRef = F5BC00000000000000000310 /* Sharing */; };
 		F5BC00000000000000000321 /* Sharing in Frameworks */ = {isa = PBXBuildFile; productRef = F5BC00000000000000000311 /* Sharing */; };
 		FECA00000000000000000101 /* RemoteTabConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = FECA00000000000000000201 /* RemoteTabConfiguration.swift */; };
-		A7AB00000000000000000101 /* RemoteAppPage+Presentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7AB00000000000000000201 /* RemoteAppPage+Presentation.swift */; };
 		FECA00000000000000000102 /* RemoteTabPreferencesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = FECA00000000000000000202 /* RemoteTabPreferencesClient.swift */; };
-		TB5A00000000000000000002 /* TabVisibilitySettingsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = TB5A00000000000000000001 /* TabVisibilitySettingsVM.swift */; };
-		TB5A00000000000000000004 /* TabVisibilitySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = TB5A00000000000000000003 /* TabVisibilitySettingsView.swift */; };
-		TB5A00000000000000000006 /* TabVisibilitySettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = TB5A00000000000000000005 /* TabVisibilitySettingsTests.swift */; };
-		SMRB00000000000000000002 /* SoundMixerRemoteBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = SMRB00000000000000000001 /* SoundMixerRemoteBridge.swift */; };
-		SMRB00000000000000000004 /* SoundMixerRemoteBridgeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = SMRB00000000000000000003 /* SoundMixerRemoteBridgeTests.swift */; };
+		OPHELP000000000000000001 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OPHELP000000000000000002 /* main.swift */; };
+		OPHELP000000000000000003 /* HostedAudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = OPHELP000000000000000004 /* HostedAudioPlayer.swift */; };
+		OPHELP00000000000000003B /* PlaybackHelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = OPHELP00000000000000003A /* PlaybackHelperProtocol.swift */; };
+		OPHELP00000000000000004B /* PlaybackHelperCommandWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = OPHELP00000000000000004A /* PlaybackHelperCommandWriter.swift */; };
+		OPHELP00000000000000005B /* PlaybackHelperEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = OPHELP00000000000000005A /* PlaybackHelperEngine.swift */; };
 		OWNP00000000000000000002 /* OwnPlaybackSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = OWNP00000000000000000001 /* OwnPlaybackSource.swift */; };
 		OWNP00000000000000000004 /* OwnPlaybackSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OWNP00000000000000000003 /* OwnPlaybackSourceTests.swift */; };
 		RBPV00000000000000000002 /* RemoteBrightnessProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = RBPV00000000000000000001 /* RemoteBrightnessProvider.swift */; };
 		RBPV00000000000000000004 /* RemoteBrightnessProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = RBPV00000000000000000003 /* RemoteBrightnessProviderTests.swift */; };
+		SMRB00000000000000000002 /* SoundMixerRemoteBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = SMRB00000000000000000001 /* SoundMixerRemoteBridge.swift */; };
+		SMRB00000000000000000004 /* SoundMixerRemoteBridgeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = SMRB00000000000000000003 /* SoundMixerRemoteBridgeTests.swift */; };
+		TB5A00000000000000000002 /* TabVisibilitySettingsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = TB5A00000000000000000001 /* TabVisibilitySettingsVM.swift */; };
+		TB5A00000000000000000004 /* TabVisibilitySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = TB5A00000000000000000003 /* TabVisibilitySettingsView.swift */; };
+		TB5A00000000000000000006 /* TabVisibilitySettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = TB5A00000000000000000005 /* TabVisibilitySettingsTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -623,16 +625,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-        OPHELP00000000000000005A /* PlaybackHelperEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackHelperEngine.swift; sourceTree = "<group>"; };
-        OPHELP00000000000000004A /* PlaybackHelperCommandWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackHelperCommandWriter.swift; sourceTree = "<group>"; };
-        OPHELP00000000000000003A /* PlaybackHelperProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackHelperProtocol.swift; sourceTree = "<group>"; };
-        OPHELP000000000000000002 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-        OPHELP000000000000000004 /* HostedAudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostedAudioPlayer.swift; sourceTree = "<group>"; };
-		FEEB9F9576C00B9708D0DADA /* DisplayBrightnessKeyboardController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayBrightnessKeyboardController.swift; sourceTree = "<group>"; };
-		2C34535B906CBDA47D280D10 /* DisplayBrightnessKeyTap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayBrightnessKeyTap.swift; sourceTree = "<group>"; };
-		C3D5E22AEF1DE4F25E9219F2 /* DisplayBrightnessLiveClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayBrightnessLiveClient.swift; sourceTree = "<group>"; };
-		955D50C29BEF4BF17F770248 /* DisplayShadeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayShadeController.swift; sourceTree = "<group>"; };
-		52660C8AAA3F5E6778721434 /* DisplayBrightnessService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayBrightnessService.swift; sourceTree = "<group>"; };
 		0406E0212CA09F8C0007AFC2 /* OnlyControlClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyControlClient.swift; sourceTree = "<group>"; };
 		0406E0232CA0BC460007AFC2 /* RefreshNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshNotification.swift; sourceTree = "<group>"; };
 		0406EDC32ACB3EE80015F4D0 /* EvolutionMarket.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = EvolutionMarket.json; sourceTree = "<group>"; };
@@ -816,6 +808,7 @@
 		049337932762BD1B00AE779A /* OpenWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWindow.swift; sourceTree = "<group>"; };
 		049337962762C07600AE779A /* RadioSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioSettingView.swift; sourceTree = "<group>"; };
 		049337982762C0B300AE779A /* RadioSettingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioSettingVM.swift; sourceTree = "<group>"; };
+		AD1000040000000000000001 /* RadioLibraryClient+App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RadioLibraryClient+App.swift"; sourceTree = "<group>"; };
 		0493379B2763C09000AE779A /* OnlySwitch.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = OnlySwitch.xcdatamodel; sourceTree = "<group>"; };
 		0493379D2763C0E800AE779A /* Persistence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		04938D092769143300713F1D /* GeneralView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralView.swift; sourceTree = "<group>"; };
@@ -898,16 +891,25 @@
 		0DDC000000000000000000A3 /* ExternalDisplayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalDisplayManager.swift; sourceTree = "<group>"; };
 		0DDC000000000000000000A4 /* BrightnessSyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrightnessSyncManager.swift; sourceTree = "<group>"; };
 		1E43EF22E4BA4D2E63E454D7 /* SoundMixerService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoundMixerService.swift; sourceTree = "<group>"; };
-		D5E1A0020000000000000001 /* DisplayVolumeKeyTap.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DisplayVolumeKeyTap.swift; sourceTree = "<group>"; };
-		D5E1A0020000000000000002 /* DisplayVolumeHUD.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DisplayVolumeHUD.swift; sourceTree = "<group>"; };
-		D5E1A0020000000000000003 /* DisplayVolumeHUDView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DisplayVolumeHUDView.swift; sourceTree = "<group>"; };
+		2C34535B906CBDA47D280D10 /* DisplayBrightnessKeyTap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayBrightnessKeyTap.swift; sourceTree = "<group>"; };
 		35AD1FCF5024EAC8DC9C8E5E /* SystemAudioMixer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SystemAudioMixer.swift; sourceTree = "<group>"; };
+		52660C8AAA3F5E6778721434 /* DisplayBrightnessService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayBrightnessService.swift; sourceTree = "<group>"; };
+		5DA700000000000000000101 /* RemoteSoundMixerFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSoundMixerFeature.swift; sourceTree = "<group>"; };
+		5DA700000000000000000102 /* RemoteSoundMixerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSoundMixerView.swift; sourceTree = "<group>"; };
+		5DA700000000000000000103 /* RemoteMixerSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteMixerSlider.swift; sourceTree = "<group>"; };
+		5DA700000000000000000104 /* RemoteEqualizerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteEqualizerView.swift; sourceTree = "<group>"; };
+		5DA700000000000000000105 /* RemoteSoundMixerFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSoundMixerFeatureTests.swift; sourceTree = "<group>"; };
 		643A9AC4ED24AE501343396D /* SoundMixerModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoundMixerModel.swift; sourceTree = "<group>"; };
+		955D50C29BEF4BF17F770248 /* DisplayShadeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayShadeController.swift; sourceTree = "<group>"; };
 		A0D100020000000000000001 /* AudioStreamingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioStreamingTests.swift; sourceTree = "<group>"; };
 		A1D0E00A2F0A000100BEEF01 /* AuthenticatorSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorSwitch.swift; sourceTree = "<group>"; };
 		A1D0E00B2F0A000100BEEF01 /* SoundMixerSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundMixerSwitch.swift; sourceTree = "<group>"; };
 		A1D0E00C2F0A000100BEEF01 /* DesktopPetSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesktopPetSwitch.swift; sourceTree = "<group>"; };
 		A47E483C8C562DBBD024C25A /* SoundMixerVM.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoundMixerVM.swift; sourceTree = "<group>"; };
+		A7AB00000000000000000201 /* RemoteAppPage+Presentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RemoteAppPage+Presentation.swift"; sourceTree = "<group>"; };
+		A7AB00000000000000000202 /* RemoteTabSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteTabSettingsView.swift; sourceTree = "<group>"; };
+		A7AB00000000000000000203 /* RemoteAppPageIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAppPageIcon.swift; sourceTree = "<group>"; };
+		A7AB00000000000000000204 /* RemoteTabConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteTabConfigurationTests.swift; sourceTree = "<group>"; };
 		A93C8BE02ECA34CB00D7CE52 /* AICommanderSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AICommanderSwitch.swift; sourceTree = "<group>"; };
 		A99F5CE8301140740029426A /* onlyswitch.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = onlyswitch.icon; sourceTree = "<group>"; };
 		A9A98A402F78834500034ADB /* models.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = models.json; sourceTree = "<group>"; };
@@ -938,6 +940,9 @@
 		B82710132700000000C0DE01 /* MenuBarClientCoreBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MenuBarClientCoreBridge.h; sourceTree = "<group>"; };
 		B82710142700000000C0DE01 /* MenuBarClientCoreBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MenuBarClientCoreBridge.m; sourceTree = "<group>"; };
 		B82710322700000000C0DE01 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		B8A700000000000000000101 /* RemoteBrightnessFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteBrightnessFeature.swift; sourceTree = "<group>"; };
+		B8A700000000000000000102 /* RemoteBrightnessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteBrightnessView.swift; sourceTree = "<group>"; };
+		B8A700000000000000000103 /* RemoteBrightnessFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteBrightnessFeatureTests.swift; sourceTree = "<group>"; };
 		B90000000000000000000001 /* MacSystemMonitorCollectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacSystemMonitorCollectorTests.swift; sourceTree = "<group>"; };
 		B90000000000000000000004 /* MacSystemMonitorCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacSystemMonitorCollector.swift; sourceTree = "<group>"; };
 		B90100000000000000000001 /* SystemMonitorPreferencesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorPreferencesTests.swift; sourceTree = "<group>"; };
@@ -955,19 +960,10 @@
 		B98500000000000000000001 /* SystemMonitorSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorSwitch.swift; sourceTree = "<group>"; };
 		B99000000000000000000001 /* ReverseScrollDirectionSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReverseScrollDirectionSwitch.swift; sourceTree = "<group>"; };
 		BA1000000000000000000004 /* SystemMonitorProcessActivation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorProcessActivation.swift; sourceTree = "<group>"; };
-		5DA700000000000000000101 /* RemoteSoundMixerFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSoundMixerFeature.swift; sourceTree = "<group>"; };
-		5DA700000000000000000102 /* RemoteSoundMixerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSoundMixerView.swift; sourceTree = "<group>"; };
-		5DA700000000000000000103 /* RemoteMixerSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteMixerSlider.swift; sourceTree = "<group>"; };
-		5DA700000000000000000104 /* RemoteEqualizerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteEqualizerView.swift; sourceTree = "<group>"; };
-		5DA700000000000000000105 /* RemoteSoundMixerFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSoundMixerFeatureTests.swift; sourceTree = "<group>"; };
-		B8A700000000000000000101 /* RemoteBrightnessFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteBrightnessFeature.swift; sourceTree = "<group>"; };
-		B8A700000000000000000102 /* RemoteBrightnessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteBrightnessView.swift; sourceTree = "<group>"; };
-		B8A700000000000000000103 /* RemoteBrightnessFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteBrightnessFeatureTests.swift; sourceTree = "<group>"; };
 		C0D000000000000000000021 /* RemoteSystemMonitorFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorFeature.swift; sourceTree = "<group>"; };
 		C0D000000000000000000022 /* RemoteSystemMonitorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorView.swift; sourceTree = "<group>"; };
 		C0D000000000000000000023 /* RemoteSystemMonitorChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorChartView.swift; sourceTree = "<group>"; };
 		C0D000000000000000000024 /* RemotePageTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemotePageTabBar.swift; sourceTree = "<group>"; };
-		A7AB00000000000000000203 /* RemoteAppPageIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAppPageIcon.swift; sourceTree = "<group>"; };
 		C0D000000000000000000025 /* RemoteSystemMonitorFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorFeatureTests.swift; sourceTree = "<group>"; };
 		C0D000000000000000000026 /* RemoteSystemMonitorViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorViewTests.swift; sourceTree = "<group>"; };
 		C0D000000000000000000027 /* RemoteSystemMonitorGaugeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSystemMonitorGaugeView.swift; sourceTree = "<group>"; };
@@ -997,6 +993,7 @@
 		C1A0F00618E9202600000001 /* PrivilegedAccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedAccessView.swift; sourceTree = "<group>"; };
 		C1A0F00818E9202600000001 /* PrivilegedAccessViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedAccessViewModelTests.swift; sourceTree = "<group>"; };
 		C1A0F1000000000000000001 /* Support/TestMutex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Support/TestMutex.swift; sourceTree = "<group>"; };
+		C3D5E22AEF1DE4F25E9219F2 /* DisplayBrightnessLiveClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayBrightnessLiveClient.swift; sourceTree = "<group>"; };
 		CADE00000000000000000021 /* RemoteCodexUsageProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCodexUsageProviderTests.swift; sourceTree = "<group>"; };
 		CADE00000000000000000022 /* RemoteCodexUsageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCodexUsageProvider.swift; sourceTree = "<group>"; };
 		CADE00000000000000000023 /* RemoteCodexUsageFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCodexUsageFeature.swift; sourceTree = "<group>"; };
@@ -1015,9 +1012,9 @@
 		CD2200040000000000000001 /* XcodeCleanerSwitchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodeCleanerSwitchTests.swift; sourceTree = "<group>"; };
 		CD3200020000000000000001 /* AppUninstallerSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUninstallerSwitch.swift; sourceTree = "<group>"; };
 		CD3200040000000000000001 /* AppUninstallerSwitchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUninstallerSwitchTests.swift; sourceTree = "<group>"; };
-		CD5200040000000000000001 /* ScreenshotsSectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotsSectionTests.swift; sourceTree = "<group>"; };
 		CD4200020000000000000001 /* TailscaleSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TailscaleSwitch.swift; sourceTree = "<group>"; };
 		CD4200040000000000000001 /* TailscaleSwitchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TailscaleSwitchTests.swift; sourceTree = "<group>"; };
+		CD5200040000000000000001 /* ScreenshotsSectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotsSectionTests.swift; sourceTree = "<group>"; };
 		CDDA00000000000000000001 /* CoreData/PersistenceControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreData/PersistenceControllerTests.swift; sourceTree = "<group>"; };
 		D0C000002F0A000100BEEF01 /* DockPreviewSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockPreviewSwitch.swift; sourceTree = "<group>"; };
 		D0C100000000000000000001 /* DockPreviewModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockPreviewModels.swift; sourceTree = "<group>"; };
@@ -1028,9 +1025,11 @@
 		D0C100000000000000000006 /* DockPreviewPanelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockPreviewPanelController.swift; sourceTree = "<group>"; };
 		D0C100000000000000000007 /* DockPreviewFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockPreviewFeatureTests.swift; sourceTree = "<group>"; };
 		D0C100000000000000000008 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
+		D5E1A0020000000000000001 /* DisplayVolumeKeyTap.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DisplayVolumeKeyTap.swift; sourceTree = "<group>"; };
+		D5E1A0020000000000000002 /* DisplayVolumeHUD.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DisplayVolumeHUD.swift; sourceTree = "<group>"; };
+		D5E1A0020000000000000003 /* DisplayVolumeHUDView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DisplayVolumeHUDView.swift; sourceTree = "<group>"; };
 		DABA00000000000000000022 /* GlobalSettingsFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSettingsFeature.swift; sourceTree = "<group>"; };
 		DABA00000000000000000023 /* GlobalSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSettingsView.swift; sourceTree = "<group>"; };
-		A7AB00000000000000000202 /* RemoteTabSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteTabSettingsView.swift; sourceTree = "<group>"; };
 		DABA00000000000000000024 /* RemoteIdleTimerClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteIdleTimerClient.swift; sourceTree = "<group>"; };
 		F3A300000000000000000003 /* OnlySwitchRemote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnlySwitchRemote.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3A300000000000000000004 /* OnlySwitchRemoteTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnlySwitchRemoteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1105,10 +1104,10 @@
 		F3AF000000000000000000024 /* OnlyRemoteCampaignView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyRemoteCampaignView.swift; sourceTree = "<group>"; };
 		F3AF000000000000000000025 /* OnlyRemoteCampaignWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyRemoteCampaignWindowController.swift; sourceTree = "<group>"; };
 		F3BB00000000000000000001 /* OnlySwitch 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "OnlySwitch 2.xcdatamodel"; sourceTree = "<group>"; };
+		F3BB00000000000000000002 /* OnlySwitch 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "OnlySwitch 3.xcdatamodel"; sourceTree = "<group>"; };
 		F4AA00000000000000000014 /* RemotePaywallFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemotePaywallFeatureTests.swift; sourceTree = "<group>"; };
 		F4AA00000000000000000015 /* RemoteSubscriptionClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSubscriptionClientTests.swift; sourceTree = "<group>"; };
 		F4AA00000000000000000016 /* GlobalSettingsFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSettingsFeatureTests.swift; sourceTree = "<group>"; };
-		A7AB00000000000000000204 /* RemoteTabConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteTabConfigurationTests.swift; sourceTree = "<group>"; };
 		F4AB00000000000000000011 /* RemoteSubscriptionClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSubscriptionClient.swift; sourceTree = "<group>"; };
 		F4AB00000000000000000012 /* RemotePaywallFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemotePaywallFeature.swift; sourceTree = "<group>"; };
 		F4AB00000000000000000013 /* RemotePaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemotePaywallView.swift; sourceTree = "<group>"; };
@@ -1121,17 +1120,22 @@
 		F5BC00000000000000000102 /* RemoteDebugMenuFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteDebugMenuFeature.swift; sourceTree = "<group>"; };
 		F5BC00000000000000000103 /* RemoteDebugMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteDebugMenuView.swift; sourceTree = "<group>"; };
 		FECA00000000000000000201 /* RemoteTabConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteTabConfiguration.swift; sourceTree = "<group>"; };
-		A7AB00000000000000000201 /* RemoteAppPage+Presentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RemoteAppPage+Presentation.swift"; sourceTree = "<group>"; };
 		FECA00000000000000000202 /* RemoteTabPreferencesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteTabPreferencesClient.swift; sourceTree = "<group>"; };
-		TB5A00000000000000000001 /* TabVisibilitySettingsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabVisibilitySettingsVM.swift; sourceTree = "<group>"; };
-		TB5A00000000000000000003 /* TabVisibilitySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabVisibilitySettingsView.swift; sourceTree = "<group>"; };
-		TB5A00000000000000000005 /* TabVisibilitySettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabVisibilitySettingsTests.swift; sourceTree = "<group>"; };
-		SMRB00000000000000000001 /* SoundMixerRemoteBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundMixerRemoteBridge.swift; sourceTree = "<group>"; };
-		SMRB00000000000000000003 /* SoundMixerRemoteBridgeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundMixerRemoteBridgeTests.swift; sourceTree = "<group>"; };
+		FEEB9F9576C00B9708D0DADA /* DisplayBrightnessKeyboardController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayBrightnessKeyboardController.swift; sourceTree = "<group>"; };
+		OPHELP000000000000000002 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		OPHELP000000000000000004 /* HostedAudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostedAudioPlayer.swift; sourceTree = "<group>"; };
+		OPHELP00000000000000003A /* PlaybackHelperProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackHelperProtocol.swift; sourceTree = "<group>"; };
+		OPHELP00000000000000004A /* PlaybackHelperCommandWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackHelperCommandWriter.swift; sourceTree = "<group>"; };
+		OPHELP00000000000000005A /* PlaybackHelperEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackHelperEngine.swift; sourceTree = "<group>"; };
 		OWNP00000000000000000001 /* OwnPlaybackSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OwnPlaybackSource.swift; sourceTree = "<group>"; };
 		OWNP00000000000000000003 /* OwnPlaybackSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OwnPlaybackSourceTests.swift; sourceTree = "<group>"; };
 		RBPV00000000000000000001 /* RemoteBrightnessProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteBrightnessProvider.swift; sourceTree = "<group>"; };
 		RBPV00000000000000000003 /* RemoteBrightnessProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteBrightnessProviderTests.swift; sourceTree = "<group>"; };
+		SMRB00000000000000000001 /* SoundMixerRemoteBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundMixerRemoteBridge.swift; sourceTree = "<group>"; };
+		SMRB00000000000000000003 /* SoundMixerRemoteBridgeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundMixerRemoteBridgeTests.swift; sourceTree = "<group>"; };
+		TB5A00000000000000000001 /* TabVisibilitySettingsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabVisibilitySettingsVM.swift; sourceTree = "<group>"; };
+		TB5A00000000000000000003 /* TabVisibilitySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabVisibilitySettingsView.swift; sourceTree = "<group>"; };
+		TB5A00000000000000000005 /* TabVisibilitySettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabVisibilitySettingsTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1178,6 +1182,7 @@
 				CD3100010000000000000001 /* AppUninstaller in Frameworks */,
 				CD5100010000000000000001 /* Screenshots in Frameworks */,
 				CD4100010000000000000001 /* Tailscale in Frameworks */,
+				AD1000010000000000000001 /* RadioBrowser in Frameworks */,
 				CDE100010000000000000001 /* SoundMixerEQ in Frameworks */,
 				CDE200010000000000000001 /* DisplayDDC in Frameworks */,
 				CDB100010000000000000001 /* DisplayBrightness in Frameworks */,
@@ -1236,18 +1241,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		CDB100030000000000000001 /* DisplayBrightness */ = {
-			isa = PBXGroup;
-			children = (
-				FEEB9F9576C00B9708D0DADA /* DisplayBrightnessKeyboardController.swift */,
-				2C34535B906CBDA47D280D10 /* DisplayBrightnessKeyTap.swift */,
-				52660C8AAA3F5E6778721434 /* DisplayBrightnessService.swift */,
-				955D50C29BEF4BF17F770248 /* DisplayShadeController.swift */,
-				C3D5E22AEF1DE4F25E9219F2 /* DisplayBrightnessLiveClient.swift */,
-			);
-			path = DisplayBrightness;
-			sourceTree = "<group>";
-		};
 		0406EDC22ACB3EBE0015F4D0 /* Evolution */ = {
 			isa = PBXGroup;
 			children = (
@@ -1422,10 +1415,10 @@
 				04DC6C5F28A46ECE00888BF9 /* CommonPlayer.swift */,
 				0493372727625A1E00AE779A /* AudioPlayer.swift */,
 				0493372A27625A1E00AE779A /* PlayerManager.swift */,
-                OPHELP000000000000000004 /* HostedAudioPlayer.swift */,
-                OPHELP00000000000000005A /* PlaybackHelperEngine.swift */,
-                OPHELP00000000000000004A /* PlaybackHelperCommandWriter.swift */,
-                OPHELP00000000000000003A /* PlaybackHelperProtocol.swift */,
+				OPHELP000000000000000004 /* HostedAudioPlayer.swift */,
+				OPHELP00000000000000005A /* PlaybackHelperEngine.swift */,
+				OPHELP00000000000000004A /* PlaybackHelperCommandWriter.swift */,
+				OPHELP00000000000000003A /* PlaybackHelperProtocol.swift */,
 				0493372827625A1E00AE779A /* JLASAudioPlayer.swift */,
 				0493374327625A1E00AE779A /* JLASAudioPlayer+Streamer.swift */,
 				0493372927625A1E00AE779A /* JLAVAudioPlayer.swift */,
@@ -1603,7 +1596,7 @@
 				C1A0B00618E9202600000001 /* PrivilegedOperations */,
 				A9C70D052EE490B3000A2367 /* GoogleService-Info.plist */,
 				04447B5B2754F08000CD2900 /* AppDelegate.swift */,
-                OPHELP000000000000000002 /* main.swift */,
+				OPHELP000000000000000002 /* main.swift */,
 				F3A9000000000000000000B2 /* DesktopPetPlaybackLive.swift */,
 				04E238612A2C831F00CDD1FA /* CoreData */,
 				040CD2BD27579CEA002E0CC6 /* Info.plist */,
@@ -1965,6 +1958,7 @@
 			children = (
 				049337962762C07600AE779A /* RadioSettingView.swift */,
 				049337982762C0B300AE779A /* RadioSettingVM.swift */,
+				AD1000040000000000000001 /* RadioLibraryClient+App.swift */,
 				04BC8ECE285008C1009E605F /* RadioSettingModel.swift */,
 			);
 			path = Radio;
@@ -2208,6 +2202,17 @@
 			path = DDC;
 			sourceTree = "<group>";
 		};
+		5DA700000000000000000010 /* SoundMixer */ = {
+			isa = PBXGroup;
+			children = (
+				5DA700000000000000000101 /* RemoteSoundMixerFeature.swift */,
+				5DA700000000000000000102 /* RemoteSoundMixerView.swift */,
+				5DA700000000000000000103 /* RemoteMixerSlider.swift */,
+				5DA700000000000000000104 /* RemoteEqualizerView.swift */,
+			);
+			path = SoundMixer;
+			sourceTree = "<group>";
+		};
 		B01000000000000000000003 /* Versions */ = {
 			isa = PBXGroup;
 			children = (
@@ -2216,6 +2221,15 @@
 			);
 			name = Versions;
 			path = Config/Versions;
+			sourceTree = "<group>";
+		};
+		B8A700000000000000000010 /* Brightness */ = {
+			isa = PBXGroup;
+			children = (
+				B8A700000000000000000101 /* RemoteBrightnessFeature.swift */,
+				B8A700000000000000000102 /* RemoteBrightnessView.swift */,
+			);
+			path = Brightness;
 			sourceTree = "<group>";
 		};
 		B90000000000000000000003 /* SystemMonitor */ = {
@@ -2243,26 +2257,6 @@
 				B90C00000000000000000002 /* SystemMonitorCompactMetricView.swift */,
 			);
 			path = SystemMonitor;
-			sourceTree = "<group>";
-		};
-		5DA700000000000000000010 /* SoundMixer */ = {
-			isa = PBXGroup;
-			children = (
-				5DA700000000000000000101 /* RemoteSoundMixerFeature.swift */,
-				5DA700000000000000000102 /* RemoteSoundMixerView.swift */,
-				5DA700000000000000000103 /* RemoteMixerSlider.swift */,
-				5DA700000000000000000104 /* RemoteEqualizerView.swift */,
-			);
-			path = SoundMixer;
-			sourceTree = "<group>";
-		};
-		B8A700000000000000000010 /* Brightness */ = {
-			isa = PBXGroup;
-			children = (
-				B8A700000000000000000101 /* RemoteBrightnessFeature.swift */,
-				B8A700000000000000000102 /* RemoteBrightnessView.swift */,
-			);
-			path = Brightness;
 			sourceTree = "<group>";
 		};
 		C0D000000000000000000010 /* SystemMonitor */ = {
@@ -2362,6 +2356,18 @@
 				CBDE00000000000000000004 /* ../ClaudeUsage/RemoteClaudeUsageView.swift */,
 			);
 			path = CodexUsage;
+			sourceTree = "<group>";
+		};
+		CDB100030000000000000001 /* DisplayBrightness */ = {
+			isa = PBXGroup;
+			children = (
+				FEEB9F9576C00B9708D0DADA /* DisplayBrightnessKeyboardController.swift */,
+				2C34535B906CBDA47D280D10 /* DisplayBrightnessKeyTap.swift */,
+				52660C8AAA3F5E6778721434 /* DisplayBrightnessService.swift */,
+				955D50C29BEF4BF17F770248 /* DisplayShadeController.swift */,
+				C3D5E22AEF1DE4F25E9219F2 /* DisplayBrightnessLiveClient.swift */,
+			);
+			path = DisplayBrightness;
 			sourceTree = "<group>";
 		};
 		D0C100000000000000000031 /* DockPreview */ = {
@@ -2717,6 +2723,7 @@
 				CD3100020000000000000001 /* AppUninstaller */,
 				CD5100020000000000000001 /* Screenshots */,
 				CD4100020000000000000001 /* Tailscale */,
+				AD1000020000000000000001 /* RadioBrowser */,
 				CDE100020000000000000001 /* SoundMixerEQ */,
 				CDE200020000000000000001 /* DisplayDDC */,
 				CDB100020000000000000001 /* DisplayBrightness */,
@@ -3122,11 +3129,11 @@
 				C2CE44CA134851106759FA13 /* SoundMixerVM.swift in Sources */,
 				SMRB00000000000000000002 /* SoundMixerRemoteBridge.swift in Sources */,
 				OWNP00000000000000000002 /* OwnPlaybackSource.swift in Sources */,
-                OPHELP000000000000000001 /* main.swift in Sources */,
-                OPHELP000000000000000003 /* HostedAudioPlayer.swift in Sources */,
-                OPHELP00000000000000005B /* PlaybackHelperEngine.swift in Sources */,
-                OPHELP00000000000000004B /* PlaybackHelperCommandWriter.swift in Sources */,
-                OPHELP00000000000000003B /* PlaybackHelperProtocol.swift in Sources */,
+				OPHELP000000000000000001 /* main.swift in Sources */,
+				OPHELP000000000000000003 /* HostedAudioPlayer.swift in Sources */,
+				OPHELP00000000000000005B /* PlaybackHelperEngine.swift in Sources */,
+				OPHELP00000000000000004B /* PlaybackHelperCommandWriter.swift in Sources */,
+				OPHELP00000000000000003B /* PlaybackHelperProtocol.swift in Sources */,
 				RBPV00000000000000000002 /* RemoteBrightnessProvider.swift in Sources */,
 				732FB599FA7E3F9BEEF45DD9 /* SoundMixerPanelView.swift in Sources */,
 				2B346BE56384C700F4046FC4 /* SystemAudioMixer.swift in Sources */,
@@ -3239,6 +3246,7 @@
 				0419276B2AEC124B0041185B /* KeyboardShortcutsDefine.swift in Sources */,
 				04BC8ED928513D3A009E605F /* HideMenubarIconsSettingView.swift in Sources */,
 				049337992762C0B300AE779A /* RadioSettingVM.swift in Sources */,
+				AD1000030000000000000001 /* RadioLibraryClient+App.swift in Sources */,
 				04B2544F283BE94E00D253E2 /* SoundWaveModel.swift in Sources */,
 				0447E38B2B71746E00D07B9A /* AutohideDockSwitch.swift in Sources */,
 				04F118C427AED8BC005DA861 /* GitHubReleaseModel.swift in Sources */,
@@ -3758,7 +3766,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 3.3.0;
+				MARKETING_VERSION = 3.4.0;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3813,7 +3821,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 3.3.0;
+				MARKETING_VERSION = 3.4.0;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3859,7 +3867,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 3.3.0;
+				MARKETING_VERSION = 3.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = OnlySwitchWidgets;
@@ -3899,7 +3907,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 3.3.0;
+				MARKETING_VERSION = 3.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = OnlySwitchWidgets;
@@ -4266,15 +4274,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		CDB100020000000000000001 /* DisplayBrightness */ = {isa = XCSwiftPackageProductDependency; productName = DisplayBrightness; };
-		CDE100020000000000000001 /* SoundMixerEQ */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SoundMixerEQ;
-		};
-		CDE200020000000000000001 /* DisplayDDC */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = DisplayDDC;
-		};
 		041B17882AD841EE0032919B /* Sparkle */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 041B17872AD841EE0032919B /* XCRemoteSwiftPackageReference "Sparkle" */;
@@ -4389,13 +4388,29 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = AppUninstaller;
 		};
+		CD4100020000000000000001 /* Tailscale */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Tailscale;
+		};
+		AD1000020000000000000001 /* RadioBrowser */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RadioBrowser;
+		};
 		CD5100020000000000000001 /* Screenshots */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Screenshots;
 		};
-		CD4100020000000000000001 /* Tailscale */ = {
+		CDB100020000000000000001 /* DisplayBrightness */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = Tailscale;
+			productName = DisplayBrightness;
+		};
+		CDE100020000000000000001 /* SoundMixerEQ */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SoundMixerEQ;
+		};
+		CDE200020000000000000001 /* DisplayDDC */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DisplayDDC;
 		};
 		D35C00022F12000100D35C01 /* DesktopPet */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -4494,8 +4509,9 @@
 			children = (
 				0493379B2763C09000AE779A /* OnlySwitch.xcdatamodel */,
 				F3BB00000000000000000001 /* OnlySwitch 2.xcdatamodel */,
+				F3BB00000000000000000002 /* OnlySwitch 3.xcdatamodel */,
 			);
-			currentVersion = F3BB00000000000000000001 /* OnlySwitch 2.xcdatamodel */;
+			currentVersion = F3BB00000000000000000002 /* OnlySwitch 3.xcdatamodel */;
 			path = OnlySwitch.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

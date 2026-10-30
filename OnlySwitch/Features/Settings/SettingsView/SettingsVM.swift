@@ -17,6 +17,7 @@ import Extensions
 import Screenshots
 import Tailscale
 import DisplayBrightness
+import RadioBrowser
 
 enum SettingsItem: String, CaseIterable {
     case General = "General"
@@ -125,6 +126,13 @@ class SettingsVM: ObservableObject {
 
     lazy var tailscaleStore = Store(initialState: TailscaleFeature.State()) {
         TailscaleFeature()
+    }
+
+    /// Keeps browse results and favorites across visits to the Radio settings page.
+    lazy var radioStationsStore = Store(initialState: RadioStationsFeature.State()) {
+        RadioStationsFeature()
+    } withDependencies: {
+        $0.radioLibraryClient = .app
     }
 
     init() {

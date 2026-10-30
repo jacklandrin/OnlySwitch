@@ -86,7 +86,8 @@ struct SettingsView: View {
                 AirPodsSettingView()
 
             case .Radio:
-                RadioSettingView()
+                RadioSettingView(store: settingVM.radioStationsStore)
+                    .id(langManager.currentLang)
 
             case .Authenticator:
                 AuthenticatorSettingsView()
