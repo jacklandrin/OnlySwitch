@@ -7,6 +7,7 @@ extension RemoteAppPage {
         case .systemMonitor: "System Monitor"
         case .soundMixer: "Sound Mixer"
         case .brightness: "Brightness"
+        case .screenshots: "Screenshots"
         case .codexUsage: "Codex Usage"
         case .claudeUsage: "Claude Usage"
         case .aphrodite: "Aphrodite"
@@ -19,6 +20,7 @@ extension RemoteAppPage {
         case .systemMonitor: "waveform.path.ecg"
         case .soundMixer: "slider.horizontal.3"
         case .brightness: "sun.max"
+        case .screenshots: "camera.viewfinder"
         case .aphrodite: "sparkles.rectangle.stack"
         case .codexUsage, .claudeUsage: nil
         }
@@ -29,13 +31,13 @@ extension RemoteAppPage {
         switch self {
         case .codexUsage: RemoteCodexUsagePresentation.tabImageName
         case .claudeUsage: RemoteClaudeUsagePresentation.tabImageName
-        case .controls, .systemMonitor, .soundMixer, .brightness, .aphrodite: nil
+        case .controls, .systemMonitor, .soundMixer, .brightness, .screenshots, .aphrodite: nil
         }
     }
 
     var requiresPlus: Bool {
         switch self {
-        case .soundMixer, .brightness, .aphrodite: true
+        case .soundMixer, .brightness, .screenshots, .aphrodite: true
         case .controls, .systemMonitor, .codexUsage, .claudeUsage: false
         }
     }

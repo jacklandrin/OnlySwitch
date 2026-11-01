@@ -24,6 +24,7 @@ enum RemoteConnectionEvent: Equatable, Sendable {
     case soundMixer(UUID, RemoteSoundMixerSnapshot)
     case systemMonitor(UUID, SystemMonitorSnapshot)
     case brightness(UUID, RemoteBrightnessSnapshot)
+    case screenshots(UUID, RemoteScreenshotLibrary)
     case aphroditeLibraryChanged(UUID, UInt64)
 }
 

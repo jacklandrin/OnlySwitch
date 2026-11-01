@@ -4,6 +4,7 @@ struct RemoteTabConfiguration: Equatable, Sendable {
     var showsSystemMonitor = true
     var showsSoundMixer = true
     var showsBrightness = true
+    var showsScreenshots = true
     var showsCodexUsage = true
     var showsClaudeUsage = true
     var showsAphrodite = true
@@ -16,6 +17,7 @@ struct RemoteTabConfiguration: Equatable, Sendable {
         case .systemMonitor: showsSystemMonitor
         case .soundMixer: showsSoundMixer
         case .brightness: showsBrightness
+        case .screenshots: showsScreenshots
         case .codexUsage: showsCodexUsage
         case .claudeUsage: showsClaudeUsage
         case .aphrodite: showsAphrodite
@@ -28,6 +30,7 @@ struct RemoteTabConfiguration: Equatable, Sendable {
         case .systemMonitor: showsSystemMonitor = isVisible
         case .soundMixer: showsSoundMixer = isVisible
         case .brightness: showsBrightness = isVisible
+        case .screenshots: showsScreenshots = isVisible
         case .codexUsage: showsCodexUsage = isVisible
         case .claudeUsage: showsClaudeUsage = isVisible
         case .aphrodite: showsAphrodite = isVisible

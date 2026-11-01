@@ -1,5 +1,5 @@
 public struct RemoteProtocolVersion: Codable, Equatable, Sendable {
-    public static let current = Self(major: 1, minor: 8)
+    public static let current = Self(major: 1, minor: 9)
 
     public let major: UInt16
     public let minor: UInt16
@@ -33,4 +33,6 @@ public struct RemoteProtocolVersion: Codable, Equatable, Sendable {
     public var supportsSoundMixerTabRemote: Bool { minor >= 8 }
     /// Streamed display brightness control.
     public var supportsBrightnessRemote: Bool { minor >= 8 }
+    /// Screenshot library stream, thumbnails, chunked originals and delete.
+    public var supportsScreenshotsRemote: Bool { minor >= 9 }
 }

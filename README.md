@@ -133,7 +133,7 @@ Open **OnlySwitch Settings → Xcode Cleaner**, or show its tab in the menu-bar 
 
 Open **OnlySwitch Settings → App Uninstaller**, or show its tab in the menu-bar list or Only Control from **Settings → Tabs**. Drop an app or choose one, review the application and matching related files, then confirm which items to move to Trash. Discovery covers supported locations matched by bundle identifier, so the results may not include every related file.
 
-Screenshots, Dock Preview, Tailscale, Xcode Cleaner, and App Uninstaller are local Mac features and are unavailable in Only Widget or OnlyRemote.
+Dock Preview, Tailscale, Xcode Cleaner, and App Uninstaller are local Mac features and are unavailable in Only Widget or OnlyRemote. Screenshots is unavailable in Only Widget; OnlyRemote Plus can view, copy, drag, and delete screenshots but not edit them.
 
 ### Shortcuts Gallery
 
@@ -241,9 +241,9 @@ Turn on **Codex Usage** or **Claude Usage** under **OnlySwitch Settings → Tabs
 
 ### OnlyRemote
 
-[OnlyRemote](https://apps.apple.com/us/app/onlyremote/id6793657946) controls OnlySwitch from iPhone or iPad over the local network. Open **iOS Remote** in OnlySwitch settings to enable access and pair a device. Choose which tabs appear under OnlyRemote's **Settings → Tabs**; Controls is always shown, while System Monitor, Codex Usage, Claude Usage, Sound Mixer, Brightness, and Aphrodite are optional.
+[OnlyRemote](https://apps.apple.com/us/app/onlyremote/id6793657946) controls OnlySwitch from iPhone or iPad over the local network. Open **iOS Remote** in OnlySwitch settings to enable access and pair a device. Choose which tabs appear under OnlyRemote's **Settings → Tabs**; Controls is always shown, while System Monitor, Codex Usage, Claude Usage, Sound Mixer, Brightness, Screenshots, and Aphrodite are optional.
 
-OnlyRemote Plus unlocks the **Sound Mixer** tab (per-app volume, mute, equalizer, and output routing), the **Brightness** tab (per-display brightness), and Aphrodite. The Sound Mixer and Brightness tabs need the latest OnlySwitch on the Mac. If the iPhone or iPad cannot find your Mac, both apps show the discovery error.
+OnlyRemote Plus unlocks the **Sound Mixer** tab (per-app volume, mute, equalizer, and output routing), the **Brightness** tab (per-display brightness), the **Screenshots** tab (view, copy, drag, and delete Mac screenshots), and Aphrodite. The Sound Mixer, Brightness, and Screenshots tabs need the latest OnlySwitch on the Mac. If the iPhone or iPad cannot find your Mac, both apps show the discovery error.
 
 ### Only Widget
 

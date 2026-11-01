@@ -157,6 +157,16 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
     case aphroditeLibraryManifest(AphroditeRemoteLibraryManifest)
     case aphroditeDocumentChunk(AphroditeRemoteDocumentChunk)
     case aphroditeTransferComplete(UUID)
+    case screenshotsSubscriptionUpdate(Bool)
+    case screenshotsLibrary(RemoteScreenshotLibrary)
+    case screenshotThumbnailsRequest(RemoteScreenshotThumbnailsRequest)
+    case screenshotThumbnailsResult(RemoteScreenshotThumbnailsResult)
+    case screenshotImageRequest(RemoteScreenshotImageRequest)
+    case screenshotImageManifest(RemoteScreenshotImageManifest)
+    case screenshotImageChunk(RemoteScreenshotImageChunk)
+    case screenshotDeleteRequest(RemoteScreenshotDeleteRequest)
+    case screenshotDeleteResult(RemoteScreenshotDeleteResult)
+    case screenshotRequestFailed(RemoteScreenshotRequestFailure)
     case ping(UInt64)
     case pong(UInt64)
     case credentialRevoked
@@ -211,6 +221,16 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
         case aphroditeLibraryManifest
         case aphroditeDocumentChunk
         case aphroditeTransferComplete
+        case screenshotsSubscriptionUpdate
+        case screenshotsLibrary
+        case screenshotThumbnailsRequest
+        case screenshotThumbnailsResult
+        case screenshotImageRequest
+        case screenshotImageManifest
+        case screenshotImageChunk
+        case screenshotDeleteRequest
+        case screenshotDeleteResult
+        case screenshotRequestFailed
         case ping
         case pong
         case credentialRevoked
@@ -300,6 +320,26 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
             self = .aphroditeDocumentChunk(try container.decode(AphroditeRemoteDocumentChunk.self, forKey: .payload))
         case .aphroditeTransferComplete:
             self = .aphroditeTransferComplete(try container.decode(UUID.self, forKey: .payload))
+        case .screenshotsSubscriptionUpdate:
+            self = .screenshotsSubscriptionUpdate(try container.decode(Bool.self, forKey: .payload))
+        case .screenshotsLibrary:
+            self = .screenshotsLibrary(try container.decode(RemoteScreenshotLibrary.self, forKey: .payload))
+        case .screenshotThumbnailsRequest:
+            self = .screenshotThumbnailsRequest(try container.decode(RemoteScreenshotThumbnailsRequest.self, forKey: .payload))
+        case .screenshotThumbnailsResult:
+            self = .screenshotThumbnailsResult(try container.decode(RemoteScreenshotThumbnailsResult.self, forKey: .payload))
+        case .screenshotImageRequest:
+            self = .screenshotImageRequest(try container.decode(RemoteScreenshotImageRequest.self, forKey: .payload))
+        case .screenshotImageManifest:
+            self = .screenshotImageManifest(try container.decode(RemoteScreenshotImageManifest.self, forKey: .payload))
+        case .screenshotImageChunk:
+            self = .screenshotImageChunk(try container.decode(RemoteScreenshotImageChunk.self, forKey: .payload))
+        case .screenshotDeleteRequest:
+            self = .screenshotDeleteRequest(try container.decode(RemoteScreenshotDeleteRequest.self, forKey: .payload))
+        case .screenshotDeleteResult:
+            self = .screenshotDeleteResult(try container.decode(RemoteScreenshotDeleteResult.self, forKey: .payload))
+        case .screenshotRequestFailed:
+            self = .screenshotRequestFailed(try container.decode(RemoteScreenshotRequestFailure.self, forKey: .payload))
         case .ping:
             self = .ping(try container.decode(UInt64.self, forKey: .payload))
         case .pong:
@@ -427,6 +467,36 @@ public enum RemoteMessage: Codable, Equatable, Sendable {
         case let .aphroditeTransferComplete(transferID):
             try container.encode(Kind.aphroditeTransferComplete, forKey: .type)
             try container.encode(transferID, forKey: .payload)
+        case let .screenshotsSubscriptionUpdate(enabled):
+            try container.encode(Kind.screenshotsSubscriptionUpdate, forKey: .type)
+            try container.encode(enabled, forKey: .payload)
+        case let .screenshotsLibrary(library):
+            try container.encode(Kind.screenshotsLibrary, forKey: .type)
+            try container.encode(library, forKey: .payload)
+        case let .screenshotThumbnailsRequest(request):
+            try container.encode(Kind.screenshotThumbnailsRequest, forKey: .type)
+            try container.encode(request, forKey: .payload)
+        case let .screenshotThumbnailsResult(result):
+            try container.encode(Kind.screenshotThumbnailsResult, forKey: .type)
+            try container.encode(result, forKey: .payload)
+        case let .screenshotImageRequest(request):
+            try container.encode(Kind.screenshotImageRequest, forKey: .type)
+            try container.encode(request, forKey: .payload)
+        case let .screenshotImageManifest(manifest):
+            try container.encode(Kind.screenshotImageManifest, forKey: .type)
+            try container.encode(manifest, forKey: .payload)
+        case let .screenshotImageChunk(chunk):
+            try container.encode(Kind.screenshotImageChunk, forKey: .type)
+            try container.encode(chunk, forKey: .payload)
+        case let .screenshotDeleteRequest(request):
+            try container.encode(Kind.screenshotDeleteRequest, forKey: .type)
+            try container.encode(request, forKey: .payload)
+        case let .screenshotDeleteResult(result):
+            try container.encode(Kind.screenshotDeleteResult, forKey: .type)
+            try container.encode(result, forKey: .payload)
+        case let .screenshotRequestFailed(failure):
+            try container.encode(Kind.screenshotRequestFailed, forKey: .type)
+            try container.encode(failure, forKey: .payload)
         case let .ping(nonce):
             try container.encode(Kind.ping, forKey: .type)
             try container.encode(nonce, forKey: .payload)

@@ -27,6 +27,9 @@ actor RemoteHost {
     private let soundMixerCommand: @Sendable (RemoteSoundMixerCommand) async throws -> RemoteSoundMixerSnapshot
     private let brightnessSnapshots: @Sendable (UUID) -> AsyncStream<RemoteBrightnessSnapshot>
     private let brightnessCommand: @Sendable (RemoteBrightnessCommand) async throws -> RemoteBrightnessSnapshot
+    /// nil resolves `RemoteScreenshotsService.live` on the main actor when the listener starts.
+    private let screenshots: RemoteScreenshotsService?
+    private var resolvedScreenshots: RemoteScreenshotsService?
     private let claudeUsage: @Sendable () async -> Result<RemoteClaudeUsageSnapshot, RemoteProtocolError>
     private let codexUsage: @Sendable (Bool) async -> Result<RemoteCodexUsageSnapshot, RemoteProtocolError>
     private var eventContinuations: [
@@ -94,6 +97,7 @@ actor RemoteHost {
         brightnessCommand: @escaping @Sendable (RemoteBrightnessCommand) async throws -> RemoteBrightnessSnapshot = { command in
             try await MainActor.run { try RemoteBrightnessProvider.shared.perform(command) }
         },
+        screenshots: RemoteScreenshotsService? = nil,
         codexUsage: @escaping @Sendable (Bool) async -> Result<RemoteCodexUsageSnapshot, RemoteProtocolError> = RemoteCodexUsageProvider.live.fetch,
         claudeUsage: @escaping @Sendable () async -> Result<RemoteClaudeUsageSnapshot, RemoteProtocolError> = RemoteClaudeUsageProvider.live.fetch
     ) {
@@ -115,6 +119,7 @@ actor RemoteHost {
         self.soundMixerCommand = soundMixerCommand
         self.brightnessSnapshots = brightnessSnapshots
         self.brightnessCommand = brightnessCommand
+        self.screenshots = screenshots
         self.codexUsage = codexUsage
         self.claudeUsage = claudeUsage
         self.statusScheduler = RemoteStatusScheduler(provider: catalogProvider)
@@ -162,6 +167,7 @@ actor RemoteHost {
         brightnessCommand: @escaping @Sendable (RemoteBrightnessCommand) async throws -> RemoteBrightnessSnapshot = { _ in
             throw RemoteProtocolError(code: .actionNotSupported, message: "Brightness is unavailable")
         },
+        screenshots: RemoteScreenshotsService = .unavailable,
         codexUsage: @escaping @Sendable (Bool) async -> Result<RemoteCodexUsageSnapshot, RemoteProtocolError> = { _ in
             .failure(.init(code: .actionNotSupported, message: "Codex usage is unavailable"))
         },
@@ -205,6 +211,7 @@ actor RemoteHost {
             soundMixerCommand: soundMixerCommand,
             brightnessSnapshots: brightnessSnapshots,
             brightnessCommand: brightnessCommand,
+            screenshots: screenshots,
             codexUsage: codexUsage,
             claudeUsage: claudeUsage
         )
@@ -354,6 +361,7 @@ actor RemoteHost {
         advertise: Bool
     ) async throws -> NWEndpoint {
         if listener != nil { await stop() }
+        await resolveScreenshotsIfNeeded()
         startCatalogObservationIfNeeded()
         let generation = lifecycle.beginStart()
         publish(.statusChanged(.starting))
@@ -422,6 +430,18 @@ actor RemoteHost {
             await listenerFailed(generation: generation)
             throw error
         }
+    }
+
+    /// The live service reads the main-actor Screenshots store, so it is built lazily rather than when
+    /// `shared` is first touched.
+    private func resolveScreenshotsIfNeeded() async {
+        guard resolvedScreenshots == nil else { return }
+        if let screenshots {
+            resolvedScreenshots = screenshots
+            return
+        }
+        let live = await MainActor.run { RemoteScreenshotsService.live }
+        resolvedScreenshots = resolvedScreenshots ?? live
     }
 
     private func publish(_ event: RemoteHostEvent) {
@@ -509,6 +529,7 @@ actor RemoteHost {
             soundMixerCommand: soundMixerCommand,
             brightnessSnapshots: brightnessSnapshots,
             brightnessCommand: brightnessCommand,
+            screenshots: resolvedScreenshots ?? .unavailable,
             codexUsage: codexUsage,
             claudeUsage: claudeUsage,
             authenticationResultSender: authenticationResultSender,

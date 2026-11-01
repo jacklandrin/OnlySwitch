@@ -33,12 +33,12 @@ struct GlobalSettingsTabTests {
         #expect(saved.value.count == 3)
         #expect(saved.value.first == .init(showsSystemMonitor: false))
         #expect(saved.value.last == expected)
-        #expect(expected.visiblePages == [.controls, .soundMixer, .brightness, .aphrodite])
+        #expect(expected.visiblePages == [.controls, .soundMixer, .brightness, .screenshots, .aphrodite])
         await store.send(.tabVisibilityChanged(.codexUsage, true)) { $0.tabConfiguration.showsCodexUsage = true }
         expected.showsCodexUsage = true
         await store.receive(.delegate(.tabConfigurationChanged(expected)))
         #expect(saved.value.last == expected)
-        #expect(expected.visiblePages == [.controls, .soundMixer, .brightness, .codexUsage, .aphrodite])
+        #expect(expected.visiblePages == [.controls, .soundMixer, .brightness, .screenshots, .codexUsage, .aphrodite])
     }
 
     @Test func controlsCannotBeHidden() async {
@@ -64,7 +64,7 @@ struct GlobalSettingsTabTests {
         #expect(saved.value.isEmpty)
     }
 
-    @Test(arguments: [RemoteAppPage.soundMixer, .brightness, .aphrodite])
+    @Test(arguments: [RemoteAppPage.soundMixer, .brightness, .screenshots, .aphrodite])
     func plusTabsCanBeHidden(page: RemoteAppPage) async {
         let saved = LockIsolated<[RemoteTabConfiguration]>([])
         let store = TestStore(initialState: GlobalSettingsFeature.State(tabConfiguration: .init())) {

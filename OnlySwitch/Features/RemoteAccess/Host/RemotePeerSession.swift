@@ -114,6 +114,7 @@ actor RemotePeerSession {
     private let soundMixerCommand: @Sendable (RemoteSoundMixerCommand) async throws -> RemoteSoundMixerSnapshot
     private let brightnessSnapshots: @Sendable (UUID) -> AsyncStream<RemoteBrightnessSnapshot>
     private let brightnessCommand: @Sendable (RemoteBrightnessCommand) async throws -> RemoteBrightnessSnapshot
+    private let screenshots: RemoteScreenshotsService
     private let claudeUsage: @Sendable () async -> Result<RemoteClaudeUsageSnapshot, RemoteProtocolError>
     private let codexUsage: @Sendable (Bool) async -> Result<RemoteCodexUsageSnapshot, RemoteProtocolError>
     private let aphroditeSnapshotMessages: @Sendable () async throws -> [RemoteMessage]
@@ -130,6 +131,11 @@ actor RemotePeerSession {
     private var systemMonitorTask: Task<Void, Never>?
     private var soundMixerTask: Task<Void, Never>?
     private var brightnessTask: Task<Void, Never>?
+    private var screenshotsLibraryTask: Task<Void, Never>?
+    /// Thumbnail requests run serially; each new one chains after the previous.
+    private var screenshotThumbnailsTask: Task<Void, Never>?
+    /// At most one original is transferred; a newer request cancels the older one.
+    private var screenshotImageTask: Task<Void, Never>?
     private var claudeUsageTask: Task<Void, Never>?
     private var claudeUsageGeneration: UInt64 = 0
     private var codexUsageTask: Task<Void, Never>?
@@ -172,6 +178,7 @@ actor RemotePeerSession {
         brightnessCommand: @escaping @Sendable (RemoteBrightnessCommand) async throws -> RemoteBrightnessSnapshot = { _ in
             throw RemoteProtocolError(code: .actionNotSupported, message: "Brightness is unavailable")
         },
+        screenshots: RemoteScreenshotsService = .unavailable,
         codexUsage: @escaping @Sendable (Bool) async -> Result<RemoteCodexUsageSnapshot, RemoteProtocolError> = { _ in
             .failure(.init(code: .actionNotSupported, message: "Codex usage is unavailable"))
         },
@@ -213,6 +220,7 @@ actor RemotePeerSession {
         self.soundMixerCommand = soundMixerCommand
         self.brightnessSnapshots = brightnessSnapshots
         self.brightnessCommand = brightnessCommand
+        self.screenshots = screenshots
         self.codexUsage = codexUsage
         self.claudeUsage = claudeUsage
         self.aphroditeSnapshotMessages = aphroditeSnapshotMessages
@@ -240,6 +248,7 @@ actor RemotePeerSession {
         stopSystemMonitorStreaming()
         stopSoundMixerStreaming()
         stopBrightnessStreaming()
+        stopScreenshotsStreaming()
         codexUsageTask?.cancel()
         codexUsageTask = nil
         claudeUsageTask?.cancel()
@@ -259,6 +268,7 @@ actor RemotePeerSession {
         stopSystemMonitorStreaming()
         stopSoundMixerStreaming()
         stopBrightnessStreaming()
+        stopScreenshotsStreaming()
         codexUsageTask?.cancel()
         codexUsageTask = nil
         claudeUsageTask?.cancel()
@@ -839,6 +849,26 @@ actor RemotePeerSession {
             try requireBrightness()
             guard let snapshot = try await commandSnapshot({ try await brightnessCommand(command) }) else { return }
             try await sendEncrypted(.brightnessSnapshot(snapshot))
+        case let .screenshotsSubscriptionUpdate(enabled):
+            try requireScreenshots()
+            if enabled {
+                startScreenshotsStreaming()
+            } else {
+                stopScreenshotsStreaming()
+            }
+        case let .screenshotThumbnailsRequest(request):
+            try requireScreenshots()
+            guard try await acceptScreenshotRequest(request.requestID) else { return }
+            enqueueScreenshotThumbnails(request)
+        case let .screenshotImageRequest(request):
+            try requireScreenshots()
+            guard try await acceptScreenshotRequest(request.requestID) else { return }
+            startScreenshotImageTransfer(request)
+        case let .screenshotDeleteRequest(request):
+            try requireScreenshots()
+            guard try await acceptScreenshotRequest(request.requestID) else { return }
+            let failed = await screenshots.delete(request.ids)
+            try await sendEncrypted(.screenshotDeleteResult(.init(requestID: request.requestID, failedIDs: failed)))
         case let .systemMonitorSubscriptionUpdate(enabled):
             guard negotiatedVersion?.supportsSystemMonitorRemote == true else {
                 throw RemoteProtocolError(
@@ -1077,6 +1107,95 @@ actor RemotePeerSession {
     private func stopBrightnessStreaming() {
         brightnessTask?.cancel()
         brightnessTask = nil
+    }
+
+    private func requireScreenshots() throws {
+        guard negotiatedVersion?.supportsScreenshotsRemote == true else {
+            throw RemoteProtocolError(code: .actionNotSupported, message: "Screenshots remote viewing requires a newer OnlySwitch")
+        }
+    }
+
+    /// Only a subscribed session may read or trash screenshots; others get a failure reply, not a closed session.
+    private func acceptScreenshotRequest(_ requestID: UUID) async throws -> Bool {
+        guard screenshotsLibraryTask == nil else { return true }
+        try await sendEncrypted(.screenshotRequestFailed(.init(
+            requestID: requestID,
+            error: .init(code: .actionNotSupported, message: "Subscribe to screenshots first")
+        )))
+        return false
+    }
+
+    private func startScreenshotsStreaming() {
+        stopScreenshotsStreaming()
+        let libraries = screenshots.libraries
+        screenshotsLibraryTask = Task { [weak self] in
+            do {
+                for await library in libraries() {
+                    try Task.checkCancellation()
+                    guard let self else { return }
+                    try await self.sendEncrypted(.screenshotsLibrary(library))
+                }
+            } catch {
+                // Send failures end only the screenshot stream; the session loop handles disconnects.
+            }
+        }
+    }
+
+    private func enqueueScreenshotThumbnails(_ request: RemoteScreenshotThumbnailsRequest) {
+        let previous = screenshotThumbnailsTask
+        let thumbnails = screenshots.thumbnails
+        screenshotThumbnailsTask = Task { [weak self] in
+            // Cancelling the newest request cancels the whole queue behind it.
+            await withTaskCancellationHandler {
+                await previous?.value
+            } onCancel: {
+                previous?.cancel()
+            }
+            guard Task.isCancelled == false else { return }
+            let result = await thumbnails(request.ids)
+            guard Task.isCancelled == false else { return }
+            try? await self?.sendEncrypted(.screenshotThumbnailsResult(.init(
+                requestID: request.requestID,
+                thumbnails: result.thumbnails,
+                missingIDs: result.missingIDs
+            )))
+        }
+    }
+
+    private func startScreenshotImageTransfer(_ request: RemoteScreenshotImageRequest) {
+        screenshotImageTask?.cancel()
+        let image = screenshots.image
+        screenshotImageTask = Task { [weak self] in
+            do {
+                let original = try await image(request.itemID, request.revision)
+                let messages = try RemoteScreenshotImageEncoder.messages(
+                    request: request,
+                    contentType: original.contentType,
+                    data: original.data
+                )
+                for message in messages {
+                    try Task.checkCancellation()
+                    guard let self else { return }
+                    try await self.sendEncrypted(message)
+                }
+            } catch is CancellationError {
+            } catch {
+                // A superseded transfer ends silently; the peer has already moved on to the newer request.
+                guard Task.isCancelled == false else { return }
+                let failure = error as? RemoteProtocolError
+                    ?? RemoteProtocolError(code: .executionFailed, message: "The screenshot could not be sent")
+                try? await self?.sendEncrypted(.screenshotRequestFailed(.init(requestID: request.requestID, error: failure)))
+            }
+        }
+    }
+
+    private func stopScreenshotsStreaming() {
+        screenshotsLibraryTask?.cancel()
+        screenshotsLibraryTask = nil
+        screenshotThumbnailsTask?.cancel()
+        screenshotThumbnailsTask = nil
+        screenshotImageTask?.cancel()
+        screenshotImageTask = nil
     }
 
     private func sendEncrypted(_ message: RemoteMessage) async throws {

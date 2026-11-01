@@ -4,11 +4,13 @@ struct RemoteSystemMonitorCardSurface: View {
     static var lightModeShadowOpacity: Double { 0.12 }
 
     private let content: AnyView
+    private let padding: CGFloat
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.colorSchemeContrast) private var contrast
 
-    init<Content: View>(@ViewBuilder content: () -> Content) {
+    init<Content: View>(padding: CGFloat = 16, @ViewBuilder content: () -> Content) {
+        self.padding = padding
         self.content = AnyView(content())
     }
 
@@ -40,7 +42,7 @@ struct RemoteSystemMonitorCardSurface: View {
 
     private var decoratedContent: some View {
         content
-            .padding(16)
+            .padding(padding)
             .frame(maxWidth: .infinity, alignment: .leading)
             .overlay {
                 RoundedRectangle(cornerRadius: 20)

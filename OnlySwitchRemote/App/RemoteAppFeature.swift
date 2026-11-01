@@ -6,6 +6,7 @@ enum RemoteAppPage: Hashable, Sendable, CaseIterable {
     case systemMonitor
     case soundMixer
     case brightness
+    case screenshots
     case codexUsage
     case claudeUsage
     case aphrodite
@@ -28,6 +29,7 @@ struct RemoteAppFeature {
         var systemMonitor = RemoteSystemMonitorFeature.State()
         var soundMixer = RemoteSoundMixerFeature.State()
         var brightness = RemoteBrightnessFeature.State()
+        var screenshots = RemoteScreenshotsFeature.State()
         var codexUsage = RemoteCodexUsageFeature.State()
         var claudeUsage = RemoteClaudeUsageFeature.State()
         var aphrodite = RemoteAphroditeFeature.State()
@@ -141,6 +143,7 @@ struct RemoteAppFeature {
         case systemMonitor(RemoteSystemMonitorFeature.Action)
         case soundMixer(RemoteSoundMixerFeature.Action)
         case brightness(RemoteBrightnessFeature.Action)
+        case screenshots(RemoteScreenshotsFeature.Action)
         case codexUsage(RemoteCodexUsageFeature.Action)
         case claudeUsage(RemoteClaudeUsageFeature.Action)
         case aphrodite(RemoteAphroditeFeature.Action)
@@ -164,10 +167,20 @@ struct RemoteAppFeature {
     private enum CancelID { case load, lifecycle, connectionEvents, metadataRefresh }
 
     var body: some ReducerOf<Self> {
+        Reduce { state, action in
+            let before = ScreenshotsContext(state)
+            let effect = core.reduce(into: &state, action: action)
+            return .merge(effect, syncScreenshotsContext(from: before, after: action, state: state))
+        }
+    }
+
+    @ReducerBuilder<State, Action>
+    private var core: some ReducerOf<Self> {
         Scope(state: \.dashboard, action: \.dashboard) { DashboardFeature() }
         Scope(state: \.systemMonitor, action: \.systemMonitor) { RemoteSystemMonitorFeature() }
         Scope(state: \.soundMixer, action: \.soundMixer) { RemoteSoundMixerFeature() }
         Scope(state: \.brightness, action: \.brightness) { RemoteBrightnessFeature() }
+        Scope(state: \.screenshots, action: \.screenshots) { RemoteScreenshotsFeature() }
         Scope(state: \.codexUsage, action: \.codexUsage) { RemoteCodexUsageFeature() }
         Scope(state: \.claudeUsage, action: \.claudeUsage) { RemoteClaudeUsageFeature() }
         Scope(state: \.aphrodite, action: \.aphrodite) { RemoteAphroditeFeature() }
@@ -333,7 +346,7 @@ struct RemoteAppFeature {
                     return .merge(forwardToDashboard(event, state: state), .send(.codexUsage(.contextChanged(macID: macID, sessionID: sessionID))), .send(.claudeUsage(.contextChanged(macID: macID, sessionID: sessionID))))
                 case let .aphroditeLibraryChanged(macID, _):
                     return .send(.aphrodite(.libraryChanged(macID)))
-                case .catalog, .catalogInvalidated, .statusSnapshot, .status, .action, .soundMixer, .systemMonitor, .brightness:
+                case .catalog, .catalogInvalidated, .statusSnapshot, .status, .action, .soundMixer, .systemMonitor, .brightness, .screenshots:
                     return forwardToDashboard(event, state: state)
                 }
 
@@ -468,6 +481,7 @@ struct RemoteAppFeature {
                 }
                 effects.append(soundMixerVisibility(state: state))
                 effects.append(brightnessVisibility(state: state))
+                effects.append(screenshotsVisibility(state: state))
                 effects.append(.send(.codexUsage(.visibilityChanged(foregrounded && state.selectedPage == .codexUsage))))
                 effects.append(.send(.claudeUsage(.visibilityChanged(foregrounded && state.selectedPage == .claudeUsage))))
                 effects.append(
@@ -493,6 +507,7 @@ struct RemoteAppFeature {
                     .send(.systemMonitor(.visibilityChanged(page == .systemMonitor && state.isForegrounded))),
                     soundMixerVisibility(state: state),
                     brightnessVisibility(state: state),
+                    screenshotsVisibility(state: state),
                     .send(.codexUsage(.visibilityChanged(page == .codexUsage && state.isForegrounded))), .send(.claudeUsage(.visibilityChanged(page == .claudeUsage && state.isForegrounded))),
                     page.requiresPlus ? .send(.plusAccess(.refresh)) : .none
                 )
@@ -513,10 +528,14 @@ struct RemoteAppFeature {
                 let brightnessEntitlement: Effect<Action> = state.brightness.isEntitled == canAccess
                     ? .none
                     : .send(.brightness(.entitlementChanged(canAccess)))
-                guard state.paywall != nil else { return .merge(soundMixerEntitlement, brightnessEntitlement) }
+                let screenshotsEntitlement: Effect<Action> = state.screenshots.isEntitled == canAccess
+                    ? .none
+                    : .send(.screenshots(.entitlementChanged(canAccess)))
+                guard state.paywall != nil else { return .merge(soundMixerEntitlement, brightnessEntitlement, screenshotsEntitlement) }
                 return .merge(
                     soundMixerEntitlement,
                     brightnessEntitlement,
+                    screenshotsEntitlement,
                     .send(.paywall(.presented(.authoritativeEntitlementUpdated(entitlement))))
                 )
 
@@ -657,7 +676,7 @@ struct RemoteAppFeature {
                 state.systemMonitor.layout = layout
                 return .none
 
-            case .dashboard, .systemMonitor, .soundMixer, .brightness, .codexUsage, .claudeUsage, .aphrodite, .plusAccess, .requiredGlobalSettings,
+            case .dashboard, .systemMonitor, .soundMixer, .brightness, .screenshots, .codexUsage, .claudeUsage, .aphrodite, .plusAccess, .requiredGlobalSettings,
                  .controlsConfiguration, .monitorConfiguration, .paywall, .path:
                 return .none
             }
@@ -936,6 +955,9 @@ struct RemoteAppFeature {
         if state.brightness.isVisible {
             effects.append(.send(.brightness(.connectionEvent(event))))
         }
+        if state.screenshots.isVisible {
+            effects.append(.send(.screenshots(.connectionEvent(event))))
+        }
         return .merge(effects)
     }
 
@@ -1003,6 +1025,58 @@ struct RemoteAppFeature {
         }
     }
 
+    private func screenshotsVisibility(state: State) -> Effect<Action> {
+        let isVisible = state.isForegrounded && state.selectedPage == .screenshots
+        guard state.screenshots.isVisible != isVisible else { return .none }
+        return .send(.screenshots(.visibilityChanged(isVisible)))
+    }
+
+    /// The root's view of the selected Mac, compared before and after each action.
+    private struct ScreenshotsContext: Equatable {
+        let macID: UUID?
+        let isConnected: Bool
+        let requiresPairing: Bool
+
+        init(_ state: State) {
+            macID = state.selectedMacID
+            isConnected = state.selectedMacID.map(state.connectedMacIDs.contains) ?? false
+            requiresPairing = state.selectedMacID.flatMap { state.pairedMacs[id: $0]?.requiresPairing } ?? false
+        }
+    }
+
+    /// Screenshots' counterpart of `syncBrightnessState`. It runs whenever an action changed the
+    /// selected Mac or its connection/pairing state (where `syncSettingsState` re-syncs Brightness),
+    /// and goes through `.contextChanged` instead of mutating child state, so the child cancels its
+    /// own in-flight stream, thumbnail, image and delete work. Same state rules as Brightness.
+    private func syncScreenshotsContext(from before: ScreenshotsContext, after action: Action, state: State) -> Effect<Action> {
+        let context = ScreenshotsContext(state)
+        guard context != before else { return .none }
+        let child = state.screenshots
+        guard let macID = context.macID else {
+            guard child.selectedMacID != nil || child.connectionState != .idle else { return .none }
+            return .send(.screenshots(.contextChanged(macID: nil, connectionState: .idle)))
+        }
+        let connectionState: DashboardFeature.ConnectionState
+        if context.requiresPairing {
+            connectionState = .revoked
+        } else if context.isConnected {
+            connectionState = .authenticated
+        } else {
+            connectionState = .offline(nil)
+        }
+        if child.selectedMacID == macID {
+            // A visible child received this Mac's event itself and keeps its own state.
+            if case let .connectionEvent(event) = action, child.isVisible, event.connectionMacID == macID { return .none }
+            switch (child.connectionState, connectionState) {
+            case (.revoked, .revoked), (.authenticated, .authenticated), (.connecting, .offline), (.offline, .offline):
+                return .none
+            default:
+                break
+            }
+        }
+        return .send(.screenshots(.contextChanged(macID: macID, connectionState: connectionState)))
+    }
+
     private func loadSystemMonitorLayout(for macID: UUID, state: inout State) -> Effect<Action> {
         state.systemMonitorLayoutGeneration &+= 1
         let generation = state.systemMonitorLayoutGeneration
@@ -1024,3 +1098,16 @@ struct RemoteAppFeature {
 
 extension RemoteAppFeature.Path.State: Equatable {}
 extension RemoteAppFeature.Path.Action: Equatable {}
+
+private extension RemoteConnectionEvent {
+    /// The Mac whose connection state this event reports, if any.
+    var connectionMacID: UUID? {
+        switch self {
+        case let .connecting(id), let .sessionStarted(id, _), let .authenticated(id), let .offline(id, _), let .revoked(id):
+            id
+        case .persistenceRestored, .catalog, .catalogInvalidated, .statusSnapshot, .status, .action, .soundMixer,
+             .systemMonitor, .brightness, .screenshots, .aphroditeLibraryChanged:
+            nil
+        }
+    }
+}

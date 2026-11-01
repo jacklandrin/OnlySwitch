@@ -5,6 +5,7 @@ import Network
 import RemoteCore
 import RemoteTransport
 import Testing
+import UIKit
 @testable import OnlySwitchRemote
 
 @Suite(.serialized)
@@ -757,6 +758,599 @@ struct RemoteConnectionClientTests {
     }
 
     @Test(.timeLimit(.minutes(1)))
+    func reviewDemoStreamsScreenshotsAndDeletes() async throws {
+        let runtime = RemoteReviewDemoRuntime()
+        let client = RemoteConnectionClient.reviewDemo(runtime: runtime)
+        let macID = RemoteReviewDemoRuntime.studioMacID
+        var events = client.events().makeAsyncIterator()
+
+        try await client.setScreenshotsStreaming(true)
+        var library: RemoteScreenshotLibrary?
+        var streamedMacID: UUID?
+        while library == nil, let event = await events.next() {
+            if case let .screenshots(id, value) = event { (streamedMacID, library) = (id, value) }
+        }
+        let initial = try #require(library)
+        let items = initial.items
+        #expect(streamedMacID == macID)
+        #expect(items.count == 4)
+        #expect(items.contains { $0.isPinned })
+        #expect(items.allSatisfy { $0.contentType == "public.png" && $0.fileName.hasSuffix(".png") })
+
+        let thumbs = try await client.fetchScreenshotThumbnails(.init(
+            macID: macID,
+            request: .init(requestID: UUID(), ids: items.map(\.id))
+        ))
+        #expect(thumbs.thumbnails.count == 4)
+        #expect(thumbs.missingIDs.isEmpty)
+        for thumbnail in thumbs.thumbnails {
+            let image = try #require(UIImage(data: thumbnail.jpegData))
+            #expect(max(image.size.width, image.size.height) * image.scale <= CGFloat(RemoteScreenshotLimits.maximumThumbnailPixel))
+            #expect(thumbnail.jpegData.starts(with: [0xFF, 0xD8]))
+        }
+
+        let image = try await client.fetchScreenshotImage(.init(
+            macID: macID,
+            request: .init(requestID: UUID(), itemID: items[0].id, revision: items[0].revision)
+        ))
+        #expect(image.contentType == "public.png")
+        #expect(image.data.starts(with: [0x89, 0x50, 0x4E, 0x47]))
+        #expect(UIImage(data: image.data) != nil)
+
+        let deleted = try await client.deleteScreenshots(.init(
+            macID: macID,
+            request: .init(requestID: UUID(), ids: [items[0].id])
+        ))
+        #expect(deleted.failedIDs.isEmpty)
+        var updated: RemoteScreenshotLibrary?
+        while updated == nil, let event = await events.next() {
+            if case let .screenshots(_, value) = event, value.revision > initial.revision { updated = value }
+        }
+        #expect(updated?.items.map(\.id) == Array(items.dropFirst()).map(\.id))
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func reviewDemoScreenshotRequestsRejectOtherMacsAndUnknownRevisions() async throws {
+        let runtime = RemoteReviewDemoRuntime()
+        let client = RemoteConnectionClient.reviewDemo(runtime: runtime)
+        let item = try #require(RemoteReviewDemoRuntime.makeScreenshotLibrary().items.first)
+
+        await #expect(throws: RemoteProtocolError.self) {
+            try await client.fetchScreenshotThumbnails(.init(
+                macID: RemoteReviewDemoRuntime.travelMacID,
+                request: .init(requestID: UUID(), ids: [item.id])
+            ))
+        }
+        await #expect(throws: RemoteProtocolError.self) {
+            try await client.fetchScreenshotImage(.init(
+                macID: RemoteReviewDemoRuntime.studioMacID,
+                request: .init(requestID: UUID(), itemID: item.id, revision: item.revision + 1)
+            ))
+        }
+        let missing = try await client.fetchScreenshotThumbnails(.init(
+            macID: RemoteReviewDemoRuntime.studioMacID,
+            request: .init(requestID: UUID(), ids: [UUID()])
+        ))
+        #expect(missing.thumbnails.isEmpty)
+        #expect(missing.missingIDs.count == 1)
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func reviewDemoResetRestoresTheScreenshotLibrary() async throws {
+        let runtime = RemoteReviewDemoRuntime()
+        let client = RemoteConnectionClient.reviewDemo(runtime: runtime)
+        let canonical = RemoteReviewDemoRuntime.makeScreenshotLibrary()
+        _ = try await client.deleteScreenshots(.init(
+            macID: RemoteReviewDemoRuntime.studioMacID,
+            request: .init(requestID: UUID(), ids: canonical.items.map(\.id))
+        ))
+        await runtime.reset()
+
+        var events = client.events().makeAsyncIterator()
+        try await client.setScreenshotsStreaming(true)
+        var library: RemoteScreenshotLibrary?
+        while library == nil, let event = await events.next() {
+            if case let .screenshots(_, value) = event { library = value }
+        }
+        #expect(library == canonical)
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func reviewDemoImageClientCachesOriginalsOnlyInTheDemoCache() async throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("ReviewDemoScreenshots-\(UUID().uuidString)", isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let runtime = RemoteReviewDemoRuntime()
+        let connection = RemoteConnectionClient.reviewDemo(runtime: runtime)
+        let cache = RemoteScreenshotCacheClient.live(root: root)
+        let images = RemoteScreenshotImageClient.reviewDemo(connection: connection, cache: cache)
+        let macID = RemoteReviewDemoRuntime.studioMacID
+        let library = RemoteReviewDemoRuntime.makeScreenshotLibrary()
+        let item = try #require(library.items.first)
+        _ = await cache.replaceLibrary(macID, library)
+
+        let url = try await images.load(macID, item)
+
+        #expect(url.standardizedFileURL.path.hasPrefix(root.standardizedFileURL.path + "/"))
+        #expect(url.lastPathComponent == item.fileName)
+        #expect(UIImage(data: try Data(contentsOf: url)) != nil)
+        #expect(await cache.imageURL(macID, item) == url)
+    }
+
+    @Test(.timeLimit(.minutes(1)), arguments: [UInt16(8), 9])
+    func screenshotMessagesRequireProtocolNine(minor: UInt16) async throws {
+        let macID = UUID()
+        let credential = Data(repeating: 21, count: 32)
+        let item = RemoteScreenshotItem(
+            id: UUID(),
+            fileName: "a.png",
+            contentType: "public.png",
+            createdAt: .init(timeIntervalSince1970: 1),
+            isPinned: false,
+            revision: 0,
+            byteCount: 3
+        )
+        let library = RemoteScreenshotLibrary(revision: 2, isCollectionEnabled: true, items: [item])
+        let thumbnail = try RemoteScreenshotThumbnail(itemID: item.id, revision: 0, jpegData: Data([1]))
+        let original = Data(repeating: 3, count: RemoteScreenshotLimits.maximumChunkBytes + 1)
+        let listener = try NWListener(using: .tcp, on: .any)
+        let (connections, connectionContinuation) = AsyncStream.makeStream(
+            of: NWConnection.self,
+            bufferingPolicy: .bufferingOldest(1)
+        )
+        listener.newConnectionHandler = { connectionContinuation.yield($0) }
+        try await start(listener)
+        defer {
+            connectionContinuation.finish()
+            listener.cancel()
+        }
+        let port = try #require(listener.port)
+        let server = Task {
+            var iterator = connections.makeAsyncIterator()
+            let connection = try #require(await iterator.next())
+            let io = RemoteConnectionIO(connection: connection)
+            try await io.start()
+            guard case let .clientHello(hello)? = (try await io.receive()).plaintext else {
+                throw TestProtocolError.unexpectedMessage
+            }
+            let key = P256.KeyAgreement.PrivateKey()
+            let serverHello = ServerHello(
+                version: .init(major: 1, minor: minor),
+                macID: macID,
+                macName: "Studio",
+                ephemeralPublicKey: key.publicKey.rawRepresentation,
+                challenge: Data(repeating: 9, count: 32)
+            )
+            try await io.send(.plaintext(.serverHello(serverHello)))
+            let transcript = try RemoteHandshakeCrypto.transcript(client: hello, server: serverHello)
+            let crypto = try makeServerCrypto(key: key, hello: hello, credential: credential, transcript: transcript)
+            guard case .authenticationProof = try await receiveEncrypted(io: io, crypto: crypto) else {
+                throw TestProtocolError.unexpectedMessage
+            }
+            try await io.send(.encrypted(try crypto.seal(.authenticationResult(.success(.init(
+                sessionID: UUID(),
+                catalogRevision: 1
+            ))))))
+            if minor >= 9 {
+                #expect(try await receiveEncrypted(io: io, crypto: crypto) == .screenshotsSubscriptionUpdate(true))
+                try await io.send(.encrypted(try crypto.seal(.screenshotsLibrary(library))))
+                guard case let .screenshotThumbnailsRequest(thumbs) = try await receiveEncrypted(io: io, crypto: crypto) else {
+                    throw TestProtocolError.unexpectedMessage
+                }
+                try await io.send(.encrypted(try crypto.seal(.screenshotThumbnailsResult(.init(
+                    requestID: thumbs.requestID,
+                    thumbnails: [thumbnail],
+                    missingIDs: []
+                )))))
+                guard case let .screenshotImageRequest(image) = try await receiveEncrypted(io: io, crypto: crypto) else {
+                    throw TestProtocolError.unexpectedMessage
+                }
+                for message in try RemoteScreenshotImageEncoder.messages(request: image, contentType: "public.png", data: original) {
+                    try await io.send(.encrypted(try crypto.seal(message)))
+                }
+                guard case let .screenshotDeleteRequest(delete) = try await receiveEncrypted(io: io, crypto: crypto) else {
+                    throw TestProtocolError.unexpectedMessage
+                }
+                try await io.send(.encrypted(try crypto.seal(.screenshotDeleteResult(.init(
+                    requestID: delete.requestID,
+                    failedIDs: [item.id]
+                )))))
+                _ = try? await io.receive()
+            } else {
+                #expect(try await receiveEncrypted(io: io, crypto: crypto) == .catalogRequest)
+            }
+            await io.cancel()
+        }
+        let (events, eventContinuation) = AsyncStream.makeStream(of: RemoteMessage.self)
+        let session = try await RemoteClientSession.authenticate(
+            endpoint: .hostPort(host: .ipv4(.loopback), port: port),
+            expectedMacID: macID,
+            credential: credential,
+            deviceID: UUID(),
+            deviceName: "Test iPad",
+            event: { eventContinuation.yield($0) }
+        )
+        session.startReceiving()
+        if minor >= 9 {
+            try await session.setScreenshotsStreaming(true)
+            var eventIterator = events.makeAsyncIterator()
+            #expect(await eventIterator.next() == .screenshotsLibrary(library))
+            let thumbs = try await session.fetchScreenshotThumbnails(.init(requestID: UUID(), ids: [item.id]))
+            #expect(thumbs.thumbnails == [thumbnail])
+            let payload = try await session.fetchScreenshotImage(.init(requestID: UUID(), itemID: item.id, revision: 0))
+            #expect(payload == .init(contentType: "public.png", data: original))
+            let deleted = try await session.deleteScreenshots(.init(requestID: UUID(), ids: [item.id]))
+            #expect(deleted.failedIDs == [item.id])
+            await session.close()
+        } else {
+            for operation in [
+                { try await session.setScreenshotsStreaming(true) },
+                { _ = try await session.fetchScreenshotThumbnails(.init(requestID: UUID(), ids: [item.id])) },
+                { _ = try await session.fetchScreenshotImage(.init(requestID: UUID(), itemID: item.id, revision: 0)) },
+                { _ = try await session.deleteScreenshots(.init(requestID: UUID(), ids: [item.id])) },
+            ] as [@Sendable () async throws -> Void] {
+                do {
+                    try await operation()
+                    Issue.record("Screenshot messages must not be sent to a 1.8 Mac.")
+                } catch let error as RemoteProtocolError {
+                    #expect(error.code == .upgradeRequired)
+                }
+            }
+            try await session.requestCatalog()
+        }
+        eventContinuation.finish()
+        try await server.value
+        await session.close()
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func screenshotImageWithTamperedChunkFailsTheRequestOnly() async throws {
+        let itemID = UUID()
+        let thumbnail = try RemoteScreenshotThumbnail(itemID: itemID, revision: 0, jpegData: Data([1]))
+        try await withScreenshotLoopback(server: { io, crypto in
+            #expect(try await receiveEncrypted(io: io, crypto: crypto) == .screenshotsSubscriptionUpdate(true))
+            guard case let .screenshotImageRequest(image) = try await receiveEncrypted(io: io, crypto: crypto),
+                  case let .screenshotImageManifest(manifest)? = try RemoteScreenshotImageEncoder.messages(
+                      request: image,
+                      contentType: "public.png",
+                      data: Data(repeating: 7, count: 16)
+                  ).first else {
+                throw TestProtocolError.unexpectedMessage
+            }
+            try await io.send(.encrypted(try crypto.seal(.screenshotImageManifest(manifest))))
+            let tampered = try RemoteScreenshotImageChunk(
+                requestID: manifest.requestID,
+                index: 0,
+                data: Data(repeating: 0, count: manifest.byteCount)
+            )
+            try await io.send(.encrypted(try crypto.seal(.screenshotImageChunk(tampered))))
+            guard case let .screenshotThumbnailsRequest(thumbs) = try await receiveEncrypted(io: io, crypto: crypto) else {
+                throw TestProtocolError.unexpectedMessage
+            }
+            try await io.send(.encrypted(try crypto.seal(.screenshotThumbnailsResult(.init(
+                requestID: thumbs.requestID,
+                thumbnails: [thumbnail],
+                missingIDs: []
+            )))))
+        }, client: { session, _ in
+            try await session.setScreenshotsStreaming(true)
+            let error = await #expect(throws: RemoteProtocolError.self) {
+                _ = try await session.fetchScreenshotImage(.init(requestID: UUID(), itemID: itemID, revision: 0))
+            }
+            #expect(error?.code == .invalidFrame)
+            // The session stays open: a following request still succeeds.
+            let thumbs = try await session.fetchScreenshotThumbnails(.init(requestID: UUID(), ids: [itemID]))
+            #expect(thumbs.thumbnails == [thumbnail])
+        })
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func screenshotRequestFailedResolvesTheMatchingRequest() async throws {
+        let failure = RemoteProtocolError(code: .controlNotFound, message: "The screenshot no longer exists")
+        try await withScreenshotLoopback(server: { io, crypto in
+            #expect(try await receiveEncrypted(io: io, crypto: crypto) == .screenshotsSubscriptionUpdate(true))
+            guard case let .screenshotImageRequest(image) = try await receiveEncrypted(io: io, crypto: crypto) else {
+                throw TestProtocolError.unexpectedMessage
+            }
+            try await io.send(.encrypted(try crypto.seal(.screenshotRequestFailed(.init(
+                requestID: image.requestID,
+                error: failure
+            )))))
+        }, client: { session, _ in
+            try await session.setScreenshotsStreaming(true)
+            let error = await #expect(throws: RemoteProtocolError.self) {
+                _ = try await session.fetchScreenshotImage(.init(requestID: UUID(), itemID: UUID(), revision: 0))
+            }
+            #expect(error == failure)
+        })
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func newerScreenshotImageRequestSupersedesThePendingOne() async throws {
+        let itemID = UUID()
+        let original = Data(repeating: 5, count: 32)
+        let (requests, requestReceived) = AsyncStream.makeStream(of: Void.self)
+        try await withScreenshotLoopback(server: { io, crypto in
+            #expect(try await receiveEncrypted(io: io, crypto: crypto) == .screenshotsSubscriptionUpdate(true))
+            guard case .screenshotImageRequest = try await receiveEncrypted(io: io, crypto: crypto) else {
+                throw TestProtocolError.unexpectedMessage
+            }
+            requestReceived.yield()
+            guard case let .screenshotImageRequest(newer) = try await receiveEncrypted(io: io, crypto: crypto) else {
+                throw TestProtocolError.unexpectedMessage
+            }
+            // Like the Mac host, the superseded transfer ends silently.
+            for message in try RemoteScreenshotImageEncoder.messages(request: newer, contentType: "public.jpeg", data: original) {
+                try await io.send(.encrypted(try crypto.seal(message)))
+            }
+        }, client: { session, _ in
+            try await session.setScreenshotsStreaming(true)
+            let superseded = Task {
+                try await session.fetchScreenshotImage(.init(requestID: UUID(), itemID: itemID, revision: 0))
+            }
+            var iterator = requests.makeAsyncIterator()
+            await iterator.next()
+            let payload = try await session.fetchScreenshotImage(.init(requestID: UUID(), itemID: itemID, revision: 1))
+            #expect(payload == .init(contentType: "public.jpeg", data: original))
+            await #expect(throws: CancellationError.self) { _ = try await superseded.value }
+        })
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func disablingScreenshotStreamingFailsPendingRequests() async throws {
+        let (requests, requestReceived) = AsyncStream.makeStream(of: Void.self)
+        try await withScreenshotLoopback(server: { io, crypto in
+            #expect(try await receiveEncrypted(io: io, crypto: crypto) == .screenshotsSubscriptionUpdate(true))
+            guard case .screenshotImageRequest = try await receiveEncrypted(io: io, crypto: crypto) else {
+                throw TestProtocolError.unexpectedMessage
+            }
+            requestReceived.yield()
+            guard case .screenshotThumbnailsRequest = try await receiveEncrypted(io: io, crypto: crypto) else {
+                throw TestProtocolError.unexpectedMessage
+            }
+            requestReceived.yield()
+            // The Mac cancels pending work on unsubscribe and never replies.
+            #expect(try await receiveEncrypted(io: io, crypto: crypto) == .screenshotsSubscriptionUpdate(false))
+        }, client: { session, _ in
+            try await session.setScreenshotsStreaming(true)
+            var iterator = requests.makeAsyncIterator()
+            let image = Task {
+                try await session.fetchScreenshotImage(.init(requestID: UUID(), itemID: UUID(), revision: 0))
+            }
+            await iterator.next()
+            let thumbnails = Task {
+                try await session.fetchScreenshotThumbnails(.init(requestID: UUID(), ids: [UUID()]))
+            }
+            await iterator.next()
+            try await session.setScreenshotsStreaming(false)
+            await #expect(throws: CancellationError.self) { _ = try await image.value }
+            await #expect(throws: CancellationError.self) { _ = try await thumbnails.value }
+        })
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func closingTheSessionFailsPendingScreenshotRequests() async throws {
+        let (requests, requestReceived) = AsyncStream.makeStream(of: Void.self)
+        try await withScreenshotLoopback(server: { io, crypto in
+            #expect(try await receiveEncrypted(io: io, crypto: crypto) == .screenshotsSubscriptionUpdate(true))
+            guard case .screenshotDeleteRequest = try await receiveEncrypted(io: io, crypto: crypto) else {
+                throw TestProtocolError.unexpectedMessage
+            }
+            requestReceived.yield()
+        }, client: { session, _ in
+            try await session.setScreenshotsStreaming(true)
+            let delete = Task {
+                try await session.deleteScreenshots(.init(requestID: UUID(), ids: [UUID()]))
+            }
+            var iterator = requests.makeAsyncIterator()
+            await iterator.next()
+            await session.close()
+            await #expect(throws: CancellationError.self) { _ = try await delete.value }
+        })
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func runtimeMapsScreenshotLibrariesToConnectionEvents() async throws {
+        let macID = UUID()
+        let library = RemoteScreenshotLibrary(revision: 3, isCollectionEnabled: false, items: [
+            .init(
+                id: UUID(),
+                fileName: "Screenshot.png",
+                contentType: "public.png",
+                createdAt: .init(timeIntervalSince1970: 10),
+                isPinned: true,
+                revision: 1,
+                byteCount: 42
+            ),
+        ])
+        let server = try await PairingLoopbackServer.start(
+            macID: macID,
+            code: "ABCDEFGH2345",
+            credential: Data(repeating: 73, count: 32),
+            stayConnected: true,
+            screenshotsLibraryOnSubscribe: library
+        )
+        defer { server.cancel() }
+        let runtime = RemoteConnectionRuntime(persistence: .inMemory(), keychain: .inMemory(), deviceID: UUID())
+        let eventTask = Task { () -> RemoteConnectionEvent? in
+            for await event in runtime.makeConnectionEventStream() {
+                if case .screenshots = event { return event }
+            }
+            return nil
+        }
+        defer { eventTask.cancel() }
+        _ = try await runtime.prepareAndFinalizeForTest(
+            .init(id: macID, displayName: "Studio", endpoint: server.endpoint, protocolVersion: .current),
+            code: "ABCDEFGH2345",
+            deviceName: "Test iPhone"
+        )
+
+        try await runtime.setScreenshotsStreaming(true)
+
+        #expect(await eventTask.value == .screenshots(macID, library))
+        #expect(await server.receivedMessages.contains(.screenshotsSubscriptionUpdate(true)))
+        await runtime.setForegrounded(false)
+    }
+
+    // MARK: Background hold for original transfers
+
+    @Test(.timeLimit(.minutes(1)))
+    func backgroundingDefersSessionCloseUntilTheOriginalTransferFinishes() async throws {
+        let transfer = try await makeHeldTransfer()
+        defer { transfer.server.cancel() }
+
+        await transfer.runtime.setForegrounded(false)
+
+        #expect(await transfer.runtime.snapshot().authenticatedSessionID == transfer.sessionID)
+        let lifecycle = await transfer.runtime.lifecycleSnapshot
+        #expect(lifecycle.foregrounded == false)
+        #expect(lifecycle.ownsBrowser == false)
+        #expect(lifecycle.hasConnectionTask == false)
+        #expect(transfer.backgroundTasks.values == .init(began: 1, ended: 0))
+        #expect(transfer.closes.count == 0)
+
+        await transfer.gate.open()
+        #expect(try await transfer.fetch.value.data == transfer.original)
+        #expect(await waitUntil { await transfer.runtime.snapshot().authenticatedSessionID == nil })
+        #expect(await waitUntil { transfer.backgroundTasks.values == .init(began: 1, ended: 1) })
+        #expect(transfer.closes.count == 1)
+        #expect((await transfer.runtime.lifecycleSnapshot).foregrounded == false)
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func backgroundHoldLastsUntilTheTransferOperationReturns() async throws {
+        let saveGate = OperationGate()
+        let transfer = try await makeHeldTransfer(saveGate: saveGate)
+        defer { transfer.server.cancel() }
+
+        await transfer.runtime.setForegrounded(false)
+        await transfer.gate.open()
+        // The original arrived but is still being written to the cache.
+        await saveGate.waitUntilEntered()
+        try await Task.sleep(for: .milliseconds(100))
+        #expect(await transfer.runtime.snapshot().authenticatedSessionID == transfer.sessionID)
+        #expect(transfer.backgroundTasks.values == .init(began: 1, ended: 0))
+
+        await saveGate.open()
+        #expect(try await transfer.fetch.value.data == transfer.original)
+        #expect(await waitUntil { transfer.backgroundTasks.values == .init(began: 1, ended: 1) })
+        #expect(await transfer.runtime.snapshot().authenticatedSessionID == nil)
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func backgroundHoldClosesTheSessionWhenTheGracePeriodExpires() async throws {
+        let transfer = try await makeHeldTransfer(gracePeriod: .milliseconds(200))
+        defer { transfer.server.cancel() }
+
+        await transfer.runtime.setForegrounded(false)
+        #expect(await transfer.runtime.snapshot().authenticatedSessionID == transfer.sessionID)
+
+        await #expect(throws: CancellationError.self) { try await transfer.fetch.value }
+        #expect(await waitUntil { await transfer.runtime.snapshot().authenticatedSessionID == nil })
+        #expect(await waitUntil { transfer.backgroundTasks.values == .init(began: 1, ended: 1) })
+        #expect(transfer.closes.count == 1)
+        await transfer.gate.open()
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func foregroundingDuringTheBackgroundHoldKeepsTheSameSession() async throws {
+        let transfer = try await makeHeldTransfer(gracePeriod: .milliseconds(300))
+        defer { transfer.server.cancel() }
+
+        await transfer.runtime.setForegrounded(false)
+        await transfer.runtime.setForegrounded(true)
+
+        #expect(transfer.backgroundTasks.values == .init(began: 1, ended: 1))
+        #expect(await transfer.runtime.snapshot().authenticatedSessionID == transfer.sessionID)
+        #expect((await transfer.runtime.lifecycleSnapshot).hasConnectionTask == false)
+        await transfer.gate.open()
+        #expect(try await transfer.fetch.value.data == transfer.original)
+        // Neither the finished transfer nor the cancelled grace period closes a foreground session.
+        try await Task.sleep(for: .milliseconds(500))
+        #expect(await transfer.runtime.snapshot().authenticatedSessionID == transfer.sessionID)
+        #expect(transfer.closes.count == 0)
+
+        await transfer.runtime.setForegrounded(false)
+        #expect(await transfer.runtime.snapshot().authenticatedSessionID == nil)
+        #expect(transfer.closes.count == 1)
+        #expect(transfer.backgroundTasks.values == .init(began: 1, ended: 1))
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func backgroundTaskExpirationEndsTheHold() async throws {
+        let transfer = try await makeHeldTransfer()
+        defer { transfer.server.cancel() }
+
+        await transfer.runtime.setForegrounded(false)
+        transfer.backgroundTasks.expireAll()
+
+        await #expect(throws: CancellationError.self) { try await transfer.fetch.value }
+        #expect(await waitUntil { await transfer.runtime.snapshot().authenticatedSessionID == nil })
+        #expect(transfer.closes.count == 1)
+        await transfer.gate.open()
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func forgettingTheMacDuringTheBackgroundHoldEndsIt() async throws {
+        let transfer = try await makeHeldTransfer()
+        defer { transfer.server.cancel() }
+
+        await transfer.runtime.setForegrounded(false)
+        try await transfer.runtime.forgetMac(transfer.macID)
+
+        #expect(await transfer.runtime.snapshot().authenticatedSessionID == nil)
+        await #expect(throws: (any Error).self) { try await transfer.fetch.value }
+        #expect(await waitUntil { transfer.backgroundTasks.values == .init(began: 1, ended: 1) })
+        #expect(transfer.closes.count == 1)
+        await transfer.gate.open()
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func backgroundingWithoutAnOriginalTransferClosesTheSessionImmediately() async throws {
+        let macID = UUID()
+        let server = try await PairingLoopbackServer.start(
+            macID: macID,
+            code: "ABCDEFGH2345",
+            credential: Data(repeating: 74, count: 32),
+            stayConnected: true
+        )
+        defer { server.cancel() }
+        let backgroundTasks = BackgroundTaskRecorder()
+        let runtime = RemoteConnectionRuntime(
+            persistence: .inMemory(),
+            keychain: .inMemory(),
+            deviceID: UUID(),
+            backgroundTasks: backgroundTasks.client
+        )
+        _ = try await runtime.prepareAndFinalizeForTest(
+            .init(id: macID, displayName: "Studio", endpoint: server.endpoint, protocolVersion: .current),
+            code: "ABCDEFGH2345",
+            deviceName: "Test iPhone"
+        )
+        #expect(await runtime.snapshot().authenticatedSessionID != nil)
+
+        await runtime.setForegrounded(false)
+
+        #expect(await runtime.snapshot().authenticatedSessionID == nil)
+        #expect(backgroundTasks.values == .init(began: 0, ended: 0))
+    }
+
+    @Test func runtimeRejectsScreenshotRequestsForAnUnselectedMac() async throws {
+        let runtime = RemoteConnectionRuntime(persistence: .inMemory(), keychain: .inMemory(), deviceID: UUID())
+        let macID = UUID()
+        for operation in [
+            { _ = try await runtime.fetchScreenshotThumbnails(.init(macID: macID, request: .init(requestID: UUID(), ids: []))) },
+            { _ = try await runtime.fetchScreenshotImage(.init(macID: macID, request: .init(requestID: UUID(), itemID: UUID(), revision: 0))) },
+            { _ = try await runtime.deleteScreenshots(.init(macID: macID, request: .init(requestID: UUID(), ids: []))) },
+        ] as [@Sendable () async throws -> Void] {
+            let error = await #expect(throws: RemoteProtocolError.self) { try await operation() }
+            #expect(error?.code == .authenticationFailed)
+        }
+        let error = await #expect(throws: RemoteProtocolError.self) { try await runtime.setScreenshotsStreaming(true) }
+        #expect(error?.code == .authenticationFailed)
+    }
+
+    @Test(.timeLimit(.minutes(1)))
     func existingCredentialAuthenticatesWithoutPairing() async throws {
         let macID = UUID()
         let deviceID = UUID()
@@ -969,6 +1563,22 @@ struct RemoteConnectionClientTests {
         #expect(await operations.values.suffix(2) == [.close, .deleteCredential])
         #expect(try await credentials.client.loadCredential(macID) == nil)
         await server.waitUntilFinished()
+    }
+
+    @Test func forgettingMacRemovesItsScreenshotCache() async throws {
+        let removed = ScreenshotCacheRemovalRecorder()
+        var cache = RemoteScreenshotCacheClient.noop
+        cache.removeMac = { await removed.record($0) }
+        let runtime = RemoteConnectionRuntime(
+            persistence: .inMemory(),
+            keychain: .inMemory(),
+            deviceID: UUID(),
+            screenshotCache: cache
+        )
+
+        try await runtime.forgetMac(firstMac)
+
+        #expect(await removed.values == [firstMac])
     }
 
     @Test(.timeLimit(.minutes(1)))
@@ -2234,6 +2844,79 @@ struct RemoteConnectionClientTests {
         #expect(RemoteConnectionRuntime.isAuthoritativeRevocation(.credentialRevoked))
     }
 
+    /// Authenticated 1.x loopback session with a scripted Mac side, built like `brightnessMessagesRequireProtocolEight`.
+    /// After the script returns, the server waits for the client to close the connection.
+    private func withScreenshotLoopback(
+        minor: UInt16 = 9,
+        server script: @escaping @Sendable (RemoteConnectionIO, RemoteSessionCrypto) async throws -> Void,
+        client: (RemoteClientSession, AsyncStream<RemoteMessage>) async throws -> Void
+    ) async throws {
+        let macID = UUID()
+        let credential = Data(repeating: 22, count: 32)
+        let listener = try NWListener(using: .tcp, on: .any)
+        let (connections, connectionContinuation) = AsyncStream.makeStream(
+            of: NWConnection.self,
+            bufferingPolicy: .bufferingOldest(1)
+        )
+        listener.newConnectionHandler = { connectionContinuation.yield($0) }
+        try await start(listener)
+        defer {
+            connectionContinuation.finish()
+            listener.cancel()
+        }
+        let port = try #require(listener.port)
+        let server = Task {
+            var iterator = connections.makeAsyncIterator()
+            let connection = try #require(await iterator.next())
+            let io = RemoteConnectionIO(connection: connection)
+            try await io.start()
+            guard case let .clientHello(hello)? = (try await io.receive()).plaintext else {
+                throw TestProtocolError.unexpectedMessage
+            }
+            let key = P256.KeyAgreement.PrivateKey()
+            let serverHello = ServerHello(
+                version: .init(major: 1, minor: minor),
+                macID: macID,
+                macName: "Studio",
+                ephemeralPublicKey: key.publicKey.rawRepresentation,
+                challenge: Data(repeating: 9, count: 32)
+            )
+            try await io.send(.plaintext(.serverHello(serverHello)))
+            let transcript = try RemoteHandshakeCrypto.transcript(client: hello, server: serverHello)
+            let crypto = try makeServerCrypto(key: key, hello: hello, credential: credential, transcript: transcript)
+            guard case .authenticationProof = try await receiveEncrypted(io: io, crypto: crypto) else {
+                throw TestProtocolError.unexpectedMessage
+            }
+            try await io.send(.encrypted(try crypto.seal(.authenticationResult(.success(.init(
+                sessionID: UUID(),
+                catalogRevision: 1
+            ))))))
+            try await script(io, crypto)
+            _ = try? await io.receive()
+            await io.cancel()
+        }
+        let (events, eventContinuation) = AsyncStream.makeStream(of: RemoteMessage.self)
+        let session = try await RemoteClientSession.authenticate(
+            endpoint: .hostPort(host: .ipv4(.loopback), port: port),
+            expectedMacID: macID,
+            credential: credential,
+            deviceID: UUID(),
+            deviceName: "Test iPad",
+            event: { eventContinuation.yield($0) }
+        )
+        session.startReceiving()
+        do {
+            try await client(session, events)
+        } catch {
+            await session.close()
+            server.cancel()
+            throw error
+        }
+        await session.close()
+        eventContinuation.finish()
+        try await server.value
+    }
+
     private func start(_ listener: NWListener) async throws {
         try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
@@ -2274,6 +2957,133 @@ struct RemoteConnectionClientTests {
         guard let encrypted = packet.encrypted else { throw TestProtocolError.unexpectedMessage }
         return try crypto.open(encrypted)
     }
+}
+
+private struct HeldTransfer {
+    let macID: UUID
+    let server: PairingLoopbackServer
+    let runtime: RemoteConnectionRuntime
+    let gate: OperationGate
+    let backgroundTasks: BackgroundTaskRecorder
+    let closes: SessionCloseCounter
+    let sessionID: UUID
+    let original: Data
+    let fetch: Task<RemoteScreenshotImagePayload, any Swift.Error>
+}
+
+/// Pairs with a loopback Mac that holds its reply to the first original request until `gate` opens.
+private func makeHeldTransfer(
+    gracePeriod: Duration = .seconds(30),
+    saveGate: OperationGate? = nil
+) async throws -> HeldTransfer {
+    let macID = UUID()
+    let original = Data(repeating: 5, count: 2_048)
+    let gate = OperationGate()
+    let server = try await PairingLoopbackServer.start(
+        macID: macID,
+        code: "ABCDEFGH2345",
+        credential: Data(repeating: 75, count: 32),
+        stayConnected: true,
+        screenshotImageData: original,
+        screenshotImageGate: gate
+    )
+    let backgroundTasks = BackgroundTaskRecorder()
+    let closes = SessionCloseCounter()
+    let runtime = RemoteConnectionRuntime(
+        persistence: .inMemory(),
+        keychain: .inMemory(),
+        deviceID: UUID(),
+        closeSession: { session in
+            closes.increment()
+            await session.close()
+        },
+        backgroundTasks: backgroundTasks.client,
+        backgroundTransferGracePeriod: gracePeriod
+    )
+    _ = try await runtime.prepareAndFinalizeForTest(
+        .init(id: macID, displayName: "Studio", endpoint: server.endpoint, protocolVersion: .current),
+        code: "ABCDEFGH2345",
+        deviceName: "Test iPhone"
+    )
+    try await runtime.setScreenshotsStreaming(true)
+    let sessionID = try #require(await runtime.snapshot().authenticatedSessionID)
+    let received = LockIsolated<RemoteScreenshotImagePayload?>(nil)
+    let fetch = Task {
+        // As RemoteScreenshotImageClient does: the hold spans the fetch and the cache write.
+        _ = try await runtime.withBackgroundTransferHold {
+            let payload = try await runtime.fetchScreenshotImage(.init(
+                macID: macID,
+                request: .init(requestID: UUID(), itemID: UUID(), revision: 0)
+            ))
+            received.setValue(payload)
+            if let saveGate { await saveGate.wait() }
+            return URL(fileURLWithPath: "/tmp/held.png")
+        }
+        return try #require(received.value)
+    }
+    await gate.waitUntilEntered()
+    return HeldTransfer(
+        macID: macID,
+        server: server,
+        runtime: runtime,
+        gate: gate,
+        backgroundTasks: backgroundTasks,
+        closes: closes,
+        sessionID: sessionID,
+        original: original,
+        fetch: fetch
+    )
+}
+
+private func waitUntil(_ condition: @Sendable () async -> Bool) async -> Bool {
+    for _ in 0..<500 {
+        if await condition() { return true }
+        try? await Task.sleep(for: .milliseconds(10))
+    }
+    return await condition()
+}
+
+private final class BackgroundTaskRecorder: @unchecked Sendable {
+    struct Values: Equatable {
+        var began: Int
+        var ended: Int
+    }
+
+    private let lock = NSLock()
+    private var began = 0
+    private var ended = 0
+    private var expirations: [@Sendable () -> Void] = []
+
+    var values: Values { lock.withLock { Values(began: began, ended: ended) } }
+
+    var client: RemoteBackgroundTaskClient {
+        RemoteBackgroundTaskClient(
+            begin: { _, expired in
+                self.lock.withLock {
+                    self.began += 1
+                    self.expirations.append(expired)
+                    return RemoteBackgroundTaskClient.Token(rawValue: self.began)
+                }
+            },
+            end: { _ in self.lock.withLock { self.ended += 1 } }
+        )
+    }
+
+    /// Simulates iOS ending the allowance: the system has already ended those tasks.
+    func expireAll() {
+        let handlers = lock.withLock {
+            defer { expirations.removeAll() }
+            return expirations
+        }
+        handlers.forEach { $0() }
+    }
+}
+
+private final class SessionCloseCounter: @unchecked Sendable {
+    private let lock = NSLock()
+    private var value = 0
+    var count: Int { lock.withLock { value } }
+    func increment() { lock.withLock { value += 1 } }
 }
 
 private extension RemoteConnectionRuntime {
@@ -2428,7 +3238,10 @@ private final class PairingLoopbackServer: @unchecked Sendable {
         catalogGate: OperationGate? = nil,
         dropCommitReply: Bool = false,
         awaitOneMessageAfterCommit: Bool = false,
-        brightnessSnapshotOnSubscribe: RemoteBrightnessSnapshot? = nil
+        brightnessSnapshotOnSubscribe: RemoteBrightnessSnapshot? = nil,
+        screenshotsLibraryOnSubscribe: RemoteScreenshotLibrary? = nil,
+        screenshotImageData: Data? = nil,
+        screenshotImageGate: OperationGate? = nil
     ) async throws -> PairingLoopbackServer {
         let listener = try NWListener(using: .tcp, on: .any)
         let (connections, continuation) = AsyncStream.makeStream(
@@ -2543,6 +3356,19 @@ private final class PairingLoopbackServer: @unchecked Sendable {
                         await messages.record(message)
                         if message == .brightnessSubscriptionUpdate(true), let brightnessSnapshotOnSubscribe {
                             try await io.send(.encrypted(try sessionCrypto.seal(.brightnessSnapshot(brightnessSnapshotOnSubscribe))))
+                        }
+                        if message == .screenshotsSubscriptionUpdate(true), let screenshotsLibraryOnSubscribe {
+                            try await io.send(.encrypted(try sessionCrypto.seal(.screenshotsLibrary(screenshotsLibraryOnSubscribe))))
+                        }
+                        if case let .screenshotImageRequest(request) = message, let screenshotImageData {
+                            if let screenshotImageGate { await screenshotImageGate.wait() }
+                            for reply in try RemoteScreenshotImageEncoder.messages(
+                                request: request,
+                                contentType: "public.png",
+                                data: screenshotImageData
+                            ) {
+                                try await io.send(.encrypted(try sessionCrypto.seal(reply)))
+                            }
                         }
                     }
                 } else if awaitOneMessageAfterCommit {
@@ -2963,6 +3789,11 @@ private actor ReconnectStartRecorder {
         guard count < expected else { return }
         await withCheckedContinuation { waiters.append((expected, $0)) }
     }
+}
+
+private actor ScreenshotCacheRemovalRecorder {
+    private(set) var values: [UUID] = []
+    func record(_ value: UUID) { values.append(value) }
 }
 
 private actor ForgetOperationRecorder {

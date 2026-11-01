@@ -364,6 +364,138 @@ struct RemoteHostIntegrationTests {
         await client.close()
     }
 
+    @Test(.timeLimit(.minutes(1)))
+    func screenshotsSubscriptionStreamsLibraryAndCancelsOnUnsubscribe() async throws {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let library = RemoteScreenshotLibrary(revision: 1, isCollectionEnabled: true, items: [Self.screenshotItem])
+        let probe = SystemMonitorStreamProbe()
+        let (stream, continuation) = AsyncStream.makeStream(of: RemoteScreenshotLibrary.self)
+        continuation.onTermination = { _ in Task { await probe.recordCancellation() } }
+        var service = RemoteScreenshotsService.unavailable
+        service.libraries = { stream }
+        let host = RemoteHost.testing(catalog: [], router: router, pairingCode: "ABCDEFGH2345", screenshots: service)
+        let endpoint = try await host.startForTesting(port: 0)
+        defer { continuation.finish(); Task { await host.stop() } }
+        let client = try await RemoteHostTestClient.connect(to: endpoint, version: .init(major: 1, minor: 9))
+        try await client.pair(code: "ABCDEFGH2345")
+
+        try await client.sendMessage(.screenshotsSubscriptionUpdate(true))
+        continuation.yield(library)
+        #expect(try await client.nextMessage() == .screenshotsLibrary(library))
+        try await client.sendMessage(.screenshotsSubscriptionUpdate(false))
+        await probe.waitForCancellation()
+        await client.close()
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func screenshotsLibraryStreamCancelsOnSessionEnd() async throws {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let library = RemoteScreenshotLibrary(revision: 1, isCollectionEnabled: true, items: [Self.screenshotItem])
+        let probe = SystemMonitorStreamProbe()
+        let (stream, continuation) = AsyncStream.makeStream(of: RemoteScreenshotLibrary.self)
+        continuation.onTermination = { _ in Task { await probe.recordCancellation() } }
+        var service = RemoteScreenshotsService.unavailable
+        service.libraries = { stream }
+        let host = RemoteHost.testing(catalog: [], router: router, pairingCode: "ABCDEFGH2345", screenshots: service)
+        let endpoint = try await host.startForTesting(port: 0)
+        defer { continuation.finish(); Task { await host.stop() } }
+        let client = try await RemoteHostTestClient.connect(to: endpoint, version: .init(major: 1, minor: 9))
+        try await client.pair(code: "ABCDEFGH2345")
+
+        try await client.sendMessage(.screenshotsSubscriptionUpdate(true))
+        continuation.yield(library)
+        #expect(try await client.nextMessage() == .screenshotsLibrary(library))
+        await client.close()
+        await probe.waitForCancellation()
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func screenshotRequestsBeforeSubscribingFailWithoutClosingSession() async throws {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let deleted = OSAllocatedUnfairLock<[[UUID]]>(initialState: [])
+        var service = RemoteScreenshotsService.unavailable
+        service.delete = { ids in deleted.withLock { $0.append(ids) }; return [] }
+        let host = RemoteHost.testing(catalog: [], router: router, pairingCode: "ABCDEFGH2345", screenshots: service)
+        let endpoint = try await host.startForTesting(port: 0)
+        defer { Task { await host.stop() } }
+        let client = try await RemoteHostTestClient.connect(to: endpoint, version: .init(major: 1, minor: 9))
+        try await client.pair(code: "ABCDEFGH2345")
+        let requestID = UUID()
+
+        try await client.sendMessage(.screenshotDeleteRequest(.init(requestID: requestID, ids: [Self.screenshotItem.id])))
+        guard case let .screenshotRequestFailed(failure) = try await client.nextMessage() else {
+            Issue.record("Expected a request failure"); return
+        }
+        #expect(failure.requestID == requestID)
+        #expect(deleted.withLock { $0 }.isEmpty)
+        try await client.sendMessage(.ping(7))
+        #expect(try await client.nextMessage() == .pong(7))
+        await client.close()
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func screenshotThumbnailImageAndDeleteRepliesCarryRequestIDs() async throws {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let item = Self.screenshotItem
+        let thumbnail = try RemoteScreenshotThumbnail(itemID: item.id, revision: item.revision, jpegData: Data([1, 2, 3]))
+        let original = Data(repeating: 5, count: RemoteScreenshotLimits.maximumChunkBytes + 3)
+        let (libraryStream, libraryContinuation) = AsyncStream.makeStream(of: RemoteScreenshotLibrary.self)
+        let service = RemoteScreenshotsService(
+            libraries: { libraryStream },
+            thumbnails: { ids in ([thumbnail], ids.filter { $0 != item.id }) },
+            image: { id, revision async throws(RemoteProtocolError) in
+                guard id == item.id, revision == item.revision else { throw .init(code: .controlNotFound, message: "gone") }
+                return ("public.png", original)
+            },
+            delete: { _ in [] }
+        )
+        let host = RemoteHost.testing(catalog: [], router: router, pairingCode: "ABCDEFGH2345", screenshots: service)
+        let endpoint = try await host.startForTesting(port: 0)
+        defer { libraryContinuation.finish(); Task { await host.stop() } }
+        let client = try await RemoteHostTestClient.connect(to: endpoint, version: .init(major: 1, minor: 9))
+        try await client.pair(code: "ABCDEFGH2345")
+        try await client.sendMessage(.screenshotsSubscriptionUpdate(true))
+
+        let other = UUID()
+        let thumbnailsID = UUID()
+        try await client.sendMessage(.screenshotThumbnailsRequest(.init(requestID: thumbnailsID, ids: [item.id, other])))
+        #expect(try await client.nextMessage() == .screenshotThumbnailsResult(.init(requestID: thumbnailsID, thumbnails: [thumbnail], missingIDs: [other])))
+
+        let imageRequest = RemoteScreenshotImageRequest(requestID: UUID(), itemID: item.id, revision: item.revision)
+        try await client.sendMessage(.screenshotImageRequest(imageRequest))
+        let expected = try RemoteScreenshotImageEncoder.messages(request: imageRequest, contentType: "public.png", data: original)
+        #expect(expected.count == 3)
+        for message in expected { #expect(try await client.nextMessage() == message) }
+
+        let staleRequest = RemoteScreenshotImageRequest(requestID: UUID(), itemID: item.id, revision: item.revision + 1)
+        try await client.sendMessage(.screenshotImageRequest(staleRequest))
+        #expect(try await client.nextMessage() == .screenshotRequestFailed(.init(requestID: staleRequest.requestID, error: .init(code: .controlNotFound, message: "gone"))))
+
+        let deleteID = UUID()
+        try await client.sendMessage(.screenshotDeleteRequest(.init(requestID: deleteID, ids: [item.id])))
+        #expect(try await client.nextMessage() == .screenshotDeleteResult(.init(requestID: deleteID, failedIDs: [])))
+        await client.close()
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func screenshotMessagesFromOneEightPeerCloseSession() async throws {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let host = RemoteHost.testing(catalog: [], router: router, pairingCode: "ABCDEFGH2345")
+        let endpoint = try await host.startForTesting(port: 0)
+        defer { Task { await host.stop() } }
+        let client = try await RemoteHostTestClient.connect(to: endpoint, version: .init(major: 1, minor: 8))
+        try await client.pair(code: "ABCDEFGH2345")
+        try await client.sendMessage(.screenshotsSubscriptionUpdate(true))
+        await #expect(throws: (any Error).self) { _ = try await client.nextMessage() }
+        await client.close()
+    }
+
+    private static let screenshotItem = RemoteScreenshotItem(
+        id: UUID(uuidString: "00000000-0000-0000-0000-00000000C001")!,
+        fileName: "Screenshot.png", contentType: "public.png",
+        createdAt: Date(timeIntervalSince1970: 1_800_000_000), isPinned: false, revision: 1, byteCount: 10
+    )
+
     private static func soundMixerSnapshot(revision: UInt64) -> RemoteSoundMixerSnapshot {
         RemoteSoundMixerSnapshot(revision: revision, isEnabled: true, systemVolume: 50, output: nil, apps: [])
     }

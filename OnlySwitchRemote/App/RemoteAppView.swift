@@ -44,6 +44,13 @@ struct RemoteAppView: View {
                                     .ignoresSafeArea(edges: .bottom)
                                     .tag(RemoteAppPage.brightness)
                             }
+                            if store.tabConfiguration.showsScreenshots {
+                                RemotePlusGateView(accessStore: plusAccessStore) {
+                                    RemoteScreenshotsView(store: store.scope(state: \.screenshots, action: \.screenshots))
+                                }
+                                    .ignoresSafeArea(edges: .bottom)
+                                    .tag(RemoteAppPage.screenshots)
+                            }
                             if store.tabConfiguration.showsCodexUsage {
                                 RemoteCodexUsageView(store: store.scope(state: \.codexUsage, action: \.codexUsage))
                                     .ignoresSafeArea(edges: .bottom)
@@ -148,6 +155,7 @@ struct RemoteAppView: View {
         .sheet(item: $store.scope(state: \.$paywall, action: \.paywall)) { paywallStore in
             RemotePaywallView(store: paywallStore)
         }
+        .modifier(RemoteScreenshotDetailPresentation(store: store.scope(state: \.screenshots, action: \.screenshots)))
         .safeAreaInset(edge: .top, spacing: 0) {
             if let issue = store.rootIssue {
                 HStack(alignment: .top, spacing: 12) {

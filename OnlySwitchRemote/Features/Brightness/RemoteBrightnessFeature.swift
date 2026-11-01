@@ -124,7 +124,7 @@ struct RemoteBrightnessFeature {
             guard id == state.selectedMacID else { return .none }
             return resetTransientState(&state, connectionState: .revoked)
         case .persistenceRestored, .catalog, .catalogInvalidated, .statusSnapshot, .status, .action,
-             .soundMixer, .systemMonitor, .aphroditeLibraryChanged:
+             .soundMixer, .systemMonitor, .screenshots, .aphroditeLibraryChanged:
             return .none
         }
     }

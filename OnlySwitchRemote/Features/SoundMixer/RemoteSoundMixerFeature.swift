@@ -202,7 +202,7 @@ struct RemoteSoundMixerFeature {
             guard id == state.selectedMacID else { return .none }
             return resetTransientState(&state, connectionState: .revoked)
         case .persistenceRestored, .catalog, .catalogInvalidated, .statusSnapshot, .status, .action,
-             .systemMonitor, .brightness, .aphroditeLibraryChanged:
+             .systemMonitor, .brightness, .screenshots, .aphroditeLibraryChanged:
             return .none
         }
     }

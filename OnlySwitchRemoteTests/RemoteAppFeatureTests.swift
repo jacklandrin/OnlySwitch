@@ -24,6 +24,7 @@ struct RemoteAppFeatureTests {
         }
         await store.receive(.soundMixer(.entitlementChanged(true))) { $0.soundMixer.isEntitled = true }
         await store.receive(.brightness(.entitlementChanged(true))) { $0.brightness.isEntitled = true }
+        await store.receive(.screenshots(.entitlementChanged(true))) { $0.screenshots.isEntitled = true }
         await store.receive(.paywall(.presented(.authoritativeEntitlementUpdated(.active(expirationDate: nil))))) {
             $0.paywall?.entitlementGeneration = 1
         }
@@ -46,6 +47,7 @@ struct RemoteAppFeatureTests {
         }
         await store.receive(.soundMixer(.entitlementChanged(true))) { $0.soundMixer.isEntitled = true }
         await store.receive(.brightness(.entitlementChanged(true))) { $0.brightness.isEntitled = true }
+        await store.receive(.screenshots(.entitlementChanged(true))) { $0.screenshots.isEntitled = true }
         await store.receive(.paywall(.presented(.authoritativeEntitlementUpdated(.active(expirationDate: nil))))) {
             $0.paywall?.entitlementGeneration = 1
         }
@@ -67,6 +69,7 @@ struct RemoteAppFeatureTests {
         }
         await store.receive(.soundMixer(.entitlementChanged(true))) { $0.soundMixer.isEntitled = true }
         await store.receive(.brightness(.entitlementChanged(true))) { $0.brightness.isEntitled = true }
+        await store.receive(.screenshots(.entitlementChanged(true))) { $0.screenshots.isEntitled = true }
         await store.receive(.paywall(.presented(.authoritativeEntitlementUpdated(.active(expirationDate: nil))))) {
             $0.paywall?.entitlementGeneration = 1
         }
@@ -143,7 +146,7 @@ struct RemoteAppFeatureTests {
         #expect(store.state.paywall == nil)
     }
 
-    @Test(arguments: [RemoteAppPage.soundMixer, .brightness, .aphrodite])
+    @Test(arguments: [RemoteAppPage.soundMixer, .brightness, .screenshots, .aphrodite])
     func selectingPlusPageRefreshesPlusAccess(page: RemoteAppPage) async {
         let store = TestStore(initialState: RemoteAppFeature.State(hasCompletedInitialSetup: true, tabConfiguration: .init())) {
             RemoteAppFeature()
@@ -157,6 +160,9 @@ struct RemoteAppFeatureTests {
         }
         if page == .brightness {
             await store.receive(.brightness(.visibilityChanged(true))) { $0.brightness.isVisible = true }
+        }
+        if page == .screenshots {
+            await store.receive(.screenshots(.visibilityChanged(true))) { $0.screenshots.isVisible = true }
         }
         await store.receive(.codexUsage(.visibilityChanged(false)))
         await store.receive(.claudeUsage(.visibilityChanged(false)))
@@ -233,14 +239,333 @@ struct RemoteAppFeatureTests {
         #expect(streaming.value == [true, false])
     }
 
+    @Test func screenshotsStreamsOnlyWhileVisibleForegroundedAndEntitled() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true, tabConfiguration: .init())
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.connectedMacIDs = [studio.id]
+        state.screenshots.selectedMacID = studio.id
+        state.screenshots.connectionState = .authenticated
+        let streaming = LockIsolated<[Bool]>([])
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remoteConnection.setScreenshotsStreaming = { enabled in streaming.withValue { $0.append(enabled) } }
+            $0.remoteConnection.setForegrounded = { _ in }
+            $0.remoteIdleTimer.setIdleTimerDisabled = { _ in }
+            $0.remoteSubscription.currentEntitlement = { .active(expirationDate: nil) }
+        }
+        store.exhaustivity = .off
+
+        await store.send(.pageSelected(.screenshots))
+        await store.receive(.screenshots(.visibilityChanged(true)))
+        await store.receive(.screenshots(.entitlementChanged(true)))
+        await store.receive(.screenshots(.streamingResponse(.success(true))))
+        #expect(store.state.screenshots.isStreaming)
+        #expect(store.state.brightness.isVisible == false)
+        #expect(store.state.soundMixer.isVisible == false)
+
+        let library = RemoteScreenshotLibrary(revision: 1, isCollectionEnabled: true, items: [])
+        await store.send(.connectionEvent(.screenshots(studio.id, library)))
+        await store.receive(.screenshots(.connectionEvent(.screenshots(studio.id, library))))
+        #expect(store.state.screenshots.library == library)
+        #expect(store.state.screenshots.hasLiveLibrary)
+
+        await store.send(.scenePhaseChanged(false))
+        await store.receive(.screenshots(.visibilityChanged(false)))
+        await store.finish()
+        #expect(store.state.screenshots.isStreaming == false)
+        #expect(streaming.value == [true, false])
+    }
+
+    @Test func selectingScreenshotsMakesItVisibleAndRefreshesPlus() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true, tabConfiguration: .init())
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.connectedMacIDs = [studio.id]
+        state.screenshots.selectedMacID = studio.id
+        state.screenshots.connectionState = .authenticated
+        // Exhaustive: a non-subscriber never subscribes (the unimplemented stream would report back).
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remoteSubscription.currentEntitlement = { .inactive }
+        }
+        await store.send(.pageSelected(.screenshots)) { $0.selectedPage = .screenshots }
+        await store.receive(.systemMonitor(.visibilityChanged(false)))
+        await store.receive(.screenshots(.visibilityChanged(true))) { $0.screenshots.isVisible = true }
+        await store.receive(.codexUsage(.visibilityChanged(false)))
+        await store.receive(.claudeUsage(.visibilityChanged(false)))
+        await store.receive(.plusAccess(.refresh)) { $0.plusAccess.refreshGeneration = 1 }
+        await store.receive(.plusAccess(.entitlementResponse(1, .inactive)))
+        #expect(store.state.showsPaywallBackground(for: .screenshots))
+        #expect(store.state.screenshots.isStreamRequested == false)
+        #expect(store.state.screenshots.isStreaming == false)
+    }
+
+    @Test func entitlementChangesAreForwardedToScreenshots() async {
+        let store = TestStore(initialState: RemoteAppFeature.State(hasCompletedInitialSetup: true)) { RemoteAppFeature() }
+        await store.send(.plusAccess(.entitlementUpdated(.active(expirationDate: nil)))) {
+            $0.plusAccess.entitlement = .active(expirationDate: nil)
+            $0.plusAccess.paywall.entitlement = .active(expirationDate: nil)
+            $0.plusAccess.refreshGeneration = 1
+        }
+        await store.receive(.soundMixer(.entitlementChanged(true))) { $0.soundMixer.isEntitled = true }
+        await store.receive(.brightness(.entitlementChanged(true))) { $0.brightness.isEntitled = true }
+        await store.receive(.screenshots(.entitlementChanged(true))) { $0.screenshots.isEntitled = true }
+
+        await store.send(.plusAccess(.entitlementUpdated(.inactive))) {
+            $0.plusAccess.entitlement = .inactive
+            $0.plusAccess.paywall.entitlement = .inactive
+            $0.plusAccess.refreshGeneration = 2
+        }
+        await store.receive(.soundMixer(.entitlementChanged(false))) { $0.soundMixer.isEntitled = false }
+        await store.receive(.brightness(.entitlementChanged(false))) { $0.brightness.isEntitled = false }
+        await store.receive(.screenshots(.entitlementChanged(false))) { $0.screenshots.isEntitled = false }
+    }
+
+    @Test func backgroundingHidesScreenshots() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true, tabConfiguration: .init())
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.connectedMacIDs = [studio.id]
+        state.selectedPage = .screenshots
+        state.screenshots.selectedMacID = studio.id
+        state.screenshots.connectionState = .authenticated
+        state.screenshots.isVisible = true
+        state.screenshots.isEntitled = true
+        state.screenshots.isStreamRequested = true
+        state.screenshots.isStreaming = true
+        let streaming = LockIsolated<[Bool]>([])
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remoteConnection.setScreenshotsStreaming = { enabled in streaming.withValue { $0.append(enabled) } }
+            $0.remoteConnection.setForegrounded = { _ in }
+            $0.remoteIdleTimer.setIdleTimerDisabled = { _ in }
+        }
+        store.exhaustivity = .off
+
+        await store.send(.scenePhaseChanged(false))
+        await store.receive(.screenshots(.visibilityChanged(false)))
+        await store.finish()
+        #expect(store.state.screenshots.isVisible == false)
+        #expect(store.state.screenshots.isStreamRequested == false)
+        #expect(store.state.screenshots.isStreaming == false)
+        #expect(streaming.value == [false])
+    }
+
+    @Test func backgroundingDuringAScreenshotDragDownloadKeepsItsSubscriptionUntilItFinishes() async {
+        let item = RemoteScreenshotItem(
+            id: UUID(uuidString: "00000000-0000-0000-0000-0000000005D1")!,
+            fileName: "Shot.png",
+            contentType: "public.png",
+            createdAt: Date(timeIntervalSince1970: 1_800_000_000),
+            isPinned: false,
+            revision: 0,
+            byteCount: 3
+        )
+        let originalURL = URL(fileURLWithPath: "/tmp/Shot.png")
+        let clock = TestClock()
+        let streaming = LockIsolated<[Bool]>([])
+        let foregrounded = LockIsolated<[Bool]>([])
+        let store = TestStore(initialState: screenshotsStreamingState(items: [item])) { RemoteAppFeature() } withDependencies: {
+            $0.remoteConnection.setScreenshotsStreaming = { enabled in streaming.withValue { $0.append(enabled) } }
+            $0.remoteConnection.setForegrounded = { value in foregrounded.withValue { $0.append(value) } }
+            $0.remoteIdleTimer.setIdleTimerDisabled = { _ in }
+            $0.remoteScreenshotImages.load = { _, _ in
+                try await clock.sleep(for: .seconds(5))
+                return originalURL
+            }
+            $0.continuousClock = clock
+        }
+        store.exhaustivity = .off
+
+        await store.send(.screenshots(.dragStarted(item.id)))
+        await store.send(.scenePhaseChanged(false))
+        await store.receive(.screenshots(.visibilityChanged(false)))
+        await store.receive(.lifecycleResponse(1))
+        #expect(store.state.screenshots.isVisible == false)
+        #expect(store.state.screenshots.isHoldingTransfers)
+        #expect(store.state.screenshots.isStreamRequested)
+        #expect(streaming.value.isEmpty)
+        #expect(foregrounded.value == [false])
+
+        await clock.advance(by: .seconds(5))
+        await store.receive(.screenshots(.imageLoaded(generation: 0, itemID: item.id, originalURL)))
+        await store.finish()
+        #expect(store.state.screenshots.imageURLs[item.id] == originalURL)
+        #expect(store.state.screenshots.isHoldingTransfers == false)
+        #expect(store.state.screenshots.isStreamRequested == false)
+        #expect(streaming.value == [false])
+    }
+
+    @Test func foregroundingDuringTheScreenshotTransferHoldResumesWithoutResubscribing() async {
+        let item = RemoteScreenshotItem(
+            id: UUID(uuidString: "00000000-0000-0000-0000-0000000005D2")!,
+            fileName: "Shot.png",
+            contentType: "public.png",
+            createdAt: Date(timeIntervalSince1970: 1_800_000_000),
+            isPinned: false,
+            revision: 0,
+            byteCount: 3
+        )
+        let originalURL = URL(fileURLWithPath: "/tmp/Shot.png")
+        let clock = TestClock()
+        let streaming = LockIsolated<[Bool]>([])
+        let foregrounded = LockIsolated<[Bool]>([])
+        let store = TestStore(initialState: screenshotsStreamingState(items: [item])) { RemoteAppFeature() } withDependencies: {
+            $0.remoteConnection.setScreenshotsStreaming = { enabled in streaming.withValue { $0.append(enabled) } }
+            $0.remoteConnection.setForegrounded = { value in foregrounded.withValue { $0.append(value) } }
+            $0.remoteIdleTimer.setIdleTimerDisabled = { _ in }
+            $0.remoteScreenshotImages.load = { _, _ in
+                try await clock.sleep(for: .seconds(5))
+                return originalURL
+            }
+            $0.continuousClock = clock
+        }
+        store.exhaustivity = .off
+
+        await store.send(.screenshots(.dragStarted(item.id)))
+        await store.send(.scenePhaseChanged(false))
+        await store.receive(.screenshots(.visibilityChanged(false)))
+        await store.send(.scenePhaseChanged(true))
+        await store.receive(.screenshots(.visibilityChanged(true)))
+        #expect(store.state.screenshots.isVisible)
+        #expect(store.state.screenshots.isHoldingTransfers == false)
+        #expect(store.state.screenshots.isStreamRequested)
+
+        await clock.advance(by: .seconds(40))
+        await store.receive(.screenshots(.imageLoaded(generation: 0, itemID: item.id, originalURL)))
+        await store.finish()
+        #expect(store.state.screenshots.isStreamRequested)
+        #expect(store.state.screenshots.isStreaming)
+        #expect(streaming.value.isEmpty)
+        #expect(foregrounded.value == [false, true])
+    }
+
+    private func screenshotsStreamingState(items: [RemoteScreenshotItem]) -> RemoteAppFeature.State {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true, tabConfiguration: .init())
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.connectedMacIDs = [studio.id]
+        state.selectedPage = .screenshots
+        state.screenshots.selectedMacID = studio.id
+        state.screenshots.connectionState = .authenticated
+        state.screenshots.isVisible = true
+        state.screenshots.isEntitled = true
+        state.screenshots.isStreamRequested = true
+        state.screenshots.isStreaming = true
+        state.screenshots.hasLiveLibrary = true
+        state.screenshots.isLibrarySaved = true
+        state.screenshots.library = .init(revision: 1, isCollectionEnabled: true, items: items)
+        state.screenshots.thumbnailURLs = Dictionary(uniqueKeysWithValues: items.map { ($0.id, URL(fileURLWithPath: "/tmp/thumb.jpg")) })
+        return state
+    }
+
+    @Test func changingMacResetsScreenshotsState() async {
+        let item = RemoteScreenshotItem(
+            id: UUID(uuidString: "00000000-0000-0000-0000-0000000005C1")!,
+            fileName: "Shot.png",
+            contentType: "public.png",
+            createdAt: Date(timeIntervalSince1970: 1_800_000_000),
+            isPinned: false,
+            revision: 0,
+            byteCount: 3
+        )
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true, tabConfiguration: .init())
+        state.pairedMacs = [studio, laptop]
+        state.selectedMacID = studio.id
+        state.connectedMacIDs = [studio.id]
+        state.screenshots.selectedMacID = studio.id
+        state.screenshots.connectionState = .authenticated
+        state.screenshots.library = .init(revision: 3, isCollectionEnabled: true, items: [item])
+        state.screenshots.hasLiveLibrary = true
+        state.screenshots.thumbnailURLs = [item.id: URL(fileURLWithPath: "/tmp/thumb.jpg")]
+        state.screenshots.imageURLs = [item.id: URL(fileURLWithPath: "/tmp/Shot.png")]
+        state.screenshots.selectedItemID = item.id
+        state.screenshots.pendingDeleteItemID = item.id
+        state.screenshots.availabilityMessage = "Old"
+        state.screenshots.operationError = "Old"
+        state.screenshots.isStreamRequested = true
+        state.screenshots.isStreaming = true
+        state.screenshots.cacheGeneration = 4
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remoteConnection.select = { _ in }
+            $0.remotePersistence.saveAppState = { _ in }
+            $0.remotePersistence.loadSystemMonitorLayout = { _ in nil }
+            $0.remotePersistence.loadAphroditeLibrary = { _ in nil }
+        }
+        store.exhaustivity = .off
+
+        await store.send(.macSelected(laptop.id))
+        await store.receive(.screenshots(.contextChanged(macID: laptop.id, connectionState: .offline(nil))))
+        let screenshots = store.state.screenshots
+        #expect(screenshots.selectedMacID == laptop.id)
+        #expect(screenshots.connectionState == .offline(nil))
+        #expect(screenshots.library == nil)
+        #expect(screenshots.hasLiveLibrary == false)
+        #expect(screenshots.thumbnailURLs.isEmpty)
+        #expect(screenshots.imageURLs.isEmpty)
+        #expect(screenshots.selectedItemID == nil)
+        #expect(screenshots.pendingDeleteItemID == nil)
+        #expect(screenshots.availabilityMessage == nil)
+        #expect(screenshots.operationError == nil)
+        #expect(screenshots.isStreamRequested == false)
+        #expect(screenshots.isStreaming == false)
+        #expect(screenshots.cacheGeneration == 5)
+    }
+
+    @Test func hiddenScreenshotsFollowsTheRootConnectionState() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true, tabConfiguration: .init())
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.screenshots.selectedMacID = studio.id
+        state.screenshots.connectionState = .offline(nil)
+        let mac = studio
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.loadPairedMacs = { [mac] }
+        }
+        store.exhaustivity = .off
+
+        await store.send(.connectionEvent(.authenticated(studio.id)))
+        await store.receive(.screenshots(.contextChanged(macID: studio.id, connectionState: .authenticated)))
+        #expect(store.state.screenshots.connectionState == .authenticated)
+
+        await store.send(.connectionEvent(.offline(studio.id, "Lost")))
+        await store.receive(.screenshots(.contextChanged(macID: studio.id, connectionState: .offline(nil))))
+        #expect(store.state.screenshots.connectionState == .offline(nil))
+    }
+
+    @Test func visibleScreenshotsReceivesItsMacEventsDirectly() async {
+        let library = RemoteScreenshotLibrary(revision: 1, isCollectionEnabled: true, items: [])
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true, tabConfiguration: .init())
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.connectedMacIDs = [studio.id]
+        state.selectedPage = .screenshots
+        state.screenshots.selectedMacID = studio.id
+        state.screenshots.connectionState = .authenticated
+        state.screenshots.isVisible = true
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+
+        // Not streaming: the library is ignored, but it reaches the child rather than the dashboard.
+        await store.send(.connectionEvent(.screenshots(studio.id, library))) { $0.connectionEventRevision = 1 }
+        await store.receive(.screenshots(.connectionEvent(.screenshots(studio.id, library))))
+
+        store.exhaustivity = .off
+        await store.send(.connectionEvent(.connecting(studio.id)))
+        await store.receive(.screenshots(.connectionEvent(.connecting(studio.id))))
+        await store.finish()
+        // No root `.contextChanged(.offline)` follows: it would reset again (generation 2, offline).
+        #expect(store.state.screenshots.cacheGeneration == 1)
+        #expect(store.state.screenshots.connectionState == .connecting)
+    }
+
     @Test func paywallBackgroundShowsOnlyForPlusPagesWithoutAccess() {
         var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
         state.plusAccess.entitlement = .inactive
         #expect(state.showsPaywallBackground(for: .brightness))
+        #expect(state.showsPaywallBackground(for: .screenshots))
         #expect(state.showsPaywallBackground(for: .soundMixer))
         #expect(state.showsPaywallBackground(for: .controls) == false)
         state.plusAccess.entitlement = .active(expirationDate: nil)
         #expect(state.showsPaywallBackground(for: .brightness) == false)
+        #expect(state.showsPaywallBackground(for: .screenshots) == false)
     }
 
     @Test func pageSelectionSynchronizesMonitorVisibilityWithSwipeablePages() async {
@@ -770,6 +1095,11 @@ struct RemoteAppFeatureTests {
                 $0.path[id: pathID] = .controlsConfiguration(settings)
             }
         }
+        await store.receive(.screenshots(.contextChanged(macID: studio.id, connectionState: .authenticated))) {
+            $0.screenshots.selectedMacID = studio.id
+            $0.screenshots.connectionState = .authenticated
+            $0.screenshots.cacheGeneration = 1
+        }
         await gate.waitUntilEntered()
         let intent = RemoteAppPersistenceIntent(
             writerID: store.state.persistenceWriterID,
@@ -823,6 +1153,11 @@ struct RemoteAppFeatureTests {
                 settings.connectionStatuses[laptop.id] = .connected
                 $0.path[id: pathID] = .controlsConfiguration(settings)
             }
+        }
+        await store.receive(.screenshots(.contextChanged(macID: laptop.id, connectionState: .authenticated))) {
+            $0.screenshots.selectedMacID = laptop.id
+            $0.screenshots.connectionState = .authenticated
+            $0.screenshots.cacheGeneration = 1
         }
         await gate.waitUntilEntered()
         await store.send(.path(.element(id: pathID, action: .controlsConfiguration(.delegate(.macForgotten(studio.id)))))) {
@@ -1788,6 +2123,47 @@ struct RemoteAppFeatureTests {
         await store.finish()
     }
 
+    @Test(.timeLimit(.minutes(1)))
+    func reviewDemoScreenshotsUseDemoImagesAndCacheInsteadOfProductionOnes() async throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("ReviewDemoShellScreenshots-\(UUID().uuidString)", isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let productionCalls = LockIsolated(0)
+        let store = TestStore(
+            initialState: RemoteAppShellFeature.State(production: .init(hasCompletedInitialSetup: false))
+        ) {
+            RemoteAppShellFeature(screenshotCache: .live(root: root))
+        } withDependencies: {
+            $0.remoteScreenshotImages = RemoteScreenshotImageClient { _, _ in
+                productionCalls.withValue { $0 += 1 }
+                throw RemoteDependencyError.unimplemented
+            }
+            $0.remoteScreenshotCache.load = { _ in
+                productionCalls.withValue { $0 += 1 }
+                return nil
+            }
+            $0.remoteScreenshotCache.saveImage = { _, _, _ in
+                productionCalls.withValue { $0 += 1 }
+                throw RemoteDependencyError.unimplemented
+            }
+        }
+        await store.send(.exploreDemoTapped)
+        await store.receive(.reviewDemoReady) { $0.reviewDemo = .init() }
+        store.exhaustivity = .off(showSkippedAssertions: false)
+        await store.send(.reviewDemo(.presented(.app(.screenshots(.visibilityChanged(true))))))
+
+        let macID = RemoteReviewDemoRuntime.studioMacID
+        let item = try #require(RemoteReviewDemoRuntime.makeScreenshotLibrary().items.first)
+        let images = try #require(store.state.reviewDemo?.app.screenshots.dragImages.client)
+        let url = try await images.load(macID, item)
+
+        #expect(url.standardizedFileURL.path.hasPrefix(root.standardizedFileURL.path + "/"))
+        #expect(productionCalls.value == 0)
+        await store.send(.reviewDemo(.presented(.exitTapped)))
+        await store.finish()
+        #expect(FileManager.default.fileExists(atPath: url.path) == false)
+    }
+
     @Test func exitingDemoDismissesOnlyThePresentationAndKeepsProductionStateUntouched() async {
         var production = RemoteAppFeature.State(hasCompletedInitialSetup: true)
         production.pairedMacs = [studio, laptop]
@@ -2007,7 +2383,7 @@ struct RemoteAppTabConfigurationTests {
         await store.send(.pageSelected(page))
     }
 
-    @Test(arguments: [RemoteAppPage.soundMixer, .brightness, .aphrodite])
+    @Test(arguments: [RemoteAppPage.soundMixer, .brightness, .screenshots, .aphrodite])
     func hidingSelectedPlusTabReturnsToControls(page: RemoteAppPage) async {
         var state = RemoteAppFeature.State(hasCompletedInitialSetup: true, tabConfiguration: .init())
         state.selectedPage = page

@@ -401,7 +401,7 @@ struct DashboardFeature {
         case let .connecting(id), let .authenticated(id), let .offline(id, _), let .revoked(id),
              let .sessionStarted(id, _), let .catalog(id, _, _), let .catalogInvalidated(id, _),
              let .statusSnapshot(id, _), let .status(id, _), let .action(id, _), let .soundMixer(id, _),
-             let .systemMonitor(id, _), let .brightness(id, _), let .aphroditeLibraryChanged(id, _):
+             let .systemMonitor(id, _), let .brightness(id, _), let .screenshots(id, _), let .aphroditeLibraryChanged(id, _):
             macID = id
         }
         guard macID == state.selectedMacID else { return .none }
@@ -474,7 +474,7 @@ struct DashboardFeature {
                 response: .success(result),
                 state: &state
             )
-        case .soundMixer, .systemMonitor, .brightness, .aphroditeLibraryChanged:
+        case .soundMixer, .systemMonitor, .brightness, .screenshots, .aphroditeLibraryChanged:
             return .none
         }
         return .none

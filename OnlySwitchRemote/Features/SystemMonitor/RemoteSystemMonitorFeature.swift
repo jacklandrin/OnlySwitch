@@ -107,7 +107,8 @@ struct RemoteSystemMonitorFeature {
                 case let .sessionStarted(id, _):
                     guard id == state.selectedMacID else { return .none }
                     resetTransientState(&state, connectionState: .connecting)
-                case .persistenceRestored, .catalog, .catalogInvalidated, .statusSnapshot, .status, .action, .soundMixer, .brightness, .aphroditeLibraryChanged:
+                case .persistenceRestored, .catalog, .catalogInvalidated, .statusSnapshot, .status, .action, .soundMixer, .brightness,
+                     .screenshots, .aphroditeLibraryChanged:
                     return .none
                 }
                 return .cancel(id: CancelID.streaming)

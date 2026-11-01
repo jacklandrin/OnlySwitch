@@ -1,5 +1,7 @@
 import ComposableArchitecture
 import Foundation
+import RemoteCore
+import SwiftUI
 import Testing
 @testable import OnlySwitchRemote
 
@@ -10,6 +12,53 @@ struct RemoteAppSmokeTests {
         #expect(state.requiresSetup)
         #expect(state.path.isEmpty)
         #expect(state.requiredGlobalSettings != nil)
+    }
+
+    @Test func screenshotsViewRendersEveryState() {
+        let item = RemoteScreenshotItem(
+            id: UUID(),
+            fileName: "a.png",
+            contentType: "public.png",
+            createdAt: .now,
+            isPinned: true,
+            revision: 0,
+            byteCount: 3
+        )
+        var empty = RemoteScreenshotsFeature.State()
+        empty.selectedMacID = UUID()
+        empty.connectionState = .authenticated
+        empty.library = .init(revision: 1, isCollectionEnabled: false, items: [])
+        var populated = empty
+        populated.library = .init(revision: 2, isCollectionEnabled: true, items: [item])
+        populated.isStreaming = true
+        populated.hasLiveLibrary = true
+        var offline = populated
+        offline.connectionState = .offline(nil)
+        offline.isStreaming = false
+        offline.hasLiveLibrary = false
+        var upgrade = empty
+        upgrade.library = nil
+        upgrade.availabilityMessage = "This Mac needs a newer OnlySwitch version to use Screenshots."
+        var connecting = empty
+        connecting.library = nil
+        var busy = populated
+        busy.downloadingItemIDs = [item.id]
+        busy.loadingThumbnailIDs = [item.id]
+        busy.copiedItemID = item.id
+        busy.pendingDeleteItemID = item.id
+        busy.operationError = "The screenshot could not be copied."
+        var detail = offline
+        detail.selectedItemID = item.id
+        let states = [RemoteScreenshotsFeature.State(), empty, populated, offline, upgrade, connecting, busy, detail]
+        for state in states {
+            let store = Store(initialState: state) { RemoteScreenshotsFeature() }
+            let grid = UIHostingController(rootView: RemoteScreenshotsView(store: store))
+            grid.view.frame = CGRect(x: 0, y: 0, width: 390, height: 844)
+            grid.view.layoutIfNeeded()
+            let viewer = UIHostingController(rootView: RemoteScreenshotDetailView(store: store))
+            viewer.view.frame = CGRect(x: 0, y: 0, width: 390, height: 844)
+            viewer.view.layoutIfNeeded()
+        }
     }
 
     @Test func reviewDemoWalkthroughDeclaresEveryReviewerScreen() {
