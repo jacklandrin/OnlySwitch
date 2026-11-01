@@ -20,7 +20,7 @@ extension RemoteAppPage {
         case .systemMonitor: "waveform.path.ecg"
         case .soundMixer: "slider.horizontal.3"
         case .brightness: "sun.max"
-        case .screenshots: "camera.viewfinder"
+        case .screenshots: "photo.on.rectangle.angled"
         case .aphrodite: "sparkles.rectangle.stack"
         case .codexUsage, .claudeUsage: nil
         }

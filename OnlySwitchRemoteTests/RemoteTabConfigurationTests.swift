@@ -59,7 +59,7 @@ struct RemoteTabConfigurationTests {
         var configuration = RemoteTabConfiguration()
         #expect(configuration.visiblePages == [.controls, .systemMonitor, .soundMixer, .brightness, .screenshots, .codexUsage, .claudeUsage, .aphrodite])
         #expect(RemoteAppPage.screenshots.requiresPlus)
-        #expect(RemoteAppPage.screenshots.tabSymbol == "camera.viewfinder")
+        #expect(RemoteAppPage.screenshots.tabSymbol == "photo.on.rectangle.angled")
         #expect(RemoteAppPage.screenshots.tabImageName == nil)
         configuration.setVisibility(false, for: .screenshots)
         #expect(configuration.isVisible(.screenshots) == false)

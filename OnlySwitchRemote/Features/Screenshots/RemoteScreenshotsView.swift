@@ -57,7 +57,7 @@ struct RemoteScreenshotsView: View {
                 .padding(16)
             }
             ContentUnavailableView {
-                Label("No Screenshots", systemImage: "camera.viewfinder")
+                Label("No Screenshots", systemImage: "photo.on.rectangle.angled")
             } description: {
                 Text(isCollectionEnabled
                      ? "Screenshots you take on this Mac appear here."
