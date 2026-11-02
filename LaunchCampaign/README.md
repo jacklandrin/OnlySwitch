@@ -28,8 +28,12 @@ after successfully displaying the page, and silently skips failed requests.
    tags, and fall back to English. Keep the visible language picker usable.
    Use CSS `prefers-color-scheme` for live system light/dark adaptation.
 4. Verify each language, light/dark appearance, keyboard navigation, and narrow
-   layouts. Check the download link: the OnlySwitch host intercepts this link
-   to open its native download QR window; standalone browsers open the App Store.
+   layouts. The current campaign's Download OnlyRemote button opens an accessible
+   inline QR-code dialog using the embedded download QR image. Verify opening,
+   closing (including Escape), and return of keyboard focus to the button. The
+   dialog also offers the App Store link below. Older campaigns use that link
+   directly; the OnlySwitch host intercepts it to open its native download QR
+   window, while standalone browsers open the App Store.
    The destination is https://apps.apple.com/us/app/onlyremote/id6793657946.
 5. Update `latest.json` after the HTML is ready. Commit and push the HTML and
    manifest together to `main`; if publishing separately, publish the HTML
