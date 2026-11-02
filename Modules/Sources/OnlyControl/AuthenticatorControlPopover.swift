@@ -5,10 +5,7 @@ struct AuthenticatorControlPopover: View {
     let onCodeCopied: () -> Void
 
     var body: some View {
-        AuthenticatorPanelView(
-            initiallyExpanded: true,
-            onCodeCopied: onCodeCopied
-        )
+        AuthenticatorPanelView(onCodeCopied: onCodeCopied)
         .frame(width: 360)
     }
 }

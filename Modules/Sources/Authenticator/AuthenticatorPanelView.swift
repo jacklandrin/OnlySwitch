@@ -13,11 +13,9 @@ public struct AuthenticatorPanelView: View {
     @ObservedObject private var store = AuthenticatorStore.shared
     @ObservedObject private var languageManager = LanguageManager.sharedManager
     @State private var showImport = false
-    @State private var isExpanded: Bool
     private let onCodeCopied: () -> Void
 
-    public init(initiallyExpanded: Bool = false, onCodeCopied: @escaping () -> Void = {}) {
-        _isExpanded = State(initialValue: initiallyExpanded)
+    public init(onCodeCopied: @escaping () -> Void = {}) {
         self.onCodeCopied = onCodeCopied
     }
 
@@ -28,19 +26,14 @@ public struct AuthenticatorPanelView: View {
                 .opacity(0.25)
                 .frame(height: 1)
 
-            if store.enabled && isExpanded {
+            if store.enabled {
                 if store.accounts.isEmpty {
                     emptyRow
                 } else {
                     TimelineView(.periodic(from: .now, by: 1)) { context in
                         VStack(spacing: 0) {
                             ForEach(store.accounts) { account in
-                                AuthenticatorCodeRow(account: account, now: context.date) {
-                                    withAnimation(.spring()) {
-                                        isExpanded = false
-                                    }
-                                    onCodeCopied()
-                                }
+                                AuthenticatorCodeRow(account: account, now: context.date, onCopied: onCodeCopied)
                                 Divider()
                                     .opacity(0.25)
                                     .frame(height: 1)
@@ -63,18 +56,8 @@ public struct AuthenticatorPanelView: View {
                 .foregroundColor(.accentColor)
                 .padding(.trailing, 8)
 
-            Button {
-                withAnimation(.spring()) { isExpanded.toggle() }
-            } label: {
-                HStack(spacing: 6) {
-                    Text("Authenticator".localized())
-                        .font(.system(size: 14))
-                    Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
-                        .font(.system(size: 12, weight: .semibold))
-                        .foregroundColor(.secondary)
-                }
-            }
-            .buttonStyle(.plain)
+            Text("Authenticator".localized())
+                .font(.system(size: 14))
 
             Text(accountSummary)
                 .foregroundColor(.gray)
@@ -85,10 +68,6 @@ public struct AuthenticatorPanelView: View {
         }
         .padding(.horizontal, 15)
         .padding(.top, 8)
-        .contentShape(Rectangle())
-        .onTapGesture {
-            withAnimation(.spring()) { isExpanded.toggle() }
-        }
         .frame(height: 45)
     }
 

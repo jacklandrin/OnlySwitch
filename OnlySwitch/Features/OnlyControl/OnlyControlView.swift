@@ -154,7 +154,7 @@ struct OnlyControlView: View {
 
     private var authenticatorPage: some View {
         VStack(spacing: 0) {
-            AuthenticatorPanelView(initiallyExpanded: true).padding(.vertical, 8)
+            AuthenticatorPanelView().padding(.vertical, 8)
         }
     }
 
