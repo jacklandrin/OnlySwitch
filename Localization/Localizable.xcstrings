@@ -79162,6 +79162,131 @@
         }
       }
     },
+    "App Uninstaller Authorization Cancelled" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Administrator authorization was cancelled. The app was not removed."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已取消管理员授权，未移除该应用。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已取消管理者授權，未移除此 App。"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Administratorautorisierung wurde abgebrochen. Die App wurde nicht entfernt."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Administratorska autorizacija je otkazana. Aplikacija nije uklonjena."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yönetici yetkilendirmesi iptal edildi. Uygulama kaldırılmadı."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anulowano autoryzację administratora. Aplikacja nie została usunięta."
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kinansela ang awtorisasyon ng administrator. Hindi inalis ang app."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beheerdersautorisatie is geannuleerd. De app is niet verwijderd."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’autorizzazione dell’amministratore è stata annullata. L’app non è stata rimossa."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Авторизация администратора отменена. Приложение не удалено."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se canceló la autorización de administrador. No se eliminó la app."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "管理者の認証がキャンセルされました。アプリは削除されていません。"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oggolaanshaha maamulaha waa la joojiyay. Abka lama saarin."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "관리자 인증이 취소되었습니다. 앱이 제거되지 않았습니다."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’autorisation administrateur a été annulée. L’app n’a pas été supprimée."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Авторизацію адміністратора скасовано. Програму не видалено."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autorizácia správcu bola zrušená. Aplikácia nebola odstránená."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A autorização de administrador foi cancelada. O app não foi removido."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autorizace správce byla zrušena. Aplikace nebyla odstraněna."
+          }
+        }
+      }
+    },
     "App Uninstaller Busy" : {
       "extractionState" : "manual",
       "localizations" : {

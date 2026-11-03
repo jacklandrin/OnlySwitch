@@ -11,15 +11,17 @@ actor AppUninstallerFileSystem {
     private let selfBundleIdentifier: String?
     private let runningApplicationURLs: @Sendable () async -> [URL]
     private let trash: @Sendable (URL) throws -> Void
+    private let privilegedTrash: (@Sendable (URL) async throws -> Void)?
     private var contexts: [UUID: Context] = [:]
     private var order: [UUID] = []
     private var activeID: UUID?
     private var sequence = 0
     private var activeSequence = -1
     private var removing = false
-    init(home: URL, selfApplicationURL: URL, selfBundleIdentifier: String? = nil, runningApplicationURLs: @escaping @Sendable () async -> [URL] = { [] }, trash: @escaping @Sendable (URL) throws -> Void) {
+    init(home: URL, selfApplicationURL: URL, selfBundleIdentifier: String? = nil, runningApplicationURLs: @escaping @Sendable () async -> [URL] = { [] }, trash: @escaping @Sendable (URL) throws -> Void,
+         privilegedTrash: (@Sendable (URL) async throws -> Void)? = nil) {
         self.home = home.standardizedFileURL; self.selfApplicationURL = selfApplicationURL.standardizedFileURL; self.selfBundleIdentifier = selfBundleIdentifier
-        self.runningApplicationURLs = runningApplicationURLs; self.trash = trash
+        self.runningApplicationURLs = runningApplicationURLs; self.trash = trash; self.privilegedTrash = privilegedTrash
     }
     func activateSnapshot(_ id: UUID) {
         guard let context = contexts[id], context.sequence >= activeSequence else { return }
@@ -97,13 +99,25 @@ actor AppUninstallerFileSystem {
                 let metadata = try validate(context.snapshot.applicationURL, running: running)
                 guard metadata.id == context.snapshot.bundleIdentifier, try appIdentities(context.snapshot.applicationURL) == context.appIdentity,
                       try identities(candidate.item.url) == candidate.ancestors else { throw UninstallerFailure(key: "App Uninstaller Stale Scan") }
-                try trash(candidate.item.url)
+                do { try trash(candidate.item.url) }
+                catch where Self.isPermissionDenied(error) {
+                    // Items owned by another user (e.g. root-installed apps) need the same
+                    // administrator authorization Finder asks for. Only validated items reach here.
+                    guard let privilegedTrash else { throw error }
+                    try await privilegedTrash(candidate.item.url)
+                }
                 result.removedItemIDs.append(candidate.item.id)
             } catch { result.failures.append(.wrapping(error, itemID: candidate.item.id)) }
         }
         // Successful items cannot be replayed through the same authorization.
         if var retained = contexts[request.snapshotID] { retained.candidates.removeAll { result.removedItemIDs.contains($0.item.id) }; contexts[request.snapshotID] = retained }
         return result
+    }
+    private static func isPermissionDenied(_ error: Error) -> Bool {
+        let error = error as NSError
+        if error.domain == NSCocoaErrorDomain, [NSFileWriteNoPermissionError, NSFileReadNoPermissionError].contains(error.code) { return true }
+        if error.domain == NSPOSIXErrorDomain, [Int(EACCES), Int(EPERM)].contains(error.code) { return true }
+        return (error.userInfo[NSUnderlyingErrorKey] as? NSError).map(isPermissionDenied) ?? false
     }
     private func appIdentities(_ app: URL) throws -> [String: Identity] {
         var result = try identities(app)

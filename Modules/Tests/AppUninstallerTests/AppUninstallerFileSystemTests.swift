@@ -164,6 +164,42 @@ struct AppUninstallerFileSystemTests {
         #expect(result.failures.count == 2)
         #expect(sink.urls.isEmpty)
     }
+    @Test func permissionDeniedTrashAsksForAdministratorAuthorization() async throws {
+        let fixture = try UninstallerFixture(); defer { fixture.remove() }
+        let pref = try fixture.write("Library/Preferences/org.example.Editor.plist")
+        let sink = UninstallerTrashSink(failingName: "Example.app"), privileged = UninstallerTrashSink()
+        let scanner = fixture.makeFileSystem(sink: sink, privileged: privileged)
+        let snapshot = try await scanner.scan(fixture.applicationURL); await scanner.activateSnapshot(snapshot.id)
+        let result = try await scanner.remove(.init(snapshotID: snapshot.id, itemIDs: snapshot.items.map(\.id)))
+        #expect(result.failures.isEmpty)
+        #expect(Set(result.removedItemIDs) == Set(snapshot.items.map(\.id)))
+        #expect(sink.urls == [pref])
+        #expect(privileged.urls == [fixture.applicationURL])
+    }
+
+    @Test func cancelledAdministratorAuthorizationKeepsTheApplication() async throws {
+        let fixture = try UninstallerFixture(); defer { fixture.remove() }
+        let cancelled = UninstallerFailure(key: "App Uninstaller Authorization Cancelled")
+        let sink = UninstallerTrashSink(failingName: "Example.app"), privileged = UninstallerTrashSink(failingName: "Example.app", failure: cancelled)
+        let scanner = fixture.makeFileSystem(sink: sink, privileged: privileged)
+        let snapshot = try await scanner.scan(fixture.applicationURL); await scanner.activateSnapshot(snapshot.id)
+        let result = try await scanner.remove(.init(snapshotID: snapshot.id, itemIDs: snapshot.items.map(\.id)))
+        #expect(result.removedItemIDs.isEmpty)
+        #expect(result.failures == [.init(key: "App Uninstaller Authorization Cancelled", itemID: fixture.applicationURL.path)])
+        #expect(privileged.urls.isEmpty)
+    }
+
+    @Test func nonPermissionTrashFailureDoesNotAskForAuthorization() async throws {
+        let fixture = try UninstallerFixture(); defer { fixture.remove() }
+        let sink = UninstallerTrashSink(failingName: "Example.app", failure: CocoaError(.fileWriteOutOfSpace)), privileged = UninstallerTrashSink()
+        let scanner = fixture.makeFileSystem(sink: sink, privileged: privileged)
+        let snapshot = try await scanner.scan(fixture.applicationURL); await scanner.activateSnapshot(snapshot.id)
+        let result = try await scanner.remove(.init(snapshotID: snapshot.id, itemIDs: snapshot.items.map(\.id)))
+        #expect(result.removedItemIDs.isEmpty)
+        #expect(result.failures == [.init(key: "App Uninstaller Remove Failed", itemID: fixture.applicationURL.path)])
+        #expect(privileged.urls.isEmpty)
+    }
+
     @Test func runningApplicationAliasBlocksScanAndRemovalByFilesystemIdentity() async throws {
         let fixture = try UninstallerFixture(); defer { fixture.remove() }
         let alias = fixture.url("RunningAlias.app")

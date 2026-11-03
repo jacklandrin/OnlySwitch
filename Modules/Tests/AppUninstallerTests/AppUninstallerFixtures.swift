@@ -25,8 +25,9 @@ struct UninstallerFixture {
         let plist = try PropertyListSerialization.data(fromPropertyList: ["CFBundleIdentifier": identifier, "CFBundleName": "Example", "CFBundlePackageType": "APPL"], format: .xml, options: 0)
         try plist.write(to: contents.appendingPathComponent("Info.plist"))
     }
-    func makeFileSystem(sink: UninstallerTrashSink = .init(), running: UninstallerRunningApps = .init(), selfURL: URL? = nil) -> AppUninstallerFileSystem {
-        AppUninstallerFileSystem(home: home, selfApplicationURL: selfURL ?? url("Applications/OnlySwitch.app"), runningApplicationURLs: { await running.urls }, trash: { try sink.trash($0) })
+    func makeFileSystem(sink: UninstallerTrashSink = .init(), running: UninstallerRunningApps = .init(), selfURL: URL? = nil, privileged: UninstallerTrashSink? = nil) -> AppUninstallerFileSystem {
+        let privilegedTrash: (@Sendable (URL) async throws -> Void)? = privileged.map { privileged in { @Sendable url in try privileged.trash(url) } }
+        return AppUninstallerFileSystem(home: home, selfApplicationURL: selfURL ?? url("Applications/OnlySwitch.app"), runningApplicationURLs: { await running.urls }, trash: { try sink.trash($0) }, privilegedTrash: privilegedTrash)
     }
     func applicationItem(in snapshot: UninstallerSnapshot) throws -> UninstallerItem {
         try #require(snapshot.items.first { $0.kind == .application })
@@ -38,10 +39,11 @@ final class UninstallerTrashSink: @unchecked Sendable {
     private let lock = NSLock()
     private var storage: [URL] = []
     let failingName: String?
-    init(failingName: String? = nil) { self.failingName = failingName }
+    let failure: any Error & Sendable
+    init(failingName: String? = nil, failure: any Error & Sendable = CocoaError(.fileWriteNoPermission)) { self.failingName = failingName; self.failure = failure }
     var urls: [URL] { lock.lock(); defer { lock.unlock() }; return storage }
     func trash(_ url: URL) throws {
-        if url.lastPathComponent == failingName { throw CocoaError(.fileWriteNoPermission) }
+        if url.lastPathComponent == failingName { throw failure }
         lock.lock(); defer { lock.unlock() }; storage.append(url)
     }
 }

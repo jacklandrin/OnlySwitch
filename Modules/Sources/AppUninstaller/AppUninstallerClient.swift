@@ -15,9 +15,11 @@ public struct AppUninstallerClient: Sendable {
 }
 extension AppUninstallerClient: DependencyKey {
     public static let liveValue: Self = {
-        let filesystem = AppUninstallerFileSystem(home: FileManager.default.homeDirectoryForCurrentUser.resolvingSymlinksInPath(), selfApplicationURL: Bundle.main.bundleURL.resolvingSymlinksInPath(), selfBundleIdentifier: Bundle.main.bundleIdentifier, runningApplicationURLs: {
+        let home = FileManager.default.homeDirectoryForCurrentUser.resolvingSymlinksInPath()
+        let filesystem = AppUninstallerFileSystem(home: home, selfApplicationURL: Bundle.main.bundleURL.resolvingSymlinksInPath(), selfBundleIdentifier: Bundle.main.bundleIdentifier, runningApplicationURLs: {
             await MainActor.run { NSWorkspace.shared.runningApplications.compactMap(\.bundleURL) }
-        }, trash: { url in _ = try FileManager.default.trashItem(at: url, resultingItemURL: nil) })
+        }, trash: { url in _ = try FileManager.default.trashItem(at: url, resultingItemURL: nil) },
+        privilegedTrash: { try await AdministratorTrash.move($0, home: home) })
         return Self(scan: { try await filesystem.scan($0) }, remove: { try await filesystem.remove($0) }, activateSnapshot: { await filesystem.activateSnapshot($0) }, chooseApplication: {
             let panel = NSOpenPanel()
             panel.allowedContentTypes = [.applicationBundle]; panel.allowsMultipleSelection = false
