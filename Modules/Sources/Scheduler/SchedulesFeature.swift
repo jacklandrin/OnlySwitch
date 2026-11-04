@@ -17,8 +17,21 @@ public struct SchedulesFeature {
         public var saveError: String?
         public var selection: Schedule.ID?
         public var searchText = ""
+        @Presents public var editor: ScheduleEditorFeature.State?
+        @Presents public var alert: AlertState<Action.Alert>?
 
         public init() {}
+
+        /// Schedules whose name or target title contains `searchText`, ignoring case and diacritics.
+        public var filteredSchedules: IdentifiedArrayOf<Schedule> {
+            let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !query.isEmpty else { return schedules }
+            let options: String.CompareOptions = [.caseInsensitive, .diacriticInsensitive]
+            return schedules.filter {
+                $0.name.range(of: query, options: options) != nil
+                    || $0.target.title.range(of: query, options: options) != nil
+            }
+        }
     }
 
     public enum Action: Equatable, BindableAction {
@@ -35,6 +48,19 @@ public struct SchedulesFeature {
         case catalogLoaded([RemoteControlDescriptor])
         case refreshCatalog
         case binding(BindingAction<State>)
+        /// Opens an empty draft, asking first when the open editor has unsaved changes.
+        case addTapped
+        /// Opens the editor for a schedule (`nil` closes it), asking first when there are unsaved changes.
+        case select(Schedule.ID?)
+        case deleteTapped(Schedule.ID)
+        case editor(PresentationAction<ScheduleEditorFeature.Action>)
+        case alert(PresentationAction<Alert>)
+
+        public enum Alert: Equatable {
+            case confirmDelete(Schedule.ID)
+            case discardAndSelect(Schedule.ID?)
+            case discardAndAdd
+        }
     }
 
     enum CancelID { case timer, events }
@@ -57,7 +83,7 @@ public struct SchedulesFeature {
         BindingReducer()
         Reduce { state, action in
             switch action {
-            case .binding:
+            case .binding, .alert(.dismiss):
                 return .none
 
             case .task:
@@ -117,9 +143,129 @@ public struct SchedulesFeature {
 
             case let .catalogLoaded(catalog):
                 state.catalog = catalog
+                state.editor?.catalog = catalog
                 return .none
 
+            case .addTapped:
+                if state.editor?.isDirty == true {
+                    state.alert = Self.unsavedChangesAlert(.discardAndAdd)
+                } else {
+                    openNewDraft(&state)
+                }
+                return .none
+
+            case let .select(id):
+                guard id != state.selection else { return .none }
+                if state.editor?.isDirty == true {
+                    state.alert = Self.unsavedChangesAlert(.discardAndSelect(id))
+                } else {
+                    openEditor(for: id, in: &state)
+                }
+                return .none
+
+            case let .deleteTapped(id):
+                guard let schedule = state.schedules[id: id] else { return .none }
+                state.alert = Self.deleteAlert(for: schedule)
+                return .none
+
+            case let .alert(.presented(.confirmDelete(id))):
+                guard state.schedules.remove(id: id) != nil else { return .none }
+                // A run already in progress finishes on its own; its result is ignored because the schedule is gone.
+                if state.selection == id || state.editor?.original?.id == id {
+                    state.selection = nil
+                    state.editor = nil
+                }
+                persist(&state)
+                return .send(.tick)
+
+            case let .alert(.presented(.discardAndSelect(id))):
+                openEditor(for: id, in: &state)
+                return .none
+
+            case .alert(.presented(.discardAndAdd)):
+                openNewDraft(&state)
+                return .none
+
+            case let .editor(.presented(.delegate(.save(schedule)))):
+                if state.schedules[id: schedule.id] != nil {
+                    state.schedules[id: schedule.id] = schedule
+                } else {
+                    state.schedules.append(schedule)
+                }
+                state.selection = schedule.id
+                // The user explicitly saved, so the undecodable data may now be replaced.
+                state.isStorageCorrupted = false
+                persist(&state)
+                let hasRequestedAuthorization = state.editor?.hasRequestedNotificationAuthorization ?? false
+                let isAuthorized = state.editor?.isNotificationAuthorized
+                state.editor = ScheduleEditorFeature.State(original: schedule, catalog: state.catalog)
+                state.editor?.hasRequestedNotificationAuthorization = hasRequestedAuthorization
+                state.editor?.isNotificationAuthorized = isAuthorized
+                return .send(.tick)
+
+            case .editor(.presented(.delegate(.discard))):
+                guard let original = state.editor?.original else {
+                    state.editor = nil
+                    return .none
+                }
+                state.editor = ScheduleEditorFeature.State(
+                    original: state.schedules[id: original.id] ?? original,
+                    catalog: state.catalog
+                )
+                return .none
+
+            case .editor:
+                return .none
             }
+        }
+        .ifLet(\.$editor, action: \.editor) { ScheduleEditorFeature() }
+        .ifLet(\.$alert, action: \.alert)
+    }
+
+    // MARK: - Editing
+
+    private func openNewDraft(_ state: inout State) {
+        state.selection = nil
+        state.editor = ScheduleEditorFeature.State(original: nil, catalog: state.catalog)
+    }
+
+    private func openEditor(for id: Schedule.ID?, in state: inout State) {
+        guard let id, let schedule = state.schedules[id: id] else {
+            state.selection = nil
+            state.editor = nil
+            return
+        }
+        state.selection = id
+        state.editor = ScheduleEditorFeature.State(original: schedule, catalog: state.catalog)
+    }
+
+    static func unsavedChangesAlert(_ discardAction: Action.Alert) -> AlertState<Action.Alert> {
+        AlertState {
+            TextState(ScheduleStrings.text("Schedule Unsaved Title"))
+        } actions: {
+            ButtonState(role: .destructive, action: discardAction) {
+                TextState(ScheduleStrings.text("Schedule Discard Changes"))
+            }
+            ButtonState(role: .cancel) {
+                TextState(ScheduleStrings.text("Cancel"))
+            }
+        } message: {
+            TextState(ScheduleStrings.text("Schedule Unsaved Message"))
+        }
+    }
+
+    static func deleteAlert(for schedule: Schedule) -> AlertState<Action.Alert> {
+        AlertState {
+            TextState("Schedule Delete Title %@".localizeWithFormat(arguments: schedule.name))
+        } actions: {
+            ButtonState(role: .destructive, action: .confirmDelete(schedule.id)) {
+                TextState(ScheduleStrings.text("Schedule Delete"))
+            }
+            ButtonState(role: .cancel) {
+                TextState(ScheduleStrings.text("Cancel"))
+            }
+        } message: {
+            TextState(ScheduleStrings.text("Schedule Delete Message"))
         }
     }
 

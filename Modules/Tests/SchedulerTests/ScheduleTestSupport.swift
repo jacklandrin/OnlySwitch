@@ -27,6 +27,30 @@ enum ScheduleFixtures {
         UUID(uuidString: String(format: "00000000-0000-0000-0000-%012d", number))!
     }
 
+    static func descriptor(
+        _ id: RemoteControlID,
+        title: String,
+        behavior: RemoteControlDescriptor.Behavior
+    ) -> RemoteControlDescriptor {
+        RemoteControlDescriptor(
+            id: id,
+            title: title,
+            behavior: behavior,
+            icon: .systemSymbol("circle"),
+            isAvailable: true,
+            unavailableReason: nil,
+            isDestructive: false,
+            supportsStatus: false,
+            supportsSecondaryInformation: false
+        )
+    }
+
+    static let catalog = [
+        descriptor(.builtIn("darkMode"), title: "Dark Mode", behavior: .switch),
+        descriptor(.builtIn("emptyTrash"), title: "Empty Trash", behavior: .button),
+        descriptor(.shortcut("Focus"), title: "Focus", behavior: .button),
+    ]
+
     static func schedule(
         _ number: Int,
         name: String? = nil,
@@ -106,6 +130,7 @@ final class ScheduleEngineHarness: Sendable {
     func apply(to dependencies: inout DependencyValues) {
         dependencies.date = DateGenerator { self.now.value }
         dependencies.calendar = ScheduleFixtures.calendar
+        dependencies.uuid = .incrementing
         dependencies.continuousClock = clock
         dependencies.scheduleStorage = ScheduleStorageClient(
             load: { self.stored.value },
