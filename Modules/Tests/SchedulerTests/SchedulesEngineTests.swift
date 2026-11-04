@@ -375,12 +375,52 @@ struct SchedulesEngineTests {
 
         await store.send(.setActive(schedule.id, true)) {
             $0.schedules[id: schedule.id]?.isActive = true
-        }
-        await store.receive(\.tick)
-        await store.receive(.saveFailed("Disk full")) {
             $0.saveError = "Disk full"
         }
+        await store.receive(\.tick)
         await store.skipInFlightEffects()
+    }
+
+    @Test func aSuccessfulSaveClearsAPreviousError() async {
+        let schedule = ScheduleFixtures.schedule(1, isActive: false, trigger: .hourly(minute: 0), activatedAt: now)
+        var state = SchedulesFeature.State.loaded([schedule])
+        state.saveError = "Disk full"
+        let harness = ScheduleEngineHarness(now: now)
+        let store = harness.makeStore(state)
+
+        await store.send(.setActive(schedule.id, true)) {
+            $0.schedules[id: schedule.id]?.isActive = true
+            $0.saveError = nil
+        }
+        await store.receive(\.tick)
+        await store.skipInFlightEffects()
+    }
+
+    @Test func savedSnapshotKeepsBothTheFireAndTheOutcome() async throws {
+        let schedule = ScheduleFixtures.schedule(
+            1,
+            trigger: .interval(value: 10, unit: .seconds),
+            activatedAt: now.addingTimeInterval(-10)
+        )
+        let harness = ScheduleEngineHarness(now: now, outcome: .failed("Boom"))
+        let store = harness.makeStore(.loaded([schedule]))
+
+        await store.send(.tick) {
+            $0.schedules[id: schedule.id]?.lastFiredAt = now
+            $0.running = [schedule.id]
+        }
+        await store.receive(.runFinished(schedule.id, .failed("Boom"), at: now)) {
+            $0.running = []
+            $0.schedules[id: schedule.id]?.lastOutcome = .failed("Boom")
+            $0.schedules[id: schedule.id]?.lastRunAt = now
+        }
+        await store.skipInFlightEffects()
+
+        #expect(harness.saves.value.map { $0.map(\.lastOutcome) } == [[nil], [.failed("Boom")]])
+        let saved = try #require(harness.saves.value.last?.first)
+        #expect(saved.lastFiredAt == now)
+        #expect(saved.lastOutcome == .failed("Boom"))
+        #expect(saved.lastRunAt == now)
     }
 
     @Test func timerSleepsSixtySecondsWhenNothingIsActive() async {

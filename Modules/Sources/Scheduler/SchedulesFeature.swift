@@ -29,11 +29,11 @@ public struct SchedulesFeature {
         /// Wake, clock or time-zone change.
         case systemEvent
         case runFinished(Schedule.ID, ScheduleRunOutcome, at: Date)
+        /// Runs the schedule now, even when it is inactive; does not move its fire anchor.
         case runNow(Schedule.ID)
         case setActive(Schedule.ID, Bool)
         case catalogLoaded([RemoteControlDescriptor])
         case refreshCatalog
-        case saveFailed(String)
         case binding(BindingAction<State>)
     }
 
@@ -93,7 +93,8 @@ public struct SchedulesFeature {
                 schedule.lastOutcome = outcome
                 schedule.lastRunAt = finishedAt
                 state.schedules[id: id] = schedule
-                return .merge(persist(state), notify(schedule, outcome: outcome))
+                persist(&state)
+                return notify(schedule, outcome: outcome)
 
             case let .runNow(id):
                 guard let schedule = state.schedules[id: id], !state.running.contains(id) else { return .none }
@@ -106,7 +107,8 @@ public struct SchedulesFeature {
                 if isActive {
                     state.schedules[id: id]?.activatedAt = date.now
                 }
-                return .merge(persist(state), .send(.tick))
+                persist(&state)
+                return .send(.tick)
 
             case .refreshCatalog:
                 return .run { [executor] send in
@@ -117,9 +119,6 @@ public struct SchedulesFeature {
                 state.catalog = catalog
                 return .none
 
-            case let .saveFailed(message):
-                state.saveError = message
-                return .none
             }
         }
     }
@@ -148,7 +147,7 @@ public struct SchedulesFeature {
             }
         }
         if !due.isEmpty {
-            effects.append(persist(state))
+            persist(&state)
         }
         effects.append(scheduleTimer(state, now: now))
         return .merge(effects)
@@ -181,15 +180,14 @@ public struct SchedulesFeature {
         return min(max(earliest.timeIntervalSince(now), minimumTimerDelay), maximumTimerDelay)
     }
 
-    private func persist(_ state: State) -> Effect<Action> {
-        guard !state.isStorageCorrupted else { return .none }
-        let schedules = Array(state.schedules)
-        return .run { [storage] send in
-            do {
-                try storage.save(schedules)
-            } catch {
-                await send(.saveFailed(error.localizedDescription))
-            }
+    /// Saves synchronously so snapshots are written in mutation order; never overwrites undecodable data.
+    private func persist(_ state: inout State) {
+        guard !state.isStorageCorrupted else { return }
+        do {
+            try storage.save(Array(state.schedules))
+            state.saveError = nil
+        } catch {
+            state.saveError = error.localizedDescription
         }
     }
 
