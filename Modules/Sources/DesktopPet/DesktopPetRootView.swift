@@ -2,6 +2,8 @@ import SwiftUI
 import ComposableArchitecture
 
 struct DesktopPetRootView: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     let presentation: DesktopPetPresentation
     let onDragChanged: @MainActor (DragGesture.Value) -> Void
     let onDragEnded: @MainActor (DragGesture.Value) -> Void
@@ -39,6 +41,11 @@ struct DesktopPetRootView: View {
             isControlPresented: presentation.isControlPresented,
             pomodoroState: presentation.pomodoroState,
             isMusicPlaying: playbackStore.isPlaying
+        )
+        .rotationEffect(.degrees(presentation.edgeTilt))
+        .animation(
+            reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.4),
+            value: presentation.edgeTilt
         )
         .contentShape(
             .interaction,

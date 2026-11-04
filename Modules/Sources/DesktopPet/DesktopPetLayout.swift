@@ -1,28 +1,14 @@
 import CoreGraphics
 
 public enum DesktopPetLayout {
+    /// Centered, so a new pet does not start against a screen edge and immediately tuck away.
     public static func defaultFrame(
         size: CGSize,
-        visibleFrame: CGRect,
-        inset: CGFloat = 28
-    ) -> CGRect {
-        defaultFrame(
-            size: size,
-            visibleFrame: visibleFrame,
-            horizontalInset: inset,
-            verticalInset: inset
-        )
-    }
-
-    public static func defaultFrame(
-        size: CGSize,
-        visibleFrame: CGRect,
-        horizontalInset: CGFloat,
-        verticalInset: CGFloat
+        visibleFrame: CGRect
     ) -> CGRect {
         CGRect(
-            x: visibleFrame.minX + horizontalInset,
-            y: visibleFrame.minY + verticalInset,
+            x: visibleFrame.midX - size.width / 2,
+            y: visibleFrame.midY - size.height / 2,
             width: size.width,
             height: size.height
         )

@@ -257,17 +257,13 @@ struct DesktopPetLayoutTests {
         )
     }
 
-    @Test func expandedCanvasKeepsArtworkBoundaryAtRequestedInset() {
+    @Test func defaultFrameCentersThePetAwayFromTheScreenEdges() {
         let frame = DesktopPetLayout.defaultFrame(
             size: DesktopPetMetrics.canvasSize,
-            visibleFrame: CGRect(x: 0, y: 25, width: 1_440, height: 875),
-            horizontalInset: DesktopPetMetrics.defaultPanelInsets.width,
-            verticalInset: DesktopPetMetrics.defaultPanelInsets.height
+            visibleFrame: CGRect(x: 0, y: 25, width: 1_440, height: 875)
         )
 
-        #expect(frame == CGRect(x: 8, y: 34, width: 152, height: 160))
-        #expect(frame.minX + 16 == 24)
-        #expect(frame.minY + 15 == 49)
+        #expect(frame == CGRect(x: 644, y: 382.5, width: 152, height: 160))
     }
 
     @Test func resizingLegacyFramePreservesItsCenter() {
