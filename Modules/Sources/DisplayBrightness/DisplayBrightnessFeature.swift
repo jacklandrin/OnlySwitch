@@ -18,6 +18,12 @@ public struct DisplayBrightnessFeature {
         public var isSavingSettings = false
         public var settingsSaveFailed = false
         public init() {}
+
+        /// The one-click sync needs a built-in source and at least one external display it can change.
+        public var canSyncFromBuiltIn: Bool {
+            snapshot.displays.contains(where: \.isBuiltIn)
+                && snapshot.displays.contains { !$0.isBuiltIn && $0.control != .unavailable }
+        }
     }
 
     public enum Action: Sendable {
@@ -30,6 +36,7 @@ public struct DisplayBrightnessFeature {
         case settingsLoaded(BrightnessSettings, revision: UInt64)
         case levelChanged(screenID: UInt32, level: Double)
         case percentSubmitted(screenID: UInt32, text: String)
+        case syncFromBuiltInTapped
         case applyCompleted(screenID: UInt32, generation: UInt64, revision: UInt64, level: Double)
         case applyFailed(screenID: UInt32, generation: UInt64, revision: UInt64)
         case settingsChanged(BrightnessSettings)
@@ -122,6 +129,11 @@ public struct DisplayBrightnessFeature {
             case let .percentSubmitted(screenID, text):
                 guard let level = BrightnessPercentInput.level(from: text) else { return .none }
                 return setLevel(level, screenID: screenID, state: &state)
+
+            case .syncFromBuiltInTapped:
+                guard let source = state.snapshot.displays.first(where: \.isBuiltIn) else { return .none }
+                let targets = state.snapshot.displays.filter { !$0.isBuiltIn && $0.control != .unavailable }.map(\.id)
+                return .merge(targets.map { setLevel(source.level, screenID: $0, state: &state) })
 
             case let .applyCompleted(screenID, generation, revision, level):
                 guard generation == state.snapshot.generation, state.pending[screenID] == revision,

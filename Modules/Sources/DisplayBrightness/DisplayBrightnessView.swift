@@ -53,6 +53,12 @@ public struct DisplayBrightnessView: View {
             ForEach(store.snapshot.displays) { display in
                 row(display)
             }
+            if store.canSyncFromBuiltIn {
+                Button("Match external displays to built-in".localized(), systemImage: "arrow.triangle.2.circlepath") {
+                    store.send(.syncFromBuiltInTapped)
+                }
+                .help("Set every external display to the built-in display's brightness".localized())
+            }
             Button("Reset software dimming".localized()) { store.send(.resetSoftwareDimming) }
                 .buttonStyle(.link)
         }

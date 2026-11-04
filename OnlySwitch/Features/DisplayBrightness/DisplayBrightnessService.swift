@@ -129,7 +129,8 @@ final class DisplayBrightnessService {
                 } else { control = .software; level = shades.factor(for: id) }
             }
             let preserved = shades.factor(for: id) < 1 ? previous.first(where: { $0.id == id && $0.control == control })?.level : nil
-            displays.append(.init(id: id, name: screen.localizedName, control: control, level: preserved ?? level))
+            displays.append(.init(id: id, name: screen.localizedName, control: control, level: preserved ?? level,
+                                  isBuiltIn: CGDisplayIsBuiltin(id) != 0))
         }
         coordinator.replaceInventory(displays)
         return presentedSnapshot(coordinator.snapshot)

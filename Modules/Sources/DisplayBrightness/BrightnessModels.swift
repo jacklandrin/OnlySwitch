@@ -34,11 +34,14 @@ public struct BrightnessDisplay: Equatable, Identifiable, Sendable {
     public var error: Bool
     /// An internal intent replaced this already accepted slider revision.
     public var supersededUIRevision: UInt64
+    public var isBuiltIn: Bool
     public init(id: UInt32, name: String, control: BrightnessControl, level: Double,
-                appliedLevel: Double? = nil, error: Bool = false, supersededUIRevision: UInt64 = 0) {
+                appliedLevel: Double? = nil, error: Bool = false, supersededUIRevision: UInt64 = 0,
+                isBuiltIn: Bool = false) {
         self.id = id; self.name = name; self.control = control; self.level = level
         self.appliedLevel = appliedLevel ?? level; self.error = error
         self.supersededUIRevision = supersededUIRevision
+        self.isBuiltIn = isBuiltIn
     }
 }
 
