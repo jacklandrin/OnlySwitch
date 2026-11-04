@@ -33,6 +33,33 @@ struct DisplayBrightnessFeatureTests {
         await store.send(.levelChanged(screenID: 99, level: 0.2))
     }
 
+    @Test func typedPercentAppliesTheClampedLevel() async {
+        let writes = LockIsolated<[BrightnessRequest]>([])
+        let store = TestStore(initialState: populatedState()) { DisplayBrightnessFeature() } withDependencies: {
+            $0.displayBrightnessClient.apply = { request in writes.withValue { $0.append(request) } }
+        }
+        await store.send(.percentSubmitted(screenID: 1, text: "150")) {
+            $0.snapshot.displays[0].level = 1
+            $0.revisions[1] = 1
+            $0.pending[1] = 1
+        }
+        await store.receive(\.applyCompleted) {
+            $0.snapshot.displays[0].appliedLevel = 1
+            $0.pending[1] = nil
+        }
+        #expect(writes.value == [.init(screenID: 1, generation: 3, level: 1, revision: 1)])
+    }
+
+    @Test func invalidOrUnavailableTypedPercentIsIgnored() async {
+        var initial = populatedState()
+        initial.snapshot.displays[1].control = .unavailable
+        let store = TestStore(initialState: initial) { DisplayBrightnessFeature() }
+        await store.send(.percentSubmitted(screenID: 1, text: "abc"))
+        await store.send(.percentSubmitted(screenID: 1, text: ""))
+        await store.send(.percentSubmitted(screenID: 2, text: "50"))
+        await store.send(.percentSubmitted(screenID: 99, text: "50"))
+    }
+
     @Test func failedWriteKeepsLastAppliedValueAndShowsFailure() async {
         let store = TestStore(initialState: populatedState()) { DisplayBrightnessFeature() } withDependencies: {
             $0.displayBrightnessClient.apply = { _ in throw BrightnessError.writeFailed }
