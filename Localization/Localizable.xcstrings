@@ -94679,6 +94679,17 @@
           }
         }
       }
+    },
+    "Schedule Storage Corrupted" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saved schedules couldn't be read. They will be replaced when you save a schedule."
+          }
+        }
+      }
     }
   },
   "version" : "1.1"
