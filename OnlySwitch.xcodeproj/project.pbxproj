@@ -333,23 +333,8 @@
 		B82710062700000000C0DE01 /* MenuBarClientCoreBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = B82710142700000000C0DE01 /* MenuBarClientCoreBridge.m */; };
 		B82710312700000000C0DE01 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B82710322700000000C0DE01 /* Security.framework */; };
 		B8A700000000000000000201 /* RemoteBrightnessFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A700000000000000000101 /* RemoteBrightnessFeature.swift */; };
-		RSFE00000000000000000002 /* RemoteScreenshotsFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSFE00000000000000000001 /* RemoteScreenshotsFeature.swift */; };
-		RSVW00000000000000000102 /* RemoteScreenshotsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSVW00000000000000000101 /* RemoteScreenshotsView.swift */; };
-		RSVW00000000000000000202 /* RemoteScreenshotCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSVW00000000000000000201 /* RemoteScreenshotCell.swift */; };
-		RSVW00000000000000000302 /* RemoteScreenshotThumbnailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSVW00000000000000000301 /* RemoteScreenshotThumbnailView.swift */; };
-		RSVW00000000000000000402 /* RemoteScreenshotBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSVW00000000000000000401 /* RemoteScreenshotBadge.swift */; };
-		RSVW00000000000000000502 /* RemoteScreenshotsBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSVW00000000000000000501 /* RemoteScreenshotsBanner.swift */; };
-		RSVW00000000000000000602 /* RemoteScreenshotPromptsModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSVW00000000000000000601 /* RemoteScreenshotPromptsModifier.swift */; };
-		RSVW00000000000000000702 /* RemoteScreenshotDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSVW00000000000000000701 /* RemoteScreenshotDetailView.swift */; };
-		RSDP00000000000000000002 /* RemoteScreenshotDetailPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSDP00000000000000000001 /* RemoteScreenshotDetailPresentation.swift */; };
-		RSVW00000000000000000802 /* RemoteScreenshotDetailContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSVW00000000000000000801 /* RemoteScreenshotDetailContent.swift */; };
-		RSVW00000000000000000902 /* RemoteScreenshotZoomableImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSVW00000000000000000901 /* RemoteScreenshotZoomableImage.swift */; };
-		RSVW00000000000000001002 /* RemoteScreenshotImageDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSVW00000000000000001001 /* RemoteScreenshotImageDecoder.swift */; };
-		RSVW00000000000000001102 /* RemoteScreenshotDragProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSVW00000000000000001101 /* RemoteScreenshotDragProvider.swift */; };
 		B8A700000000000000000202 /* RemoteBrightnessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A700000000000000000102 /* RemoteBrightnessView.swift */; };
 		B8A700000000000000000203 /* RemoteBrightnessFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A700000000000000000103 /* RemoteBrightnessFeatureTests.swift */; };
-		RSFT00000000000000000002 /* RemoteScreenshotsFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSFT00000000000000000001 /* RemoteScreenshotsFeatureTests.swift */; };
-		RSDT00000000000000000002 /* RemoteScreenshotDragProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSDT00000000000000000001 /* RemoteScreenshotDragProviderTests.swift */; };
 		B90000000000000000000002 /* MacSystemMonitorCollectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90000000000000000000001 /* MacSystemMonitorCollectorTests.swift */; };
 		B90000000000000000000005 /* MacSystemMonitorCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90000000000000000000004 /* MacSystemMonitorCollector.swift */; };
 		B90000000000000000000007 /* SystemMonitor in Frameworks */ = {isa = PBXBuildFile; productRef = B90000000000000000000008 /* SystemMonitor */; };
@@ -449,7 +434,6 @@
 		DABA00000000000000000002 /* GlobalSettingsFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA00000000000000000022 /* GlobalSettingsFeature.swift */; };
 		DABA00000000000000000003 /* GlobalSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA00000000000000000023 /* GlobalSettingsView.swift */; };
 		DABA00000000000000000004 /* RemoteIdleTimerClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA00000000000000000024 /* RemoteIdleTimerClient.swift */; };
-		RBTC00000000000000000002 /* RemoteBackgroundTaskClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = RBTC00000000000000000001 /* RemoteBackgroundTaskClient.swift */; };
 		F3A300000000000000000020 /* OnlySwitchRemoteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A300000000000000000010 /* OnlySwitchRemoteApp.swift */; };
 		F3A300000000000000000021 /* RemoteAppFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A300000000000000000011 /* RemoteAppFeature.swift */; };
 		F3A300000000000000000022 /* RemoteAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A300000000000000000012 /* RemoteAppView.swift */; };
@@ -565,16 +549,32 @@
 		OWNP00000000000000000004 /* OwnPlaybackSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OWNP00000000000000000003 /* OwnPlaybackSourceTests.swift */; };
 		RBPV00000000000000000002 /* RemoteBrightnessProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = RBPV00000000000000000001 /* RemoteBrightnessProvider.swift */; };
 		RBPV00000000000000000004 /* RemoteBrightnessProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = RBPV00000000000000000003 /* RemoteBrightnessProviderTests.swift */; };
-		RSSV00000000000000000002 /* RemoteScreenshotsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSSV00000000000000000001 /* RemoteScreenshotsService.swift */; };
+		RBTC00000000000000000002 /* RemoteBackgroundTaskClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = RBTC00000000000000000001 /* RemoteBackgroundTaskClient.swift */; };
+		RSCC00000000000000000002 /* RemoteScreenshotCacheClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSCC00000000000000000001 /* RemoteScreenshotCacheClient.swift */; };
+		RSCT00000000000000000002 /* RemoteScreenshotCacheClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSCT00000000000000000001 /* RemoteScreenshotCacheClientTests.swift */; };
+		RSDP00000000000000000002 /* RemoteScreenshotDetailPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSDP00000000000000000001 /* RemoteScreenshotDetailPresentation.swift */; };
+		RSDT00000000000000000002 /* RemoteScreenshotDragProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSDT00000000000000000001 /* RemoteScreenshotDragProviderTests.swift */; };
+		RSFE00000000000000000002 /* RemoteScreenshotsFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSFE00000000000000000001 /* RemoteScreenshotsFeature.swift */; };
+		RSFT00000000000000000002 /* RemoteScreenshotsFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSFT00000000000000000001 /* RemoteScreenshotsFeatureTests.swift */; };
+		RSIC00000000000000000002 /* RemoteScreenshotImageClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSIC00000000000000000001 /* RemoteScreenshotImageClient.swift */; };
+		RSIT00000000000000000002 /* RemoteScreenshotImageClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSIT00000000000000000001 /* RemoteScreenshotImageClientTests.swift */; };
+		RSPB00000000000000000002 /* RemoteScreenshotPasteboardClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSPB00000000000000000001 /* RemoteScreenshotPasteboardClient.swift */; };
+		RSPT00000000000000000002 /* RemoteScreenshotsProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSPT00000000000000000001 /* RemoteScreenshotsProviderTests.swift */; };
 		RSPV00000000000000000002 /* RemoteScreenshotsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSPV00000000000000000001 /* RemoteScreenshotsProvider.swift */; };
 		RSRS00000000000000000002 /* RemoteScreenshotResponses.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSRS00000000000000000001 /* RemoteScreenshotResponses.swift */; };
 		RSRT00000000000000000002 /* RemoteScreenshotResponsesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSRT00000000000000000001 /* RemoteScreenshotResponsesTests.swift */; };
-		RSCC00000000000000000002 /* RemoteScreenshotCacheClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSCC00000000000000000001 /* RemoteScreenshotCacheClient.swift */; };
-		RSIC00000000000000000002 /* RemoteScreenshotImageClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSIC00000000000000000001 /* RemoteScreenshotImageClient.swift */; };
-		RSPB00000000000000000002 /* RemoteScreenshotPasteboardClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSPB00000000000000000001 /* RemoteScreenshotPasteboardClient.swift */; };
-		RSCT00000000000000000002 /* RemoteScreenshotCacheClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSCT00000000000000000001 /* RemoteScreenshotCacheClientTests.swift */; };
-		RSIT00000000000000000002 /* RemoteScreenshotImageClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSIT00000000000000000001 /* RemoteScreenshotImageClientTests.swift */; };
-		RSPT00000000000000000002 /* RemoteScreenshotsProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSPT00000000000000000001 /* RemoteScreenshotsProviderTests.swift */; };
+		RSSV00000000000000000002 /* RemoteScreenshotsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSSV00000000000000000001 /* RemoteScreenshotsService.swift */; };
+		RSVW00000000000000000102 /* RemoteScreenshotsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSVW00000000000000000101 /* RemoteScreenshotsView.swift */; };
+		RSVW00000000000000000202 /* RemoteScreenshotCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSVW00000000000000000201 /* RemoteScreenshotCell.swift */; };
+		RSVW00000000000000000302 /* RemoteScreenshotThumbnailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSVW00000000000000000301 /* RemoteScreenshotThumbnailView.swift */; };
+		RSVW00000000000000000402 /* RemoteScreenshotBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSVW00000000000000000401 /* RemoteScreenshotBadge.swift */; };
+		RSVW00000000000000000502 /* RemoteScreenshotsBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSVW00000000000000000501 /* RemoteScreenshotsBanner.swift */; };
+		RSVW00000000000000000602 /* RemoteScreenshotPromptsModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSVW00000000000000000601 /* RemoteScreenshotPromptsModifier.swift */; };
+		RSVW00000000000000000702 /* RemoteScreenshotDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSVW00000000000000000701 /* RemoteScreenshotDetailView.swift */; };
+		RSVW00000000000000000802 /* RemoteScreenshotDetailContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSVW00000000000000000801 /* RemoteScreenshotDetailContent.swift */; };
+		RSVW00000000000000000902 /* RemoteScreenshotZoomableImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSVW00000000000000000901 /* RemoteScreenshotZoomableImage.swift */; };
+		RSVW00000000000000001002 /* RemoteScreenshotImageDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSVW00000000000000001001 /* RemoteScreenshotImageDecoder.swift */; };
+		RSVW00000000000000001102 /* RemoteScreenshotDragProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = RSVW00000000000000001101 /* RemoteScreenshotDragProvider.swift */; };
 		SMRB00000000000000000002 /* SoundMixerRemoteBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = SMRB00000000000000000001 /* SoundMixerRemoteBridge.swift */; };
 		SMRB00000000000000000004 /* SoundMixerRemoteBridgeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = SMRB00000000000000000003 /* SoundMixerRemoteBridgeTests.swift */; };
 		TB5A00000000000000000002 /* TabVisibilitySettingsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = TB5A00000000000000000001 /* TabVisibilitySettingsVM.swift */; };
@@ -965,23 +965,8 @@
 		B82710142700000000C0DE01 /* MenuBarClientCoreBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MenuBarClientCoreBridge.m; sourceTree = "<group>"; };
 		B82710322700000000C0DE01 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		B8A700000000000000000101 /* RemoteBrightnessFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteBrightnessFeature.swift; sourceTree = "<group>"; };
-		RSFE00000000000000000001 /* RemoteScreenshotsFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotsFeature.swift; sourceTree = "<group>"; };
-		RSVW00000000000000000101 /* RemoteScreenshotsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotsView.swift; sourceTree = "<group>"; };
-		RSVW00000000000000000201 /* RemoteScreenshotCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotCell.swift; sourceTree = "<group>"; };
-		RSVW00000000000000000301 /* RemoteScreenshotThumbnailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotThumbnailView.swift; sourceTree = "<group>"; };
-		RSVW00000000000000000401 /* RemoteScreenshotBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotBadge.swift; sourceTree = "<group>"; };
-		RSVW00000000000000000501 /* RemoteScreenshotsBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotsBanner.swift; sourceTree = "<group>"; };
-		RSVW00000000000000000601 /* RemoteScreenshotPromptsModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotPromptsModifier.swift; sourceTree = "<group>"; };
-		RSVW00000000000000000701 /* RemoteScreenshotDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotDetailView.swift; sourceTree = "<group>"; };
-		RSDP00000000000000000001 /* RemoteScreenshotDetailPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotDetailPresentation.swift; sourceTree = "<group>"; };
-		RSVW00000000000000000801 /* RemoteScreenshotDetailContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotDetailContent.swift; sourceTree = "<group>"; };
-		RSVW00000000000000000901 /* RemoteScreenshotZoomableImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotZoomableImage.swift; sourceTree = "<group>"; };
-		RSVW00000000000000001001 /* RemoteScreenshotImageDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotImageDecoder.swift; sourceTree = "<group>"; };
-		RSVW00000000000000001101 /* RemoteScreenshotDragProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotDragProvider.swift; sourceTree = "<group>"; };
 		B8A700000000000000000102 /* RemoteBrightnessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteBrightnessView.swift; sourceTree = "<group>"; };
 		B8A700000000000000000103 /* RemoteBrightnessFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteBrightnessFeatureTests.swift; sourceTree = "<group>"; };
-		RSFT00000000000000000001 /* RemoteScreenshotsFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotsFeatureTests.swift; sourceTree = "<group>"; };
-		RSDT00000000000000000001 /* RemoteScreenshotDragProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotDragProviderTests.swift; sourceTree = "<group>"; };
 		B90000000000000000000001 /* MacSystemMonitorCollectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacSystemMonitorCollectorTests.swift; sourceTree = "<group>"; };
 		B90000000000000000000004 /* MacSystemMonitorCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacSystemMonitorCollector.swift; sourceTree = "<group>"; };
 		B90100000000000000000001 /* SystemMonitorPreferencesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorPreferencesTests.swift; sourceTree = "<group>"; };
@@ -1070,7 +1055,6 @@
 		DABA00000000000000000022 /* GlobalSettingsFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSettingsFeature.swift; sourceTree = "<group>"; };
 		DABA00000000000000000023 /* GlobalSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSettingsView.swift; sourceTree = "<group>"; };
 		DABA00000000000000000024 /* RemoteIdleTimerClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteIdleTimerClient.swift; sourceTree = "<group>"; };
-		RBTC00000000000000000001 /* RemoteBackgroundTaskClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteBackgroundTaskClient.swift; sourceTree = "<group>"; };
 		F3A300000000000000000003 /* OnlySwitchRemote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnlySwitchRemote.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3A300000000000000000004 /* OnlySwitchRemoteTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnlySwitchRemoteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3A300000000000000000010 /* OnlySwitchRemoteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlySwitchRemoteApp.swift; sourceTree = "<group>"; };
@@ -1171,16 +1155,32 @@
 		OWNP00000000000000000003 /* OwnPlaybackSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OwnPlaybackSourceTests.swift; sourceTree = "<group>"; };
 		RBPV00000000000000000001 /* RemoteBrightnessProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteBrightnessProvider.swift; sourceTree = "<group>"; };
 		RBPV00000000000000000003 /* RemoteBrightnessProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteBrightnessProviderTests.swift; sourceTree = "<group>"; };
-		RSSV00000000000000000001 /* RemoteScreenshotsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotsService.swift; sourceTree = "<group>"; };
+		RBTC00000000000000000001 /* RemoteBackgroundTaskClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteBackgroundTaskClient.swift; sourceTree = "<group>"; };
+		RSCC00000000000000000001 /* RemoteScreenshotCacheClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotCacheClient.swift; sourceTree = "<group>"; };
+		RSCT00000000000000000001 /* RemoteScreenshotCacheClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotCacheClientTests.swift; sourceTree = "<group>"; };
+		RSDP00000000000000000001 /* RemoteScreenshotDetailPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotDetailPresentation.swift; sourceTree = "<group>"; };
+		RSDT00000000000000000001 /* RemoteScreenshotDragProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotDragProviderTests.swift; sourceTree = "<group>"; };
+		RSFE00000000000000000001 /* RemoteScreenshotsFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotsFeature.swift; sourceTree = "<group>"; };
+		RSFT00000000000000000001 /* RemoteScreenshotsFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotsFeatureTests.swift; sourceTree = "<group>"; };
+		RSIC00000000000000000001 /* RemoteScreenshotImageClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotImageClient.swift; sourceTree = "<group>"; };
+		RSIT00000000000000000001 /* RemoteScreenshotImageClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotImageClientTests.swift; sourceTree = "<group>"; };
+		RSPB00000000000000000001 /* RemoteScreenshotPasteboardClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotPasteboardClient.swift; sourceTree = "<group>"; };
+		RSPT00000000000000000001 /* RemoteScreenshotsProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotsProviderTests.swift; sourceTree = "<group>"; };
 		RSPV00000000000000000001 /* RemoteScreenshotsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotsProvider.swift; sourceTree = "<group>"; };
 		RSRS00000000000000000001 /* RemoteScreenshotResponses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotResponses.swift; sourceTree = "<group>"; };
 		RSRT00000000000000000001 /* RemoteScreenshotResponsesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotResponsesTests.swift; sourceTree = "<group>"; };
-		RSCC00000000000000000001 /* RemoteScreenshotCacheClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotCacheClient.swift; sourceTree = "<group>"; };
-		RSIC00000000000000000001 /* RemoteScreenshotImageClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotImageClient.swift; sourceTree = "<group>"; };
-		RSPB00000000000000000001 /* RemoteScreenshotPasteboardClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotPasteboardClient.swift; sourceTree = "<group>"; };
-		RSCT00000000000000000001 /* RemoteScreenshotCacheClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotCacheClientTests.swift; sourceTree = "<group>"; };
-		RSIT00000000000000000001 /* RemoteScreenshotImageClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotImageClientTests.swift; sourceTree = "<group>"; };
-		RSPT00000000000000000001 /* RemoteScreenshotsProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotsProviderTests.swift; sourceTree = "<group>"; };
+		RSSV00000000000000000001 /* RemoteScreenshotsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotsService.swift; sourceTree = "<group>"; };
+		RSVW00000000000000000101 /* RemoteScreenshotsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotsView.swift; sourceTree = "<group>"; };
+		RSVW00000000000000000201 /* RemoteScreenshotCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotCell.swift; sourceTree = "<group>"; };
+		RSVW00000000000000000301 /* RemoteScreenshotThumbnailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotThumbnailView.swift; sourceTree = "<group>"; };
+		RSVW00000000000000000401 /* RemoteScreenshotBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotBadge.swift; sourceTree = "<group>"; };
+		RSVW00000000000000000501 /* RemoteScreenshotsBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotsBanner.swift; sourceTree = "<group>"; };
+		RSVW00000000000000000601 /* RemoteScreenshotPromptsModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotPromptsModifier.swift; sourceTree = "<group>"; };
+		RSVW00000000000000000701 /* RemoteScreenshotDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotDetailView.swift; sourceTree = "<group>"; };
+		RSVW00000000000000000801 /* RemoteScreenshotDetailContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotDetailContent.swift; sourceTree = "<group>"; };
+		RSVW00000000000000000901 /* RemoteScreenshotZoomableImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotZoomableImage.swift; sourceTree = "<group>"; };
+		RSVW00000000000000001001 /* RemoteScreenshotImageDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotImageDecoder.swift; sourceTree = "<group>"; };
+		RSVW00000000000000001101 /* RemoteScreenshotDragProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotDragProvider.swift; sourceTree = "<group>"; };
 		SMRB00000000000000000001 /* SoundMixerRemoteBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundMixerRemoteBridge.swift; sourceTree = "<group>"; };
 		SMRB00000000000000000003 /* SoundMixerRemoteBridgeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundMixerRemoteBridgeTests.swift; sourceTree = "<group>"; };
 		TB5A00000000000000000001 /* TabVisibilitySettingsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabVisibilitySettingsVM.swift; sourceTree = "<group>"; };
@@ -2281,26 +2281,6 @@
 			path = Brightness;
 			sourceTree = "<group>";
 		};
-		RSFE00000000000000000010 /* Screenshots */ = {
-			isa = PBXGroup;
-			children = (
-				RSFE00000000000000000001 /* RemoteScreenshotsFeature.swift */,
-				RSVW00000000000000000101 /* RemoteScreenshotsView.swift */,
-				RSVW00000000000000000201 /* RemoteScreenshotCell.swift */,
-				RSVW00000000000000000301 /* RemoteScreenshotThumbnailView.swift */,
-				RSVW00000000000000000401 /* RemoteScreenshotBadge.swift */,
-				RSVW00000000000000000501 /* RemoteScreenshotsBanner.swift */,
-				RSVW00000000000000000601 /* RemoteScreenshotPromptsModifier.swift */,
-				RSVW00000000000000000701 /* RemoteScreenshotDetailView.swift */,
-				RSDP00000000000000000001 /* RemoteScreenshotDetailPresentation.swift */,
-				RSVW00000000000000000801 /* RemoteScreenshotDetailContent.swift */,
-				RSVW00000000000000000901 /* RemoteScreenshotZoomableImage.swift */,
-				RSVW00000000000000001001 /* RemoteScreenshotImageDecoder.swift */,
-				RSVW00000000000000001101 /* RemoteScreenshotDragProvider.swift */,
-			);
-			path = Screenshots;
-			sourceTree = "<group>";
-		};
 		B90000000000000000000003 /* SystemMonitor */ = {
 			isa = PBXGroup;
 			children = (
@@ -2734,6 +2714,26 @@
 				F4AC00000000000000000011 /* RemoteAphroditeFeature.swift */,
 			);
 			path = Aphrodite;
+			sourceTree = "<group>";
+		};
+		RSFE00000000000000000010 /* Screenshots */ = {
+			isa = PBXGroup;
+			children = (
+				RSFE00000000000000000001 /* RemoteScreenshotsFeature.swift */,
+				RSVW00000000000000000101 /* RemoteScreenshotsView.swift */,
+				RSVW00000000000000000201 /* RemoteScreenshotCell.swift */,
+				RSVW00000000000000000301 /* RemoteScreenshotThumbnailView.swift */,
+				RSVW00000000000000000401 /* RemoteScreenshotBadge.swift */,
+				RSVW00000000000000000501 /* RemoteScreenshotsBanner.swift */,
+				RSVW00000000000000000601 /* RemoteScreenshotPromptsModifier.swift */,
+				RSVW00000000000000000701 /* RemoteScreenshotDetailView.swift */,
+				RSDP00000000000000000001 /* RemoteScreenshotDetailPresentation.swift */,
+				RSVW00000000000000000801 /* RemoteScreenshotDetailContent.swift */,
+				RSVW00000000000000000901 /* RemoteScreenshotZoomableImage.swift */,
+				RSVW00000000000000001001 /* RemoteScreenshotImageDecoder.swift */,
+				RSVW00000000000000001101 /* RemoteScreenshotDragProvider.swift */,
+			);
+			path = Screenshots;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -3874,7 +3874,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 3.4.0;
+				MARKETING_VERSION = 3.5.0;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3929,7 +3929,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 3.4.0;
+				MARKETING_VERSION = 3.5.0;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3975,7 +3975,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 3.4.0;
+				MARKETING_VERSION = 3.5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = OnlySwitchWidgets;
@@ -4015,7 +4015,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 3.4.0;
+				MARKETING_VERSION = 3.5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = OnlySwitchWidgets;
