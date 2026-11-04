@@ -59,6 +59,14 @@ struct ScheduleCalendarTests {
         #expect(next == t.addingTimeInterval(604_800))
     }
 
+    @Test func overflowingStoredIntervalClampsInsteadOfTrapping() {
+        let t = date(2026, 11, 4, 10, 0)
+        let huge = ScheduleCalendar.nextFireDate(for: .interval(value: .max, unit: .hours), after: t, calendar: calendar)
+        let negative = ScheduleCalendar.nextFireDate(for: .interval(value: .min, unit: .hours), after: t, calendar: calendar)
+        #expect(huge == t.addingTimeInterval(604_800))
+        #expect(negative == t.addingTimeInterval(10))
+    }
+
     @Test func intervalLimits() {
         #expect(ScheduleCalendar.minimumIntervalSeconds == 10)
         #expect(ScheduleCalendar.maximumIntervalSeconds == 604_800)

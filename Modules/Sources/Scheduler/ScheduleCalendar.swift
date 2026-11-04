@@ -8,7 +8,11 @@ public enum ScheduleCalendar {
     public static func nextFireDate(for trigger: ScheduleTrigger, after date: Date, calendar: Calendar) -> Date? {
         switch trigger {
         case let .interval(value, unit):
-            let seconds = min(max(value * unit.seconds, minimumIntervalSeconds), maximumIntervalSeconds)
+            // Stored data is decoded without validation, so an oversized value must clamp rather than trap.
+            let (product, overflow) = value.multipliedReportingOverflow(by: unit.seconds)
+            let seconds = overflow
+                ? (value < 0 ? minimumIntervalSeconds : maximumIntervalSeconds)
+                : min(max(product, minimumIntervalSeconds), maximumIntervalSeconds)
             return date.addingTimeInterval(TimeInterval(seconds))
         case let .hourly(minute):
             return calendar.nextDate(
