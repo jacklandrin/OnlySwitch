@@ -186,7 +186,8 @@ public struct SchedulesFeature {
                 openNewDraft(&state)
                 return .none
 
-            case let .editor(.presented(.delegate(.save(schedule)))):
+            case let .editor(.presented(.delegate(.save(saved)))):
+                let schedule = Self.reconcile(saved, with: state.schedules[id: saved.id], now: date.now)
                 if state.schedules[id: schedule.id] != nil {
                     state.schedules[id: schedule.id] = schedule
                 } else {
@@ -237,6 +238,20 @@ public struct SchedulesFeature {
         }
         state.selection = id
         state.editor = ScheduleEditorFeature.State(original: schedule, catalog: state.catalog)
+    }
+
+    /// The editor's copy can be stale: the schedule may have fired, finished a run or been (de)activated from
+    /// the tab while it was open. Keep the stored run history and decide the anchor against the stored schedule,
+    /// so saving an edit never rewinds `lastFiredAt` (which would fire it again) or drops a recorded outcome.
+    static func reconcile(_ saved: Schedule, with current: Schedule?, now: Date) -> Schedule {
+        guard let current else { return saved }
+        var merged = saved
+        merged.lastFiredAt = current.lastFiredAt
+        merged.lastOutcome = current.lastOutcome
+        merged.lastRunAt = current.lastRunAt
+        let keepsAnchor = current.trigger == saved.trigger && (current.isActive || !saved.isActive)
+        merged.activatedAt = keepsAnchor ? current.activatedAt : now
+        return merged
     }
 
     static func unsavedChangesAlert(_ discardAction: Action.Alert) -> AlertState<Action.Alert> {

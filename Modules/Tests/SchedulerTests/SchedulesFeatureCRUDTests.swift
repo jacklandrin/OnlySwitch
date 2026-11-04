@@ -132,6 +132,72 @@ struct SchedulesFeatureCRUDTests {
         #expect(harness.runs.value.isEmpty)
     }
 
+    @Test func savingAnEditAfterAFireKeepsTheRunHistoryAndDoesNotFireAgain() async {
+        let first = ScheduleFixtures.schedule(
+            1,
+            trigger: .hourly(minute: 0),
+            activatedAt: now.addingTimeInterval(-7200),
+            lastFiredAt: now.addingTimeInterval(-3600)
+        )
+        let harness = ScheduleEngineHarness(now: now)
+        let store = harness.makeStore(editing([first], selected: first))
+
+        await store.send(.tick) {
+            $0.schedules[id: first.id]?.lastFiredAt = now
+            $0.running = [first.id]
+        }
+        await store.receive(.runFinished(first.id, .succeeded, at: now)) {
+            $0.running = []
+            $0.schedules[id: first.id]?.lastOutcome = .succeeded
+            $0.schedules[id: first.id]?.lastRunAt = now
+        }
+        await store.send(.editor(.presented(.binding(.set(\.draft.name, "Renamed"))))) {
+            $0.editor?.draft.name = "Renamed"
+        }
+        await store.send(.editor(.presented(.saveTapped)))
+
+        // The editor still holds the copy from before the fire.
+        var stale = first
+        stale.name = "Renamed"
+        var expected = stale
+        expected.lastFiredAt = now
+        expected.lastOutcome = .succeeded
+        expected.lastRunAt = now
+        await store.receive(.editor(.presented(.delegate(.save(stale))))) {
+            $0.schedules[id: first.id] = expected
+            $0.editor = editor(expected)
+        }
+        await store.receive(\.tick)
+        await store.skipInFlightEffects()
+
+        #expect(harness.runs.value.count == 1)
+        #expect(harness.saves.value.last == [expected])
+    }
+
+    @Test func savingAStaleActiveDraftAfterDeactivatingFromTheTabResetsTheAnchor() async {
+        let first = ScheduleFixtures.schedule(1, trigger: .hourly(minute: 0), activatedAt: now.addingTimeInterval(-1800))
+        let harness = ScheduleEngineHarness(now: now)
+        let store = harness.makeStore(editing([first], selected: first))
+
+        await store.send(.setActive(first.id, false)) {
+            $0.schedules[id: first.id]?.isActive = false
+        }
+        await store.receive(\.tick)
+        await store.send(.editor(.presented(.saveTapped)))
+
+        var expected = first
+        expected.activatedAt = now
+        await store.receive(.editor(.presented(.delegate(.save(first))))) {
+            $0.schedules[id: first.id] = expected
+            $0.editor = editor(expected)
+        }
+        await store.receive(\.tick)
+        await store.skipInFlightEffects()
+
+        #expect(harness.runs.value.isEmpty)
+        #expect(harness.saves.value.last == [expected])
+    }
+
     // MARK: - Discarding
 
     @Test func discardingAnEditResetsTheDraft() async {
