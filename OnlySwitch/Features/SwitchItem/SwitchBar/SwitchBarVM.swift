@@ -199,7 +199,7 @@ class SwitchBarVM : BarProvider, ObservableObject, @MainActor SwitchDelegate {
     @MainActor
     func openTailscaleSettings() {
         SettingsVM.shared.selection = .Tailscale
-        OpenWindows.Setting.open()
+        SettingsWindow.shared.show()
         privilegedHelperRecovery = nil
     }
 

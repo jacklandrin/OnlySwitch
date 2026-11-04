@@ -126,7 +126,7 @@ extension SwitchType {
                 } catch {
                     SettingsVM.shared.selection = .Tailscale
                     SettingsVM.shared.tailscaleStore.send(.externalFailure(TailscaleError.sanitized(error)))
-                    OpenWindows.Setting.open()
+                    SettingsWindow.shared.show()
                 }
                 return
             }

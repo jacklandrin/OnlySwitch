@@ -139,7 +139,7 @@ struct OnlySwitchListView: View {
                         case .schedules:
                             SchedulesPanelView(store: SettingsVM.shared.schedulesStore, compact: true) {
                                 SettingsVM.shared.selection = .Schedules
-                                OpenWindows.Setting.open()
+                                SettingsWindow.shared.show()
                             }
                             .padding(.horizontal, 12)
                             .padding(.vertical, 6)
