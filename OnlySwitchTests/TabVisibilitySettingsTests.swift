@@ -12,7 +12,7 @@ struct TabVisibilitySettingsTests {
     @Test func everyOptionalTabIsManageableAndControlsIsNot() {
         #expect(SectionBar.Section.manageable == SectionBar.Section.allCases.filter { $0 != .controls })
         #expect(!SectionBar.Section.manageable.contains(.controls))
-        #expect(SectionBar.Section.manageable.count == 10)
+        #expect(SectionBar.Section.manageable.count == 11)
     }
 
     @Test func tabsBackedByDefaultsUseTheExistingSharedKeys() {
@@ -24,6 +24,7 @@ struct TabVisibilitySettingsTests {
         #expect(SectionBar.Section.xcodeCleaner.visibilityDefaultsKey == UserDefaults.Key.showXcodeCleanerTab)
         #expect(SectionBar.Section.appUninstaller.visibilityDefaultsKey == UserDefaults.Key.showAppUninstallerTab)
         #expect(SectionBar.Section.screenshots.visibilityDefaultsKey == UserDefaults.Key.showScreenshotsTab)
+        #expect(SectionBar.Section.schedules.visibilityDefaultsKey == UserDefaults.Key.showSchedulesTab)
         #expect(SectionBar.Section.authenticator.visibilityDefaultsKey == nil)
         #expect(SectionBar.Section.soundMixer.visibilityDefaultsKey == nil)
     }
@@ -144,6 +145,44 @@ struct TabVisibilitySettingsTests {
             OnlyControlReducer()
         }
         await store.send(.availableSectionsChanged([.controls])) { $0.selectedSection = .controls }
+    }
+
+    @Test func schedulesTabUsesSharedVisibilityAndDefaultsToVisible() throws {
+        let suite = "SchedulesTabTests.\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let client = TabVisibilityClient.defaults(defaults,
+            authenticatorEnabled: { false }, setAuthenticatorEnabled: { _ in },
+            soundMixerEnabled: { false }, setSoundMixerEnabled: { _ in })
+        #expect(client.isVisible(.schedules))
+        client.setVisible(false, .schedules)
+        #expect(defaults.object(forKey: UserDefaults.Key.showSchedulesTab) as? Bool == false)
+        #expect(SectionBar.sections(authenticator: false, soundMixer: false,
+            systemMonitor: false, codexUsage: false, schedules: client.isVisible(.schedules)) == [.controls])
+        client.setVisible(true, .schedules)
+        #expect(SectionBar.sections(authenticator: false, soundMixer: false,
+            systemMonitor: false, codexUsage: false, schedules: client.isVisible(.schedules)) == [.controls, .schedules])
+    }
+
+    @Test func schedulesTabIsLastAndUsesItsSymbol() {
+        let all = SectionBar.sections(authenticator: true, soundMixer: true, systemMonitor: true, codexUsage: true,
+            claudeUsage: true, aphrodite: true, xcodeCleaner: true, appUninstaller: true, screenshots: true,
+            brightness: true, schedules: true)
+        #expect(all.last == .schedules)
+        #expect(all.count == SectionBar.Section.allCases.count)
+        #expect(SectionBar.Section.schedules.symbolName == "calendar.badge.clock")
+        #expect(SectionBar.Section.schedules.assetName == nil)
+        #expect(SectionBar.Section.schedules.allowsOutsideClickDismissal)
+    }
+
+    @Test func scheduleVisibilityIsExportedButTheScheduleListIsNot() {
+        #expect(UserDefaults.Key.exportableKeys.contains(UserDefaults.Key.showSchedulesTab))
+        #expect(!UserDefaults.Key.exportableKeys.contains(UserDefaults.Key.schedules))
+    }
+
+    @Test func schedulesSettingsPageFollowsEvolution() {
+        let items = SettingsItem.allCases
+        #expect(items.firstIndex(of: .Schedules) == items.firstIndex(of: .Evolution).map { $0 + 1 })
     }
 
     @Test func tabsSettingsPageFollowsBuiltIn() {

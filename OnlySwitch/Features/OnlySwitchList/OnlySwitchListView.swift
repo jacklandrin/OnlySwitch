@@ -20,6 +20,7 @@ import XcodeCleaner
 import AppUninstaller
 import Screenshots
 import DisplayBrightness
+import Scheduler
 
 enum Focusable: Hashable {
   case none
@@ -56,6 +57,7 @@ struct OnlySwitchListView: View {
     @AppStorage(UserDefaults.Key.showAppUninstallerTab) private var showAppUninstallerTab = true
     @AppStorage(UserDefaults.Key.showScreenshotsTab) private var showScreenshotsTab = true
     @AppStorage(UserDefaults.Key.showBrightnessTab) private var showBrightnessTab = true
+    @AppStorage(UserDefaults.Key.showSchedulesTab) private var showSchedulesTab = true
 
     let columns = [
         GridItem(.fixed(Layout.popoverWidth - 40)),
@@ -134,6 +136,14 @@ struct OnlySwitchListView: View {
                         case .screenshots:
                             ScreenshotsView(store: SettingsVM.shared.screenshotsStore, compactPresentation: true)
                                 .id(languageManager.currentLang)
+                        case .schedules:
+                            SchedulesPanelView(store: SettingsVM.shared.schedulesStore, compact: true) {
+                                SettingsVM.shared.selection = .Schedules
+                                OpenWindows.Setting.open()
+                            }
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .id(languageManager.currentLang)
                         case .aphrodite:
                             if #available(macOS 26.0, *) {
                                 AphroditePanelView(
@@ -616,7 +626,8 @@ struct OnlySwitchListView: View {
             xcodeCleaner: showXcodeCleanerTab,
             appUninstaller: showAppUninstallerTab,
             screenshots: showScreenshotsTab,
-            brightness: showBrightnessTab
+            brightness: showBrightnessTab,
+            schedules: showSchedulesTab
         )
     }
 

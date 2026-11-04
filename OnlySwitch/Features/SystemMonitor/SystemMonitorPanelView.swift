@@ -17,6 +17,7 @@ enum SectionBar {
         case appUninstaller
         case screenshots
         case brightness
+        case schedules
 
         var allowsOutsideClickDismissal: Bool { self != .appUninstaller && self != .screenshots }
 
@@ -33,6 +34,7 @@ enum SectionBar {
             case .appUninstaller: "App Uninstaller".localized()
             case .screenshots: "Screenshots".localized()
             case .brightness: "Brightness".localized()
+            case .schedules: "Schedules".localized()
             }
         }
 
@@ -49,6 +51,7 @@ enum SectionBar {
             case .appUninstaller: "trash.fill"
             case .screenshots: "photo.on.rectangle.angled"
             case .brightness: "sun.max.fill"
+            case .schedules: "calendar.badge.clock"
             }
         }
 
@@ -57,7 +60,7 @@ enum SectionBar {
             switch self {
             case .codexUsage: "openai_logo"
             case .claudeUsage: "claude_logo"
-            case .controls, .authenticator, .soundMixer, .systemMonitor, .aphrodite, .xcodeCleaner, .appUninstaller, .screenshots, .brightness: nil
+            case .controls, .authenticator, .soundMixer, .systemMonitor, .aphrodite, .xcodeCleaner, .appUninstaller, .screenshots, .brightness, .schedules: nil
             }
         }
     }
@@ -72,7 +75,8 @@ enum SectionBar {
         xcodeCleaner: Bool = false,
         appUninstaller: Bool = false,
         screenshots: Bool = false,
-        brightness: Bool = false
+        brightness: Bool = false,
+        schedules: Bool = false
     ) -> [Section] {
         var sections: [Section] = [.controls]
         if authenticator { sections.append(.authenticator) }
@@ -85,6 +89,7 @@ enum SectionBar {
         if appUninstaller { sections.append(.appUninstaller) }
         if screenshots { sections.append(.screenshots) }
         if brightness { sections.append(.brightness) }
+        if schedules { sections.append(.schedules) }
         return sections
     }
 

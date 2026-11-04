@@ -66,6 +66,7 @@ extension SectionBar.Section {
         case .appUninstaller: UserDefaults.Key.showAppUninstallerTab
         case .screenshots: UserDefaults.Key.showScreenshotsTab
         case .brightness: UserDefaults.Key.showBrightnessTab
+        case .schedules: UserDefaults.Key.showSchedulesTab
         case .controls, .authenticator, .soundMixer: nil
         }
     }

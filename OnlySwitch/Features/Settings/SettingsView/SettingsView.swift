@@ -17,6 +17,7 @@ import Screenshots
 import Tailscale
 import Extensions
 import KeyboardShortcuts
+import Scheduler
 
 struct SettingsView: View {
     @StateObject var settingVM = SettingsVM.shared
@@ -163,6 +164,10 @@ struct SettingsView: View {
 
             case .Evolution:
                 EvolutionView(store: settingVM.evolutionStore)
+
+            case .Schedules:
+                ScheduleSettingsView(store: settingVM.schedulesStore)
+                    .id(langManager.currentLang)
 
             case .ModelProviders:
                 if #available(macOS 26.0, *) {

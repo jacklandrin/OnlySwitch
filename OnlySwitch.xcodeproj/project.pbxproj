@@ -311,6 +311,8 @@
 		A9C70D062EE490B3000A2367 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A9C70D052EE490B3000A2367 /* GoogleService-Info.plist */; };
 		A9F007CA2EC3D9BD002D9AB0 /* Design in Frameworks */ = {isa = PBXBuildFile; productRef = A9F007C92EC3D9BD002D9AB0 /* Design */; };
 		AD1000010000000000000001 /* RadioBrowser in Frameworks */ = {isa = PBXBuildFile; productRef = AD1000020000000000000001 /* RadioBrowser */; };
+		5C4ED00000000000000000A1 /* Scheduler in Frameworks */ = {isa = PBXBuildFile; productRef = 5C4ED00000000000000000A2 /* Scheduler */; };
+		5C4ED00000000000000000A4 /* ScheduleClients+App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C4ED00000000000000000A3 /* ScheduleClients+App.swift */; };
 		AD1000030000000000000001 /* RadioLibraryClient+App.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1000040000000000000001 /* RadioLibraryClient+App.swift */; };
 		AF1000010000000000000001 /* Aphrodite in Frameworks */ = {isa = PBXBuildFile; productRef = AF1000020000000000000001 /* Aphrodite */; };
 		AF1000050000000000000001 /* AphroditeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF1000040000000000000001 /* AphroditeSwitch.swift */; };
@@ -1183,6 +1185,7 @@
 		RSVW00000000000000001101 /* RemoteScreenshotDragProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotDragProvider.swift; sourceTree = "<group>"; };
 		SMRB00000000000000000001 /* SoundMixerRemoteBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundMixerRemoteBridge.swift; sourceTree = "<group>"; };
 		SMRB00000000000000000003 /* SoundMixerRemoteBridgeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundMixerRemoteBridgeTests.swift; sourceTree = "<group>"; };
+		5C4ED00000000000000000A3 /* ScheduleClients+App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScheduleClients+App.swift"; sourceTree = "<group>"; };
 		TB5A00000000000000000001 /* TabVisibilitySettingsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabVisibilitySettingsVM.swift; sourceTree = "<group>"; };
 		TB5A00000000000000000003 /* TabVisibilitySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabVisibilitySettingsView.swift; sourceTree = "<group>"; };
 		TB5A00000000000000000005 /* TabVisibilitySettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabVisibilitySettingsTests.swift; sourceTree = "<group>"; };
@@ -1233,6 +1236,7 @@
 				CD5100010000000000000001 /* Screenshots in Frameworks */,
 				CD4100010000000000000001 /* Tailscale in Frameworks */,
 				AD1000010000000000000001 /* RadioBrowser in Frameworks */,
+				5C4ED00000000000000000A1 /* Scheduler in Frameworks */,
 				CDE100010000000000000001 /* SoundMixerEQ in Frameworks */,
 				CDE200010000000000000001 /* DisplayDDC in Frameworks */,
 				CDB100010000000000000001 /* DisplayBrightness in Frameworks */,
@@ -1882,11 +1886,20 @@
 			path = AudioSpectrum;
 			sourceTree = "<group>";
 		};
+		5C4ED00000000000000000A5 /* Schedules */ = {
+			isa = PBXGroup;
+			children = (
+				5C4ED00000000000000000A3 /* ScheduleClients+App.swift */,
+			);
+			path = Schedules;
+			sourceTree = "<group>";
+		};
 		049337952762C05200AE779A /* Settings */ = {
 			isa = PBXGroup;
 			children = (
 				04BF977127908EBC00E7C0E2 /* SettingsView */,
 				047C1E482A2250EF0061235D /* Evolution */,
+				5C4ED00000000000000000A5 /* Schedules */,
 				04BF977627908F1100E7C0E2 /* General */,
 				04BF977227908ECE00E7C0E2 /* Customize */,
 				04BF977827908F5400E7C0E2 /* Shortcuts */,
@@ -2807,6 +2820,7 @@
 				CD5100020000000000000001 /* Screenshots */,
 				CD4100020000000000000001 /* Tailscale */,
 				AD1000020000000000000001 /* RadioBrowser */,
+				5C4ED00000000000000000A2 /* Scheduler */,
 				CDE100020000000000000001 /* SoundMixerEQ */,
 				CDE200020000000000000001 /* DisplayDDC */,
 				CDB100020000000000000001 /* DisplayBrightness */,
@@ -3422,6 +3436,7 @@
 				04581DB02764CBCF008ADF30 /* SettingsVM.swift in Sources */,
 				TB5A00000000000000000004 /* TabVisibilitySettingsView.swift in Sources */,
 				TB5A00000000000000000002 /* TabVisibilitySettingsVM.swift in Sources */,
+				5C4ED00000000000000000A4 /* ScheduleClients+App.swift in Sources */,
 				04E03B06275FEBE200EA5FB9 /* AirPodsBatteryView.swift in Sources */,
 				04EB1CD62781299A00C612AB /* ShortcutsBarVM.swift in Sources */,
 				0447E36B2B71746E00D07B9A /* TrueToneSwitch.swift in Sources */,
@@ -4483,6 +4498,10 @@
 		AD1000020000000000000001 /* RadioBrowser */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = RadioBrowser;
+		};
+		5C4ED00000000000000000A2 /* Scheduler */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Scheduler;
 		};
 		AF1000020000000000000001 /* Aphrodite */ = {
 			isa = XCSwiftPackageProductDependency;

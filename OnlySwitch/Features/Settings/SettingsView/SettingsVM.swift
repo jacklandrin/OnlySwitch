@@ -18,6 +18,7 @@ import Screenshots
 import Tailscale
 import DisplayBrightness
 import RadioBrowser
+import Scheduler
 
 enum SettingsItem: String, CaseIterable {
     case General = "General"
@@ -25,6 +26,7 @@ enum SettingsItem: String, CaseIterable {
     case Tabs = "Tabs"
     case Shortcuts = "Shortcuts"
     case Evolution = "Evolution"
+    case Schedules = "Schedules"
     case ModelProviders = "Model Providers"
     case Aphrodite = "Aphrodite"
     case AirPods = "AirPods"
@@ -133,6 +135,16 @@ class SettingsVM: ObservableObject {
         RadioStationsFeature()
     } withDependencies: {
         $0.radioLibraryClient = .app
+    }
+
+    /// The single session store for schedules, shared by Settings, the popover list and OnlyControl.
+    /// AppDelegate starts it at launch so schedules fire whether or not any window is open.
+    lazy var schedulesStore = Store(initialState: SchedulesFeature.State()) {
+        SchedulesFeature()
+    } withDependencies: {
+        $0.scheduleExecutor = .app
+        $0.scheduleNotifications = .app
+        $0.scheduleSystemEvents = .app
     }
 
     init() {

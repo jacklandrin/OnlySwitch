@@ -224,6 +224,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         statusBar = StatusBarController(popover)
         // Collect screenshots (and reveal/fly new captures) before any list host has appeared.
         SettingsVM.shared.screenshotsStore.send(.task)
+        SettingsVM.shared.schedulesStore.send(.task)
         setupDesktopPet()
         setupDockPreview()
 
