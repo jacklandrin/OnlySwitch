@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import Defines
 import Switches
+import DisplayBrightness
 
 final class DimScreenSwitch: SwitchProvider, @unchecked Sendable {
     enum DimScreenError:Error {
@@ -24,8 +25,8 @@ final class DimScreenSwitch: SwitchProvider, @unchecked Sendable {
             timerCounter = 0
         }
     }
-    private var manager = DisplayManager()
-    private var originalBrightness:Float = 1.0
+    /// Brightness of every dimmed display before dimming, keyed by display ID.
+    private var originalLevels: [UInt32: Double] = [:]
     private var dimPercent:Float = Preferences.shared.dimScreenPercent
     private var autoDimScreenTime = Preferences.shared.autoDimScreenTime
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -42,7 +43,7 @@ final class DimScreenSwitch: SwitchProvider, @unchecked Sendable {
             if strongSelf.dimPercent != Preferences.shared.dimScreenPercent {
                 strongSelf.dimPercent = Preferences.shared.dimScreenPercent
                 if strongSelf.isDimming {
-                    try? strongSelf.modifyDimPercent()
+                    Task { @MainActor in await strongSelf.applyDimPercent() }
                 }
             }
             strongSelf.autoDimScreenTime = Preferences.shared.autoDimScreenTime
@@ -52,10 +53,10 @@ final class DimScreenSwitch: SwitchProvider, @unchecked Sendable {
             .receive(on: RunLoop.main)
             .sink { [weak self] note in
                 guard let self, let id = note.object as? NSNumber else { return }
-                self.manager.configureDisplays()
-                guard self.manager.primaryDisplayID == id.uint32Value else { return }
+                // A manually adjusted display keeps its new brightness; dimming ends once none are left.
+                guard self.originalLevels.removeValue(forKey: id.uint32Value) != nil,
+                      self.originalLevels.isEmpty else { return }
                 self.isDimming = false
-                self.timerCounter = 0
                 NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: self.type)
             }.store(in: &cancellable)
         setTimer()
@@ -78,9 +79,9 @@ final class DimScreenSwitch: SwitchProvider, @unchecked Sendable {
     @MainActor
     func operateSwitch(isOn: Bool) async throws {
         if isOn {
-            try dimScreen()
+            try await dimScreen()
         } else {
-            restoreScreen()
+            await restoreScreen()
         }
     }
 
@@ -94,33 +95,60 @@ final class DimScreenSwitch: SwitchProvider, @unchecked Sendable {
             self.timerCounter += 1
             if self.timerCounter == self.durationBySecond {
                 self.timerCounter = 0
-                try? self.dimScreen()
-                NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: self.type)
+                Task { @MainActor in
+                    try? await self.dimScreen()
+                    NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: self.type)
+                }
             }
         }.store(in: &cancellable)
     }
 
-    private func dimScreen() throws {
-        manager.configureDisplays()
-        originalBrightness = manager.getBrightness()
-        try modifyDimPercent()
-        isDimming = true
-    }
-
-    private func modifyDimPercent() throws {
-        let dimBrightness = originalBrightness * dimPercent
-        guard dimBrightness >= 0.10 else { // the minimum brightness is 0.10
+    @MainActor
+    private func dimScreen() async throws {
+        guard !isDimming else { return }
+        let snapshot = await DisplayBrightnessService.shared.scan()
+        guard !isDimming else { return } // another dim request finished while scanning
+        let levels = snapshot.displays.filter { $0.control != .unavailable }.map { ($0.id, $0.level) }
+        let originals = Dictionary(levels, uniquingKeysWith: { first, _ in first })
+        let targets = BrightnessDimPolicy.targets(originals: originals, percent: Double(dimPercent))
+        guard !targets.isEmpty else {
             throw DimScreenError.brightnessTooLow
         }
-        manager.setBrightness(level: dimBrightness)
-        NotificationCenter.default.post(name: .builtInDisplayBrightnessDidChange, object: nil)
+        originalLevels = originals.filter { targets[$0.key] != nil }
+        isDimming = true
+        await applyDimPercent(generation: snapshot.generation)
     }
 
-    private func restoreScreen() {
+    @MainActor
+    private func applyDimPercent(generation: UInt64? = nil) async {
+        var currentGeneration = generation
+        if currentGeneration == nil {
+            currentGeneration = await DisplayBrightnessService.shared.scan().generation
+        }
+        guard let generation = currentGeneration else { return }
+        let targets = BrightnessDimPolicy.targets(originals: originalLevels, percent: Double(dimPercent))
+        await apply(targets, generation: generation)
+    }
+
+    @MainActor
+    private func restoreScreen() async {
         guard isDimming else { return }
-        manager.configureDisplays()
-        manager.setBrightness(level: originalBrightness)
-        NotificationCenter.default.post(name: .builtInDisplayBrightnessDidChange, object: nil)
         isDimming = false
+        let originals = originalLevels
+        originalLevels = [:]
+        let generation = await DisplayBrightnessService.shared.scan().generation
+        await apply(originals, generation: generation)
+    }
+
+    /// Displays transition in parallel; one failing display must not keep the others from changing.
+    @MainActor
+    private func apply(_ levels: [UInt32: Double], generation: UInt64) async {
+        let tasks = levels.map { id, level in
+            Task { @MainActor in
+                try? await DisplayBrightnessService.shared.apply(
+                    .init(screenID: id, generation: generation, level: level, revision: 0), isManual: false)
+            }
+        }
+        for task in tasks { await task.value }
     }
 }
