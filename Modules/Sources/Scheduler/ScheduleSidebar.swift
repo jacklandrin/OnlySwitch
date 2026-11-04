@@ -29,7 +29,8 @@ struct ScheduleSidebar: View {
                     }
                 }
             }
-            .listStyle(.sidebar)
+            .listStyle(.inset)
+            .scrollContentBackground(.hidden)
             .overlay {
                 if store.filteredSchedules.isEmpty, !store.searchText.isEmpty {
                     ContentUnavailableView.search(text: store.searchText)
@@ -51,6 +52,8 @@ struct ScheduleSidebar: View {
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
         }
+        // A content-coloured column, so the list doesn't blend into the Settings sidebar beside it.
+        .background(Color(nsColor: .controlBackgroundColor))
     }
 
     private func add() {
