@@ -107,5 +107,14 @@ struct ScheduleFormatterTests {
         #expect(failed.contains("Not found"))
         #expect(failed.hasPrefix("Schedule ") == false)
     }
+
+    @Test func nextRunDateFollowsTheGivenLocale() {
+        let date = ScheduleFixtures.date(2026, 11, 4, 9, 0)
+        let german = ScheduleNextRunText.format(date, locale: Locale(identifier: "de"), calendar: ScheduleFixtures.calendar)
+        let english = ScheduleNextRunText.format(date, locale: locale, calendar: ScheduleFixtures.calendar)
+        #expect(german.hasPrefix("Mi"))
+        #expect(english.hasPrefix("Wed"))
+        #expect(english.contains("9:00"))
+    }
 }
 #endif

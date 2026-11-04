@@ -143,6 +143,7 @@ struct OnlySwitchListView: View {
                             }
                             .padding(.horizontal, 12)
                             .padding(.vertical, 6)
+                            .environment(\.locale, Locale(identifier: languageManager.currentLang))
                             .id(languageManager.currentLang)
                         case .aphrodite:
                             if #available(macOS 26.0, *) {

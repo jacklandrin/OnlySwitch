@@ -167,6 +167,7 @@ struct SettingsView: View {
 
             case .Schedules:
                 ScheduleSettingsView(store: settingVM.schedulesStore)
+                    .environment(\.locale, Locale(identifier: langManager.currentLang))
                     .id(langManager.currentLang)
 
             case .ModelProviders:

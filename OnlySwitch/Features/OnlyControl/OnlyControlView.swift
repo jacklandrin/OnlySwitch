@@ -156,6 +156,7 @@ struct OnlyControlView: View {
                 }
                 .padding(.horizontal, 30)
                 .padding(.vertical, 12)
+                .environment(\.locale, Locale(identifier: languageManager.currentLang))
                 .id(languageManager.currentLang)
             case .aphrodite:
                 aphroditePage
