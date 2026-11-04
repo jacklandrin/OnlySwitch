@@ -14,10 +14,11 @@ struct SchedulePanelRow: View {
     var body: some View {
         HStack(spacing: compact ? 8 : 10) {
             HStack(spacing: compact ? 8 : 10) {
-                ScheduleTargetIcon(icon: descriptor?.icon, size: compact ? 22 : 28)
+                ScheduleTargetIcon(descriptor: descriptor, size: compact ? 22 : 28)
                 VStack(alignment: .leading, spacing: 1) {
                     Text(schedule.name)
                         .font((compact ? Font.callout : .body).weight(.medium))
+                        .foregroundStyle(.primary)
                         .lineLimit(1)
                     Text(verbatim: "\(ScheduleFormatter.actionTitle(schedule.action)) · \(descriptor?.title ?? schedule.target.title)")
                         .lineLimit(1)
