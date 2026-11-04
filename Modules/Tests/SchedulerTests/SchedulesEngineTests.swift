@@ -41,6 +41,39 @@ struct SchedulesEngineTests {
         #expect(harness.saves.value.last == Array(store.state.schedules))
     }
 
+    @Test func clockSetBackwardsPullsFutureAnchorsBackToNow() async {
+        let schedule = ScheduleFixtures.schedule(
+            1,
+            trigger: .interval(value: 60, unit: .seconds),
+            activatedAt: now.addingTimeInterval(2 * 86_400),
+            lastFiredAt: now.addingTimeInterval(86_400)
+        )
+        let harness = ScheduleEngineHarness(now: now)
+        let store = harness.makeStore(.loaded([schedule]))
+
+        await store.send(.tick) {
+            $0.schedules[id: schedule.id]?.activatedAt = now
+            $0.schedules[id: schedule.id]?.lastFiredAt = now
+        }
+        #expect(harness.runs.value.isEmpty)
+        #expect(harness.saves.value.last == Array(store.state.schedules))
+
+        let fire = now.addingTimeInterval(60)
+        harness.advanceDate(by: 60)
+        await store.send(.tick) {
+            $0.schedules[id: schedule.id]?.lastFiredAt = fire
+            $0.running = [schedule.id]
+        }
+        await store.receive(.runFinished(schedule.id, .succeeded, at: fire)) {
+            $0.running = []
+            $0.schedules[id: schedule.id]?.lastOutcome = .succeeded
+            $0.schedules[id: schedule.id]?.lastRunAt = fire
+        }
+        await store.skipInFlightEffects()
+
+        #expect(harness.runs.value.count == 1)
+    }
+
     @Test func taskOnlyLoadsOnce() async {
         var state = SchedulesFeature.State()
         state.hasLoaded = true

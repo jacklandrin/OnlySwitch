@@ -288,6 +288,13 @@ public struct SchedulesFeature {
 
     private func tick(_ state: inout State) -> Effect<Action> {
         let now = date.now
+        // A clock set backwards leaves anchors in the future, which would silence a schedule until the clock caught up.
+        var pulledBack = false
+        for schedule in state.schedules where ScheduleCalendar.anchor(of: schedule) > now {
+            state.schedules[id: schedule.id]?.activatedAt = min(schedule.activatedAt, now)
+            state.schedules[id: schedule.id]?.lastFiredAt = schedule.lastFiredAt.map { min($0, now) }
+            pulledBack = true
+        }
         let due = state.schedules
             .compactMap { schedule -> (date: Date, schedule: Schedule)? in
                 guard ScheduleCalendar.isDue(schedule, now: now, calendar: calendar),
@@ -307,7 +314,7 @@ public struct SchedulesFeature {
                 effects.append(run(schedule))
             }
         }
-        if !due.isEmpty {
+        if pulledBack || !due.isEmpty {
             persist(&state)
         }
         effects.append(scheduleTimer(state, now: now))
