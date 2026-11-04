@@ -134,6 +134,89 @@ struct PersistenceControllerTests {
         #expect(try readStore(at: legacy, model: model) == ["recoverable"])
     }
 
+    @Test("Adding optional attributes migrates an existing store and keeps its records")
+    func additiveModelChangeMigratesStore() throws {
+        let directory = try temporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let destination = directory.appendingPathComponent("onlyswitch.sqlite")
+        try seedStore(at: destination, model: makeModel(), value: "upgraded")
+
+        let controller = PersistenceController(
+            storeURL: destination,
+            legacyStoreURL: directory.appendingPathComponent("absent-legacy.sqlite"),
+            managedObjectModel: makeModel(withOptionalExtra: true)
+        )
+
+        try #require(controller.loadError == nil)
+        #expect(try values(in: controller.container.viewContext) == ["upgraded"])
+        try close(controller)
+    }
+
+    @Test("A non-migrating controller leaves an older store for the app to migrate")
+    func nonMigratingControllerLeavesOlderStoreUntouched() throws {
+        let directory = try temporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let destination = directory.appendingPathComponent("onlyswitch.sqlite")
+        let oldModel = makeModel()
+        try seedStore(at: destination, model: oldModel, value: "pending")
+
+        let controller = PersistenceController(
+            storeURL: destination,
+            legacyStoreURL: directory.appendingPathComponent("absent-legacy.sqlite"),
+            managedObjectModel: makeModel(withOptionalExtra: true),
+            migratesStore: false
+        )
+
+        #expect(controller.loadError != nil)
+        #expect(controller.container.persistentStoreCoordinator.persistentStores.isEmpty)
+        let metadata = try NSPersistentStoreCoordinator.metadataForPersistentStore(
+            ofType: NSSQLiteStoreType, at: destination
+        )
+        #expect(oldModel.isConfiguration(withName: nil, compatibleWithStoreMetadata: metadata))
+        #expect(try readStore(at: destination, model: oldModel) == ["pending"])
+    }
+
+    @Test("A non-migrating controller neither creates the shared store nor copies the legacy one")
+    func nonMigratingControllerDoesNotRelocateLegacyStore() throws {
+        let directory = try temporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let legacy = directory.appendingPathComponent("legacy.sqlite")
+        let destination = directory.appendingPathComponent("shared/onlyswitch.sqlite")
+        let model = makeModel()
+        try seedStore(at: legacy, model: model, value: "legacy")
+
+        let controller = PersistenceController(
+            storeURL: destination, legacyStoreURL: legacy, managedObjectModel: model,
+            migratesStore: false
+        )
+
+        #expect(controller.loadError != nil)
+        #expect(FileManager.default.fileExists(atPath: destination.path) == false)
+        #expect(try readStore(at: legacy, model: model) == ["legacy"])
+    }
+
+    @Test(
+        "Migration and SQLite lock failures are retried; other store failures are not",
+        arguments: [
+            (NSError(domain: NSCocoaErrorDomain, code: NSMigrationError), true),
+            (NSError(domain: NSSQLiteErrorDomain, code: 5), true),
+            (NSError(domain: NSCocoaErrorDomain, code: NSPersistentStoreOpenError, userInfo: [NSSQLiteErrorDomain: 6]), true),
+            (
+                NSError(
+                    domain: NSCocoaErrorDomain, code: NSPersistentStoreOpenError,
+                    userInfo: [NSUnderlyingErrorKey: NSError(domain: NSSQLiteErrorDomain, code: 5)]
+                ),
+                true
+            ),
+            (NSError(domain: NSCocoaErrorDomain, code: NSPersistentStoreIncompatibleVersionHashError), false),
+            (NSError(domain: NSCocoaErrorDomain, code: NSFileReadCorruptFileError), false),
+            (NSError(domain: NSSQLiteErrorDomain, code: 11), false),
+        ]
+    )
+    func transientMigrationFailureClassification(error: NSError, isTransient: Bool) {
+        #expect(PersistenceController.isTransientMigrationFailure(error) == isTransient)
+    }
+
     private func temporaryDirectory() throws -> URL {
         let directory = FileManager.default.temporaryDirectory
             .appendingPathComponent("PersistenceControllerTests-\(UUID().uuidString)", isDirectory: true)
@@ -141,7 +224,7 @@ struct PersistenceControllerTests {
         return directory
     }
 
-    private func makeModel() -> NSManagedObjectModel {
+    private func makeModel(withOptionalExtra: Bool = false) -> NSManagedObjectModel {
         let value = NSAttributeDescription()
         value.name = "value"
         value.attributeType = .stringAttributeType
@@ -150,6 +233,13 @@ struct PersistenceControllerTests {
         record.name = "PersistenceTestRecord"
         record.managedObjectClassName = NSStringFromClass(NSManagedObject.self)
         record.properties = [value]
+        if withOptionalExtra {
+            let extra = NSAttributeDescription()
+            extra.name = "extra"
+            extra.attributeType = .stringAttributeType
+            extra.isOptional = true
+            record.properties.append(extra)
+        }
         let model = NSManagedObjectModel()
         model.entities = [record]
         return model

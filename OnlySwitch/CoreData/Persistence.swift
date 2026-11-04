@@ -8,7 +8,12 @@
 import CoreData
 
 struct PersistenceController {
-    static let shared = PersistenceController()
+    // Only the app migrates the shared store. The widget extension can launch
+    // alongside the app after an update, and two processes migrating the same
+    // SQLite file concurrently makes one of them fail.
+    static let shared = PersistenceController(
+        migratesStore: Bundle.main.bundleURL.pathExtension != "appex"
+    )
 
     let container: NSPersistentContainer
     let loadError: NSError?
@@ -17,7 +22,9 @@ struct PersistenceController {
         inMemory: Bool = false,
         storeURL: URL? = nil,
         legacyStoreURL: URL? = nil,
-        managedObjectModel: NSManagedObjectModel? = nil
+        managedObjectModel: NSManagedObjectModel? = nil,
+        migratesStore: Bool = true,
+        migrationRetryDelays: [TimeInterval] = [0.2, 0.5, 1]
     ) {
         if let managedObjectModel {
             container = NSPersistentContainer(name: "OnlySwitch", managedObjectModel: managedObjectModel)
@@ -51,6 +58,19 @@ struct PersistenceController {
                 Self.log(error)
                 return
             }
+            guard migratesStore || FileManager.default.fileExists(atPath: sharedURL.path) else {
+                // Creating an empty shared store here would make the app skip
+                // relocating the legacy store on its next launch.
+                container.persistentStoreDescriptions = []
+                let error = NSError(
+                    domain: NSCocoaErrorDomain,
+                    code: NSFileReadNoSuchFileError,
+                    userInfo: [NSDebugDescriptionErrorKey: "The app has not created the shared store yet."]
+                )
+                loadError = error
+                Self.log(error)
+                return
+            }
             destinationURL = sharedURL
             // An existing shared store is authoritative. Never overwrite it with
             // an older legacy store left behind by a previous migration.
@@ -63,8 +83,8 @@ struct PersistenceController {
         }
 
         // Optional Evolution metadata is compatible with lightweight migration.
-        description.shouldMigrateStoreAutomatically = true
-        description.shouldInferMappingModelAutomatically = true
+        description.shouldMigrateStoreAutomatically = migratesStore
+        description.shouldInferMappingModelAutomatically = migratesStore
         // Initialization and migration finish before callers can use viewContext.
         description.shouldAddStoreAsynchronously = false
         container.persistentStoreDescriptions = [description]
@@ -72,6 +92,18 @@ struct PersistenceController {
         var startupError: NSError?
         container.loadPersistentStores { _, error in
             startupError = error as NSError?
+        }
+        // A process still holding the store, such as the widget extension, can
+        // make a migration fail transiently. Once it finishes, the store opens.
+        var retryDelays = migratesStore ? migrationRetryDelays[...] : []
+        while let error = startupError, Self.isTransientMigrationFailure(error),
+              let delay = retryDelays.popFirst() {
+            Self.log(error)
+            Thread.sleep(forTimeInterval: delay)
+            startupError = nil
+            container.loadPersistentStores { _, error in
+                startupError = error as NSError?
+            }
         }
 
         if startupError == nil,
@@ -140,6 +172,23 @@ struct PersistenceController {
                 Self.log(error as NSError)
             }
         }
+    }
+
+    static func isTransientMigrationFailure(_ error: NSError) -> Bool {
+        if error.domain == NSCocoaErrorDomain, error.code == NSMigrationError {
+            return true
+        }
+        if error.domain == NSSQLiteErrorDomain, error.code == 5 || error.code == 6 {
+            // SQLITE_BUSY and SQLITE_LOCKED.
+            return true
+        }
+        if let sqliteCode = error.userInfo[NSSQLiteErrorDomain] as? Int, sqliteCode == 5 || sqliteCode == 6 {
+            return true
+        }
+        guard let underlying = error.userInfo[NSUnderlyingErrorKey] as? NSError else {
+            return false
+        }
+        return isTransientMigrationFailure(underlying)
     }
 
     private static func log(_ error: NSError) {
