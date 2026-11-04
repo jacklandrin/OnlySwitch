@@ -18,6 +18,7 @@ let package = Package(
         .library(name: "AppUninstaller", targets: ["AppUninstaller"]),
         .library(name: "Screenshots", targets: ["Screenshots"]),
         .library(name: "RadioBrowser", targets: ["RadioBrowser"]),
+        .library(name: "Scheduler", targets: ["Scheduler"]),
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "Extensions",
@@ -114,6 +115,8 @@ let package = Package(
         .testTarget(name: "ScreenshotsTests", dependencies: ["Screenshots", .product(name: "ComposableArchitecture", package: "swift-composable-architecture")]),
         .target(name: "RadioBrowser", dependencies: ["Extensions", .product(name: "ComposableArchitecture", package: "swift-composable-architecture"), .product(name: "Dependencies", package: "swift-dependencies")]),
         .testTarget(name: "RadioBrowserTests", dependencies: ["RadioBrowser", .product(name: "ComposableArchitecture", package: "swift-composable-architecture")]),
+        .target(name: "Scheduler", dependencies: ["Extensions", "RemoteCore", .product(name: "ComposableArchitecture", package: "swift-composable-architecture"), .product(name: "Dependencies", package: "swift-dependencies")]),
+        .testTarget(name: "SchedulerTests", dependencies: ["Scheduler", "RemoteCore", .product(name: "ComposableArchitecture", package: "swift-composable-architecture")]),
         .target(name: "XcodeCleaner", dependencies: ["Extensions", .product(name: "Dependencies", package: "swift-dependencies"), .product(name: "ComposableArchitecture", package: "swift-composable-architecture")]),
         .testTarget(name: "XcodeCleanerTests", dependencies: ["XcodeCleaner", .product(name: "ComposableArchitecture", package: "swift-composable-architecture")]),
         .target(
