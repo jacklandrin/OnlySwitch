@@ -68,6 +68,10 @@ public extension UserDefaults {
         public static let screenshotsPreviousCaptureSettings = "screenshotsPreviousCaptureSettingsKey"
         /// Machine specific backup of the Simulator screenshot save location; intentionally not exportable.
         public static let screenshotsPreviousSimulatorLocation = "screenshotsPreviousSimulatorLocationKey"
+        // Schedules
+        /// The schedule list; intentionally not exportable (targets are machine specific).
+        public static let schedules = "schedulesKey"
+        public static let showSchedulesTab = "showSchedulesTabKey"
         //BackNoises
         public static let backNoisesTrack = "backNoisesTrackKey"
         public static let automaticallyStopPlayNoiseTime = "automaticallyStopPlayNoiseTimeKey"
@@ -146,7 +150,7 @@ public extension UserDefaults {
             shortcutsDic,
             orderWeight, onlyControlOrderWeight,
             soundMixerEnabled,
-            systemMonitorPreferences, showSystemMonitorTab, showXcodeCleanerTab, showAppUninstallerTab, showScreenshotsTab,
+            systemMonitorPreferences, showSystemMonitorTab, showXcodeCleanerTab, showAppUninstallerTab, showScreenshotsTab, showSchedulesTab,
             backNoisesTrack, automaticallyStopPlayNoiseTime,
             autoStopKeepAwakeMode, autoStopKeepAwakeTime, autoStopKeepAwakeStartDate, autoStopKeepAwakeEndDate, autoStopKeepAwakeOnSleep, KeepAwakeKey,
             autoDimScreenTime, dimScreenPercent, syncExternalBrightness,
