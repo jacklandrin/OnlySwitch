@@ -18,7 +18,7 @@ public enum ScheduleStrings {
         "Schedule Section Switches", "Schedule Section Buttons", "Schedule Section Evolution", "Schedule Section Shortcuts",
         "Schedule Issue Missing Target", "Schedule Issue Action", "Schedule Issue Interval Short",
         "Schedule Issue Interval Long", "Schedule Issue Minute", "Schedule Issue Hour",
-        "Schedule Save Failed", "Schedule Storage Corrupted", "Schedule Notification Ran %@", "Schedule Notification Failed %@",
+        "Schedule Save Failed %@", "Schedule Storage Corrupted", "Schedule Notification Ran %@", "Schedule Notification Failed %@",
     ]
 
     public static func text(_ key: String) -> String {

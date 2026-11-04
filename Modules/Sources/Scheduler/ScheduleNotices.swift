@@ -14,7 +14,7 @@ struct ScheduleNotices: View {
                 }
                 if let saveError {
                     Label {
-                        Text(verbatim: "\(ScheduleStrings.text("Schedule Save Failed")) \(saveError)")
+                        Text(verbatim: "Schedule Save Failed %@".localizeWithFormat(arguments: saveError))
                     } icon: {
                         Image(systemName: "exclamationmark.octagon.fill")
                     }

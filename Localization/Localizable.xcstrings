@@ -101031,127 +101031,127 @@
         }
       }
     },
-    "Schedule Save Failed" : {
+    "Schedule Save Failed %@" : {
       "extractionState" : "manual",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Plány se nepodařilo uložit."
+            "value" : "Plány se nepodařilo uložit. %@"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zeitpläne konnten nicht gespeichert werden."
+            "value" : "Zeitpläne konnten nicht gespeichert werden. %@"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Couldn't save schedules."
+            "value" : "Couldn't save schedules. %@"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No se pudieron guardar las programaciones."
+            "value" : "No se pudieron guardar las programaciones. %@"
           }
         },
         "fil" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hindi ma-save ang mga iskedyul."
+            "value" : "Hindi ma-save ang mga iskedyul. %@"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Impossible d’enregistrer les planifications."
+            "value" : "Impossible d’enregistrer les planifications. %@"
           }
         },
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rasporede nije moguće spremiti."
+            "value" : "Rasporede nije moguće spremiti. %@"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Impossibile salvare le pianificazioni."
+            "value" : "Impossibile salvare le pianificazioni. %@"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "スケジュールを保存できませんでした。"
+            "value" : "スケジュールを保存できませんでした。%@"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "예약을 저장할 수 없습니다."
+            "value" : "예약을 저장할 수 없습니다. %@"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Schema's konden niet worden bewaard."
+            "value" : "Schema's konden niet worden bewaard. %@"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nie udało się zapisać harmonogramów."
+            "value" : "Nie udało się zapisać harmonogramów. %@"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Não foi possível salvar os agendamentos."
+            "value" : "Não foi possível salvar os agendamentos. %@"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Не удалось сохранить расписания."
+            "value" : "Не удалось сохранить расписания. %@"
           }
         },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Plány sa nepodarilo uložiť."
+            "value" : "Plány sa nepodarilo uložiť. %@"
           }
         },
         "so" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Jadwallada lama kaydin karin."
+            "value" : "Jadwallada lama kaydin karin. %@"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zamanlamalar kaydedilemedi."
+            "value" : "Zamanlamalar kaydedilemedi. %@"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Не вдалося зберегти розклади."
+            "value" : "Не вдалося зберегти розклади. %@"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "无法保存定时任务。"
+            "value" : "无法保存定时任务。%@"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無法儲存排程。"
+            "value" : "無法儲存排程。%@"
           }
         }
       }
