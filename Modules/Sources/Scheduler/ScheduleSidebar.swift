@@ -14,7 +14,7 @@ struct ScheduleSidebar: View {
                 ForEach(store.filteredSchedules) { schedule in
                     ScheduleSidebarRow(
                         schedule: schedule,
-                        icon: store.catalog.descriptor(for: schedule.target)?.icon
+                        descriptor: store.catalog.descriptor(for: schedule.target)
                     )
                     .tag(schedule.id)
                     .contextMenu {

@@ -10,7 +10,7 @@ struct ScheduleTargetPicker: View {
     var body: some View {
         Button(action: togglePopover) {
             HStack(spacing: 6) {
-                ScheduleTargetIcon(icon: selectedDescriptor?.icon, size: 16)
+                ScheduleTargetIcon(descriptor: selectedDescriptor, size: 16)
                 Text(store.draft.target?.title ?? ScheduleStrings.text("Schedule Choose Target"))
                     .lineLimit(1)
                     .foregroundStyle(store.draft.target == nil ? .secondary : .primary)

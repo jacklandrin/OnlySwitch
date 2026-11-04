@@ -3,8 +3,9 @@ import RemoteCore
 import SwiftUI
 
 /// A catalog control's icon, falling back to a calendar glyph when the control is unknown or its image is unreadable.
+/// Built-in images are tinted like symbols; Shortcut icons keep their own colours, as on OnlyRemote.
 struct ScheduleTargetIcon: View {
-    let icon: RemoteControlDescriptor.Icon?
+    let descriptor: RemoteControlDescriptor?
     var size: CGFloat = 24
 
     static let fallbackSymbol = "calendar.badge.clock"
@@ -17,12 +18,16 @@ struct ScheduleTargetIcon: View {
 
     @ViewBuilder
     private var content: some View {
-        switch icon {
+        switch descriptor?.icon {
         case let .png(data):
             if let image = NSImage(data: data) {
+                let isShortcut = descriptor?.id.kind == .shortcut
                 Image(nsImage: image)
+                    .renderingMode(isShortcut ? .original : .template)
                     .resizable()
                     .scaledToFit()
+                    .foregroundStyle(.tint)
+                    .padding(isShortcut ? 0 : size * 0.1)
             } else {
                 symbol(Self.fallbackSymbol)
             }

@@ -10,7 +10,7 @@ struct ScheduleTargetRow: View {
     var body: some View {
         Button(action: choose) {
             HStack(spacing: 8) {
-                ScheduleTargetIcon(icon: descriptor.icon, size: 18)
+                ScheduleTargetIcon(descriptor: descriptor, size: 18)
                 VStack(alignment: .leading, spacing: 1) {
                     Text(descriptor.title)
                         .lineLimit(1)

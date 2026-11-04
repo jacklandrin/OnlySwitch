@@ -8,7 +8,7 @@ struct ScheduleIdentitySection: View {
     var body: some View {
         ScheduleSectionCard(number: 1) {
             HStack(alignment: .center, spacing: 16) {
-                ScheduleTargetIcon(icon: store.catalog.descriptor(for: store.draft.target)?.icon, size: 44)
+                ScheduleTargetIcon(descriptor: store.catalog.descriptor(for: store.draft.target), size: 44)
                     .padding(6)
                     .scheduleCard(cornerRadius: 10)
 

@@ -4,13 +4,13 @@ import SwiftUI
 /// A schedule in the settings sidebar: icon, name, trigger summary and status badges.
 struct ScheduleSidebarRow: View {
     let schedule: Schedule
-    let icon: RemoteControlDescriptor.Icon?
+    let descriptor: RemoteControlDescriptor?
     @Environment(\.calendar) private var calendar
     @Environment(\.locale) private var locale
 
     var body: some View {
         HStack(spacing: 8) {
-            ScheduleTargetIcon(icon: icon, size: 22)
+            ScheduleTargetIcon(descriptor: descriptor, size: 22)
                 .opacity(schedule.isActive ? 1 : 0.5)
             VStack(alignment: .leading, spacing: 1) {
                 HStack(spacing: 4) {
