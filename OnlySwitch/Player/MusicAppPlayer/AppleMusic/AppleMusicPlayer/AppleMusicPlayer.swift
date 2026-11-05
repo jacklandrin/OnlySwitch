@@ -64,8 +64,11 @@ extension AppleMusicPlayer:MusicPlayer {
     }
     
     var playbackState: MusicPlaybackState {
+        // A player that quits mid-request replies with no state, which is not a valid case
+        // and would trap when switched on, so validate it through its raw value first.
         guard isRunning,
-              let playerState = applemusicApp.playerState
+              let rawState = applemusicApp.playerState?.rawValue,
+              let playerState = iTunesEPlS(rawValue: rawState)
         else { return .stopped }
         return MusicPlaybackState(playerState)
     }

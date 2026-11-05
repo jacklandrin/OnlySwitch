@@ -61,8 +61,11 @@ class SpotifyPlayer{
 
 extension SpotifyPlayer:MusicPlayer {
     var playbackState: MusicPlaybackState {
+        // A player that quits mid-request replies with no state, which is not a valid case
+        // and would trap when switched on, so validate it through its raw value first.
         guard isRunning,
-              let playerState = spotifyApp.playerState
+              let rawState = spotifyApp.playerState?.rawValue,
+              let playerState = SpotifyEPlS(rawValue: rawState)
         else { return .stopped }
         return MusicPlaybackState(playerState)
     }
