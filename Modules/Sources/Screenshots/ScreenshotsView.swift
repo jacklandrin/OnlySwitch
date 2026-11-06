@@ -364,17 +364,19 @@ private struct ScreenshotHoverButton: View {
     let action: () -> Void
 
     var body: some View {
-        Button(title, systemImage: systemImage, action: action)
-            .labelStyle(.iconOnly)
-            .font(.system(size: 11, weight: .bold))
-            .foregroundStyle(.primary)
-            .frame(width: 24, height: 24)
-            .modifier(ScreenshotHoverButtonSurface())
-            .contentShape(.circle)
-            .buttonStyle(.plain)
-            .help(title)
-            .padding(5)
-            .transition(.opacity)
+        Button(action: action) {
+            Label(title, systemImage: systemImage)
+                .labelStyle(.iconOnly)
+                .font(.system(size: 11, weight: .bold))
+                .foregroundStyle(.primary)
+                .frame(width: 24, height: 24)
+                .modifier(ScreenshotHoverButtonSurface())
+                .contentShape(.interaction, Circle())
+        }
+        .buttonStyle(.plain)
+        .help(title)
+        .padding(5)
+        .transition(.opacity)
     }
 }
 

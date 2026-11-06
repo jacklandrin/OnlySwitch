@@ -54,6 +54,7 @@ To control OnlySwitch from an iPhone or iPad, install [OnlyRemote from the App S
 
 ### Highlights
 
+- Automate recurring Mac tasks with [Schedules](#schedules).
 - Import macOS Shortcuts into OnlySwitch and control switches and Shortcuts with keyboard shortcuts.
 - Customize which controls appear and arrange them to fit your workflow. Built-in switches are grouped by category and can be searched by name.
 - Manage every optional page from one place: **OnlySwitch Settings → Tabs** shows or hides tabs in the menu-bar list and Only Control.
@@ -70,6 +71,12 @@ To control OnlySwitch from an iPhone or iPad, install [OnlyRemote from the App S
 <p align="center">
   <img alt="OnlySwitch desktop pet" src="https://github.com/user-attachments/assets/f45e4b4f-932e-4768-8bfd-845e22fdfff3" width="152" height="188" />
 </p>
+
+### Schedules
+
+Open **OnlySwitch Settings → Schedules** to automate supported switches, buttons, Shortcuts, and Evolutions. Run an action at a repeating interval, at a specific minute every hour, or at a set time on selected days. For example, turn **Dim Screen** on at 8:00 AM and off at 7:00 PM every day, or run **Empty Trash** every Saturday at 9:00 AM.
+
+Use the **Schedules** tab in the menu bar or Only Control to see what runs next, run an action immediately, or turn a schedule on or off. Show or hide the tab under **OnlySwitch Settings → Tabs**. Schedules run locally while OnlySwitch is running, even with no window open.
 
 ### Built-in switches
 

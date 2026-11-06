@@ -281,6 +281,8 @@
 		217549FC82A1C95A0843C27E /* DisplayBrightnessKeyTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C34535B906CBDA47D280D10 /* DisplayBrightnessKeyTap.swift */; };
 		2B346BE56384C700F4046FC4 /* SystemAudioMixer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AD1FCF5024EAC8DC9C8E5E /* SystemAudioMixer.swift */; };
 		4BE55DA1B55BBA22CCF4E310 /* DisplayBrightnessService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52660C8AAA3F5E6778721434 /* DisplayBrightnessService.swift */; };
+		5C4ED00000000000000000A1 /* Scheduler in Frameworks */ = {isa = PBXBuildFile; productRef = 5C4ED00000000000000000A2 /* Scheduler */; };
+		5C4ED00000000000000000A4 /* ScheduleClients+App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C4ED00000000000000000A3 /* ScheduleClients+App.swift */; };
 		5DA700000000000000000201 /* RemoteSoundMixerFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA700000000000000000101 /* RemoteSoundMixerFeature.swift */; };
 		5DA700000000000000000202 /* RemoteSoundMixerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA700000000000000000102 /* RemoteSoundMixerView.swift */; };
 		5DA700000000000000000203 /* RemoteMixerSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA700000000000000000103 /* RemoteMixerSlider.swift */; };
@@ -311,8 +313,6 @@
 		A9C70D062EE490B3000A2367 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A9C70D052EE490B3000A2367 /* GoogleService-Info.plist */; };
 		A9F007CA2EC3D9BD002D9AB0 /* Design in Frameworks */ = {isa = PBXBuildFile; productRef = A9F007C92EC3D9BD002D9AB0 /* Design */; };
 		AD1000010000000000000001 /* RadioBrowser in Frameworks */ = {isa = PBXBuildFile; productRef = AD1000020000000000000001 /* RadioBrowser */; };
-		5C4ED00000000000000000A1 /* Scheduler in Frameworks */ = {isa = PBXBuildFile; productRef = 5C4ED00000000000000000A2 /* Scheduler */; };
-		5C4ED00000000000000000A4 /* ScheduleClients+App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C4ED00000000000000000A3 /* ScheduleClients+App.swift */; };
 		AD1000030000000000000001 /* RadioLibraryClient+App.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1000040000000000000001 /* RadioLibraryClient+App.swift */; };
 		AF1000010000000000000001 /* Aphrodite in Frameworks */ = {isa = PBXBuildFile; productRef = AF1000020000000000000001 /* Aphrodite */; };
 		AF1000050000000000000001 /* AphroditeSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF1000040000000000000001 /* AphroditeSwitch.swift */; };
@@ -919,6 +919,7 @@
 		2C34535B906CBDA47D280D10 /* DisplayBrightnessKeyTap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayBrightnessKeyTap.swift; sourceTree = "<group>"; };
 		35AD1FCF5024EAC8DC9C8E5E /* SystemAudioMixer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SystemAudioMixer.swift; sourceTree = "<group>"; };
 		52660C8AAA3F5E6778721434 /* DisplayBrightnessService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayBrightnessService.swift; sourceTree = "<group>"; };
+		5C4ED00000000000000000A3 /* ScheduleClients+App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScheduleClients+App.swift"; sourceTree = "<group>"; };
 		5DA700000000000000000101 /* RemoteSoundMixerFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSoundMixerFeature.swift; sourceTree = "<group>"; };
 		5DA700000000000000000102 /* RemoteSoundMixerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSoundMixerView.swift; sourceTree = "<group>"; };
 		5DA700000000000000000103 /* RemoteMixerSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteMixerSlider.swift; sourceTree = "<group>"; };
@@ -1185,7 +1186,6 @@
 		RSVW00000000000000001101 /* RemoteScreenshotDragProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenshotDragProvider.swift; sourceTree = "<group>"; };
 		SMRB00000000000000000001 /* SoundMixerRemoteBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundMixerRemoteBridge.swift; sourceTree = "<group>"; };
 		SMRB00000000000000000003 /* SoundMixerRemoteBridgeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundMixerRemoteBridgeTests.swift; sourceTree = "<group>"; };
-		5C4ED00000000000000000A3 /* ScheduleClients+App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScheduleClients+App.swift"; sourceTree = "<group>"; };
 		TB5A00000000000000000001 /* TabVisibilitySettingsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabVisibilitySettingsVM.swift; sourceTree = "<group>"; };
 		TB5A00000000000000000003 /* TabVisibilitySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabVisibilitySettingsView.swift; sourceTree = "<group>"; };
 		TB5A00000000000000000005 /* TabVisibilitySettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabVisibilitySettingsTests.swift; sourceTree = "<group>"; };
@@ -1886,14 +1886,6 @@
 			path = AudioSpectrum;
 			sourceTree = "<group>";
 		};
-		5C4ED00000000000000000A5 /* Schedules */ = {
-			isa = PBXGroup;
-			children = (
-				5C4ED00000000000000000A3 /* ScheduleClients+App.swift */,
-			);
-			path = Schedules;
-			sourceTree = "<group>";
-		};
 		049337952762C05200AE779A /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -2262,6 +2254,14 @@
 				0DDC000000000000000000A4 /* BrightnessSyncManager.swift */,
 			);
 			path = DDC;
+			sourceTree = "<group>";
+		};
+		5C4ED00000000000000000A5 /* Schedules */ = {
+			isa = PBXGroup;
+			children = (
+				5C4ED00000000000000000A3 /* ScheduleClients+App.swift */,
+			);
+			path = Schedules;
 			sourceTree = "<group>";
 		};
 		5DA700000000000000000010 /* SoundMixer */ = {
@@ -3889,7 +3889,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 3.5.0;
+				MARKETING_VERSION = 3.6.0;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3944,7 +3944,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 3.5.0;
+				MARKETING_VERSION = 3.6.0;
 				OTHER_SWIFT_FLAGS = "-enforce-exclusivity=unchecked";
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3990,7 +3990,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 3.5.0;
+				MARKETING_VERSION = 3.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = OnlySwitchWidgets;
@@ -4030,7 +4030,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 3.5.0;
+				MARKETING_VERSION = 3.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = jacklandrin.OnlySwitch.OnlyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = OnlySwitchWidgets;
@@ -4475,6 +4475,10 @@
 			package = 04DA45702E12F28A0051047B /* XCRemoteSwiftPackageReference "swift-dependencies" */;
 			productName = Dependencies;
 		};
+		5C4ED00000000000000000A2 /* Scheduler */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Scheduler;
+		};
 		A1D201012F0B000200BEEF01 /* PureColorView */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = PureColorView;
@@ -4498,10 +4502,6 @@
 		AD1000020000000000000001 /* RadioBrowser */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = RadioBrowser;
-		};
-		5C4ED00000000000000000A2 /* Scheduler */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Scheduler;
 		};
 		AF1000020000000000000001 /* Aphrodite */ = {
 			isa = XCSwiftPackageProductDependency;
