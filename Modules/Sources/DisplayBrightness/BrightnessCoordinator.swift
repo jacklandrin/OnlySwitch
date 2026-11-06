@@ -15,6 +15,12 @@ public final class BrightnessCoordinator {
     private var intentVersions: [UInt32: UInt64] = [:]
     public func intentRevision(for id: UInt32) -> UInt64 { intentVersions[id] ?? 0 }
 
+    public func needsBrightness(id: UInt32, level: Double) -> Bool {
+        guard let display = snapshot.displays.first(where: { $0.id == id }) else { return false }
+        let current = revisions[id] == nil ? display.appliedLevel : display.level
+        return abs(current - level) > 0.004
+    }
+
     public init(settings: BrightnessSettings = .init(),
                 write: @escaping @MainActor (UInt32, BrightnessOutput) async -> Bool,
                 sleep: @escaping @Sendable (Duration) async throws -> Void = { try await Task.sleep(for: $0) }) {
@@ -30,7 +36,8 @@ public final class BrightnessCoordinator {
         didChange?(snapshot)
     }
 
-    public func apply(_ request: BrightnessRequest, animated: Bool = true) async throws {
+    public func apply(_ request: BrightnessRequest, animated: Bool = true,
+                      onApplied: (@MainActor (Double) -> Void)? = nil) async throws {
         guard request.level.isFinite else { throw BrightnessError.invalidLevel }
         guard request.generation == snapshot.generation else { throw BrightnessError.staleRequest }
         guard let index = snapshot.displays.firstIndex(where: { $0.id == request.screenID }),
@@ -62,6 +69,7 @@ public final class BrightnessCoordinator {
             let level = start + (target - start) * Double(step) / Double(steps)
             let output = BrightnessPolicy.output(level: level, control: control, settings: settings)
             let success = await write(request.screenID, output)
+            try Task.checkCancellation()
             guard revisions[request.screenID] == revision, snapshot.generation == request.generation,
                   let current = snapshot.displays.firstIndex(where: { $0.id == request.screenID }) else {
                 throw BrightnessError.staleRequest
@@ -75,10 +83,15 @@ public final class BrightnessCoordinator {
             didChange?(snapshot)
             if step != steps { try await sleep(.milliseconds(control == .ddc ? 100 : 30)) }
         }
+        onApplied?(target)
     }
 
     public func updateSettings(_ settings: BrightnessSettings) async {
+        var previous = self.settings
         self.settings = settings
+        // Sync changes who follows native brightness, not the output mapping or an existing user write.
+        previous.syncNativeBrightness = settings.syncNativeBrightness
+        guard settings != previous else { return }
         settingsRevision &+= 1
         let revision = settingsRevision
         // Invalidate old transitions before the first suspension.
@@ -108,7 +121,8 @@ public final class BrightnessCoordinator {
 
     /// Refresh native observations without treating them as slider intent.
     public func observeNative(id: UInt32, level: Double) {
-        guard revisions[id] == nil, let index = snapshot.displays.firstIndex(where: { $0.id == id }) else { return }
+        guard revisions[id] == nil, let index = snapshot.displays.firstIndex(where: { $0.id == id }),
+              snapshot.displays[index].level != level || snapshot.displays[index].appliedLevel != level else { return }
         snapshot.displays[index].level = level
         snapshot.displays[index].appliedLevel = level
         didChange?(snapshot)

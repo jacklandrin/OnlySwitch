@@ -16,7 +16,12 @@ final class DisplayBrightnessService {
     private var workspaceObservers: [NSObjectProtocol] = []
     private var pollTask: Task<Void, Never>?
     private var discoveryRevision: UInt64 = 0
+    private var activeScanRevision: UInt64?
     private var syncState = BrightnessNativeSyncState()
+    private var syncTask: Task<Void, Never>?
+    private var pendingSyncSource: (id: UInt32, level: Double)?
+    private var initialSyncPending = false
+    private var isResettingDimming = false
     private var outputRevision: UInt64 = 0
     private var isSleeping = false
     private var hasStarted = false
@@ -64,7 +69,7 @@ final class DisplayBrightnessService {
                 Task { @MainActor [weak self] in
                     guard let self else { return }
                     if topologyChanged { await self.topologyChanged() }
-                    else { await self.pollNative() }
+                    else { self.pollNative() }
                 }
             })
         }
@@ -90,9 +95,10 @@ final class DisplayBrightnessService {
             await self.updateSettings(DisplayBrightnessSettingsPersistence.load())
             _ = await self.scan()
             while !Task.isCancelled {
-                do { try await Task.sleep(for: .seconds(2)) } catch { break }
+                let interval: Duration = self.coordinator.settings.syncNativeBrightness ? .milliseconds(500) : .seconds(2)
+                do { try await Task.sleep(for: interval) } catch { break }
                 self.updateKeyboardRouting()
-                await self.pollNative()
+                self.pollNative()
             }
         }
     }
@@ -102,10 +108,15 @@ final class DisplayBrightnessService {
         guard !isSleeping else { return presentedSnapshot(coordinator.snapshot) }
         discoveryRevision &+= 1
         let revision = discoveryRevision
-        let previous = coordinator.snapshot.displays
+        activeScanRevision = revision
+        cancelNativeSync(preservingSource: true)
+        defer {
+            if activeScanRevision == revision { activeScanRevision = nil }
+        }
         let screens = NSScreen.screens.filter { $0.displayID != 0 && CGDisplayMirrorsDisplay($0.displayID) == kCGNullDirectDisplay }
         let readings = await ddc.brightnessDisplays()
         guard revision == discoveryRevision, !isSleeping else { return presentedSnapshot(coordinator.snapshot) }
+        let previous = coordinator.snapshot.displays
         tokens.removeAll()
         let identities = readings.map(\.identity)
         let screenIdentities = screens.map {
@@ -118,7 +129,6 @@ final class DisplayBrightnessService {
             let level: Double
             if let native = nativeBrightness(id) {
                 control = .native; level = native
-                syncState.recordOwnWrite(id: id, level: native)
             } else {
                 let identity = DDCDisplayIdentity(vendor: CGDisplayVendorNumber(id), product: CGDisplayModelNumber(id), serial: CGDisplaySerialNumber(id))
                 if identity.uniqueIndex(in: screenIdentities) != nil,
@@ -128,11 +138,13 @@ final class DisplayBrightnessService {
                     level = BrightnessPolicy.level(hardware: Double(readings[index].percent) / 100, control: .ddc, settings: coordinator.settings)
                 } else { control = .software; level = shades.factor(for: id) }
             }
-            let preserved = shades.factor(for: id) < 1 ? previous.first(where: { $0.id == id && $0.control == control })?.level : nil
+            let preserved = shades.factor(for: id) < 1 ? previous.first(where: { $0.id == id && $0.control == control })?.appliedLevel : nil
             displays.append(.init(id: id, name: screen.localizedName, control: control, level: preserved ?? level,
                                   isBuiltIn: CGDisplayIsBuiltin(id) != 0))
         }
         coordinator.replaceInventory(displays)
+        activeScanRevision = nil
+        pollNative()
         return presentedSnapshot(coordinator.snapshot)
     }
 
@@ -141,17 +153,26 @@ final class DisplayBrightnessService {
         guard !isSleeping else { throw BrightnessError.unavailable }
         keyboardTasks.removeValue(forKey: request.screenID)?.cancel()
         keyboardAccumulator.cancel(screenID: request.screenID)
-        if isManual, coordinator.snapshot.displays.first(where: { $0.id == request.screenID })?.control == .native {
+        let manualNative = isManual && coordinator.snapshot.displays.first(where: { $0.id == request.screenID })?.control == .native
+        if manualNative {
             NotificationCenter.default.post(name: .init("OnlySwitchManualNativeBrightness"), object: NSNumber(value: request.screenID))
         }
-        try await coordinator.apply(request)
+        try await coordinator.apply(request) { [weak self] level in
+            if manualNative { self?.syncManualNativeChange(id: request.screenID, level: level) }
+        }
     }
 
     func updateSettings(_ settings: BrightnessSettings) async {
         guard settings != coordinator.settings else { return }
+        let wasSyncing = coordinator.settings.syncNativeBrightness
+        if wasSyncing != settings.syncNativeBrightness {
+            initialSyncPending = settings.syncNativeBrightness
+        }
         if !settings.controlWithBrightnessKeys { cancelKeyboardAdjustments() }
-        outputRevision &+= 1
-        _ = syncState.beginCycle()
+        var previous = coordinator.settings
+        previous.syncNativeBrightness = settings.syncNativeBrightness
+        if previous != settings { outputRevision &+= 1 }
+        cancelNativeSync(preservingSource: wasSyncing && settings.syncNativeBrightness)
         if !settings.combinedDimming {
             for display in coordinator.snapshot.displays where display.control == .ddc { shades.remove(display.id) }
         }
@@ -161,9 +182,15 @@ final class DisplayBrightnessService {
             }
         }
         await coordinator.updateSettings(settings)
+        if coordinator.settings.syncNativeBrightness { pollNative() }
     }
 
     func resetSoftwareDimming() async {
+        guard !isResettingDimming else { return }
+        isResettingDimming = true
+        defer { isResettingDimming = false }
+        cancelNativeSync()
+        initialSyncPending = false
         cancelKeyboardAdjustments()
         outputRevision &+= 1
         shades.reset()
@@ -188,6 +215,10 @@ final class DisplayBrightnessService {
         outputRevision &+= 1
         pollTask?.cancel(); pollTask = nil
         discoveryRevision &+= 1
+        activeScanRevision = nil
+        cancelNativeSync()
+        syncState.invalidate()
+        initialSyncPending = coordinator.settings.syncNativeBrightness
         coordinator.cancelTransitions()
         coordinator.replaceInventory([])
         shades.reset(); tokens.removeAll()
@@ -204,6 +235,9 @@ final class DisplayBrightnessService {
         outputRevision &+= 1
         isSleeping = true
         discoveryRevision &+= 1
+        activeScanRevision = nil
+        cancelNativeSync()
+        initialSyncPending = coordinator.settings.syncNativeBrightness
         coordinator.cancelTransitions()
         shades.reset(); tokens.removeAll(); syncState.invalidate()
         coordinator.replaceInventory([])
@@ -213,6 +247,9 @@ final class DisplayBrightnessService {
         cancelKeyboardAdjustments()
         outputRevision &+= 1
         discoveryRevision &+= 1
+        activeScanRevision = nil
+        cancelNativeSync()
+        initialSyncPending = coordinator.settings.syncNativeBrightness
         coordinator.cancelTransitions()
         shades.reset(); tokens.removeAll(); syncState.invalidate()
         coordinator.replaceInventory([])
@@ -237,32 +274,77 @@ final class DisplayBrightnessService {
         }
         guard coordinator.snapshot.displays.first(where: { $0.id == id })?.control == .native,
               DisplayServicesSetBrightness(id, Float(level)) == 0 else { return false }
-        syncState.recordOwnWrite(id: id, level: level)
+        syncState.recordOwnWrite(id: id, level: level, readback: nativeBrightness(id))
         return true
     }
 
-    private func pollNative() async {
-        guard !isSleeping else { return }
-        let native = coordinator.snapshot.displays.filter { $0.control == .native }
-        let source = native.first(where: { CGDisplayIsBuiltin($0.id) != 0 }) ?? native.sorted(by: { $0.id < $1.id }).first
-        var sourceChange: Double?
-        for display in native {
-            guard let value = nativeBrightness(display.id) else { continue }
-            let changed = syncState.observe(id: display.id, level: value)
-            coordinator.observeNative(id: display.id, level: value)
-            if display.id == source?.id && changed { sourceChange = value }
+    private func pollNative() {
+        guard hasStarted, !isSleeping, activeScanRevision == nil else { return }
+        let readings = coordinator.snapshot.displays.compactMap { display -> (display: BrightnessDisplay, level: Double)? in
+            guard display.control == .native, let level = nativeBrightness(display.id) else { return nil }
+            return (display, level)
         }
-        // A duplicate observation must not invalidate the in-flight pass that is reaching later screens.
-        guard coordinator.settings.syncNativeBrightness, let value = sourceChange else { return }
+        let sourceChange = syncState.observeChanges(readings)
+        for (display, level) in readings { coordinator.observeNative(id: display.id, level: level) }
+        guard coordinator.settings.syncNativeBrightness, !isResettingDimming else { return }
+        if let sourceChange, !initialSyncPending || syncTask != nil || pendingSyncSource != nil {
+            startNativeSync(from: sourceChange.id, level: sourceChange.level)
+        } else if syncTask == nil {
+            if let source = pendingSyncSource {
+                if coordinator.snapshot.displays.contains(where: { $0.id == source.id && $0.control == .native }) {
+                    startNativeSync(from: source.id, level: source.level)
+                    return
+                }
+                pendingSyncSource = nil
+            }
+            if initialSyncPending, let source = BrightnessNativeSyncState.preferredSource(in: readings) {
+                startNativeSync(from: source.id, level: source.level)
+            }
+        }
+    }
+
+    private func syncManualNativeChange(id: UInt32, level: Double) {
+        guard coordinator.settings.syncNativeBrightness, !isSleeping, !isResettingDimming else { return }
+        if activeScanRevision != nil {
+            pendingSyncSource = (id, level)
+        } else {
+            startNativeSync(from: id, level: level)
+        }
+    }
+
+    private func startNativeSync(from sourceID: UInt32, level: Double) {
+        let previousTask = syncTask
+        previousTask?.cancel()
+        pendingSyncSource = (sourceID, level)
         let revision = syncState.beginCycle()
         let generation = coordinator.snapshot.generation
-        let targets = coordinator.snapshot.displays.map { ($0, coordinator.intentRevision(for: $0.id)) }
-        for (target, intent) in targets where target.control != .native && target.control != .unavailable {
-            guard syncState.isCurrent(revision), coordinator.settings.syncNativeBrightness,
-                  generation == coordinator.snapshot.generation else { return }
-            guard coordinator.intentRevision(for: target.id) == intent else { continue }
-            try? await coordinator.apply(.init(screenID: target.id, generation: generation, level: value, revision: 0))
+        let targets = BrightnessNativeSyncState.targets(in: coordinator.snapshot.displays, excluding: sourceID)
+            .map { ($0.id, coordinator.intentRevision(for: $0.id)) }
+        syncTask = Task { @MainActor [weak self] in
+            await previousTask?.value
+            guard let self, !Task.isCancelled else { return }
+            defer {
+                if self.syncState.isCurrent(revision) {
+                    self.syncTask = nil
+                    self.pendingSyncSource = nil
+                    self.initialSyncPending = false
+                }
+            }
+            for (id, intent) in targets {
+                guard !Task.isCancelled, self.syncState.isCurrent(revision), self.coordinator.settings.syncNativeBrightness,
+                      generation == self.coordinator.snapshot.generation else { return }
+                guard self.coordinator.intentRevision(for: id) == intent,
+                      self.coordinator.needsBrightness(id: id, level: level) else { continue }
+                try? await self.coordinator.apply(.init(screenID: id, generation: generation, level: level, revision: 0))
+            }
         }
+    }
+
+    private func cancelNativeSync(preservingSource: Bool = false) {
+        syncTask?.cancel()
+        syncTask = nil
+        if !preservingSource { pendingSyncSource = nil }
+        _ = syncState.beginCycle()
     }
 
     func requestKeyboardAccess() { keyboardController.requestAccess() }
@@ -294,7 +376,9 @@ final class DisplayBrightnessService {
                 }
                 do {
                     try await self.coordinator.apply(.init(screenID: id, generation: generation,
-                                                          level: adjustment.level, revision: 0))
+                                                          level: adjustment.level, revision: 0)) { [weak self] level in
+                        if display.control == .native { self?.syncManualNativeChange(id: id, level: level) }
+                    }
                 } catch { /* The coordinator publishes hardware failure; cancellation is ordinary supersession. */ }
                 self.keyboardAccumulator.finish(screenID: id, revision: adjustment.revision)
             }

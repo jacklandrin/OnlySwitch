@@ -40,19 +40,27 @@ struct BrightnessCoordinatorTests {
     @Test func newerIntentInvalidatesSuspendedTransition() async throws {
         let gate = BrightnessSleepGate()
         var outputs: [Double] = []
+        var completed: [Double] = []
         let coordinator = BrightnessCoordinator(write: { _, output in
             outputs.append(output.hardware ?? 1); return true
         }, sleep: { _ in await gate.wait() })
         coordinator.replaceInventory([.init(id: 1, name: "One", control: .native, level: 1)])
         let generation = coordinator.snapshot.generation
-        let old = Task { try await coordinator.apply(.init(screenID: 1, generation: generation, level: 0.2, revision: 1)) }
+        let old = Task {
+            try await coordinator.apply(.init(screenID: 1, generation: generation, level: 0.2, revision: 1)) {
+                completed.append($0)
+            }
+        }
         var iterator = gate.entered.makeAsyncIterator()
         _ = await iterator.next()
         await coordinator.updateSettings(.init(smoothTransitions: false))
-        try await coordinator.apply(.init(screenID: 1, generation: generation, level: 0.6, revision: 2))
+        try await coordinator.apply(.init(screenID: 1, generation: generation, level: 0.6, revision: 2)) {
+            completed.append($0)
+        }
         await gate.release()
         await #expect(throws: BrightnessError.staleRequest) { try await old.value }
         #expect(outputs.last == 0.6)
+        #expect(completed == [0.6])
         coordinator.observeNative(id: 1, level: 0.7)
         #expect(coordinator.snapshot.displays[0].level == 0.7)
     }
@@ -101,6 +109,65 @@ struct BrightnessCoordinatorTests {
         state.invalidate()
         #expect(state.isCurrent(second) == false)
         #expect(state.observe(id: 1, level: 0.2) == false)
+    }
+
+    @Test func appleDisplayCanDriveSyncWhileBuiltInDisplayIsConnected() {
+        let builtIn = BrightnessDisplay(id: 2, name: "Built-in", control: .native, level: 0.7, isBuiltIn: true)
+        let apple = BrightnessDisplay(id: 1, name: "Apple", control: .native, level: 0.8)
+        var state = BrightnessNativeSyncState()
+        let initial = [(display: apple, level: 0.8), (display: builtIn, level: 0.7)]
+        #expect(BrightnessNativeSyncState.preferredSource(in: initial)?.id == builtIn.id)
+        #expect(state.observeChanges(initial)?.id == nil)
+
+        let appleChange = state.observeChanges([(apple, 0.5), (builtIn, 0.7)])
+        #expect(appleChange?.id == apple.id)
+        #expect(appleChange?.level == 0.5)
+
+        let simultaneousChange = state.observeChanges([(apple, 0.4), (builtIn, 0.6)])
+        #expect(simultaneousChange?.id == builtIn.id)
+        state.recordOwnWrite(id: apple.id, level: 0.6)
+        #expect(state.observeChanges([(apple, 0.6), (builtIn, 0.6)])?.id == nil)
+    }
+
+    @Test func delayedNativeReadbackDoesNotEchoAMirroredWrite() {
+        var state = BrightnessNativeSyncState()
+        state.recordOwnWrite(id: 1, level: 0.6, readback: 0.8)
+        #expect(state.observe(id: 1, level: 0.6) == false)
+        let userChange = state.observe(id: 1, level: 0.5)
+        #expect(userChange)
+
+        state.recordOwnWrite(id: 1, level: 0.7, readback: 0.5)
+        let otherChange = state.observe(id: 1, level: 0.55)
+        let laterChange = state.observe(id: 1, level: 0.7)
+        #expect(otherChange)
+        #expect(laterChange)
+    }
+
+    @Test func syncIncludesExternalNativeDisplaysButNeverWritesBackToItsSource() {
+        let displays = [
+            BrightnessDisplay(id: 1, name: "Built-in", control: .native, level: 0.7, isBuiltIn: true),
+            BrightnessDisplay(id: 2, name: "Apple", control: .native, level: 0.8),
+            BrightnessDisplay(id: 3, name: "DDC", control: .ddc, level: 0.6),
+            BrightnessDisplay(id: 4, name: "Software", control: .software, level: 0.9),
+            BrightnessDisplay(id: 5, name: "Unavailable", control: .unavailable, level: 1),
+        ]
+        #expect(Set(BrightnessNativeSyncState.targets(in: displays, excluding: 1).map(\.id)) == [2, 3, 4])
+        #expect(Set(BrightnessNativeSyncState.targets(in: displays, excluding: 2).map(\.id)) == [3, 4])
+    }
+
+    @Test func togglingSyncDoesNotReapplyCachedBrightness() async {
+        var writes: [UInt32] = []
+        let coordinator = BrightnessCoordinator(write: { id, _ in writes.append(id); return true })
+        coordinator.replaceInventory([
+            .init(id: 1, name: "Built-in", control: .native, level: 0.7, isBuiltIn: true),
+            .init(id: 2, name: "Apple", control: .native, level: 0.8),
+        ])
+
+        await coordinator.updateSettings(.init(syncNativeBrightness: true))
+        #expect(coordinator.settings.syncNativeBrightness)
+        await coordinator.updateSettings(.init(syncNativeBrightness: false))
+        #expect(coordinator.settings.syncNativeBrightness == false)
+        #expect(writes.isEmpty)
     }
 
     @Test func resetDoesNotOverwriteNewerIntentOnAnotherScreen() async throws {
