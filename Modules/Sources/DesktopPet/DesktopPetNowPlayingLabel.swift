@@ -6,12 +6,23 @@ struct DesktopPetNowPlayingLabel: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     let nowPlaying: DesktopPetNowPlaying?
+    /// Opens the player app; `nil` when the source has no app to open, e.g. radio.
+    var onOpen: (@MainActor () -> Void)?
 
     var body: some View {
         ZStack {
             if let nowPlaying {
-                content(nowPlaying)
+                if let onOpen {
+                    Button(action: onOpen) {
+                        content(nowPlaying)
+                            .contentShape(.rect)
+                    }
+                    .buttonStyle(.plain)
                     .transition(.opacity)
+                } else {
+                    content(nowPlaying)
+                        .transition(.opacity)
+                }
             }
         }
         .animation(reduceMotion ? nil : .smooth(duration: 0.25), value: nowPlaying)

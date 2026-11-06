@@ -91,6 +91,16 @@ extension DesktopPetPlaybackClient {
             case .radio:
                 RadioStationSwitch.shared.playerItem.isPlaying = false
             }
+        },
+        open: { source in
+            switch source {
+            case .appleMusic:
+                openApplication(bundleID: appleMusicBundleID)
+            case .spotify:
+                openApplication(bundleID: spotifyBundleID)
+            case .radio:
+                break
+            }
         }
     )
 
@@ -103,6 +113,12 @@ extension DesktopPetPlaybackClient {
         !NSRunningApplication.runningApplications(withBundleIdentifier: bundleID).isEmpty
     }
 
+    @MainActor
+    private static func openApplication(bundleID: String) {
+        guard let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleID) else { return }
+        NSWorkspace.shared.openApplication(at: url, configuration: NSWorkspace.OpenConfiguration())
+    }
+
     /// Polling must never launch a player or ask for Automation permission.
     /// Distributed playback notifications remain usable before permission is granted.
     @MainActor
@@ -112,7 +128,10 @@ extension DesktopPetPlaybackClient {
         currentState: () -> MusicPlaybackState
     ) -> DesktopPetPlaybackStatus? {
         guard let canAutomate = canAutomate(bundleID: bundleID) else { return nil }
-        switch canAutomate ? currentState() : cachedState {
+        // An Apple Event can fail even with permission, so a stopped reply falls back to
+        // the state from playback notifications.
+        let state = canAutomate ? currentState() : cachedState
+        switch state == .stopped ? cachedState : state {
         case .playing, .fastForwarding, .rewinding, .reposition:
             return .playing
         case .paused:

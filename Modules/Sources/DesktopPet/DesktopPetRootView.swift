@@ -14,7 +14,10 @@ struct DesktopPetRootView: View {
     var body: some View {
         VStack(spacing: 0) {
             if playbackStore.source != nil {
-                DesktopPetNowPlayingLabel(nowPlaying: playbackStore.nowPlaying)
+                DesktopPetNowPlayingLabel(
+                    nowPlaying: playbackStore.nowPlaying,
+                    onOpen: openPlayer
+                )
                     .frame(height: DesktopPetMetrics.nowPlayingLaneHeight, alignment: .top)
                 DesktopPetPlaybackControls(
                     isPlaying: playbackStore.isPlaying,
@@ -32,6 +35,11 @@ struct DesktopPetRootView: View {
         .onChange(of: playbackStore.source != nil, initial: true) { _, isShown in
             onPlaybackVisibilityChanged(isShown)
         }
+    }
+
+    private var openPlayer: (@MainActor () -> Void)? {
+        guard playbackStore.source?.hasPlayerApp == true else { return nil }
+        return { playbackStore.send(.nowPlayingTapped) }
     }
 
     private var pet: some View {

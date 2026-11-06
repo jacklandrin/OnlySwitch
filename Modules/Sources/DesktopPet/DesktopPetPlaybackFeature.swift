@@ -27,6 +27,7 @@ public struct DesktopPetPlaybackFeature {
         )
         case nextTapped
         case playPauseTapped
+        case nowPlayingTapped
         case clear
     }
 
@@ -77,6 +78,13 @@ public struct DesktopPetPlaybackFeature {
                 state.pausedSource = wasPlaying ? source : nil
                 return command(pausedSource: state.pausedSource) {
                     wasPlaying ? $0.pause(source) : $0.play(source)
+                }
+            case .nowPlayingTapped:
+                guard state.isEnabled, let source = state.source, source.hasPlayerApp else {
+                    return .none
+                }
+                return .run { [playback] _ in
+                    await playback.open(source)
                 }
             case .clear:
                 state.isEnabled = false

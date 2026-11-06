@@ -3,6 +3,11 @@ public enum DesktopPetPlaybackSource: CaseIterable, Hashable, Sendable {
     case spotify
     case radio
 
+    /// Whether the source plays in a separate app that can be brought to the front.
+    public var hasPlayerApp: Bool {
+        self != .radio
+    }
+
     /// Playing sources win by priority; otherwise the displayed paused source is kept
     /// so the controls do not jump between paused players.
     public static func preferred(

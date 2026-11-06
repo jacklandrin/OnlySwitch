@@ -33,8 +33,16 @@ class SpotifyPlayer{
         DistributedNotificationCenter.default().removeObserver(self)
     }
     
+    /// AppKit suspends distributed notifications while the app is inactive, which a menu bar app
+    /// almost always is, so deliver immediately to keep the cached state current.
     func observePlayerInfoNotification() {
-        DistributedNotificationCenter.default().addObserver(self, selector: #selector(playerInfoChanged(_:)), name: spotifyStateChangedNotification, object: nil)
+        DistributedNotificationCenter.default().addObserver(
+            self,
+            selector: #selector(playerInfoChanged(_:)),
+            name: spotifyStateChangedNotification,
+            object: nil,
+            suspensionBehavior: .deliverImmediately
+        )
     }
     
     @objc func playerInfoChanged(_ notification: Notification) {

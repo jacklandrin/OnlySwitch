@@ -6,19 +6,23 @@ public struct DesktopPetPlaybackClient: Sendable {
     public var next: @MainActor @Sendable (DesktopPetPlaybackSource) -> Void
     public var play: @MainActor @Sendable (DesktopPetPlaybackSource) -> Void
     public var pause: @MainActor @Sendable (DesktopPetPlaybackSource) -> Void
+    /// Brings the source's player app to the front.
+    public var open: @MainActor @Sendable (DesktopPetPlaybackSource) -> Void
 
     public init(
         statuses: @escaping @MainActor @Sendable () -> [DesktopPetPlaybackSource: DesktopPetPlaybackStatus] = { [:] },
         nowPlaying: @escaping @MainActor @Sendable (DesktopPetPlaybackSource) -> DesktopPetNowPlaying? = { _ in nil },
         next: @escaping @MainActor @Sendable (DesktopPetPlaybackSource) -> Void = { _ in },
         play: @escaping @MainActor @Sendable (DesktopPetPlaybackSource) -> Void = { _ in },
-        pause: @escaping @MainActor @Sendable (DesktopPetPlaybackSource) -> Void = { _ in }
+        pause: @escaping @MainActor @Sendable (DesktopPetPlaybackSource) -> Void = { _ in },
+        open: @escaping @MainActor @Sendable (DesktopPetPlaybackSource) -> Void = { _ in }
     ) {
         self.statuses = statuses
         self.nowPlaying = nowPlaying
         self.next = next
         self.play = play
         self.pause = pause
+        self.open = open
     }
 }
 

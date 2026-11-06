@@ -94,6 +94,35 @@ struct DesktopPetPlaybackTests {
         }
     }
 
+    @Test(arguments: [DesktopPetPlaybackSource.appleMusic, .spotify])
+    func nowPlayingTapOpensPlayerApp(source: DesktopPetPlaybackSource) async {
+        let playback = PlaybackFixture(statuses: [source: .playing])
+        let store = TestStore(initialState: enabledState(source: source)) {
+            DesktopPetPlaybackFeature()
+        } withDependencies: {
+            $0.desktopPetPlayback = playback.client
+        }
+
+        await store.send(.nowPlayingTapped)
+        await store.finish()
+
+        #expect(playback.commands == [.open(source)])
+    }
+
+    @Test func nowPlayingTapIgnoresRadioAndMissingSource() async {
+        let playback = PlaybackFixture(statuses: [:])
+        for source in [DesktopPetPlaybackSource.radio, nil] {
+            let store = TestStore(initialState: enabledState(source: source)) {
+                DesktopPetPlaybackFeature()
+            } withDependencies: {
+                $0.desktopPetPlayback = playback.client
+            }
+            await store.send(.nowPlayingTapped)
+        }
+
+        #expect(playback.commands.isEmpty)
+    }
+
     @Test(arguments: DesktopPetPlaybackSource.allCases)
     func nextAdvancesDisplayedSource(source: DesktopPetPlaybackSource) async {
         let playback = PlaybackFixture(statuses: [source: .playing])
@@ -383,6 +412,7 @@ private enum PlaybackCommand: Equatable {
     case next(DesktopPetPlaybackSource)
     case play(DesktopPetPlaybackSource)
     case pause(DesktopPetPlaybackSource)
+    case open(DesktopPetPlaybackSource)
 }
 
 @MainActor
@@ -410,7 +440,8 @@ private final class PlaybackFixture {
             },
             next: { self.record(.next($0)) },
             play: { self.record(.play($0)) },
-            pause: { self.record(.pause($0)) }
+            pause: { self.record(.pause($0)) },
+            open: { self.record(.open($0)) }
         )
     }
 
