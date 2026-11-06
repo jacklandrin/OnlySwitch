@@ -11,7 +11,7 @@ struct ScheduleTargetPicker: View {
         Button(action: togglePopover) {
             HStack(spacing: 6) {
                 ScheduleTargetIcon(descriptor: selectedDescriptor, size: 16)
-                Text(store.draft.target?.title ?? ScheduleStrings.text("Schedule Choose Target"))
+                Text(store.targetTitle ?? ScheduleStrings.text("Schedule Choose Target"))
                     .lineLimit(1)
                     .foregroundStyle(store.draft.target == nil ? .secondary : .primary)
                 Spacer(minLength: 4)
@@ -23,7 +23,7 @@ struct ScheduleTargetPicker: View {
             .frame(minWidth: 200, maxWidth: 280)
         }
         .accessibilityLabel(ScheduleStrings.text("Schedule Target"))
-        .accessibilityValue(store.draft.target?.title ?? ScheduleStrings.text("Schedule Choose Target"))
+        .accessibilityValue(store.targetTitle ?? ScheduleStrings.text("Schedule Choose Target"))
         .popover(isPresented: $isPresented, arrowEdge: .bottom) {
             ScheduleTargetList(
                 groups: ScheduleTargetGroups.make(catalog: store.catalog, search: store.targetSearch),

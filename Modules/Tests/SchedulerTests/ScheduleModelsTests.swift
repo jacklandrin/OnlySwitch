@@ -10,14 +10,29 @@ struct ScheduleModelsTests {
     }
 
     @Test(arguments: [RemoteControlDescriptor.Behavior.switch, .player])
-    func switchesAndPlayersAllowTurnOnAndOff(behavior: RemoteControlDescriptor.Behavior) {
-        #expect(ScheduleAction.allowed(for: behavior) == [.turnOn, .turnOff])
+    func switchesAndPlayersAllowTurnOnOffAndToggle(behavior: RemoteControlDescriptor.Behavior) {
+        #expect(ScheduleAction.allowed(for: behavior) == [.turnOn, .turnOff, .toggle])
     }
 
     @Test func actionsMapToRemoteActions() {
-        #expect(ScheduleAction.turnOn.remoteAction == .setState(true))
-        #expect(ScheduleAction.turnOff.remoteAction == .setState(false))
-        #expect(ScheduleAction.run.remoteAction == .trigger)
+        #expect(ScheduleAction.turnOn.remoteAction() == .setState(true))
+        #expect(ScheduleAction.turnOff.remoteAction() == .setState(false))
+        #expect(ScheduleAction.run.remoteAction() == .trigger)
+    }
+
+    @Test func toggleInvertsTheCurrentState() {
+        #expect(ScheduleAction.toggle.remoteAction(currentlyOn: true) == .setState(false))
+        #expect(ScheduleAction.toggle.remoteAction(currentlyOn: false) == .setState(true))
+        #expect(ScheduleAction.toggle.remoteAction(currentlyOn: nil) == nil)
+    }
+
+    @Test func onlyToggleNeedsTheCurrentState() {
+        #expect(ScheduleAction.allCases.filter(\.needsCurrentState) == [.toggle])
+    }
+
+    @Test func toggleSurvivesARoundTrip() throws {
+        let data = try JSONEncoder().encode(ScheduleAction.toggle)
+        #expect(try JSONDecoder().decode(ScheduleAction.self, from: data) == .toggle)
     }
 
     @Test func weekdayRawValuesMatchCalendarNumbering() {

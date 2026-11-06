@@ -16,7 +16,7 @@ struct ScheduleIdentitySection: View {
                     TextField(
                         ScheduleStrings.text("Schedule Name"),
                         text: $store.draft.name,
-                        prompt: Text(store.draft.target?.title ?? "")
+                        prompt: Text(store.targetTitle ?? "")
                     )
                     .textFieldStyle(.roundedBorder)
                     .labelsHidden()

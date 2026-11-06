@@ -3,18 +3,23 @@ import RemoteCore
 
 /// What a schedule does to its target when it fires.
 public enum ScheduleAction: String, Codable, CaseIterable, Sendable {
-    case turnOn, turnOff, run
+    case turnOn, turnOff, toggle, run
 
-    public var remoteAction: RemoteControlAction {
+    /// Whether running needs the target's current state first.
+    public var needsCurrentState: Bool { self == .toggle }
+
+    /// `nil` when toggling a target whose current state is unknown.
+    public func remoteAction(currentlyOn: Bool? = nil) -> RemoteControlAction? {
         switch self {
         case .turnOn: .setState(true)
         case .turnOff: .setState(false)
+        case .toggle: currentlyOn.map { .setState(!$0) }
         case .run: .trigger
         }
     }
 
     public static func allowed(for behavior: RemoteControlDescriptor.Behavior) -> [ScheduleAction] {
-        behavior == .button ? [.run] : [.turnOn, .turnOff]
+        behavior == .button ? [.run] : [.turnOn, .turnOff, .toggle]
     }
 }
 

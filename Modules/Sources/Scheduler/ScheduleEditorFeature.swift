@@ -35,8 +35,13 @@ public struct ScheduleEditorFeature {
             return !catalog.contains { $0.id == original.target.controlID }
         }
 
+        /// Prefers the catalog's current title, so targets saved under another language show translated.
+        public var targetTitle: String? {
+            catalog.descriptor(for: draft.target)?.title ?? draft.target?.title
+        }
+
         public var allowedActions: [ScheduleAction] {
-            draft.target.map { ScheduleAction.allowed(for: $0.behavior) } ?? [.turnOn, .turnOff]
+            draft.target.map { ScheduleAction.allowed(for: $0.behavior) } ?? [.turnOn, .turnOff, .toggle]
         }
     }
 

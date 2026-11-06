@@ -4,6 +4,7 @@
 //
 
 import AppKit
+import Extensions
 import Foundation
 import RemoteCore
 import Scheduler
@@ -17,10 +18,24 @@ extension ScheduleExecutorClient {
         let router = RemoteCommandRouter.live
         let provider = RemoteCatalogProvider.live
         return Self(
-            catalog: { (try? await provider.catalog()) ?? [] },
+            // The remote catalog carries built-in titles as localization keys; schedules show them translated.
+            catalog: { ((try? await provider.catalog()) ?? []).map(\.localizingBuiltInTitle) },
             run: { id, action in
+                var currentlyOn: Bool?
+                if action.needsCurrentState {
+                    do {
+                        currentlyOn = try await provider.status(id, 0).isOn
+                    } catch let error as RemoteProtocolError {
+                        return .failed(error.message)
+                    } catch {
+                        return .failed(error.localizedDescription)
+                    }
+                }
+                guard let remoteAction = action.remoteAction(currentlyOn: currentlyOn) else {
+                    return .failed("Current state unavailable")
+                }
                 let response = await router.perform(
-                    RemoteActionRequest(requestID: UUID(), controlID: id, action: action.remoteAction)
+                    RemoteActionRequest(requestID: UUID(), controlID: id, action: remoteAction)
                 )
                 switch response.result {
                 case .success: return .succeeded
@@ -29,6 +44,23 @@ extension ScheduleExecutorClient {
             }
         )
     }()
+}
+
+private extension RemoteControlDescriptor {
+    var localizingBuiltInTitle: Self {
+        guard id.kind == .builtIn else { return self }
+        return Self(
+            id: id,
+            title: title.localized(),
+            behavior: behavior,
+            icon: icon,
+            isAvailable: isAvailable,
+            unavailableReason: unavailableReason,
+            isDestructive: isDestructive,
+            supportsStatus: supportsStatus,
+            supportsSecondaryInformation: supportsSecondaryInformation
+        )
+    }
 }
 
 extension ScheduleNotificationClient {

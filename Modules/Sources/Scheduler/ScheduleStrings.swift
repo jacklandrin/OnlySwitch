@@ -5,7 +5,7 @@ import Foundation
 public enum ScheduleStrings {
     public static let keys = [
         "Schedules", "Schedule Name", "Schedule Enabled", "Schedule Notification", "Schedule Run", "Schedule When",
-        "Schedule Target", "Schedule Choose Target", "Schedule Action", "Schedule Turn On", "Schedule Turn Off",
+        "Schedule Target", "Schedule Choose Target", "Schedule Action", "Schedule Turn On", "Schedule Turn Off", "Schedule Toggle",
         "Schedule Run Action", "Schedule Repeat Interval", "Schedule Every Hour", "Schedule Day Of Week",
         "Schedule Seconds", "Schedule Minutes", "Schedule Hours", "Schedule Minute",
         "Schedule Every Day", "Schedule Weekdays", "Schedule Weekends",

@@ -213,9 +213,18 @@ struct ScheduleEditorFeatureTests {
         #expect(!ScheduleEditorFeature.State(original: nil, catalog: ScheduleFixtures.catalog).targetIsUnavailable)
     }
 
+    @Test func targetTitlePrefersTheCatalogOverTheSavedTitle() {
+        let saved = ScheduleFixtures.schedule(1, controlID: .builtIn("darkMode"), trigger: .hourly(minute: 0), activatedAt: now)
+        let missing = ScheduleFixtures.schedule(2, controlID: .builtIn("gone"), trigger: .hourly(minute: 0), activatedAt: now)
+
+        #expect(ScheduleEditorFeature.State(original: saved, catalog: ScheduleFixtures.catalog).targetTitle == "Dark Mode")
+        #expect(ScheduleEditorFeature.State(original: missing, catalog: ScheduleFixtures.catalog).targetTitle == "Target 2")
+        #expect(ScheduleEditorFeature.State(original: nil, catalog: ScheduleFixtures.catalog).targetTitle == nil)
+    }
+
     @Test func allowedActionsFollowTheTargetBehavior() {
         var state = ScheduleEditorFeature.State(original: nil, catalog: [])
-        #expect(state.allowedActions == [.turnOn, .turnOff])
+        #expect(state.allowedActions == [.turnOn, .turnOff, .toggle])
 
         state.draft.target = focus
         #expect(state.allowedActions == [.run])

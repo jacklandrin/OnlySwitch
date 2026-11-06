@@ -51,6 +51,7 @@ public enum ScheduleFormatter {
         switch action {
         case .turnOn: localize("Schedule Turn On")
         case .turnOff: localize("Schedule Turn Off")
+        case .toggle: localize("Schedule Toggle")
         case .run: localize("Schedule Run Action")
         }
     }

@@ -89,6 +89,7 @@ struct ScheduleFormatterTests {
     @Test func actionTitles() {
         #expect(ScheduleFormatter.actionTitle(.turnOn, localize: localize) == "Turn On")
         #expect(ScheduleFormatter.actionTitle(.turnOff, localize: localize) == "Turn Off")
+        #expect(ScheduleFormatter.actionTitle(.toggle, localize: localize) == "Toggle")
         #expect(ScheduleFormatter.actionTitle(.run, localize: localize) == "Run")
     }
 
