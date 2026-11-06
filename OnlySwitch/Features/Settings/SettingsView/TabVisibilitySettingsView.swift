@@ -32,7 +32,6 @@ struct TabVisibilitySettingsView: View {
         }
         .formStyle(.grouped)
         .tint(colorScheme == .dark ? .mint : .accentColor)
-        .id(langManager.currentLang)
     }
 
     private func binding(for section: SectionBar.Section) -> Binding<Bool> {

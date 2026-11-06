@@ -1,3 +1,4 @@
+import Combine
 import Defines
 import ComposableArchitecture
 import Extensions
@@ -93,6 +94,21 @@ struct TabVisibilitySettingsTests {
         stored[.authenticator] = false
         viewModel.reload()
         #expect(!viewModel.isVisible(.authenticator))
+    }
+
+    @Test func unrelatedSettingsChangesDoNotRepublishTheTabsPage() {
+        let viewModel = TabVisibilitySettingsVM(
+            client: TabVisibilityClient(isVisible: { _ in true }, setVisible: { _, _ in }),
+            notificationCenter: NotificationCenter()
+        )
+        var publishes = 0
+        let cancellable = viewModel.objectWillChange.sink { publishes += 1 }
+        defer { cancellable.cancel() }
+
+        viewModel.reload()
+        viewModel.reload()
+
+        #expect(publishes == 0)
     }
 
     @Test func tabVisibilitySwitchesAreDeprecatedButKeepStableIdentifiers() {
