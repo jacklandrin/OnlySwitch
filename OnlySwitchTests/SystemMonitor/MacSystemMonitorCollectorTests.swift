@@ -145,7 +145,7 @@ struct MacSystemMonitorCollectorTests {
 
         #expect(snapshot.processes.isEmpty == false)
         #expect(snapshot.processes.allSatisfy { process in
-            process.pid > 0 && process.name.isEmpty == false && process.memoryBytes.value != nil
+            process.pid > 0 && process.name.isEmpty == false && process.cpuUsage.value != nil
         })
     }
 

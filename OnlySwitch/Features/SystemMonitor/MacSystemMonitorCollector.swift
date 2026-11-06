@@ -774,7 +774,7 @@ actor MacSystemMonitorCollector {
 
     private struct ProcessCounters {
         let cpuNanoseconds: UInt64
-        let residentBytes: UInt64
+        let memoryBytes: UInt64?
         let name: String
         let identity: SystemMonitorProcessIdentity?
     }
@@ -1216,7 +1216,7 @@ private extension MacSystemMonitorCollector {
                 pid: pid,
                 name: counters.name,
                 cpuUsage: .available(cpuUsage),
-                memoryBytes: .available(counters.residentBytes),
+                memoryBytes: counters.memoryBytes.map { .available($0) } ?? .unavailable,
                 downloadBytesPerSecond: .unavailable,
                 uploadBytesPerSecond: .unavailable
             )
@@ -1232,14 +1232,14 @@ private extension MacSystemMonitorCollector {
 
         // `proc_pid_rusage` can be denied for individual processes (and has differed between
         // macOS releases for sandboxed callers). Use the documented task-info query as a
-        // per-process fallback rather than dropping every row when that happens. Both sources
-        // report cumulative CPU time and resident memory, so downstream rate calculations stay
-        // identical.
-        let values: (cpuNanoseconds: UInt64, residentBytes: UInt64)
+        // per-process CPU fallback rather than dropping every row when that happens. Physical
+        // footprint is not available from task info, and RSS is intentionally not substituted
+        // because it measures different memory semantics.
+        let values: (cpuNanoseconds: UInt64, memoryBytes: UInt64?)
         if resourceUsageResult == 0 {
             values = (
                 cpuNanoseconds: usage.ri_user_time + usage.ri_system_time,
-                residentBytes: usage.ri_resident_size
+                memoryBytes: usage.ri_phys_footprint
             )
         } else {
             var taskInfo = proc_taskinfo()
@@ -1253,7 +1253,7 @@ private extension MacSystemMonitorCollector {
             guard returnedByteCount == MemoryLayout<proc_taskinfo>.size else { return nil }
             values = (
                 cpuNanoseconds: taskInfo.pti_total_user + taskInfo.pti_total_system,
-                residentBytes: taskInfo.pti_resident_size
+                memoryBytes: nil
             )
         }
 
@@ -1287,7 +1287,7 @@ private extension MacSystemMonitorCollector {
 
         return ProcessCounters(
             cpuNanoseconds: values.cpuNanoseconds,
-            residentBytes: values.residentBytes,
+            memoryBytes: values.memoryBytes,
             name: name,
             identity: identity
         )
