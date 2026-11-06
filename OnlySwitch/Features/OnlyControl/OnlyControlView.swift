@@ -45,6 +45,7 @@ struct OnlyControlView: View {
     @AppStorage(UserDefaults.Key.showScreenshotsTab) private var showScreenshotsTab = true
     @AppStorage(UserDefaults.Key.showBrightnessTab) private var showBrightnessTab = true
     @AppStorage(UserDefaults.Key.showSchedulesTab) private var showSchedulesTab = true
+    @AppStorage(UserDefaults.Key.tabOrder) private var tabOrder = ""
     
     private let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
 
@@ -292,7 +293,8 @@ struct OnlyControlView: View {
             appUninstaller: showAppUninstallerTab,
             screenshots: showScreenshotsTab,
             brightness: showBrightnessTab,
-            schedules: showSchedulesTab
+            schedules: showSchedulesTab,
+            order: SectionBar.manageableOrder(from: tabOrder)
         )
     }
 }

@@ -72,6 +72,9 @@ public extension UserDefaults {
         /// The schedule list; intentionally not exportable (targets are machine specific).
         public static let schedules = "schedulesKey"
         public static let showSchedulesTab = "showSchedulesTabKey"
+        // Tabs
+        /// Comma-separated `SectionBar.Section` ids for the optional popover/Only Control tabs.
+        public static let tabOrder = "tabOrderKey"
         //BackNoises
         public static let backNoisesTrack = "backNoisesTrackKey"
         public static let automaticallyStopPlayNoiseTime = "automaticallyStopPlayNoiseTimeKey"
@@ -150,7 +153,7 @@ public extension UserDefaults {
             shortcutsDic,
             orderWeight, onlyControlOrderWeight,
             soundMixerEnabled,
-            systemMonitorPreferences, showSystemMonitorTab, showXcodeCleanerTab, showAppUninstallerTab, showScreenshotsTab, showSchedulesTab,
+            systemMonitorPreferences, showSystemMonitorTab, showXcodeCleanerTab, showAppUninstallerTab, showScreenshotsTab, showSchedulesTab, tabOrder,
             backNoisesTrack, automaticallyStopPlayNoiseTime,
             autoStopKeepAwakeMode, autoStopKeepAwakeTime, autoStopKeepAwakeStartDate, autoStopKeepAwakeEndDate, autoStopKeepAwakeOnSleep, KeepAwakeKey,
             autoDimScreenTime, dimScreenPercent, syncExternalBrightness,

@@ -201,6 +201,94 @@ struct TabVisibilitySettingsTests {
         #expect(items.firstIndex(of: .Schedules) == items.firstIndex(of: .Evolution).map { $0 + 1 })
     }
 
+    @Test func savedTabOrderIsSanitizedAndNewTabsAreAppended() {
+        #expect(SectionBar.manageableOrder(from: "") == SectionBar.Section.manageable)
+        let order = SectionBar.manageableOrder(from: "schedules,controls,unknown,brightness,schedules")
+        #expect(order.prefix(2) == [.schedules, .brightness])
+        #expect(order.count == SectionBar.Section.manageable.count)
+        #expect(Set(order) == Set(SectionBar.Section.manageable))
+        #expect(Array(order.dropFirst(2)) == SectionBar.Section.manageable.filter { $0 != .schedules && $0 != .brightness })
+        #expect(SectionBar.manageableOrder(from: SectionBar.storedOrder(order)) == order)
+    }
+
+    @Test func sectionsFollowTheSavedOrderWithControlsFirst() {
+        let order = SectionBar.manageableOrder(from: "schedules,soundMixer,authenticator")
+        let sections = SectionBar.sections(authenticator: true, soundMixer: true, systemMonitor: false,
+            codexUsage: false, schedules: true, order: order)
+        #expect(sections == [.controls, .schedules, .soundMixer, .authenticator])
+    }
+
+    @Test func defaultsClientPersistsTabOrderUnderTheExportedKey() throws {
+        let suite = "TabOrderTests.\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let client = TabVisibilityClient.defaults(defaults,
+            authenticatorEnabled: { false }, setAuthenticatorEnabled: { _ in },
+            soundMixerEnabled: { false }, setSoundMixerEnabled: { _ in })
+        #expect(client.order() == SectionBar.Section.manageable)
+        let reversed = Array(SectionBar.Section.manageable.reversed())
+        client.setOrder(reversed)
+        #expect(client.order() == reversed)
+        #expect(defaults.string(forKey: UserDefaults.Key.tabOrder) == SectionBar.storedOrder(reversed))
+        #expect(UserDefaults.Key.exportableKeys.contains(UserDefaults.Key.tabOrder))
+    }
+
+    @Test func viewModelReordersTabsAndPostsOneSettingsRefresh() {
+        var stored = SectionBar.Section.manageable
+        let center = NotificationCenter()
+        let notifications = TestMutex(0)
+        let observer = center.addObserver(forName: .changeSettings, object: nil, queue: nil) { _ in notifications.withLock { $0 += 1 } }
+        defer { center.removeObserver(observer) }
+        let viewModel = TabVisibilitySettingsVM(
+            client: TabVisibilityClient(isVisible: { _ in true }, setVisible: { _, _ in },
+                order: { stored }, setOrder: { stored = $0 }),
+            notificationCenter: center
+        )
+        let first = stored[0], second = stored[1], last = stored[stored.count - 1]
+
+        // onMove semantics: moving the first row below the second targets index 2.
+        viewModel.move(fromOffsets: [0], toOffset: 2)
+        #expect(Array(viewModel.sections.prefix(2)) == [second, first])
+        #expect(stored == viewModel.sections)
+        #expect(notifications.withLock { $0 } == 1)
+
+        viewModel.move(fromOffsets: [0], toOffset: 0)
+        #expect(notifications.withLock { $0 } == 1)
+
+        #expect(!viewModel.canMove(second, by: -1))
+        #expect(!viewModel.canMove(last, by: 1))
+        viewModel.move(last, by: 1)
+        #expect(viewModel.sections.last == last)
+
+        viewModel.move(last, by: -1)
+        #expect(viewModel.sections[viewModel.sections.count - 2] == last)
+        viewModel.move(first, by: -1)
+        #expect(Array(viewModel.sections.prefix(2)) == [first, second])
+        #expect(notifications.withLock { $0 } == 3)
+    }
+
+    @Test func reorderModeTogglesAndDraggingOntoARowTakesItsPlace() {
+        var stored = SectionBar.Section.manageable
+        let viewModel = TabVisibilitySettingsVM(
+            client: TabVisibilityClient(isVisible: { _ in true }, setVisible: { _, _ in },
+                order: { stored }, setOrder: { stored = $0 }),
+            notificationCenter: NotificationCenter()
+        )
+        #expect(!viewModel.isReordering)
+        viewModel.toggleReordering()
+        #expect(viewModel.isReordering)
+
+        let initial = viewModel.sections
+        viewModel.move(initial[0], onto: initial[3])
+        #expect(Array(viewModel.sections.prefix(4)) == [initial[1], initial[2], initial[3], initial[0]])
+        viewModel.move(initial[0], onto: initial[1])
+        #expect(Array(viewModel.sections.prefix(4)) == [initial[0], initial[1], initial[2], initial[3]])
+        #expect(stored == initial)
+
+        viewModel.toggleReordering()
+        #expect(!viewModel.isReordering)
+    }
+
     @Test func tabsSettingsPageFollowsBuiltIn() {
         let items = SettingsItem.allCases
         #expect(items.firstIndex(of: .Tabs) == items.firstIndex(of: .Customize).map { $0 + 1 })

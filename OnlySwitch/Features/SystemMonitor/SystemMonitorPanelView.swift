@@ -5,7 +5,8 @@ import SystemMonitor
 import Utilities
 
 enum SectionBar {
-    enum Section: CaseIterable, Hashable {
+    /// Raw values are persisted in `UserDefaults.Key.tabOrder`; keep them stable.
+    enum Section: String, CaseIterable, Hashable {
         case controls
         case authenticator
         case soundMixer
@@ -76,21 +77,31 @@ enum SectionBar {
         appUninstaller: Bool = false,
         screenshots: Bool = false,
         brightness: Bool = false,
-        schedules: Bool = false
+        schedules: Bool = false,
+        order: [Section] = Section.manageable
     ) -> [Section] {
-        var sections: [Section] = [.controls]
-        if authenticator { sections.append(.authenticator) }
-        if soundMixer { sections.append(.soundMixer) }
-        if systemMonitor { sections.append(.systemMonitor) }
-        if codexUsage { sections.append(.codexUsage) }
-        if claudeUsage { sections.append(.claudeUsage) }
-        if aphrodite { sections.append(.aphrodite) }
-        if xcodeCleaner { sections.append(.xcodeCleaner) }
-        if appUninstaller { sections.append(.appUninstaller) }
-        if screenshots { sections.append(.screenshots) }
-        if brightness { sections.append(.brightness) }
-        if schedules { sections.append(.schedules) }
-        return sections
+        let isVisible: [Section: Bool] = [
+            .authenticator: authenticator, .soundMixer: soundMixer, .systemMonitor: systemMonitor,
+            .codexUsage: codexUsage, .claudeUsage: claudeUsage, .aphrodite: aphrodite,
+            .xcodeCleaner: xcodeCleaner, .appUninstaller: appUninstaller, .screenshots: screenshots,
+            .brightness: brightness, .schedules: schedules,
+        ]
+        return [.controls] + order.filter { isVisible[$0] == true }
+    }
+
+    /// Optional tabs in the user's saved order. Unknown or repeated ids are dropped, and tabs missing from
+    /// the saved order (e.g. added in a later version) follow in their default position.
+    static func manageableOrder(from storedOrder: String) -> [Section] {
+        var order: [Section] = []
+        for id in storedOrder.split(separator: ",") {
+            guard let section = Section(rawValue: String(id)), section != .controls, !order.contains(section) else { continue }
+            order.append(section)
+        }
+        return order + Section.manageable.filter { !order.contains($0) }
+    }
+
+    static func storedOrder(_ order: [Section]) -> String {
+        order.map(\.rawValue).joined(separator: ",")
     }
 
     static func shouldShowBar(for sections: [Section]) -> Bool {
