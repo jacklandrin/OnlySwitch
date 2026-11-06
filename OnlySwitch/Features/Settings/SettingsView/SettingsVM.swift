@@ -58,6 +58,68 @@ enum SettingsItem: String, CaseIterable {
             rawValue
         }
     }
+
+    var systemImage: String {
+        switch self {
+        case .General: "gearshape"
+        case .Customize: "square.grid.2x2"
+        case .Tabs: "rectangle.stack"
+        case .Shortcuts: "command"
+        case .Evolution: "wand.and.stars"
+        case .Schedules: "calendar.badge.clock"
+        case .ModelProviders: "brain"
+        case .Aphrodite: "sparkles"
+        case .AirPods: "airpodspro"
+        case .Radio: "radio"
+        case .Authenticator: "lock.shield"
+        case .SystemMonitor: "gauge.with.dots.needle.67percent"
+        case .XcodeCleaner: "hammer"
+        case .AppUninstaller: "trash"
+        case .Screenshots: "camera.viewfinder"
+        case .Tailscale: "network"
+        case .PomodoroTimer: "timer"
+        case .HideMenubarIcons: "menubar.rectangle"
+        case .BackNoises: "waveform"
+        case .KeepAwake: "cup.and.saucer"
+        case .DimScreen: "sun.max"
+        case .NightShift: "moon"
+        case .KeyLight: "light.max"
+        case .PrivilegedAccess: "key"
+        case .iOSRemote: "iphone"
+        case .About: "info.circle"
+        }
+    }
+
+    var iconColor: Color {
+        switch self {
+        case .General: .gray
+        case .Customize: .blue
+        case .Tabs: .indigo
+        case .Shortcuts: .pink
+        case .Evolution: .purple
+        case .Schedules: .red
+        case .ModelProviders: .mint
+        case .Aphrodite: .orange
+        case .AirPods: .cyan
+        case .Radio: .teal
+        case .Authenticator: .green
+        case .SystemMonitor: .blue
+        case .XcodeCleaner: .brown
+        case .AppUninstaller: .red
+        case .Screenshots: .purple
+        case .Tailscale: .indigo
+        case .PomodoroTimer: .orange
+        case .HideMenubarIcons: .gray
+        case .BackNoises: .teal
+        case .KeepAwake: .brown
+        case .DimScreen: .yellow
+        case .NightShift: .indigo
+        case .KeyLight: .orange
+        case .PrivilegedAccess: .yellow
+        case .iOSRemote: .blue
+        case .About: .gray
+        }
+    }
 }
 
 @MainActor

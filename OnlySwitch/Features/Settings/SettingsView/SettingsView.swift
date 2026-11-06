@@ -38,10 +38,7 @@ struct SettingsView: View {
                         page(item: item)
                             .navigationTitle(item.titleLocalizationKey.localized())
                     } label:{
-                        Text(item.titleLocalizationKey.localized())
-                            .id(currentLang)
-                            .frame(minWidth: 190, alignment:.leading)
-                            .lineLimit(2)
+                        sidebarRow(item: item, currentLang: currentLang)
                     }
                 }
             }
@@ -65,10 +62,7 @@ struct SettingsView: View {
             List(selection:$settingVM.selection) {
                 ForEach(settingVM.settingItems, id:\.self ) { item in
                     NavigationLink(value: item) {
-                        Text(item.titleLocalizationKey.localized())
-                            .id(currentLang)
-                            .frame(minWidth: 190, alignment:.leading)
-                            .lineLimit(2)
+                        sidebarRow(item: item, currentLang: currentLang)
                     }
                 }
             }
@@ -78,6 +72,21 @@ struct SettingsView: View {
             page(item: selection)
                 .navigationTitle(selection.titleLocalizationKey.localized())
         })
+    }
+
+    func sidebarRow(item: SettingsItem, currentLang: String) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: item.systemImage)
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundStyle(.white)
+                .frame(width: 22, height: 22)
+                .background(item.iconColor.gradient, in: RoundedRectangle(cornerRadius: 5, style: .continuous))
+            Text(item.titleLocalizationKey.localized())
+                .id(currentLang)
+                .lineLimit(2)
+        }
+        .frame(minWidth: 190, alignment: .leading)
+        .padding(.vertical, 6)
     }
 
     @ViewBuilder
