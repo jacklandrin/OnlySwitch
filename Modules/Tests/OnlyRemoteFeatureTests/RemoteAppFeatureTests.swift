@@ -1,0 +1,2723 @@
+import ComposableArchitecture
+import Foundation
+import RemoteCore
+import Testing
+@testable import OnlyRemoteFeature
+
+@MainActor
+struct RemoteAppFeatureTests {
+    private let studio = PairedMac(id: UUID(uuidString: "00000000-0000-0000-0000-000000000101")!, displayName: "Studio", lastEndpointDescription: nil, lastConnectedAt: nil, requiresPairing: false)
+    private let laptop = PairedMac(id: UUID(uuidString: "00000000-0000-0000-0000-000000000102")!, displayName: "Laptop", lastEndpointDescription: nil, lastConnectedAt: nil, requiresPairing: false)
+
+    @Test func settingsPurchaseUpdatesAphroditeMembershipImmediately() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.paywall = .init(isPurchasing: true)
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+        await store.send(.paywall(.presented(.purchaseResponse(.success(.purchased(.active(expirationDate: nil))))))) {
+            $0.paywall?.isPurchasing = false
+            $0.paywall?.entitlement = .active(expirationDate: nil)
+        }
+        await store.receive(.plusAccess(.entitlementUpdated(.active(expirationDate: nil)))) {
+            $0.plusAccess.entitlement = .active(expirationDate: nil)
+            $0.plusAccess.paywall.entitlement = .active(expirationDate: nil)
+            $0.plusAccess.refreshGeneration = 1
+        }
+        await store.receive(.soundMixer(.entitlementChanged(true))) { $0.soundMixer.isEntitled = true }
+        await store.receive(.brightness(.entitlementChanged(true))) { $0.brightness.isEntitled = true }
+        await store.receive(.screenshots(.entitlementChanged(true))) { $0.screenshots.isEntitled = true }
+        await store.receive(.paywall(.presented(.authoritativeEntitlementUpdated(.active(expirationDate: nil))))) {
+            $0.paywall?.entitlementGeneration = 1
+        }
+        #expect(store.state.plusAccess.canAccess)
+    }
+
+    @Test func settingsRestoreUpdatesAphroditeMembership() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.paywall = .init(isRestoring: true)
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+        await store.send(.paywall(.presented(.restoreResponse(.success(.active(expirationDate: nil)))))) {
+            $0.paywall?.isRestoring = false
+            $0.paywall?.entitlement = .active(expirationDate: nil)
+            $0.paywall?.restoreCompleted = true
+        }
+        await store.receive(.plusAccess(.entitlementUpdated(.active(expirationDate: nil)))) {
+            $0.plusAccess.entitlement = .active(expirationDate: nil)
+            $0.plusAccess.paywall.entitlement = .active(expirationDate: nil)
+            $0.plusAccess.refreshGeneration = 1
+        }
+        await store.receive(.soundMixer(.entitlementChanged(true))) { $0.soundMixer.isEntitled = true }
+        await store.receive(.brightness(.entitlementChanged(true))) { $0.brightness.isEntitled = true }
+        await store.receive(.screenshots(.entitlementChanged(true))) { $0.screenshots.isEntitled = true }
+        await store.receive(.paywall(.presented(.authoritativeEntitlementUpdated(.active(expirationDate: nil))))) {
+            $0.paywall?.entitlementGeneration = 1
+        }
+        #expect(store.state.plusAccess.canAccess)
+    }
+
+    @Test func approvedPendingPurchaseUpdatesBothPaywalls() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.paywall = .init(purchasePending: true)
+        state.plusAccess.paywall.purchasePending = true
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+        await store.send(.plusAccess(.entitlementUpdated(.active(expirationDate: nil)))) {
+            $0.plusAccess.entitlement = .active(expirationDate: nil)
+            $0.plusAccess.paywall.entitlement = .active(expirationDate: nil)
+            $0.plusAccess.paywall.purchasePending = false
+            $0.plusAccess.refreshGeneration = 1
+            $0.paywall?.entitlement = .active(expirationDate: nil)
+            $0.paywall?.purchasePending = false
+        }
+        await store.receive(.soundMixer(.entitlementChanged(true))) { $0.soundMixer.isEntitled = true }
+        await store.receive(.brightness(.entitlementChanged(true))) { $0.brightness.isEntitled = true }
+        await store.receive(.screenshots(.entitlementChanged(true))) { $0.screenshots.isEntitled = true }
+        await store.receive(.paywall(.presented(.authoritativeEntitlementUpdated(.active(expirationDate: nil))))) {
+            $0.paywall?.entitlementGeneration = 1
+        }
+        #expect(store.state.paywall?.canPurchase == false)
+        #expect(store.state.plusAccess.canAccess)
+    }
+
+    @Test func membershipPresentationAndDismissalPreserveSetup() async {
+        let store = TestStore(initialState: RemoteAppFeature.State(hasCompletedInitialSetup: false)) { RemoteAppFeature() }
+        await store.send(.membershipTapped) { $0.paywall = .init() }
+        await store.send(.paywall(.dismiss)) { $0.paywall = nil }
+        #expect(store.state.requiredGlobalSettings?.isSetupRequired == true)
+        #expect(store.state.hasCompletedInitialSetup == false)
+    }
+
+    @Test func requiredSettingsCanOpenMembershipBeforePairing() async {
+        let store = TestStore(initialState: RemoteAppFeature.State(hasCompletedInitialSetup: false)) { RemoteAppFeature() }
+        await store.send(.requiredGlobalSettings(.delegate(.openMembership))) { $0.paywall = .init() }
+        #expect(store.state.requiredGlobalSettings?.isSetupRequired == true)
+        #expect(store.state.path.isEmpty)
+        #expect(store.state.selectedMacID == nil)
+    }
+
+    @Test func pushedSettingsCanOpenMembershipWithoutChangingNavigation() async throws {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.path.append(.globalSettings(.init()))
+        let pathID = try #require(state.path.ids.last)
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+        await store.send(.path(.element(id: pathID, action: .globalSettings(.delegate(.openMembership))))) {
+            $0.paywall = .init()
+        }
+        #expect(store.state.path.ids == state.path.ids)
+        #expect(store.state.hasCompletedInitialSetup)
+    }
+
+    @Test func aphroditeSelectionStopsVisibleMonitorStreaming() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.selectedPage = .systemMonitor
+        state.systemMonitor.isVisible = true
+        state.systemMonitor.isStreaming = true
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remoteConnection.setSystemMonitorStreaming = { #expect($0 == false) }
+            $0.remoteSubscription.currentEntitlement = { .inactive }
+        }
+        await store.send(.pageSelected(.aphrodite)) { $0.selectedPage = .aphrodite }
+        await store.receive(.systemMonitor(.visibilityChanged(false))) {
+            $0.systemMonitor.isVisible = false
+            $0.systemMonitor.isStreaming = false
+        }
+        await store.receive(.codexUsage(.visibilityChanged(false)))
+        await store.receive(.claudeUsage(.visibilityChanged(false)))
+        await store.receive(.plusAccess(.refresh)) { $0.plusAccess.refreshGeneration = 1 }
+        await store.receive(.plusAccess(.entitlementResponse(1, .inactive)))
+        #expect(store.state.controlsConfiguration == nil)
+        #expect(store.state.monitorConfiguration == nil)
+        #expect(store.state.paywall == nil)
+        #expect(store.state.path.isEmpty)
+    }
+
+    @Test func aphroditeSelectionHidesCodexUsage() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.selectedPage = .codexUsage
+        state.codexUsage.isVisible = true
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remoteSubscription.currentEntitlement = { .inactive }
+        }
+        await store.send(.pageSelected(.aphrodite)) { $0.selectedPage = .aphrodite }
+        await store.receive(.systemMonitor(.visibilityChanged(false)))
+        await store.receive(.codexUsage(.visibilityChanged(false))) { $0.codexUsage.isVisible = false }
+        await store.receive(.claudeUsage(.visibilityChanged(false)))
+        await store.receive(.plusAccess(.refresh)) { $0.plusAccess.refreshGeneration = 1 }
+        await store.receive(.plusAccess(.entitlementResponse(1, .inactive)))
+        #expect(store.state.path.isEmpty)
+        #expect(store.state.paywall == nil)
+    }
+
+    @Test(arguments: [RemoteAppPage.soundMixer, .brightness, .screenshots, .aphrodite])
+    func selectingPlusPageRefreshesPlusAccess(page: RemoteAppPage) async {
+        let store = TestStore(initialState: RemoteAppFeature.State(hasCompletedInitialSetup: true, tabConfiguration: .init())) {
+            RemoteAppFeature()
+        } withDependencies: {
+            $0.remoteSubscription.currentEntitlement = { .inactive }
+        }
+        await store.send(.pageSelected(page)) { $0.selectedPage = page }
+        await store.receive(.systemMonitor(.visibilityChanged(false)))
+        if page == .soundMixer {
+            await store.receive(.soundMixer(.visibilityChanged(true))) { $0.soundMixer.isVisible = true }
+        }
+        if page == .brightness {
+            await store.receive(.brightness(.visibilityChanged(true))) { $0.brightness.isVisible = true }
+        }
+        if page == .screenshots {
+            await store.receive(.screenshots(.visibilityChanged(true))) { $0.screenshots.isVisible = true }
+        }
+        await store.receive(.codexUsage(.visibilityChanged(false)))
+        await store.receive(.claudeUsage(.visibilityChanged(false)))
+        await store.receive(.plusAccess(.refresh)) { $0.plusAccess.refreshGeneration = 1 }
+        await store.receive(.plusAccess(.entitlementResponse(1, .inactive)))
+    }
+
+    @Test func soundMixerStreamsOnlyWhileVisibleForegroundedAndEntitled() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true, tabConfiguration: .init())
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.soundMixer.selectedMacID = studio.id
+        state.soundMixer.connectionState = .authenticated
+        let streaming = LockIsolated<[Bool]>([])
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remoteConnection.setSoundMixerStreaming = { enabled in streaming.withValue { $0.append(enabled) } }
+            $0.remoteConnection.setForegrounded = { _ in }
+            $0.remoteIdleTimer.setIdleTimerDisabled = { _ in }
+            $0.remoteSubscription.currentEntitlement = { .active(expirationDate: nil) }
+        }
+        store.exhaustivity = .off
+
+        await store.send(.pageSelected(.soundMixer))
+        await store.receive(.soundMixer(.visibilityChanged(true)))
+        await store.receive(.soundMixer(.entitlementChanged(true)))
+        await store.receive(.soundMixer(.streamingResponse(.success(true))))
+        #expect(store.state.soundMixer.isStreaming)
+
+        let snapshot = RemoteSoundMixerSnapshot(revision: 1, isEnabled: true, systemVolume: 30, output: nil, apps: [])
+        await store.send(.connectionEvent(.soundMixer(studio.id, snapshot)))
+        await store.receive(.soundMixer(.connectionEvent(.soundMixer(studio.id, snapshot))))
+        #expect(store.state.soundMixer.snapshot == snapshot)
+
+        await store.send(.scenePhaseChanged(false))
+        await store.receive(.soundMixer(.visibilityChanged(false)))
+        await store.finish()
+        #expect(store.state.soundMixer.isStreaming == false)
+        #expect(streaming.value == [true, false])
+    }
+
+    @Test func brightnessStreamsOnlyWhileVisibleForegroundedAndEntitled() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true, tabConfiguration: .init())
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.brightness.selectedMacID = studio.id
+        state.brightness.connectionState = .authenticated
+        let streaming = LockIsolated<[Bool]>([])
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remoteConnection.setBrightnessStreaming = { enabled in streaming.withValue { $0.append(enabled) } }
+            $0.remoteConnection.setForegrounded = { _ in }
+            $0.remoteIdleTimer.setIdleTimerDisabled = { _ in }
+            $0.remoteSubscription.currentEntitlement = { .active(expirationDate: nil) }
+        }
+        store.exhaustivity = .off
+
+        await store.send(.pageSelected(.brightness))
+        await store.receive(.brightness(.visibilityChanged(true)))
+        await store.receive(.brightness(.entitlementChanged(true)))
+        await store.receive(.brightness(.streamingResponse(.success(true))))
+        #expect(store.state.brightness.isStreaming)
+        #expect(store.state.soundMixer.isVisible == false)
+
+        let snapshot = RemoteBrightnessSnapshot(revision: 1, displays: [
+            .init(id: 1, name: "Built-in Retina Display", control: .native, level: 0.7, hasError: false),
+        ])
+        await store.send(.connectionEvent(.brightness(studio.id, snapshot)))
+        await store.receive(.brightness(.connectionEvent(.brightness(studio.id, snapshot))))
+        #expect(store.state.brightness.snapshot == snapshot)
+
+        await store.send(.scenePhaseChanged(false))
+        await store.receive(.brightness(.visibilityChanged(false)))
+        await store.finish()
+        #expect(store.state.brightness.isStreaming == false)
+        #expect(streaming.value == [true, false])
+    }
+
+    @Test func screenshotsStreamsOnlyWhileVisibleForegroundedAndEntitled() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true, tabConfiguration: .init())
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.connectedMacIDs = [studio.id]
+        state.screenshots.selectedMacID = studio.id
+        state.screenshots.connectionState = .authenticated
+        let streaming = LockIsolated<[Bool]>([])
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remoteConnection.setScreenshotsStreaming = { enabled in streaming.withValue { $0.append(enabled) } }
+            $0.remoteConnection.setForegrounded = { _ in }
+            $0.remoteIdleTimer.setIdleTimerDisabled = { _ in }
+            $0.remoteSubscription.currentEntitlement = { .active(expirationDate: nil) }
+        }
+        store.exhaustivity = .off
+
+        await store.send(.pageSelected(.screenshots))
+        await store.receive(.screenshots(.visibilityChanged(true)))
+        await store.receive(.screenshots(.entitlementChanged(true)))
+        await store.receive(.screenshots(.streamingResponse(.success(true))))
+        #expect(store.state.screenshots.isStreaming)
+        #expect(store.state.brightness.isVisible == false)
+        #expect(store.state.soundMixer.isVisible == false)
+
+        let library = RemoteScreenshotLibrary(revision: 1, isCollectionEnabled: true, items: [])
+        await store.send(.connectionEvent(.screenshots(studio.id, library)))
+        await store.receive(.screenshots(.connectionEvent(.screenshots(studio.id, library))))
+        #expect(store.state.screenshots.library == library)
+        #expect(store.state.screenshots.hasLiveLibrary)
+
+        await store.send(.scenePhaseChanged(false))
+        await store.receive(.screenshots(.visibilityChanged(false)))
+        await store.finish()
+        #expect(store.state.screenshots.isStreaming == false)
+        #expect(streaming.value == [true, false])
+    }
+
+    @Test func selectingScreenshotsMakesItVisibleAndRefreshesPlus() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true, tabConfiguration: .init())
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.connectedMacIDs = [studio.id]
+        state.screenshots.selectedMacID = studio.id
+        state.screenshots.connectionState = .authenticated
+        // Exhaustive: a non-subscriber never subscribes (the unimplemented stream would report back).
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remoteSubscription.currentEntitlement = { .inactive }
+        }
+        await store.send(.pageSelected(.screenshots)) { $0.selectedPage = .screenshots }
+        await store.receive(.systemMonitor(.visibilityChanged(false)))
+        await store.receive(.screenshots(.visibilityChanged(true))) { $0.screenshots.isVisible = true }
+        await store.receive(.codexUsage(.visibilityChanged(false)))
+        await store.receive(.claudeUsage(.visibilityChanged(false)))
+        await store.receive(.plusAccess(.refresh)) { $0.plusAccess.refreshGeneration = 1 }
+        await store.receive(.plusAccess(.entitlementResponse(1, .inactive)))
+        #expect(store.state.showsPaywallBackground(for: .screenshots))
+        #expect(store.state.screenshots.isStreamRequested == false)
+        #expect(store.state.screenshots.isStreaming == false)
+    }
+
+    @Test func entitlementChangesAreForwardedToScreenshots() async {
+        let store = TestStore(initialState: RemoteAppFeature.State(hasCompletedInitialSetup: true)) { RemoteAppFeature() }
+        await store.send(.plusAccess(.entitlementUpdated(.active(expirationDate: nil)))) {
+            $0.plusAccess.entitlement = .active(expirationDate: nil)
+            $0.plusAccess.paywall.entitlement = .active(expirationDate: nil)
+            $0.plusAccess.refreshGeneration = 1
+        }
+        await store.receive(.soundMixer(.entitlementChanged(true))) { $0.soundMixer.isEntitled = true }
+        await store.receive(.brightness(.entitlementChanged(true))) { $0.brightness.isEntitled = true }
+        await store.receive(.screenshots(.entitlementChanged(true))) { $0.screenshots.isEntitled = true }
+
+        await store.send(.plusAccess(.entitlementUpdated(.inactive))) {
+            $0.plusAccess.entitlement = .inactive
+            $0.plusAccess.paywall.entitlement = .inactive
+            $0.plusAccess.refreshGeneration = 2
+        }
+        await store.receive(.soundMixer(.entitlementChanged(false))) { $0.soundMixer.isEntitled = false }
+        await store.receive(.brightness(.entitlementChanged(false))) { $0.brightness.isEntitled = false }
+        await store.receive(.screenshots(.entitlementChanged(false))) { $0.screenshots.isEntitled = false }
+    }
+
+    @Test func backgroundingHidesScreenshots() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true, tabConfiguration: .init())
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.connectedMacIDs = [studio.id]
+        state.selectedPage = .screenshots
+        state.screenshots.selectedMacID = studio.id
+        state.screenshots.connectionState = .authenticated
+        state.screenshots.isVisible = true
+        state.screenshots.isEntitled = true
+        state.screenshots.isStreamRequested = true
+        state.screenshots.isStreaming = true
+        let streaming = LockIsolated<[Bool]>([])
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remoteConnection.setScreenshotsStreaming = { enabled in streaming.withValue { $0.append(enabled) } }
+            $0.remoteConnection.setForegrounded = { _ in }
+            $0.remoteIdleTimer.setIdleTimerDisabled = { _ in }
+        }
+        store.exhaustivity = .off
+
+        await store.send(.scenePhaseChanged(false))
+        await store.receive(.screenshots(.visibilityChanged(false)))
+        await store.finish()
+        #expect(store.state.screenshots.isVisible == false)
+        #expect(store.state.screenshots.isStreamRequested == false)
+        #expect(store.state.screenshots.isStreaming == false)
+        #expect(streaming.value == [false])
+    }
+
+    @Test func backgroundingDuringAScreenshotDragDownloadKeepsItsSubscriptionUntilItFinishes() async {
+        let item = RemoteScreenshotItem(
+            id: UUID(uuidString: "00000000-0000-0000-0000-0000000005D1")!,
+            fileName: "Shot.png",
+            contentType: "public.png",
+            createdAt: Date(timeIntervalSince1970: 1_800_000_000),
+            isPinned: false,
+            revision: 0,
+            byteCount: 3
+        )
+        let originalURL = URL(fileURLWithPath: "/tmp/Shot.png")
+        let clock = TestClock()
+        let streaming = LockIsolated<[Bool]>([])
+        let foregrounded = LockIsolated<[Bool]>([])
+        let store = TestStore(initialState: screenshotsStreamingState(items: [item])) { RemoteAppFeature() } withDependencies: {
+            $0.remoteConnection.setScreenshotsStreaming = { enabled in streaming.withValue { $0.append(enabled) } }
+            $0.remoteConnection.setForegrounded = { value in foregrounded.withValue { $0.append(value) } }
+            $0.remoteIdleTimer.setIdleTimerDisabled = { _ in }
+            $0.remoteScreenshotImages.load = { _, _ in
+                try await clock.sleep(for: .seconds(5))
+                return originalURL
+            }
+            $0.continuousClock = clock
+        }
+        store.exhaustivity = .off
+
+        await store.send(.screenshots(.dragStarted(item.id)))
+        await store.send(.scenePhaseChanged(false))
+        await store.receive(.screenshots(.visibilityChanged(false)))
+        await store.receive(.lifecycleResponse(1))
+        #expect(store.state.screenshots.isVisible == false)
+        #expect(store.state.screenshots.isHoldingTransfers)
+        #expect(store.state.screenshots.isStreamRequested)
+        #expect(streaming.value.isEmpty)
+        #expect(foregrounded.value == [false])
+
+        await clock.advance(by: .seconds(5))
+        await store.receive(.screenshots(.imageLoaded(generation: 0, itemID: item.id, originalURL)))
+        await store.finish()
+        #expect(store.state.screenshots.imageURLs[item.id] == originalURL)
+        #expect(store.state.screenshots.isHoldingTransfers == false)
+        #expect(store.state.screenshots.isStreamRequested == false)
+        #expect(streaming.value == [false])
+    }
+
+    @Test func foregroundingDuringTheScreenshotTransferHoldResumesWithoutResubscribing() async {
+        let item = RemoteScreenshotItem(
+            id: UUID(uuidString: "00000000-0000-0000-0000-0000000005D2")!,
+            fileName: "Shot.png",
+            contentType: "public.png",
+            createdAt: Date(timeIntervalSince1970: 1_800_000_000),
+            isPinned: false,
+            revision: 0,
+            byteCount: 3
+        )
+        let originalURL = URL(fileURLWithPath: "/tmp/Shot.png")
+        let clock = TestClock()
+        let streaming = LockIsolated<[Bool]>([])
+        let foregrounded = LockIsolated<[Bool]>([])
+        let store = TestStore(initialState: screenshotsStreamingState(items: [item])) { RemoteAppFeature() } withDependencies: {
+            $0.remoteConnection.setScreenshotsStreaming = { enabled in streaming.withValue { $0.append(enabled) } }
+            $0.remoteConnection.setForegrounded = { value in foregrounded.withValue { $0.append(value) } }
+            $0.remoteIdleTimer.setIdleTimerDisabled = { _ in }
+            $0.remoteScreenshotImages.load = { _, _ in
+                try await clock.sleep(for: .seconds(5))
+                return originalURL
+            }
+            $0.continuousClock = clock
+        }
+        store.exhaustivity = .off
+
+        await store.send(.screenshots(.dragStarted(item.id)))
+        await store.send(.scenePhaseChanged(false))
+        await store.receive(.screenshots(.visibilityChanged(false)))
+        await store.send(.scenePhaseChanged(true))
+        await store.receive(.screenshots(.visibilityChanged(true)))
+        #expect(store.state.screenshots.isVisible)
+        #expect(store.state.screenshots.isHoldingTransfers == false)
+        #expect(store.state.screenshots.isStreamRequested)
+
+        await clock.advance(by: .seconds(40))
+        await store.receive(.screenshots(.imageLoaded(generation: 0, itemID: item.id, originalURL)))
+        await store.finish()
+        #expect(store.state.screenshots.isStreamRequested)
+        #expect(store.state.screenshots.isStreaming)
+        #expect(streaming.value.isEmpty)
+        #expect(foregrounded.value == [false, true])
+    }
+
+    private func screenshotsStreamingState(items: [RemoteScreenshotItem]) -> RemoteAppFeature.State {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true, tabConfiguration: .init())
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.connectedMacIDs = [studio.id]
+        state.selectedPage = .screenshots
+        state.screenshots.selectedMacID = studio.id
+        state.screenshots.connectionState = .authenticated
+        state.screenshots.isVisible = true
+        state.screenshots.isEntitled = true
+        state.screenshots.isStreamRequested = true
+        state.screenshots.isStreaming = true
+        state.screenshots.hasLiveLibrary = true
+        state.screenshots.isLibrarySaved = true
+        state.screenshots.library = .init(revision: 1, isCollectionEnabled: true, items: items)
+        state.screenshots.thumbnailURLs = Dictionary(uniqueKeysWithValues: items.map { ($0.id, URL(fileURLWithPath: "/tmp/thumb.jpg")) })
+        return state
+    }
+
+    @Test func changingMacResetsScreenshotsState() async {
+        let item = RemoteScreenshotItem(
+            id: UUID(uuidString: "00000000-0000-0000-0000-0000000005C1")!,
+            fileName: "Shot.png",
+            contentType: "public.png",
+            createdAt: Date(timeIntervalSince1970: 1_800_000_000),
+            isPinned: false,
+            revision: 0,
+            byteCount: 3
+        )
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true, tabConfiguration: .init())
+        state.pairedMacs = [studio, laptop]
+        state.selectedMacID = studio.id
+        state.connectedMacIDs = [studio.id]
+        state.screenshots.selectedMacID = studio.id
+        state.screenshots.connectionState = .authenticated
+        state.screenshots.library = .init(revision: 3, isCollectionEnabled: true, items: [item])
+        state.screenshots.hasLiveLibrary = true
+        state.screenshots.thumbnailURLs = [item.id: URL(fileURLWithPath: "/tmp/thumb.jpg")]
+        state.screenshots.imageURLs = [item.id: URL(fileURLWithPath: "/tmp/Shot.png")]
+        state.screenshots.selectedItemID = item.id
+        state.screenshots.pendingDeleteItemID = item.id
+        state.screenshots.availabilityMessage = "Old"
+        state.screenshots.operationError = "Old"
+        state.screenshots.isStreamRequested = true
+        state.screenshots.isStreaming = true
+        state.screenshots.cacheGeneration = 4
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remoteConnection.select = { _ in }
+            $0.remotePersistence.saveAppState = { _ in }
+            $0.remotePersistence.loadSystemMonitorLayout = { _ in nil }
+            $0.remotePersistence.loadAphroditeLibrary = { _ in nil }
+        }
+        store.exhaustivity = .off
+
+        await store.send(.macSelected(laptop.id))
+        await store.receive(.screenshots(.contextChanged(macID: laptop.id, connectionState: .offline(nil))))
+        let screenshots = store.state.screenshots
+        #expect(screenshots.selectedMacID == laptop.id)
+        #expect(screenshots.connectionState == .offline(nil))
+        #expect(screenshots.library == nil)
+        #expect(screenshots.hasLiveLibrary == false)
+        #expect(screenshots.thumbnailURLs.isEmpty)
+        #expect(screenshots.imageURLs.isEmpty)
+        #expect(screenshots.selectedItemID == nil)
+        #expect(screenshots.pendingDeleteItemID == nil)
+        #expect(screenshots.availabilityMessage == nil)
+        #expect(screenshots.operationError == nil)
+        #expect(screenshots.isStreamRequested == false)
+        #expect(screenshots.isStreaming == false)
+        #expect(screenshots.cacheGeneration == 5)
+    }
+
+    @Test func hiddenScreenshotsFollowsTheRootConnectionState() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true, tabConfiguration: .init())
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.screenshots.selectedMacID = studio.id
+        state.screenshots.connectionState = .offline(nil)
+        let mac = studio
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.loadPairedMacs = { [mac] }
+        }
+        store.exhaustivity = .off
+
+        await store.send(.connectionEvent(.authenticated(studio.id)))
+        await store.receive(.screenshots(.contextChanged(macID: studio.id, connectionState: .authenticated)))
+        #expect(store.state.screenshots.connectionState == .authenticated)
+
+        await store.send(.connectionEvent(.offline(studio.id, "Lost")))
+        await store.receive(.screenshots(.contextChanged(macID: studio.id, connectionState: .offline(nil))))
+        #expect(store.state.screenshots.connectionState == .offline(nil))
+    }
+
+    @Test func visibleScreenshotsReceivesItsMacEventsDirectly() async {
+        let library = RemoteScreenshotLibrary(revision: 1, isCollectionEnabled: true, items: [])
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true, tabConfiguration: .init())
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.connectedMacIDs = [studio.id]
+        state.selectedPage = .screenshots
+        state.screenshots.selectedMacID = studio.id
+        state.screenshots.connectionState = .authenticated
+        state.screenshots.isVisible = true
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+
+        // Not streaming: the library is ignored, but it reaches the child rather than the dashboard.
+        await store.send(.connectionEvent(.screenshots(studio.id, library))) { $0.connectionEventRevision = 1 }
+        await store.receive(.screenshots(.connectionEvent(.screenshots(studio.id, library))))
+
+        store.exhaustivity = .off
+        await store.send(.connectionEvent(.connecting(studio.id)))
+        await store.receive(.screenshots(.connectionEvent(.connecting(studio.id))))
+        await store.finish()
+        // No root `.contextChanged(.offline)` follows: it would reset again (generation 2, offline).
+        #expect(store.state.screenshots.cacheGeneration == 1)
+        #expect(store.state.screenshots.connectionState == .connecting)
+    }
+
+    @Test func paywallBackgroundShowsOnlyForPlusPagesWithoutAccess() {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.plusAccess.entitlement = .inactive
+        #expect(state.showsPaywallBackground(for: .brightness))
+        #expect(state.showsPaywallBackground(for: .screenshots))
+        #expect(state.showsPaywallBackground(for: .soundMixer))
+        #expect(state.showsPaywallBackground(for: .controls) == false)
+        state.plusAccess.entitlement = .active(expirationDate: nil)
+        #expect(state.showsPaywallBackground(for: .brightness) == false)
+        #expect(state.showsPaywallBackground(for: .screenshots) == false)
+    }
+
+    @Test func pageSelectionSynchronizesMonitorVisibilityWithSwipeablePages() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.systemMonitor.selectedMacID = studio.id
+        state.systemMonitor.connectionState = .authenticated
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remoteConnection.setSystemMonitorStreaming = { _ in }
+        }
+
+        await store.send(.pageSelected(.systemMonitor)) {
+            $0.selectedPage = .systemMonitor
+        }
+        await store.receive(.systemMonitor(.visibilityChanged(true))) {
+            $0.systemMonitor.isVisible = true
+        }
+        await store.receive(.codexUsage(.visibilityChanged(false)))
+        await store.receive(.claudeUsage(.visibilityChanged(false)))
+        await store.receive(.systemMonitor(.streamingResponse(.success(true)))) {
+            $0.systemMonitor.isStreaming = true
+        }
+        await store.send(.pageSelected(.controls)) {
+            $0.selectedPage = .controls
+        }
+        await store.receive(.systemMonitor(.visibilityChanged(false))) {
+            $0.systemMonitor.isVisible = false
+            $0.systemMonitor.isStreaming = false
+        }
+        await store.receive(.codexUsage(.visibilityChanged(false)))
+        await store.receive(.claudeUsage(.visibilityChanged(false)))
+    }
+
+    @Test func activeMonitorReceivesSnapshotsWithoutForwardingThemToDashboard() async {
+        let snapshot = SystemMonitorSnapshot(
+            timestamp: Date(timeIntervalSince1970: 1_800_000_000),
+            cpuUsage: .available(0.42)
+        )
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.selectedPage = .systemMonitor
+        state.systemMonitor.selectedMacID = studio.id
+        state.systemMonitor.connectionState = .authenticated
+        state.systemMonitor.isVisible = true
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+
+        await store.send(.connectionEvent(.systemMonitor(studio.id, snapshot))) {
+            $0.connectionEventRevision = 1
+        }
+        await store.receive(.systemMonitor(.connectionEvent(.systemMonitor(studio.id, snapshot)))) {
+            $0.systemMonitor.snapshot = snapshot
+            $0.systemMonitor.history = .init(snapshots: [snapshot])
+        }
+        #expect(store.state.dashboard.statuses.isEmpty)
+    }
+
+    @Test func returningToAnActiveMonitorPageRestartsItsVisibleStream() async {
+        let (streamingGate, releaseStreaming) = AsyncStream<Void>.makeStream()
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.selectedPage = .systemMonitor
+        state.systemMonitor.selectedMacID = studio.id
+        state.systemMonitor.connectionState = .authenticated
+        state.systemMonitor.isVisible = false
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remoteConnection.setForegrounded = { _ in }
+            $0.remoteIdleTimer.setIdleTimerDisabled = { _ in }
+            $0.remoteConnection.setSystemMonitorStreaming = { enabled in
+                #expect(enabled)
+                for await _ in streamingGate { break }
+            }
+        }
+
+        await store.send(.scenePhaseChanged(true)) {
+            $0.lifecycleGeneration = 1
+        }
+        await store.receive(.systemMonitor(.visibilityChanged(true))) {
+            $0.systemMonitor.isVisible = true
+        }
+        await store.receive(.codexUsage(.visibilityChanged(false)))
+        await store.receive(.claudeUsage(.visibilityChanged(false)))
+        await store.receive(.lifecycleResponse(1))
+        releaseStreaming.yield(())
+        releaseStreaming.finish()
+        await store.receive(.systemMonitor(.streamingResponse(.success(true)))) {
+            $0.systemMonitor.isStreaming = true
+        }
+    }
+
+    @Test func rootForwardsSelectedMacStatusIntoDashboard() async {
+        let current = RemoteControlStatus(
+            id: .darkMode,
+            isAvailable: true,
+            unavailableReason: nil,
+            isOn: true,
+            secondaryInformation: "Enabled",
+            isProcessing: false,
+            revision: 3,
+            updatedAt: Date(timeIntervalSince1970: 3)
+        )
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.dashboard = .init(
+            pairedMacs: [studio],
+            selectedMacID: studio.id,
+            connectionState: .authenticated,
+            isActive: true
+        )
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.mergeStatus = { _, _ in }
+        }
+
+        await store.send(.connectionEvent(.status(studio.id, current))) {
+            $0.connectionEventRevision = 1
+        }
+        await store.receive(.dashboard(.connectionEvent(.status(studio.id, current)))) {
+            $0.dashboard.statuses[.darkMode] = .init(value: current, isStale: false)
+            $0.dashboard.liveStatusControlIDs = [.darkMode]
+        }
+    }
+
+    @Test func dashboardLoadsSelectedMacCachedLayoutCatalogAndStatus() async {
+        let layout = MacDashboardLayout(macID: studio.id, selectedControlIDs: [.darkMode], order: [.darkMode])
+        let descriptor = RemoteControlDescriptor(
+            id: .darkMode,
+            title: "Dark Mode",
+            behavior: .switch,
+            icon: .systemSymbol("moon"),
+            isAvailable: true,
+            unavailableReason: nil,
+            isDestructive: false,
+            supportsStatus: true,
+            supportsSecondaryInformation: true
+        )
+        let status = RemoteControlStatus(
+            id: .darkMode,
+            isAvailable: true,
+            unavailableReason: nil,
+            isOn: false,
+            secondaryInformation: "Off",
+            isProcessing: false,
+            revision: 5,
+            updatedAt: Date(timeIntervalSince1970: 5)
+        )
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.dashboard = .init(
+            pairedMacs: [studio],
+            selectedMacID: studio.id,
+            connectionState: .offline(nil),
+            isActive: true
+        )
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.loadLayout = { _ in layout }
+            $0.remotePersistence.loadCatalog = { _ in .init(revision: 4, controls: [descriptor]) }
+            $0.remotePersistence.loadStatuses = { _ in [status] }
+            $0.remoteConnection.subscribe = { _ in Issue.record("Subscribing must wait for a live catalog") }
+        }
+
+        // Offline with only cached data: the dashboard shows it but subscribes once a live catalog arrives.
+        await store.send(.dashboard(.task)) {
+            $0.dashboard.selectionGeneration = 1
+        }
+        await store.receive(\.dashboard.selectedDataLoaded) {
+            $0.dashboard.descriptors = [descriptor]
+            $0.dashboard.catalogRevision = 4
+            $0.dashboard.statuses = [.darkMode: .init(value: status, isStale: true)]
+            $0.dashboard.orderedSelectedIDs = [.darkMode]
+        }
+    }
+
+    @Test func firstDashboardTaskAdoptsTheRootSelection() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.loadLayout = { _ in nil }
+            $0.remotePersistence.loadCatalog = { _ in nil }
+            $0.remotePersistence.loadStatuses = { _ in nil }
+            $0.remoteConnection.subscribe = { _ in }
+        }
+        store.exhaustivity = .off(showSkippedAssertions: false)
+
+        await store.send(.dashboard(.task)) {
+            $0.dashboard.isActive = true
+            $0.dashboard.pairedMacs = [self.studio]
+            $0.dashboard.selectedMacID = self.studio.id
+            $0.dashboard.selectionGeneration = 1
+            $0.dashboard.connectionState = .offline(nil)
+        }
+    }
+
+    @Test func launchSelectionReloadsAnAlreadyActiveDashboard() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.loadGeneration = 1
+        state.isLoading = true
+        state.dashboard.isActive = true
+        let loads = DashboardLoadRecorder()
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.loadLayout = { id in await loads.record(id); return nil }
+            $0.remotePersistence.loadCatalog = { _ in nil }
+            $0.remotePersistence.loadStatuses = { _ in nil }
+            $0.remotePersistence.loadSystemMonitorLayout = { _ in nil }
+            $0.remotePersistence.loadAphroditeLibrary = { _ in nil }
+            $0.remotePersistence.saveAppState = { _ in }
+            $0.remoteConnection.select = { _ in }
+            $0.remoteConnection.subscribe = { _ in }
+        }
+        store.exhaustivity = .off(showSkippedAssertions: false)
+
+        await store.send(.launchResponse(1, .success(.init(
+            pairedMacs: [studio],
+            selectedMacID: studio.id
+        ))))
+        await store.finish()
+
+        #expect(await loads.macIDs == [studio.id])
+    }
+
+    @Test func selectingAnotherMacClearsPriorDashboardStatusImmediately() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio, laptop]
+        state.selectedMacID = studio.id
+        state.dashboard = .init(
+            pairedMacs: [studio, laptop],
+            selectedMacID: studio.id,
+            descriptors: [],
+            statuses: [.darkMode: .init(
+                value: .init(
+                    id: .darkMode,
+                    isAvailable: true,
+                    unavailableReason: nil,
+                    isOn: true,
+                    secondaryInformation: nil,
+                    isProcessing: false,
+                    revision: 2,
+                    updatedAt: .now
+                ),
+                isStale: false
+            )],
+            orderedSelectedIDs: [.darkMode],
+            connectionState: .authenticated,
+            isActive: true
+        )
+        state.dashboard.actionFailures = [.darkMode: "The Mac could not complete this action."]
+        let persistence = PersistenceAttemptRecorder(shouldFail: false)
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.saveAppState = { try await persistence.save($0) }
+            $0.remotePersistence.loadLayout = { _ in nil }
+            $0.remotePersistence.loadCatalog = { _ in nil }
+            $0.remotePersistence.loadStatuses = { _ in nil }
+            $0.remotePersistence.loadSystemMonitorLayout = { _ in nil }
+            $0.remotePersistence.loadAphroditeLibrary = { _ in nil }
+            $0.remoteConnection.subscribe = { _ in }
+            $0.remoteConnection.select = { _ in }
+        }
+        store.exhaustivity = .off(showSkippedAssertions: false)
+
+        let intent = RemoteAppPersistenceIntent(
+            writerID: state.persistenceWriterID,
+            sequence: 1,
+            selectedMacID: laptop.id,
+            hasCompletedInitialSetup: true
+        )
+        await store.send(.dashboard(.delegate(.selectedMac(laptop)))) {
+            $0.selectedMacID = laptop.id
+            $0.connectedMacIDs = []
+            $0.dashboard.pairedMacs = [studio, laptop]
+            $0.dashboard.selectedMacID = laptop.id
+            $0.dashboard.connectionState = .connecting
+            $0.dashboard.selectionGeneration = 1
+            $0.dashboard.statuses = [:]
+            $0.dashboard.orderedSelectedIDs = []
+            $0.dashboard.actionFailures = [:]
+            $0.nextPersistenceSequence = 1
+            $0.pendingPersistenceIntent = intent
+            $0.isPersisting = true
+        }
+        await store.receive(.persistenceResponse(intent, .success)) {
+            $0.pendingPersistenceIntent = nil
+            $0.isPersisting = false
+        }
+    }
+
+    @Test func pairingAnotherMacReloadsTheActiveDashboard() async throws {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.dashboard = .init(
+            pairedMacs: [studio],
+            selectedMacID: studio.id,
+            connectionState: .authenticated,
+            isActive: true
+        )
+        state.path.append(.controlsConfiguration(.init(
+            pairedMacs: [studio],
+            selectedMacID: studio.id
+        )))
+        let pathID = try #require(state.path.ids.last)
+        let loads = DashboardLoadRecorder()
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.saveAppState = { _ in }
+            $0.remotePersistence.loadLayout = { id in await loads.record(id); return nil }
+            $0.remotePersistence.loadCatalog = { _ in nil }
+            $0.remotePersistence.loadStatuses = { _ in nil }
+            $0.remotePersistence.loadSystemMonitorLayout = { _ in nil }
+            $0.remotePersistence.loadAphroditeLibrary = { _ in nil }
+            $0.remoteConnection.adoptPairedMac = { _ in .offline }
+            $0.remoteConnection.subscribe = { _ in }
+        }
+        store.exhaustivity = .off(showSkippedAssertions: false)
+
+        await store.send(.path(.element(id: pathID, action: .controlsConfiguration(.delegate(.paired(laptop))))))
+        await store.finish()
+
+        #expect(await loads.macIDs == [laptop.id])
+    }
+
+    @Test func settingsLayoutChangeUpdatesDashboardSubscription() async throws {
+        let layout = MacDashboardLayout(
+            macID: studio.id,
+            selectedControlIDs: [.darkMode, .mute],
+            order: [.mute, .darkMode]
+        )
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.dashboard = .init(
+            pairedMacs: [studio],
+            selectedMacID: studio.id,
+            descriptors: [Self.switchDescriptor(.darkMode), Self.switchDescriptor(.mute)],
+            orderedSelectedIDs: [.darkMode],
+            connectionState: .authenticated,
+            isActive: true
+        )
+        state.dashboard.hasAcceptedLiveCatalog = true
+        state.path.append(.controlsConfiguration(.init(
+            pairedMacs: [studio],
+            selectedMacID: studio.id
+        )))
+        let pathID = try #require(state.path.ids.last)
+        let subscriptions = DashboardSubscriptionRecorder()
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remoteConnection.subscribe = { await subscriptions.record($0) }
+        }
+
+        await store.send(.path(.element(
+            id: pathID,
+            action: .controlsConfiguration(.delegate(.layoutChanged(layout)))
+        )))
+        await store.receive(.dashboard(.layoutChanged(layout))) {
+            $0.dashboard.orderedSelectedIDs = [.mute, .darkMode]
+        }
+        await store.receive(.dashboard(.subscriptionStarted([.mute, .darkMode])))
+        #expect(await subscriptions.values == [[.mute, .darkMode]])
+    }
+
+    private static func switchDescriptor(_ id: RemoteControlID) -> RemoteControlDescriptor {
+        RemoteControlDescriptor(
+            id: id,
+            title: "\(id)",
+            behavior: .switch,
+            icon: .systemSymbol("switch.2"),
+            isAvailable: true,
+            unavailableReason: nil,
+            isDestructive: false,
+            supportsStatus: true,
+            supportsSecondaryInformation: false
+        )
+    }
+
+    /// Child state the root re-syncs (`syncSettingsState`, `loadSystemMonitorLayout`) when it selects
+    /// a Mac that is not connected yet.
+    private static func selectOfflineMac(_ id: UUID, in state: inout RemoteAppFeature.State) {
+        syncChildren(to: id, .offline(nil), in: &state)
+        state.systemMonitorLayoutGeneration &+= 1
+    }
+
+    /// The System Monitor, Sound Mixer and Brightness state `syncSettingsState` keeps in step with the
+    /// root's selected Mac and its connection. A newly selected Mac starts on the default monitor layout.
+    private static func syncChildren(
+        to id: UUID,
+        _ connectionState: DashboardFeature.ConnectionState,
+        in state: inout RemoteAppFeature.State
+    ) {
+        if state.systemMonitor.selectedMacID != id {
+            state.systemMonitor.layout = .default(macID: id)
+        }
+        state.systemMonitor.selectedMacID = id
+        state.systemMonitor.connectionState = connectionState
+        state.soundMixer.selectedMacID = id
+        state.soundMixer.connectionState = connectionState
+        state.brightness.selectedMacID = id
+        state.brightness.connectionState = connectionState
+    }
+
+    /// The per-Mac context every selection sends to the usage, Aphrodite and Screenshots children.
+    /// The loads it starts arrive through `receiveDefaultMonitorLayout` and `receiveEmptyAphroditeLibrary`.
+    private func receiveSelectedMacContext(
+        _ store: TestStoreOf<RemoteAppFeature>,
+        _ id: UUID,
+        sessionID: UUID? = nil,
+        connectionState: DashboardFeature.ConnectionState = .offline(nil)
+    ) async {
+        await store.receive(.codexUsage(.contextChanged(macID: id, sessionID: sessionID))) {
+            $0.codexUsage.selectedMacID = id
+            $0.codexUsage.authenticatedSessionID = sessionID
+        }
+        await store.receive(.claudeUsage(.contextChanged(macID: id, sessionID: sessionID))) {
+            $0.claudeUsage.selectedMacID = id
+            $0.claudeUsage.authenticatedSessionID = sessionID
+        }
+        await store.receive(.aphrodite(.selectedMacChanged(id))) {
+            $0.aphrodite.selectedMacID = id
+            $0.aphrodite.isLoading = true
+        }
+        await store.receive(.screenshots(.contextChanged(macID: id, connectionState: connectionState))) {
+            $0.screenshots.selectedMacID = id
+            $0.screenshots.connectionState = connectionState
+            $0.screenshots.cacheGeneration += 1
+        }
+    }
+
+    /// The context a cleared selection (`clearedSelection`) sends to the usage and Aphrodite children,
+    /// which hold no Mac in these tests.
+    private func receiveClearedSelectionContext(_ store: TestStoreOf<RemoteAppFeature>) async {
+        await store.receive(.codexUsage(.contextChanged(macID: nil, sessionID: nil)))
+        await store.receive(.claudeUsage(.contextChanged(macID: nil, sessionID: nil)))
+        await store.receive(.aphrodite(.selectedMacChanged(nil)))
+    }
+
+    /// No stored System Monitor layout: the default layout set on selection stays.
+    private func receiveDefaultMonitorLayout(_ store: TestStoreOf<RemoteAppFeature>, _ id: UUID) async {
+        await store.receive(.systemMonitorLayoutLoaded(store.state.systemMonitorLayoutGeneration, id, .success(nil)))
+    }
+
+    /// No stored Aphrodite library for the selected Mac.
+    private func receiveEmptyAphroditeLibrary(_ store: TestStoreOf<RemoteAppFeature>, _ id: UUID) async {
+        await store.receive(.aphrodite(.libraryLoaded(id, nil))) {
+            $0.aphrodite.isLoading = false
+        }
+    }
+
+    @Test func firstLaunchHasRequiredSettingsBeforeAnyEffect() {
+        let state = RemoteAppFeature.State(hasCompletedInitialSetup: false)
+        #expect(state.requiredGlobalSettings?.isSetupRequired == true)
+        #expect(state.path.isEmpty)
+        #expect(state.hasCompletedInitialSetup == false)
+    }
+
+    @Test func completedLaunchStartsAtDashboardAndSelectsPersistedMac() async {
+        let selected = SelectionRecorder(); let studio = studio; let laptop = laptop
+        let store = TestStore(initialState: RemoteAppFeature.State(hasCompletedInitialSetup: true)) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.loadPairedMacs = { [studio, laptop] }
+            $0.remotePersistence.loadSelectedMacID = { laptop.id }
+            $0.remotePersistence.loadSystemMonitorLayout = { _ in nil }
+            $0.remotePersistence.loadAphroditeLibrary = { _ in nil }
+            $0.remoteConnection.select = { await selected.record($0) }
+            $0.remoteIdleTimer.setIdleTimerDisabled = { _ in }
+        }
+        #expect(store.state.requiredGlobalSettings == nil)
+        await store.send(.task) { $0.loadGeneration = 1; $0.isLoading = true }
+        await store.receive(.launchResponse(1, .success(.init(pairedMacs: [studio, laptop], selectedMacID: laptop.id)))) {
+            $0.isLoading = false; $0.pairedMacs = [studio, laptop]; $0.selectedMacID = laptop.id
+            Self.selectOfflineMac(laptop.id, in: &$0)
+        }
+        await receiveSelectedMacContext(store, laptop.id)
+        await receiveDefaultMonitorLayout(store, laptop.id)
+        await receiveEmptyAphroditeLibrary(store, laptop.id)
+        await store.finish()
+        #expect(await selected.ids == [laptop.id])
+    }
+
+    @Test func alreadyAuthenticatedSnapshotSeedsConnectedStateBeforeSettingsOpens() async {
+        let sessionID = UUID(uuidString: "00000000-0000-0000-0000-000000000103")!
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+
+        await store.send(.connectionSnapshotLoaded(.init(
+            selectedMacID: studio.id,
+            authenticatedMacID: studio.id,
+            authenticatedSessionID: sessionID
+        ))) {
+            $0.connectedMacIDs = [studio.id]
+            $0.activeSessionID = sessionID
+            Self.syncChildren(to: studio.id, .authenticated, in: &$0)
+        }
+        await store.receive(.codexUsage(.contextChanged(macID: studio.id, sessionID: sessionID))) {
+            $0.codexUsage.selectedMacID = studio.id
+            $0.codexUsage.authenticatedSessionID = sessionID
+        }
+        await store.receive(.claudeUsage(.contextChanged(macID: studio.id, sessionID: sessionID))) {
+            $0.claudeUsage.selectedMacID = studio.id
+            $0.claudeUsage.authenticatedSessionID = sessionID
+        }
+        await store.receive(.screenshots(.contextChanged(macID: studio.id, connectionState: .authenticated))) {
+            $0.screenshots.selectedMacID = studio.id
+            $0.screenshots.connectionState = .authenticated
+            $0.screenshots.cacheGeneration += 1
+        }
+        await store.send(.controlsConfigurationButtonTapped) {
+            $0.controlsConfiguration = .init(
+                pairedMacs: [studio],
+                selectedMacID: studio.id,
+                connectionStatuses: [studio.id: .connected]
+            )
+        }
+    }
+
+    @Test func connectedStateFollowsTheSingleSelectedRuntimeSession() async throws {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio, laptop]
+        state.selectedMacID = studio.id
+        state.path.append(.controlsConfiguration(.init(
+            pairedMacs: [studio, laptop],
+            selectedMacID: studio.id
+        )))
+        let pathID = try #require(state.path.ids.last)
+        let studioID = studio.id
+        let laptopID = laptop.id
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.loadPairedMacs = { [studio, laptop] }
+        }
+
+        await store.send(.connectionSnapshotLoaded(.init(
+            selectedMacID: studioID,
+            authenticatedMacID: studioID
+        ))) {
+            $0.connectedMacIDs = [studioID]
+            if case var .controlsConfiguration(settings) = $0.path[id: pathID] {
+                settings.connectionStatuses = [studioID: .connected]
+                $0.path[id: pathID] = .controlsConfiguration(settings)
+            }
+            Self.syncChildren(to: studioID, .authenticated, in: &$0)
+        }
+        await store.receive(.codexUsage(.contextChanged(macID: studioID, sessionID: nil))) {
+            $0.codexUsage.selectedMacID = studioID
+        }
+        await store.receive(.claudeUsage(.contextChanged(macID: studioID, sessionID: nil))) {
+            $0.claudeUsage.selectedMacID = studioID
+        }
+        await store.receive(.screenshots(.contextChanged(macID: studioID, connectionState: .authenticated))) {
+            $0.screenshots.selectedMacID = studioID
+            $0.screenshots.connectionState = .authenticated
+            $0.screenshots.cacheGeneration += 1
+        }
+        // Lifecycle events for a Mac other than the selected one only reach the dashboard (0036625f).
+        await store.send(.connectionEvent(.connecting(laptopID))) {
+            $0.connectionEventRevision = 1
+        }
+        await store.send(.connectionEvent(.authenticated(laptopID))) {
+            $0.connectionEventRevision = 2
+            $0.connectedMacIDs = [laptopID]
+            $0.metadataRefreshGeneration = 1
+            if case var .controlsConfiguration(settings) = $0.path[id: pathID] {
+                settings.connectionStatuses = [laptopID: .connected]
+                $0.path[id: pathID] = .controlsConfiguration(settings)
+            }
+            Self.syncChildren(to: studioID, .offline(nil), in: &$0)
+        }
+        await store.receive(.screenshots(.contextChanged(macID: studioID, connectionState: .offline(nil)))) {
+            $0.screenshots.connectionState = .offline(nil)
+            $0.screenshots.cacheGeneration += 1
+        }
+        await store.receive(.pairedMetadataRefreshed(1, [studio, laptop]))
+        await store.finish()
+
+        var reopened = store.state
+        reopened.path.removeAll()
+        let reopenedStore = TestStore(initialState: reopened) { RemoteAppFeature() }
+        await reopenedStore.send(.controlsConfigurationButtonTapped) {
+            $0.controlsConfiguration = .init(
+                pairedMacs: [studio, laptop],
+                selectedMacID: studioID,
+                connectionStatuses: [laptopID: .connected]
+            )
+        }
+    }
+
+    @Test func revocationRefreshSurvivesSettingsDismissAndReopen() async throws {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.connectedMacIDs = [studio.id]
+        state.path.append(.controlsConfiguration(.init(
+            pairedMacs: [studio],
+            selectedMacID: studio.id,
+            connectionStatuses: [studio.id: .connected]
+        )))
+        let pathID = try #require(state.path.ids.last)
+        let refreshed = PairedMac(
+            id: studio.id,
+            displayName: studio.displayName,
+            lastEndpointDescription: studio.lastEndpointDescription,
+            lastConnectedAt: studio.lastConnectedAt,
+            requiresPairing: true
+        )
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.loadPairedMacs = { [refreshed] }
+        }
+
+        await store.send(.connectionEvent(.revoked(studio.id))) {
+            $0.connectionEventRevision = 1
+            $0.connectedMacIDs = []
+            $0.metadataRefreshGeneration = 1
+            if case var .controlsConfiguration(settings) = $0.path[id: pathID] {
+                settings.connectionStatuses[studio.id] = .needsPairing
+                $0.path[id: pathID] = .controlsConfiguration(settings)
+            }
+            Self.syncChildren(to: studio.id, .offline(nil), in: &$0)
+        }
+        await store.receive(.codexUsage(.contextChanged(macID: studio.id, sessionID: nil))) {
+            $0.codexUsage.selectedMacID = studio.id
+        }
+        await store.receive(.claudeUsage(.contextChanged(macID: studio.id, sessionID: nil))) {
+            $0.claudeUsage.selectedMacID = studio.id
+        }
+        await store.receive(.screenshots(.contextChanged(macID: studio.id, connectionState: .offline(nil)))) {
+            $0.screenshots.selectedMacID = studio.id
+            $0.screenshots.connectionState = .offline(nil)
+            $0.screenshots.cacheGeneration += 1
+        }
+        await store.receive(.pairedMetadataRefreshed(1, [refreshed])) {
+            $0.pairedMacs = [refreshed]
+            if case var .controlsConfiguration(settings) = $0.path[id: pathID] {
+                settings.pairedMacs = [refreshed]
+                $0.path[id: pathID] = .controlsConfiguration(settings)
+            }
+            Self.syncChildren(to: studio.id, .revoked, in: &$0)
+        }
+        await store.receive(.screenshots(.contextChanged(macID: studio.id, connectionState: .revoked))) {
+            $0.screenshots.connectionState = .revoked
+            $0.screenshots.cacheGeneration += 1
+        }
+        await store.finish()
+
+        var reopenedState = store.state
+        reopenedState.path.removeAll()
+        let reopenedStore = TestStore(initialState: reopenedState) { RemoteAppFeature() }
+        await reopenedStore.send(.controlsConfigurationButtonTapped) {
+            $0.controlsConfiguration = .init(
+                pairedMacs: [refreshed],
+                selectedMacID: studio.id,
+                connectionStatuses: [studio.id: .needsPairing]
+            )
+        }
+    }
+
+    @Test func staleMetadataRefreshCannotClobberNewlyPairedMacOrSettings() async throws {
+        let gate = MetadataLoadGate(result: [studio])
+        let persistence = PersistenceAttemptRecorder(shouldFail: false)
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.path.append(.controlsConfiguration(.init(pairedMacs: [studio], selectedMacID: studio.id)))
+        let pathID = try #require(state.path.ids.last)
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.loadPairedMacs = { try await gate.load() }
+            $0.remotePersistence.saveAppState = { try await persistence.save($0) }
+            $0.remotePersistence.loadSystemMonitorLayout = { _ in nil }
+            $0.remotePersistence.loadAphroditeLibrary = { _ in nil }
+        }
+
+        await store.send(.connectionEvent(.authenticated(studio.id))) {
+            $0.connectionEventRevision = 1
+            $0.connectedMacIDs = [studio.id]
+            $0.metadataRefreshGeneration = 1
+            if case var .controlsConfiguration(settings) = $0.path[id: pathID] {
+                settings.connectionStatuses[studio.id] = .connected
+                $0.path[id: pathID] = .controlsConfiguration(settings)
+            }
+            Self.syncChildren(to: studio.id, .authenticated, in: &$0)
+        }
+        await store.receive(.screenshots(.contextChanged(macID: studio.id, connectionState: .authenticated))) {
+            $0.screenshots.selectedMacID = studio.id
+            $0.screenshots.connectionState = .authenticated
+            $0.screenshots.cacheGeneration = 1
+        }
+        await gate.waitUntilEntered()
+        let intent = RemoteAppPersistenceIntent(
+            writerID: store.state.persistenceWriterID,
+            sequence: 1,
+            selectedMacID: laptop.id,
+            hasCompletedInitialSetup: true
+        )
+        await store.send(.path(.element(id: pathID, action: .controlsConfiguration(.delegate(.paired(laptop)))))) {
+            $0.pairedMacs = [studio, laptop]
+            $0.selectedMacID = laptop.id
+            $0.connectedMacIDs = []
+            $0.pairAdoptionGeneration = 1
+            $0.metadataRefreshGeneration = 2
+            if case var .controlsConfiguration(settings) = $0.path[id: pathID] {
+                settings.pairedMacs = [studio, laptop]
+                settings.selectedMacID = laptop.id
+                settings.connectionStatuses = [:]
+                $0.path[id: pathID] = .controlsConfiguration(settings)
+            }
+            $0.nextPersistenceSequence = 1
+            $0.pendingPersistenceIntent = intent
+            $0.isPersisting = true
+            Self.selectOfflineMac(laptop.id, in: &$0)
+        }
+        await receiveSelectedMacContext(store, laptop.id)
+        await receiveDefaultMonitorLayout(store, laptop.id)
+        await store.receive(.persistenceResponse(intent, .success)) {
+            $0.pendingPersistenceIntent = nil
+            $0.isPersisting = false
+        }
+        await store.receive(.pairAdoptionResponse(1, 1, laptop.id, .offline))
+        await receiveEmptyAphroditeLibrary(store, laptop.id)
+        await gate.open()
+        await store.send(.pairedMetadataRefreshed(1, [studio]))
+        await store.finish()
+        #expect(store.state.pairedMacs == [studio, laptop])
+    }
+
+    @Test func staleMetadataRefreshCannotResurrectForgottenMacInSettings() async throws {
+        let gate = MetadataLoadGate(result: [studio, laptop])
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio, laptop]
+        state.selectedMacID = laptop.id
+        state.path.append(.controlsConfiguration(.init(pairedMacs: [studio, laptop], selectedMacID: laptop.id)))
+        let pathID = try #require(state.path.ids.last)
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.loadPairedMacs = { try await gate.load() }
+        }
+
+        await store.send(.connectionEvent(.authenticated(laptop.id))) {
+            $0.connectionEventRevision = 1
+            $0.connectedMacIDs = [laptop.id]
+            $0.metadataRefreshGeneration = 1
+            if case var .controlsConfiguration(settings) = $0.path[id: pathID] {
+                settings.connectionStatuses[laptop.id] = .connected
+                $0.path[id: pathID] = .controlsConfiguration(settings)
+            }
+            Self.syncChildren(to: laptop.id, .authenticated, in: &$0)
+        }
+        await store.receive(.screenshots(.contextChanged(macID: laptop.id, connectionState: .authenticated))) {
+            $0.screenshots.selectedMacID = laptop.id
+            $0.screenshots.connectionState = .authenticated
+            $0.screenshots.cacheGeneration = 1
+        }
+        await gate.waitUntilEntered()
+        await store.send(.path(.element(id: pathID, action: .controlsConfiguration(.delegate(.macForgotten(studio.id)))))) {
+            $0.pairedMacs = [laptop]
+            $0.metadataRefreshGeneration = 2
+            if case var .controlsConfiguration(settings) = $0.path[id: pathID] {
+                settings.pairedMacs = [laptop]
+                settings.connectionStatuses = [laptop.id: .connected]
+                $0.path[id: pathID] = .controlsConfiguration(settings)
+            }
+        }
+        await gate.open()
+        await store.send(.pairedMetadataRefreshed(1, [studio, laptop]))
+        await store.finish()
+        #expect(store.state.pairedMacs == [laptop])
+    }
+
+    @Test func authoritativeMetadataMembershipChangeReconcilesSelectionAndInvalidatesGeneration() async throws {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio, laptop]
+        state.selectedMacID = studio.id
+        state.connectedMacIDs = [studio.id]
+        state.metadataRefreshGeneration = 4
+        state.path.append(.controlsConfiguration(.init(
+            pairedMacs: [studio, laptop],
+            selectedMacID: studio.id,
+            connectionStatuses: [studio.id: .connected]
+        )))
+        let pathID = try #require(state.path.ids.last)
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.loadSystemMonitorLayout = { _ in nil }
+        }
+
+        await store.send(.pairedMetadataRefreshed(4, [laptop])) {
+            $0.pairedMacs = [laptop]
+            $0.selectedMacID = laptop.id
+            $0.connectedMacIDs = []
+            $0.metadataRefreshGeneration = 5
+            if case var .controlsConfiguration(settings) = $0.path[id: pathID] {
+                settings.pairedMacs = [laptop]
+                settings.selectedMacID = laptop.id
+                settings.connectionStatuses = [:]
+                $0.path[id: pathID] = .controlsConfiguration(settings)
+            }
+            Self.selectOfflineMac(laptop.id, in: &$0)
+        }
+        await store.receive(.codexUsage(.contextChanged(macID: laptop.id, sessionID: nil))) {
+            $0.codexUsage.selectedMacID = laptop.id
+        }
+        await store.receive(.claudeUsage(.contextChanged(macID: laptop.id, sessionID: nil))) {
+            $0.claudeUsage.selectedMacID = laptop.id
+        }
+        await store.receive(.screenshots(.contextChanged(macID: laptop.id, connectionState: .offline(nil)))) {
+            $0.screenshots.selectedMacID = laptop.id
+            $0.screenshots.connectionState = .offline(nil)
+            $0.screenshots.cacheGeneration += 1
+        }
+        await receiveDefaultMonitorLayout(store, laptop.id)
+    }
+
+    @Test func invalidPersistedSelectionFallsBackAndPersists() async {
+        let persistence = PersistenceAttemptRecorder(shouldFail: false); let selected = SelectionRecorder(); let studio = studio
+        let store = TestStore(initialState: RemoteAppFeature.State(hasCompletedInitialSetup: true)) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.loadPairedMacs = { [studio] }
+            $0.remotePersistence.loadSelectedMacID = { UUID() }
+            $0.remotePersistence.saveAppState = { try await persistence.save($0) }
+            $0.remotePersistence.loadSystemMonitorLayout = { _ in nil }
+            $0.remotePersistence.loadAphroditeLibrary = { _ in nil }
+            $0.remoteConnection.select = { await selected.record($0) }
+            $0.remoteIdleTimer.setIdleTimerDisabled = { _ in }
+        }
+        await store.send(.task) { $0.loadGeneration = 1; $0.isLoading = true }
+        let intent = RemoteAppPersistenceIntent(writerID: store.state.persistenceWriterID, sequence: 1, selectedMacID: studio.id, hasCompletedInitialSetup: true)
+        await store.receive(\.launchResponse) {
+            $0.isLoading = false; $0.pairedMacs = [studio]; $0.selectedMacID = studio.id
+            $0.nextPersistenceSequence = 1; $0.pendingPersistenceIntent = intent; $0.isPersisting = true
+            Self.selectOfflineMac(studio.id, in: &$0)
+        }
+        await receiveSelectedMacContext(store, studio.id)
+        await store.receive(.persistenceResponse(intent, .success)) { $0.pendingPersistenceIntent = nil; $0.isPersisting = false }
+        await receiveDefaultMonitorLayout(store, studio.id)
+        await receiveEmptyAphroditeLibrary(store, studio.id)
+        await store.finish()
+        #expect(await persistence.selectedIDs == [studio.id]); #expect(await persistence.completionValues == [true]); #expect(await selected.ids == [studio.id])
+    }
+
+    @Test func globalSettingsButtonIsAvailableWithoutASelectedMac() async {
+        let state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+        await store.send(.globalSettingsButtonTapped) {
+            $0.path.append(.globalSettings(.init()))
+        }
+    }
+
+    @Test func globalSettingsButtonUsesTheSameRouteFromSystemMonitor() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.selectedPage = .systemMonitor
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+
+        await store.send(.globalSettingsButtonTapped) {
+            $0.path.append(.globalSettings(.init()))
+        }
+    }
+
+    @Test func systemMonitorConfigurationStillUsesItsContextualRoute() async {
+        let layout = MacSystemMonitorLayout.default(macID: studio.id)
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.selectedPage = .systemMonitor
+        state.systemMonitor.layout = layout
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+
+        await store.send(.systemMonitor(.delegate(.openConfiguration))) {
+            $0.monitorConfiguration = .init(layout: layout)
+        }
+    }
+
+    @Test func controlsConfigurationPresentsSheetStateWithoutChangingNavigationPath() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+
+        await store.send(.controlsConfigurationButtonTapped) {
+            $0.controlsConfiguration = .init(
+                pairedMacs: [studio],
+                selectedMacID: studio.id
+            )
+        }
+
+        #expect(store.state.path.isEmpty)
+    }
+
+    @Test func monitorConfigurationPresentsSheetStateWithoutChangingNavigationPath() async {
+        let layout = MacSystemMonitorLayout.default(macID: studio.id)
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.selectedPage = .systemMonitor
+        state.systemMonitor.layout = layout
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+
+        await store.send(.systemMonitor(.delegate(.openConfiguration))) {
+            $0.monitorConfiguration = .init(layout: layout)
+        }
+
+        #expect(store.state.path.isEmpty)
+    }
+
+    @Test func controlConfigurationSheetDismissalClearsOnlyItsPresentationState() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.controlsConfiguration = .init(
+            pairedMacs: [studio],
+            selectedMacID: studio.id
+        )
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+
+        await store.send(.controlsConfiguration(.dismiss)) {
+            $0.controlsConfiguration = nil
+        }
+
+        #expect(store.state.path.isEmpty)
+    }
+
+    @Test func controlsConfigurationIsTheContextualTrailingRoute() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.selectedPage = .controls
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+
+        await store.send(.controlsConfigurationButtonTapped) {
+            $0.controlsConfiguration = .init(
+                pairedMacs: [studio],
+                selectedMacID: studio.id
+            )
+        }
+    }
+
+    @Test func controlsConfigurationDoesNotOpenWithoutASelectedMac() async {
+        let store = TestStore(
+            initialState: RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        ) {
+            RemoteAppFeature()
+        }
+
+        await store.send(.controlsConfigurationButtonTapped)
+        #expect(store.state.path.isEmpty)
+    }
+
+    @Test func globalSettingsPairingAdoptsTheNewMac() async throws {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.path.append(.globalSettings(.init()))
+        let pathID = try #require(state.path.ids.last)
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.saveAppState = { _ in }
+            $0.remotePersistence.loadSystemMonitorLayout = { _ in nil }
+            $0.remotePersistence.loadAphroditeLibrary = { _ in nil }
+            $0.remoteConnection.adoptPairedMac = { _ in .offline }
+        }
+        store.exhaustivity = .off(showSkippedAssertions: false)
+
+        await store.send(.path(.element(
+            id: pathID,
+            action: .globalSettings(.delegate(.paired(studio)))
+        )))
+        #expect(store.state.pairedMacs == [studio])
+        #expect(store.state.selectedMacID == studio.id)
+        await store.finish()
+    }
+
+    @Test func configurationDelegateUpdatesTheActiveMonitorLayout() async throws {
+        let initial = MacSystemMonitorLayout.default(macID: studio.id)
+        let updated = MacSystemMonitorLayout(
+            macID: studio.id,
+            visibleMetrics: [.cpu, .memory, .network],
+            order: [.memory, .cpu, .gpu, .disk, .network]
+        )
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.systemMonitor.layout = initial
+        state.path.append(.monitorConfiguration(.init(layout: initial)))
+        let pathID = try #require(state.path.ids.last)
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+
+        await store.send(.path(.element(
+            id: pathID,
+            action: .monitorConfiguration(.delegate(.layoutChanged(updated)))
+        ))) {
+            $0.systemMonitor.layout = updated
+        }
+    }
+
+    @Test func staleMonitorLayoutResponseCannotOverwriteANewlySelectedMac() async {
+        let studioLayout = MacSystemMonitorLayout.default(macID: studio.id)
+        let laptopLayout = MacSystemMonitorLayout.default(macID: laptop.id)
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio, laptop]
+        state.selectedMacID = laptop.id
+        state.systemMonitor.selectedMacID = laptop.id
+        state.systemMonitor.layout = laptopLayout
+        state.systemMonitorLayoutGeneration = 2
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+
+        await store.send(.systemMonitorLayoutLoaded(1, studio.id, .success(studioLayout)))
+
+        #expect(store.state.selectedMacID == laptop.id)
+        #expect(store.state.systemMonitor.layout == laptopLayout)
+    }
+
+    @Test func currentSelectedMacAcceptsItsLoadedMonitorLayout() async {
+        let initial = MacSystemMonitorLayout.default(macID: studio.id)
+        let loaded = MacSystemMonitorLayout(
+            macID: studio.id,
+            visibleMetrics: [.cpu, .gpu],
+            order: [.gpu, .cpu, .memory, .disk, .network]
+        )
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.systemMonitor.selectedMacID = studio.id
+        state.systemMonitor.layout = initial
+        state.systemMonitorLayoutGeneration = 3
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+
+        await store.send(.systemMonitorLayoutLoaded(3, studio.id, .success(loaded))) {
+            $0.systemMonitor.layout = loaded
+        }
+    }
+
+    @Test func settingsMacSelectionAtomicallyPersistsAndSelectsConnection() async throws {
+        let persistence = PersistenceAttemptRecorder(shouldFail: false)
+        let selections = SelectionRecorder()
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio, laptop]
+        state.selectedMacID = studio.id
+        state.path.append(.controlsConfiguration(.init(pairedMacs: [studio, laptop], selectedMacID: studio.id)))
+        let pathID = try #require(state.path.ids.last)
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.saveAppState = { try await persistence.save($0) }
+            $0.remotePersistence.loadSystemMonitorLayout = { _ in nil }
+            $0.remotePersistence.loadAphroditeLibrary = { _ in nil }
+            $0.remoteConnection.select = { await selections.record($0) }
+        }
+        let intent = RemoteAppPersistenceIntent(writerID: store.state.persistenceWriterID, sequence: 1, selectedMacID: laptop.id, hasCompletedInitialSetup: true)
+
+        await store.send(.path(.element(id: pathID, action: .controlsConfiguration(.delegate(.selectedMacChanged(laptop)))))) {
+            $0.selectedMacID = laptop.id
+            if case var .controlsConfiguration(settings) = $0.path[id: pathID] {
+                settings.selectedMacID = laptop.id
+                $0.path[id: pathID] = .controlsConfiguration(settings)
+            }
+            $0.nextPersistenceSequence = 1; $0.pendingPersistenceIntent = intent; $0.isPersisting = true
+            Self.selectOfflineMac(laptop.id, in: &$0)
+        }
+        await receiveSelectedMacContext(store, laptop.id)
+        await store.receive(.persistenceResponse(intent, .success)) { $0.pendingPersistenceIntent = nil; $0.isPersisting = false }
+        await receiveDefaultMonitorLayout(store, laptop.id)
+        await receiveEmptyAphroditeLibrary(store, laptop.id)
+        await store.finish()
+        #expect(await selections.ids == [laptop.id])
+        #expect(await persistence.selectedIDs == [laptop.id])
+    }
+
+    @Test func forgettingNonselectedMacUpdatesRootCollection() async throws {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio, laptop]
+        state.selectedMacID = studio.id
+        state.path.append(.controlsConfiguration(.init(pairedMacs: [studio, laptop], selectedMacID: studio.id)))
+        let pathID = try #require(state.path.ids.last)
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+
+        await store.send(.path(.element(id: pathID, action: .controlsConfiguration(.delegate(.macForgotten(laptop.id)))))) {
+            $0.pairedMacs = [studio]
+            $0.metadataRefreshGeneration = 1
+            if case var .controlsConfiguration(settings) = $0.path[id: pathID] {
+                settings.pairedMacs = [studio]
+                $0.path[id: pathID] = .controlsConfiguration(settings)
+            }
+            Self.syncChildren(to: studio.id, .offline(nil), in: &$0)
+        }
+    }
+
+    @Test func removingLastMacResetsActiveDashboardSession() async throws {
+        let sessionID = UUID(uuidString: "00000000-0000-0000-0000-000000000701")!
+        let requestID = UUID(uuidString: "00000000-0000-0000-0000-000000000702")!
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.activeSessionID = sessionID
+        state.dashboard = .init(
+            pairedMacs: [studio],
+            selectedMacID: studio.id,
+            connectionState: .authenticated,
+            isActive: true
+        )
+        state.dashboard.activeSessionID = sessionID
+        state.dashboard.requestsInFlight = [.darkMode]
+        state.dashboard.requestIDs = [.darkMode: requestID]
+        state.path.append(.controlsConfiguration(.init(
+            pairedMacs: [studio],
+            selectedMacID: studio.id
+        )))
+        let pathID = try #require(state.path.ids.last)
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.saveAppState = { _ in }
+            $0.remoteConnection.select = { _ in }
+        }
+        store.exhaustivity = .off(showSkippedAssertions: false)
+
+        await store.send(.path(.element(
+            id: pathID,
+            action: .controlsConfiguration(.delegate(.allMacsRemoved))
+        )))
+
+        #expect(store.state.dashboard.selectedMacID == nil)
+        #expect(store.state.dashboard.connectionState == .idle)
+        #expect(store.state.dashboard.activeSessionID == nil)
+        #expect(store.state.dashboard.requestsInFlight.isEmpty)
+        #expect(store.state.dashboard.requestIDs.isEmpty)
+    }
+
+    @Test func attemptedNormalNavigationCannotReplaceRequiredSettingsOrPairingState() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: false)
+        state.requiredGlobalSettings?.pairing = PairingFeature.State(code: "ABCDEFGHJKMN")
+        let original = state.requiredGlobalSettings
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+        await store.send(.controlsConfigurationButtonTapped)
+        #expect(store.state.requiredGlobalSettings == original)
+        #expect(store.state.path.isEmpty)
+    }
+
+    @Test func requiredPairingSuccessRevealsDashboardAndPersistsCompletion() async {
+        let persistence = PersistenceAttemptRecorder(shouldFail: false); let selected = SelectionRecorder(); let studio = studio
+        let store = TestStore(initialState: RemoteAppFeature.State(hasCompletedInitialSetup: false)) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.saveAppState = { try await persistence.save($0) }
+            $0.remotePersistence.loadSystemMonitorLayout = { _ in nil }
+            $0.remotePersistence.loadAphroditeLibrary = { _ in nil }
+            $0.remoteConnection.select = { await selected.record($0) }
+        }
+        let intent = RemoteAppPersistenceIntent(writerID: store.state.persistenceWriterID, sequence: 1, selectedMacID: studio.id, hasCompletedInitialSetup: true)
+        await store.send(.requiredGlobalSettings(.delegate(.paired(studio)))) {
+            $0.requiredGlobalSettings = nil; $0.hasCompletedInitialSetup = true; $0.pairedMacs = [studio]; $0.selectedMacID = studio.id
+            $0.pairAdoptionGeneration = 1; $0.metadataRefreshGeneration = 1
+            $0.nextPersistenceSequence = 1; $0.pendingPersistenceIntent = intent; $0.isPersisting = true
+            Self.selectOfflineMac(studio.id, in: &$0)
+        }
+        await receiveSelectedMacContext(store, studio.id)
+        await receiveDefaultMonitorLayout(store, studio.id)
+        await store.receive(.persistenceResponse(intent, .success)) { $0.pendingPersistenceIntent = nil; $0.isPersisting = false }
+        await store.receive(.pairAdoptionResponse(1, 0, studio.id, .offline))
+        await receiveEmptyAphroditeLibrary(store, studio.id)
+        await store.finish()
+        #expect(await persistence.selectedIDs == [studio.id]); #expect(await persistence.completionValues == [true]); #expect(await selected.ids.isEmpty)
+    }
+
+    @Test func offlineEventBetweenPairAdoptionStartAndResponseWins() async {
+        let adoption = PairAdoptionGate(result: .authenticated)
+        let studio = studio
+        let store = TestStore(initialState: RemoteAppFeature.State(hasCompletedInitialSetup: false)) {
+            RemoteAppFeature()
+        } withDependencies: {
+            $0.remotePersistence.saveAppState = { _ in }
+            $0.remotePersistence.loadSystemMonitorLayout = { _ in nil }
+            $0.remotePersistence.loadAphroditeLibrary = { _ in nil }
+            $0.remoteConnection.adoptPairedMac = { await adoption.adopt($0) }
+        }
+        let intent = RemoteAppPersistenceIntent(
+            writerID: store.state.persistenceWriterID,
+            sequence: 1,
+            selectedMacID: studio.id,
+            hasCompletedInitialSetup: true
+        )
+
+        await store.send(.requiredGlobalSettings(.delegate(.paired(studio)))) {
+            $0.requiredGlobalSettings = nil
+            $0.pairedMacs = [studio]
+            $0.selectedMacID = studio.id
+            $0.metadataRefreshGeneration = 1
+            $0.pairAdoptionGeneration = 1
+            $0.hasCompletedInitialSetup = true
+            $0.nextPersistenceSequence = 1
+            $0.pendingPersistenceIntent = intent
+            $0.isPersisting = true
+            Self.selectOfflineMac(studio.id, in: &$0)
+        }
+        await receiveSelectedMacContext(store, studio.id)
+        await store.receive(.persistenceResponse(intent, .success)) {
+            $0.pendingPersistenceIntent = nil
+            $0.isPersisting = false
+        }
+        await receiveDefaultMonitorLayout(store, studio.id)
+        await receiveEmptyAphroditeLibrary(store, studio.id)
+        await adoption.waitUntilEntered()
+        await store.send(.connectionEvent(.offline(studio.id, "Disconnected"))) {
+            $0.connectionEventRevision = 1
+        }
+        await store.receive(.codexUsage(.contextChanged(macID: studio.id, sessionID: nil)))
+        await store.receive(.claudeUsage(.contextChanged(macID: studio.id, sessionID: nil)))
+        await adoption.open()
+        await store.receive(.pairAdoptionResponse(1, 0, studio.id, .authenticated))
+        #expect(store.state.connectedMacIDs.isEmpty)
+    }
+
+    @Test func authenticatedEventBetweenPairAdoptionStartAndResponseWins() async {
+        let adoption = PairAdoptionGate(result: .offline)
+        let studio = studio
+        let store = TestStore(initialState: RemoteAppFeature.State(hasCompletedInitialSetup: false)) {
+            RemoteAppFeature()
+        } withDependencies: {
+            $0.remotePersistence.saveAppState = { _ in }
+            $0.remotePersistence.loadPairedMacs = { [studio] }
+            $0.remotePersistence.loadSystemMonitorLayout = { _ in nil }
+            $0.remotePersistence.loadAphroditeLibrary = { _ in nil }
+            $0.remoteConnection.adoptPairedMac = { await adoption.adopt($0) }
+        }
+        let intent = RemoteAppPersistenceIntent(
+            writerID: store.state.persistenceWriterID,
+            sequence: 1,
+            selectedMacID: studio.id,
+            hasCompletedInitialSetup: true
+        )
+
+        await store.send(.requiredGlobalSettings(.delegate(.paired(studio)))) {
+            $0.requiredGlobalSettings = nil
+            $0.pairedMacs = [studio]
+            $0.selectedMacID = studio.id
+            $0.metadataRefreshGeneration = 1
+            $0.pairAdoptionGeneration = 1
+            $0.hasCompletedInitialSetup = true
+            $0.nextPersistenceSequence = 1
+            $0.pendingPersistenceIntent = intent
+            $0.isPersisting = true
+            Self.selectOfflineMac(studio.id, in: &$0)
+        }
+        await receiveSelectedMacContext(store, studio.id)
+        await store.receive(.persistenceResponse(intent, .success)) {
+            $0.pendingPersistenceIntent = nil
+            $0.isPersisting = false
+        }
+        await receiveDefaultMonitorLayout(store, studio.id)
+        await receiveEmptyAphroditeLibrary(store, studio.id)
+        await adoption.waitUntilEntered()
+        await store.send(.connectionEvent(.authenticated(studio.id))) {
+            $0.connectionEventRevision = 1
+            $0.connectedMacIDs = [studio.id]
+            $0.metadataRefreshGeneration = 2
+            Self.syncChildren(to: studio.id, .authenticated, in: &$0)
+        }
+        await store.receive(.screenshots(.contextChanged(macID: studio.id, connectionState: .authenticated))) {
+            $0.screenshots.connectionState = .authenticated
+        }
+        await store.receive(.pairedMetadataRefreshed(2, [studio]))
+        await adoption.open()
+        await store.receive(.pairAdoptionResponse(1, 0, studio.id, .offline))
+        #expect(store.state.connectedMacIDs == [studio.id])
+    }
+
+    @Test func removingFinalMacCreatesRequiredChild() async throws {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true); state.pairedMacs = [studio]; state.selectedMacID = studio.id
+        state.path.append(.controlsConfiguration(.init(pairedMacs: [studio], selectedMacID: studio.id)))
+        let id = try #require(state.path.ids.last); let selected = SelectionRecorder(); let persistence = PersistenceAttemptRecorder(shouldFail: false)
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.saveAppState = { try await persistence.save($0) }
+            $0.remoteConnection.select = { await selected.record($0) }
+        }
+        let intent = RemoteAppPersistenceIntent(writerID: store.state.persistenceWriterID, sequence: 1, selectedMacID: nil, hasCompletedInitialSetup: false)
+        await store.send(.path(.element(id: id, action: .controlsConfiguration(.delegate(.allMacsRemoved))))) {
+            $0.pairedMacs = []; $0.selectedMacID = nil; $0.path.removeAll(); $0.requiredGlobalSettings = .init(isSetupRequired: true)
+            $0.metadataRefreshGeneration = 1; $0.hasCompletedInitialSetup = false
+            $0.nextPersistenceSequence = 1; $0.pendingPersistenceIntent = intent; $0.isPersisting = true
+            $0.systemMonitorLayoutGeneration = 1
+        }
+        await receiveClearedSelectionContext(store)
+        await store.receive(.persistenceResponse(intent, .success)) { $0.pendingPersistenceIntent = nil; $0.isPersisting = false }
+        await store.finish(); #expect(await selected.ids == [nil]); #expect(await persistence.completionValues == [false])
+    }
+
+    @Test func completedLaunchWithNoMacsShowsRequiredSettings() async {
+        let persistence = PersistenceAttemptRecorder(shouldFail: false)
+        let store = TestStore(initialState: RemoteAppFeature.State(hasCompletedInitialSetup: true)) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.loadPairedMacs = { [] }; $0.remotePersistence.loadSelectedMacID = { nil }
+            $0.remotePersistence.saveAppState = { try await persistence.save($0) }
+            $0.remoteConnection.select = { _ in }
+            $0.remoteIdleTimer.setIdleTimerDisabled = { _ in }
+        }
+        await store.send(.task) { $0.loadGeneration = 1; $0.isLoading = true }
+        let intent = RemoteAppPersistenceIntent(writerID: store.state.persistenceWriterID, sequence: 1, selectedMacID: nil, hasCompletedInitialSetup: false)
+        await store.receive(.launchResponse(1, .success(.init(pairedMacs: [], selectedMacID: nil)))) {
+            $0.isLoading = false; $0.requiredGlobalSettings = .init(isSetupRequired: true); $0.hasCompletedInitialSetup = false
+            $0.nextPersistenceSequence = 1; $0.pendingPersistenceIntent = intent; $0.isPersisting = true
+        }
+        await store.receive(.codexUsage(.contextChanged(macID: nil, sessionID: nil)))
+        await store.receive(.claudeUsage(.contextChanged(macID: nil, sessionID: nil)))
+        await store.receive(.aphrodite(.selectedMacChanged(nil)))
+        await store.receive(.persistenceResponse(intent, .success)) { $0.pendingPersistenceIntent = nil; $0.isPersisting = false }
+        #expect(await persistence.completionValues == [false])
+    }
+
+    @Test func staleLaunchResponseIsIgnored() async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true); state.loadGeneration = 2; state.isLoading = true
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+        await store.send(.launchResponse(1, .success(.init(pairedMacs: [studio], selectedMacID: studio.id))))
+    }
+
+    @Test func persistenceRestoreReloadsCanonicalMacAndReconnectsIt() async {
+        let candidate = laptop
+        let old = studio
+        let selections = SelectionRecorder()
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [old, candidate]
+        state.selectedMacID = candidate.id
+        let store = TestStore(initialState: state) { RemoteAppFeature() } withDependencies: {
+            $0.remotePersistence.loadPairedMacs = { [old] }
+            $0.remotePersistence.loadSelectedMacID = { old.id }
+            $0.remoteConnection.snapshot = { .init(selectedMacID: old.id) }
+            $0.remoteConnection.select = { await selections.record($0) }
+            $0.remotePersistence.loadSystemMonitorLayout = { _ in nil }
+            $0.remotePersistence.loadAphroditeLibrary = { _ in nil }
+        }
+
+        await store.send(.connectionEvent(.persistenceRestored)) {
+            $0.connectionEventRevision = 1
+            $0.loadGeneration = 1
+            $0.isLoading = true
+        }
+        await store.receive(.launchResponse(1, .success(.init(
+            pairedMacs: [old],
+            selectedMacID: old.id,
+            connectionSnapshot: .init(selectedMacID: old.id)
+        )))) {
+            $0.isLoading = false
+            $0.pairedMacs = [old]
+            $0.selectedMacID = old.id
+            Self.selectOfflineMac(old.id, in: &$0)
+        }
+        await receiveSelectedMacContext(store, old.id)
+        await receiveDefaultMonitorLayout(store, old.id)
+        await receiveEmptyAphroditeLibrary(store, old.id)
+        await store.finish()
+
+        #expect(await selections.ids == [old.id])
+    }
+
+    @Test func sceneLifecycleForwardsLatestState() async {
+        let recorder = ForegroundRecorder()
+        let idleTimer = RemoteIdleTimerRecorder()
+        var initialState = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        initialState.isKeepingScreenAwake = true
+        let store = TestStore(initialState: initialState) { RemoteAppFeature() } withDependencies: {
+            $0.remoteConnection.setForegrounded = { await recorder.record($0) }
+            $0.remoteIdleTimer.setIdleTimerDisabled = { await idleTimer.record($0) }
+        }
+        await store.send(.scenePhaseChanged(false)) {
+            $0.isForegrounded = false
+            $0.lifecycleGeneration = 1
+        }
+        await store.receive(.codexUsage(.visibilityChanged(false)))
+        await store.receive(.claudeUsage(.visibilityChanged(false)))
+        await store.receive(.lifecycleResponse(1))
+        await store.send(.scenePhaseChanged(true)) {
+            $0.isForegrounded = true
+            $0.lifecycleGeneration = 2
+        }
+        await store.receive(.codexUsage(.visibilityChanged(false)))
+        await store.receive(.claudeUsage(.visibilityChanged(false)))
+        await store.receive(.lifecycleResponse(2))
+        #expect(await recorder.values == [false, true])
+        #expect(await idleTimer.values == [false, true])
+    }
+
+    @Test func globalSettingsToggleUpdatesTheAppWideWakePreference() async {
+        var initialState = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        initialState.path.append(.globalSettings(.init(isKeepingScreenAwake: false)))
+        let savedPreferences = RemoteIdleTimerRecorder()
+        let idleTimer = RemoteIdleTimerRecorder()
+        let store = TestStore(initialState: initialState) { RemoteAppFeature() } withDependencies: {
+            $0.remoteIdleTimer.savePreference = { await savedPreferences.record($0) }
+            $0.remoteIdleTimer.setIdleTimerDisabled = { await idleTimer.record($0) }
+        }
+        let id = store.state.path.ids[0]
+
+        await store.send(.path(.element(
+            id: id,
+            action: .globalSettings(.keepScreenAwakeToggled(true))
+        ))) {
+            $0.isKeepingScreenAwake = true
+            $0.path[id: id] = .globalSettings(.init(isKeepingScreenAwake: true))
+        }
+        await store.finish()
+        #expect(await savedPreferences.values == [true])
+        #expect(await idleTimer.values == [true])
+    }
+
+    @Test func authoritativeEmptyStorageRepairsCompletedSeedAndRequiresSetup() async {
+        let persistence = PersistenceAttemptRecorder(shouldFail: false)
+        let selected = SelectionRecorder()
+        let studio = studio
+        let store = TestStore(
+            initialState: RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        ) {
+            RemoteAppFeature()
+        } withDependencies: {
+            $0.remotePersistence.loadPairedMacs = { [] }
+            $0.remotePersistence.loadSelectedMacID = { studio.id }
+            $0.remotePersistence.saveAppState = { try await persistence.save($0) }
+            $0.remoteConnection.select = { await selected.record($0) }
+            $0.remoteIdleTimer.setIdleTimerDisabled = { _ in }
+        }
+
+        await store.send(.task) {
+            $0.loadGeneration = 1
+            $0.isLoading = true
+        }
+        let intent = RemoteAppPersistenceIntent(writerID: store.state.persistenceWriterID, sequence: 1, selectedMacID: nil, hasCompletedInitialSetup: false)
+        await store.receive(.launchResponse(1, .success(.init(pairedMacs: [], selectedMacID: studio.id)))) {
+            $0.isLoading = false
+            $0.requiredGlobalSettings = .init(isSetupRequired: true)
+            $0.hasCompletedInitialSetup = false
+            $0.nextPersistenceSequence = 1
+            $0.pendingPersistenceIntent = intent
+            $0.isPersisting = true
+        }
+        await store.receive(.codexUsage(.contextChanged(macID: nil, sessionID: nil)))
+        await store.receive(.claudeUsage(.contextChanged(macID: nil, sessionID: nil)))
+        await store.receive(.aphrodite(.selectedMacChanged(nil)))
+        await store.receive(.persistenceResponse(intent, .success)) {
+            $0.pendingPersistenceIntent = nil
+            $0.isPersisting = false
+        }
+        await store.finish()
+
+        #expect(await persistence.selectedIDs == [nil])
+        #expect(await persistence.completionValues == [false])
+        #expect(await selected.ids == [nil])
+    }
+
+    @Test func authoritativeNonemptyStorageRepairsIncompleteSeedAndRevealsDashboard() async {
+        let persistence = PersistenceAttemptRecorder(shouldFail: false)
+        let selected = SelectionRecorder()
+        let studio = studio
+        let store = TestStore(
+            initialState: RemoteAppFeature.State(hasCompletedInitialSetup: false)
+        ) {
+            RemoteAppFeature()
+        } withDependencies: {
+            $0.remotePersistence.loadPairedMacs = { [studio] }
+            $0.remotePersistence.loadSelectedMacID = { studio.id }
+            $0.remotePersistence.saveAppState = { try await persistence.save($0) }
+            $0.remotePersistence.loadSystemMonitorLayout = { _ in nil }
+            $0.remotePersistence.loadAphroditeLibrary = { _ in nil }
+            $0.remoteConnection.select = { await selected.record($0) }
+            $0.remoteIdleTimer.setIdleTimerDisabled = { _ in }
+        }
+
+        await store.send(.task) {
+            $0.loadGeneration = 1
+            $0.isLoading = true
+        }
+        let intent = RemoteAppPersistenceIntent(writerID: store.state.persistenceWriterID, sequence: 1, selectedMacID: studio.id, hasCompletedInitialSetup: true)
+        await store.receive(.launchResponse(1, .success(.init(pairedMacs: [studio], selectedMacID: studio.id)))) {
+            $0.isLoading = false
+            $0.pairedMacs = [studio]
+            $0.selectedMacID = studio.id
+            $0.requiredGlobalSettings = nil
+            $0.hasCompletedInitialSetup = true
+            $0.nextPersistenceSequence = 1
+            $0.pendingPersistenceIntent = intent
+            $0.isPersisting = true
+            Self.selectOfflineMac(studio.id, in: &$0)
+        }
+        await receiveSelectedMacContext(store, studio.id)
+        await store.receive(.persistenceResponse(intent, .success)) {
+            $0.pendingPersistenceIntent = nil
+            $0.isPersisting = false
+        }
+        await receiveDefaultMonitorLayout(store, studio.id)
+        await receiveEmptyAphroditeLibrary(store, studio.id)
+        await store.finish()
+
+        #expect(await persistence.selectedIDs == [studio.id])
+        #expect(await persistence.completionValues == [true])
+        #expect(await selected.ids == [studio.id])
+    }
+
+    @Test func launchLoadFailurePreservesSeededRootStateAndCanRetry() async throws {
+        let loader = RetryableLaunchLoader(macs: [studio], selectedMacID: studio.id)
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [laptop]
+        state.selectedMacID = laptop.id
+        state.path.append(.controlsConfiguration(.init(pairedMacs: [laptop], selectedMacID: laptop.id)))
+        let originalPath = state.path
+        let store = TestStore(initialState: state) {
+            RemoteAppFeature()
+        } withDependencies: {
+            $0.remotePersistence.loadPairedMacs = { try await loader.loadMacs() }
+            $0.remotePersistence.loadSelectedMacID = { loader.selectedMacID }
+            $0.remotePersistence.loadSystemMonitorLayout = { _ in nil }
+            $0.remotePersistence.loadAphroditeLibrary = { _ in nil }
+            $0.remoteConnection.select = { _ in }
+            $0.remoteIdleTimer.setIdleTimerDisabled = { _ in }
+        }
+
+        await store.send(.task) {
+            $0.loadGeneration = 1
+            $0.isLoading = true
+        }
+        await store.receive(.launchResponse(1, .failure)) {
+            $0.isLoading = false
+            $0.rootIssue = .loadFailed
+        }
+        #expect(store.state.pairedMacs == [laptop])
+        #expect(store.state.selectedMacID == laptop.id)
+        #expect(store.state.path == originalPath)
+
+        await loader.allowSuccess()
+        await store.send(.retryTapped)
+        await store.receive(.task) {
+            $0.loadGeneration = 2
+            $0.isLoading = true
+        }
+        await store.receive(.launchResponse(2, .success(.init(pairedMacs: [studio], selectedMacID: studio.id)))) {
+            $0.isLoading = false
+            $0.rootIssue = nil
+            $0.pairedMacs = [studio]
+            $0.selectedMacID = studio.id
+            if let pathID = $0.path.ids.last,
+               case var .controlsConfiguration(settings) = $0.path[id: pathID] {
+                settings.pairedMacs = [studio]
+                settings.selectedMacID = studio.id
+                $0.path[id: pathID] = .controlsConfiguration(settings)
+            }
+            Self.selectOfflineMac(studio.id, in: &$0)
+        }
+        await receiveSelectedMacContext(store, studio.id)
+        await receiveDefaultMonitorLayout(store, studio.id)
+        await receiveEmptyAphroditeLibrary(store, studio.id)
+        await store.finish()
+    }
+
+    @Test func pairingPersistenceFailureRetainsIntentAndRetrySuccessClearsIt() async {
+        let persistence = PersistenceAttemptRecorder(shouldFail: true)
+        let studio = studio
+        let store = TestStore(
+            initialState: RemoteAppFeature.State(hasCompletedInitialSetup: false)
+        ) {
+            RemoteAppFeature()
+        } withDependencies: {
+            $0.remotePersistence.saveAppState = { try await persistence.save($0) }
+            $0.remotePersistence.loadSystemMonitorLayout = { _ in nil }
+            $0.remotePersistence.loadAphroditeLibrary = { _ in nil }
+            $0.remoteConnection.select = { _ in }
+        }
+        let intent = RemoteAppPersistenceIntent(writerID: store.state.persistenceWriterID, sequence: 1, selectedMacID: studio.id, hasCompletedInitialSetup: true)
+
+        await store.send(.requiredGlobalSettings(.delegate(.paired(studio)))) {
+            $0.requiredGlobalSettings = nil
+            $0.hasCompletedInitialSetup = true
+            $0.pairedMacs = [studio]
+            $0.selectedMacID = studio.id
+            $0.pairAdoptionGeneration = 1
+            $0.metadataRefreshGeneration = 1
+            $0.nextPersistenceSequence = 1
+            $0.pendingPersistenceIntent = intent
+            $0.isPersisting = true
+            Self.selectOfflineMac(studio.id, in: &$0)
+        }
+        await receiveSelectedMacContext(store, studio.id)
+        await receiveDefaultMonitorLayout(store, studio.id)
+        await store.receive(.persistenceResponse(intent, .failure)) {
+            $0.isPersisting = false
+            $0.rootIssue = .persistenceFailed
+        }
+        await receiveEmptyAphroditeLibrary(store, studio.id)
+        await store.receive(.pairAdoptionResponse(1, 0, studio.id, .offline))
+
+        await persistence.allowSuccess()
+        await store.send(.retryTapped) { $0.isPersisting = true }
+        await store.receive(.persistenceResponse(intent, .success)) {
+            $0.pendingPersistenceIntent = nil
+            $0.isPersisting = false
+            $0.rootIssue = nil
+        }
+        await store.finish()
+    }
+
+    @Test func finalRemovalPersistenceFailureRetainsIntentAndRetrySuccessClearsIt() async throws {
+        let persistence = PersistenceAttemptRecorder(shouldFail: true)
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.path.append(.controlsConfiguration(.init(pairedMacs: [studio], selectedMacID: studio.id)))
+        let id = try #require(state.path.ids.last)
+        let store = TestStore(initialState: state) {
+            RemoteAppFeature()
+        } withDependencies: {
+            $0.remotePersistence.saveAppState = { try await persistence.save($0) }
+            $0.remoteConnection.select = { _ in }
+        }
+        let intent = RemoteAppPersistenceIntent(writerID: store.state.persistenceWriterID, sequence: 1, selectedMacID: nil, hasCompletedInitialSetup: false)
+
+        await store.send(.path(.element(id: id, action: .controlsConfiguration(.delegate(.allMacsRemoved))))) {
+            $0.pairedMacs = []
+            $0.selectedMacID = nil
+            $0.path.removeAll()
+            $0.requiredGlobalSettings = .init(isSetupRequired: true)
+            $0.metadataRefreshGeneration = 1
+            $0.hasCompletedInitialSetup = false
+            $0.nextPersistenceSequence = 1
+            $0.pendingPersistenceIntent = intent
+            $0.isPersisting = true
+            $0.systemMonitorLayoutGeneration = 1
+        }
+        await receiveClearedSelectionContext(store)
+        await store.receive(.persistenceResponse(intent, .failure)) {
+            $0.isPersisting = false
+            $0.rootIssue = .persistenceFailed
+        }
+
+        await persistence.allowSuccess()
+        await store.send(.retryTapped) { $0.isPersisting = true }
+        await store.receive(.persistenceResponse(intent, .success)) {
+            $0.pendingPersistenceIntent = nil
+            $0.isPersisting = false
+            $0.rootIssue = nil
+        }
+        await store.finish()
+    }
+
+    @Test func rapidPairThenFinalRemovalKeepsNewestStorageWhenOlderSaveCompletesLast() async throws {
+        let backing = RemotePersistenceClient.inMemory()
+        let saver = ReverseAtomicAppStateSaver(backing: backing)
+        let writerID = UUID(uuidString: "00000000-0000-0000-0000-000000000901")!
+        var state = RemoteAppFeature.State(
+            hasCompletedInitialSetup: true,
+            persistenceWriterID: writerID
+        )
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.path.append(.controlsConfiguration(.init(
+            pairedMacs: [studio],
+            selectedMacID: studio.id
+        )))
+        let pathID = try #require(state.path.ids.last)
+        let store = TestStore(initialState: state) {
+            RemoteAppFeature()
+        } withDependencies: {
+            $0.remotePersistence.saveAppState = { try await saver.save($0) }
+            $0.remotePersistence.loadSystemMonitorLayout = { _ in nil }
+            $0.remotePersistence.loadAphroditeLibrary = { _ in nil }
+            $0.remoteConnection.select = { _ in }
+        }
+        let pairedIntent = RemoteAppPersistenceIntent(
+            writerID: writerID,
+            sequence: 1,
+            selectedMacID: laptop.id,
+            hasCompletedInitialSetup: true
+        )
+        let clearedIntent = RemoteAppPersistenceIntent(
+            writerID: writerID,
+            sequence: 2,
+            selectedMacID: nil,
+            hasCompletedInitialSetup: false
+        )
+
+        await store.send(.path(.element(id: pathID, action: .controlsConfiguration(.delegate(.paired(laptop)))))) {
+            $0.pairedMacs = [self.studio, self.laptop]
+            $0.selectedMacID = self.laptop.id
+            $0.pairAdoptionGeneration = 1
+            $0.metadataRefreshGeneration = 1
+            if case var .controlsConfiguration(settings) = $0.path[id: pathID] {
+                settings.pairedMacs = [self.studio, self.laptop]
+                settings.selectedMacID = self.laptop.id
+                settings.connectionStatuses = [:]
+                $0.path[id: pathID] = .controlsConfiguration(settings)
+            }
+            $0.nextPersistenceSequence = 1
+            $0.pendingPersistenceIntent = pairedIntent
+            $0.isPersisting = true
+            Self.selectOfflineMac(self.laptop.id, in: &$0)
+        }
+        await receiveSelectedMacContext(store, laptop.id)
+        await receiveDefaultMonitorLayout(store, laptop.id)
+        await receiveEmptyAphroditeLibrary(store, laptop.id)
+        await saver.waitUntilFirstSaveStarts()
+        await store.send(.path(.element(id: pathID, action: .controlsConfiguration(.delegate(.allMacsRemoved))))) {
+            $0.pairedMacs = []
+            $0.selectedMacID = nil
+            $0.path.removeAll()
+            $0.requiredGlobalSettings = .init(isSetupRequired: true)
+            $0.connectedMacIDs = []
+            $0.metadataRefreshGeneration = 2
+            $0.hasCompletedInitialSetup = false
+            $0.nextPersistenceSequence = 2
+            $0.pendingPersistenceIntent = clearedIntent
+            $0.isPersisting = true
+            $0.systemMonitorLayoutGeneration = 2
+            $0.systemMonitor.layout = nil
+        }
+        await store.receive(.codexUsage(.contextChanged(macID: nil, sessionID: nil))) {
+            $0.codexUsage.selectedMacID = nil
+        }
+        await store.receive(.claudeUsage(.contextChanged(macID: nil, sessionID: nil))) {
+            $0.claudeUsage.selectedMacID = nil
+        }
+        await store.receive(.aphrodite(.selectedMacChanged(nil))) {
+            $0.aphrodite.selectedMacID = nil
+        }
+        await store.receive(.screenshots(.contextChanged(macID: nil, connectionState: .idle))) {
+            $0.screenshots.selectedMacID = nil
+            $0.screenshots.connectionState = .idle
+            $0.screenshots.cacheGeneration += 1
+        }
+        await store.receive(.persistenceResponse(clearedIntent, .success)) {
+            $0.pendingPersistenceIntent = nil
+            $0.isPersisting = false
+        }
+        await saver.releaseFirstSave()
+        await store.receive(.persistenceResponse(pairedIntent, .success))
+        await store.receive(.pairAdoptionResponse(1, 0, laptop.id, .offline))
+        await store.finish()
+
+        #expect(try await backing.loadSelectedMacID() == nil)
+        #expect(try await backing.loadInitialSetupCompleted() == false)
+    }
+
+    @Test func rapidFinalRemovalThenPairKeepsNewestStorageWhenOlderSaveCompletesLast() async throws {
+        let backing = RemotePersistenceClient.inMemory()
+        let saver = ReverseAtomicAppStateSaver(backing: backing)
+        let adoption = PairAdoptionGate(result: .offline)
+        let writerID = UUID(uuidString: "00000000-0000-0000-0000-000000000902")!
+        var state = RemoteAppFeature.State(
+            hasCompletedInitialSetup: true,
+            persistenceWriterID: writerID
+        )
+        state.pairedMacs = [studio]
+        state.selectedMacID = studio.id
+        state.path.append(.controlsConfiguration(.init(
+            pairedMacs: [studio],
+            selectedMacID: studio.id
+        )))
+        let pathID = try #require(state.path.ids.last)
+        let store = TestStore(initialState: state) {
+            RemoteAppFeature()
+        } withDependencies: {
+            $0.remotePersistence.saveAppState = { try await saver.save($0) }
+            $0.remotePersistence.loadSystemMonitorLayout = { _ in nil }
+            $0.remotePersistence.loadAphroditeLibrary = { _ in nil }
+            $0.remoteConnection.select = { _ in }
+            $0.remoteConnection.adoptPairedMac = { await adoption.adopt($0) }
+        }
+        let clearedIntent = RemoteAppPersistenceIntent(
+            writerID: writerID,
+            sequence: 1,
+            selectedMacID: nil,
+            hasCompletedInitialSetup: false
+        )
+        let pairedIntent = RemoteAppPersistenceIntent(
+            writerID: writerID,
+            sequence: 2,
+            selectedMacID: laptop.id,
+            hasCompletedInitialSetup: true
+        )
+
+        await store.send(.path(.element(id: pathID, action: .controlsConfiguration(.delegate(.allMacsRemoved))))) {
+            $0.pairedMacs = []
+            $0.selectedMacID = nil
+            $0.path.removeAll()
+            $0.requiredGlobalSettings = .init(isSetupRequired: true)
+            $0.metadataRefreshGeneration = 1
+            $0.hasCompletedInitialSetup = false
+            $0.nextPersistenceSequence = 1
+            $0.pendingPersistenceIntent = clearedIntent
+            $0.isPersisting = true
+            $0.systemMonitorLayoutGeneration = 1
+        }
+        await receiveClearedSelectionContext(store)
+        await saver.waitUntilFirstSaveStarts()
+        await store.send(.requiredGlobalSettings(.delegate(.paired(laptop)))) {
+            $0.requiredGlobalSettings = nil
+            $0.hasCompletedInitialSetup = true
+            $0.pairedMacs = [laptop]
+            $0.selectedMacID = laptop.id
+            $0.pairAdoptionGeneration = 1
+            $0.metadataRefreshGeneration = 2
+            $0.nextPersistenceSequence = 2
+            $0.pendingPersistenceIntent = pairedIntent
+            $0.isPersisting = true
+            Self.selectOfflineMac(self.laptop.id, in: &$0)
+        }
+        await receiveSelectedMacContext(store, laptop.id)
+        await receiveDefaultMonitorLayout(store, laptop.id)
+        await store.receive(.persistenceResponse(pairedIntent, .success)) {
+            $0.pendingPersistenceIntent = nil
+            $0.isPersisting = false
+        }
+        await receiveEmptyAphroditeLibrary(store, laptop.id)
+        await adoption.waitUntilEntered()
+        await adoption.open()
+        await store.receive(.pairAdoptionResponse(1, 0, laptop.id, .offline))
+        await saver.releaseFirstSave()
+        await store.receive(.persistenceResponse(clearedIntent, .success))
+        await store.finish()
+
+        #expect(try await backing.loadSelectedMacID() == laptop.id)
+        #expect(try await backing.loadInitialSetupCompleted())
+    }
+
+    @Test func appShellPresentsExploreDemoWithoutStartingProductionDependencies() async {
+        let liveCalls = LockIsolated(0)
+        let store = TestStore(
+            initialState: RemoteAppShellFeature.State(
+                production: .init(hasCompletedInitialSetup: false)
+            )
+        ) {
+            RemoteAppShellFeature()
+        } withDependencies: {
+            $0.remoteConnection.snapshot = {
+                liveCalls.withValue { $0 += 1 }
+                return .init()
+            }
+            $0.remoteConnection.events = {
+                liveCalls.withValue { $0 += 1 }
+                return AsyncStream { $0.finish() }
+            }
+            $0.remotePersistence.loadPairedMacs = {
+                liveCalls.withValue { $0 += 1 }
+                return []
+            }
+            $0.remotePersistence.loadSelectedMacID = {
+                liveCalls.withValue { $0 += 1 }
+                return nil
+            }
+            $0.remotePersistence.saveAppState = { _ in
+                liveCalls.withValue { $0 += 1 }
+            }
+            // The demo applies the saved keep-awake preference like production does; the idle
+            // timer is app-wide UI state, not a production connection or persistence dependency.
+            $0.remoteIdleTimer.setIdleTimerDisabled = { _ in }
+        }
+        await store.send(.exploreDemoTapped)
+        await store.receive(.reviewDemoReady) {
+            $0.reviewDemo = .init()
+        }
+        store.exhaustivity = .off(showSkippedAssertions: false)
+        await store.send(.reviewDemo(.presented(.app(.task))))
+        await store.receive(\.reviewDemo)
+
+        #expect(store.state.reviewDemo != nil)
+        #expect(liveCalls.value == 0)
+        await store.send(.reviewDemo(.presented(.exitTapped)))
+        await store.finish()
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func reviewDemoScreenshotsUseDemoImagesAndCacheInsteadOfProductionOnes() async throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("ReviewDemoShellScreenshots-\(UUID().uuidString)", isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let productionCalls = LockIsolated(0)
+        let store = TestStore(
+            initialState: RemoteAppShellFeature.State(production: .init(hasCompletedInitialSetup: false))
+        ) {
+            RemoteAppShellFeature(screenshotCache: .live(root: root))
+        } withDependencies: {
+            $0.remoteScreenshotImages = RemoteScreenshotImageClient { _, _ in
+                productionCalls.withValue { $0 += 1 }
+                throw RemoteDependencyError.unimplemented
+            }
+            $0.remoteScreenshotCache.load = { _ in
+                productionCalls.withValue { $0 += 1 }
+                return nil
+            }
+            $0.remoteScreenshotCache.saveImage = { _, _, _ in
+                productionCalls.withValue { $0 += 1 }
+                throw RemoteDependencyError.unimplemented
+            }
+        }
+        await store.send(.exploreDemoTapped)
+        await store.receive(.reviewDemoReady) { $0.reviewDemo = .init() }
+        store.exhaustivity = .off(showSkippedAssertions: false)
+        await store.send(.reviewDemo(.presented(.app(.screenshots(.visibilityChanged(true))))))
+
+        let macID = RemoteReviewDemoRuntime.studioMacID
+        let item = try #require(RemoteReviewDemoRuntime.makeScreenshotLibrary().items.first)
+        let images = try #require(store.state.reviewDemo?.app.screenshots.dragImages.client)
+        let url = try await images.load(macID, item)
+
+        #expect(url.standardizedFileURL.path.hasPrefix(root.standardizedFileURL.path + "/"))
+        #expect(productionCalls.value == 0)
+        await store.send(.reviewDemo(.presented(.exitTapped)))
+        await store.finish()
+        #expect(FileManager.default.fileExists(atPath: url.path) == false)
+    }
+
+    @Test func exitingDemoDismissesOnlyThePresentationAndKeepsProductionStateUntouched() async {
+        var production = RemoteAppFeature.State(hasCompletedInitialSetup: true)
+        production.pairedMacs = [studio, laptop]
+        production.selectedMacID = studio.id
+        production.nextPersistenceSequence = 7
+        let originalProduction = production
+        var initialState = RemoteAppShellFeature.State(production: production)
+        initialState.reviewDemo = .init()
+        let store = TestStore(initialState: initialState) {
+            RemoteAppShellFeature()
+        }
+
+        await store.send(.reviewDemo(.presented(.exitTapped))) {
+            $0.reviewDemo = nil
+        }
+
+        #expect(store.state.production == originalProduction)
+    }
+}
+
+private actor SelectionRecorder { private(set) var ids: [UUID?] = []; func record(_ mac: PairedMac?) { ids.append(mac?.id) }; func recordID(_ id: UUID?) { ids.append(id) } }
+private actor ForegroundRecorder { private(set) var values: [Bool] = []; func record(_ value: Bool) { values.append(value) } }
+
+private actor RemoteIdleTimerRecorder {
+    private(set) var values: [Bool] = []
+
+    func record(_ value: Bool) {
+        values.append(value)
+    }
+}
+
+private actor MetadataLoadGate {
+    private let result: [PairedMac]
+    private var entered = false
+    private var enteredWaiters: [CheckedContinuation<Void, Never>] = []
+    private var openContinuation: CheckedContinuation<Void, Never>?
+
+    init(result: [PairedMac]) { self.result = result }
+
+    func load() async throws -> [PairedMac] {
+        entered = true
+        let waiters = enteredWaiters
+        enteredWaiters.removeAll()
+        for waiter in waiters { waiter.resume() }
+        await withCheckedContinuation { openContinuation = $0 }
+        return result
+    }
+
+    func waitUntilEntered() async {
+        guard entered == false else { return }
+        await withCheckedContinuation { enteredWaiters.append($0) }
+    }
+
+    func open() {
+        openContinuation?.resume()
+        openContinuation = nil
+    }
+}
+
+private actor DashboardLoadRecorder {
+    private(set) var macIDs: [UUID] = []
+
+    func record(_ id: UUID) {
+        macIDs.append(id)
+    }
+}
+
+private actor PairAdoptionGate {
+    private let result: RemotePairAdoptionResult
+    private var entered = false
+    private var enteredWaiters: [CheckedContinuation<Void, Never>] = []
+    private var openContinuation: CheckedContinuation<Void, Never>?
+
+    init(result: RemotePairAdoptionResult) { self.result = result }
+
+    func adopt(_ mac: PairedMac) async -> RemotePairAdoptionResult {
+        entered = true
+        let waiters = enteredWaiters
+        enteredWaiters.removeAll()
+        for waiter in waiters { waiter.resume() }
+        await withCheckedContinuation { openContinuation = $0 }
+        return result
+    }
+
+    func waitUntilEntered() async {
+        guard entered == false else { return }
+        await withCheckedContinuation { enteredWaiters.append($0) }
+    }
+
+    func open() {
+        openContinuation?.resume()
+        openContinuation = nil
+    }
+}
+
+private enum TestPersistenceError: Error { case failed }
+
+private actor PersistenceAttemptRecorder {
+    private var shouldFail: Bool
+    private(set) var selectedIDs: [UUID?] = []
+    private(set) var completionValues: [Bool] = []
+
+    init(shouldFail: Bool) { self.shouldFail = shouldFail }
+
+    func save(_ intent: RemoteAppPersistenceIntent) throws {
+        selectedIDs.append(intent.selectedMacID)
+        completionValues.append(intent.hasCompletedInitialSetup)
+        if shouldFail { throw TestPersistenceError.failed }
+    }
+
+    func allowSuccess() { shouldFail = false }
+}
+
+private actor RetryableLaunchLoader {
+    let macs: [PairedMac]
+    let selectedMacID: UUID?
+    private var shouldFail = true
+
+    init(macs: [PairedMac], selectedMacID: UUID?) {
+        self.macs = macs
+        self.selectedMacID = selectedMacID
+    }
+
+    func loadMacs() throws -> [PairedMac] {
+        if shouldFail { throw TestPersistenceError.failed }
+        return macs
+    }
+
+    func allowSuccess() { shouldFail = false }
+}
+
+private actor ReverseAtomicAppStateSaver {
+    private let backing: RemotePersistenceClient
+    private var callCount = 0
+    private var firstSaveContinuation: CheckedContinuation<Void, Never>?
+    private var firstStartWaiters: [CheckedContinuation<Void, Never>] = []
+
+    init(backing: RemotePersistenceClient) {
+        self.backing = backing
+    }
+
+    func save(_ intent: RemoteAppPersistenceIntent) async throws {
+        callCount += 1
+        if callCount == 1 {
+            let waiters = firstStartWaiters
+            firstStartWaiters.removeAll()
+            for waiter in waiters { waiter.resume() }
+            await withCheckedContinuation { firstSaveContinuation = $0 }
+        }
+        try await backing.saveAppState(intent)
+    }
+
+    func waitUntilFirstSaveStarts() async {
+        guard callCount == 0 else { return }
+        await withCheckedContinuation { firstStartWaiters.append($0) }
+    }
+
+    func releaseFirstSave() {
+        firstSaveContinuation?.resume()
+        firstSaveContinuation = nil
+    }
+}
+
+@MainActor
+struct RemoteAppTabConfigurationTests {
+    @Test(arguments: [RemoteAppPage.systemMonitor, .codexUsage, .claudeUsage])
+    func hidingSelectedTabReturnsToControlsAndStopsVisibility(page: RemoteAppPage) async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true, tabConfiguration: .init())
+        state.selectedPage = page
+        state.systemMonitor.isVisible = page == .systemMonitor
+        state.systemMonitor.isStreaming = page == .systemMonitor
+        state.codexUsage.isVisible = page == .codexUsage
+        state.claudeUsage.isVisible = page == .claudeUsage
+        state.codexUsage.isLoading = page == .codexUsage
+        state.claudeUsage.isLoading = page == .claudeUsage
+        if page == .codexUsage { state.codexUsage.activeRequestID = UUID() }
+        if page == .claudeUsage { state.claudeUsage.activeRequestID = UUID() }
+        var configuration = state.tabConfiguration
+        configuration.setVisibility(false, for: page)
+        let expected = configuration
+        state.path.append(.globalSettings(.init(tabConfiguration: .init())))
+        let id = state.path.ids[0]
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+        await store.send(.path(.element(id: id, action: .globalSettings(.delegate(.tabConfigurationChanged(expected)))))) {
+            $0.tabConfiguration = expected
+            $0.path[id: id] = .globalSettings(.init(tabConfiguration: expected))
+        }
+        await store.receive(.pageSelected(.controls)) { $0.selectedPage = .controls }
+        if page == .systemMonitor {
+            await store.receive(.systemMonitor(.visibilityChanged(false))) {
+                $0.systemMonitor.isVisible = false
+                $0.systemMonitor.isStreaming = false
+            }
+        } else {
+            await store.receive(.systemMonitor(.visibilityChanged(false)))
+        }
+        if page == .codexUsage {
+            await store.receive(.codexUsage(.visibilityChanged(false))) {
+                $0.codexUsage.isVisible = false
+                $0.codexUsage.requestGeneration = 1
+                $0.codexUsage.isLoading = false
+                $0.codexUsage.activeRequestID = nil
+            }
+        } else {
+            await store.receive(.codexUsage(.visibilityChanged(false)))
+        }
+        if page == .claudeUsage {
+            await store.receive(.claudeUsage(.visibilityChanged(false))) {
+                $0.claudeUsage.isVisible = false
+                $0.claudeUsage.requestGeneration = 1
+                $0.claudeUsage.isLoading = false
+                $0.claudeUsage.activeRequestID = nil
+            }
+        } else {
+            await store.receive(.claudeUsage(.visibilityChanged(false)))
+        }
+        await store.send(.pageSelected(page))
+    }
+
+    @Test(arguments: [RemoteAppPage.soundMixer, .brightness, .screenshots, .aphrodite])
+    func hidingSelectedPlusTabReturnsToControls(page: RemoteAppPage) async {
+        var state = RemoteAppFeature.State(hasCompletedInitialSetup: true, tabConfiguration: .init())
+        state.selectedPage = page
+        var configuration = state.tabConfiguration
+        configuration.setVisibility(false, for: page)
+        let expected = configuration
+        state.path.append(.globalSettings(.init(tabConfiguration: .init())))
+        let id = state.path.ids[0]
+        let store = TestStore(initialState: state) { RemoteAppFeature() }
+        await store.send(.path(.element(id: id, action: .globalSettings(.delegate(.tabConfigurationChanged(expected)))))) {
+            $0.tabConfiguration = expected
+            $0.path[id: id] = .globalSettings(.init(tabConfiguration: expected))
+        }
+        await store.receive(.pageSelected(.controls)) { $0.selectedPage = .controls }
+        await store.receive(.systemMonitor(.visibilityChanged(false)))
+        await store.receive(.codexUsage(.visibilityChanged(false)))
+        await store.receive(.claudeUsage(.visibilityChanged(false)))
+        await store.send(.pageSelected(page))
+    }
+
+    @Test func configurationPersistsAcrossSettingsReopeningAndRequiredSetup() async {
+        let configuration = RemoteTabConfiguration(showsSystemMonitor: false, showsCodexUsage: true, showsClaudeUsage: false)
+        let store = TestStore(initialState: RemoteAppFeature.State(hasCompletedInitialSetup: true, tabConfiguration: configuration)) {
+            RemoteAppFeature()
+        }
+        await store.send(.globalSettingsButtonTapped) {
+            $0.path.append(.globalSettings(.init(tabConfiguration: configuration, isKeepingScreenAwake: $0.isKeepingScreenAwake)))
+        }
+        let id = store.state.path.ids[0]
+        await store.send(.path(.popFrom(id: id))) { $0.path.removeAll() }
+        await store.send(.globalSettingsButtonTapped) {
+            $0.path.append(.globalSettings(.init(tabConfiguration: configuration, isKeepingScreenAwake: $0.isKeepingScreenAwake)))
+        }
+        let requiredState = RemoteAppFeature.State(hasCompletedInitialSetup: false, tabConfiguration: configuration)
+        #expect(requiredState.requiredGlobalSettings?.tabConfiguration == configuration)
+        let requiredStore = TestStore(initialState: requiredState) { RemoteAppFeature() }
+        await requiredStore.send(.requiredGlobalSettings(.tabVisibilityChanged(.codexUsage, false))) {
+            $0.requiredGlobalSettings?.tabConfiguration.showsCodexUsage = false
+        }
+        var hidden = configuration
+        hidden.showsCodexUsage = false
+        let expected = hidden
+        await requiredStore.receive(.requiredGlobalSettings(.delegate(.tabConfigurationChanged(expected)))) {
+            $0.tabConfiguration = expected
+        }
+        #expect(requiredStore.state.requiredGlobalSettings?.isSetupRequired == true)
+    }
+}

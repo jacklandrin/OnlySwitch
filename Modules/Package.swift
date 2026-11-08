@@ -23,6 +23,7 @@ let package = Package(
         .library(name: "OnlySwitchPersistence", targets: ["OnlySwitchPersistence"]),
         .library(name: "PrivilegedHelperCore", targets: ["PrivilegedHelperCore"]),
         .library(name: "AppFeature", targets: ["AppFeature"]),
+        .library(name: "OnlyRemoteFeature", targets: ["OnlyRemoteFeature"]),
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "Extensions",
@@ -176,6 +177,24 @@ let package = Package(
                 "SystemMonitor/SystemMonitorLocalizationTests.swift"
             ],
             swiftSettings: [.swiftLanguageMode(.v5)]
+        ),
+        .target(
+            name: "OnlyRemoteFeature",
+            dependencies: [
+                "RemoteCore", "RemoteTransport",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "Dependencies", package: "swift-dependencies"),
+                .product(name: "DependenciesMacros", package: "swift-dependencies"),
+                .product(name: "Sharing", package: "swift-sharing")
+            ]
+        ),
+        .testTarget(
+            name: "OnlyRemoteFeatureTests",
+            dependencies: [
+                "OnlyRemoteFeature", "RemoteCore", "RemoteTransport",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "Dependencies", package: "swift-dependencies")
+            ]
         ),
         .target(name: "CSoundMixerEQ"),
         .target(name: "SoundMixerEQ", dependencies: ["CSoundMixerEQ", .product(name: "ComposableArchitecture", package: "swift-composable-architecture"), .product(name: "Dependencies", package: "swift-dependencies")]),
