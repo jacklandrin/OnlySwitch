@@ -38,18 +38,18 @@ class StatusBarController {
         item.isVisible = true
     }
 
-    private var mainItem: NSStatusItem
-    private var markItem: NSStatusItem?
+    var mainItem: NSStatusItem
+    var markItem: NSStatusItem?
     private var popover: NSPopover
     private var eventMonitor : EventMonitor?
-    private let menuBarTransitionOwner = UUID()
-    private let privateMenuBarBridge = MenuBarClientCoreBridgeAdapter()
-    private var nativeVisibilityApplier: MenuBarClientCoreVisibilityApplier!
-    private var menuBarIconHidingCoordinator: MenuBarIconHidingCoordinator!
-    private var systemMonitorStatusItems: SystemMonitorStatusItemController!
-    private var systemMonitorPreferencesObserver: NSObjectProtocol?
+    let menuBarTransitionOwner = UUID()
+    let privateMenuBarBridge = MenuBarClientCoreBridgeAdapter()
+    var nativeVisibilityApplier: MenuBarClientCoreVisibilityApplier!
+    var menuBarIconHidingCoordinator: MenuBarIconHidingCoordinator!
+    var systemMonitorStatusItems: SystemMonitorStatusItemController!
+    var systemMonitorPreferencesObserver: NSObjectProtocol?
     @UserDefaultValue(key: UserDefaults.Key.isMenubarCollapse, defaultValue: false)
-    private var isMenubarCollapse:Bool
+    var isMenubarCollapse:Bool
     private var hasOtherPopover = false
     private let appearance: @MainActor () -> SwitchListAppearance
     private let configuresSystemIntegrations: Bool
@@ -123,7 +123,7 @@ class StatusBarController {
         observeNotifications()
     }
 
-    @objc private func togglePopover(sender:AnyObject?) {
+    @objc func togglePopover(sender:AnyObject?) {
         // Safety check: ensure we're on main thread
         guard Thread.isMainThread else {
             DispatchQueue.main.async { [weak self] in
@@ -194,82 +194,6 @@ class StatusBarController {
         }
     }
 
-    private func configureMenuBarIconHiding() {
-        let legacyApplier = LegacyMarkerVisibilityApplier { [weak self] isCollapsed in
-            guard let self else { return }
-            self.markItem?.length = isCollapsed ? MarkItemLength.collapse : MarkItemLength.normal
-        }
-        let resolver = AXMenuBarVisibleItemResolver(
-            markerScreenX: { [weak self] in self?.screenMidX(of: self?.markItem) },
-            mainItemScreenX: { [weak self] in self?.screenMidX(of: self?.mainItem) },
-            ownBundleIdentifier: { Bundle.main.bundleIdentifier },
-            source: SystemAXMenuBarSource(preferredDisplayBounds: { [weak self] in
-                guard let self else { return .null }
-                return self.displayBounds(of: self.markItem) ?? .null
-            })
-        )
-        let nativeApplier = MenuBarClientCoreVisibilityApplier(bridge: privateMenuBarBridge)
-        nativeVisibilityApplier = nativeApplier
-        menuBarIconHidingCoordinator = MenuBarIconHidingCoordinator(
-            nativeApplier: nativeApplier,
-            legacyApplier: legacyApplier,
-            visibleItemResolver: resolver
-        )
-
-        let owner = menuBarTransitionOwner
-        HideMenubarIconsSwitch.shared.installTransition(owner: owner) { [weak self] isCollapsed in
-            guard let self else { throw MenuBarIconHidingError.nativeOperationFailed }
-            try await self.menuBarIconHidingCoordinator.setCollapsed(isCollapsed)
-        }
-    }
-
-    private func screenMidX(of item: NSStatusItem?) -> CGFloat? {
-        guard let button = item?.button, let window = button.window else { return nil }
-        return window.convertToScreen(button.convert(button.bounds, to: nil)).midX
-    }
-
-    private func displayBounds(of item: NSStatusItem?) -> CGRect? {
-        guard let screen = item?.button?.window?.screen,
-              let screenNumber = screen.deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as? NSNumber
-        else { return nil }
-        return CGDisplayBounds(CGDirectDisplayID(screenNumber.uint32Value))
-    }
-
-    private var isMarkItemValidPosition:Bool {
-        guard let mainItemX = screenMidX(of: mainItem), mainItemX.isFinite,
-              let markItemX = screenMidX(of: markItem), markItemX.isFinite
-        else { return false }
-        return mainItemX >= markItemX
-    }
-
-    private func restoreMenuBarIconHidingState() async {
-        if isMenubarCollapse {
-            for attempt in 0..<10 {
-                guard isMarkItemValidPosition == false else { break }
-                guard attempt < 9 else {
-                    await recoverFromFailedMenuBarStartup()
-                    return
-                }
-                do {
-                    try await Task.sleep(for: .milliseconds(100))
-                } catch {
-                    return
-                }
-            }
-        }
-
-        do {
-            try await HideMenubarIconsSwitch.shared.operateSwitch(isOn: isMenubarCollapse)
-        } catch {
-            await recoverFromFailedMenuBarStartup()
-        }
-    }
-
-    private func recoverFromFailedMenuBarStartup() async {
-        try? await menuBarIconHidingCoordinator.setCollapsed(false)
-        HideMenubarIconsSwitch.shared.resetPersistedStateAfterFailedStartup()
-    }
-
     /// Setup main item button with retry mechanism for macOS 26 compatibility
     private func setupMainItemButtonWithRetry(image: String, attempt: Int = 0) {
         guard let mainItemButton = mainItem.button else {
@@ -295,7 +219,7 @@ class StatusBarController {
         print("✅ Status bar button setup successfully")
     }
     
-    private func setMainItemButton(image: String) {
+    func setMainItemButton(image: String) {
         guard let mainItemButton = mainItem.button else {
             print("⚠️ Cannot update status bar button - button is nil")
             // Try to setup with retry if button became nil
@@ -311,7 +235,7 @@ class StatusBarController {
         mainItemButton.target = self
     }
 
-    private func setMarkButton(attempt: Int = 0) {
+    func setMarkButton(attempt: Int = 0) {
         if markItem == nil {
             markItem = NSStatusBar.system.statusItem(withLength: MarkItemLength.normal)
             if let markItem {
@@ -341,90 +265,6 @@ class StatusBarController {
         print("✅ Mark button setup successfully")
     }
 
-    private func observeNotifications() {
-        systemMonitorPreferencesObserver = NotificationCenter.default.addObserver(
-            forName: .systemMonitorPreferencesChanged,
-            object: nil,
-            queue: .main
-        ) { [weak self] notification in
-            guard let preferences = notification.object as? SystemMonitorPreferences else { return }
-            Task { @MainActor [weak self] in
-                self?.systemMonitorStatusItems.apply(preferences)
-            }
-        }
-
-        NotificationCenter.default.addObserver(
-            forName: .changeMenuBarIcon,
-            object: nil,
-            queue: .main
-        ) { [weak self] notify in
-            let newImageName = notify.object as? String
-            Task { @MainActor [weak self] in
-                guard let self else { return }
-                guard let newImageName else {
-                    print("⚠️ Invalid object type for changeMenuBarIcon notification")
-                    return
-                }
-                self.setMainItemButton(image: newImageName)
-            }
-        }
-
-        NotificationCenter.default.addObserver(
-            forName: .togglePopover,
-            object: nil,
-            queue: .main
-        ) { [weak self] notify in
-            Task { @MainActor in
-                guard let self else {return}
-                self.togglePopover(sender: nil)
-            }
-        }
-
-        NotificationCenter.default.addObserver(
-            forName: .shouldHidePopover,
-            object: nil,
-            queue: .main
-        ) { [weak self] notify in
-            Task {
-                guard let self else {
-                    return
-                }
-                await self.handleHidePopover()
-            }
-        }
-
-        NotificationCenter.default.addObserver(
-            forName: .revealScreenshotsSection,
-            object: nil,
-            queue: .main
-        ) { [weak self] _ in
-            Task { @MainActor [weak self] in
-                self?.revealScreenshotsHost()
-            }
-        }
-
-        NotificationCenter.default.addObserver(
-            forName: .menubarCollapsable,
-            object: nil,
-            queue: .main
-        ) { [weak self] notify in
-            let enable = notify.object as? Bool
-            Task { @MainActor [weak self] in
-                guard let self, let enable else { return }
-                if enable {
-                    self.setMarkButton()
-                    try? await HideMenubarIconsSwitch.shared.operateSwitch(isOn: false)
-                } else if let markItem = self.markItem {
-                    try? await HideMenubarIconsSwitch.shared.operateSwitch(isOn: false)
-                    // macOS 26 Tahoe: Safely remove status item
-                    NSStatusBar.system.removeStatusItem(markItem)
-                    self.markItem = nil
-                    print("✅ Mark button removed successfully")
-                }
-            }
-        }
-    }
-
     isolated deinit {
         if let systemMonitorPreferencesObserver {
             NotificationCenter.default.removeObserver(systemMonitorPreferencesObserver)
@@ -440,13 +280,6 @@ class StatusBarController {
         }
     }
 
-    @MainActor
-    private func handleHidePopover() {
-        if let statusBarButton = mainItem.button {
-            hidePopover(statusBarButton)
-        }
-    }
-    
     /// The keyboard shortcut closes only an already-visible Screenshots section. Captures continue to use
     /// the reveal-only client, so taking another screenshot never closes the host.
     func toggleScreenshotsSection(defaults: UserDefaults = .standard, presentation: ScreenshotPresentationClient = .app) {

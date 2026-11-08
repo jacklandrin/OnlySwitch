@@ -345,6 +345,7 @@
                   "path": "Settings",
                   "children": [
                     { "path": "RemoteAccessSettingsFeature.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "RemoteAccessSettingsClients.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
                     { "path": "RemoteAccessSettingsView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
                     { "path": "RemoteAccessController.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
                   ],
@@ -357,12 +358,16 @@
                 { "path": "OnlyControlClient.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
                 { "path": "OnlyControlReducer.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
                 { "path": "OnlyControlView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "OnlyControlSectionBar.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "OnlyControlWindow.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
               ],
             }, {
               "kind": "group",
               "path": "OnlySwitchList",
               "children": [
                 { "path": "OnlySwitchListView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "OnlySwitchListView+Lists.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "OnlySwitchListView+BottomBar.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
                 { "path": "SwitchListVM.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
                 { "path": "SwitchListModel.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
                 { "path": "SettingsWindow.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
@@ -669,6 +674,7 @@
             { "path": "AphroditeSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
             { "path": "SystemMonitorSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
             { "path": "ReverseScrollDirectionSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "ScrollDirectionEventTap.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
             { "path": "AirPodsSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
             { "path": "AppleMusicSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
             { "path": "AutohideDockSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
@@ -715,6 +721,8 @@
             { "path": "MenuBarAccessibilityItemResolver.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
             { "path": "MenuBarClientCoreBridge.m", "target-membership": [ "OnlySwitch/compile-sources" ] },
             { "path": "StatusBarController.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "StatusBarController+MenuBarIconHiding.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "StatusBarController+Notifications.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
             { "path": "EventMonitor.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
           ],
         }, {
@@ -785,6 +793,8 @@
                       "path": "iTunesBridge",
                       "children": [
                         { "path": "iTunesBridge.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        { "path": "iTunesBridge+Enums.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        { "path": "iTunesBridge+Tracks.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
                         { "path": "iTunesScripting.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
                         {
                           "kind": "group",
