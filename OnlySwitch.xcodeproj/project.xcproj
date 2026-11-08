@@ -1,0 +1,1940 @@
+{
+  "default-configuration": "Release",
+  "configurations": [
+    "Debug",
+    "Release",
+  ],
+  "localizations": {
+    "development": "en",
+    "supported": [
+      "Base",
+      "de",
+      "es",
+      "fil",
+      "fr",
+      "hr",
+      "it",
+      "ja",
+      "ko",
+      "nl",
+      "pl",
+      "pt-BR",
+      "ru",
+      "sk",
+      "so",
+      "tr",
+      "uk",
+      "zh-Hans",
+    ],
+  },
+  "packages": [
+    {
+      "kind": "remote",
+      "repository": "https://github.com/pointfreeco/swift-clocks",
+      "version": {
+        "version": "1.0.5",
+      },
+    }, {
+      "kind": "remote",
+      "repository": "https://github.com/sindresorhus/LaunchAtLogin",
+      "version": {
+        "version": "5.0.2",
+      },
+    }, {
+      "kind": "remote",
+      "repository": "https://github.com/elai950/AlertToast.git",
+      "version": {
+        "up-to-next-major-version": "1.0.0",
+      },
+    }, {
+      "kind": "remote",
+      "repository": "https://github.com/Alamofire/Alamofire.git",
+      "version": {
+        "version": "5.5.0",
+      },
+    }, {
+      "kind": "remote",
+      "repository": "https://github.com/sindresorhus/KeyboardShortcuts",
+      "version": {
+        "up-to-next-major-version": "3.1.0",
+      },
+    }, {
+      "kind": "remote",
+      "repository": "https://github.com/globulus/swiftui-webview",
+      "version": {
+        "up-to-next-major-version": "1.0.0",
+      },
+    }, {
+      "kind": "remote",
+      "repository": "https://github.com/pointfreeco/swift-composable-architecture",
+      "version": {
+        "version": "1.26.2",
+      },
+    }, {
+      "kind": "remote",
+      "repository": "https://github.com/sparkle-project/Sparkle",
+      "version": {
+        "version": "2.10.0",
+      },
+    }, {
+      "kind": "remote",
+      "repository": "https://github.com/gonzalezreal/swift-markdown-ui",
+      "version": {
+        "up-to-next-major-version": "2.3.0",
+      },
+    }, {
+      "kind": "remote",
+      "repository": "https://github.com/pointfreeco/swift-custom-dump",
+      "version": {
+        "up-to-next-major-version": "1.3.0",
+      },
+    }, {
+      "kind": "remote",
+      "repository": "https://github.com/pointfreeco/swift-dependencies",
+      "version": {
+        "up-to-next-major-version": "1.9.2",
+      },
+    }, {
+      "kind": "remote",
+      "repository": "https://github.com/pointfreeco/swift-case-paths",
+      "version": {
+        "version": "1.7.0",
+      },
+    }, {
+      "kind": "remote",
+      "repository": "https://github.com/pointfreeco/swift-identified-collections",
+      "version": {
+        "version": "1.1.0",
+      },
+    }, {
+      "kind": "remote",
+      "repository": "https://github.com/apple/swift-collections",
+      "version": {
+        "version": "1.1.1",
+      },
+    }, {
+      "kind": "remote",
+      "repository": "https://github.com/pointfreeco/swift-issue-reporting.git",
+      "version": {
+        "up-to-next-major-version": "2.1.0",
+      },
+    },
+  ],
+  "files": [
+    {
+      "kind": "group",
+      "path": "Config/Versions",
+      "children": [
+        { "path": "OnlySwitch.xcconfig" },
+        { "path": "OnlySwitchRemote.xcconfig" },
+      ],
+    }, {
+      "kind": "group",
+      "path": "OnlySwitchPrivilegedHelper",
+      "children": [
+        { "path": "main.swift", "target-membership": [ "OnlySwitchPrivilegedHelper/compile-sources" ] },
+        {
+          "path": "PrivilegedHelperExecutor.swift",
+          "target-membership": [
+            "OnlySwitch/compile-sources",
+            "OnlySwitchPrivilegedHelper/compile-sources",
+          ],
+        },
+        { "path": "Info.plist" },
+      ],
+    },
+    { "path": "Modules" },
+    {
+      "kind": "group",
+      "path": "Localization",
+      "children": [
+        { "path": "Localizable.xcstrings", "target-membership": [ "OnlySwitch/resources" ] },
+        { "path": "InfoPlist.xcstrings", "target-membership": [ "OnlySwitch/resources" ] },
+      ],
+    },
+    { "path": "README.md", "encoding": "utf8", "target-membership": [ "OnlySwitch/resources" ] },
+    { "path": "ShortcutsGalleryContributing.md", "target-membership": [ "OnlySwitch/resources" ] },
+    { "path": "EvolutionGalleryContributing.md", "encoding": "utf8", "target-membership": [ "OnlySwitch/resources" ] },
+    {
+      "kind": "group",
+      "path": "OnlySwitch",
+      "children": [
+        {
+          "kind": "group",
+          "path": "PrivilegedOperations",
+          "children": [
+            {
+              "path": "PrivilegedOperation.swift",
+              "target-membership": [
+                "OnlySwitch/compile-sources",
+                "OnlySwitchPrivilegedHelper/compile-sources",
+              ],
+            },
+            { "path": "PrivilegedOperationClient.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "PrivilegedHelperStatus.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "com.jacklandrin.OnlySwitch.PrivilegedHelper.plist", "target-membership": [ "OnlySwitch/copy/Copy Privileged Helper Daemon Plist" ] },
+          ],
+        },
+        { "path": "GoogleService-Info.plist", "target-membership": [ "OnlySwitch/resources" ] },
+        { "path": "AppDelegate.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+        { "path": "main.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+        { "path": "DesktopPetPlaybackLive.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+        {
+          "kind": "group",
+          "path": "CoreData",
+          "children": [
+            {
+              "kind": "version-group",
+              "path": "OnlySwitch.xcdatamodeld",
+              "current-version": "OnlySwitch 3.xcdatamodel",
+              "type": "wrapper.xcdatamodel",
+              "target-membership": [
+                "OnlySwitch/compile-sources",
+                "OnlyWidgetExtension/compile-sources",
+              ],
+              "children": [
+                {
+                  "path": "OnlySwitch.xcdatamodel",
+                }, {
+                  "path": "OnlySwitch 2.xcdatamodel",
+                }, {
+                  "path": "OnlySwitch 3.xcdatamodel",
+                },
+              ],
+            }, {
+              "path": "Persistence.swift",
+              "encoding": "utf8",
+              "target-membership": [
+                "OnlySwitch/compile-sources",
+                "OnlyWidgetExtension/compile-sources",
+              ],
+            },
+            { "path": "RadioStations+Fetch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            {
+              "path": "EvolutionCommandEntity+Fetch.swift",
+              "target-membership": [
+                "OnlySwitch/compile-sources",
+                "OnlyWidgetExtension/compile-sources",
+              ],
+            },
+            { "path": "EvolutionCommandEntityLive.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+          ],
+        },
+        { "path": "Info.plist" },
+        {
+          "kind": "group",
+          "path": "Header",
+          "children": [
+            { "path": "OnlySwitch-Bridging-Header.h" },
+            { "path": "CBBlueLightClient.h" },
+            { "path": "MenuBarClientCoreBridge.h" },
+            { "path": "CBTrueToneClient.h" },
+          ],
+        }, {
+          "kind": "group",
+          "path": "Features",
+          "children": [
+            {
+              "kind": "group",
+              "path": "CrashReports",
+              "children": [
+                { "path": "CrashReportDiscovery.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "CrashReportPrompt.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+              ],
+            }, {
+              "kind": "group",
+              "path": "DisplayBrightness",
+              "children": [
+                { "path": "DisplayBrightnessKeyboardController.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "DisplayBrightnessKeyTap.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "DisplayBrightnessService.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "DisplayShadeController.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "DisplayBrightnessLiveClient.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+              ],
+            }, {
+              "kind": "group",
+              "path": "DockPreview",
+              "children": [
+                { "path": "DockPreviewModels.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "DockPreviewFeature.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "DockPreviewClient.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "DockPreviewController.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "DockPreviewView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "DockPreviewPanelController.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+              ],
+            }, {
+              "kind": "group",
+              "path": "SystemMonitor",
+              "children": [
+                { "path": "MacSystemMonitorCollector.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "SystemMonitorProcessActivation.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "SystemMonitorStatusItemController.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "SystemMonitorSettingsView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "SystemMonitorSettingsViewModel.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "SystemMonitorPanelView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "SystemMonitorChartView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "SystemMonitorCompactMetricView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+              ],
+            }, {
+              "kind": "group",
+              "path": "RemoteAccess",
+              "children": [
+                {
+                  "kind": "group",
+                  "path": "Campaign",
+                  "children": [
+                    { "path": "OnlyRemoteCampaignClient.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "OnlyRemoteCampaignFeature.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "OnlyRemoteCampaignView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "OnlyRemoteCampaignWindowController.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                  ],
+                }, {
+                  "kind": "group",
+                  "path": "Catalog",
+                  "children": [
+                    { "path": "RemoteControlAvailability.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "RemoteIconAdapter.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "RemoteCatalogProvider.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "RemoteCatalogProvider+Live.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                  ],
+                }, {
+                  "kind": "group",
+                  "path": "Commands",
+                  "children": [
+                    { "path": "RemoteCommandRouter.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "RemoteCommandRouter+Live.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "RecentRequestCache.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                  ],
+                }, {
+                  "kind": "group",
+                  "path": "Host",
+                  "children": [
+                    { "path": "RemoteCredentialStore.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "RemoteHostConfiguration.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "RemotePeerSession.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "RemoteStatusScheduler.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "RemoteHost.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "RemoteAphroditeSnapshotProvider.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "RemoteHostClient.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "RemoteCodexUsageProvider.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "RemoteClaudeUsageProvider.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "RemoteBrightnessProvider.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "RemoteScreenshotsService.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "RemoteScreenshotsProvider.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "RemoteCatalogMonitor.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "RemoteHostLifecycle.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                  ],
+                }, {
+                  "kind": "group",
+                  "path": "Settings",
+                  "children": [
+                    { "path": "RemoteAccessSettingsFeature.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "RemoteAccessSettingsView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "RemoteAccessController.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                  ],
+                },
+              ],
+            }, {
+              "kind": "group",
+              "path": "OnlyControl",
+              "children": [
+                { "path": "OnlyControlClient.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "OnlyControlReducer.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "OnlyControlView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+              ],
+            }, {
+              "kind": "group",
+              "path": "OnlySwitchList",
+              "children": [
+                { "path": "OnlySwitchListView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "SwitchListVM.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "SwitchListModel.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "SettingsWindow.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+              ],
+            }, {
+              "kind": "group",
+              "path": "SwitchItem",
+              "children": [
+                {
+                  "kind": "group",
+                  "path": "SwitchBar",
+                  "children": [
+                    { "path": "SwitchBarView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "SwitchBarVM.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "SwitchBarModel.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "AirPodsBatteryView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "SwitchToggle.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "CleanProgressView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "TimerCountDownView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                  ],
+                }, {
+                  "kind": "group",
+                  "path": "ShortcutsItem",
+                  "children": [
+                    { "path": "ShortcutsBarView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "ShortcutsBarVM.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "ShortcutsBarModel.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                  ],
+                }, {
+                  "kind": "group",
+                  "path": "EvolutionItems",
+                  "children": [
+                    { "path": "EvolutionBarView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "EvolutionBarVM.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                  ],
+                },
+                { "path": "BarProvider.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+              ],
+            }, {
+              "kind": "group",
+              "path": "SoundMixer",
+              "children": [
+                { "path": "SoundMixerModel.swift", "index": true, "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "SoundMixerService.swift", "index": true, "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "DisplayVolumeKeyTap.swift", "index": true, "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "DisplayVolumeHUD.swift", "index": true, "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "DisplayVolumeHUDView.swift", "index": true, "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "SoundMixerVM.swift", "index": true, "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "SoundMixerRemoteBridge.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "OwnPlaybackSource.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "SoundMixerPanelView.swift", "index": true, "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "SystemAudioMixer.swift", "index": true, "target-membership": [ "OnlySwitch/compile-sources" ] },
+              ],
+            }, {
+              "kind": "group",
+              "path": "SoundWave",
+              "children": [
+                { "path": "SoundWaveVM.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "SoundWaveView.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "BluredSoundWave.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "SoundWaveModel.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+              ],
+            }, {
+              "kind": "group",
+              "path": "Settings",
+              "children": [
+                {
+                  "kind": "group",
+                  "path": "SettingsView",
+                  "children": [
+                    { "path": "SettingsView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "SettingsVM.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "TabVisibilitySettingsView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "TabVisibilitySettingsVM.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                  ],
+                }, {
+                  "kind": "group",
+                  "path": "Evolution",
+                  "children": [
+                    {
+                      "kind": "group",
+                      "path": "EvolutionEditor",
+                      "children": [
+                        {
+                          "kind": "group",
+                          "path": "EvolutionEditorService",
+                          "children": [
+                            { "path": "EvolutionCommandService.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                            { "path": "EvolutionCommandService+Live.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                            { "path": "EvolutionCommandService+Test.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                          ],
+                        },
+                        { "path": "EvolutionEditorView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        { "path": "EvolutionEditorReducer.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        { "path": "EvolutionCommandEditingView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        { "path": "EvolutionCommandEditingReducer.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                      ],
+                    }, {
+                      "kind": "group",
+                      "path": "EvolutionGallery",
+                      "children": [
+                        {
+                          "kind": "group",
+                          "path": "EvolutionGalleryService",
+                          "children": [
+                            { "path": "EvolutionGalleryService.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                            { "path": "EvolutionGalleryService+Live.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                            { "path": "EvolutionGalleryService+Test.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                          ],
+                        },
+                        { "path": "EvolutionGalleryView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        { "path": "EvolutionGalleryReducer.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        { "path": "EvolutionGalleryItemView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        { "path": "EvolutionGalleryItemReducer.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        { "path": "EvolutionGalleryItem.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        { "path": "EvolutionGalleryModel.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        { "path": "EvolutionGalleryAdaptor.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                      ],
+                    },
+                    { "path": "EvolutionModel.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "EvolutionAdapter.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "Evolution+Dependencies.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    {
+                      "kind": "group",
+                      "path": "EvolutionListService",
+                      "children": [
+                        { "path": "EvolutionListService.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        { "path": "EvolutionListService+Live.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        { "path": "EvolutionListService+Test.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                      ],
+                    },
+                    { "path": "EvolutionView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "EvolutionReducer.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "EvolutionRowView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "EvolutionRowReducer.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                  ],
+                }, {
+                  "kind": "group",
+                  "path": "Schedules",
+                  "children": [
+                    { "path": "ScheduleClients+App.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                  ],
+                }, {
+                  "kind": "group",
+                  "path": "General",
+                  "children": [
+                    { "path": "GeneralView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "GeneralVM.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "GeneralModel.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                  ],
+                }, {
+                  "kind": "group",
+                  "path": "Customize",
+                  "children": [
+                    { "path": "BuiltInSwitchCatalog.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "CustomizeView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "CustomizeVM.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                  ],
+                }, {
+                  "kind": "group",
+                  "path": "Shortcuts",
+                  "children": [
+                    { "path": "ShortcutsView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "ShortcutsSettingVM.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "ShortcutsSettingModel.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "ShortcutOnMarket.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                  ],
+                }, {
+                  "kind": "group",
+                  "path": "KeepAwake",
+                  "children": [
+                    { "path": "KeepAwakeSettingView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "KeepAwakeSettingVM.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                  ],
+                }, {
+                  "kind": "group",
+                  "path": "DimScreen",
+                  "children": [
+                    { "path": "DimScreenSettingView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "DimScreenSettingVM.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                  ],
+                }, {
+                  "kind": "group",
+                  "path": "Radio",
+                  "children": [
+                    { "path": "RadioSettingView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "RadioSettingVM.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "RadioLibraryClient+App.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "RadioSettingModel.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                  ],
+                }, {
+                  "kind": "group",
+                  "path": "BackNoises",
+                  "children": [
+                    { "path": "BackNoisesSettingView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "BackNoisesSettingVM.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                  ],
+                }, {
+                  "kind": "group",
+                  "path": "AirPods",
+                  "children": [
+                    { "path": "AirPodsSettingView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "AirPodsSettingVM.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                  ],
+                }, {
+                  "kind": "group",
+                  "path": "PomodoroTimer",
+                  "children": [
+                    { "path": "PomodoroTimerSettingView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "PomodoroTimerSettingVM.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "PomodoroTimerSettingModel.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                  ],
+                }, {
+                  "kind": "group",
+                  "path": "HideMenubarIcons",
+                  "children": [
+                    { "path": "HideMenubarIconsSettingView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "HideMenubarIconsSettingVM.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                  ],
+                }, {
+                  "kind": "group",
+                  "path": "KeyLight",
+                  "children": [
+                    {
+                      "kind": "group",
+                      "path": "KeyLightService",
+                      "children": [
+                        { "path": "KeyLightService.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        { "path": "KeyLightService+Live.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                      ],
+                    },
+                    { "path": "KeyLightView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "KeyLightFeature.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                  ],
+                }, {
+                  "kind": "group",
+                  "path": "NightShift",
+                  "children": [
+                    { "path": "NightShiftSettingsView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "NightShiftSettingsVM.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                  ],
+                }, {
+                  "kind": "group",
+                  "path": "PrivilegedAccess",
+                  "children": [
+                    { "path": "PrivilegedAccessPresentation.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "PrivilegedAccessViewModel.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "PrivilegedAccessView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                  ],
+                }, {
+                  "kind": "group",
+                  "path": "About",
+                  "children": [
+                    { "path": "AboutView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "AboutVM.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                  ],
+                },
+              ],
+            }, {
+              "kind": "group",
+              "path": "Update",
+              "children": [
+                { "path": "UpdateView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "UpdateVM.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+              ],
+            },
+            { "path": "VisualEffectView.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "HostWindowFinder.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+          ],
+        }, {
+          "kind": "group",
+          "path": "ViewModel",
+          "children": [
+            { "path": "PreferencesObserver.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+          ],
+        }, {
+          "kind": "group",
+          "path": "Model",
+          "children": [
+            { "path": "GitHubReleaseModel.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "Preferences.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "StoredSystemMonitorPreferences.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "AdsModel.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+          ],
+        }, {
+          "kind": "group",
+          "path": "EverySwitch",
+          "children": [
+            { "path": "SwitchType++.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "AICommanderSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "AuthenticatorSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "SoundMixerSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "DesktopPetSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "DockPreviewSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "CodexUsageSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "ClaudeUsageSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "XcodeCleanerSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "AppUninstallerSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "TailscaleSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "AphroditeSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "SystemMonitorSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "ReverseScrollDirectionSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "AirPodsSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "AppleMusicSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "AutohideDockSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "AutohideMenuBarSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "BackNoisesSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "BluetoothSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "DarkModeSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "DimScreenSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "DockRecentSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "EjectDiscsSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "EmptyPasteboardSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "EmptyTrashSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "FKeySwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "HiddenDesktopSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "HiddenFilesSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "HideMenubarIconsSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "HideWindowsSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "KeepAwakeSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "LowPowerModeSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "MuteMicSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "MuteSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "NightShiftSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "PomodoroTimerSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "RadioStationSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "ScreenSaverSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "ScreenTestSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "ShowExtensionNameSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "ShowFinderPathbarSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "ShowUserLibrarySwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "SmallLaunchpadIconSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "SpotifySwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "TopNotchSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "TopStickerSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "TrueToneSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "XcodeCacheSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "KeyLightSwitch.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "SwitchManager.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+          ],
+        }, {
+          "kind": "group",
+          "path": "StatusBar",
+          "children": [
+            { "path": "MenuBarIconHiding.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "MenuBarAccessibilityItemResolver.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "MenuBarClientCoreBridge.m", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "StatusBarController.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "EventMonitor.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+          ],
+        }, {
+          "kind": "group",
+          "path": "Define",
+          "children": [
+            { "path": "RefreshNotification.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "OpenWindow.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "UserDefaultValue.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "MusicPlaybackState.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "SwitchListApperanceDefine.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "KeyboardShortcutsDefine.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+          ],
+        }, {
+          "kind": "group",
+          "path": "Modifier",
+          "children": [
+            { "path": "HiddenModifier.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "CursorModifier.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "WindowContentSizeModifier.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "FocusModifier.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            {
+              "path": "ViewModify.swift",
+              "target-membership": [
+                "OnlySwitch/compile-sources",
+                "OnlyWidgetExtension/compile-sources",
+              ],
+            },
+          ],
+        }, {
+          "kind": "group",
+          "path": "Player",
+          "children": [
+            {
+              "kind": "group",
+              "path": "BackNoisesPlayerItem",
+              "children": [
+                { "path": "BackNoisesPlayerItem.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "BackNoisesPlayerItemViewModel.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "BackNoisiesTrackManager.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+              ],
+            }, {
+              "kind": "group",
+              "path": "RadioPlayerItem",
+              "children": [
+                { "path": "RadioPlayerItem.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "RadioPlayerItemViewModel.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+              ],
+            }, {
+              "kind": "group",
+              "path": "MusicAppPlayer",
+              "children": [
+                { "path": "MusicPlayer.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "MusicPlayerDelegate.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "SBProtocols.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                {
+                  "kind": "group",
+                  "path": "AppleMusic",
+                  "children": [
+                    {
+                      "kind": "group",
+                      "path": "AppleMusicPlayer",
+                      "children": [
+                        { "path": "AppleMusicPlayer.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                      ],
+                    }, {
+                      "kind": "group",
+                      "path": "iTunesBridge",
+                      "children": [
+                        { "path": "iTunesBridge.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        { "path": "iTunesScripting.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        {
+                          "kind": "group",
+                          "path": "ObjC",
+                          "children": [
+                            { "path": "iTunes.h", "encoding": "utf8" },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                }, {
+                  "kind": "group",
+                  "path": "Spotify",
+                  "children": [
+                    {
+                      "kind": "group",
+                      "path": "SpotifyPlayer",
+                      "children": [
+                        { "path": "SpotifyPlayer.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                      ],
+                    }, {
+                      "kind": "group",
+                      "path": "SpotifyBridge",
+                      "children": [
+                        { "path": "SpotifyScripting.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        { "path": "SpotifyBridge.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        {
+                          "kind": "group",
+                          "path": "ObjC",
+                          "children": [
+                            { "path": "Spotify.h", "encoding": "utf8" },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            }, {
+              "kind": "group",
+              "path": "CommonPlayer",
+              "children": [
+                {
+                  "kind": "group",
+                  "path": "AudioSpectrum",
+                  "children": [
+                    { "path": "SpectrumView.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                    { "path": "RealtimeAnalyzer.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                  ],
+                }, {
+                  "kind": "group",
+                  "path": "AudioStreamer",
+                  "children": [
+                    {
+                      "kind": "group",
+                      "path": "Stream",
+                      "children": [
+                        { "path": "StreamingDelegate.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        { "path": "Streaming.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        { "path": "Streamer+DownloadableDelegate.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        { "path": "StreamingState.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        { "path": "Streamer.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                      ],
+                    }, {
+                      "kind": "group",
+                      "path": "Parse",
+                      "children": [
+                        { "path": "Parser+PropertyListener.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        { "path": "ParserError.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        { "path": "Parser+Packets.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        { "path": "Parsing.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        { "path": "Parser.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                      ],
+                    }, {
+                      "kind": "group",
+                      "path": "Read",
+                      "children": [
+                        { "path": "Reader.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        { "path": "Reading.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        { "path": "ReaderError.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        { "path": "Reader+Converter.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                      ],
+                    }, {
+                      "kind": "group",
+                      "path": "Download",
+                      "children": [
+                        { "path": "Downloading.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        { "path": "Downloader.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        { "path": "Downloader+URLSessionDelegate.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        { "path": "DownloadingState.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                        { "path": "DownloadingDelegate.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                      ],
+                    },
+                  ],
+                },
+                { "path": "CommonPlayer.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "AudioPlayer.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "PlayerManager.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "HostedAudioPlayer.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "PlaybackHelperEngine.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "PlaybackHelperCommandWriter.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "PlaybackHelperProtocol.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "JLASAudioPlayer.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "JLASAudioPlayer+Streamer.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "JLAVAudioPlayer.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+              ],
+            },
+          ],
+        }, {
+          "kind": "group",
+          "path": "Utilities",
+          "children": [
+            {
+              "kind": "group",
+              "path": "KeyboardBrightness",
+              "children": [
+                { "path": "BrightnessControl.h", "encoding": "utf8" },
+                { "path": "BrightnessControl.m", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "KeyboardBrightnessClient.h", "encoding": "utf8" },
+                { "path": "KeyboardManager.h", "encoding": "utf8" },
+                { "path": "KeyboardManager.m", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+              ],
+            }, {
+              "kind": "group",
+              "path": "DDC",
+              "children": [
+                { "path": "DDCControl.h", "encoding": "utf8" },
+                { "path": "DDCControl.m", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "ExternalDisplayManager.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+                { "path": "BrightnessSyncManager.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+              ],
+            },
+            { "path": "MetadataExtractorError.swift", "encoding": "utf8", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "BluetoothDevicesManager.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "SystemInfo.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "SendEmail.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "WallpaperManager.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "EffectSoundHelper.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "CurrentScreen.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "SupportedLanguage.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "IOService.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "DisplayManager.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "Updater.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+            { "path": "CBTrueToneClient++.swift", "target-membership": [ "OnlySwitch/compile-sources" ] },
+          ],
+        }, {
+          "kind": "group",
+          "path": "Resource",
+          "children": [
+            {
+              "kind": "group",
+              "path": "Evolution",
+              "children": [
+                { "path": "EvolutionMarket.json", "target-membership": [ "OnlySwitch/resources" ] },
+              ],
+            }, {
+              "kind": "group",
+              "path": "ShortcutsMarket",
+              "children": [
+                {
+                  "path": "ShortcutsMarket.json",
+                  "target-membership": [
+                    "OnlySwitch/resources",
+                    "OnlySwitchTests/resources",
+                  ],
+                },
+              ],
+            },
+            { "path": "AdsMarket.json", "target-membership": [ "OnlySwitch/resources" ] },
+            { "path": "Ads", "target-membership": [ "OnlySwitch/resources" ] },
+            { "path": "mixkit-alert-bells-echo-765.wav", "target-membership": [ "OnlySwitch/resources" ] },
+            { "path": "mixkit-bell-notification-933.wav", "target-membership": [ "OnlySwitch/resources" ] },
+            { "path": "battery-airpods-monterey.sh", "encoding": "utf8", "target-membership": [ "OnlySwitch/resources" ] },
+            {
+              "path": "Releases_mock.json",
+              "target-membership": [
+                "OnlySwitch/resources",
+                "OnlySwitchTests/resources",
+              ],
+            }, {
+              "path": "Latest_release_mock.json",
+              "target-membership": [
+                "OnlySwitch/resources",
+                "OnlySwitchTests/resources",
+              ],
+            },
+            { "path": "models.json", "target-membership": [ "OnlySwitch/resources" ] },
+          ],
+        },
+        { "path": "Assets.xcassets", "target-membership": [ "OnlySwitch/resources" ] },
+        { "path": "OnlySwitch.entitlements" },
+        {
+          "kind": "group",
+          "path": "Preview Content",
+          "children": [
+            { "path": "Preview Assets.xcassets", "target-membership": [ "OnlySwitch/resources" ] },
+          ],
+        },
+      ],
+    }, {
+      "kind": "group",
+      "path": "OnlySwitchTests",
+      "children": [
+        { "path": "ClaudeUsageIntegrationTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+        {
+          "kind": "group",
+          "path": "DockPreview",
+          "children": [
+            { "path": "DockPreviewFeatureTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+          ],
+        }, {
+          "kind": "group",
+          "path": "SystemMonitor",
+          "children": [
+            { "path": "MacSystemMonitorCollectorTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+            { "path": "SystemMonitorPreferencesTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+            { "path": "SystemMonitorSectionTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+            { "path": "OnlyControlSystemMonitorTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+            { "path": "SystemMonitorStatusItemControllerTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+          ],
+        }, {
+          "kind": "group",
+          "path": "PrivilegedOperations",
+          "children": [
+            { "path": "PrivilegedOperationTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+            { "path": "PrivilegedHelperExecutorTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+            { "path": "PrivilegedOperationClientTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+            { "path": "LowPowerModeSwitchTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+            { "path": "CuratedEvolutionPrivilegeTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+            { "path": "PrivilegedAccessViewModelTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+          ],
+        }, {
+          "kind": "group",
+          "path": "RemoteAccess",
+          "children": [
+            { "path": "RemoteCodexUsageProviderTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+            { "path": "RemoteClaudeUsageProviderTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+            { "path": "RemoteCatalogProviderTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+            { "path": "RemoteCommandRouterTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+            { "path": "RemoteMacTestValues.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+            { "path": "RemoteCredentialStoreTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+            { "path": "RemoteHostIntegrationTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+            { "path": "RemoteHostTestClient.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+            { "path": "RemoteHostLifecycleTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+            { "path": "RemoteAccessSettingsFeatureTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+            { "path": "OnlyRemoteCampaignFeatureTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+            { "path": "RemoteScreenshotsProviderTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+          ],
+        },
+        { "path": "XcodeCleanerSwitchTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+        { "path": "TabVisibilitySettingsTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+        { "path": "SoundMixerRemoteBridgeTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+        { "path": "OwnPlaybackSourceTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+        { "path": "RemoteBrightnessProviderTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+        { "path": "AudioStreamingTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+        { "path": "AppUninstallerSwitchTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+        { "path": "ScreenshotsSectionTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+        { "path": "TailscaleSwitchTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+        { "path": "BuiltInSwitchCatalogTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+        { "path": "Support/TestMutex.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+        { "path": "MenuBarIconHidingTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+        { "path": "OnlySwitchTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+        { "path": "CoreData/PersistenceControllerTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+        { "path": "AdsModelTests.swift", "target-membership": [ "OnlySwitchTests/compile-sources" ] },
+        { "path": "Info.plist", "target-membership": [ "OnlySwitchTests/resources" ] },
+      ],
+    }, {
+      "kind": "group",
+      "path": "OnlyWidget",
+      "children": [
+        {
+          "kind": "group",
+          "path": "Widgets",
+          "children": [
+            {
+              "kind": "group",
+              "path": "Evolution",
+              "children": [
+                {
+                  "kind": "group",
+                  "path": "Intents",
+                  "children": [
+                    { "path": "SelectEvolutionIntent.swift", "target-membership": [ "OnlyWidgetExtension/compile-sources" ] },
+                    { "path": "EvolutionEntity.swift", "target-membership": [ "OnlyWidgetExtension/compile-sources" ] },
+                  ],
+                },
+                { "path": "EvolutionWidgetModel.swift", "target-membership": [ "OnlyWidgetExtension/compile-sources" ] },
+                { "path": "OnlyWidgetEvolutionProvider.swift", "target-membership": [ "OnlyWidgetExtension/compile-sources" ] },
+              ],
+            }, {
+              "kind": "group",
+              "path": "BuiltIn",
+              "children": [
+                { "path": "OnlyWidgetBuiltIn.swift", "target-membership": [ "OnlyWidgetExtension/compile-sources" ] },
+                {
+                  "kind": "group",
+                  "path": "Intents",
+                  "children": [
+                    { "path": "SelectBuiltInSwitchesIntent.swift", "target-membership": [ "OnlyWidgetExtension/compile-sources" ] },
+                    { "path": "BuiltInSwitchEntity.swift", "target-membership": [ "OnlyWidgetExtension/compile-sources" ] },
+                  ],
+                },
+              ],
+            },
+          ],
+        }, {
+          "kind": "group",
+          "path": "Localization",
+          "children": [
+            { "path": "Localizable.xcstrings", "target-membership": [ "OnlyWidgetExtension/resources" ] },
+          ],
+        }, {
+          "kind": "group",
+          "path": "Views",
+          "children": [
+            { "path": "SmallWidget.swift", "target-membership": [ "OnlyWidgetExtension/compile-sources" ] },
+            { "path": "ErrorView.swift", "target-membership": [ "OnlyWidgetExtension/compile-sources" ] },
+            { "path": "SpectrumView.swift", "target-membership": [ "OnlyWidgetExtension/compile-sources" ] },
+          ],
+        },
+        { "path": "OnlyWidgetBundle.swift", "target-membership": [ "OnlyWidgetExtension/compile-sources" ] },
+        { "path": "Assets.xcassets", "target-membership": [ "OnlyWidgetExtension/resources" ] },
+        { "path": "Info.plist" },
+        { "path": "OnlyWidget.entitlements" },
+      ],
+    }, {
+      "kind": "group",
+      "path": "OnlySwitchRemote",
+      "children": [
+        {
+          "kind": "group",
+          "path": "App",
+          "children": [
+            { "path": "OnlySwitchRemoteApp.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "RemoteAppFeature.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "RemoteAppView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "RemoteAppShellFeature.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "RemoteAppShellView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "ReviewDemoFeature.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "ReviewDemoView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "ReviewDemoScreen.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+          ],
+        }, {
+          "kind": "group",
+          "path": "Models",
+          "children": [
+            { "path": "PairedMac.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "MacDashboardLayout.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "RemoteTabConfiguration.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "RemoteAppPage+Presentation.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "MacSystemMonitorLayout.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+          ],
+        }, {
+          "kind": "group",
+          "path": "Dependencies",
+          "children": [
+            { "path": "RemotePersistenceClient.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "RemoteKeychainClient.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "RemoteConnectionCoordinator.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "RemoteConnectionEvent.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "RemoteConnectionClient.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "RemoteConnectionClient+Live.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "RemoteScreenshotResponses.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "RemoteScreenshotCacheClient.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "RemoteScreenshotImageClient.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "RemoteScreenshotPasteboardClient.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "RemoteSystemSettingsClient.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "RemoteIdleTimerClient.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "RemoteBackgroundTaskClient.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "RemoteTabPreferencesClient.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "RemoteReviewDemoClient.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "RemoteSubscriptionClient.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+          ],
+        }, {
+          "kind": "group",
+          "path": "Features",
+          "children": [
+            {
+              "kind": "group",
+              "path": "Pairing",
+              "children": [
+                { "path": "PairingFeature.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "PairingView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+              ],
+            }, {
+              "kind": "group",
+              "path": "Settings",
+              "children": [
+                { "path": "GlobalSettingsFeature.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteDebugMenuFeature.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "GlobalSettingsView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteTabSettingsView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteDebugMenuView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "SettingsFeature.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "SettingsView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "HowToUseView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "AboutView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "MacManagementFeature.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "MacManagementView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "ControlSelectionRow.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+              ],
+            }, {
+              "kind": "group",
+              "path": "Dashboard",
+              "children": [
+                { "path": "DashboardFeature.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "DashboardView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "DashboardBackground.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "ControlTileView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "ControlTilePresentation.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "ControlTileStatusBadge.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "ControlTileIconView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "MacPickerView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+              ],
+            }, {
+              "kind": "group",
+              "path": "CodexUsage",
+              "children": [
+                { "path": "RemoteCodexUsageFeature.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "../ClaudeUsage/RemoteClaudeUsageFeature.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteCodexUsagePresentation.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "../ClaudeUsage/RemoteClaudeUsagePresentation.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteCodexUsageCardSurface.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteCodexUsageView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "../ClaudeUsage/RemoteClaudeUsageView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+              ],
+            }, {
+              "kind": "group",
+              "path": "SystemMonitor",
+              "children": [
+                { "path": "RemoteSystemMonitorFeature.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteSystemMonitorView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteSystemMonitorWaterfallLayout.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteSystemMonitorChartView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteSystemMonitorGaugeView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteSystemMonitorCardSurface.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteSystemMonitorConfigurationFeature.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteSystemMonitorConfigurationView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+              ],
+            }, {
+              "kind": "group",
+              "path": "SoundMixer",
+              "children": [
+                { "path": "RemoteSoundMixerFeature.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteSoundMixerView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteMixerSlider.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteEqualizerView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+              ],
+            }, {
+              "kind": "group",
+              "path": "Brightness",
+              "children": [
+                { "path": "RemoteBrightnessFeature.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteBrightnessView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+              ],
+            }, {
+              "kind": "group",
+              "path": "Screenshots",
+              "children": [
+                { "path": "RemoteScreenshotsFeature.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteScreenshotsView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteScreenshotCell.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteScreenshotThumbnailView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteScreenshotBadge.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteScreenshotsBanner.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteScreenshotPromptsModifier.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteScreenshotDetailView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteScreenshotDetailPresentation.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteScreenshotDetailContent.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteScreenshotZoomableImage.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteScreenshotImageDecoder.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteScreenshotDragProvider.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+              ],
+            }, {
+              "kind": "group",
+              "path": "Navigation",
+              "children": [
+                { "path": "RemotePageTabBar.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteAppPageIcon.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+              ],
+            }, {
+              "kind": "group",
+              "path": "Subscription",
+              "children": [
+                { "path": "RemotePaywallFeature.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemotePlusAccessFeature.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemotePaywallView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemotePlusGateView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+              ],
+            }, {
+              "kind": "group",
+              "path": "Aphrodite",
+              "children": [
+                { "path": "RemoteAphroditeView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteAphroditeFeature.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+              ],
+            },
+          ],
+        },
+        { "path": "Info.plist" },
+        { "path": "OnlySwitchRemote.entitlements" },
+        { "path": "Assets.xcassets", "target-membership": [ "OnlySwitchRemote/resources" ] },
+        { "path": "onlyswitch.icon", "target-membership": [ "OnlySwitchRemote/resources" ] },
+        { "path": "Localizable.xcstrings", "target-membership": [ "OnlySwitchRemote/resources" ] },
+      ],
+    }, {
+      "kind": "group",
+      "path": "OnlySwitchRemoteTests",
+      "children": [
+        { "path": "RemoteClaudeUsageFeatureTests.swift", "target-membership": [ "OnlySwitchRemoteTests/compile-sources" ] },
+        { "path": "RemoteCodexUsageFeatureTests.swift", "target-membership": [ "OnlySwitchRemoteTests/compile-sources" ] },
+        { "path": "RemoteCodexUsageViewTests.swift", "target-membership": [ "OnlySwitchRemoteTests/compile-sources" ] },
+        { "path": "RemoteAppSmokeTests.swift", "target-membership": [ "OnlySwitchRemoteTests/compile-sources" ] },
+        { "path": "RemoteTestValues.swift", "target-membership": [ "OnlySwitchRemoteTests/compile-sources" ] },
+        { "path": "RemotePersistenceClientTests.swift", "target-membership": [ "OnlySwitchRemoteTests/compile-sources" ] },
+        { "path": "RemoteConnectionClientTests.swift", "target-membership": [ "OnlySwitchRemoteTests/compile-sources" ] },
+        { "path": "RemoteScreenshotResponsesTests.swift", "target-membership": [ "OnlySwitchRemoteTests/compile-sources" ] },
+        { "path": "RemoteScreenshotCacheClientTests.swift", "target-membership": [ "OnlySwitchRemoteTests/compile-sources" ] },
+        { "path": "RemoteScreenshotImageClientTests.swift", "target-membership": [ "OnlySwitchRemoteTests/compile-sources" ] },
+        { "path": "RemotePaywallFeatureTests.swift", "target-membership": [ "OnlySwitchRemoteTests/compile-sources" ] },
+        { "path": "RemoteSubscriptionClientTests.swift", "target-membership": [ "OnlySwitchRemoteTests/compile-sources" ] },
+        { "path": "GlobalSettingsFeatureTests.swift", "target-membership": [ "OnlySwitchRemoteTests/compile-sources" ] },
+        { "path": "RemoteTabConfigurationTests.swift", "target-membership": [ "OnlySwitchRemoteTests/compile-sources" ] },
+        { "path": "RemoteAphroditeFeatureTests.swift", "target-membership": [ "OnlySwitchRemoteTests/compile-sources" ] },
+        { "path": "RemoteAppFeatureTests.swift", "target-membership": [ "OnlySwitchRemoteTests/compile-sources" ] },
+        { "path": "PairingFeatureTests.swift", "target-membership": [ "OnlySwitchRemoteTests/compile-sources" ] },
+        { "path": "SettingsFeatureTests.swift", "target-membership": [ "OnlySwitchRemoteTests/compile-sources" ] },
+        { "path": "MacManagementFeatureTests.swift", "target-membership": [ "OnlySwitchRemoteTests/compile-sources" ] },
+        { "path": "DashboardFeatureTests.swift", "target-membership": [ "OnlySwitchRemoteTests/compile-sources" ] },
+        { "path": "RemoteEndToEndTests.swift", "target-membership": [ "OnlySwitchRemoteTests/compile-sources" ] },
+        { "path": "RemoteSystemMonitorFeatureTests.swift", "target-membership": [ "OnlySwitchRemoteTests/compile-sources" ] },
+        { "path": "RemoteSoundMixerFeatureTests.swift", "target-membership": [ "OnlySwitchRemoteTests/compile-sources" ] },
+        { "path": "RemoteBrightnessFeatureTests.swift", "target-membership": [ "OnlySwitchRemoteTests/compile-sources" ] },
+        { "path": "RemoteScreenshotsFeatureTests.swift", "target-membership": [ "OnlySwitchRemoteTests/compile-sources" ] },
+        { "path": "RemoteScreenshotDragProviderTests.swift", "target-membership": [ "OnlySwitchRemoteTests/compile-sources" ] },
+        { "path": "RemoteSystemMonitorViewTests.swift", "target-membership": [ "OnlySwitchRemoteTests/compile-sources" ] },
+        { "path": "RemoteSystemMonitorConfigurationFeatureTests.swift", "target-membership": [ "OnlySwitchRemoteTests/compile-sources" ] },
+      ],
+    }, {
+      "kind": "group",
+      "name": "Products",
+      "children": [
+        { "path": "<PRODUCTS>/OnlySwitch.app", "id": "04447B582754F08000CD2900", "type": "wrapper.application", "index": false },
+        { "path": "<PRODUCTS>/OnlySwitchTests.xctest", "id": "041D725428353A150083092D", "type": "wrapper.cfbundle", "index": false },
+        { "path": "<PRODUCTS>/OnlyWidgetExtension.appex", "id": "04CB89FC2B703AF3006B8620", "type": "wrapper.app-extension", "index": false, "target-membership": [ { "build-phase": "OnlySwitch/copy/Embed App Extensions", "header-preservation": "remove-on-copy" } ] },
+        { "path": "<PRODUCTS>/OnlySwitchRemote.app", "id": "F3A300000000000000000003", "type": "wrapper.application", "index": false },
+        { "path": "<PRODUCTS>/OnlySwitchRemoteTests.xctest", "id": "F3A300000000000000000004", "type": "wrapper.cfbundle", "index": false },
+        { "path": "<PRODUCTS>/OnlySwitchPrivilegedHelper", "id": "C1A0C10618E9202600000001", "type": "compiled.mach-o.executable", "index": false, "target-membership": [ { "build-phase": "OnlySwitch/copy/Embed Privileged Helper", "code-sign-on-copy": true } ] },
+      ],
+    }, {
+      "kind": "group",
+      "name": "Frameworks",
+      "children": [
+        { "path": "<SDK>/System/Library/Frameworks/Security.framework", "target-membership": [ "OnlySwitch/frameworks" ] },
+        { "path": "../../../../System/Library/PrivateFrameworks/DisplayServices.framework", "target-membership": [ "OnlySwitch/frameworks" ] },
+        { "path": "../../../../System/Library/Frameworks/CoreDisplay.framework", "target-membership": [ "OnlySwitch/frameworks" ] },
+        { "path": "<SDK>/System/Library/Frameworks/CoreBluetooth.framework" },
+        { "path": "<SDK>/System/Library/Frameworks/NetworkExtension.framework", "target-membership": [ "OnlySwitch/frameworks" ] },
+        { "path": "../../../../System/Library/PrivateFrameworks/CoreBrightness.framework", "target-membership": [ "OnlySwitch/frameworks" ] },
+        {
+          "path": "<SDK>/System/Library/Frameworks/AVFoundation.framework",
+          "target-membership": [
+            "OnlySwitch/frameworks",
+            "OnlySwitchTests/frameworks",
+          ],
+        },
+        { "path": "<SDK>/System/Library/Frameworks/Intents.framework" },
+        { "path": "<SDK>/System/Library/Frameworks/WidgetKit.framework", "target-membership": [ "OnlyWidgetExtension/frameworks" ] },
+        { "path": "<SDK>/System/Library/Frameworks/SwiftUI.framework", "target-membership": [ "OnlyWidgetExtension/frameworks" ] },
+      ],
+    },
+  ],
+  "targets": [
+    {
+      "name": "OnlySwitch",
+      "id": "04447B572754F08000CD2900",
+      "product": "Products/OnlySwitch.app",
+      "product-type": "application",
+      "specialized-configurations": [
+        { "name": "Debug", "file": "Versions/OnlySwitch.xcconfig" },
+        { "name": "Release", "file": "Versions/OnlySwitch.xcconfig" },
+      ],
+      "dependencies": [
+        "OnlyWidgetExtension",
+        "OnlySwitchPrivilegedHelper",
+      ],
+      "build-phases": [
+        "compile-sources",
+        "frameworks",
+        "resources",
+        {
+          "kind": "script",
+          "name": "Launch at Login Helper",
+          "log-environment-variables": true,
+          "shell": "/bin/sh",
+          "script": [
+            "# Type a script or drag a script file from your workspace to insert its path.",
+            "\"${BUILT_PRODUCTS_DIR}/LaunchAtLogin_LaunchAtLogin.bundle/Contents/Resources/copy-helper-swiftpm.sh\"",
+            "",
+          ],
+        }, {
+          "kind": "copy",
+          "name": "Embed App Extensions",
+          "bundle-base-path": "plugins-directory",
+        }, {
+          "kind": "script",
+          "name": "Run Script",
+          "log-environment-variables": true,
+          "shell": "/bin/sh",
+          "script": [
+            "\"${BUILT_PRODUCTS_DIR}/LaunchAtLogin_LaunchAtLogin.bundle/Contents/Resources/copy-helper-swiftpm.sh\"",
+            "",
+            "",
+          ],
+        }, {
+          "kind": "copy",
+          "name": "Embed Privileged Helper",
+          "bundle-base-path": "root",
+          "relative-path": "Contents/MacOS",
+        }, {
+          "kind": "copy",
+          "name": "Copy Privileged Helper Daemon Plist",
+          "bundle-base-path": "root",
+          "relative-path": "Contents/Library/LaunchDaemons",
+        }, {
+          "kind": "script",
+          "name": "Sign Sparkle for Distribution",
+          "log-environment-variables": true,
+          "input-paths": [
+            "$(TARGET_BUILD_DIR)/$(WRAPPER_NAME)/Contents/Frameworks/Sparkle.framework",
+          ],
+          "scope": "install",
+          "shell": "/bin/sh",
+          "script": "\"${SRCROOT}/Scripts/sign-sparkle-for-distribution.sh\"\n",
+        },
+      ],
+      "package-product-members": [
+        {
+          "product-name": "Aphrodite",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "product-name": "AppUninstaller",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "product-name": "Authenticator",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "product-name": "Design",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "product-name": "DesktopPet",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "product-name": "DisplayBrightness",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "product-name": "DisplayDDC",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "product-name": "Extensions",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "product-name": "OnlyAgent",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "product-name": "OnlyControl",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "product-name": "PureColorView",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "product-name": "RadioBrowser",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "product-name": "RemoteCore",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "product-name": "RemoteTransport",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "product-name": "Scheduler",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "product-name": "Screenshots",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "product-name": "SoundMixerEQ",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "product-name": "StickerView",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "product-name": "Switches",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "product-name": "SystemMonitor",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "product-name": "Tailscale",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "product-name": "Utilities",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "product-name": "XcodeCleaner",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "package": "Alamofire",
+          "product-name": "Alamofire",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "package": "AlertToast",
+          "product-name": "AlertToast",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "package": "KeyboardShortcuts",
+          "product-name": "KeyboardShortcuts",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "package": "LaunchAtLogin",
+          "product-name": "LaunchAtLogin",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "package": "Sparkle",
+          "product-name": "Sparkle",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "package": "swift-composable-architecture",
+          "product-name": "ComposableArchitecture",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "package": "swift-custom-dump",
+          "product-name": "CustomDump",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "package": "swift-dependencies",
+          "product-name": "Dependencies",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "package": "swift-markdown-ui",
+          "product-name": "MarkdownUI",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "package": "swiftui-webview",
+          "product-name": "SwiftUIWebView",
+          "build-phase": { "build-phase": "frameworks" },
+        },
+      ],
+      "build-settings": {
+        "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES": "YES",
+        "ASSETCATALOG_COMPILER_APPICON_NAME": "AppIcon",
+        "ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME": "AccentColor",
+        "CODE_SIGN_ENTITLEMENTS": "OnlySwitch/OnlySwitch.entitlements",
+        "CODE_SIGN_IDENTITY": "Apple Development",
+        "CODE_SIGN_IDENTITY[sdk=macosx*]": "Developer ID Application",
+        "CODE_SIGN_STYLE": "Manual",
+        "COMBINE_HIDPI_IMAGES": "YES",
+        "DEVELOPMENT_ASSET_PATHS": "\"OnlySwitch/Preview Content\"",
+        "DEVELOPMENT_TEAM": "B22726TNGH",
+        "DEVELOPMENT_TEAM[sdk=macosx*]": "B22726TNGH",
+        "ENABLE_HARDENED_RUNTIME": "YES",
+        "ENABLE_PREVIEWS": "YES",
+        "FRAMEWORK_SEARCH_PATHS": [
+          "$(inherited)",
+          "$(PROJECT_DIR)",
+          "$(PROJECT_DIR)/OnlySwitch",
+          "$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
+        ],
+        "GENERATE_INFOPLIST_FILE": "YES",
+        "INFOPLIST_FILE": "OnlySwitch/Info.plist",
+        "INFOPLIST_KEY_CFBundleDisplayName": "Only Switch",
+        "INFOPLIST_KEY_LSApplicationCategoryType": "public.app-category.utilities",
+        "INFOPLIST_KEY_LSUIElement": "NO",
+        "INFOPLIST_KEY_NSAppleEventsUsageDescription": "Only Switch needs to control System Events",
+        "INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription": "Only Switch requests Bluetooth usage to switch Airpods connection",
+        "INFOPLIST_KEY_NSHumanReadableCopyright": "Copyright © 2021-2026 Jacklandrin",
+        "INFOPLIST_KEY_NSPrincipalClass": "NSApplication",
+        "LD_RUNPATH_SEARCH_PATHS": [
+          "$(inherited)",
+          "@executable_path/../Frameworks",
+        ],
+        "MACOSX_DEPLOYMENT_TARGET": "14.0",
+        "MARKETING_VERSION": "3.6.0",
+        "OTHER_SWIFT_FLAGS": "-enforce-exclusivity=unchecked",
+        "PRODUCT_BUNDLE_IDENTIFIER": "jacklandrin.OnlySwitch",
+        "PRODUCT_NAME": "$(TARGET_NAME)",
+        "PROVISIONING_PROFILE_SPECIFIER": "jacklandrin.onlyswitch.profile",
+        "PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]": "jacklandrin.onlyswitch.profile",
+        "SKIP_INSTALL": "NO",
+        "SWIFT_EMIT_LOC_STRINGS": "YES",
+        "SWIFT_OBJC_BRIDGING_HEADER": "OnlySwitch/Header/OnlySwitch-Bridging-Header.h",
+        "SWIFT_VERSION": "6.0",
+        "SYSTEM_FRAMEWORK_SEARCH_PATHS": [
+          "$(inherited)",
+          "$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks/CoreBrightness.framework/Versions/A",
+        ],
+        "TEST_HOST": "",
+      },
+    }, {
+      "name": "OnlySwitchTests",
+      "id": "041D725328353A150083092D",
+      "product": "Products/OnlySwitchTests.xctest",
+      "product-type": "bundle.unit-test",
+      "test-host-target": "OnlySwitch",
+      "dependencies": [
+        "OnlySwitch",
+      ],
+      "build-phases": [
+        "compile-sources",
+        "frameworks",
+        "resources",
+      ],
+      "build-settings": {
+        "BUNDLE_LOADER": "$(TEST_HOST)",
+        "CODE_SIGN_STYLE": "Manual",
+        "CREATE_INFOPLIST_SECTION_IN_BINARY": "YES",
+        "CURRENT_PROJECT_VERSION": "271",
+        "DEVELOPMENT_TEAM": "B22726TNGH",
+        "GENERATE_INFOPLIST_FILE": "NO",
+        "INFOPLIST_FILE": "OnlySwitchTests/Info.plist",
+        "INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription": "Only Switch requests Bluetooth usage to switch Airpods connection",
+        "INFOPLIST_OUTPUT_FORMAT": "binary",
+        "MACOSX_DEPLOYMENT_TARGET": "14.0",
+        "MARKETING_VERSION": "2.5.5",
+        "PRODUCT_BUNDLE_IDENTIFIER": "jacklandrin.OnlySwitchTests",
+        "PRODUCT_NAME": "$(TARGET_NAME)",
+        "SWIFT_EMIT_LOC_STRINGS": "NO",
+        "SWIFT_OBJC_BRIDGING_HEADER": "OnlySwitch/Header/OnlySwitch-Bridging-Header.h",
+        "SWIFT_VERSION": "5.0",
+        "TEST_HOST": "$(BUILT_PRODUCTS_DIR)/OnlySwitch.app/Contents/MacOS/OnlySwitch",
+      },
+    }, {
+      "name": "OnlyWidgetExtension",
+      "id": "04CB89FB2B703AF3006B8620",
+      "product": "Products/OnlyWidgetExtension.appex",
+      "product-type": "app-extension",
+      "specialized-configurations": [
+        { "name": "Debug", "file": "Versions/OnlySwitch.xcconfig" },
+        { "name": "Release", "file": "Versions/OnlySwitch.xcconfig" },
+      ],
+      "build-phases": [
+        "compile-sources",
+        "frameworks",
+        "resources",
+      ],
+      "package-product-members": [
+        {
+          "product-name": "Defines",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "product-name": "Switches",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "product-name": "Utilities",
+          "build-phase": { "build-phase": "frameworks" },
+        },
+      ],
+      "build-settings": {
+        "ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS": "YES",
+        "ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME": "AccentColor",
+        "ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME": "WidgetBackground",
+        "CLANG_CXX_LANGUAGE_STANDARD": "gnu++20",
+        "CODE_SIGN_ENTITLEMENTS": "OnlyWidget/OnlyWidget.entitlements",
+        "CODE_SIGN_IDENTITY": "Apple Development",
+        "CODE_SIGN_IDENTITY[sdk=macosx*]": "Developer ID Application",
+        "CODE_SIGN_STYLE": "Manual",
+        "DEVELOPMENT_TEAM": "",
+        "DEVELOPMENT_TEAM[sdk=macosx*]": "B22726TNGH",
+        "ENABLE_HARDENED_RUNTIME": "YES",
+        "ENABLE_USER_SCRIPT_SANDBOXING": "YES",
+        "GCC_C_LANGUAGE_STANDARD": "gnu17",
+        "GENERATE_INFOPLIST_FILE": "YES",
+        "INFOPLIST_FILE": "OnlyWidget/Info.plist",
+        "INFOPLIST_KEY_CFBundleDisplayName": "Only Widget",
+        "INFOPLIST_KEY_NSHumanReadableCopyright": "",
+        "LD_RUNPATH_SEARCH_PATHS": [
+          "$(inherited)",
+          "@executable_path/../Frameworks",
+          "@executable_path/../../../../Frameworks",
+        ],
+        "LOCALIZATION_PREFERS_STRING_CATALOGS": "YES",
+        "MACOSX_DEPLOYMENT_TARGET": "14.0",
+        "MARKETING_VERSION": "3.6.0",
+        "PRODUCT_BUNDLE_IDENTIFIER": "jacklandrin.OnlySwitch.OnlyWidget",
+        "PRODUCT_NAME": "$(TARGET_NAME)",
+        "PROVISIONING_PROFILE_SPECIFIER": "OnlySwitchWidgets",
+        "PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]": "OnlySwitchWidgets",
+        "SKIP_INSTALL": "YES",
+        "SWIFT_ACTIVE_COMPILATION_CONDITIONS[config=Debug]": "DEBUG $(inherited)",
+        "SWIFT_EMIT_LOC_STRINGS": "YES",
+        "SWIFT_VERSION": "5.0",
+      },
+    }, {
+      "name": "OnlySwitchRemote",
+      "id": "F3A300000000000000000001",
+      "product": "Products/OnlySwitchRemote.app",
+      "product-type": "application",
+      "specialized-configurations": [
+        { "name": "Debug", "file": "Versions/OnlySwitchRemote.xcconfig" },
+        { "name": "Release", "file": "Versions/OnlySwitchRemote.xcconfig" },
+      ],
+      "build-phases": [
+        "compile-sources",
+        "frameworks",
+        "resources",
+      ],
+      "package-product-members": [
+        {
+          "product-name": "RemoteCore",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "product-name": "RemoteTransport",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "product-name": "Sharing",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "product-name": "SwiftNavigation",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "package": "swift-case-paths",
+          "product-name": "CasePaths",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "package": "swift-case-paths",
+          "product-name": "CasePaths",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "package": "swift-collections",
+          "product-name": "OrderedCollections",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "package": "swift-collections",
+          "product-name": "OrderedCollections",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "package": "swift-composable-architecture",
+          "product-name": "ComposableArchitecture",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "package": "swift-dependencies",
+          "product-name": "Dependencies",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "package": "swift-dependencies",
+          "product-name": "DependenciesMacros",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "package": "swift-identified-collections",
+          "product-name": "IdentifiedCollections",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "package": "swift-identified-collections",
+          "product-name": "IdentifiedCollections",
+          "build-phase": { "build-phase": "frameworks" },
+        },
+      ],
+      "build-settings": {
+        "ASSETCATALOG_COMPILER_APPICON_NAME": "onlyswitch",
+        "ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME": "AccentColor",
+        "CODE_SIGN_ENTITLEMENTS": "OnlySwitchRemote/OnlySwitchRemote.entitlements",
+        "CODE_SIGN_STYLE": "Automatic",
+        "DEVELOPMENT_TEAM": "B22726TNGH",
+        "GENERATE_INFOPLIST_FILE": "NO",
+        "INFOPLIST_FILE": "OnlySwitchRemote/Info.plist",
+        "INFOPLIST_KEY_CFBundleDisplayName": "OnlyRemote",
+        "INFOPLIST_KEY_LSApplicationCategoryType": "public.app-category.utilities",
+        "IPHONEOS_DEPLOYMENT_TARGET": "18.0",
+        "LD_RUNPATH_SEARCH_PATHS": [
+          "$(inherited)",
+          "@executable_path/Frameworks",
+        ],
+        "MARKETING_VERSION": "1.7.0",
+        "PRODUCT_BUNDLE_IDENTIFIER": "jacklandrin.OnlySwitchRemote",
+        "PRODUCT_NAME": "$(TARGET_NAME)",
+        "SDKROOT": "iphoneos",
+        "SUPPORTED_PLATFORMS": "iphoneos iphonesimulator",
+        "SUPPORTS_MACCATALYST": "NO",
+        "SWIFT_ACTIVE_COMPILATION_CONDITIONS[config=Debug]": "DEBUG $(inherited)",
+        "SWIFT_EMIT_LOC_STRINGS": "YES",
+        "SWIFT_VERSION": "6.0",
+        "TARGETED_DEVICE_FAMILY": "1,2",
+      },
+    }, {
+      "name": "OnlySwitchRemoteTests",
+      "id": "F3A300000000000000000002",
+      "product": "Products/OnlySwitchRemoteTests.xctest",
+      "product-type": "bundle.unit-test",
+      "test-host-target": "OnlySwitchRemote",
+      "dependencies": [
+        "OnlySwitchRemote",
+      ],
+      "build-phases": [
+        "compile-sources",
+        "frameworks",
+        "resources",
+      ],
+      "package-product-members": [
+        {
+          "product-name": "RemoteCore",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "product-name": "RemoteTransport",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "product-name": "Sharing",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "product-name": "SwiftNavigation",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "package": "swift-case-paths",
+          "product-name": "CasePaths",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "package": "swift-case-paths",
+          "product-name": "CasePaths",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "package": "swift-clocks",
+          "product-name": "Clocks",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "package": "swift-collections",
+          "product-name": "OrderedCollections",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "package": "swift-collections",
+          "product-name": "OrderedCollections",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "package": "swift-composable-architecture",
+          "product-name": "ComposableArchitecture",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "package": "swift-dependencies",
+          "product-name": "Dependencies",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "package": "swift-identified-collections",
+          "product-name": "IdentifiedCollections",
+          "build-phase": { "build-phase": "frameworks" },
+        }, {
+          "package": "swift-identified-collections",
+          "product-name": "IdentifiedCollections",
+          "build-phase": { "build-phase": "frameworks" },
+        },
+      ],
+      "build-settings": {
+        "BUNDLE_LOADER": "$(TEST_HOST)",
+        "CODE_SIGN_IDENTITY[sdk=macosx*]": "-",
+        "CODE_SIGN_STYLE": "Automatic",
+        "CURRENT_PROJECT_VERSION": "271",
+        "DEVELOPMENT_TEAM": "",
+        "GENERATE_INFOPLIST_FILE": "YES",
+        "IPHONEOS_DEPLOYMENT_TARGET": "18.0",
+        "LD_RUNPATH_SEARCH_PATHS": [
+          "$(inherited)",
+          "@executable_path/Frameworks",
+          "@loader_path/Frameworks",
+          "@executable_path/../Frameworks",
+        ],
+        "MARKETING_VERSION": "1.0",
+        "PRODUCT_BUNDLE_IDENTIFIER": "jacklandrin.OnlySwitchRemoteTests",
+        "PRODUCT_NAME": "$(TARGET_NAME)",
+        "SDKROOT": "iphoneos",
+        "SKIP_INSTALL": "YES",
+        "SUPPORTED_PLATFORMS": "iphoneos iphonesimulator",
+        "SWIFT_ACTIVE_COMPILATION_CONDITIONS[config=Debug]": "DEBUG $(inherited)",
+        "SWIFT_EMIT_LOC_STRINGS": "NO",
+        "SWIFT_VERSION": "6.0",
+        "TARGETED_DEVICE_FAMILY": "1,2",
+        "TEST_HOST": "$(BUILT_PRODUCTS_DIR)/OnlySwitchRemote.app/OnlySwitchRemote",
+      },
+    }, {
+      "name": "OnlySwitchPrivilegedHelper",
+      "id": "C1A0C30118E9202600000001",
+      "product": "Products/OnlySwitchPrivilegedHelper",
+      "product-type": "tool",
+      "specialized-configurations": [
+        { "name": "Debug", "file": "Versions/OnlySwitch.xcconfig" },
+        { "name": "Release", "file": "Versions/OnlySwitch.xcconfig" },
+      ],
+      "build-phases": [
+        "compile-sources",
+      ],
+      "build-settings": {
+        "CODE_SIGN_IDENTITY": "Apple Development",
+        "CODE_SIGN_IDENTITY[sdk=macosx*]": "Developer ID Application",
+        "CODE_SIGN_STYLE": "Manual",
+        "CREATE_INFOPLIST_SECTION_IN_BINARY": "YES",
+        "DEVELOPMENT_TEAM": "B22726TNGH",
+        "ENABLE_HARDENED_RUNTIME": "YES",
+        "GENERATE_INFOPLIST_FILE": "NO",
+        "INFOPLIST_FILE": "OnlySwitchPrivilegedHelper/Info.plist",
+        "MACOSX_DEPLOYMENT_TARGET": "14.0",
+        "MARKETING_VERSION": "2.7.6",
+        "PRODUCT_BUNDLE_IDENTIFIER": "com.jacklandrin.OnlySwitch.PrivilegedHelper",
+        "PRODUCT_NAME": "$(TARGET_NAME)",
+        "SKIP_INSTALL": "NO",
+        "SWIFT_VERSION": "6.0",
+      },
+    },
+  ],
+  "build-settings": {
+    "ALWAYS_SEARCH_USER_PATHS": "NO",
+    "CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED": "YES",
+    "CLANG_ANALYZER_NONNULL": "YES",
+    "CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION": "YES_AGGRESSIVE",
+    "CLANG_CXX_LANGUAGE_STANDARD": "gnu++17",
+    "CLANG_CXX_LIBRARY": "libc++",
+    "CLANG_ENABLE_MODULES": "YES",
+    "CLANG_ENABLE_OBJC_ARC": "YES",
+    "CLANG_ENABLE_OBJC_WEAK": "YES",
+    "CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING": "YES",
+    "CLANG_WARN_BOOL_CONVERSION": "YES",
+    "CLANG_WARN_COMMA": "YES",
+    "CLANG_WARN_CONSTANT_CONVERSION": "YES",
+    "CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS": "YES",
+    "CLANG_WARN_DIRECT_OBJC_ISA_USAGE": "YES_ERROR",
+    "CLANG_WARN_DOCUMENTATION_COMMENTS": "YES",
+    "CLANG_WARN_EMPTY_BODY": "YES",
+    "CLANG_WARN_ENUM_CONVERSION": "YES",
+    "CLANG_WARN_INFINITE_RECURSION": "YES",
+    "CLANG_WARN_INT_CONVERSION": "YES",
+    "CLANG_WARN_NON_LITERAL_NULL_CONVERSION": "YES",
+    "CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF": "YES",
+    "CLANG_WARN_OBJC_LITERAL_CONVERSION": "YES",
+    "CLANG_WARN_OBJC_ROOT_CLASS": "YES_ERROR",
+    "CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER": "YES",
+    "CLANG_WARN_RANGE_LOOP_ANALYSIS": "YES",
+    "CLANG_WARN_STRICT_PROTOTYPES": "YES",
+    "CLANG_WARN_SUSPICIOUS_MOVE": "YES",
+    "CLANG_WARN_UNGUARDED_AVAILABILITY": "YES_AGGRESSIVE",
+    "CLANG_WARN_UNREACHABLE_CODE": "YES",
+    "CLANG_WARN__DUPLICATE_METHOD_MATCH": "YES",
+    "COPY_PHASE_STRIP": "NO",
+    "DEBUG_INFORMATION_FORMAT[config=Debug]": "dwarf",
+    "DEBUG_INFORMATION_FORMAT[config=Release]": "dwarf-with-dsym",
+    "ENABLE_NS_ASSERTIONS[config=Release]": "NO",
+    "ENABLE_STRICT_OBJC_MSGSEND": "YES",
+    "ENABLE_TESTABILITY[config=Debug]": "YES",
+    "GCC_C_LANGUAGE_STANDARD": "gnu11",
+    "GCC_DYNAMIC_NO_PIC[config=Debug]": "NO",
+    "GCC_NO_COMMON_BLOCKS": "YES",
+    "GCC_OPTIMIZATION_LEVEL[config=Debug]": "0",
+    "GCC_PREPROCESSOR_DEFINITIONS[config=Debug]": [
+      "DEBUG=1",
+      "$(inherited)",
+    ],
+    "GCC_WARN_64_TO_32_BIT_CONVERSION": "YES",
+    "GCC_WARN_ABOUT_RETURN_TYPE": "YES_ERROR",
+    "GCC_WARN_UNDECLARED_SELECTOR": "YES",
+    "GCC_WARN_UNINITIALIZED_AUTOS": "YES_AGGRESSIVE",
+    "GCC_WARN_UNUSED_FUNCTION": "YES",
+    "GCC_WARN_UNUSED_VARIABLE": "YES",
+    "LOCALIZATION_PREFERS_STRING_CATALOGS": "YES",
+    "MACOSX_DEPLOYMENT_TARGET": "14.0",
+    "MTL_ENABLE_DEBUG_INFO[config=Debug]": "INCLUDE_SOURCE",
+    "MTL_ENABLE_DEBUG_INFO[config=Release]": "NO",
+    "MTL_FAST_MATH": "YES",
+    "ONLY_ACTIVE_ARCH[config=Debug]": "YES",
+    "SDKROOT": "macosx",
+    "SWIFT_ACTIVE_COMPILATION_CONDITIONS[config=Debug]": "DEBUG",
+    "SWIFT_COMPILATION_MODE[config=Release]": "wholemodule",
+    "SWIFT_EMIT_LOC_STRINGS": "YES",
+    "SWIFT_OPTIMIZATION_LEVEL[config=Debug]": "-Onone",
+    "SWIFT_OPTIMIZATION_LEVEL[config=Release]": "-O",
+  },
+  "last-upgrade": "13.2",
+  "last-swift-update": "15.2",
+}
