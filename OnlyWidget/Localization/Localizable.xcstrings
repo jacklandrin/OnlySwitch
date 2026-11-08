@@ -1,9 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "%@" : {
-
-    },
     "AirPods" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -570,6 +567,7 @@
       }
     },
     "Built-In Switch" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1239,9 +1237,6 @@
           }
         }
       }
-    },
-    "Evolution" : {
-
     },
     "Hide Desktop" : {
       "extractionState" : "manual",
@@ -2260,9 +2255,6 @@
         }
       }
     },
-    "Only Switch" : {
-
-    },
     "Only Widget - BuiltIn" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3055,6 +3047,7 @@
       }
     },
     "Select Built-In Switches" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -3161,6 +3154,7 @@
       }
     },
     "Select Evolution" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -3267,6 +3261,7 @@
       }
     },
     "Select Evolution you want to display in the widget." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -3373,6 +3368,7 @@
       }
     },
     "Select the switches you want to display in the widget." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -4150,6 +4146,131 @@
         }
       }
     },
+    "System Monitor" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monitor systému"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Systemmonitor"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "System Monitor"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monitor del sistema"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monitor ng System"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moniteur système"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nadzor sustava"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monitor di sistema"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "システムモニタ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "시스템 모니터"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Systeemmonitor"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monitor systemu"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monitor do Sistema"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Системный монитор"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monitor systému"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kormeeraha Nidaamka"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistem Monitörü"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Системний монітор"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "系统监视器"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "系統監視器"
+          }
+        }
+      }
+    },
     "Top Sticker" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -4605,31 +4726,6 @@
             "value" : "ウィジェットはEvolutionスイッチを制御できます"
           }
         }
-      }
-    },
-    "System Monitor" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "cs" : { "stringUnit" : { "state" : "translated", "value" : "Monitor systému" } },
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Systemmonitor" } },
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "System Monitor" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Monitor del sistema" } },
-        "fil" : { "stringUnit" : { "state" : "translated", "value" : "Monitor ng System" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Moniteur système" } },
-        "hr" : { "stringUnit" : { "state" : "translated", "value" : "Nadzor sustava" } },
-        "it" : { "stringUnit" : { "state" : "translated", "value" : "Monitor di sistema" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "システムモニタ" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "시스템 모니터" } },
-        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Systeemmonitor" } },
-        "pl" : { "stringUnit" : { "state" : "translated", "value" : "Monitor systemu" } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Monitor do Sistema" } },
-        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Системный монитор" } },
-        "sk" : { "stringUnit" : { "state" : "translated", "value" : "Monitor systému" } },
-        "so" : { "stringUnit" : { "state" : "translated", "value" : "Kormeeraha Nidaamka" } },
-        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Sistem Monitörü" } },
-        "uk" : { "stringUnit" : { "state" : "translated", "value" : "Системний монітор" } },
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "系统监视器" } },
-        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "系統監視器" } }
       }
     },
     "Xcode Derived Data" : {
