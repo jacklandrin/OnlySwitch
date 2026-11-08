@@ -1131,6 +1131,10 @@
           "children": [
             { "path": "OnlySwitchRemoteApp.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
             { "path": "RemoteAppFeature.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "RemoteAppFeature+Launch.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "RemoteAppFeature+Navigation.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "RemoteAppFeature+Selection.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "RemoteAppFeature+Sync.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
             { "path": "RemoteAppView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
             { "path": "RemoteAppShellFeature.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
             { "path": "RemoteAppShellView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
@@ -1153,6 +1157,9 @@
           "path": "Dependencies",
           "children": [
             { "path": "RemotePersistenceClient.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "RemotePersistenceModels.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "InMemoryRemotePersistenceStore.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "RemoteFilePersistenceStore.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
             { "path": "RemoteKeychainClient.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
             { "path": "RemoteConnectionCoordinator.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
             { "path": "RemoteConnectionEvent.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
@@ -1178,6 +1185,9 @@
             { "path": "RemoteBackgroundTaskClient.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
             { "path": "RemoteTabPreferencesClient.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
             { "path": "RemoteReviewDemoClient.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "RemoteReviewDemoRuntime+Persistence.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "RemoteReviewDemoRuntime+Fixtures.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+            { "path": "RemoteReviewDemoClients.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
             { "path": "RemoteSubscriptionClient.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
           ],
         }, {
@@ -1213,6 +1223,9 @@
               "path": "Dashboard",
               "children": [
                 { "path": "DashboardFeature.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "DashboardFeature+Actions.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "DashboardFeature+ConnectionEvents.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "DashboardFeature+Alerts.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
                 { "path": "DashboardView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
                 { "path": "DashboardBackground.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
                 { "path": "ControlTileView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
@@ -1267,6 +1280,8 @@
               "path": "Screenshots",
               "children": [
                 { "path": "RemoteScreenshotsFeature.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteScreenshotsFeature+Effects.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
+                { "path": "RemoteScreenshotsFeature+Messages.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
                 { "path": "RemoteScreenshotsView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
                 { "path": "RemoteScreenshotCell.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
                 { "path": "RemoteScreenshotThumbnailView.swift", "target-membership": [ "OnlySwitchRemote/compile-sources" ] },
