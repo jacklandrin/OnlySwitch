@@ -184,6 +184,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     private var desktopPetController: DesktopPetController?
     private var desktopPetPomodoroRefreshTask: Task<Void, Never>?
     private let remoteAccessController = RemoteAccessController()
+    private lazy var crashReportPrompt = CrashReportPrompt()
     private lazy var onlyRemoteCampaignController = OnlyRemoteCampaignWindowController()
     let dockPreviewController = DockPreviewController()
     private lazy var dockPreviewPanelController = DockPreviewPanelController(
@@ -262,7 +263,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
 
         Task { @MainActor [weak self] in
             await Task.yield()
-            self?.onlyRemoteCampaignController.presentIfNeeded()
+            guard let self else { return }
+            if !CrashReportPrompt.isRunningTests, await self.crashReportPrompt.presentIfNeeded() { return }
+            self.onlyRemoteCampaignController.presentIfNeeded()
         }
     }
 

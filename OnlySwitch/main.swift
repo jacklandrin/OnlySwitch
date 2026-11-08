@@ -4,5 +4,6 @@ import Foundation
 if CommandLine.arguments.contains(HostedAudioPlayer.helperArgument) {
     HostedAudioPlayer.runHelper()
 } else {
+    CrashReportPrompt.beginMonitoring()
     OnlySwitchApp.main()
 }

@@ -1,6 +1,256 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "OnlySwitch crash report available" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je k dispozici hlášení o pádu OnlySwitch"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Absturzbericht für OnlySwitch verfügbar"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch crash report available"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informe de cierre inesperado de OnlySwitch disponible"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "May ulat sa pag-crash ng OnlySwitch"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rapport de plantage d’OnlySwitch disponible"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dostupno je izvješće o rušenju aplikacije OnlySwitch"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rapporto di arresto anomalo di OnlySwitch disponibile"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitchのクラッシュレポートがあります"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch 충돌 리포트가 있습니다"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crashrapport voor OnlySwitch beschikbaar"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Raport o awarii OnlySwitch jest dostępny"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Relatório de falha do OnlySwitch disponível"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Доступен отчёт о сбое OnlySwitch"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "K dispozícii je hlásenie o zlyhaní OnlySwitch"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Warbixinta burburka OnlySwitch waa la heli karaa"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch çökme raporu hazır"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Доступний звіт про збій OnlySwitch"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch 有一份崩溃报告"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OnlySwitch 有一份當機報告"
+          }
+        }
+      }
+    },
+    "macOS saved a crash report for OnlySwitch. You can find it in Finder if you want to share it when reporting the problem." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS uložil hlášení o pádu OnlySwitch. Pokud ho chcete přiložit k hlášení problému, najdete ho ve Finderu."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS hat einen Absturzbericht für OnlySwitch gespeichert. Du kannst ihn im Finder finden und deiner Fehlermeldung beifügen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS saved a crash report for OnlySwitch. You can find it in Finder if you want to share it when reporting the problem."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS ha guardado un informe de cierre inesperado de OnlySwitch. Puedes localizarlo en el Finder si quieres adjuntarlo al comunicar el problema."
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nag-save ang macOS ng ulat sa pag-crash ng OnlySwitch. Mahahanap mo ito sa Finder kung gusto mo itong ibahagi kapag iniulat ang problema."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS a enregistré un rapport de plantage pour OnlySwitch. Vous pouvez le retrouver dans le Finder pour le joindre à votre signalement."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS je spremio izvješće o rušenju aplikacije OnlySwitch. Možete ga pronaći u Finderu ako ga želite priložiti prijavi problema."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS ha salvato un rapporto di arresto anomalo di OnlySwitch. Puoi trovarlo nel Finder se vuoi allegarlo alla segnalazione del problema."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOSがOnlySwitchのクラッシュレポートを保存しました。問題の報告に添付する場合は、Finderで確認できます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS가 OnlySwitch의 충돌 리포트를 저장했습니다. 문제를 신고할 때 첨부하려면 Finder에서 찾을 수 있습니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS heeft een crashrapport voor OnlySwitch bewaard. Je kunt het in de Finder opzoeken als je het wilt toevoegen aan je probleemmelding."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS zapisał raport o awarii OnlySwitch. Możesz go znaleźć w Finderze, jeśli chcesz dołączyć go do zgłoszenia problemu."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O macOS salvou um relatório de falha do OnlySwitch. Você pode encontrá-lo no Finder caso queira anexá-lo ao relatar o problema."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS сохранила отчёт о сбое OnlySwitch. Его можно найти в Finder и приложить к сообщению о проблеме."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS uložil hlásenie o zlyhaní OnlySwitch. Ak ho chcete priložiť k hláseniu problému, nájdete ho vo Finderi."
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS waxay kaydisay warbixin ku saabsan burburka OnlySwitch. Waxaad ka heli kartaa Finder haddii aad rabto inaad ku lifaaqdo marka aad dhibaatada soo sheegayso."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS, OnlySwitch için bir çökme raporu kaydetti. Sorunu bildirirken paylaşmak isterseniz raporu Finder’da bulabilirsiniz."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS зберегла звіт про збій OnlySwitch. Його можна знайти у Finder і додати до повідомлення про проблему."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS 已保存 OnlySwitch 的崩溃报告。如果你想在反馈问题时附上报告，可以在访达中找到它。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS 已儲存 OnlySwitch 的當機報告。如果你想在回報問題時附上報告，可以在 Finder 中找到它。"
+          }
+        }
+      }
+    },
     "Set every external display to the built-in display's brightness" : {
       "extractionState" : "manual",
       "localizations" : {

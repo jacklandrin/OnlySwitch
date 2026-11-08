@@ -755,3 +755,153 @@ struct LocalNetworkPermissionMetadataTests {
         #expect(bonjourServices.contains("_onlyswitch._tcp"))
     }
 }
+
+struct CrashReportDiscoveryTests {
+    private let bundleIdentifier = "jacklandrin.OnlySwitch"
+    private let cutoff = Date(timeIntervalSince1970: 1_793_790_970)
+    private var launch: Date { cutoff.addingTimeInterval(3) }
+
+    @Test func selectsNewestIncidentByReportTimeRatherThanFileTimeOrName() throws {
+        try withReportDirectory { directory in
+            let older = try writeReport(in: directory, name: "OnlySwitch-zzz.ips", second: "11")
+            let newest = try writeReport(in: directory, name: "OnlySwitch-aaa.ips", second: "12")
+            try FileManager.default.setAttributes([.modificationDate: launch], ofItemAtPath: older.path)
+            try FileManager.default.setAttributes([.modificationDate: cutoff], ofItemAtPath: newest.path)
+
+            #expect(latest(in: directory)?.lastPathComponent == newest.lastPathComponent)
+        }
+    }
+
+    @Test func excludesAcknowledgedIncidentsAndIncludesReportsAtLaunchBoundary() throws {
+        try withReportDirectory { directory in
+            _ = try writeReport(in: directory, name: "OnlySwitch-handled.ips", second: "10")
+            _ = try writeReport(in: directory, name: "OnlySwitch-too-new.ips", second: "14")
+            #expect(latest(in: directory) == nil)
+
+            let report = try writeReport(in: directory, name: "OnlySwitch-at-launch.ips", second: "13")
+            #expect(latest(in: directory)?.lastPathComponent == report.lastPathComponent)
+            #expect(CrashReportDiscovery.latest(
+                in: directory, bundleIdentifier: bundleIdentifier, after: launch, through: launch
+            ) == nil)
+        }
+    }
+
+    @Test func ignoresOtherProcessesOtherDiagnosticTypesAndMalformedFiles() throws {
+        try withReportDirectory { directory in
+            _ = try writeReport(
+                in: directory, name: "OnlySwitch-widget.ips", identifier: "jacklandrin.OnlySwitch.OnlyWidget"
+            )
+            _ = try writeReport(in: directory, name: "OnlySwitch-fault.ips", bugType: "288")
+            _ = try writeReport(in: directory, name: "OnlySwitch-other-platform.ips", platform: 2)
+            _ = try writeReport(in: directory, name: "OnlySwitch-not-ips.txt")
+            try Data("{\"bug_type\":\"309\"".utf8).write(
+                to: directory.appendingPathComponent("OnlySwitch-malformed.ips")
+            )
+            _ = try writeReport(in: directory, name: "OnlySwitch-no-newline.ips", hasNewline: false)
+
+            #expect(latest(in: directory) == nil)
+        }
+    }
+
+    @Test func ignoresSymbolicLinksToReportsOutsideTheDirectory() throws {
+        try withReportDirectory { directory in
+            try withReportDirectory { externalDirectory in
+                let externalReport = try writeReport(in: externalDirectory, name: "OnlySwitch-external.ips")
+                try FileManager.default.createSymbolicLink(
+                    at: directory.appendingPathComponent("OnlySwitch-linked.ips"),
+                    withDestinationURL: externalReport
+                )
+
+                #expect(latest(in: directory) == nil)
+            }
+        }
+    }
+
+    private func latest(in directory: URL) -> URL? {
+        CrashReportDiscovery.latest(
+            in: directory, bundleIdentifier: bundleIdentifier, after: cutoff, through: launch
+        )?.url
+    }
+
+    private func withReportDirectory(_ run: (URL) throws -> Void) throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: false)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        try run(directory)
+    }
+
+    private func writeReport(
+        in directory: URL,
+        name: String,
+        second: String = "12",
+        identifier: String = "jacklandrin.OnlySwitch",
+        bugType: String = "309",
+        platform: Int = 1,
+        hasNewline: Bool = true
+    ) throws -> URL {
+        let report = directory.appendingPathComponent(name)
+        var contents = try JSONSerialization.data(withJSONObject: [
+            "app_name": "OnlySwitch",
+            "bundleID": identifier,
+            "bug_type": bugType,
+            "incident_id": UUID().uuidString,
+            "platform": platform,
+            "timestamp": "2026-11-04 12:16:\(second).00 +0100"
+        ])
+        if hasNewline {
+            contents.append(contentsOf: "\n{\"procName\":\"OnlySwitch\"}\n".utf8)
+        }
+        try contents.write(to: report)
+        return report
+    }
+}
+
+struct CrashReportPromptTests {
+    @MainActor
+    @Test(arguments: [false, true])
+    func acknowledgesAcrossRelaunchAndRevealsOnlyOnRequest(revealRequested: Bool) async throws {
+        let suite = "OnlySwitch.CrashReportPromptTests.\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let initialLaunch = Date(timeIntervalSince1970: 1_793_790_970)
+        let report = CrashReportDiscovery.Report(
+            url: URL(fileURLWithPath: "/tmp/OnlySwitch-test.ips"),
+            timestamp: initialLaunch.addingTimeInterval(60)
+        )
+        let presentation = PresentationProbe()
+        let watermark = CrashReportWatermark(defaults: defaults)
+        watermark.beginMonitoring(at: initialLaunch)
+
+        func launch(using watermark: CrashReportWatermark) async -> Bool {
+            await withDependencies {
+                $0.crashReport.cutoff = { watermark.cutoff }
+                $0.crashReport.latest = { report.timestamp > $0 ? report : nil }
+                $0.crashReport.present = {
+                    presentation.count += 1
+                    return revealRequested
+                }
+                $0.crashReport.acknowledge = { watermark.acknowledge($0) }
+                $0.crashReport.reveal = { presentation.revealed.append($0) }
+            } operation: {
+                await CrashReportPrompt().presentIfNeeded()
+            }
+        }
+
+        #expect(await launch(using: watermark))
+
+        let relaunchedDefaults = try #require(UserDefaults(suiteName: suite))
+        let relaunchedWatermark = CrashReportWatermark(defaults: relaunchedDefaults)
+        relaunchedWatermark.beginMonitoring(at: report.timestamp.addingTimeInterval(60))
+        #expect(relaunchedWatermark.cutoff == report.timestamp)
+        #expect(await launch(using: relaunchedWatermark) == false)
+        #expect(presentation.count == 1)
+        #expect(presentation.revealed == (revealRequested ? [report.url] : []))
+    }
+
+    @MainActor
+    private final class PresentationProbe {
+        var count = 0
+        var revealed: [URL] = []
+    }
+}

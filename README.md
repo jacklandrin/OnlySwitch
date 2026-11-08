@@ -264,6 +264,12 @@ Screen Test opens a full-screen solid-color view for checking dead pixels or cle
 
 ## Known limitations and troubleshooting
 
+### OnlySwitch crash reports
+
+OnlySwitch starts watching for new crash reports the first time you open the updated app. On later launches, it shows a notice for the newest report it has not already handled. If macOS is still writing the report when you reopen OnlySwitch, a later launch can still find it. Select **Show in Finder** to find the `.ips` file if you want to attach it to a bug report. OnlySwitch does not upload the file.
+
+If there is no notice, open **Console → Crash Reports** and look for **OnlySwitch**. This also works for older reports or when OnlySwitch cannot finish launching.
+
 ### OnlySwitch icon missing from the menu bar
 
 OnlySwitch is accessed through its menu-bar icon. On macOS 26.2, the app can appear not to open when it is disabled in the system menu-bar settings.

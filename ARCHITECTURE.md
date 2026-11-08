@@ -69,6 +69,10 @@ Changes to switches, shell commands, AppleScript, keychain data, Core Data, widg
 
 Prefer deterministic reducer and domain tests with controlled dependencies. Add integration coverage for Core Data, system-effect adapters, remote transport, pairing, and cross-target behavior when reducer tests cannot prove correctness. New concurrency-sensitive code should include tests for cancellation, ordering, actor isolation assumptions, malformed frames, connection loss, and failure propagation where applicable.
 
+## Crash report notice
+
+The macOS app records an initial cutoff before entering SwiftUI. After a successful launch, `CrashReportPrompt` uses an injected client to look for the newest matching system `.ips` report newer than that cutoff. Discovery runs off the main thread and inspects bounded metadata from regular files in the current user's DiagnosticReports folder. OnlySwitch's macOS bundle identity and the system crash report type must match. The localized AppKit alert advances the cutoff after dismissal, whether or not the user chooses to reveal the report in Finder. No match leaves the cutoff unchanged so a report written after the scan remains eligible at a later launch. The launch campaign waits for discovery and is deferred to another launch if the alert is shown. Test hosts and the hosted audio helper do not run crash report discovery. OnlySwitch does not install a crash handler, change system settings, or upload reports.
+
 
 ## Tab visibility
 
