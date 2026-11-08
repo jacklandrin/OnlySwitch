@@ -15,8 +15,16 @@
 OnlySwitch puts everyday macOS controls—such as hiding desktop icons, changing appearance, keeping the Mac awake, and managing the notch—into one customizable menu-bar app. Add, remove, and reorder switches and Shortcuts, assign keyboard shortcuts, or place controls on the desktop as widgets.
 
 <p align="center">
-  <img alt="OnlySwitch controls" src="https://github.com/user-attachments/assets/40d94175-6487-4c59-b09e-2261ac5b8453" width="80%" />
+  <img alt="OnlySwitch controls" src="doc/images/onlyswitch-controls.png" width="55%" />
 </p>
+
+<table>
+  <tr>
+    <td valign="top" width="33%"><img alt="OnlySwitch screenshot gallery" src="doc/images/onlyswitch-screenshots.png" width="100%" /></td>
+    <td valign="top" width="33%"><img alt="OnlySwitch sound mixer" src="doc/images/onlyswitch-sound-mixer.png" width="100%" /></td>
+    <td valign="top" width="33%"><img alt="OnlySwitch system monitor" src="doc/images/onlyswitch-system-monitor.png" width="100%" /></td>
+  </tr>
+</table>
 
 ## Installation
 
