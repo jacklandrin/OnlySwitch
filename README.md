@@ -238,10 +238,6 @@ Some values may be unavailable when the hardware or macOS does not expose them, 
 
 When a process is associated with a regular macOS application, click its row in the CPU or memory process list to activate that application. Protected or background-only processes may not be activatable.
 
-<p align="center">
-  <img alt="OnlySwitch System Monitor" src="https://github.com/user-attachments/assets/ac8178f6-9f61-43be-a73b-a2103ac18ff7" width="30%" />
-</p>
-
 ### Codex Usage and Claude Usage
 
 Codex Usage is an optional built-in tab showing the signed-in Codex account's plan, remaining five-hour and weekly usage, reset times, available credits, and reset-credit information. It uses the existing local Codex sign-in, so OnlySwitch does not require a separate sign-in.
@@ -249,10 +245,6 @@ Codex Usage is an optional built-in tab showing the signed-in Codex account's pl
 Claude Usage shows the Claude Code account's plan and its reported five-hour, weekly, model-specific, and extra usage. It reads your existing Claude Code sign-in; if the credentials have expired, sign in to Claude Code again.
 
 Turn on **Codex Usage** or **Claude Usage** under **OnlySwitch Settings → Tabs** to show them in OnlySwitch and Only Control.
-
-<p align="center">
-  <img alt="Codex Usage" src="https://github.com/user-attachments/assets/dad0f898-fe19-4df4-be7f-9db278ba5334" width="30%" />
-</p>
 
 ### OnlyRemote
 
