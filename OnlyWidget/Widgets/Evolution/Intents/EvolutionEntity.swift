@@ -6,6 +6,7 @@
 //
 
 import AppIntents
+import OnlySwitchPersistence
 
 struct EvolutionEntity: AppEntity {
     var id: UUID

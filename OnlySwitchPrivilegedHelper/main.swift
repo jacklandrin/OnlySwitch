@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import PrivilegedHelperCore
 
 private let helperMachService = "com.jacklandrin.OnlySwitch.PrivilegedHelper"
 private let permittedCallerRequirement = "identifier \"jacklandrin.OnlySwitch\" and anchor apple generic and certificate leaf[subject.OU] = \"B22726TNGH\""

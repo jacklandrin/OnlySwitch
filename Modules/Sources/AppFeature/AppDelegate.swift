@@ -1,0 +1,500 @@
+//
+//  OnlySwitchApp.swift
+//  OnlySwitch
+//
+//  Created by Jacklandrin on 2021/11/29.
+//
+
+import SwiftUI
+import Cocoa
+import KeyboardShortcuts
+import Defines
+import Switches
+import Utilities
+import OnlyControl
+import Networking
+import FirebaseCore
+import Extensions
+import DesktopPet
+import UserNotifications
+import OnlySwitchPersistence
+
+struct OnlySwitchApp: App {
+    let persistenceController = PersistenceController.shared
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    @ObservedObject var preferencesvm = PreferencesObserver.shared
+    @State var preferences = PreferencesObserver.shared.preferences
+    @State var settingsItem: SettingsItem? = nil
+
+    var body: some Scene {
+        WindowGroup("run") {
+            EmptyView()
+                .frame(width: 0, height: 0)
+                .onAppear {
+                    NSApp.hideDockIcon()
+                }
+                .onDisappear() {
+                    NSApp.hideDockIcon()
+                }
+                .onOpenURL{ url in
+                    defer {
+                        if let window = NSApplication.shared.windows.first(where: { $0.title == "run"}) {
+                            window.close()
+                            NSApp.hideDockIcon()
+                        }
+                    }
+                    guard url.absoluteString.contains("run"),
+                          let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+                          let queryItems = components.queryItems,
+                          let typeStr = queryItems.first(where: {$0.name == "type"})?.value,
+                          let unitType =  UnitType(rawValue: typeStr),
+                          let id = queryItems.first(where: {$0.name == "id"})?.value
+                    else {
+                        return
+                    }
+
+                    if unitType == .builtIn {
+                        guard
+                            let intID = UInt64(id),
+                            let type = SwitchType(legacyIdentifier: intID)
+                        else {
+                            return
+                        }
+                        let theSwitch = CustomizeVM.shared.allSwitches.first{ $0.type == type }
+                        Task {
+                            await theSwitch?.doSwitch()
+                        }
+                    } else if unitType == .evolution {
+                        guard
+                            let uuid = UUID(uuidString: id),
+                            let entity = try? EvolutionCommandEntity.fetchRequest(by: uuid)
+                        else {
+                            return
+                        }
+                        let item = EvolutionAdapter.toEvolutionItem(entity)
+                        item?.doSwitch()
+                    }
+                }
+        }
+        .windowKeepContentSize()
+        .handlesExternalEvents(matching: Set(arrayLiteral: "run"))
+
+        WindowGroup("Settings".localized()) {
+            settings
+        }
+        .windowResizability(.contentMinSize)
+        .handlesExternalEvents(matching: Set(arrayLiteral: "SettingsWindow"))
+        .commands{
+            CommandMenu("Switches Availability") {
+                Button(action: {
+                    preferencesvm.preferences.radioEnable = !preferences.radioEnable
+                    if preferences.radioEnable {
+                        PlayerManager.shared.player.setupRemoteCommandCenter()
+                    } else {
+                        RadioStationSwitch.shared.playerItem.isPlaying = false
+                        PlayerManager.shared.player.clearCommandCenter()
+                    }
+                }, label: {
+                    if preferencesvm.preferences.radioEnable {
+                        Text("Disable Player")
+                    } else {
+                        Text("Enable Player")
+                    }
+                })
+                Button(action: {
+                    preferencesvm.preferences.menubarCollaspable = !preferences.menubarCollaspable
+                }, label: {
+                    if preferencesvm.preferences.menubarCollaspable {
+                        Text("Disable Hide Menu Bar Icons")
+                    } else {
+                        Text("Enable Hide Menu Bar Icons")
+                    }
+                })
+            }
+            SidebarCommands()
+            CommandGroup(after: .appSettings) {
+                Button(action: {
+                    appDelegate.checkUpdate()
+                }, label: {
+                    Text("Check For Update...")
+                })
+            }
+            CommandGroup(replacing: .newItem) {
+
+            }
+        }
+    }
+
+    private var settings: some View {
+        SettingsView(settingItem: $settingsItem)
+            .frame(minWidth: Layout.settingWindowWidth, minHeight: Layout.settingWindowHeight)
+            .onDisappear {
+                if #available(macOS 13.3, *) {
+                    print("settings window closing")
+                    NSApp.activate(ignoringOtherApps: false)
+                    NSApp.setActivationPolicy(.accessory)
+                    NotificationCenter.default.post(name: .settingsWindowClosed, object: nil)
+                }
+            }
+            .onOpenURL{ url in
+                guard url.absoluteString.contains("destination"),
+                      let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+                      let queryItems = components.queryItems,
+                      let destination = queryItems.first(where: { $0.name == "destination" })?.value
+                else {
+                    return
+                }
+                let itemString = destination.replacingOccurrences(of: "_", with: " ").capitalized
+                if let item = SettingsItem(rawValue: itemString) {
+                    settingsItem = item
+                }
+            }
+
+    }
+}
+
+extension NSApplication {
+    func hideDockIcon() {
+        if !SettingsWindow.shared.isShowing {
+            setActivationPolicy(.accessory)
+        }
+    }
+}
+
+@MainActor
+protocol DesktopPetPomodoroPresenting: AnyObject {
+    var isVisible: Bool { get }
+    func setPomodoroState(_ state: DesktopPetPomodoroState?)
+}
+
+extension DesktopPetController: DesktopPetPomodoroPresenting {}
+
+@MainActor
+class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDelegate {
+    var statusBar: StatusBarController?
+    var popover = NSPopover()
+    let switchVM = SwitchListVM()
+    var blManager:BluetoothDevicesManager?
+    var currentAppearance:String {
+        return PreferencesObserver
+            .shared
+            .preferences
+            .currentAppearance
+    }
+    var checkUpdatePresenter = GitHubPresenter.shared
+    private var desktopPetController: DesktopPetController?
+    private var desktopPetPomodoroRefreshTask: Task<Void, Never>?
+    private let remoteAccessController = RemoteAccessController()
+    private lazy var crashReportPrompt = CrashReportPrompt()
+    private lazy var onlyRemoteCampaignController = OnlyRemoteCampaignWindowController()
+    let dockPreviewController = DockPreviewController()
+    private lazy var dockPreviewPanelController = DockPreviewPanelController(
+        store: dockPreviewController.store,
+        updatePreviewFrame: dockPreviewController.updatePreviewFrame
+    )
+    private var isStoppingRemoteAccess = false
+    private var didStopRemoteAccess = false
+
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        UNUserNotificationCenter.current().delegate = self
+        FirebaseApp.configure()
+        Task { await remoteAccessController.startIfEnabled() }
+        // Migrate API keys from UserDefaults to Keychain if needed
+        KeychainMigration.migrateAPIKeysIfNeeded()
+        // Display volume keys must work before the Sound Mixer panel is ever opened.
+        _ = SoundMixerVM.shared
+        //for issue #11
+        closeWindow()
+        let contentView = OnlySwitchListView(
+            onPanelSizeChange: { [weak self] size in
+                guard let self, self.popover.contentSize != size else { return }
+                self.popover.contentSize = size
+            },
+            onOutsideClickRetentionChanged: { [weak self] retainsOutsideClicks in
+                self?.statusBar?.listPreventsOutsideClickDismissal = retainsOutsideClicks
+            },
+            onSectionSelectionChanged: { [weak self] section in
+                self?.statusBar?.listSelectedSection = section
+            }
+        )
+            .environmentObject(switchVM)
+        let apperearance = SwitchListAppearance(rawValue: currentAppearance)
+
+        popover.contentSize = NSSize(width: apperearance == .single ? Layout.popoverWidth : Layout.popoverWidth * 2 - 40, height: 300)
+        popover.contentViewController = NSHostingController(rootView: contentView)
+
+        statusBar = StatusBarController(popover)
+        // Collect screenshots (and reveal/fly new captures) before any list host has appeared.
+        SettingsVM.shared.screenshotsStore.send(.task)
+        SettingsVM.shared.schedulesStore.send(.task)
+        setupDesktopPet()
+        setupDockPreview()
+
+        SwitchManager.shared.registerSwitchesShouldShow()
+        _ = ReverseScrollDirectionController.shared.currentStatus()
+
+        blManager = BluetoothDevicesManager.shared
+        RadioStationSwitch.shared.setDefaultRadioStations()
+        Bundle.setLanguage(lang: LanguageManager.sharedManager.currentLang)
+
+        registerShortcut()
+
+        // Mirror built-in display brightness to external monitors (issue #206) –
+        // start now if enabled and react to the setting being toggled later.
+        BrightnessSyncManager.shared.updateState()
+        NotificationCenter.default.addObserver(
+            forName: .changeSyncExternalBrightnessSetting,
+            object: nil,
+            queue: .main
+        ) { _ in
+            Task { @MainActor in
+                BrightnessSyncManager.shared.updateState()
+            }
+        }
+
+        if PreferencesObserver.shared.preferences.checkUpdateOnLaunch {
+            checkUpdate()
+        }
+        // Workaround for issue [#147](https://github.com/jacklandrin/OnlySwitch/issues/147)
+        NSApp.setActivationPolicy(.accessory)
+
+        if let error = PersistenceController.shared.loadError {
+            NSAlert(error: error).runModal()
+        }
+
+        Task { @MainActor [weak self] in
+            await Task.yield()
+            guard let self else { return }
+            if !CrashReportPrompt.isRunningTests, await self.crashReportPrompt.presentIfNeeded() { return }
+            self.onlyRemoteCampaignController.presentIfNeeded()
+        }
+    }
+
+    nonisolated func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+    ) {
+        completionHandler(Self.aphroditeForegroundNotificationOptions)
+    }
+
+    nonisolated static let aphroditeForegroundNotificationOptions: UNNotificationPresentationOptions = [.banner, .sound]
+
+    func applicationWillTerminate(_ notification: Notification) {
+        DisplayBrightnessService.shared.stop()
+        ReverseScrollDirectionController.shared.suspendForTermination()
+        dockPreviewPanelController.stop()
+        dockPreviewController.stop()
+        stopDesktopPetPomodoroRefresh()
+        OnlyControlWindow.shared.onVisibilityChanged = nil
+        NotificationCenter.default.removeObserver(
+            self,
+            name: .desktopPetVisibilityChanged,
+            object: nil
+        )
+        NotificationCenter.default.removeObserver(
+            self,
+            name: .dockPreviewVisibilityChanged,
+            object: nil
+        )
+    }
+
+    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+        guard !didStopRemoteAccess else { return .terminateNow }
+        guard !isStoppingRemoteAccess else { return .terminateLater }
+        isStoppingRemoteAccess = true
+        Task {
+            await remoteAccessController.stopForTermination()
+            didStopRemoteAccess = true
+            sender.reply(toApplicationShouldTerminate: true)
+        }
+        return .terminateLater
+    }
+
+    private func setupDesktopPet() {
+        let onlyControlWindow = OnlyControlWindow.shared
+        let controller = DesktopPetController(
+            onActivate: {
+                onlyControlWindow.toggle(monitorsOutsideClicks: true)
+            },
+            onClose: {
+                Preferences.shared.showDesktopPet = false
+            },
+            playbackClient: .appLive
+        )
+        desktopPetController = controller
+        onlyControlWindow.outsideClickExclusionWindowNumbers = [controller.windowNumber]
+        onlyControlWindow.onVisibilityChanged = { [weak controller] isPresented in
+            controller?.setControlPresented(isPresented)
+        }
+        controller.setControlPresented(onlyControlWindow.isShowing)
+
+        if Preferences.shared.showDesktopPet {
+            controller.show()
+            startDesktopPetPomodoroRefreshIfNeeded()
+        }
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(desktopPetVisibilityDidChange),
+            name: .desktopPetVisibilityChanged,
+            object: nil
+        )
+    }
+
+    private func setupDockPreview() {
+        dockPreviewPanelController.start()
+        dockPreviewController.start(isEnabled: Preferences.shared.dockPreviewEnabled)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(dockPreviewVisibilityDidChange),
+            name: .dockPreviewVisibilityChanged,
+            object: nil
+        )
+    }
+
+    @objc private func dockPreviewVisibilityDidChange() {
+        dockPreviewController.setEnabled(Preferences.shared.dockPreviewEnabled)
+        if let previewSwitch = SwitchManager.shared.getSwitch(of: .dockPreview) {
+            previewSwitch.delegate?.shouldRefreshIfNeed(aSwitch: previewSwitch)
+        }
+    }
+
+    @objc private func desktopPetVisibilityDidChange() {
+        guard let desktopPetController else { return }
+
+        if Preferences.shared.showDesktopPet {
+            desktopPetController.show()
+            startDesktopPetPomodoroRefreshIfNeeded()
+        } else {
+            stopDesktopPetPomodoroRefresh()
+            desktopPetController.hide()
+        }
+    }
+
+    private func startDesktopPetPomodoroRefreshIfNeeded() {
+        guard desktopPetController?.isVisible == true,
+              desktopPetPomodoroRefreshTask == nil
+        else { return }
+
+        desktopPetPomodoroRefreshTask = Task { @MainActor [weak self] in
+            while !Task.isCancelled {
+                do {
+                    guard let owner = self else { return }
+                    await owner.refreshDesktopPetPomodoroState()
+                }
+
+                do {
+                    try await Task.sleep(for: .seconds(1))
+                } catch is CancellationError {
+                    return
+                } catch {
+                    return
+                }
+            }
+        }
+    }
+
+    private func stopDesktopPetPomodoroRefresh() {
+        desktopPetPomodoroRefreshTask?.cancel()
+        desktopPetPomodoroRefreshTask = nil
+
+        if let desktopPetController {
+            applyDesktopPetPomodoroState(nil, to: desktopPetController)
+            desktopPetController.clearPlayback()
+        }
+    }
+
+    private func refreshDesktopPetPomodoroState() async {
+        guard !Task.isCancelled,
+              let controller = desktopPetController,
+              controller.isVisible
+        else { return }
+
+        controller.refreshPlayback()
+        let state = await PomodoroTimerSwitch.shared.desktopPetState()
+
+        guard !Task.isCancelled,
+              desktopPetController === controller,
+              controller.isVisible
+        else { return }
+
+        applyDesktopPetPomodoroState(state, to: controller)
+    }
+
+    func applyDesktopPetPomodoroState(
+        _ state: DesktopPetPomodoroState?,
+        to controller: any DesktopPetPomodoroPresenting
+    ) {
+        guard controller.isVisible else {
+            controller.setPomodoroState(nil)
+            return
+        }
+
+        controller.setPomodoroState(state)
+    }
+
+    func checkUpdate() {
+        checkUpdatePresenter.checkUpdate(releaseType: GitHubRelease.self) { result in
+            switch result {
+            case .success:
+                let newestVersion = self.checkUpdatePresenter.latestVersion
+                UserDefaults.standard.set(newestVersion, forKey: UserDefaults.Key.newestVersion)
+                UserDefaults.standard.synchronize()
+                if !self.checkUpdatePresenter.isTheNewestVersion {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+                        Updater.checkForUpdates()
+                    }
+                }
+
+            case let .failure(error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
+    @MainActor
+    private func registerShortcut() {
+        KeyboardShortcuts.onKeyDown(for: .invokePopoverShortcutsName) {
+            NotificationCenter.default.post(name: .togglePopover, object: nil)
+        }
+
+        KeyboardShortcuts.onKeyDown(for: .openScreenshotsTab) { [weak self] in
+            self?.statusBar?.toggleScreenshotsSection()
+        }
+
+        CustomizeVM.shared.allSwitches.forEach{ item in
+            KeyboardShortcuts.onKeyDown(for: item.keyboardShortcutName) {
+                Task { @MainActor in
+                    await item.doSwitch()
+                }
+            }
+        }
+
+        ShortcutsSettingVM.shared.shortcutsList.forEach{ item in
+            KeyboardShortcuts.onKeyDown(for: item.keyboardShortcutName) {
+                item.doShortcuts()
+            }
+        }
+
+        if let entities = try? EvolutionCommandEntity.fetchResult() {
+            let evolutionItems = EvolutionAdapter.evolutionItems(entities)
+            evolutionItems.forEach{ item in
+                KeyboardShortcuts.onKeyDown(for: KeyboardShortcuts.Name(rawValue: item.id.uuidString)!) {
+                    item.doSwitch()
+                }
+            }
+        }
+    }
+
+    private func closeWindow() {
+        for window in NSApplication.shared.windows {
+            window.orderOut(nil)
+            NSApp.setActivationPolicy(.accessory)
+            NSWindow.allowsAutomaticWindowTabbing = false
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                window.close()
+            }
+        }
+    }
+}
