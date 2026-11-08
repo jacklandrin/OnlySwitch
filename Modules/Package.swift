@@ -24,6 +24,7 @@ let package = Package(
         .library(name: "PrivilegedHelperCore", targets: ["PrivilegedHelperCore"]),
         .library(name: "AppFeature", targets: ["AppFeature"]),
         .library(name: "OnlyRemoteFeature", targets: ["OnlyRemoteFeature"]),
+        .library(name: "OnlyWidgetFeature", targets: ["OnlyWidgetFeature"]),
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "Extensions",
@@ -195,6 +196,10 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "Dependencies", package: "swift-dependencies")
             ]
+        ),
+        .target(
+            name: "OnlyWidgetFeature",
+            dependencies: ["Defines", "Extensions", "Switches", "Utilities", "OnlySwitchPersistence"]
         ),
         .target(name: "CSoundMixerEQ"),
         .target(name: "SoundMixerEQ", dependencies: ["CSoundMixerEQ", .product(name: "ComposableArchitecture", package: "swift-composable-architecture"), .product(name: "Dependencies", package: "swift-dependencies")]),

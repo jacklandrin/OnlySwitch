@@ -54,10 +54,12 @@ struct OnlyWidgetBuiltInEntryView: View {
     }
 }
 
-struct OnlyWidgetBuildIn: Widget {
+public struct OnlyWidgetBuildIn: Widget {
     let kind: String = "OnlyWidget-BuiltIn"
 
-    var body: some WidgetConfiguration {
+    public init() {}
+
+    public var body: some WidgetConfiguration {
         AppIntentConfiguration(
             kind: kind,
             intent: SelectBuiltInSwitchesIntent.self,

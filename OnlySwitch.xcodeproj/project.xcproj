@@ -205,52 +205,9 @@
       "children": [
         {
           "kind": "group",
-          "path": "Widgets",
-          "children": [
-            {
-              "kind": "group",
-              "path": "Evolution",
-              "children": [
-                {
-                  "kind": "group",
-                  "path": "Intents",
-                  "children": [
-                    { "path": "SelectEvolutionIntent.swift", "target-membership": [ "OnlyWidgetExtension/compile-sources" ] },
-                    { "path": "EvolutionEntity.swift", "target-membership": [ "OnlyWidgetExtension/compile-sources" ] },
-                  ],
-                },
-                { "path": "EvolutionWidgetModel.swift", "target-membership": [ "OnlyWidgetExtension/compile-sources" ] },
-                { "path": "OnlyWidgetEvolutionProvider.swift", "target-membership": [ "OnlyWidgetExtension/compile-sources" ] },
-              ],
-            }, {
-              "kind": "group",
-              "path": "BuiltIn",
-              "children": [
-                { "path": "OnlyWidgetBuiltIn.swift", "target-membership": [ "OnlyWidgetExtension/compile-sources" ] },
-                {
-                  "kind": "group",
-                  "path": "Intents",
-                  "children": [
-                    { "path": "SelectBuiltInSwitchesIntent.swift", "target-membership": [ "OnlyWidgetExtension/compile-sources" ] },
-                    { "path": "BuiltInSwitchEntity.swift", "target-membership": [ "OnlyWidgetExtension/compile-sources" ] },
-                  ],
-                },
-              ],
-            },
-          ],
-        }, {
-          "kind": "group",
           "path": "Localization",
           "children": [
             { "path": "Localizable.xcstrings", "target-membership": [ "OnlyWidgetExtension/resources" ] },
-          ],
-        }, {
-          "kind": "group",
-          "path": "Views",
-          "children": [
-            { "path": "SmallWidget.swift", "target-membership": [ "OnlyWidgetExtension/compile-sources" ] },
-            { "path": "ErrorView.swift", "target-membership": [ "OnlyWidgetExtension/compile-sources" ] },
-            { "path": "SpectrumView.swift", "target-membership": [ "OnlyWidgetExtension/compile-sources" ] },
           ],
         },
         { "path": "OnlyWidgetBundle.swift", "target-membership": [ "OnlyWidgetExtension/compile-sources" ] },
@@ -423,13 +380,7 @@
       ],
       "package-product-members": [
         {
-          "product-name": "Defines",
-          "build-phase": { "build-phase": "frameworks" },
-        }, {
-          "product-name": "OnlySwitchPersistence",
-          "build-phase": { "build-phase": "frameworks" },
-        }, {
-          "product-name": "Switches",
+          "product-name": "OnlyWidgetFeature",
           "build-phase": { "build-phase": "frameworks" },
         }, {
           "product-name": "Utilities",

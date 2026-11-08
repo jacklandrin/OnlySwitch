@@ -45,10 +45,12 @@ struct OnlyWidgetEvolutionEntryView: View {
     }
 }
 
-struct OnlyWidgetEvolution: Widget {
+public struct OnlyWidgetEvolution: Widget {
     let kind: String = "OnlyWidget-Evolution"
 
-    var body: some WidgetConfiguration {
+    public init() {}
+
+    public var body: some WidgetConfiguration {
         AppIntentConfiguration(
             kind: kind,
             intent: SelectEvolutionIntent.self,

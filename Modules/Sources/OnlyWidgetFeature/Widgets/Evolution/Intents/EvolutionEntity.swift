@@ -11,14 +11,14 @@ import OnlySwitchPersistence
 struct EvolutionEntity: AppEntity {
     var id: UUID
     var evolution: EvolutionWidgetModel
-    static var typeDisplayRepresentation: TypeDisplayRepresentation = "Evolution"
-    static var defaultQuery = EvolutionQuery()
+    static let typeDisplayRepresentation: TypeDisplayRepresentation = "Evolution"
+    static let defaultQuery = EvolutionQuery()
 
     var displayRepresentation: DisplayRepresentation {
         DisplayRepresentation(title: "\(evolution.title)")
     }
 
-    static func allEvolutions() async -> [EvolutionEntity]  {
+    @MainActor static func allEvolutions() async -> [EvolutionEntity]  {
         do {
            return try await EvolutionCommandEntity.fetchResult()
                 .compactMap { (entity: EvolutionCommandEntity) -> EvolutionEntity? in

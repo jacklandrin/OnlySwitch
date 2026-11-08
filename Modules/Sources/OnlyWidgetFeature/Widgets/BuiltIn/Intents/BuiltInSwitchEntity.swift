@@ -12,8 +12,8 @@ import Extensions
 struct BuiltInSwitchEntity: AppEntity {
     var id: String
     var type: SwitchType
-    static var typeDisplayRepresentation: TypeDisplayRepresentation = "Built-In Switch"
-    static var defaultQuery = BuildInSwitchQuery()
+    static let typeDisplayRepresentation: TypeDisplayRepresentation = "Built-In Switch"
+    static let defaultQuery = BuildInSwitchQuery()
 
     var displayRepresentation: DisplayRepresentation {
         DisplayRepresentation(title: "\(type.barInfo().title.localized())")

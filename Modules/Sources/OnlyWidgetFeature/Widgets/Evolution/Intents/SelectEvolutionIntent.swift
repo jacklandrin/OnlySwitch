@@ -9,8 +9,8 @@ import AppIntents
 import WidgetKit
 
 struct SelectEvolutionIntent: WidgetConfigurationIntent {
-    static var title: LocalizedStringResource = "Select Evolution"
-    static var description: LocalizedStringResource = "Select Evolution you want to display in the widget."
+    static let title: LocalizedStringResource = "Select Evolution"
+    static let description: LocalizedStringResource = "Select Evolution you want to display in the widget."
     @Parameter(title: "Evolution")
     var evolutionEntity: EvolutionEntity?
 
