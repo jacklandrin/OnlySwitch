@@ -681,18 +681,20 @@ struct SettingsViewTests {
 
 @MainActor
 struct SettingsVMAphroditeLifetimeTests {
-    @Test func retainedStoreFinishesGenerationAfterPresentationIsReleased() async {
+    @Test func retainedStoreFinishesGenerationAfterPresentationIsReleased() async throws {
         guard #available(macOS 26.0, *) else { return }
         let taskID = UUID()
         let continuation = LockIsolated<CheckedContinuation<String, Error>?>(nil)
         let delivered = LockIsolated(0)
         let library = LockIsolated<AphroditeLibrary?>(nil)
         let owner = SettingsVM()
-        owner.aphroditeStore = Store(initialState: AphroditeReducer.State(
+        var initialState = AphroditeReducer.State(
             prompt: "Build a counter",
             selection: .init(provider: .openai, model: "gpt-test"),
             storageState: .ready
-        )) {
+        )
+        initialState.models = [.openai: ["gpt-test"]]
+        owner.aphroditeStore = Store(initialState: initialState) {
             AphroditeReducer()
         } withDependencies: {
             $0.uuid = .constant(taskID)
@@ -717,11 +719,13 @@ struct SettingsVMAphroditeLifetimeTests {
         let operation = owner.aphroditeStore.send(.generateTapped)
         presentation = nil
         #expect(presentation == nil)
+        while continuation.value == nil { await Task.yield() }
         continuation.withValue { $0?.resume(returning: "<!doctype html><html><head><title>Counter</title></head><body></body></html>") }
         await operation.finish()
 
         let recreated = NSHostingView(rootView: AphroditeSettingsView(store: owner.aphroditeStore))
-        #expect(owner.aphroditeStore.apps == IdentifiedArray(uniqueElements: library.value!.apps))
+        let persisted = try #require(library.value)
+        #expect(owner.aphroditeStore.apps == IdentifiedArray(uniqueElements: persisted.apps))
         #expect(delivered.value == 1)
         _ = recreated
 
