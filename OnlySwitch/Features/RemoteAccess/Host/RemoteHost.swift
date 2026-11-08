@@ -11,7 +11,7 @@ actor RemoteHost {
         router: .live
     )
 
-    private let credentialStore: RemoteCredentialStore
+    let credentialStore: RemoteCredentialStore
     private let catalogProvider: RemoteCatalogProvider
     private let router: RemoteCommandRouter
     private let fixedPairingCode: String?
@@ -20,8 +20,8 @@ actor RemoteHost {
     private let installationIDProvider: @Sendable () async throws -> UUID
     private let revocationPrepared: @Sendable () async -> Void
     private let authenticationResultSender: RemotePeerSession.AuthenticationResultSender
-    private let commitStageReached: @Sendable (RemotePairingCommitStage) async -> Void
-    private let authenticatedSessionObserver: @Sendable () -> Void
+    let commitStageReached: @Sendable (RemotePairingCommitStage) async -> Void
+    let authenticatedSessionObserver: @Sendable () -> Void
     private let systemMonitorSnapshots: @Sendable () -> AsyncThrowingStream<SystemMonitorSnapshot, Error>
     private let soundMixerSnapshots: @Sendable () -> AsyncThrowingStream<RemoteSoundMixerSnapshot, Error>
     private let soundMixerCommand: @Sendable (RemoteSoundMixerCommand) async throws -> RemoteSoundMixerSnapshot
@@ -38,15 +38,15 @@ actor RemoteHost {
     private var currentStatus: HostStatus = .stopped
     private var listener: NWListener?
     private var configuration: RemoteHostConfiguration?
-    private var pairing: PairingWindow?
-    private var pairingFailures = 0
-    private var sessions: [UUID: RemotePeerSession] = [:]
-    private var lifecycle = RemoteHostLifecycle()
-    private let statusScheduler: RemoteStatusScheduler
-    private let catalogMonitor: RemoteCatalogMonitor
+    var pairing: PairingWindow?
+    var pairingFailures = 0
+    var sessions: [UUID: RemotePeerSession] = [:]
+    var lifecycle = RemoteHostLifecycle()
+    let statusScheduler: RemoteStatusScheduler
+    let catalogMonitor: RemoteCatalogMonitor
     private var catalogMonitorTask: Task<Void, Never>?
 
-    private init(
+    init(
         credentialStore: RemoteCredentialStore,
         catalogProvider: RemoteCatalogProvider,
         router: RemoteCommandRouter,
@@ -130,91 +130,6 @@ actor RemoteHost {
         for continuation in eventContinuations.values {
             continuation.finish()
         }
-    }
-
-    static func testing(
-        catalog: [RemoteControlDescriptor],
-        catalogProvider injectedCatalogProvider: RemoteCatalogProvider? = nil,
-        router: RemoteCommandRouter,
-        pairingCode: String,
-        peerDeadlines: RemotePeerDeadlines = .init(),
-        credentialStore: RemoteCredentialStore? = nil,
-        listenerFactory: @escaping @Sendable (NWEndpoint.Port) throws -> NWListener = {
-            try NWListener(using: .tcp, on: $0)
-        },
-        installationIDProvider: (@Sendable () async throws -> UUID)? = nil,
-        revocationPrepared: @escaping @Sendable () async -> Void = {},
-        authenticationResultSender: @escaping RemotePeerSession.AuthenticationResultSender = { operation in
-            try await operation()
-        },
-        commitStageReached: @escaping @Sendable (RemotePairingCommitStage) async -> Void = { _ in },
-        authenticatedSessionObserver: @escaping @Sendable () -> Void = {},
-        finalizeRepairObserver: @escaping @Sendable (UUID) -> Void = { _ in },
-        systemMonitorSnapshots: @escaping @Sendable () -> AsyncThrowingStream<SystemMonitorSnapshot, Error> = {
-            MacSystemMonitorCollector.liveClient().snapshots()
-        },
-        soundMixerSnapshots: @escaping @Sendable () -> AsyncThrowingStream<RemoteSoundMixerSnapshot, Error> = {
-            AsyncThrowingStream {
-                $0.finish(throwing: RemoteProtocolError(code: .actionNotSupported, message: "Sound Mixer is unavailable"))
-            }
-        },
-        soundMixerCommand: @escaping @Sendable (RemoteSoundMixerCommand) async throws -> RemoteSoundMixerSnapshot = { _ in
-            throw RemoteProtocolError(code: .actionNotSupported, message: "Sound Mixer is unavailable")
-        },
-        brightnessSnapshots: @escaping @Sendable (UUID) -> AsyncStream<RemoteBrightnessSnapshot> = { _ in
-            AsyncStream { $0.finish() }
-        },
-        brightnessCommand: @escaping @Sendable (RemoteBrightnessCommand) async throws -> RemoteBrightnessSnapshot = { _ in
-            throw RemoteProtocolError(code: .actionNotSupported, message: "Brightness is unavailable")
-        },
-        screenshots: RemoteScreenshotsService = .unavailable,
-        codexUsage: @escaping @Sendable (Bool) async -> Result<RemoteCodexUsageSnapshot, RemoteProtocolError> = { _ in
-            .failure(.init(code: .actionNotSupported, message: "Codex usage is unavailable"))
-        },
-        claudeUsage: @escaping @Sendable () async -> Result<RemoteClaudeUsageSnapshot, RemoteProtocolError> = {
-            .failure(.init(code: .actionNotSupported, message: "Claude usage is unavailable"))
-        }
-    ) -> RemoteHost {
-        let fixedProvider = RemoteCatalogProvider(
-            catalog: { catalog },
-            status: { id, revision in
-                guard let descriptor = catalog.first(where: { $0.id == id }) else {
-                    throw RemoteProtocolError(code: .controlNotFound, message: "Control not found")
-                }
-                return RemoteControlStatus(
-                    id: id,
-                    isAvailable: descriptor.isAvailable,
-                    unavailableReason: descriptor.unavailableReason,
-                    isOn: nil,
-                    secondaryInformation: nil,
-                    isProcessing: false,
-                    revision: revision,
-                    updatedAt: .now
-                )
-            }
-        )
-        let provider = injectedCatalogProvider ?? fixedProvider
-        return RemoteHost(
-            credentialStore: credentialStore ?? .inMemory(finalizeRepairObserver: finalizeRepairObserver),
-            catalogProvider: provider,
-            router: router,
-            fixedPairingCode: pairingCode,
-            peerDeadlines: peerDeadlines,
-            listenerFactory: listenerFactory,
-            installationIDProvider: installationIDProvider,
-            revocationPrepared: revocationPrepared,
-            authenticationResultSender: authenticationResultSender,
-            commitStageReached: commitStageReached,
-            authenticatedSessionObserver: authenticatedSessionObserver,
-            systemMonitorSnapshots: systemMonitorSnapshots,
-            soundMixerSnapshots: soundMixerSnapshots,
-            soundMixerCommand: soundMixerCommand,
-            brightnessSnapshots: brightnessSnapshots,
-            brightnessCommand: brightnessCommand,
-            screenshots: screenshots,
-            codexUsage: codexUsage,
-            claudeUsage: claudeUsage
-        )
     }
 
     func start(configuration: RemoteHostConfiguration) async throws {
@@ -319,43 +234,6 @@ actor RemoteHost {
         try await credentialStore.loadAll()
     }
 
-    func pairingTransactionStateForTesting(_ transactionID: UUID) async throws -> PairingTransactionState {
-        try await credentialStore.transactionStatus(transactionID)
-    }
-
-    func revokePreservingCredentialForTesting(deviceID: UUID) async throws {
-        guard try await credentialStore.prepareRevocation(deviceID) != nil else { return }
-        let affected = lifecycle.revoke(deviceID: deviceID)
-        let peers = affected.compactMap { sessions.removeValue(forKey: $0) }
-        for peer in peers { await peer.close() }
-    }
-
-    func revocationVerifierForTesting(deviceID: UUID) async throws -> Data? {
-        try await credentialStore.loadRevocationVerifier(deviceID)
-    }
-
-    func isRevokedForTesting(deviceID: UUID) -> Bool {
-        lifecycle.isRevoked(deviceID)
-    }
-
-    func deleteCredentialForTesting(deviceID: UUID, matching credential: Data) async throws {
-        try await credentialStore.delete(deviceID, matchingCredential: credential)
-    }
-
-    @discardableResult
-    func refreshCatalogForTesting() async throws -> RemoteCatalogSnapshot? {
-        try await catalogMonitor.refresh()
-    }
-
-    func closeSessionsForTesting() async {
-        let peers = Array(sessions.values)
-        for peer in peers { await peer.close() }
-    }
-
-    func authenticatedSessionCountForTesting() -> Int {
-        lifecycle.authenticatedCount
-    }
-
     private func startListener(
         configuration: RemoteHostConfiguration,
         advertise: Bool
@@ -444,7 +322,7 @@ actor RemoteHost {
         resolvedScreenshots = resolvedScreenshots ?? live
     }
 
-    private func publish(_ event: RemoteHostEvent) {
+    func publish(_ event: RemoteHostEvent) {
         if case let .statusChanged(status) = event {
             currentStatus = status
         }
@@ -541,129 +419,6 @@ actor RemoteHost {
         Task { await peer.run() }
     }
 
-    func activePairingWindow() -> PairingWindow? {
-        guard let pairing, pairing.expiresAt > Date(), pairingFailures < 5 else {
-            if self.pairing != nil {
-                self.pairing = nil
-                publish(.pairingChanged(nil))
-            }
-            return nil
-        }
-        return pairing
-    }
-
-    private func pairingSnapshot(
-        deviceID: UUID,
-        generation: UInt64
-    ) -> RemotePairingSnapshot? {
-        lifecycle.pairingSnapshot(for: deviceID, generation: generation)
-    }
-
-    private func validatePairing(_ snapshot: RemotePairingSnapshot) -> Bool {
-        lifecycle.validateRepair(snapshot)
-    }
-
-    private func commitPairing(_ snapshot: RemotePairingSnapshot) async -> Bool {
-        await commitStageReached(.duringLifecycleCommit)
-        let committed = lifecycle.commitRepair(snapshot)
-        await commitStageReached(.afterLifecycleCommit)
-        return committed
-    }
-
-    private func rollbackPairing(_ snapshot: RemotePairingSnapshot) -> Bool {
-        lifecycle.rollbackRepair(snapshot)
-    }
-
-    func recordPairingFailure() {
-        pairingFailures += 1
-        if pairingFailures >= 5 { cancelPairing() }
-    }
-
-    func consumePairing(code: String) -> Bool {
-        guard let current = activePairingWindow(), current.code == code else { return false }
-        cancelPairing()
-        return true
-    }
-
-    private func sessionAuthenticated(_ sessionID: UUID, deviceID: UUID, generation: UInt64) async -> Bool {
-        authenticatedSessionObserver()
-        guard lifecycle.mayAuthorize(
-            sessionID: sessionID,
-            deviceID: deviceID,
-            generation: generation
-        ) else { return false }
-        let credentialExists = (try? await credentialStore.load(deviceID)) != nil
-        guard lifecycle.authorize(
-            sessionID: sessionID,
-            deviceID: deviceID,
-            generation: generation,
-            credentialExists: credentialExists
-        ) else { return false }
-        return true
-    }
-
-    private func sessionAuthenticationConfirmed(
-        _ sessionID: UUID,
-        deviceID: UUID,
-        generation: UInt64
-    ) async -> Bool {
-        guard lifecycle.isAuthorized(
-            sessionID: sessionID,
-            deviceID: deviceID,
-            generation: generation
-        ) else { return false }
-        publish(.connectionCountChanged(lifecycle.authenticatedCount))
-        await catalogMonitor.setAuthenticatedSessionCount(lifecycle.authenticatedCount)
-        if let devices = try? await credentialStore.loadAll() {
-            guard lifecycle.isAuthorized(
-                sessionID: sessionID,
-                deviceID: deviceID,
-                generation: generation
-            ) else { return false }
-            publish(.devicesChanged(devices))
-        }
-        return lifecycle.isAuthorized(
-            sessionID: sessionID,
-            deviceID: deviceID,
-            generation: generation
-        )
-    }
-
-    private func sessionAuthenticationIsAuthorized(
-        _ sessionID: UUID,
-        deviceID: UUID,
-        generation: UInt64
-    ) -> Bool {
-        lifecycle.isAuthorized(
-            sessionID: sessionID,
-            deviceID: deviceID,
-            generation: generation
-        )
-    }
-
-    private func sessionEnded(_ id: UUID) async {
-        let previousCount = lifecycle.authenticatedCount
-        _ = lifecycle.end(sessionID: id)
-        sessions.removeValue(forKey: id)
-        await statusScheduler.remove(sessionID: id)
-        if lifecycle.authenticatedCount != previousCount {
-            await catalogMonitor.setAuthenticatedSessionCount(lifecycle.authenticatedCount)
-            publish(.connectionCountChanged(lifecycle.authenticatedCount))
-        }
-    }
-
-    private func evictSession(_ id: UUID) async {
-        let previousCount = lifecycle.authenticatedCount
-        _ = lifecycle.end(sessionID: id)
-        let peer = sessions.removeValue(forKey: id)
-        await statusScheduler.remove(sessionID: id)
-        await peer?.close()
-        if lifecycle.authenticatedCount != previousCount {
-            await catalogMonitor.setAuthenticatedSessionCount(lifecycle.authenticatedCount)
-            publish(.connectionCountChanged(lifecycle.authenticatedCount))
-        }
-    }
-
     private func listenerFailed(generation: UInt64) async {
         guard lifecycle.isActive(generation: generation) else { return }
         let sessionIDs = lifecycle.fail(generation: generation)
@@ -702,28 +457,4 @@ actor RemoteHost {
 
     var hasOwnedListener: Bool { listener != nil }
 
-}
-
-private final class HostContinuationGate: @unchecked Sendable {
-    private let lock = NSLock()
-    private var continuation: CheckedContinuation<Void, Swift.Error>?
-
-    init(_ continuation: CheckedContinuation<Void, Swift.Error>) {
-        self.continuation = continuation
-    }
-
-    func resume(returning value: Void) {
-        take()?.resume(returning: value)
-    }
-
-    func resume(throwing error: Swift.Error) {
-        take()?.resume(throwing: error)
-    }
-
-    private func take() -> CheckedContinuation<Void, Swift.Error>? {
-        lock.lock()
-        defer { lock.unlock() }
-        defer { continuation = nil }
-        return continuation
-    }
 }
