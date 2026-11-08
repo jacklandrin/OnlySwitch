@@ -3,8 +3,8 @@ import ComposableArchitecture
 import CoreGraphics
 import Foundation
 
-/// The Screenshots tab: library, capture takeover toggle, copy/open/pin/delete/delete-all and fly-in
-/// orchestration. One session store lives in `SettingsVM`, so the capture subscription is app-lifetime.
+/// The Screenshots & Record tab: library of screenshots and screen recordings, capture takeover toggle,
+/// copy/open/pin/delete/delete-all and fly-in orchestration. One session store lives in `SettingsVM`, so the capture subscription is app-lifetime.
 @Reducer
 public struct ScreenshotsFeature {
     @ObservableState
@@ -184,7 +184,8 @@ public struct ScreenshotsFeature {
                 return setItems(items, &state)
 
             case let .editTapped(id):
-                guard contains(id, state) else { return .none }
+                // Recordings are listed, pinned and deleted like screenshots but never edited.
+                guard let item = state.items.first(where: { $0.id == id }), !item.isRecording else { return .none }
                 return .run { [presentation] _ in await presentation.openEditor(id) }
 
             case let .itemsChanged(items):

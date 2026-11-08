@@ -37,13 +37,16 @@ public struct StandardUserDefaultsDomain: PreferenceDomain {
 public struct ScreenCapturePreferences: Sendable {
     static let locationKey = "location"
     static let screenshotLocationKey = "location-screenshot"
+    static let screenRecordingLocationKey = "location-screenrecording"
     static let showThumbnailKey = "show-thumbnail"
     private let domain: any PreferenceDomain
     private let backup: any PreferenceDomain
     private let folder: URL
     private let activeLocationKey: String
+    private let recordingLocationKey: String?
 
-    public init(domain: any PreferenceDomain, backup: any PreferenceDomain, folder: URL, locationKey: String? = nil) {
+    /// `recordingLocationKey`: `.none` uses the OS default (macOS 27+ only); `.some(nil)` leaves recordings alone.
+    public init(domain: any PreferenceDomain, backup: any PreferenceDomain, folder: URL, locationKey: String? = nil, recordingLocationKey: String?? = .none) {
         self.domain = domain
         self.backup = backup
         self.folder = folder
@@ -54,6 +57,12 @@ public struct ScreenCapturePreferences: Sendable {
         } else {
             activeLocationKey = Self.locationKey
         }
+        switch recordingLocationKey {
+        case let .some(key): self.recordingLocationKey = key
+        case .none:
+            // Before macOS 27, `location` covers recordings too.
+            if #available(macOS 27, *) { self.recordingLocationKey = Self.screenRecordingLocationKey } else { self.recordingLocationKey = nil }
+        }
     }
 
     public static func live(folder: URL) -> Self {
@@ -62,9 +71,37 @@ public struct ScreenCapturePreferences: Sendable {
 
     public var isEnabled: Bool { backup.value(forKey: UserDefaults.Key.screenshotsCaptureEnabled) as? Bool == true }
 
+    /// Collection was enabled by a version that did not own the recording location yet. A screenshot location
+    /// changed elsewhere is respected: the user reapplies explicitly instead.
+    /// A missing or corrupt backup is never migrated, so OnlySwitch's own values are not recorded as the user's.
+    public var needsRecordingMigration: Bool {
+        guard isEnabled, recordingLocationKey != nil, let previous = storedBackup() else { return false }
+        return previous.screenRecordingLocationBackedUp != true && isOurLocation(domain.value(forKey: activeLocationKey))
+    }
+
+    /// Backs up and redirects only the recording location, leaving every other setting as the user left it.
+    /// On a failed synchronize the recording location and the backup are reverted.
+    public func migrateRecordingLocation() throws {
+        guard needsRecordingMigration, let recordingLocationKey, var previous = storedBackup() else { return }
+        let originalBackup = backup.value(forKey: UserDefaults.Key.screenshotsPreviousCaptureSettings)
+        let current = domain.value(forKey: recordingLocationKey) as? String
+        previous.screenRecordingLocation = current
+        previous.screenRecordingLocationBackedUp = true
+        guard let data = try? JSONEncoder().encode(previous) else { throw ScreenshotFailure(key: ScreenshotFailure.captureSettingsFailedKey) }
+        backup.set(data, forKey: UserDefaults.Key.screenshotsPreviousCaptureSettings)
+        domain.set(folder.path, forKey: recordingLocationKey)
+        guard domain.synchronize() else {
+            domain.set(current, forKey: recordingLocationKey)
+            _ = domain.synchronize()
+            backup.set(originalBackup, forKey: UserDefaults.Key.screenshotsPreviousCaptureSettings)
+            throw ScreenshotFailure(key: ScreenshotFailure.captureSettingsFailedKey)
+        }
+    }
+
     public func status(enabledFlag: Bool) -> ScreenshotCaptureStatus {
         guard enabledFlag else { return .disabled }
-        return isOurLocation(domain.value(forKey: activeLocationKey)) ? .active : .changedElsewhere
+        let recordingsOurs = recordingLocationKey.map { isOurLocation(domain.value(forKey: $0)) } ?? true
+        return isOurLocation(domain.value(forKey: activeLocationKey)) && recordingsOurs ? .active : .changedElsewhere
     }
 
     /// Backs up current values once, then writes the active destination and show-thumbnail = false. On a failed
@@ -80,9 +117,14 @@ public struct ScreenCapturePreferences: Sendable {
             previous.screenshotLocation = current.screenshotLocation
             previous.screenshotLocationBackedUp = true
         }
+        if recordingLocationKey != nil, previous.screenRecordingLocationBackedUp != true {
+            previous.screenRecordingLocation = current.screenRecordingLocation
+            previous.screenRecordingLocationBackedUp = true
+        }
         guard let data = try? JSONEncoder().encode(previous) else { throw ScreenshotFailure(key: ScreenshotFailure.captureSettingsFailedKey) }
         backup.set(data, forKey: UserDefaults.Key.screenshotsPreviousCaptureSettings)
         domain.set(folder.path, forKey: activeLocationKey)
+        if let recordingLocationKey { domain.set(folder.path, forKey: recordingLocationKey) }
         domain.set(false, forKey: Self.showThumbnailKey)
         guard domain.synchronize() else {
             write(current)
@@ -98,11 +140,14 @@ public struct ScreenCapturePreferences: Sendable {
     public func disable() throws {
         // A lost or corrupt backup falls back to the system defaults (keys absent) rather than leaving
         // captures redirected to the OnlySwitch folder.
-        let previous = storedBackup() ?? (isEnabled ? ScreenshotCaptureSettings(location: nil, showThumbnail: nil) : nil)
+        let previous = storedBackup() ?? (isEnabled ? ScreenshotCaptureSettings(location: nil, showThumbnail: nil, screenRecordingLocation: nil) : nil)
         if let previous {
             if isOurLocation(domain.value(forKey: Self.locationKey)) { domain.set(previous.location, forKey: Self.locationKey) }
             if previous.screenshotLocationBackedUp == true, isOurLocation(domain.value(forKey: Self.screenshotLocationKey)) {
                 domain.set(previous.screenshotLocation, forKey: Self.screenshotLocationKey)
+            }
+            if previous.screenRecordingLocationBackedUp == true, isOurLocation(domain.value(forKey: ownedRecordingKey)) {
+                domain.set(previous.screenRecordingLocation, forKey: ownedRecordingKey)
             }
             if domain.value(forKey: Self.showThumbnailKey) as? Bool == false { domain.set(previous.showThumbnail, forKey: Self.showThumbnailKey) }
             guard domain.synchronize() else { throw ScreenshotFailure(key: ScreenshotFailure.captureSettingsFailedKey) }
@@ -114,14 +159,18 @@ public struct ScreenCapturePreferences: Sendable {
     // MARK: - Private
 
     private func currentSettings() -> ScreenshotCaptureSettings {
-        ScreenshotCaptureSettings(location: domain.value(forKey: Self.locationKey) as? String, screenshotLocation: domain.value(forKey: Self.screenshotLocationKey) as? String, showThumbnail: domain.value(forKey: Self.showThumbnailKey) as? Bool)
+        ScreenshotCaptureSettings(location: domain.value(forKey: Self.locationKey) as? String, screenshotLocation: domain.value(forKey: Self.screenshotLocationKey) as? String, showThumbnail: domain.value(forKey: Self.showThumbnailKey) as? Bool, screenRecordingLocation: domain.value(forKey: ownedRecordingKey) as? String, screenRecordingLocationBackedUp: recordingLocationKey == nil ? nil : true)
     }
 
     private func write(_ settings: ScreenshotCaptureSettings) {
         domain.set(settings.location, forKey: Self.locationKey)
         domain.set(settings.screenshotLocation, forKey: Self.screenshotLocationKey)
         domain.set(settings.showThumbnail, forKey: Self.showThumbnailKey)
+        domain.set(settings.screenRecordingLocation, forKey: ownedRecordingKey)
     }
+
+    /// The key the recording backup belongs to: the configured one, or the macOS 27 key when recordings are not redirected.
+    private var ownedRecordingKey: String { recordingLocationKey ?? Self.screenRecordingLocationKey }
 
     private func storedBackup() -> ScreenshotCaptureSettings? {
         (backup.value(forKey: UserDefaults.Key.screenshotsPreviousCaptureSettings) as? Data).flatMap { try? JSONDecoder().decode(ScreenshotCaptureSettings.self, from: $0) }

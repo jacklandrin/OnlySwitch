@@ -855,7 +855,10 @@ actor RemoteConnectionRuntime {
     func fetchScreenshotImage(
         _ invocation: RemoteScreenshotInvocation<RemoteScreenshotImageRequest>
     ) async throws -> RemoteScreenshotImagePayload {
-        try await screenshotRequest(invocation) { try await $0.fetchScreenshotImage(invocation.request) }
+        // The delivered file belongs to the caller only once it is returned.
+        try await screenshotRequest(invocation, discard: { try? FileManager.default.removeItem(at: $0.fileURL) }) {
+            try await $0.fetchScreenshotImage(invocation.request)
+        }
     }
 
     func deleteScreenshots(
@@ -865,8 +868,10 @@ actor RemoteConnectionRuntime {
     }
 
     /// Timeouts live in the session's `RemoteScreenshotResponses` (per reply, or per chunk for images).
+    /// `discard` releases a result that is dropped because the session changed while it was in flight.
     private func screenshotRequest<Request: Equatable & Sendable, Value: Sendable>(
         _ invocation: RemoteScreenshotInvocation<Request>,
+        discard: (Value) -> Void = { _ in },
         _ operation: @Sendable (RemoteClientSession) async throws -> Value
     ) async throws -> Value {
         guard selected?.id == invocation.macID, let session else {
@@ -874,6 +879,7 @@ actor RemoteConnectionRuntime {
         }
         let result = try await operation(session)
         guard selected?.id == invocation.macID, self.session === session else {
+            discard(result)
             throw RemoteProtocolError(code: .authenticationFailed, message: "The selected Mac session changed")
         }
         return result

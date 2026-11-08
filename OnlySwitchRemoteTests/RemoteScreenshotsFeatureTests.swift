@@ -10,9 +10,11 @@ struct RemoteScreenshotsFeatureTests {
     private let otherMacID = UUID(uuidString: "00000000-0000-0000-0000-00000000E002")!
     private let first = Self.item(0xE101, createdAt: 2)
     private let second = Self.item(0xE102, createdAt: 1)
+    private let recording = Self.item(0xE103, createdAt: 3, fileName: "clip.mov", contentType: "com.apple.quicktime-movie", durationSeconds: 12)
     private let thumbURL = URL(fileURLWithPath: "/tmp/thumb.jpg")
     private let imageURL = URL(fileURLWithPath: "/tmp/a.png")
     private let otherImageURL = URL(fileURLWithPath: "/tmp/b.png")
+    private let movieURL = URL(fileURLWithPath: "/tmp/clip.mov")
 
     // MARK: Streaming lifecycle
 
@@ -658,6 +660,65 @@ struct RemoteScreenshotsFeatureTests {
         }
     }
 
+    // MARK: Recordings
+
+    @Test func copyIsIgnoredForRecordings() async {
+        var state = streamingState()
+        state.library = .init(revision: 1, isCollectionEnabled: true, items: [recording])
+        // The image and pasteboard clients are unimplemented: a download or copy fails the test.
+        let store = makeStore(state)
+
+        await store.send(.copyTapped(recording.id))
+    }
+
+    @Test func copyIsIgnoredForCachedRecordings() async {
+        var state = streamingState()
+        state.library = .init(revision: 1, isCollectionEnabled: true, items: [recording])
+        state.imageURLs = [recording.id: movieURL]
+        let store = makeStore(state)
+
+        await store.send(.copyTapped(recording.id))
+    }
+
+    @Test func tappingRecordingDownloadsForPlayback() async {
+        var state = streamingState()
+        state.library = .init(revision: 1, isCollectionEnabled: true, items: [recording])
+        let store = makeStore(state) {
+            $0.remoteScreenshotImages.load = { macID, item in
+                #expect(macID == self.macID)
+                #expect(item == self.recording)
+                return self.movieURL
+            }
+        }
+
+        await store.send(.itemTapped(recording.id)) {
+            $0.selectedItemID = self.recording.id
+            $0.downloadingItemIDs = [self.recording.id]
+        }
+        await store.receive(.imageLoaded(generation: 0, itemID: recording.id, movieURL)) {
+            $0.downloadingItemIDs = []
+            $0.imageURLs = [self.recording.id: self.movieURL]
+        }
+    }
+
+    @Test func unavailableRecordingUsesItemCopy() async {
+        var state = streamingState()
+        state.library = .init(revision: 1, isCollectionEnabled: true, items: [recording])
+        let error = RemoteProtocolError(code: .controlUnavailable, message: "English diagnostic")
+        let store = makeStore(state) {
+            $0.remoteScreenshotImages.load = { _, _ in throw error }
+        }
+
+        await store.send(.itemTapped(recording.id)) {
+            $0.selectedItemID = self.recording.id
+            $0.downloadingItemIDs = [self.recording.id]
+        }
+        await store.receive(.imageFailed(generation: 0, itemID: recording.id, error)) {
+            $0.downloadingItemIDs = []
+            $0.operationError = "This item changed on the Mac or is too large to transfer."
+        }
+    }
+
     @Test func supersededDownloadIsSilentAndCanBeRetried() async {
         var state = streamingState()
         state.library = .init(revision: 1, isCollectionEnabled: true, items: [first, second])
@@ -829,7 +890,7 @@ struct RemoteScreenshotsFeatureTests {
             fetchImage: { _ in
                 fetches.withValue { $0 += 1 }
                 for await _ in release { break }
-                return .init(contentType: "public.png", data: Data([1, 2, 3]))
+                return .init(contentType: "public.png", fileURL: self.imageURL)
             },
             makeRequestID: { UUID() }
         )
@@ -1088,15 +1149,22 @@ struct RemoteScreenshotsFeatureTests {
 
     // MARK: Helpers
 
-    private static func item(_ suffix: Int, createdAt: Double) -> RemoteScreenshotItem {
+    private static func item(
+        _ suffix: Int,
+        createdAt: Double,
+        fileName: String? = nil,
+        contentType: String = "public.png",
+        durationSeconds: Double? = nil
+    ) -> RemoteScreenshotItem {
         RemoteScreenshotItem(
             id: UUID(uuidString: String(format: "00000000-0000-0000-0000-%012X", suffix))!,
-            fileName: "\(suffix).png",
-            contentType: "public.png",
+            fileName: fileName ?? "\(suffix).png",
+            contentType: contentType,
             createdAt: .init(timeIntervalSince1970: createdAt),
             isPinned: false,
             revision: 0,
-            byteCount: 3
+            byteCount: 3,
+            durationSeconds: durationSeconds
         )
     }
 

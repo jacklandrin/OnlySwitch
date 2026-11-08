@@ -1,5 +1,5 @@
 public struct RemoteProtocolVersion: Codable, Equatable, Sendable {
-    public static let current = Self(major: 1, minor: 9)
+    public static let current = Self(major: 1, minor: 10)
 
     public let major: UInt16
     public let minor: UInt16
@@ -35,4 +35,6 @@ public struct RemoteProtocolVersion: Codable, Equatable, Sendable {
     public var supportsBrightnessRemote: Bool { minor >= 8 }
     /// Screenshot library stream, thumbnails, chunked originals and delete.
     public var supportsScreenshotsRemote: Bool { minor >= 9 }
+    /// Screen recordings in the screenshot library (larger, file-assembled originals).
+    public var supportsScreenRecordingsRemote: Bool { minor >= 10 }
 }

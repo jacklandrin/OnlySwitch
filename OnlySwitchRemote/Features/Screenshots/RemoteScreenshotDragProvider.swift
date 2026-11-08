@@ -12,7 +12,7 @@ struct RemoteScreenshotDragImages: Equatable, Sendable {
     static func == (lhs: Self, rhs: Self) -> Bool { true }
 }
 
-/// Builds drag item providers for screenshots. It only bridges to the image client: no reducer
+/// Builds drag item providers for screenshots and recordings. It only bridges to the image client: no reducer
 /// state is read or changed, and a cancelled or superseded load simply fails the drop.
 enum RemoteScreenshotDragProvider {
     /// Registers the original as a file of its own type. The file is resolved only when a drop target
@@ -30,7 +30,8 @@ enum RemoteScreenshotDragProvider {
     ) -> NSItemProvider {
         let provider = NSItemProvider()
         provider.suggestedName = (item.fileName as NSString).deletingPathExtension
-        let type = UTType(item.contentType).flatMap { $0.conforms(to: .image) ? $0 : nil } ?? .image
+        // The item's own image or movie type; anything else is offered as a generic image.
+        let type = UTType(item.contentType).flatMap { $0.conforms(to: .image) || $0.conforms(to: .movie) ? $0 : nil } ?? .image
         provider.registerFileRepresentation(
             forTypeIdentifier: type.identifier,
             fileOptions: [],

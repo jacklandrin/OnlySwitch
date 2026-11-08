@@ -7,7 +7,7 @@ extension RemoteAppPage {
         case .systemMonitor: "System Monitor"
         case .soundMixer: "Sound Mixer"
         case .brightness: "Brightness"
-        case .screenshots: "Screenshots"
+        case .screenshots: "Screenshots & Record"
         case .codexUsage: "Codex Usage"
         case .claudeUsage: "Claude Usage"
         case .aphrodite: "Aphrodite"

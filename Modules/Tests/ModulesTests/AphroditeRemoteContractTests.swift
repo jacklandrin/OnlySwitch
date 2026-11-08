@@ -5,7 +5,7 @@ import Testing
 struct AphroditeRemoteContractTests {
     @Test func capabilityNegotiationExcludesLegacyPeers() throws {
         let legacy = RemoteProtocolVersion(major: 1, minor: 5)
-        let current = RemoteProtocolVersion(major: 1, minor: 9)
+        let current = RemoteProtocolVersion(major: 1, minor: 10)
         #expect(RemoteProtocolVersion.current == current)
         #expect(legacy.supportsAphroditeRemote == false)
         #expect(current.supportsAphroditeRemote)

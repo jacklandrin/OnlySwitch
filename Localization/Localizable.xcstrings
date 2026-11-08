@@ -82162,6 +82162,756 @@
         }
       }
     },
+    "Screenshots & Record" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Snímky a záznamy obrazovky"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildschirmfotos & Aufnahmen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Screenshots & Record"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Capturas y grabaciones"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mga Screenshot at Recording"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Captures et enregistrements"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Snimke i videozapisi zaslona"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Screenshot e registrazioni"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "スクリーンショットと録画"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "스크린샷 및 녹화"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schermafbeeldingen & opnamen"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zrzuty i nagrania ekranu"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Capturas e gravações de tela"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Снимки и запись экрана"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Snímky a záznamy obrazovky"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sawir-shaashadeed & Duubis"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ekran Görüntüleri ve Kayıtlar"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Знімки та запис екрана"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "截屏与录屏"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "截圖與錄影"
+          }
+        }
+      }
+    },
+    "Screen Recording Accessibility Label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Záznam obrazovky, %@"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildschirmaufnahme, %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Screen recording, %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grabación de pantalla, %@"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Screen recording, %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enregistrement de l’écran, %@"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videozapis zaslona, %@"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registrazione dello schermo, %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "画面収録、%@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "화면 기록, %@"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schermopname, %@"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nagranie ekranu, %@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gravação de tela, %@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Запись экрана, %@"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Záznam obrazovky, %@"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duubista shaashadda, %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ekran kaydı, %@"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Запис екрана, %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "屏幕录制，%@"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "螢幕錄影，%@"
+          }
+        }
+      }
+    },
+    "Open Item" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otevřít"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öffnen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buksan"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrir"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otvori"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apri"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開く"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "열기"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Openen"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otwórz"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Открыть"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otvoriť"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fur"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aç"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Відкрити"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打開"
+          }
+        }
+      }
+    },
+    "Pin Item" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Připnout"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anheften"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pin"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fijar"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I-pin"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Épingler"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prikvači"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fissa"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "固定"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "고정"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vastzetten"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Przypnij"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fixar"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Закрепить"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pripnúť"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dheji"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sabitle"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Закріпити"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "置顶"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "釘選"
+          }
+        }
+      }
+    },
+    "Unpin Item" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odepnout"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nicht mehr anheften"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unpin"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dejar de fijar"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I-unpin"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Désépingler"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otkvači"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non fissare più"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "固定を解除"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "고정 해제"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Losmaken"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odepnij"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desafixar"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Открепить"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odopnúť"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ka qaad dhejinta"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sabitlemeyi Kaldır"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Відкріпити"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消置顶"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消釘選"
+          }
+        }
+      }
+    },
+    "Delete Item" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Smazat"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Löschen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Burahin"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izbriši"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elimina"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "削除"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "삭제"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verwijderen"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usuń"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apagar"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Удалить"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vymazať"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tirtir"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sil"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Видалити"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刪除"
+          }
+        }
+      }
+    },
     "Screenshots Show Tab" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -82293,121 +83043,121 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Shromažďovat systémové snímky obrazovky"
+            "value" : "Shromažďovat snímky a záznamy obrazovky"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Systembildschirmfotos sammeln"
+            "value" : "Bildschirmfotos und Aufnahmen sammeln"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Collect system screenshots"
+            "value" : "Collect screenshots and recordings"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Recopilar capturas del sistema"
+            "value" : "Recopilar capturas y grabaciones"
           }
         },
         "fil" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kolektahin ang mga screenshot ng system"
+            "value" : "Kolektahin ang mga screenshot at recording"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Collecter les captures d’écran du système"
+            "value" : "Collecter les captures et les enregistrements"
           }
         },
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Prikupljaj snimke zaslona sustava"
+            "value" : "Prikupljaj snimke i videozapise zaslona"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Raccogli gli screenshot di sistema"
+            "value" : "Raccogli screenshot e registrazioni"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "システムのスクリーンショットを収集"
+            "value" : "スクリーンショットと録画を収集"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "시스템 스크린샷 수집"
+            "value" : "스크린샷 및 녹화 수집"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Systeemschermafbeeldingen verzamelen"
+            "value" : "Schermafbeeldingen en opnamen verzamelen"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zbieraj systemowe zrzuty ekranu"
+            "value" : "Zbieraj zrzuty i nagrania ekranu"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Coletar capturas de tela do sistema"
+            "value" : "Coletar capturas e gravações"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Собирать системные снимки экрана"
+            "value" : "Собирать снимки и записи экрана"
           }
         },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zhromažďovať systémové snímky obrazovky"
+            "value" : "Zhromažďovať snímky a záznamy obrazovky"
           }
         },
         "so" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ururi sawir-shaashadeedka nidaamka"
+            "value" : "Ururi sawir-shaashadeed iyo duubisyo"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sistem ekran görüntülerini topla"
+            "value" : "Ekran görüntülerini ve kayıtları topla"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Збирати системні знімки екрана"
+            "value" : "Збирати знімки та записи екрана"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "收集系统截屏"
+            "value" : "收集截屏和录屏"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "收集系統截圖"
+            "value" : "收集截圖和錄影"
           }
         }
       }
@@ -82418,121 +83168,121 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "OnlySwitch ukládá nové snímky obrazovky do vlastní složky a vypíná plovoucí miniaturu. Vypnutím obnovíte předchozí nastavení snímků obrazovky."
+            "value" : "OnlySwitch ukládá nové snímky a záznamy obrazovky (včetně těch z iOS Simulatoru) do vlastní složky a vypíná plovoucí miniaturu. Vypnutím obnovíte předchozí nastavení."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "OnlySwitch speichert neue Bildschirmfotos in einem eigenen Ordner und deaktiviert die schwebende Miniatur. Beim Ausschalten werden deine vorherigen Bildschirmfoto-Einstellungen wiederhergestellt."
+            "value" : "OnlySwitch speichert neue Bildschirmfotos und Bildschirmaufnahmen (auch aus dem iOS-Simulator) in einem eigenen Ordner und deaktiviert die schwebende Miniatur. Beim Ausschalten werden deine vorherigen Einstellungen wiederhergestellt."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "OnlySwitch saves new screenshots to its own folder and turns off the floating thumbnail. Turning this off restores your previous screenshot settings."
+            "value" : "OnlySwitch saves new screenshots and screen recordings (including iOS Simulator ones) to its own folder and turns off the floating thumbnail. Turning this off restores your previous settings."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "OnlySwitch guarda las nuevas capturas en su propia carpeta y desactiva la miniatura flotante. Al desactivarlo, se restaura tu configuración de capturas anterior."
+            "value" : "OnlySwitch guarda las nuevas capturas y grabaciones de pantalla (incluidas las del simulador de iOS) en su propia carpeta y desactiva la miniatura flotante. Al desactivarlo, se restaura tu configuración anterior."
           }
         },
         "fil" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sine-save ng OnlySwitch ang mga bagong screenshot sa sarili nitong folder at ino-off ang lumulutang na thumbnail. Kapag in-off ito, maibabalik ang dati mong mga setting ng screenshot."
+            "value" : "Sine-save ng OnlySwitch ang mga bagong screenshot at screen recording (kasama ang mula sa iOS Simulator) sa sarili nitong folder at ino-off ang lumulutang na thumbnail. Kapag in-off ito, maibabalik ang dati mong mga setting."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "OnlySwitch enregistre les nouvelles captures d’écran dans son propre dossier et désactive la vignette flottante. La désactivation rétablit vos réglages de capture précédents."
+            "value" : "OnlySwitch enregistre les nouvelles captures et les nouveaux enregistrements de l’écran (y compris ceux du simulateur iOS) dans son propre dossier et désactive la vignette flottante. La désactivation rétablit vos réglages précédents."
           }
         },
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "OnlySwitch sprema nove snimke zaslona u vlastitu mapu i isključuje plutajuću minijaturu. Isključivanjem se vraćaju vaše prethodne postavke snimaka zaslona."
+            "value" : "OnlySwitch sprema nove snimke i videozapise zaslona (uključujući one iz iOS simulatora) u vlastitu mapu i isključuje plutajuću minijaturu. Isključivanjem se vraćaju vaše prethodne postavke."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "OnlySwitch salva i nuovi screenshot in una propria cartella e disattiva la miniatura mobile. Disattivando l’opzione vengono ripristinate le impostazioni precedenti degli screenshot."
+            "value" : "OnlySwitch salva i nuovi screenshot e le nuove registrazioni dello schermo (incluse quelle del Simulatore iOS) in una propria cartella e disattiva la miniatura mobile. Disattivando l’opzione vengono ripristinate le impostazioni precedenti."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "OnlySwitch は新しいスクリーンショットを専用フォルダに保存し、フローティングサムネールをオフにします。オフにすると、以前のスクリーンショット設定に戻ります。"
+            "value" : "OnlySwitch は新しいスクリーンショットと画面収録（iOS シミュレータのものを含む）を専用フォルダに保存し、フローティングサムネールをオフにします。オフにすると、以前の設定に戻ります。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "OnlySwitch는 새 스크린샷을 자체 폴더에 저장하고 플로팅 썸네일을 끕니다. 이 옵션을 끄면 이전 스크린샷 설정이 복원됩니다."
+            "value" : "OnlySwitch는 새 스크린샷과 화면 기록(iOS 시뮬레이터 포함)을 자체 폴더에 저장하고 플로팅 썸네일을 끕니다. 이 옵션을 끄면 이전 설정이 복원됩니다."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "OnlySwitch bewaart nieuwe schermafbeeldingen in een eigen map en schakelt de zwevende miniatuur uit. Als je dit uitschakelt, worden je vorige instellingen voor schermafbeeldingen hersteld."
+            "value" : "OnlySwitch bewaart nieuwe schermafbeeldingen en schermopnamen (ook die van de iOS-simulator) in een eigen map en schakelt de zwevende miniatuur uit. Als je dit uitschakelt, worden je vorige instellingen hersteld."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "OnlySwitch zapisuje nowe zrzuty ekranu we własnym folderze i wyłącza pływającą miniaturę. Wyłączenie tej opcji przywraca poprzednie ustawienia zrzutów ekranu."
+            "value" : "OnlySwitch zapisuje nowe zrzuty i nagrania ekranu (także z symulatora iOS) we własnym folderze i wyłącza pływającą miniaturę. Wyłączenie tej opcji przywraca poprzednie ustawienia."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "O OnlySwitch salva novas capturas de tela em sua própria pasta e desativa a miniatura flutuante. Desativar esta opção restaura seus ajustes anteriores de captura de tela."
+            "value" : "O OnlySwitch salva novas capturas e gravações de tela (incluindo as do Simulador do iOS) em sua própria pasta e desativa a miniatura flutuante. Desativar esta opção restaura seus ajustes anteriores."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "OnlySwitch сохраняет новые снимки экрана в собственную папку и отключает плавающую миниатюру. При выключении восстанавливаются прежние настройки снимков экрана."
+            "value" : "OnlySwitch сохраняет новые снимки и записи экрана (включая записи из симулятора iOS) в собственную папку и отключает плавающую миниатюру. При выключении восстанавливаются прежние настройки."
           }
         },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "OnlySwitch ukladá nové snímky obrazovky do vlastného priečinka a vypína plávajúcu miniatúru. Vypnutím sa obnovia predchádzajúce nastavenia snímok obrazovky."
+            "value" : "OnlySwitch ukladá nové snímky a záznamy obrazovky (vrátane tých z iOS Simulatora) do vlastného priečinka a vypína plávajúcu miniatúru. Vypnutím sa obnovia predchádzajúce nastavenia."
           }
         },
         "so" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "OnlySwitch wuxuu sawir-shaashadeedka cusub ku kaydiyaa galkiisa gaarka ah wuxuuna damiyaa sawirka yar ee sabaynaya. Damintiisu waxay soo celinaysaa dejimihii hore ee sawir-shaashadda."
+            "value" : "OnlySwitch wuxuu sawir-shaashadeedka iyo duubisyada shaashadda ee cusub (oo ay ku jiraan kuwa iOS Simulator) ku kaydiyaa galkiisa gaarka ah wuxuuna damiyaa sawirka yar ee sabaynaya. Damintiisu waxay soo celinaysaa dejimihii hore."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "OnlySwitch yeni ekran görüntülerini kendi klasörüne kaydeder ve kayan küçük resmi kapatır. Bunu kapatmak önceki ekran görüntüsü ayarlarınızı geri yükler."
+            "value" : "OnlySwitch yeni ekran görüntülerini ve ekran kayıtlarını (iOS Simülatörü’nden gelenler dahil) kendi klasörüne kaydeder ve kayan küçük resmi kapatır. Bunu kapatmak önceki ayarlarınızı geri yükler."
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "OnlySwitch зберігає нові знімки екрана у власну папку та вимикає плаваючу мініатюру. Вимкнення відновлює попередні налаштування знімків екрана."
+            "value" : "OnlySwitch зберігає нові знімки та записи екрана (зокрема із симулятора iOS) у власну папку та вимикає плаваючу мініатюру. Вимкнення відновлює попередні налаштування."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "OnlySwitch 会将新截屏存储到自己的文件夹，并关闭浮动缩略图。关闭此选项将恢复你之前的截屏设置。"
+            "value" : "OnlySwitch 会将新的截屏和录屏（包括 iOS 模拟器中的）存储到自己的文件夹，并关闭浮动缩略图。关闭此选项将恢复你之前的设置。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "OnlySwitch 會將新截圖儲存到自己的資料夾，並關閉浮動縮圖。關閉此選項會還原你先前的截圖設定。"
+            "value" : "OnlySwitch 會將新的截圖和螢幕錄影（包括 iOS 模擬器中的）儲存到自己的資料夾，並關閉浮動縮圖。關閉此選項會還原你先前的設定。"
           }
         }
       }
@@ -82793,121 +83543,121 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Umístění pro ukládání snímků obrazovky bylo změněno mimo OnlySwitch."
+            "value" : "Umístění pro ukládání snímků nebo záznamů obrazovky bylo změněno mimo OnlySwitch."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Der Speicherort für Bildschirmfotos wurde außerhalb von OnlySwitch geändert."
+            "value" : "Der Speicherort für Bildschirmfotos oder Bildschirmaufnahmen wurde außerhalb von OnlySwitch geändert."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The screenshot save location was changed outside OnlySwitch."
+            "value" : "The screenshot or recording save location was changed outside OnlySwitch."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La ubicación para guardar capturas se cambió fuera de OnlySwitch."
+            "value" : "La ubicación para guardar capturas o grabaciones se cambió fuera de OnlySwitch."
           }
         },
         "fil" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Binago sa labas ng OnlySwitch ang lokasyon ng pag-save ng screenshot."
+            "value" : "Binago sa labas ng OnlySwitch ang lokasyon ng pag-save ng screenshot o recording."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "L’emplacement d’enregistrement des captures d’écran a été modifié en dehors d’OnlySwitch."
+            "value" : "L’emplacement d’enregistrement des captures ou des enregistrements de l’écran a été modifié en dehors d’OnlySwitch."
           }
         },
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lokacija spremanja snimaka zaslona promijenjena je izvan aplikacije OnlySwitch."
+            "value" : "Lokacija spremanja snimaka ili videozapisa zaslona promijenjena je izvan aplikacije OnlySwitch."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La posizione di salvataggio degli screenshot è stata modificata al di fuori di OnlySwitch."
+            "value" : "La posizione di salvataggio degli screenshot o delle registrazioni è stata modificata al di fuori di OnlySwitch."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "スクリーンショットの保存先が OnlySwitch 以外で変更されました。"
+            "value" : "スクリーンショットまたは録画の保存先が OnlySwitch 以外で変更されました。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "스크린샷 저장 위치가 OnlySwitch 외부에서 변경되었습니다."
+            "value" : "스크린샷 또는 녹화 저장 위치가 OnlySwitch 외부에서 변경되었습니다."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "De bewaarlocatie voor schermafbeeldingen is buiten OnlySwitch gewijzigd."
+            "value" : "De bewaarlocatie voor schermafbeeldingen of opnamen is buiten OnlySwitch gewijzigd."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lokalizacja zapisu zrzutów ekranu została zmieniona poza OnlySwitch."
+            "value" : "Lokalizacja zapisu zrzutów lub nagrań ekranu została zmieniona poza OnlySwitch."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "O local de salvamento das capturas de tela foi alterado fora do OnlySwitch."
+            "value" : "O local de salvamento das capturas ou gravações de tela foi alterado fora do OnlySwitch."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Место сохранения снимков экрана было изменено вне OnlySwitch."
+            "value" : "Место сохранения снимков или записей экрана было изменено вне OnlySwitch."
           }
         },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Umiestnenie na ukladanie snímok obrazovky bolo zmenené mimo OnlySwitch."
+            "value" : "Umiestnenie na ukladanie snímok alebo záznamov obrazovky bolo zmenené mimo OnlySwitch."
           }
         },
         "so" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Goobta lagu kaydiyo sawir-shaashadda waxaa laga beddelay meel ka baxsan OnlySwitch."
+            "value" : "Goobta lagu kaydiyo sawir-shaashadda ama duubista waxaa laga beddelay meel ka baxsan OnlySwitch."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ekran görüntüsü kayıt konumu OnlySwitch dışında değiştirildi."
+            "value" : "Ekran görüntüsü veya kayıt konumu OnlySwitch dışında değiştirildi."
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Місце збереження знімків екрана змінено поза OnlySwitch."
+            "value" : "Місце збереження знімків або записів екрана змінено поза OnlySwitch."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "截屏存储位置已在 OnlySwitch 之外被更改。"
+            "value" : "截屏或录屏存储位置已在 OnlySwitch 之外被更改。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "截圖儲存位置已在 OnlySwitch 以外被更改。"
+            "value" : "截圖或錄影儲存位置已在 OnlySwitch 以外被更改。"
           }
         }
       }
@@ -83043,121 +83793,121 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zatím žádné snímky obrazovky"
+            "value" : "Zatím žádné snímky ani záznamy obrazovky"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Noch keine Bildschirmfotos"
+            "value" : "Noch keine Bildschirmfotos oder Aufnahmen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No screenshots yet"
+            "value" : "No screenshots or recordings yet"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aún no hay capturas"
+            "value" : "Aún no hay capturas ni grabaciones"
           }
         },
         "fil" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wala pang screenshot"
+            "value" : "Wala pang screenshot o recording"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aucune capture d’écran pour l’instant"
+            "value" : "Aucune capture ni aucun enregistrement pour l’instant"
           }
         },
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Još nema snimaka zaslona"
+            "value" : "Još nema snimaka ni videozapisa zaslona"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ancora nessuno screenshot"
+            "value" : "Ancora nessuno screenshot o registrazione"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "スクリーンショットはまだありません"
+            "value" : "スクリーンショットや録画はまだありません"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "아직 스크린샷이 없습니다"
+            "value" : "아직 스크린샷이나 녹화가 없습니다"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nog geen schermafbeeldingen"
+            "value" : "Nog geen schermafbeeldingen of opnamen"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Brak zrzutów ekranu"
+            "value" : "Brak zrzutów i nagrań ekranu"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nenhuma captura de tela ainda"
+            "value" : "Nenhuma captura ou gravação ainda"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Снимков экрана пока нет"
+            "value" : "Пока нет снимков или записей экрана"
           }
         },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zatiaľ žiadne snímky obrazovky"
+            "value" : "Zatiaľ žiadne snímky ani záznamy obrazovky"
           }
         },
         "so" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Weli ma jiro sawir-shaashad"
+            "value" : "Weli ma jiraan sawir-shaashadeed ama duubisyo"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Henüz ekran görüntüsü yok"
+            "value" : "Henüz ekran görüntüsü veya kayıt yok"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Знімків екрана ще немає"
+            "value" : "Ще немає знімків або записів екрана"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "还没有截屏"
+            "value" : "还没有截屏或录屏"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "尚無截圖"
+            "value" : "尚無截圖或錄影"
           }
         }
       }
@@ -83168,121 +83918,121 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pořiďte snímek obrazovky pomocí ⇧⌘3, ⇧⌘4 nebo ⇧⌘5 a zobrazí se zde."
+            "value" : "Pořiďte snímek obrazovky pomocí ⇧⌘3 nebo ⇧⌘4, nebo nahrajte obrazovku pomocí ⇧⌘5 či iOS Simulatoru, a objeví se zde."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Erstelle ein Bildschirmfoto mit ⇧⌘3, ⇧⌘4 oder ⇧⌘5, und es erscheint hier."
+            "value" : "Erstelle ein Bildschirmfoto mit ⇧⌘3 oder ⇧⌘4 oder nimm deinen Bildschirm mit ⇧⌘5 oder dem iOS-Simulator auf – es erscheint dann hier."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Take a screenshot with ⇧⌘3, ⇧⌘4 or ⇧⌘5 and it appears here."
+            "value" : "Take a screenshot with ⇧⌘3 or ⇧⌘4, or record your screen with ⇧⌘5 or the iOS Simulator, and it appears here."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Haz una captura con ⇧⌘3, ⇧⌘4 o ⇧⌘5 y aparecerá aquí."
+            "value" : "Haz una captura con ⇧⌘3 o ⇧⌘4, o graba la pantalla con ⇧⌘5 o el simulador de iOS, y aparecerá aquí."
           }
         },
         "fil" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kumuha ng screenshot gamit ang ⇧⌘3, ⇧⌘4 o ⇧⌘5 at lalabas ito rito."
+            "value" : "Kumuha ng screenshot gamit ang ⇧⌘3 o ⇧⌘4, o i-record ang iyong screen gamit ang ⇧⌘5 o ang iOS Simulator, at lalabas ito rito."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Faites une capture d’écran avec ⇧⌘3, ⇧⌘4 ou ⇧⌘5 et elle apparaîtra ici."
+            "value" : "Faites une capture d’écran avec ⇧⌘3 ou ⇧⌘4, ou enregistrez votre écran avec ⇧⌘5 ou le simulateur iOS, et le résultat apparaîtra ici."
           }
         },
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Snimite zaslon pomoću ⇧⌘3, ⇧⌘4 ili ⇧⌘5 i snimka će se pojaviti ovdje."
+            "value" : "Snimite zaslon pomoću ⇧⌘3 ili ⇧⌘4 ili snimite videozapis zaslona pomoću ⇧⌘5 ili iOS simulatora i pojavit će se ovdje."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Scatta uno screenshot con ⇧⌘3, ⇧⌘4 o ⇧⌘5 e apparirà qui."
+            "value" : "Fai uno screenshot con ⇧⌘3 o ⇧⌘4, oppure registra lo schermo con ⇧⌘5 o con il Simulatore iOS, e apparirà qui."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "⇧⌘3、⇧⌘4、⇧⌘5 でスクリーンショットを撮ると、ここに表示されます。"
+            "value" : "⇧⌘3 または ⇧⌘4 でスクリーンショットを撮るか、⇧⌘5 または iOS シミュレータで画面を収録すると、ここに表示されます。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "⇧⌘3, ⇧⌘4 또는 ⇧⌘5로 스크린샷을 찍으면 여기에 표시됩니다."
+            "value" : "⇧⌘3 또는 ⇧⌘4로 스크린샷을 찍거나 ⇧⌘5 또는 iOS 시뮬레이터로 화면을 기록하면 여기에 표시됩니다."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Maak een schermafbeelding met ⇧⌘3, ⇧⌘4 of ⇧⌘5 en deze verschijnt hier."
+            "value" : "Maak een schermafbeelding met ⇧⌘3 of ⇧⌘4, of neem je scherm op met ⇧⌘5 of de iOS-simulator, en het verschijnt hier."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zrób zrzut ekranu za pomocą ⇧⌘3, ⇧⌘4 lub ⇧⌘5, a pojawi się tutaj."
+            "value" : "Zrób zrzut ekranu za pomocą ⇧⌘3 lub ⇧⌘4 albo nagraj ekran za pomocą ⇧⌘5 lub symulatora iOS, a pojawi się tutaj."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Faça uma captura de tela com ⇧⌘3, ⇧⌘4 ou ⇧⌘5 e ela aparecerá aqui."
+            "value" : "Faça uma captura de tela com ⇧⌘3 ou ⇧⌘4, ou grave a tela com ⇧⌘5 ou o Simulador do iOS, e ela aparecerá aqui."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Сделайте снимок экрана с помощью ⇧⌘3, ⇧⌘4 или ⇧⌘5, и он появится здесь."
+            "value" : "Сделайте снимок экрана с помощью ⇧⌘3 или ⇧⌘4 либо запишите экран с помощью ⇧⌘5 или симулятора iOS — и он появится здесь."
           }
         },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Urobte snímku obrazovky pomocou ⇧⌘3, ⇧⌘4 alebo ⇧⌘5 a zobrazí sa tu."
+            "value" : "Urobte snímku obrazovky pomocou ⇧⌘3 alebo ⇧⌘4 alebo nahrajte obrazovku pomocou ⇧⌘5 či iOS Simulatora a zobrazí sa tu."
           }
         },
         "so" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ku qaado sawir-shaashad ⇧⌘3, ⇧⌘4 ama ⇧⌘5, halkan ayuu ka soo muuqan doonaa."
+            "value" : "Ku qaado sawir-shaashadeed ⇧⌘3 ama ⇧⌘4, ama ku duub shaashaddaada ⇧⌘5 ama iOS Simulator, wuxuuna halkan ka soo muuqan doonaa."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "⇧⌘3, ⇧⌘4 veya ⇧⌘5 ile ekran görüntüsü alın, burada görünür."
+            "value" : "⇧⌘3 veya ⇧⌘4 ile ekran görüntüsü alın ya da ⇧⌘5 veya iOS Simülatörü ile ekranınızı kaydedin; burada görünür."
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Зробіть знімок екрана за допомогою ⇧⌘3, ⇧⌘4 або ⇧⌘5, і він з’явиться тут."
+            "value" : "Зробіть знімок екрана за допомогою ⇧⌘3 або ⇧⌘4 чи запишіть екран за допомогою ⇧⌘5 або симулятора iOS — і він з’явиться тут."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "使用 ⇧⌘3、⇧⌘4 或 ⇧⌘5 截屏后，截屏会显示在这里。"
+            "value" : "使用 ⇧⌘3 或 ⇧⌘4 截屏，或使用 ⇧⌘5 或 iOS 模拟器录制屏幕，内容就会显示在这里。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "使用 ⇧⌘3、⇧⌘4 或 ⇧⌘5 截圖後，截圖會顯示在這裡。"
+            "value" : "使用 ⇧⌘3 或 ⇧⌘4 截圖，或使用 ⇧⌘5 或 iOS 模擬器錄製螢幕，內容就會顯示在這裡。"
           }
         }
       }
@@ -83293,121 +84043,121 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zapněte shromažďování snímků obrazovky a nové snímky se budou shromažďovat zde."
+            "value" : "Zapněte shromažďování a nové snímky a záznamy obrazovky se budou shromažďovat zde."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aktiviere das Sammeln von Bildschirmfotos, um neue Bildschirmfotos hier zu sammeln."
+            "value" : "Aktiviere das Sammeln, um neue Bildschirmfotos und Bildschirmaufnahmen hier zu sammeln."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Turn on screenshot collection to gather new screenshots here."
+            "value" : "Turn on collection to gather new screenshots and screen recordings here."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Activa la recopilación de capturas para reunir aquí las nuevas capturas."
+            "value" : "Activa la recopilación para reunir aquí las nuevas capturas y grabaciones de pantalla."
           }
         },
         "fil" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "I-on ang pagkolekta ng screenshot para maipon dito ang mga bagong screenshot."
+            "value" : "I-on ang pagkolekta para maipon dito ang mga bagong screenshot at screen recording."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Activez la collecte des captures d’écran pour regrouper ici les nouvelles captures."
+            "value" : "Activez la collecte pour regrouper ici les nouvelles captures et les nouveaux enregistrements de l’écran."
           }
         },
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uključite prikupljanje snimaka zaslona kako bi se nove snimke skupljale ovdje."
+            "value" : "Uključite prikupljanje kako bi se nove snimke i videozapisi zaslona skupljali ovdje."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Attiva la raccolta degli screenshot per raccogliere qui i nuovi screenshot."
+            "value" : "Attiva la raccolta per raccogliere qui i nuovi screenshot e le nuove registrazioni dello schermo."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "スクリーンショットの収集をオンにすると、新しいスクリーンショットがここに集まります。"
+            "value" : "収集をオンにすると、新しいスクリーンショットと画面収録がここに集まります。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "스크린샷 수집을 켜면 새 스크린샷이 여기에 모입니다."
+            "value" : "수집을 켜면 새 스크린샷과 화면 기록이 여기에 모입니다."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Schakel het verzamelen van schermafbeeldingen in om nieuwe schermafbeeldingen hier te verzamelen."
+            "value" : "Schakel verzamelen in om nieuwe schermafbeeldingen en schermopnamen hier te verzamelen."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Włącz zbieranie zrzutów ekranu, aby gromadzić tutaj nowe zrzuty."
+            "value" : "Włącz zbieranie, aby gromadzić tutaj nowe zrzuty i nagrania ekranu."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ative a coleta de capturas de tela para reunir novas capturas aqui."
+            "value" : "Ative a coleta para reunir aqui novas capturas e gravações de tela."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Включите сбор снимков экрана, чтобы новые снимки собирались здесь."
+            "value" : "Включите сбор, чтобы новые снимки и записи экрана собирались здесь."
           }
         },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zapnite zhromažďovanie snímok obrazovky, aby sa sem zhromažďovali nové snímky."
+            "value" : "Zapnite zhromažďovanie, aby sa sem zhromažďovali nové snímky a záznamy obrazovky."
           }
         },
         "so" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Daar ururinta sawir-shaashadda si sawirrada cusub halkan loogu soo ururiyo."
+            "value" : "Daar ururinta si sawir-shaashadeedka iyo duubisyada shaashadda ee cusub halkan loogu soo ururiyo."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Yeni ekran görüntülerini burada toplamak için ekran görüntüsü toplamayı açın."
+            "value" : "Yeni ekran görüntülerini ve ekran kayıtlarını burada toplamak için toplamayı açın."
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Увімкніть збирання знімків екрана, щоб нові знімки з’являлися тут."
+            "value" : "Увімкніть збирання, щоб нові знімки та записи екрана з’являлися тут."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "开启截屏收集，即可在此汇集新的截屏。"
+            "value" : "开启收集，即可在此汇集新的截屏和录屏。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "開啟截圖收集，即可在此彙集新的截圖。"
+            "value" : "開啟收集，即可在此彙集新的截圖和錄影。"
           }
         }
       }
@@ -83543,121 +84293,121 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Přesunout snímky obrazovky (%lld) do koše? Připnuté snímky zůstanou zachovány."
+            "value" : "Přesunout položky (%lld) do koše? Připnuté položky zůstanou zachovány."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld Bildschirmfotos in den Papierkorb legen? Angeheftete Bildschirmfotos bleiben erhalten."
+            "value" : "%lld Objekte in den Papierkorb legen? Angeheftete Objekte bleiben erhalten."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Move %lld screenshots to the Trash? Pinned screenshots are kept."
+            "value" : "Move %lld items to the Trash? Pinned items are kept."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¿Mover %lld capturas a la papelera? Las capturas fijadas se conservan."
+            "value" : "¿Mover %lld elementos a la papelera? Los elementos fijados se conservan."
           }
         },
         "fil" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ilipat ang %lld screenshot sa Basurahan? Mananatili ang mga naka-pin na screenshot."
+            "value" : "Ilipat ang %lld item sa Basurahan? Mananatili ang mga naka-pin na item."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Placer %lld captures d’écran dans la corbeille ? Les captures épinglées sont conservées."
+            "value" : "Placer %lld éléments dans la corbeille ? Les éléments épinglés sont conservés."
           }
         },
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Premjestiti snimke zaslona (%lld) u smeće? Prikvačene snimke se zadržavaju."
+            "value" : "Premjestiti stavke (%lld) u smeće? Prikvačene stavke se zadržavaju."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Spostare %lld screenshot nel Cestino? Gli screenshot fissati vengono mantenuti."
+            "value" : "Spostare %lld elementi nel Cestino? Gli elementi fissati vengono mantenuti."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld 件のスクリーンショットをゴミ箱に入れますか？固定したスクリーンショットは残ります。"
+            "value" : "%lld 件の項目をゴミ箱に入れますか？固定した項目は残ります。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "스크린샷 %lld개를 휴지통으로 이동하시겠습니까? 고정된 스크린샷은 유지됩니다."
+            "value" : "항목 %lld개를 휴지통으로 이동하시겠습니까? 고정된 항목은 유지됩니다."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld schermafbeeldingen naar de prullenmand verplaatsen? Vastgezette schermafbeeldingen blijven bewaard."
+            "value" : "%lld onderdelen naar de prullenmand verplaatsen? Vastgezette onderdelen blijven bewaard."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Przenieść zrzuty ekranu (%lld) do kosza? Przypięte zrzuty zostaną zachowane."
+            "value" : "Przenieść elementy (%lld) do kosza? Przypięte elementy zostaną zachowane."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mover %lld capturas de tela para o Lixo? As capturas fixadas serão mantidas."
+            "value" : "Mover %lld itens para o Lixo? Os itens fixados serão mantidos."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Переместить снимки экрана (%lld) в Корзину? Закреплённые снимки останутся."
+            "value" : "Переместить объекты (%lld) в Корзину? Закреплённые объекты останутся."
           }
         },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Presunúť snímky obrazovky (%lld) do koša? Pripnuté snímky zostanú zachované."
+            "value" : "Presunúť položky (%lld) do koša? Pripnuté položky zostanú zachované."
           }
         },
         "so" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "U rar %lld sawir-shaashadeed qashinka? Sawirrada la dhejiyay waa la hayn doonaa."
+            "value" : "U rar %lld shay qashinka? Shayada la dhejiyay waa la hayn doonaa."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld ekran görüntüsü Çöp Sepeti’ne taşınsın mı? Sabitlenmiş ekran görüntüleri korunur."
+            "value" : "%lld öğe Çöp Sepeti’ne taşınsın mı? Sabitlenmiş öğeler korunur."
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Перемістити знімки екрана (%lld) у Смітник? Закріплені знімки буде збережено."
+            "value" : "Перемістити елементи (%lld) у Смітник? Закріплені елементи буде збережено."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "要将 %lld 张截屏移到废纸篓吗？已置顶的截屏会被保留。"
+            "value" : "要将 %lld 个项目移到废纸篓吗？已置顶的项目会被保留。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "要將 %lld 張截圖移到垃圾桶嗎？已釘選的截圖會被保留。"
+            "value" : "要將 %lld 個項目移到垃圾桶嗎？已釘選的項目會被保留。"
           }
         }
       }
@@ -86418,121 +87168,121 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Otevřít kartu Snímky obrazovky"
+            "value" : "Otevřít kartu Snímky a záznamy obrazovky"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tab „Bildschirmfotos“ öffnen"
+            "value" : "Tab „Bildschirmfotos & Aufnahmen“ öffnen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Open Screenshots Tab"
+            "value" : "Open Screenshots & Record Tab"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Abrir pestaña Capturas de pantalla"
+            "value" : "Abrir pestaña Capturas y grabaciones"
           }
         },
         "fil" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Buksan ang tab na Mga Screenshot"
+            "value" : "Buksan ang tab na Mga Screenshot at Recording"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ouvrir l’onglet Captures d’écran"
+            "value" : "Ouvrir l’onglet Captures et enregistrements"
           }
         },
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Otvori karticu Snimke zaslona"
+            "value" : "Otvori karticu Snimke i videozapisi zaslona"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apri la scheda Screenshot"
+            "value" : "Apri la scheda Screenshot e registrazioni"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "スクリーンショットタブを開く"
+            "value" : "スクリーンショットと録画タブを開く"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "스크린샷 탭 열기"
+            "value" : "스크린샷 및 녹화 탭 열기"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tabblad Schermafbeeldingen openen"
+            "value" : "Tabblad Schermafbeeldingen & opnamen openen"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Otwórz kartę Zrzuty ekranu"
+            "value" : "Otwórz kartę Zrzuty i nagrania ekranu"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Abrir aba Capturas de tela"
+            "value" : "Abrir aba Capturas e gravações de tela"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Открыть вкладку «Снимки экрана»"
+            "value" : "Открыть вкладку «Снимки и запись экрана»"
           }
         },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Otvoriť kartu Snímky obrazovky"
+            "value" : "Otvoriť kartu Snímky a záznamy obrazovky"
           }
         },
         "so" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fur tabka Sawir-shaashadeed"
+            "value" : "Fur tabka Sawir-shaashadeed & Duubis"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ekran Görüntüleri Sekmesini Aç"
+            "value" : "Ekran Görüntüleri ve Kayıtlar Sekmesini Aç"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Відкрити вкладку «Знімки екрана»"
+            "value" : "Відкрити вкладку «Знімки та запис екрана»"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "打开截屏标签页"
+            "value" : "打开截屏与录屏标签页"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "開啟截圖分頁"
+            "value" : "開啟截圖與錄影分頁"
           }
         }
       }

@@ -794,8 +794,9 @@ struct RemoteConnectionClientTests {
             request: .init(requestID: UUID(), itemID: items[0].id, revision: items[0].revision)
         ))
         #expect(image.contentType == "public.png")
-        #expect(image.data.starts(with: [0x89, 0x50, 0x4E, 0x47]))
-        #expect(UIImage(data: image.data) != nil)
+        let imageData = try Data(contentsOf: image.fileURL)
+        #expect(imageData.starts(with: [0x89, 0x50, 0x4E, 0x47]))
+        #expect(UIImage(data: imageData) != nil)
 
         let deleted = try await client.deleteScreenshots(.init(
             macID: macID,
@@ -978,7 +979,8 @@ struct RemoteConnectionClientTests {
             let thumbs = try await session.fetchScreenshotThumbnails(.init(requestID: UUID(), ids: [item.id]))
             #expect(thumbs.thumbnails == [thumbnail])
             let payload = try await session.fetchScreenshotImage(.init(requestID: UUID(), itemID: item.id, revision: 0))
-            #expect(payload == .init(contentType: "public.png", data: original))
+            #expect(payload.contentType == "public.png")
+            #expect(try Data(contentsOf: payload.fileURL) == original)
             let deleted = try await session.deleteScreenshots(.init(requestID: UUID(), ids: [item.id]))
             #expect(deleted.failedIDs == [item.id])
             await session.close()
@@ -1091,7 +1093,8 @@ struct RemoteConnectionClientTests {
             var iterator = requests.makeAsyncIterator()
             await iterator.next()
             let payload = try await session.fetchScreenshotImage(.init(requestID: UUID(), itemID: itemID, revision: 1))
-            #expect(payload == .init(contentType: "public.jpeg", data: original))
+            #expect(payload.contentType == "public.jpeg")
+            #expect(try Data(contentsOf: payload.fileURL) == original)
             await #expect(throws: CancellationError.self) { _ = try await superseded.value }
         })
     }
@@ -1210,7 +1213,7 @@ struct RemoteConnectionClientTests {
         #expect(transfer.closes.count == 0)
 
         await transfer.gate.open()
-        #expect(try await transfer.fetch.value.data == transfer.original)
+        #expect(try Data(contentsOf: await transfer.fetch.value.fileURL) == transfer.original)
         #expect(await waitUntil { await transfer.runtime.snapshot().authenticatedSessionID == nil })
         #expect(await waitUntil { transfer.backgroundTasks.values == .init(began: 1, ended: 1) })
         #expect(transfer.closes.count == 1)
@@ -1232,7 +1235,7 @@ struct RemoteConnectionClientTests {
         #expect(transfer.backgroundTasks.values == .init(began: 1, ended: 0))
 
         await saveGate.open()
-        #expect(try await transfer.fetch.value.data == transfer.original)
+        #expect(try Data(contentsOf: await transfer.fetch.value.fileURL) == transfer.original)
         #expect(await waitUntil { transfer.backgroundTasks.values == .init(began: 1, ended: 1) })
         #expect(await transfer.runtime.snapshot().authenticatedSessionID == nil)
     }
@@ -1264,7 +1267,7 @@ struct RemoteConnectionClientTests {
         #expect(await transfer.runtime.snapshot().authenticatedSessionID == transfer.sessionID)
         #expect((await transfer.runtime.lifecycleSnapshot).hasConnectionTask == false)
         await transfer.gate.open()
-        #expect(try await transfer.fetch.value.data == transfer.original)
+        #expect(try Data(contentsOf: await transfer.fetch.value.fileURL) == transfer.original)
         // Neither the finished transfer nor the cancelled grace period closes a foreground session.
         try await Task.sleep(for: .milliseconds(500))
         #expect(await transfer.runtime.snapshot().authenticatedSessionID == transfer.sessionID)

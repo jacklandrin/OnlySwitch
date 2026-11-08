@@ -17,7 +17,7 @@ struct RemoteScreenshotCacheClientTests {
         let library = RemoteScreenshotLibrary(revision: 1, isCollectionEnabled: true, items: [first])
         _ = await cache.replaceLibrary(macID, library)
         let thumbnailURLs = await cache.saveThumbnails(macID, [try .init(itemID: first.id, revision: 0, jpegData: Data([1]))])
-        let imageURL = try await cache.saveImage(macID, first, Data([1, 2, 3]))
+        let imageURL = try await cache.saveImage(macID, first, try Self.transferFile(Data([1, 2, 3])))
         #expect(imageURL.lastPathComponent == "Shot.png")
         #expect(try Data(contentsOf: imageURL) == Data([1, 2, 3]))
 
@@ -28,12 +28,32 @@ struct RemoteScreenshotCacheClientTests {
         #expect(await cache.load(otherMacID) == nil)
     }
 
+    @Test func savingMovesTheTransferFileIntoPlaceReplacingAnyExistingOne() async throws {
+        let root = try Self.root()
+        let cache = RemoteScreenshotCacheClient.live(root: root)
+        let first = item(1)
+        _ = await cache.replaceLibrary(macID, .init(revision: 1, isCollectionEnabled: true, items: [first]))
+        _ = try await cache.saveImage(macID, first, try Self.transferFile(Data([1])))
+        let transfer = try Self.transferFile(Data([4, 5, 6]))
+
+        let url = try await cache.saveImage(macID, first, transfer)
+
+        let expected = root
+            .appendingPathComponent(macID.uuidString.lowercased(), isDirectory: true)
+            .appendingPathComponent("images/\(first.cacheKey)/Shot.png")
+            .standardizedFileURL
+        #expect(url == expected)
+        #expect(try Data(contentsOf: url) == Data([4, 5, 6]))
+        #expect(FileManager.default.fileExists(atPath: transfer.path) == false)
+        #expect(await cache.imageURL(macID, first) == url)
+    }
+
     @Test func newRevisionAndRemovedItemsArePruned() async throws {
         let cache = RemoteScreenshotCacheClient.live(root: try Self.root())
         let first = item(1), second = item(2)
         _ = await cache.replaceLibrary(macID, .init(revision: 1, isCollectionEnabled: true, items: [first, second]))
         _ = await cache.saveThumbnails(macID, [try .init(itemID: first.id, revision: 0, jpegData: Data([1])), try .init(itemID: second.id, revision: 0, jpegData: Data([2]))])
-        let oldImage = try await cache.saveImage(macID, first, Data([9]))
+        let oldImage = try await cache.saveImage(macID, first, try Self.transferFile(Data([9])))
 
         let edited = item(1, revision: 1)
         let snapshot = await cache.replaceLibrary(macID, .init(revision: 2, isCollectionEnabled: true, items: [edited]))
@@ -85,7 +105,7 @@ struct RemoteScreenshotCacheClientTests {
         let cache = RemoteScreenshotCacheClient.live(root: root)
         let hostile = item(1, name: name)
         _ = await cache.replaceLibrary(macID, .init(revision: 1, isCollectionEnabled: true, items: [hostile]))
-        let url = try await cache.saveImage(macID, hostile, Data([1]))
+        let url = try await cache.saveImage(macID, hostile, try Self.transferFile(Data([1])))
         let imagesFolder = root
             .appendingPathComponent(macID.uuidString.lowercased(), isDirectory: true)
             .appendingPathComponent("images", isDirectory: true)
@@ -95,6 +115,12 @@ struct RemoteScreenshotCacheClientTests {
         #expect(url.lastPathComponent.contains("/") == false)
         #expect(url.lastPathComponent.hasPrefix(".") == false)
         #expect(await cache.imageURL(macID, hostile) == url)
+    }
+
+    private static func transferFile(_ data: Data) throws -> URL {
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent("transfer-\(UUID().uuidString)")
+        try data.write(to: url)
+        return url
     }
 
     private static func root() throws -> URL {

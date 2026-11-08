@@ -3,7 +3,7 @@ import AppKit
 import Dependencies
 import ImageIO
 
-/// Every file-system, pasteboard, workspace and system-settings effect of the Screenshots tab. Files are
+/// Every file-system, pasteboard, workspace and system-settings effect of the Screenshots & Record tab. Files are
 /// addressed by recorded item id only; `fileURL` is the single way to turn an id into a path.
 public struct ScreenshotsClient: Sendable {
     public var folderURL: @Sendable () -> URL
@@ -16,6 +16,8 @@ public struct ScreenshotsClient: Sendable {
     public var fileURL: @Sendable (UUID) async -> URL?
     /// url, maxPixel, revision (cache key).
     public var thumbnail: @Sendable (URL, Int, Int) async -> CGImage?
+    /// Seconds of a recording; nil for images and unreadable files.
+    public var duration: @Sendable (URL) async -> Double?
     public var captureStatus: @Sendable () async -> ScreenshotCaptureStatus
     public var enableCapture: @Sendable () async throws -> Void
     public var disableCapture: @Sendable () async throws -> Void
@@ -35,6 +37,7 @@ public struct ScreenshotsClient: Sendable {
         replaceImage: @escaping @Sendable (UUID, Data) async throws -> [ScreenshotItem],
         fileURL: @escaping @Sendable (UUID) async -> URL?,
         thumbnail: @escaping @Sendable (URL, Int, Int) async -> CGImage?,
+        duration: @escaping @Sendable (URL) async -> Double? = { _ in nil },
         captureStatus: @escaping @Sendable () async -> ScreenshotCaptureStatus,
         enableCapture: @escaping @Sendable () async throws -> Void,
         disableCapture: @escaping @Sendable () async throws -> Void,
@@ -44,7 +47,7 @@ public struct ScreenshotsClient: Sendable {
         collectExternalCaptures: @escaping @Sendable () async -> Void = {}
     ) {
         self.folderURL = folderURL; self.load = load; self.captures = captures; self.setPinned = setPinned; self.trash = trash
-        self.replaceImage = replaceImage; self.fileURL = fileURL; self.thumbnail = thumbnail; self.captureStatus = captureStatus
+        self.replaceImage = replaceImage; self.fileURL = fileURL; self.thumbnail = thumbnail; self.duration = duration; self.captureStatus = captureStatus
         self.enableCapture = enableCapture; self.disableCapture = disableCapture; self.copyToPasteboard = copyToPasteboard
         self.openInDefaultApp = openInDefaultApp; self.revealFolder = revealFolder; self.collectExternalCaptures = collectExternalCaptures
     }
@@ -72,6 +75,8 @@ extension ScreenshotsClient: DependencyKey {
                 // Collection enabled before the Simulator takeover existed: redirect it once. Later changes made
                 // elsewhere are respected because the backup then exists.
                 if preferences.isEnabled, !simulatorPreferences.isEnabled { try? simulatorPreferences.enable() }
+                // Collection enabled before recordings were redirected (macOS 27): take over the recording location once.
+                if preferences.needsRecordingMigration { try? preferences.migrateRecordingLocation() }
                 return try await library.load()
             },
             captures: {
@@ -95,7 +100,8 @@ extension ScreenshotsClient: DependencyKey {
             },
             replaceImage: { try await library.replaceImage($0, data: $1) },
             fileURL: { await library.fileURL($0) },
-            thumbnail: { url, maxPixel, revision in thumbnails.thumbnail(for: url, maxPixel: maxPixel, revision: revision) },
+            thumbnail: { url, maxPixel, revision in await thumbnails.thumbnail(for: url, maxPixel: maxPixel, revision: revision) },
+            duration: { await ScreenshotMediaInspector.duration($0) },
             captureStatus: { preferences.status(enabledFlag: preferences.isEnabled) },
             enableCapture: {
                 try preferences.enable()
@@ -111,9 +117,11 @@ extension ScreenshotsClient: DependencyKey {
                 try systemResult.get()
             },
             copyToPasteboard: { url in
-                guard let image = NSImage(contentsOf: url) else { return false }
                 let pasteboard = NSPasteboard.general
                 pasteboard.clearContents()
+                // A recording is copied as its file (Finder, Mail and Messages paste it); images also carry pixels.
+                if ScreenshotMediaType(fileName: url.lastPathComponent) == .recording { return pasteboard.writeObjects([url as NSURL]) }
+                guard let image = NSImage(contentsOf: url) else { return false }
                 return pasteboard.writeObjects([url as NSURL, image])
             },
             openInDefaultApp: { url in NSWorkspace.shared.open(url) },
@@ -131,6 +139,7 @@ extension ScreenshotsClient: DependencyKey {
         replaceImage: { _, _ in reportIssue("Unimplemented: ScreenshotsClient.replaceImage"); return [] },
         fileURL: { _ in reportIssue("Unimplemented: ScreenshotsClient.fileURL"); return nil },
         thumbnail: { _, _, _ in reportIssue("Unimplemented: ScreenshotsClient.thumbnail"); return nil },
+        duration: { _ in reportIssue("Unimplemented: ScreenshotsClient.duration"); return nil },
         captureStatus: { reportIssue("Unimplemented: ScreenshotsClient.captureStatus"); return .disabled },
         enableCapture: { reportIssue("Unimplemented: ScreenshotsClient.enableCapture") },
         disableCapture: { reportIssue("Unimplemented: ScreenshotsClient.disableCapture") },
@@ -184,19 +193,25 @@ final class ScreenshotThumbnailCache: @unchecked Sendable {
     private let cache = NSCache<NSString, CGImage>()
     init() { cache.countLimit = 200 }
 
-    func thumbnail(for url: URL, maxPixel: Int, revision: Int) -> CGImage? {
+    func thumbnail(for url: URL, maxPixel: Int, revision: Int) async -> CGImage? {
         let key = "\(url.path)#\(revision)#\(maxPixel)" as NSString
         if let cached = cache.object(forKey: key) { return cached }
+        let image = ScreenshotMediaType(fileName: url.lastPathComponent) == .recording
+            ? await ScreenshotMediaInspector.posterFrame(url, maxPixel: maxPixel)
+            : imageThumbnail(for: url, maxPixel: maxPixel)
+        if let image { cache.setObject(image, forKey: key) }
+        return image
+    }
+
+    private func imageThumbnail(for url: URL, maxPixel: Int) -> CGImage? {
         let options: [CFString: Any] = [
             kCGImageSourceCreateThumbnailFromImageAlways: true,
             kCGImageSourceCreateThumbnailWithTransform: true,
             kCGImageSourceThumbnailMaxPixelSize: max(1, maxPixel),
             kCGImageSourceShouldCache: false,
         ]
-        guard let source = CGImageSourceCreateWithURL(url as CFURL, [kCGImageSourceShouldCache: false] as CFDictionary),
-              let image = CGImageSourceCreateThumbnailAtIndex(source, 0, options as CFDictionary) else { return nil }
-        cache.setObject(image, forKey: key)
-        return image
+        guard let source = CGImageSourceCreateWithURL(url as CFURL, [kCGImageSourceShouldCache: false] as CFDictionary) else { return nil }
+        return CGImageSourceCreateThumbnailAtIndex(source, 0, options as CFDictionary)
     }
 }
 #endif

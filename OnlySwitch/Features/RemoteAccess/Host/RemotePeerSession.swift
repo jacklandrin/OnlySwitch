@@ -1128,9 +1128,10 @@ actor RemotePeerSession {
     private func startScreenshotsStreaming() {
         stopScreenshotsStreaming()
         let libraries = screenshots.libraries
+        let includesRecordings = negotiatedVersion?.supportsScreenRecordingsRemote == true
         screenshotsLibraryTask = Task { [weak self] in
             do {
-                for await library in libraries() {
+                for await library in libraries(includesRecordings) {
                     try Task.checkCancellation()
                     guard let self else { return }
                     try await self.sendEncrypted(.screenshotsLibrary(library))
@@ -1165,18 +1166,18 @@ actor RemotePeerSession {
     private func startScreenshotImageTransfer(_ request: RemoteScreenshotImageRequest) {
         screenshotImageTask?.cancel()
         let image = screenshots.image
+        let includesRecordings = negotiatedVersion?.supportsScreenRecordingsRemote == true
         screenshotImageTask = Task { [weak self] in
             do {
-                let original = try await image(request.itemID, request.revision)
-                let messages = try RemoteScreenshotImageEncoder.messages(
-                    request: request,
-                    contentType: original.contentType,
-                    data: original.data
-                )
-                for message in messages {
+                let original = try await image(request.itemID, request.revision, includesRecordings)
+                let manifest = try RemoteScreenshotImageEncoder.manifest(request: request, contentType: original.contentType, data: original.data)
+                try Task.checkCancellation()
+                guard let self else { return }
+                try await self.sendEncrypted(.screenshotImageManifest(manifest))
+                // One chunk at a time so a large recording is never copied whole.
+                for index in 0..<manifest.chunkCount {
                     try Task.checkCancellation()
-                    guard let self else { return }
-                    try await self.sendEncrypted(message)
+                    try await self.sendEncrypted(.screenshotImageChunk(RemoteScreenshotImageEncoder.chunk(request: request, data: original.data, index: index)))
                 }
             } catch is CancellationError {
             } catch {

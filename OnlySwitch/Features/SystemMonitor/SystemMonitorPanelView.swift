@@ -33,7 +33,7 @@ enum SectionBar {
             case .aphrodite: "Aphrodite".localized()
             case .xcodeCleaner: "Xcode Cleaner".localized()
             case .appUninstaller: "App Uninstaller".localized()
-            case .screenshots: "Screenshots".localized()
+            case .screenshots: "Screenshots & Record".localized()
             case .brightness: "Brightness".localized()
             case .schedules: "Schedules".localized()
             }

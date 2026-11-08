@@ -4,12 +4,13 @@ import Dependencies
 import Foundation
 import Observation
 
-/// Holds one cell's decoded thumbnail. Loading goes through `ScreenshotsClient.thumbnail` (cached by path,
-/// revision and size); there is no other state or logic here.
+/// Holds one cell's decoded thumbnail and, for a recording, its duration. Loading goes through
+/// `ScreenshotsClient.thumbnail` (cached by path, revision and size) and `ScreenshotsClient.duration`.
 @MainActor
 @Observable
 final class ScreenshotThumbnailModel {
     private(set) var image: CGImage?
+    private(set) var duration: Double?
     @ObservationIgnored @Dependency(\.screenshotsClient) private var client
 
     func load(_ request: ScreenshotThumbnailRequest) async {
@@ -17,6 +18,9 @@ final class ScreenshotThumbnailModel {
         let loaded = await client.thumbnail(url, request.maxPixel, request.revision)
         guard !Task.isCancelled else { return }
         image = loaded
+        let seconds = request.isRecording ? await client.duration(url) : nil
+        guard !Task.isCancelled else { return }
+        duration = seconds
     }
 }
 
@@ -25,5 +29,6 @@ struct ScreenshotThumbnailRequest: Equatable {
     var url: URL?
     var revision: Int
     var maxPixel: Int
+    var isRecording: Bool
 }
 #endif

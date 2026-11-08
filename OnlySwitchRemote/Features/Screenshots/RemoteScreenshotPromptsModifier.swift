@@ -20,7 +20,7 @@ struct RemoteScreenshotPromptsModifier: ViewModifier {
                 Text("It can be restored from the Trash on the Mac.")
             }
             .alert(
-                "Screenshots",
+                "Screenshots & Record",
                 isPresented: errorPresented,
                 actions: { Button("OK", action: dismissError) },
                 message: { Text(verbatim: store.operationError ?? "") }

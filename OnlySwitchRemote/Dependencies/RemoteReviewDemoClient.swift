@@ -272,7 +272,9 @@ actor RemoteReviewDemoRuntime {
               let data = Self.demoScreenshotImage(for: item, width: 1_440).pngData() else {
             throw RemoteProtocolError(code: .controlNotFound, message: "The screenshot is no longer on the Mac")
         }
-        return .init(contentType: item.contentType, data: data)
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent("demo-\(UUID().uuidString)")
+        try data.write(to: url)
+        return .init(contentType: item.contentType, fileURL: url)
     }
 
     func deleteScreenshots(

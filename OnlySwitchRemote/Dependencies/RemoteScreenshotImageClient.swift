@@ -33,7 +33,12 @@ struct RemoteScreenshotImageClient: Sendable {
                         macID: macID,
                         request: .init(requestID: makeRequestID(), itemID: item.id, revision: item.revision)
                     ))
-                    return try await cache.saveImage(macID, item, payload.data)
+                    do {
+                        return try await cache.saveImage(macID, item, payload.fileURL)
+                    } catch {
+                        try? FileManager.default.removeItem(at: payload.fileURL)
+                        throw error
+                    }
                 }
             }
         }

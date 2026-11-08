@@ -104,7 +104,7 @@ Use the **Schedules** tab in the menu bar or Only Control to see what runs next,
 | Show desktop pet | finished | Tailscale | requires official client |
 | Dock Preview | requires Accessibility and Screen Recording | | |
 
-Switches can be added to or removed from the list. Optional tabs (Authenticator, Sound Mixer, Brightness, Screenshots, System Monitor, Codex Usage, Claude Usage, Aphrodite, Xcode Cleaner, and App Uninstaller) are shown or hidden under **OnlySwitch Settings → Tabs**; switches that only toggled a tab have been replaced by this page.
+Switches can be added to or removed from the list. Optional tabs (Authenticator, Sound Mixer, Brightness, Screenshots & Record, System Monitor, Codex Usage, Claude Usage, Aphrodite, Xcode Cleaner, and App Uninstaller) are shown or hidden under **OnlySwitch Settings → Tabs**; switches that only toggled a tab have been replaced by this page.
 
 ### Sound Mixer
 
@@ -118,11 +118,11 @@ The Brightness tab shows one slider per active display. OnlySwitch uses native b
 
 The keyboard's brightness keys adjust the external display under the pointer, using the same fine-step modifier as volume keys. On the built-in display, macOS behavior is unchanged. Software dimming changes image brightness rather than the physical backlight.
 
-### Screenshots
+### Screenshots & Record
 
-The Screenshots tab collects your screenshots in one list. Enable **Collect System Screenshots** under **OnlySwitch Settings → Screenshots** to save system captures, iOS Simulator screenshots, and Xcode Device Hub screenshots to `~/Pictures/OnlySwitch Screenshots`; OnlySwitch backs up your previous screenshot settings and restores them when you turn collection off. New captures fly into the list automatically.
+The Screenshots & Record tab collects your screenshots and screen recordings in one list. Enable **Collect screenshots and recordings** under **OnlySwitch Settings → Screenshots & Record** to save system captures and ⇧⌘5 recordings, iOS Simulator screenshots and recordings, and Xcode Device Hub screenshots and recordings to `~/Pictures/OnlySwitch Screenshots`; OnlySwitch backs up your previous capture settings and restores them when you turn collection off. New captures fly into the list automatically; a recording flies in as its first frame.
 
-Click a screenshot to copy it, double-click to open it, drag it out to share it, or pin it to the top of the list. The built-in editor adds pen strokes, rectangles, ellipses, arrows, and blur, with undo and redo; saving overwrites the original file in its original format. Deleting moves files to the Trash, and **Delete All** keeps pinned items. Assign an optional keyboard shortcut on the Screenshots settings page to open or close the tab. Clipboard-only captures and screen recordings are not collected.
+Click an item to copy it, double-click to open it, drag it out to share it, or pin it to the top of the list. Recordings show a video badge with their length and are copied as files. The built-in editor adds pen strokes, rectangles, ellipses, arrows, and blur to screenshots, with undo and redo; saving overwrites the original file in its original format. Recordings can't be edited. Deleting moves files to the Trash, and **Delete All** keeps pinned items. Assign an optional keyboard shortcut on the Screenshots & Record settings page to open or close the tab. Clipboard-only captures are not collected.
 
 ### Dock Preview
 
@@ -140,7 +140,7 @@ Open **OnlySwitch Settings → Xcode Cleaner**, or show its tab in the menu-bar 
 
 Open **OnlySwitch Settings → App Uninstaller**, or show its tab in the menu-bar list or Only Control from **Settings → Tabs**. Drop an app or choose one, review the application and matching related files, then confirm which items to move to Trash. Discovery covers supported locations matched by bundle identifier, so the results may not include every related file.
 
-Dock Preview, Tailscale, Xcode Cleaner, and App Uninstaller are local Mac features and are unavailable in Only Widget or OnlyRemote. Screenshots is unavailable in Only Widget; OnlyRemote Plus can view, copy, drag, and delete screenshots but not edit them.
+Dock Preview, Tailscale, Xcode Cleaner, and App Uninstaller are local Mac features and are unavailable in Only Widget or OnlyRemote. Screenshots & Record is unavailable in Only Widget; OnlyRemote Plus can view, copy, drag, and delete screenshots and play, drag, and delete recordings, but not edit them.
 
 ### Shortcuts Gallery
 
@@ -248,9 +248,9 @@ Turn on **Codex Usage** or **Claude Usage** under **OnlySwitch Settings → Tabs
 
 ### OnlyRemote
 
-[OnlyRemote](https://apps.apple.com/us/app/onlyremote/id6793657946) controls OnlySwitch from iPhone or iPad over the local network. Open **iOS Remote** in OnlySwitch settings to enable access and pair a device. Choose which tabs appear under OnlyRemote's **Settings → Tabs**; Controls is always shown, while System Monitor, Codex Usage, Claude Usage, Sound Mixer, Brightness, Screenshots, and Aphrodite are optional.
+[OnlyRemote](https://apps.apple.com/us/app/onlyremote/id6793657946) controls OnlySwitch from iPhone or iPad over the local network. Open **iOS Remote** in OnlySwitch settings to enable access and pair a device. Choose which tabs appear under OnlyRemote's **Settings → Tabs**; Controls is always shown, while System Monitor, Codex Usage, Claude Usage, Sound Mixer, Brightness, Screenshots & Record, and Aphrodite are optional.
 
-OnlyRemote Plus unlocks the **Sound Mixer** tab (per-app volume, mute, equalizer, and output routing), the **Brightness** tab (per-display brightness), the **Screenshots** tab (view, copy, drag, and delete Mac screenshots), and Aphrodite. The Sound Mixer, Brightness, and Screenshots tabs need the latest OnlySwitch on the Mac. If the iPhone or iPad cannot find your Mac, both apps show the discovery error.
+OnlyRemote Plus unlocks the **Sound Mixer** tab (per-app volume, mute, equalizer, and output routing), the **Brightness** tab (per-display brightness), the **Screenshots & Record** tab (view, copy, drag, and delete Mac screenshots; play, drag, and delete screen recordings up to 512 MB), and Aphrodite. The Sound Mixer, Brightness, and Screenshots & Record tabs need the latest OnlySwitch on the Mac; recordings appear only when the Mac runs an OnlySwitch version that supports them. If the iPhone or iPad cannot find your Mac, both apps show the discovery error.
 
 ### Only Widget
 

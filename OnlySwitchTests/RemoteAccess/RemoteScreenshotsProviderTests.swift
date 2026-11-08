@@ -1,3 +1,4 @@
+import AVFoundation
 import ComposableArchitecture
 import CoreGraphics
 import Foundation
@@ -36,7 +37,7 @@ struct RemoteScreenshotsProviderTests {
         )
         let received = LockIsolated<[RemoteScreenshotLibrary]>([])
         let consumer = Task {
-            for await library in service.libraries() { received.withValue { $0.append(library) } }
+            for await library in service.libraries(false) { received.withValue { $0.append(library) } }
         }
         // Unchanged items do not produce another library within several polls.
         try await Task.sleep(for: .milliseconds(150))
@@ -72,11 +73,11 @@ struct RemoteScreenshotsProviderTests {
             source: .init(items: { items }, isCollectionEnabled: { true }, itemsChanged: { _ in }),
             client: Self.client(fileURLs: [firstID: url])
         )
-        let image = try await service.image(firstID, 3)
+        let image = try await service.image(firstID, 3, false)
         #expect(image.data == Data([9, 9]))
         #expect(image.contentType == UTType.png.identifier)
-        await #expect(throws: RemoteProtocolError.self) { _ = try await service.image(firstID, 2) }
-        await #expect(throws: RemoteProtocolError.self) { _ = try await service.image(secondID, 0) }
+        await #expect(throws: RemoteProtocolError.self) { _ = try await service.image(firstID, 2, false) }
+        await #expect(throws: RemoteProtocolError.self) { _ = try await service.image(secondID, 0, false) }
     }
 
     @Test func deleteTrashesAppliesItemsAndReturnsFailures() async throws {
@@ -98,23 +99,103 @@ struct RemoteScreenshotsProviderTests {
         #expect(applied.value == [remaining])
     }
 
+    @Test func recordingsAreHiddenFromPeersWithoutCapability() async throws {
+        let service = try await Self.mixedService(imageID: firstID, movieID: secondID).service
+        let legacy = try await Self.firstLibrary(service.libraries(false))
+        #expect(legacy.items.map(\.fileName) == ["a.png"])
+        let modern = try await Self.firstLibrary(service.libraries(true))
+        #expect(modern.items.map(\.fileName) == ["a.png", "b.mov"])
+        let recording = try #require(modern.items.first { $0.isRecording })
+        #expect(recording.contentType == UTType.quickTimeMovie.identifier)
+        #expect((recording.durationSeconds ?? 0) > 0)
+    }
+
+    @Test func recordingOriginalRequiresCapability() async throws {
+        let service = try await Self.mixedService(imageID: firstID, movieID: secondID).service
+        await #expect(throws: RemoteProtocolError.self) { _ = try await service.image(secondID, 0, false) }
+        let original = try await service.image(secondID, 0, true)
+        #expect(original.contentType == UTType.quickTimeMovie.identifier)
+        #expect(original.data.isEmpty == false)
+    }
+
+    @Test func recordingThumbnailIsAPosterJPEG() async throws {
+        let service = try await Self.mixedService(imageID: firstID, movieID: secondID).service
+        let result = await service.thumbnails([secondID])
+        #expect(result.thumbnails.map(\.itemID) == [secondID])
+        #expect(result.missingIDs.isEmpty)
+    }
+
     // MARK: - Helpers
 
-    private static func temporaryFolder() throws -> URL {
+    /// A png (`a.png`) and a QuickTime recording (`b.mov`) in a temporary library.
+    static func mixedService(imageID: UUID, movieID: UUID) async throws -> (service: RemoteScreenshotsService, movie: URL) {
+        let folder = try temporaryFolder()
+        let image = folder.appendingPathComponent("a.png")
+        try Data([1]).write(to: image)
+        let movie = try await writeMovie(to: folder.appendingPathComponent("b.mov"))
+        let items = [
+            ScreenshotItem(id: imageID, fileName: "a.png", createdAt: .init(timeIntervalSince1970: 1)),
+            ScreenshotItem(id: movieID, fileName: "b.mov", createdAt: .init(timeIntervalSince1970: 2)),
+        ]
+        let service = RemoteScreenshotsProvider.service(
+            source: .init(items: { items }, isCollectionEnabled: { true }, itemsChanged: { _ in }),
+            client: client(fileURLs: [imageID: image, movieID: movie]),
+            pollInterval: .milliseconds(10)
+        )
+        return (service, movie)
+    }
+
+    private static func firstLibrary(_ libraries: AsyncStream<RemoteScreenshotLibrary>) async throws -> RemoteScreenshotLibrary {
+        var iterator = libraries.makeAsyncIterator()
+        return try #require(await iterator.next())
+    }
+
+    /// Mirrors the Screenshots package's test-only `writeMovie`: a tiny H.264 movie.
+    @discardableResult static func writeMovie(to url: URL, frames: Int = 5) async throws -> URL {
+        let writer = try AVAssetWriter(outputURL: url, fileType: url.pathExtension.lowercased() == "mp4" ? .mp4 : .mov)
+        let input = AVAssetWriterInput(mediaType: .video, outputSettings: [AVVideoCodecKey: AVVideoCodecType.h264, AVVideoWidthKey: 16, AVVideoHeightKey: 16])
+        let adaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: input, sourcePixelBufferAttributes: [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA, kCVPixelBufferWidthKey as String: 16, kCVPixelBufferHeightKey as String: 16])
+        writer.add(input)
+        #expect(writer.startWriting())
+        writer.startSession(atSourceTime: .zero)
+        for frame in 0..<frames {
+            while !input.isReadyForMoreMediaData { try await Task.sleep(for: .milliseconds(5)) }
+            var buffer: CVPixelBuffer?
+            CVPixelBufferCreate(nil, 16, 16, kCVPixelFormatType_32BGRA, nil, &buffer)
+            let pixels = try #require(buffer)
+            CVPixelBufferLockBaseAddress(pixels, []); memset(CVPixelBufferGetBaseAddress(pixels), 0x7F, CVPixelBufferGetDataSize(pixels)); CVPixelBufferUnlockBaseAddress(pixels, [])
+            #expect(adaptor.append(pixels, withPresentationTime: CMTime(value: CMTimeValue(frame), timescale: 10)))
+        }
+        input.markAsFinished()
+        await writer.finishWriting()
+        #expect(writer.status == .completed)
+        return url
+    }
+
+    static func temporaryFolder() throws -> URL {
         let url = FileManager.default.temporaryDirectory.appendingPathComponent("RemoteScreenshotsProviderTests-\(UUID().uuidString)", isDirectory: true)
         try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
         return url
     }
 
-    private static func client(fileURLs: [UUID: URL]) -> ScreenshotsClient {
+    static func client(fileURLs: [UUID: URL]) -> ScreenshotsClient {
         var client = ScreenshotsClient.testValue
         client.fileURL = { fileURLs[$0] }
         client.thumbnail = { url, maxPixel, _ in
+            if ScreenshotMediaType(fileName: url.lastPathComponent) == .recording {
+                let generator = AVAssetImageGenerator(asset: AVURLAsset(url: url))
+                generator.maximumSize = CGSize(width: maxPixel, height: maxPixel)
+                return try? await generator.image(at: .zero).image
+            }
             guard let source = CGImageSourceCreateWithURL(url as CFURL, nil) else { return nil }
             return CGImageSourceCreateThumbnailAtIndex(source, 0, [
                 kCGImageSourceCreateThumbnailFromImageAlways: true,
                 kCGImageSourceThumbnailMaxPixelSize: maxPixel,
             ] as CFDictionary)
+        }
+        client.duration = { url in
+            guard let duration = try? await AVURLAsset(url: url).load(.duration), duration.isNumeric else { return nil }
+            return duration.seconds
         }
         return client
     }

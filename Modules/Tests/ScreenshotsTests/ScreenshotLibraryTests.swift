@@ -191,5 +191,29 @@ struct ScreenshotLibraryTests {
         #expect(await library.fileURL(swapped.id) == nil)
         #expect(await library.fileURL(removed.id) == nil)
     }
+
+    @Test func mediaTypeIsDerivedFromExtension() {
+        #expect(ScreenshotMediaType(fileName: "a.png") == .image)
+        #expect(ScreenshotMediaType(fileName: "Screen Recording 2026-11-07 at 10.00.00.mov") == .recording)
+        #expect(ScreenshotMediaType(fileName: "clip.MP4") == .recording)
+        #expect(ScreenshotMediaType(fileName: "notes.txt") == nil)
+        #expect(ScreenshotMediaType(fileName: ".hidden.mov") == nil)
+        #expect(item(createdAt: 0, fileName: "x.mov").isRecording)
+        #expect(item(createdAt: 0, fileName: "x.png").isRecording == false)
+    }
+
+    @Test func loadAdoptsRecordingsAndAddAcceptsThem() async throws {
+        let root = try makeTemporaryDirectory(); defer { try? FileManager.default.removeItem(at: root) }
+        let folder = root.appendingPathComponent("Library", isDirectory: true)
+        try await writeMovie(to: folder.appendingPathComponent("Old Recording.mov"))
+        let library = ScreenshotLibrary(folder: folder, manifestURL: root.appendingPathComponent("library.json"), trash: { _ in }, now: { Date(timeIntervalSince1970: 10) }, uuid: { UUID() })
+        let loaded = try await library.load()
+        #expect(loaded.map(\.fileName) == ["Old Recording.mov"])
+        let new = try await writeMovie(to: folder.appendingPathComponent("New Recording.mp4"))
+        let added = try #require(try await library.add(fileURL: new))
+        #expect(added.isRecording)
+        let pinned = try await library.setPinned(added.id, true)
+        #expect(pinned.first?.id == added.id)
+    }
 }
 #endif

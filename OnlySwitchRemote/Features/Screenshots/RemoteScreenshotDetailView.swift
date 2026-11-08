@@ -2,7 +2,8 @@ import ComposableArchitecture
 import RemoteCore
 import SwiftUI
 
-/// Read-only full-size viewer with Copy and Delete. There are no editing affordances.
+/// Read-only full-size viewer (or player, for recordings) with Copy (images only) and Delete.
+/// There are no editing affordances.
 ///
 /// Shows the thumbnail at once and swaps to the original when its download lands in `imageURLs`.
 /// Offline without a cached original it keeps the thumbnail and says why.
@@ -26,11 +27,13 @@ struct RemoteScreenshotDetailView: View {
                 }
                 if let id = store.selectedItemID {
                     ToolbarItemGroup(placement: .bottomBar) {
-                        Button(
-                            store.copiedItemID == id ? "Copied" : "Copy",
-                            systemImage: store.copiedItemID == id ? "checkmark" : "doc.on.doc"
-                        ) {
-                            store.send(.copyTapped(id))
+                        if store.state.item(id)?.isRecording == false {
+                            Button(
+                                store.copiedItemID == id ? "Copied" : "Copy",
+                                systemImage: store.copiedItemID == id ? "checkmark" : "doc.on.doc"
+                            ) {
+                                store.send(.copyTapped(id))
+                            }
                         }
                         Spacer()
                         Button("Delete", systemImage: "trash", role: .destructive) {

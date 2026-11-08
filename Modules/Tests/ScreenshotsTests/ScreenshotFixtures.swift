@@ -1,5 +1,7 @@
 #if os(macOS)
+import AVFoundation
 import CoreGraphics
+import CoreVideo
 import Foundation
 import ImageIO
 import Testing
@@ -33,6 +35,29 @@ func pngData(width: Int = 4, height: Int = 4, color: (CGFloat, CGFloat, CGFloat)
 @discardableResult func writePNG(to url: URL, width: Int = 4, height: Int = 4, color: (CGFloat, CGFloat, CGFloat) = (1, 0, 0)) throws -> URL {
     try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
     try pngData(width: width, height: height, color: color).write(to: url)
+    return url
+}
+
+/// A real, playable H.264 `.mov` (16×16, `frames` frames at 10 fps) written with AVAssetWriter.
+@discardableResult func writeMovie(to url: URL, frames: Int = 5) async throws -> URL {
+    try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+    let writer = try AVAssetWriter(outputURL: url, fileType: url.pathExtension.lowercased() == "mp4" ? .mp4 : .mov)
+    let input = AVAssetWriterInput(mediaType: .video, outputSettings: [AVVideoCodecKey: AVVideoCodecType.h264, AVVideoWidthKey: 16, AVVideoHeightKey: 16])
+    let adaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: input, sourcePixelBufferAttributes: [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA, kCVPixelBufferWidthKey as String: 16, kCVPixelBufferHeightKey as String: 16])
+    writer.add(input)
+    #expect(writer.startWriting())
+    writer.startSession(atSourceTime: .zero)
+    for frame in 0..<frames {
+        while !input.isReadyForMoreMediaData { try await Task.sleep(for: .milliseconds(5)) }
+        var buffer: CVPixelBuffer?
+        CVPixelBufferCreate(nil, 16, 16, kCVPixelFormatType_32BGRA, nil, &buffer)
+        let pixels = try #require(buffer)
+        CVPixelBufferLockBaseAddress(pixels, []); memset(CVPixelBufferGetBaseAddress(pixels), 0x7F, CVPixelBufferGetDataSize(pixels)); CVPixelBufferUnlockBaseAddress(pixels, [])
+        #expect(adaptor.append(pixels, withPresentationTime: CMTime(value: CMTimeValue(frame), timescale: 10)))
+    }
+    input.markAsFinished()
+    await writer.finishWriting()
+    #expect(writer.status == .completed)
     return url
 }
 

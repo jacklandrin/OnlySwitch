@@ -18,7 +18,12 @@ public final class ScreenshotFlyInPresenter {
     /// Returns when the image has landed. An unreadable image or an empty target returns immediately. Cancelling
     /// the calling task (a newer capture, or the item was deleted mid-flight) removes the panel at once.
     public func fly(_ url: URL, to target: CGRect) async {
-        guard !Task.isCancelled, !target.isEmpty, let image = NSImage(contentsOf: url), image.size.width > 0, image.size.height > 0,
+        guard !Task.isCancelled, !target.isEmpty else { return }
+        // A recording flies in as its poster frame.
+        let image: NSImage? = if ScreenshotMediaType(fileName: url.lastPathComponent) == .recording {
+            await ScreenshotMediaInspector.posterFrame(url, maxPixel: 1600).map { NSImage(cgImage: $0, size: .zero) }
+        } else { NSImage(contentsOf: url) }
+        guard !Task.isCancelled, let image, image.size.width > 0, image.size.height > 0,
               let screen = NSScreen.screens.first(where: { $0.frame.intersects(target) }) ?? NSScreen.main else { return }
         let start = Self.startFrame(for: image.size, in: screen.visibleFrame)
         let panel = Self.makePanel(image: image, frame: start)

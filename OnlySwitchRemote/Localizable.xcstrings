@@ -8988,6 +8988,130 @@
         }
       }
     },
+    "Connect to the Mac to play this recording." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Připojte se k Macu, abyste mohli tento záznam přehrát."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbinde dich mit dem Mac, um diese Aufnahme abzuspielen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connect to the Mac to play this recording."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conéctate al Mac para reproducir esta grabación."
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kumonekta sa Mac para mapatugtog ang recording na ito."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connectez-vous au Mac pour lire cet enregistrement."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Povežite se s Macom da biste reproducirali ovaj videozapis."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connettiti al Mac per riprodurre questa registrazione."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この録画を再生するには、Macに接続してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 녹화를 재생하려면 Mac에 연결하세요."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maak verbinding met de Mac om deze opname af te spelen."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Połącz się z komputerem Mac, aby odtworzyć to nagranie."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conecte-se ao Mac para reproduzir esta gravação."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подключитесь к Mac, чтобы воспроизвести эту запись."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pripojte sa k Macu, aby ste mohli prehrať tento záznam."
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ku xir Mac-ga si aad u daarto duubistan."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu kaydı oynatmak için Mac’e bağlanın."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Підключіться до Mac, щоб відтворити цей запис."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "连接到 Mac 以播放此录屏。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "連線到 Mac 以播放此錄影。"
+          }
+        }
+      }
+    },
     "Connect to the Mac to view the full-size screenshot." : {
       "localizations" : {
         "cs" : {
@@ -31759,6 +31883,130 @@
         }
       }
     },
+    "Pinned screen recording, %@" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Připnutý záznam obrazovky, %@"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Angeheftete Bildschirmaufnahme, %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pinned screen recording, %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grabación de pantalla fijada, %@"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Naka-pin na screen recording, %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enregistrement de l’écran épinglé, %@"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prikvačeni videozapis zaslona, %@"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registrazione dello schermo fissata, %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ピン留めされた画面収録、%@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "고정된 화면 기록, %@"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vastgezette schermopname, %@"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Przypięte nagranie ekranu, %@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gravação de tela fixada, %@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Закрепленная запись экрана, %@"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pripnutý záznam obrazovky, %@"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duubista shaashadda la dhejiyay, %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sabitlenmiş ekran kaydı, %@"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Закріплений запис екрана, %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已置顶的屏幕录制，%@"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已釘選的螢幕錄影，%@"
+          }
+        }
+      }
+    },
     "Pinned screenshot, %@" : {
       "localizations" : {
         "cs" : {
@@ -31879,6 +32127,130 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "已釘選的截圖，%@"
+          }
+        }
+      }
+    },
+    "Plays the recording" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přehraje záznam"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spielt die Aufnahme ab"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plays the recording"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reproduce la grabación"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pinapatugtog ang recording"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lit l’enregistrement"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reproducira videozapis"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Riproduce la registrazione"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "録画を再生します"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "녹화를 재생합니다"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speelt de opname af"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odtwarza nagranie"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reproduz a gravação"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Воспроизводит запись"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prehrá záznam"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wuxuu daaraa duubista"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kaydı oynatır"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Відтворює запис"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放录屏"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放錄影"
           }
         }
       }
@@ -36896,6 +37268,130 @@
         }
       }
     },
+    "Screen recording, %@" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Záznam obrazovky, %@"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildschirmaufnahme, %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Screen recording, %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grabación de pantalla, %@"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Screen recording, %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enregistrement de l’écran, %@"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videozapis zaslona, %@"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registrazione dello schermo, %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "画面収録、%@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "화면 기록, %@"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schermopname, %@"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nagranie ekranu, %@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gravação de tela, %@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Запись экрана, %@"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Záznam obrazovky, %@"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duubista shaashadda, %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ekran kaydı, %@"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Запис екрана, %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "屏幕录制，%@"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "螢幕錄影，%@"
+          }
+        }
+      }
+    },
     "Screen Saver" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -37394,250 +37890,250 @@
         }
       }
     },
-    "Screenshots" : {
+    "Screenshots & Record" : {
       "localizations" : {
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Snímky obrazovky"
+            "value" : "Snímky a záznamy obrazovky"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bildschirmfotos"
+            "value" : "Bildschirmfotos & Aufnahmen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Screenshots"
+            "value" : "Screenshots & Record"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Capturas de pantalla"
+            "value" : "Capturas y grabaciones"
           }
         },
         "fil" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mga screenshot"
+            "value" : "Mga Screenshot at Recording"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Captures d’écran"
+            "value" : "Captures et enregistrements"
           }
         },
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Snimke zaslona"
+            "value" : "Snimke i videozapisi zaslona"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Screenshot"
+            "value" : "Screenshot e registrazioni"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "スクリーンショット"
+            "value" : "スクリーンショットと録画"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "스크린샷"
+            "value" : "스크린샷 및 녹화"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Schermafbeeldingen"
+            "value" : "Schermafbeeldingen & opnamen"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zrzuty ekranu"
+            "value" : "Zrzuty i nagrania ekranu"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Capturas de tela"
+            "value" : "Capturas e gravações de tela"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Снимки экрана"
+            "value" : "Снимки и запись экрана"
           }
         },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Snímky obrazovky"
+            "value" : "Snímky a záznamy obrazovky"
           }
         },
         "so" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sawir-shaashadeed"
+            "value" : "Sawir-shaashadeed & Duubis"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ekran Görüntüleri"
+            "value" : "Ekran Görüntüleri ve Kayıtlar"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Знімки екрана"
+            "value" : "Знімки та запис екрана"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "截屏"
+            "value" : "截屏与录屏"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "截圖"
+            "value" : "截圖與錄影"
           }
         }
       }
     },
-    "Screenshots you take on this Mac appear here." : {
+    "Screenshots and screen recordings you take on this Mac appear here." : {
       "localizations" : {
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zde se zobrazí snímky obrazovky pořízené na tomto Macu."
+            "value" : "Zde se zobrazí snímky a záznamy obrazovky pořízené na tomto Macu."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bildschirmfotos, die du auf diesem Mac aufnimmst, werden hier angezeigt."
+            "value" : "Bildschirmfotos und Bildschirmaufnahmen, die du auf diesem Mac erstellst, werden hier angezeigt."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Screenshots you take on this Mac appear here."
+            "value" : "Screenshots and screen recordings you take on this Mac appear here."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Las capturas de pantalla que hagas en este Mac aparecerán aquí."
+            "value" : "Las capturas y grabaciones de pantalla que hagas en este Mac aparecerán aquí."
           }
         },
         "fil" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lalabas dito ang mga screenshot na kinukuha mo sa Mac na ito."
+            "value" : "Lalabas dito ang mga screenshot at screen recording na kinukuha mo sa Mac na ito."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Les captures d’écran que vous prenez sur ce Mac apparaissent ici."
+            "value" : "Les captures et enregistrements d’écran que vous réalisez sur ce Mac apparaissent ici."
           }
         },
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ovdje se prikazuju snimke zaslona koje snimite na ovom Macu."
+            "value" : "Ovdje se prikazuju snimke i videozapisi zaslona koje snimite na ovom Macu."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gli screenshot che acquisisci su questo Mac vengono mostrati qui."
+            "value" : "Gli screenshot e le registrazioni dello schermo che acquisisci su questo Mac vengono mostrati qui."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "このMacで撮ったスクリーンショットがここに表示されます。"
+            "value" : "このMacで撮ったスクリーンショットと画面収録がここに表示されます。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "이 Mac에서 찍은 스크린샷이 여기에 표시됩니다."
+            "value" : "이 Mac에서 찍은 스크린샷과 화면 기록이 여기에 표시됩니다."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Schermafbeeldingen die je op deze Mac maakt, worden hier getoond."
+            "value" : "Schermafbeeldingen en schermopnamen die je op deze Mac maakt, worden hier getoond."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zrzuty ekranu wykonane na tym komputerze Mac pojawiają się tutaj."
+            "value" : "Zrzuty i nagrania ekranu wykonane na tym komputerze Mac pojawiają się tutaj."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "As capturas de tela feitas neste Mac aparecem aqui."
+            "value" : "As capturas e gravações de tela feitas neste Mac aparecem aqui."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Снимки экрана, сделанные на этом Mac, появляются здесь."
+            "value" : "Снимки и записи экрана, сделанные на этом Mac, появляются здесь."
           }
         },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tu sa zobrazia snímky obrazovky, ktoré zhotovíte na tomto Macu."
+            "value" : "Tu sa zobrazia snímky a záznamy obrazovky, ktoré zhotovíte na tomto Macu."
           }
         },
         "so" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sawir-shaashadaha aad ku qaaddo Mac-gan halkan ayay ka muuqdaan."
+            "value" : "Sawir-shaashadaha iyo duubisyada shaashadda ee aad ku samayso Mac-gan halkan ayay ka muuqdaan."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bu Mac’te aldığınız ekran görüntüleri burada görünür."
+            "value" : "Bu Mac’te aldığınız ekran görüntüleri ve ekran kayıtları burada görünür."
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Знімки екрана, зроблені на цьому Mac, з’являються тут."
+            "value" : "Знімки та записи екрана, зроблені на цьому Mac, з’являються тут."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "在这台 Mac 上拍摄的截屏会显示在这里。"
+            "value" : "在这台 Mac 上拍摄的截屏和录屏会显示在这里。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "在這台 Mac 上拍攝的截圖會顯示在這裡。"
+            "value" : "在這台 Mac 上拍攝的截圖和錄影會顯示在這裡。"
           }
         }
       }
@@ -48181,6 +48677,130 @@
         }
       }
     },
+    "This item changed on the Mac or is too large to transfer." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tato položka se na Macu změnila nebo je příliš velká k přenosu."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieses Objekt wurde auf dem Mac geändert oder ist zu groß für die Übertragung."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This item changed on the Mac or is too large to transfer."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este elemento ha cambiado en el Mac o es demasiado grande para transferirlo."
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nagbago ang item na ito sa Mac o masyado itong malaki para ilipat."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cet élément a été modifié sur le Mac ou est trop volumineux pour être transféré."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ova se stavka promijenila na Macu ili je prevelika za prijenos."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Questo elemento è stato modificato sul Mac o è troppo grande per essere trasferito."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この項目はMac上で変更されたか、大きすぎて転送できません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 항목이 Mac에서 변경되었거나 너무 커서 전송할 수 없습니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dit onderdeel is op de Mac gewijzigd of is te groot om over te zetten."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ten element zmienił się na komputerze Mac lub jest zbyt duży, aby go przesłać."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este item foi alterado no Mac ou é grande demais para ser transferido."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Этот объект изменился на Mac или слишком велик для передачи."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Táto položka sa na Macu zmenila alebo je príliš veľká na prenos."
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sheygan waa laga beddelay Mac-ga ama aad buu u weyn yahay in la gudbiyo."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu öğe Mac’te değişti veya aktarılamayacak kadar büyük."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Цей елемент змінився на Mac або завеликий для передавання."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此项目已在 Mac 上更改，或文件过大而无法传输。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此項目已在 Mac 上變更，或檔案過大而無法傳輸。"
+          }
+        }
+      }
+    },
     "This Mac does not have a supported display notch" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -50520,126 +51140,126 @@
         }
       }
     },
-    "Turn on screenshot collection in OnlySwitch on the Mac to see new screenshots here." : {
+    "Turn on screenshot collection in OnlySwitch on the Mac to see new screenshots and recordings here." : {
       "localizations" : {
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zapněte shromažďování snímků obrazovky v OnlySwitch na Macu, aby se zde zobrazovaly nové snímky obrazovky."
+            "value" : "Zapněte shromažďování snímků obrazovky v OnlySwitch na Macu, aby se zde zobrazovaly nové snímky a záznamy obrazovky."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aktiviere das Sammeln von Bildschirmfotos in OnlySwitch auf dem Mac, um neue Bildschirmfotos hier zu sehen."
+            "value" : "Aktiviere das Sammeln von Bildschirmfotos in OnlySwitch auf dem Mac, um neue Bildschirmfotos und Aufnahmen hier zu sehen."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Turn on screenshot collection in OnlySwitch on the Mac to see new screenshots here."
+            "value" : "Turn on screenshot collection in OnlySwitch on the Mac to see new screenshots and recordings here."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Activa la recopilación de capturas de pantalla en OnlySwitch en el Mac para ver aquí las nuevas capturas."
+            "value" : "Activa la recopilación de capturas de pantalla en OnlySwitch en el Mac para ver aquí las nuevas capturas y grabaciones."
           }
         },
         "fil" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "I-on ang pagkolekta ng screenshot sa OnlySwitch sa Mac para makita dito ang mga bagong screenshot."
+            "value" : "I-on ang pagkolekta ng screenshot sa OnlySwitch sa Mac para makita dito ang mga bagong screenshot at recording."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Activez la collecte des captures d’écran dans OnlySwitch sur le Mac pour voir les nouvelles captures d’écran ici."
+            "value" : "Activez la collecte des captures d’écran dans OnlySwitch sur le Mac pour voir les nouvelles captures et les nouveaux enregistrements ici."
           }
         },
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uključite prikupljanje snimki zaslona u OnlySwitchu na Macu da biste ovdje vidjeli nove snimke zaslona."
+            "value" : "Uključite prikupljanje snimki zaslona u OnlySwitchu na Macu da biste ovdje vidjeli nove snimke i videozapise zaslona."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Attiva la raccolta degli screenshot in OnlySwitch sul Mac per vedere qui i nuovi screenshot."
+            "value" : "Attiva la raccolta degli screenshot in OnlySwitch sul Mac per vedere qui i nuovi screenshot e le nuove registrazioni."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "新しいスクリーンショットをここに表示するには、MacのOnlySwitchでスクリーンショットの収集をオンにしてください。"
+            "value" : "新しいスクリーンショットと録画をここに表示するには、MacのOnlySwitchでスクリーンショットの収集をオンにしてください。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "새 스크린샷을 여기에서 보려면 Mac의 OnlySwitch에서 스크린샷 수집을 켜세요."
+            "value" : "새 스크린샷과 녹화를 여기에서 보려면 Mac의 OnlySwitch에서 스크린샷 수집을 켜세요."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Schakel het verzamelen van schermafbeeldingen in OnlySwitch op de Mac in om hier nieuwe schermafbeeldingen te zien."
+            "value" : "Schakel het verzamelen van schermafbeeldingen in OnlySwitch op de Mac in om hier nieuwe schermafbeeldingen en opnamen te zien."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Włącz zbieranie zrzutów ekranu w OnlySwitch na komputerze Mac, aby widzieć tutaj nowe zrzuty ekranu."
+            "value" : "Włącz zbieranie zrzutów ekranu w OnlySwitch na komputerze Mac, aby widzieć tutaj nowe zrzuty i nagrania ekranu."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ative a coleta de capturas de tela no OnlySwitch no Mac para ver novas capturas de tela aqui."
+            "value" : "Ative a coleta de capturas de tela no OnlySwitch no Mac para ver novas capturas e gravações aqui."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Включите сбор снимков экрана в OnlySwitch на Mac, чтобы новые снимки экрана появлялись здесь."
+            "value" : "Включите сбор снимков экрана в OnlySwitch на Mac, чтобы новые снимки и записи экрана появлялись здесь."
           }
         },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zapnite zhromažďovanie snímok obrazovky v OnlySwitch na Macu, aby sa tu zobrazovali nové snímky obrazovky."
+            "value" : "Zapnite zhromažďovanie snímok obrazovky v OnlySwitch na Macu, aby sa tu zobrazovali nové snímky a záznamy obrazovky."
           }
         },
         "so" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Daar ururinta sawir-shaashadaha ee OnlySwitch ee Mac-ga si aad halkan ugu aragto sawir-shaashado cusub."
+            "value" : "Daar ururinta sawir-shaashadaha ee OnlySwitch ee Mac-ga si aad halkan ugu aragto sawir-shaashado iyo duubisyo cusub."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Yeni ekran görüntülerini burada görmek için Mac’teki OnlySwitch’te ekran görüntüsü toplamayı açın."
+            "value" : "Yeni ekran görüntülerini ve kayıtları burada görmek için Mac’teki OnlySwitch’te ekran görüntüsü toplamayı açın."
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Увімкніть збирання знімків екрана в OnlySwitch на Mac, щоб бачити тут нові знімки екрана."
+            "value" : "Увімкніть збирання знімків екрана в OnlySwitch на Mac, щоб бачити тут нові знімки та записи екрана."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "在 Mac 上的 OnlySwitch 中打开截屏收集，即可在这里看到新截屏。"
+            "value" : "在 Mac 上的 OnlySwitch 中打开截屏收集，即可在这里看到新的截屏和录屏。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "在 Mac 上的 OnlySwitch 中開啟截圖收集，即可在這裡看到新的截圖。"
+            "value" : "在 Mac 上的 OnlySwitch 中開啟截圖收集，即可在這裡看到新的截圖和錄影。"
           }
         }
       }

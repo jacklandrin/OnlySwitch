@@ -2,7 +2,7 @@ import ComposableArchitecture
 import Foundation
 import RemoteCore
 
-/// Mirrors the selected Mac's screenshot library (view, copy, delete; never edit).
+/// Mirrors the selected Mac's screenshots and screen recordings (view, play, copy images, delete; never edit).
 ///
 /// Streams only while visible, entitled and authenticated, like Brightness. Every request is sent
 /// after the subscription; stopping the stream cancels streaming, thumbnail, image and delete work.
@@ -197,7 +197,8 @@ struct RemoteScreenshotsFeature {
                 return .none
 
             case let .copyTapped(id):
-                guard let item = state.item(id) else { return .none }
+                // Recordings are never put on the pasteboard.
+                guard let item = state.item(id), item.isRecording == false else { return .none }
                 if let url = state.imageURLs[id] { return copy(url, item: item) }
                 return download(item, intent: .copy, state: &state)
 
@@ -218,7 +219,7 @@ struct RemoteScreenshotsFeature {
                 guard generation == state.cacheGeneration else { return .none }
                 state.downloadingItemIDs.remove(itemID)
                 state.pendingCopyIDs.remove(itemID)
-                state.operationError = Self.downloadErrorMessage(for: error)
+                state.operationError = Self.downloadErrorMessage(for: error, isRecording: state.item(itemID)?.isRecording == true)
                 return reconcileTransferHold(&state)
 
             case let .imageCancelled(generation, itemID):
@@ -597,10 +598,12 @@ extension RemoteScreenshotsFeature {
         }
     }
 
-    static func downloadErrorMessage(for error: RemoteProtocolError) -> String {
+    static func downloadErrorMessage(for error: RemoteProtocolError, isRecording: Bool = false) -> String {
         switch error.code {
         case .controlNotFound:
             String(localized: "This screenshot is no longer on the Mac.")
+        case .controlUnavailable where isRecording:
+            String(localized: "This item changed on the Mac or is too large to transfer.")
         case .controlUnavailable:
             String(localized: "This screenshot changed on the Mac or is too large to transfer.")
         case .requestTimedOut:

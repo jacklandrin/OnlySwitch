@@ -17,7 +17,7 @@ public actor ScreenshotLibrary {
         self.folder = folder.standardizedFileURL; self.manifestURL = manifestURL; self.trashItem = trash; self.now = now; self.uuid = uuid
     }
 
-    /// Re-reads the manifest, reconciles it with disk and adopts visible image files directly in the folder that
+    /// Re-reads the manifest, reconciles it with disk and adopts visible image or movie files directly in the folder that
     /// are not recorded yet (e.g. captured while OnlySwitch was not running), dated by creation/modification date.
     public func load() throws -> [ScreenshotItem] {
         items = nil
@@ -25,7 +25,7 @@ public actor ScreenshotLibrary {
         let recorded = Set(list.map(\.fileName))
         let names = ((try? FileManager.default.contentsOfDirectory(atPath: folder.path)) ?? []).sorted()
         let adopted: [ScreenshotItem] = names.compactMap { name in
-            guard !recorded.contains(name), Self.isImageName(name), let url = validatedURL(for: name), isRegularFile(url) else { return nil }
+            guard !recorded.contains(name), Self.isMediaName(name), let url = validatedURL(for: name), isRegularFile(url) else { return nil }
             let values = try? url.resourceValues(forKeys: [.creationDateKey, .contentModificationDateKey])
             return ScreenshotItem(id: uuid(), fileName: name, createdAt: values?.creationDate ?? values?.contentModificationDate ?? now())
         }
@@ -34,10 +34,10 @@ public actor ScreenshotLibrary {
     }
 
     /// Records a new capture in the library folder. Returns nil for anything that is not a visible, regular
-    /// image file directly inside the folder; returns the existing item when the name is already recorded.
+    /// image or movie file directly inside the folder; returns the existing item when the name is already recorded.
     public func add(fileURL: URL) throws -> ScreenshotItem? {
         let name = fileURL.lastPathComponent
-        guard let url = validatedURL(for: name), url == fileURL.standardizedFileURL, Self.isImageName(name), isRegularFile(url) else { return nil }
+        guard let url = validatedURL(for: name), url == fileURL.standardizedFileURL, Self.isMediaName(name), isRegularFile(url) else { return nil }
         var list = try current()
         if let existing = list.first(where: { $0.fileName == name }) { return existing }
         let item = ScreenshotItem(id: uuid(), fileName: name, createdAt: now())
@@ -110,7 +110,7 @@ public actor ScreenshotLibrary {
         }
         var seen = Set<String>()
         let reconciled = decoded.filter { entry in
-            guard let url = validatedURL(for: entry.fileName), Self.isImageName(entry.fileName), isRegularFile(url), seen.insert(entry.fileName).inserted else { return false }
+            guard let url = validatedURL(for: entry.fileName), Self.isMediaName(entry.fileName), isRegularFile(url), seen.insert(entry.fileName).inserted else { return false }
             return true
         }
         if reconciled.count != decoded.count { dirty = true }
@@ -141,9 +141,6 @@ public actor ScreenshotLibrary {
 
     private func isSymbolicLink(_ url: URL) -> Bool { (try? url.resourceValues(forKeys: [.isSymbolicLinkKey]))?.isSymbolicLink == true }
 
-    static func isImageName(_ name: String) -> Bool {
-        guard !name.hasPrefix("."), let type = UTType(filenameExtension: (name as NSString).pathExtension) else { return false }
-        return type.conforms(to: .image)
-    }
+    static func isMediaName(_ name: String) -> Bool { ScreenshotMediaType(fileName: name) != nil }
 }
 #endif

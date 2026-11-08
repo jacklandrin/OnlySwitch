@@ -24,12 +24,22 @@ struct RemoteAppSmokeTests {
             revision: 0,
             byteCount: 3
         )
+        let recording = RemoteScreenshotItem(
+            id: UUID(),
+            fileName: "clip.mov",
+            contentType: "com.apple.quicktime-movie",
+            createdAt: .now,
+            isPinned: false,
+            revision: 0,
+            byteCount: 3,
+            durationSeconds: 3_725
+        )
         var empty = RemoteScreenshotsFeature.State()
         empty.selectedMacID = UUID()
         empty.connectionState = .authenticated
         empty.library = .init(revision: 1, isCollectionEnabled: false, items: [])
         var populated = empty
-        populated.library = .init(revision: 2, isCollectionEnabled: true, items: [item])
+        populated.library = .init(revision: 2, isCollectionEnabled: true, items: [item, recording])
         populated.isStreaming = true
         populated.hasLiveLibrary = true
         var offline = populated
@@ -49,7 +59,12 @@ struct RemoteAppSmokeTests {
         busy.operationError = "The screenshot could not be copied."
         var detail = offline
         detail.selectedItemID = item.id
-        let states = [RemoteScreenshotsFeature.State(), empty, populated, offline, upgrade, connecting, busy, detail]
+        var recordingDetail = offline
+        recordingDetail.selectedItemID = recording.id
+        var playing = populated
+        playing.selectedItemID = recording.id
+        playing.imageURLs = [recording.id: URL(fileURLWithPath: "/tmp/clip.mov")]
+        let states = [RemoteScreenshotsFeature.State(), empty, populated, offline, upgrade, connecting, busy, detail, recordingDetail, playing]
         for state in states {
             let store = Store(initialState: state) { RemoteScreenshotsFeature() }
             let grid = UIHostingController(rootView: RemoteScreenshotsView(store: store))

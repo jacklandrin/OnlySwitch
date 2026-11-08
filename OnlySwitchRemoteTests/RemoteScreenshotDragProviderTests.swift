@@ -84,6 +84,12 @@ struct RemoteScreenshotDragProviderTests {
         #expect(FileManager.default.fileExists(atPath: cached.path))
     }
 
+    @Test func recordingsRegisterTheirMovieType() {
+        let images = RemoteScreenshotImageClient { _, _ in throw CancellationError() }
+        let provider = RemoteScreenshotDragProvider.itemProvider(macID: macID, item: item(contentType: "com.apple.quicktime-movie", fileName: "clip.mov"), cachedURL: nil, images: images)
+        #expect(provider.registeredTypeIdentifiers == [UTType.quickTimeMovie.identifier])
+    }
+
     @Test func nonImageTypesFallBackToGenericImageAndFailuresReachTheDropTarget() async throws {
         let images = RemoteScreenshotImageClient { _, _ in throw RemoteProtocolError(code: .controlNotFound, message: "gone") }
         let provider = RemoteScreenshotDragProvider.itemProvider(macID: macID, item: item(contentType: "public.plain-text"), cachedURL: nil, images: images)

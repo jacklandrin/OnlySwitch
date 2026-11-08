@@ -8,7 +8,9 @@ enum RemoteScreenshotResponse: Equatable, Sendable {
     case failed(RemoteProtocolError)
 }
 
-/// Correlates screenshot replies by request id and reassembles originals for one session.
+/// Correlates screenshot replies by request id and reassembles originals into files under
+/// `transferDirectory` for one session. A delivered file belongs to the receiver; every other
+/// ending deletes it.
 ///
 /// Every registration ends exactly once: with its reply, the Mac's failure, a corrupted
 /// transfer (`invalidFrame`), a timeout (`requestTimedOut`), or `CancellationError` when it
@@ -56,16 +58,21 @@ actor RemoteScreenshotResponses {
         let token: UUID
         let kind: Kind
         let continuation: Stream.Continuation
-        var assembler: RemoteScreenshotImageAssembler?
+        var assembler: RemoteScreenshotFileAssembler?
         var activity: UInt64 = 0
         var timeout: Task<Void, Never>?
     }
 
     private let timeouts: Timeouts
+    private let transferDirectory: URL
     private var pending: [UUID: Pending] = [:]
 
-    init(timeouts: Timeouts = .init()) {
+    init(
+        timeouts: Timeouts = .init(),
+        transferDirectory: URL = FileManager.default.temporaryDirectory.appendingPathComponent("OnlyRemoteTransfers", isDirectory: true)
+    ) {
         self.timeouts = timeouts
+        self.transferDirectory = transferDirectory
     }
 
     var pendingCount: Int { pending.count }
@@ -96,6 +103,7 @@ actor RemoteScreenshotResponses {
         case let .screenshotRequestFailed(failure):
             guard let entry = pending.removeValue(forKey: failure.requestID) else { return true }
             entry.timeout?.cancel()
+            entry.assembler?.discard()
             entry.continuation.yield(.failed(failure.error))
             entry.continuation.finish()
         case let .screenshotImageManifest(manifest):
@@ -104,27 +112,31 @@ actor RemoteScreenshotResponses {
                 finish(manifest.requestID, throwing: Self.corrupted)
                 return true
             }
-            entry.assembler = .init(manifest: manifest)
+            guard let assembler = try? RemoteScreenshotFileAssembler(manifest: manifest, directory: transferDirectory) else {
+                finish(manifest.requestID, throwing: Self.corrupted)
+                return true
+            }
+            entry.assembler = assembler
             pending[manifest.requestID] = entry
             armTimeout(manifest.requestID)
         case let .screenshotImageChunk(chunk):
-            guard var entry = pending[chunk.requestID] else { return true }
-            guard var assembler = entry.assembler else {
+            guard let assembler = pending[chunk.requestID]?.assembler else {
                 finish(chunk.requestID, throwing: Self.corrupted)
                 return true
             }
             do {
                 try assembler.append(chunk)
                 guard assembler.isComplete else {
-                    entry.assembler = assembler
-                    pending[chunk.requestID] = entry
                     armTimeout(chunk.requestID)
                     return true
                 }
-                let payload = RemoteScreenshotImagePayload(contentType: assembler.manifest.contentType, data: try assembler.data())
+                let payload = RemoteScreenshotImagePayload(contentType: assembler.manifest.contentType, fileURL: try assembler.finish())
                 guard let entry = pending.removeValue(forKey: chunk.requestID) else { return true }
                 entry.timeout?.cancel()
-                entry.continuation.yield(.image(payload))
+                // A receiver that already went away never reads the file.
+                if case .terminated = entry.continuation.yield(.image(payload)) {
+                    try? FileManager.default.removeItem(at: payload.fileURL)
+                }
                 entry.continuation.finish()
             } catch {
                 finish(chunk.requestID, throwing: Self.corrupted)
@@ -145,6 +157,7 @@ actor RemoteScreenshotResponses {
         pending.removeAll()
         for entry in values {
             entry.timeout?.cancel()
+            entry.assembler?.discard()
             entry.continuation.finish(throwing: CancellationError())
         }
     }
@@ -164,6 +177,7 @@ actor RemoteScreenshotResponses {
     private func finish(_ id: UUID, throwing error: Swift.Error) {
         guard let entry = pending.removeValue(forKey: id) else { return }
         entry.timeout?.cancel()
+        entry.assembler?.discard()
         entry.continuation.finish(throwing: error)
     }
 

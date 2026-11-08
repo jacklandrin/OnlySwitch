@@ -21,15 +21,17 @@ struct ScreenCapturePreferencesTests {
         let root: URL
         let domain: InMemoryPreferenceDomain
         let locationKey: String
+        let recordingLocationKey: String?
         let backup = InMemoryPreferenceDomain()
         var folder: URL { root.appendingPathComponent("OnlySwitch Screenshots", isDirectory: true) }
-        init(_ values: [String: Any] = [:], locationKey: String = "location") throws {
+        init(_ values: [String: Any] = [:], locationKey: String = "location", recordingLocationKey: String? = nil) throws {
             root = try makeTemporaryDirectory()
             domain = InMemoryPreferenceDomain(values)
             self.locationKey = locationKey
+            self.recordingLocationKey = recordingLocationKey
         }
         func remove() { try? FileManager.default.removeItem(at: root) }
-        var preferences: ScreenCapturePreferences { ScreenCapturePreferences(domain: domain, backup: backup, folder: folder, locationKey: locationKey) }
+        var preferences: ScreenCapturePreferences { ScreenCapturePreferences(domain: domain, backup: backup, folder: folder, locationKey: locationKey, recordingLocationKey: .some(recordingLocationKey)) }
     }
 
     @Test func enableBacksUpAndRedirectsLocationAndHidesThumbnail() throws {
@@ -38,7 +40,7 @@ struct ScreenCapturePreferencesTests {
         #expect(fixture.domain.value(forKey: "location") as? String == fixture.folder.path)
         #expect(fixture.domain.value(forKey: "show-thumbnail") as? Bool == false)
         let data = try #require(fixture.backup.value(forKey: UserDefaults.Key.screenshotsPreviousCaptureSettings) as? Data)
-        #expect(try JSONDecoder().decode(ScreenshotCaptureSettings.self, from: data) == ScreenshotCaptureSettings(location: "/Users/example/Desktop", showThumbnail: true))
+        #expect(try JSONDecoder().decode(ScreenshotCaptureSettings.self, from: data) == ScreenshotCaptureSettings(location: "/Users/example/Desktop", showThumbnail: true, screenRecordingLocationBackedUp: nil))
         #expect(fixture.backup.value(forKey: UserDefaults.Key.screenshotsCaptureEnabled) as? Bool == true)
         #expect(fixture.preferences.isEnabled)
         #expect(fixture.preferences.status(enabledFlag: true) == .active)
@@ -82,7 +84,7 @@ struct ScreenCapturePreferencesTests {
         #expect(fixture.domain.value(forKey: "location") as? String == "/Volumes/Legacy")
         #expect(fixture.preferences.status(enabledFlag: true) == .active)
         let data = try #require(fixture.backup.value(forKey: UserDefaults.Key.screenshotsPreviousCaptureSettings) as? Data)
-        #expect(try JSONDecoder().decode(ScreenshotCaptureSettings.self, from: data) == ScreenshotCaptureSettings(location: "/Volumes/Legacy", screenshotLocation: "/Volumes/Current", showThumbnail: nil))
+        #expect(try JSONDecoder().decode(ScreenshotCaptureSettings.self, from: data) == ScreenshotCaptureSettings(location: "/Volumes/Legacy", screenshotLocation: "/Volumes/Current", showThumbnail: nil, screenRecordingLocationBackedUp: nil))
         fixture.domain.set("/Volumes/Changed", forKey: "location-screenshot")
         fixture.domain.set(fixture.folder.path, forKey: "location")
         #expect(fixture.preferences.status(enabledFlag: true) == .changedElsewhere)
@@ -209,6 +211,110 @@ struct ScreenCapturePreferencesTests {
         #expect(fixture.domain.value(forKey: "location-screenshot") as? String == "/Volumes/Current")
         #expect(fixture.domain.value(forKey: "show-thumbnail") as? Bool == true)
         #expect(fixture.backup.keys.isEmpty)
+        #expect(fixture.preferences.isEnabled == false)
+    }
+
+    @Test func modernEnableRedirectsRecordingsAndDisableRestoresThem() throws {
+        let f = try Fixture(["location-screenrecording": "/Users/me/Movies"], locationKey: "location-screenshot")
+        defer { f.remove() }
+        let p = ScreenCapturePreferences(domain: f.domain, backup: f.backup, folder: f.folder, locationKey: "location-screenshot", recordingLocationKey: "location-screenrecording")
+        try p.enable()
+        #expect(f.domain.value(forKey: "location-screenrecording") as? String == f.folder.path)
+        #expect(p.status(enabledFlag: true) == .active)
+        try p.disable()
+        #expect(f.domain.value(forKey: "location-screenrecording") as? String == "/Users/me/Movies")
+    }
+
+    @Test func recordingLocationChangedElsewhereIsReported() throws {
+        let f = try Fixture(locationKey: "location-screenshot"); defer { f.remove() }
+        let p = ScreenCapturePreferences(domain: f.domain, backup: f.backup, folder: f.folder, locationKey: "location-screenshot", recordingLocationKey: "location-screenrecording")
+        try p.enable()
+        f.domain.set("/elsewhere", forKey: "location-screenrecording")
+        #expect(p.status(enabledFlag: true) == .changedElsewhere)
+        try p.disable()
+        #expect(f.domain.value(forKey: "location-screenrecording") as? String == "/elsewhere")
+    }
+
+    @Test func backupWithoutRecordingLocationNeedsMigrationAndReapplyFixesIt() throws {
+        let f = try Fixture(locationKey: "location-screenshot"); defer { f.remove() }
+        let old = ScreenCapturePreferences(domain: f.domain, backup: f.backup, folder: f.folder, locationKey: "location-screenshot", recordingLocationKey: .some(nil))
+        try old.enable()
+        let p = ScreenCapturePreferences(domain: f.domain, backup: f.backup, folder: f.folder, locationKey: "location-screenshot", recordingLocationKey: "location-screenrecording")
+        #expect(p.needsRecordingMigration)
+        try p.enable()
+        #expect(p.needsRecordingMigration == false)
+        try p.disable()
+        #expect(f.domain.keys.contains("location-screenrecording") == false)
+    }
+
+    @Test func migrationSkipsScreenshotLocationChangedElsewhere() throws {
+        let f = try Fixture(locationKey: "location-screenshot"); defer { f.remove() }
+        let old = ScreenCapturePreferences(domain: f.domain, backup: f.backup, folder: f.folder, locationKey: "location-screenshot", recordingLocationKey: .some(nil))
+        try old.enable()
+        f.domain.set("/elsewhere", forKey: "location-screenshot")
+        let p = ScreenCapturePreferences(domain: f.domain, backup: f.backup, folder: f.folder, locationKey: "location-screenshot", recordingLocationKey: "location-screenrecording")
+        #expect(p.needsRecordingMigration == false)
+    }
+
+    @Test func recordingMigrationTouchesOnlyTheRecordingLocation() throws {
+        let f = try Fixture(["location-screenrecording": "/Users/me/Movies"], locationKey: "location-screenshot"); defer { f.remove() }
+        let old = ScreenCapturePreferences(domain: f.domain, backup: f.backup, folder: f.folder, locationKey: "location-screenshot", recordingLocationKey: .some(nil))
+        try old.enable()
+        f.domain.set(true, forKey: "show-thumbnail")
+        let p = ScreenCapturePreferences(domain: f.domain, backup: f.backup, folder: f.folder, locationKey: "location-screenshot", recordingLocationKey: "location-screenrecording")
+        try p.migrateRecordingLocation()
+        #expect(f.domain.value(forKey: "show-thumbnail") as? Bool == true)
+        #expect(f.domain.value(forKey: "location-screenrecording") as? String == f.folder.path)
+        #expect(p.needsRecordingMigration == false)
+        try p.disable()
+        #expect(f.domain.value(forKey: "location-screenrecording") as? String == "/Users/me/Movies")
+    }
+
+    @Test func missingBackupDoesNotNeedRecordingMigration() throws {
+        let f = try Fixture(locationKey: "location-screenshot"); defer { f.remove() }
+        f.domain.set(f.folder.path, forKey: "location-screenshot")
+        f.backup.set(true, forKey: UserDefaults.Key.screenshotsCaptureEnabled)
+        let p = ScreenCapturePreferences(domain: f.domain, backup: f.backup, folder: f.folder, locationKey: "location-screenshot", recordingLocationKey: "location-screenrecording")
+        #expect(p.needsRecordingMigration == false)
+    }
+
+    @Test func failedRecordingMigrationRestoresLocationAndBackup() throws {
+        let f = try Fixture(["location-screenrecording": "/Users/me/Movies"], locationKey: "location-screenshot"); defer { f.remove() }
+        let old = ScreenCapturePreferences(domain: f.domain, backup: f.backup, folder: f.folder, locationKey: "location-screenshot", recordingLocationKey: .some(nil))
+        try old.enable()
+        let backupBytes = f.backup.value(forKey: UserDefaults.Key.screenshotsPreviousCaptureSettings) as? Data
+        f.domain.synchronizeResult = false
+        let p = ScreenCapturePreferences(domain: f.domain, backup: f.backup, folder: f.folder, locationKey: "location-screenshot", recordingLocationKey: "location-screenrecording")
+        #expect(throws: ScreenshotFailure.self) { try p.migrateRecordingLocation() }
+        #expect(f.domain.value(forKey: "location-screenrecording") as? String == "/Users/me/Movies")
+        #expect(f.backup.value(forKey: UserDefaults.Key.screenshotsPreviousCaptureSettings) as? Data == backupBytes)
+    }
+
+    @Test func customRecordingKeyIsBackedUpAndRestored() throws {
+        let f = try Fixture(["custom-recording": "/Users/me/Movies"], locationKey: "location-screenshot", recordingLocationKey: "custom-recording"); defer { f.remove() }
+        try f.preferences.enable()
+        #expect(f.domain.value(forKey: "custom-recording") as? String == f.folder.path)
+        try f.preferences.disable()
+        #expect(f.domain.value(forKey: "custom-recording") as? String == "/Users/me/Movies")
+    }
+
+    @Test func legacyCaptureHasNoRecordingKey() throws {
+        let f = try Fixture(); defer { f.remove() }
+        let p = ScreenCapturePreferences(domain: f.domain, backup: f.backup, folder: f.folder, locationKey: "location", recordingLocationKey: .some(nil))
+        try p.enable()
+        #expect(f.domain.keys.contains("location-screenrecording") == false)
+        #expect(p.needsRecordingMigration == false)
+    }
+
+    @Test func modernDisableWithoutBackupClearsOwnedRecordingLocation() throws {
+        let fixture = try Fixture(locationKey: "location-screenshot", recordingLocationKey: "location-screenrecording")
+        defer { fixture.remove() }
+        fixture.domain.set(fixture.folder.path, forKey: "location-screenshot")
+        fixture.domain.set(fixture.folder.path, forKey: "location-screenrecording")
+        fixture.domain.set(false, forKey: "show-thumbnail")
+        fixture.backup.set(true, forKey: UserDefaults.Key.screenshotsCaptureEnabled)
+        try fixture.preferences.disable()
+        #expect(fixture.domain.keys.isEmpty)
         #expect(fixture.preferences.isEnabled == false)
     }
 

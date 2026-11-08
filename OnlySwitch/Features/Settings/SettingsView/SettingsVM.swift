@@ -54,6 +54,8 @@ enum SettingsItem: String, CaseIterable {
             "Display"
         case .Customize:
             "Built-In"
+        case .Screenshots:
+            "Screenshots & Record"
         default:
             rawValue
         }

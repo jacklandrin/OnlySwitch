@@ -2,8 +2,8 @@ import ComposableArchitecture
 import RemoteCore
 import SwiftUI
 
-/// One grid cell: thumbnail, date and pinned/copied state. Tap opens the viewer; Copy and Delete are
-/// in the context menu and exposed as accessibility actions. Dragging hands out the original.
+/// One grid cell: thumbnail, date and pinned/copied/recording state. Tap opens the viewer; Copy (images
+/// only) and Delete are in the context menu and exposed as accessibility actions. Dragging hands out the original.
 struct RemoteScreenshotCell: View {
     let store: StoreOf<RemoteScreenshotsFeature>
     let item: RemoteScreenshotItem
@@ -24,6 +24,11 @@ struct RemoteScreenshotCell: View {
                     .overlay(alignment: .topTrailing) {
                         if item.isPinned {
                             RemoteScreenshotBadge(systemImage: "pin.fill")
+                        }
+                    }
+                    .overlay(alignment: .bottomLeading) {
+                        if item.isRecording {
+                            recordingBadge
                         }
                     }
                     .overlay {
@@ -55,7 +60,9 @@ struct RemoteScreenshotCell: View {
         .opacity(isDeleting ? 0.5 : 1)
         .disabled(isDeleting)
         .contextMenu {
-            Button("Copy", systemImage: "doc.on.doc", action: copy)
+            if item.isRecording == false {
+                Button("Copy", systemImage: "doc.on.doc", action: copy)
+            }
             Button("Delete", systemImage: "trash", role: .destructive, action: delete)
                 .disabled(store.canDelete == false)
         }
@@ -63,11 +70,13 @@ struct RemoteScreenshotCell: View {
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(accessibilityLabel)
         .accessibilityValue(isCopied ? Text("Copied") : Text(verbatim: ""))
-        .accessibilityHint("Opens the screenshot")
+        .accessibilityHint(item.isRecording ? Text("Plays the recording") : Text("Opens the screenshot"))
         .accessibilityAddTraits(.isButton)
         .accessibilityAction(.default, open)
         .accessibilityActions {
-            Button("Copy", action: copy)
+            if item.isRecording == false {
+                Button("Copy", action: copy)
+            }
             if store.canDelete {
                 Button("Delete", action: delete)
             }
@@ -76,9 +85,32 @@ struct RemoteScreenshotCell: View {
 
     static let dateFormat = Date.FormatStyle.dateTime.month().day().hour().minute()
 
-    private var accessibilityLabel: Text {
-        let date = item.createdAt.formatted(RemoteScreenshotCell.dateFormat)
+    private var accessibilityLabel: Text { RemoteScreenshotCell.accessibilityLabel(for: item) }
+
+    static func accessibilityLabel(for item: RemoteScreenshotItem) -> Text {
+        let date = item.createdAt.formatted(dateFormat)
+        if item.isRecording {
+            return item.isPinned ? Text("Pinned screen recording, \(date)") : Text("Screen recording, \(date)")
+        }
         return item.isPinned ? Text("Pinned screenshot, \(date)") : Text("Screenshot, \(date)")
+    }
+
+    /// Video symbol and duration over the bottom-leading corner of a recording's poster frame.
+    private var recordingBadge: some View {
+        Label {
+            if let seconds = item.durationSeconds {
+                Text(Duration.seconds(seconds), format: .time(pattern: seconds >= 3600 ? .hourMinuteSecond : .minuteSecond))
+            }
+        } icon: {
+            Image(systemName: "video.fill")
+        }
+        .font(.caption2.monospacedDigit().weight(.semibold))
+        .foregroundStyle(.white)
+        .padding(.horizontal, 6)
+        .padding(.vertical, 3)
+        .background(.black.opacity(0.55), in: .capsule)
+        .padding(6)
+        .accessibilityHidden(true)
     }
 
     private func open() { store.send(.itemTapped(item.id)) }

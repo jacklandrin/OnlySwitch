@@ -1,5 +1,6 @@
 import CryptoKit
 import Foundation
+import UniformTypeIdentifiers
 
 public enum RemoteScreenshotLimits {
     public static let maximumItems = 500
@@ -8,14 +9,20 @@ public enum RemoteScreenshotLimits {
     public static let maximumThumbnailPixel = 480
     public static let maximumThumbnailsPerRequest = 12
     public static let maximumImageBytes = 48 * 1_048_576
+    public static let maximumRecordingBytes = 512 * 1_048_576
     public static let maximumChunkBytes = 262_144
     public static let maximumDeleteCount = 100
+
+    public static func maximumTransferBytes(contentType: String) -> Int {
+        UTType(contentType)?.conforms(to: .movie) == true ? maximumRecordingBytes : maximumImageBytes
+    }
 }
 
 public enum RemoteScreenshotValidationError: Error, Equatable, Sendable {
     case invalidThumbnail, invalidManifest, invalidChunk, imageTooLarge, digestMismatch, incomplete
 }
 
+/// One screenshot or screen recording.
 public struct RemoteScreenshotItem: Codable, Equatable, Identifiable, Sendable {
     public let id: UUID
     /// Sanitized display name, used only for drag/drop and copy metadata; never a path.
@@ -27,8 +34,10 @@ public struct RemoteScreenshotItem: Codable, Equatable, Identifiable, Sendable {
     /// Bumped by the Mac editor; invalidates cached thumbnails and originals.
     public let revision: Int
     public let byteCount: Int
+    /// Recording length; nil for images and when unknown.
+    public let durationSeconds: Double?
 
-    public init(id: UUID, fileName: String, contentType: String, createdAt: Date, isPinned: Bool, revision: Int, byteCount: Int) {
+    public init(id: UUID, fileName: String, contentType: String, createdAt: Date, isPinned: Bool, revision: Int, byteCount: Int, durationSeconds: Double? = nil) {
         self.id = id
         self.fileName = Self.sanitizedFileName(fileName)
         self.contentType = String(contentType.prefix(128))
@@ -36,6 +45,7 @@ public struct RemoteScreenshotItem: Codable, Equatable, Identifiable, Sendable {
         self.isPinned = isPinned
         self.revision = max(0, revision)
         self.byteCount = max(0, byteCount)
+        self.durationSeconds = durationSeconds.flatMap { $0.isFinite && $0 >= 0 ? $0 : nil }
     }
 
     public init(from decoder: any Decoder) throws {
@@ -47,9 +57,12 @@ public struct RemoteScreenshotItem: Codable, Equatable, Identifiable, Sendable {
             createdAt: try values.decode(Date.self, forKey: .createdAt),
             isPinned: try values.decodeIfPresent(Bool.self, forKey: .isPinned) ?? false,
             revision: try values.decode(Int.self, forKey: .revision),
-            byteCount: try values.decode(Int.self, forKey: .byteCount)
+            byteCount: try values.decode(Int.self, forKey: .byteCount),
+            durationSeconds: try values.decodeIfPresent(Double.self, forKey: .durationSeconds)
         )
     }
+
+    public var isRecording: Bool { UTType(contentType)?.conforms(to: .movie) == true }
 
     public var cacheKey: String { "\(id.uuidString.lowercased())-\(revision)" }
 
@@ -167,7 +180,7 @@ public struct RemoteScreenshotImageManifest: Codable, Equatable, Sendable {
     public let sha256: Data
 
     public init(requestID: UUID, itemID: UUID, revision: Int, contentType: String, byteCount: Int, chunkCount: Int, sha256: Data) throws {
-        guard byteCount <= RemoteScreenshotLimits.maximumImageBytes else { throw RemoteScreenshotValidationError.imageTooLarge }
+        guard byteCount <= RemoteScreenshotLimits.maximumTransferBytes(contentType: contentType) else { throw RemoteScreenshotValidationError.imageTooLarge }
         let chunkBytes = RemoteScreenshotLimits.maximumChunkBytes
         guard byteCount > 0,
               chunkCount == (byteCount + chunkBytes - 1) / chunkBytes,
@@ -257,26 +270,21 @@ public struct RemoteScreenshotRequestFailure: Codable, Equatable, Sendable {
 public enum RemoteScreenshotImageEncoder {
     /// A manifest followed by contiguous chunks. Throws for empty or oversized data.
     public static func messages(request: RemoteScreenshotImageRequest, contentType: String, data: Data) throws -> [RemoteMessage] {
+        let manifest = try manifest(request: request, contentType: contentType, data: data)
+        return try [.screenshotImageManifest(manifest)] + (0..<manifest.chunkCount).map { .screenshotImageChunk(try chunk(request: request, data: data, index: $0)) }
+    }
+
+    public static func manifest(request: RemoteScreenshotImageRequest, contentType: String, data: Data) throws -> RemoteScreenshotImageManifest {
         let chunkBytes = RemoteScreenshotLimits.maximumChunkBytes
-        let manifest = try RemoteScreenshotImageManifest(
-            requestID: request.requestID,
-            itemID: request.itemID,
-            revision: request.revision,
-            contentType: contentType,
-            byteCount: data.count,
-            chunkCount: (data.count + chunkBytes - 1) / chunkBytes,
-            sha256: Data(SHA256.hash(data: data))
-        )
-        var messages: [RemoteMessage] = [.screenshotImageManifest(manifest)]
-        var offset = data.startIndex
-        var index = 0
-        while offset < data.endIndex {
-            let end = data.index(offset, offsetBy: chunkBytes, limitedBy: data.endIndex) ?? data.endIndex
-            messages.append(.screenshotImageChunk(try .init(requestID: request.requestID, index: index, data: Data(data[offset..<end]))))
-            offset = end
-            index += 1
-        }
-        return messages
+        return try RemoteScreenshotImageManifest(requestID: request.requestID, itemID: request.itemID, revision: request.revision, contentType: contentType, byteCount: data.count, chunkCount: (data.count + chunkBytes - 1) / chunkBytes, sha256: Data(SHA256.hash(data: data)))
+    }
+
+    /// Copies only chunk `index` out of `data` (which may be memory-mapped), so large originals never exist twice.
+    public static func chunk(request: RemoteScreenshotImageRequest, data: Data, index: Int) throws -> RemoteScreenshotImageChunk {
+        let chunkBytes = RemoteScreenshotLimits.maximumChunkBytes
+        guard index >= 0, index < (data.count + chunkBytes - 1) / chunkBytes else { throw RemoteScreenshotValidationError.invalidChunk }
+        let start = data.startIndex + index * chunkBytes
+        return try .init(requestID: request.requestID, index: index, data: Data(data[start..<min(start + chunkBytes, data.endIndex)]))
     }
 }
 
@@ -308,5 +316,57 @@ public struct RemoteScreenshotImageAssembler: Sendable {
         guard isComplete, bytes.count == manifest.byteCount else { throw RemoteScreenshotValidationError.incomplete }
         guard Data(SHA256.hash(data: bytes)) == manifest.sha256 else { throw RemoteScreenshotValidationError.digestMismatch }
         return bytes
+    }
+}
+
+/// Reassembles one original into a file (for recordings up to `maximumRecordingBytes`), hashing as it goes.
+/// `finish()` returns the verified file; any failure or `discard()` deletes it. Chunks arrive in order.
+/// Single-owner and unsynchronized: `@unchecked Sendable` only so one actor can hold it; never share it.
+public final class RemoteScreenshotFileAssembler: @unchecked Sendable {
+    public let manifest: RemoteScreenshotImageManifest
+    private let url: URL
+    private var handle: FileHandle?
+    private var hasher = SHA256()
+    private var written = 0
+    private var nextIndex = 0
+
+    public init(manifest: RemoteScreenshotImageManifest, directory: URL) throws {
+        self.manifest = manifest
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        url = directory.appendingPathComponent("transfer-\(manifest.requestID.uuidString)")
+        guard FileManager.default.createFile(atPath: url.path, contents: nil) else { throw RemoteScreenshotValidationError.incomplete }
+        do { handle = try FileHandle(forWritingTo: url) } catch { try? FileManager.default.removeItem(at: url); throw error }
+    }
+
+    deinit { try? handle?.close() }
+
+    public var isComplete: Bool { nextIndex == manifest.chunkCount }
+
+    public func append(_ chunk: RemoteScreenshotImageChunk) throws {
+        guard let handle, chunk.requestID == manifest.requestID, chunk.index == nextIndex, nextIndex < manifest.chunkCount,
+              written + chunk.data.count <= manifest.byteCount else { discard(); throw RemoteScreenshotValidationError.invalidChunk }
+        do { try handle.write(contentsOf: chunk.data) } catch { discard(); throw RemoteScreenshotValidationError.incomplete }
+        hasher.update(data: chunk.data)
+        written += chunk.data.count
+        nextIndex += 1
+    }
+
+    public func finish() throws -> URL {
+        let wasOpen = handle != nil
+        close()
+        guard wasOpen, isComplete, written == manifest.byteCount else { discard(); throw RemoteScreenshotValidationError.incomplete }
+        guard Data(hasher.finalize()) == manifest.sha256 else { discard(); throw RemoteScreenshotValidationError.digestMismatch }
+        return url
+    }
+
+    /// Closes and deletes the file; safe to call repeatedly.
+    public func discard() {
+        close()
+        try? FileManager.default.removeItem(at: url)
+    }
+
+    private func close() {
+        try? handle?.close()
+        handle = nil
     }
 }

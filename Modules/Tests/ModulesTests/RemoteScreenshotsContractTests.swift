@@ -7,9 +7,77 @@ struct RemoteScreenshotsContractTests {
     private let id = UUID(uuidString: "00000000-0000-0000-0000-00000000A001")!
 
     @Test func protocolOneNineEnablesScreenshots() {
-        #expect(RemoteProtocolVersion.current == .init(major: 1, minor: 9))
         #expect(RemoteProtocolVersion(major: 1, minor: 9).supportsScreenshotsRemote)
         #expect(RemoteProtocolVersion(major: 1, minor: 8).supportsScreenshotsRemote == false)
+    }
+
+    @Test func protocolOneTenAddsRecordings() {
+        #expect(RemoteProtocolVersion.current == .init(major: 1, minor: 10))
+        #expect(RemoteProtocolVersion(major: 1, minor: 9).supportsScreenRecordingsRemote == false)
+        #expect(RemoteProtocolVersion(major: 1, minor: 10).supportsScreenRecordingsRemote)
+    }
+
+    @Test func recordingItemRoundTripsDurationAndOldPayloadsDecode() throws {
+        let item = RemoteScreenshotItem(id: UUID(), fileName: "Screen Recording.mov", contentType: "com.apple.quicktime-movie", createdAt: .init(timeIntervalSince1970: 1), isPinned: false, revision: 0, byteCount: 10, durationSeconds: 12.5)
+        #expect(item.isRecording)
+        let decoded = try JSONDecoder().decode(RemoteScreenshotItem.self, from: JSONEncoder().encode(item))
+        #expect(decoded.durationSeconds == 12.5)
+        let legacy = #"{"id":"\#(UUID().uuidString)","fileName":"a.png","contentType":"public.png","createdAt":0,"revision":0,"byteCount":1}"#
+        let old = try JSONDecoder().decode(RemoteScreenshotItem.self, from: Data(legacy.utf8))
+        #expect(old.durationSeconds == nil && old.isRecording == false)
+        #expect(RemoteScreenshotItem(id: id, fileName: "a.mp4", contentType: "public.mpeg-4", createdAt: .now, isPinned: false, revision: 0, byteCount: 1, durationSeconds: -1).durationSeconds == nil)
+        #expect(RemoteScreenshotItem(id: id, fileName: "a.mp4", contentType: "public.mpeg-4", createdAt: .now, isPinned: false, revision: 0, byteCount: 1, durationSeconds: .nan).durationSeconds == nil)
+    }
+
+    @Test func manifestAllowsLargeRecordingsButNotLargeImages() throws {
+        let big = 100 * 1_048_576, chunks = (big + RemoteScreenshotLimits.maximumChunkBytes - 1) / RemoteScreenshotLimits.maximumChunkBytes
+        #expect(throws: RemoteScreenshotValidationError.imageTooLarge) {
+            try RemoteScreenshotImageManifest(requestID: UUID(), itemID: UUID(), revision: 0, contentType: "public.png", byteCount: big, chunkCount: chunks, sha256: Data(count: 32))
+        }
+        _ = try RemoteScreenshotImageManifest(requestID: UUID(), itemID: UUID(), revision: 0, contentType: "com.apple.quicktime-movie", byteCount: big, chunkCount: chunks, sha256: Data(count: 32))
+        #expect(RemoteScreenshotLimits.maximumTransferBytes(contentType: "public.mpeg-4") == RemoteScreenshotLimits.maximumRecordingBytes)
+        #expect(RemoteScreenshotLimits.maximumTransferBytes(contentType: "public.png") == RemoteScreenshotLimits.maximumImageBytes)
+    }
+
+    @Test func fileAssemblerWritesVerifiedFile() throws {
+        let data = Data((0..<600_000).map { UInt8($0 % 251) })
+        let request = RemoteScreenshotImageRequest(requestID: UUID(), itemID: UUID(), revision: 1)
+        let manifest = try RemoteScreenshotImageEncoder.manifest(request: request, contentType: "public.mpeg-4", data: data)
+        let dir = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: dir) }
+        let assembler = try RemoteScreenshotFileAssembler(manifest: manifest, directory: dir)
+        for index in 0..<manifest.chunkCount { try assembler.append(RemoteScreenshotImageEncoder.chunk(request: request, data: data, index: index)) }
+        #expect(assembler.isComplete)
+        let url = try assembler.finish()
+        #expect(try Data(contentsOf: url) == data)
+        #expect(throws: RemoteScreenshotValidationError.invalidChunk) { try RemoteScreenshotImageEncoder.chunk(request: request, data: data, index: manifest.chunkCount) }
+    }
+
+    @Test func fileAssemblerRejectsDigestMismatchAndDeletesFile() throws {
+        let data = Data(repeating: 1, count: 10)
+        let request = RemoteScreenshotImageRequest(requestID: UUID(), itemID: UUID(), revision: 0)
+        let real = try RemoteScreenshotImageEncoder.manifest(request: request, contentType: "public.png", data: data)
+        let forged = try RemoteScreenshotImageManifest(requestID: real.requestID, itemID: real.itemID, revision: 0, contentType: "public.png", byteCount: 10, chunkCount: 1, sha256: Data(count: 32))
+        let dir = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: dir) }
+        let assembler = try RemoteScreenshotFileAssembler(manifest: forged, directory: dir)
+        try assembler.append(RemoteScreenshotImageEncoder.chunk(request: request, data: data, index: 0))
+        #expect(throws: RemoteScreenshotValidationError.digestMismatch) { try assembler.finish() }
+        #expect(try FileManager.default.contentsOfDirectory(atPath: dir.path).isEmpty)
+        assembler.discard()
+    }
+
+    @Test func fileAssemblerDiscardsOnBadChunkAndIsIdempotent() throws {
+        let data = Data(repeating: 2, count: RemoteScreenshotLimits.maximumChunkBytes + 1)
+        let request = RemoteScreenshotImageRequest(requestID: UUID(), itemID: UUID(), revision: 0)
+        let manifest = try RemoteScreenshotImageEncoder.manifest(request: request, contentType: "public.mpeg-4", data: data)
+        let dir = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: dir) }
+        let assembler = try RemoteScreenshotFileAssembler(manifest: manifest, directory: dir)
+        #expect(throws: RemoteScreenshotValidationError.invalidChunk) { try assembler.append(RemoteScreenshotImageEncoder.chunk(request: request, data: data, index: 1)) }
+        #expect(try FileManager.default.contentsOfDirectory(atPath: dir.path).isEmpty)
+        assembler.discard()
+        #expect(throws: RemoteScreenshotValidationError.incomplete) { try assembler.finish() }
     }
 
     @Test func fileNamesAreSanitizedDisplayNames() {

@@ -1,8 +1,10 @@
+import AVKit
 import ComposableArchitecture
 import RemoteCore
 import SwiftUI
 
-/// The image area of the viewer: zoomable original (or thumbnail), progress and the offline hint.
+/// The media area of the viewer: zoomable original (or thumbnail), the recording player once its
+/// original is downloaded (the poster frame until then), progress and the offline hint.
 struct RemoteScreenshotDetailContent: View {
     let store: StoreOf<RemoteScreenshotsFeature>
     let item: RemoteScreenshotItem
@@ -10,14 +12,17 @@ struct RemoteScreenshotDetailContent: View {
 
     var body: some View {
         let originalURL = store.imageURLs[item.id]
-        let displayURL = originalURL ?? store.thumbnailURLs[item.id]
+        // A recording's original is a movie: only its thumbnail (the poster frame) is decoded.
+        let displayURL = item.isRecording ? store.thumbnailURLs[item.id] : originalURL ?? store.thumbnailURLs[item.id]
         let isDownloading = store.state.isDownloading(item.id)
         ZStack {
-            if let image {
+            if item.isRecording, let originalURL {
+                RemoteScreenshotVideoPlayer(url: originalURL)
+            } else if let image {
                 RemoteScreenshotZoomableImage(image: image, accessibilityLabel: accessibilityLabel)
                     .onDrag(dragProvider)
             } else if isDownloading == false {
-                ContentUnavailableView("Screenshots", systemImage: "photo", description: Text("No preview is available."))
+                ContentUnavailableView("Screenshots & Record", systemImage: "photo", description: Text("No preview is available."))
             }
             if isDownloading {
                 ProgressView()
@@ -30,7 +35,9 @@ struct RemoteScreenshotDetailContent: View {
         .safeAreaInset(edge: .bottom) {
             if originalURL == nil, store.isOffline {
                 RemoteScreenshotsBanner(
-                    message: "Connect to the Mac to view the full-size screenshot.",
+                    message: item.isRecording
+                        ? "Connect to the Mac to play this recording."
+                        : "Connect to the Mac to view the full-size screenshot.",
                     systemImage: "wifi.slash"
                 )
                 .padding(16)
@@ -48,10 +55,7 @@ struct RemoteScreenshotDetailContent: View {
         }
     }
 
-    private var accessibilityLabel: Text {
-        let date = item.createdAt.formatted(RemoteScreenshotCell.dateFormat)
-        return item.isPinned ? Text("Pinned screenshot, \(date)") : Text("Screenshot, \(date)")
-    }
+    private var accessibilityLabel: Text { RemoteScreenshotCell.accessibilityLabel(for: item) }
 
     private func dragProvider() -> NSItemProvider {
         guard let macID = store.selectedMacID else { return NSItemProvider() }
@@ -60,5 +64,22 @@ struct RemoteScreenshotDetailContent: View {
         // left the foreground. The provider then joins the same single-flight load.
         store.send(.dragStarted(item.id))
         return provider
+    }
+}
+
+/// Plays a downloaded recording. The player is created per file and paused when the viewer goes away.
+struct RemoteScreenshotVideoPlayer: View {
+    let url: URL
+    @State private var player: AVPlayer?
+
+    var body: some View {
+        VideoPlayer(player: player)
+            .task(id: url) {
+                self.player?.pause()
+                let player = AVPlayer(url: url)
+                self.player = player
+                player.play()
+            }
+            .onDisappear { player?.pause() }
     }
 }

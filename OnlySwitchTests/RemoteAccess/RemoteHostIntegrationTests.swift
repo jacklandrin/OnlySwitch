@@ -372,7 +372,7 @@ struct RemoteHostIntegrationTests {
         let (stream, continuation) = AsyncStream.makeStream(of: RemoteScreenshotLibrary.self)
         continuation.onTermination = { _ in Task { await probe.recordCancellation() } }
         var service = RemoteScreenshotsService.unavailable
-        service.libraries = { stream }
+        service.libraries = { _ in stream }
         let host = RemoteHost.testing(catalog: [], router: router, pairingCode: "ABCDEFGH2345", screenshots: service)
         let endpoint = try await host.startForTesting(port: 0)
         defer { continuation.finish(); Task { await host.stop() } }
@@ -395,7 +395,7 @@ struct RemoteHostIntegrationTests {
         let (stream, continuation) = AsyncStream.makeStream(of: RemoteScreenshotLibrary.self)
         continuation.onTermination = { _ in Task { await probe.recordCancellation() } }
         var service = RemoteScreenshotsService.unavailable
-        service.libraries = { stream }
+        service.libraries = { _ in stream }
         let host = RemoteHost.testing(catalog: [], router: router, pairingCode: "ABCDEFGH2345", screenshots: service)
         let endpoint = try await host.startForTesting(port: 0)
         defer { continuation.finish(); Task { await host.stop() } }
@@ -441,9 +441,9 @@ struct RemoteHostIntegrationTests {
         let original = Data(repeating: 5, count: RemoteScreenshotLimits.maximumChunkBytes + 3)
         let (libraryStream, libraryContinuation) = AsyncStream.makeStream(of: RemoteScreenshotLibrary.self)
         let service = RemoteScreenshotsService(
-            libraries: { libraryStream },
+            libraries: { _ in libraryStream },
             thumbnails: { ids in ([thumbnail], ids.filter { $0 != item.id }) },
-            image: { id, revision async throws(RemoteProtocolError) in
+            image: { id, revision, _ async throws(RemoteProtocolError) in
                 guard id == item.id, revision == item.revision else { throw .init(code: .controlNotFound, message: "gone") }
                 return ("public.png", original)
             },
@@ -475,6 +475,63 @@ struct RemoteHostIntegrationTests {
         try await client.sendMessage(.screenshotDeleteRequest(.init(requestID: deleteID, ids: [item.id])))
         #expect(try await client.nextMessage() == .screenshotDeleteResult(.init(requestID: deleteID, failedIDs: [])))
         await client.close()
+    }
+
+    @Test(.timeLimit(.minutes(1)))
+    func recordingsReachOnlyOneTenPeers() async throws {
+        let router = await MainActor.run { RemoteCommandRouter(resolveBuiltIn: { _ in nil }) }
+        let imageID = UUID(uuidString: "00000000-0000-0000-0000-00000000C011")!
+        let movieID = UUID(uuidString: "00000000-0000-0000-0000-00000000C012")!
+        let (service, movie) = try await RemoteScreenshotsProviderTests.mixedService(imageID: imageID, movieID: movieID)
+        // Pairing codes are single-use, so each peer gets its own host.
+        let legacyHost = RemoteHost.testing(catalog: [], router: router, pairingCode: "ABCDEFGH2345", screenshots: service)
+        let modernHost = RemoteHost.testing(catalog: [], router: router, pairingCode: "ABCDEFGH2345", screenshots: service)
+        let legacyEndpoint = try await legacyHost.startForTesting(port: 0)
+        let modernEndpoint = try await modernHost.startForTesting(port: 0)
+        defer { Task { await legacyHost.stop(); await modernHost.stop() } }
+
+        let legacy = try await RemoteHostTestClient.connect(to: legacyEndpoint, version: .init(major: 1, minor: 9))
+        try await legacy.pair(code: "ABCDEFGH2345")
+        try await legacy.sendMessage(.screenshotsSubscriptionUpdate(true))
+        guard case let .screenshotsLibrary(legacyLibrary) = try await legacy.nextMessage() else {
+            Issue.record("Expected a library"); return
+        }
+        #expect(legacyLibrary.items.map(\.id) == [imageID])
+        let hiddenRequest = RemoteScreenshotImageRequest(requestID: UUID(), itemID: movieID, revision: 0)
+        try await legacy.sendMessage(.screenshotImageRequest(hiddenRequest))
+        guard case let .screenshotRequestFailed(failure) = try await legacy.nextMessage() else {
+            Issue.record("Expected a request failure"); return
+        }
+        #expect(failure.requestID == hiddenRequest.requestID)
+        await legacy.close()
+
+        let modern = try await RemoteHostTestClient.connect(to: modernEndpoint, version: .init(major: 1, minor: 10))
+        try await modern.pair(code: "ABCDEFGH2345")
+        try await modern.sendMessage(.screenshotsSubscriptionUpdate(true))
+        guard case let .screenshotsLibrary(library) = try await modern.nextMessage() else {
+            Issue.record("Expected a library"); return
+        }
+        #expect(library.items.map(\.id) == [imageID, movieID])
+        let recording = try #require(library.items.first { $0.id == movieID })
+        #expect(recording.isRecording)
+
+        let request = RemoteScreenshotImageRequest(requestID: UUID(), itemID: movieID, revision: recording.revision)
+        try await modern.sendMessage(.screenshotImageRequest(request))
+        guard case let .screenshotImageManifest(manifest) = try await modern.nextMessage() else {
+            Issue.record("Expected a manifest"); return
+        }
+        #expect(manifest.contentType == recording.contentType)
+        var assembler = RemoteScreenshotImageAssembler(manifest: manifest)
+        while assembler.isComplete == false {
+            guard case let .screenshotImageChunk(chunk) = try await modern.nextMessage() else {
+                Issue.record("Expected a chunk"); return
+            }
+            try assembler.append(chunk)
+        }
+        let original = try Data(contentsOf: movie)
+        #expect(try assembler.data() == original)
+        #expect(original.count == recording.byteCount)
+        await modern.close()
     }
 
     @Test(.timeLimit(.minutes(1)))

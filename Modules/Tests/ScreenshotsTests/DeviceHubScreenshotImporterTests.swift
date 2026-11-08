@@ -60,5 +60,25 @@ struct DeviceHubScreenshotImporterTests {
         // Files already on the Desktop when collection starts are left alone.
         #expect(FileManager.default.fileExists(atPath: existing.path))
     }
+    @Test func runMovesNewDeviceHubRecordings() async throws {
+        let root = try makeTemporaryDirectory(); defer { try? FileManager.default.removeItem(at: root) }
+        let source = root.appendingPathComponent("Desktop", isDirectory: true)
+        let destination = root.appendingPathComponent("Library", isDirectory: true)
+        try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+        let importer = DeviceHubScreenshotImporter(source: source, destination: destination, stabilityInterval: .milliseconds(20))
+        let task = Task { await importer.run() }
+        defer { task.cancel() }
+        try await Task.sleep(for: .milliseconds(100))
+
+        let hub = source.appendingPathComponent("Screen Recording iPhone 17 Pro 2026-11-07.mov")
+        let temporary = source.appendingPathComponent(".tmp-hub.mov")
+        try await writeMovie(to: temporary); try tag(temporary, agent: "DeviceHub")
+        try FileManager.default.moveItem(at: temporary, to: hub)
+
+        let target = destination.appendingPathComponent(hub.lastPathComponent)
+        for _ in 0..<100 where !FileManager.default.fileExists(atPath: target.path) { try await Task.sleep(for: .milliseconds(30)) }
+        #expect(FileManager.default.fileExists(atPath: target.path))
+        #expect(!FileManager.default.fileExists(atPath: hub.path))
+    }
 }
 #endif

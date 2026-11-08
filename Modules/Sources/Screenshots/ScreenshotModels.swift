@@ -1,5 +1,6 @@
 #if os(macOS)
 import Foundation
+import UniformTypeIdentifiers
 
 public struct ScreenshotItem: Identifiable, Equatable, Sendable, Codable {
     public var id: UUID
@@ -10,6 +11,20 @@ public struct ScreenshotItem: Identifiable, Equatable, Sendable, Codable {
     /// Bumped after an edit; used as the thumbnail cache key.
     public var revision: Int
     public init(id: UUID, fileName: String, createdAt: Date, isPinned: Bool = false, revision: Int = 0) { self.id = id; self.fileName = fileName; self.createdAt = createdAt; self.isPinned = isPinned; self.revision = revision }
+}
+public enum ScreenshotMediaType: Equatable, Sendable {
+    case image, recording
+    /// nil for hidden names and anything that is neither an image nor a movie.
+    public init?(fileName: String) {
+        guard !fileName.hasPrefix("."), let type = UTType(filenameExtension: (fileName as NSString).pathExtension) else { return nil }
+        if type.conforms(to: .image) { self = .image } else if type.conforms(to: .movie) { self = .recording } else { return nil }
+    }
+}
+
+public extension ScreenshotItem {
+    /// Derived from the extension so the manifest format is unchanged.
+    var mediaType: ScreenshotMediaType { ScreenshotMediaType(fileName: fileName) ?? .image }
+    var isRecording: Bool { mediaType == .recording }
 }
 public struct ScreenshotFailure: Error, Equatable, Sendable {
     public var key: String
@@ -33,11 +48,17 @@ public struct ScreenshotCaptureSettings: Equatable, Sendable, Codable {
     public var showThumbnail: Bool?
     /// nil identifies backups made before the still-image destination was tracked.
     public var screenshotLocationBackedUp: Bool?
-    public init(location: String? = nil, screenshotLocation: String? = nil, showThumbnail: Bool? = nil, screenshotLocationBackedUp: Bool? = true) {
+    /// macOS 27 and later use a separate recording destination.
+    public var screenRecordingLocation: String?
+    /// nil identifies backups made before the recording destination was tracked.
+    public var screenRecordingLocationBackedUp: Bool?
+    public init(location: String? = nil, screenshotLocation: String? = nil, showThumbnail: Bool? = nil, screenshotLocationBackedUp: Bool? = true, screenRecordingLocation: String? = nil, screenRecordingLocationBackedUp: Bool? = true) {
         self.location = location
         self.screenshotLocation = screenshotLocation
         self.showThumbnail = showThumbnail
         self.screenshotLocationBackedUp = screenshotLocationBackedUp
+        self.screenRecordingLocation = screenRecordingLocation
+        self.screenRecordingLocationBackedUp = screenRecordingLocationBackedUp
     }
 }
 public enum ScreenshotCaptureStatus: Equatable, Sendable { case disabled, active, changedElsewhere }

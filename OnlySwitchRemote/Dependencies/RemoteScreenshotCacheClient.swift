@@ -24,7 +24,8 @@ struct RemoteScreenshotCacheClient: Sendable {
     /// Saves only thumbnails whose item and revision are in the cached library.
     var saveThumbnails: @Sendable (_ macID: UUID, [RemoteScreenshotThumbnail]) async -> [UUID: URL]
     var imageURL: @Sendable (_ macID: UUID, RemoteScreenshotItem) async -> URL?
-    var saveImage: @Sendable (_ macID: UUID, RemoteScreenshotItem, Data) async throws -> URL
+    /// Moves a verified transfer file into place, replacing any existing copy.
+    var saveImage: @Sendable (_ macID: UUID, RemoteScreenshotItem, _ fileURL: URL) async throws -> URL
     var removeMac: @Sendable (_ macID: UUID) async -> Void
 
     static func live(root: URL) -> Self {
@@ -108,10 +109,11 @@ private actor RemoteScreenshotFileStore {
         return url
     }
 
-    func saveImage(_ macID: UUID, _ item: RemoteScreenshotItem, _ data: Data) throws -> URL {
+    func saveImage(_ macID: UUID, _ item: RemoteScreenshotItem, _ fileURL: URL) throws -> URL {
         guard let url = imageFileURL(macID, item) else { throw RemoteScreenshotCacheError.pathOutsideCache }
         try fileManager.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
-        try data.write(to: url, options: .atomic)
+        if fileManager.fileExists(atPath: url.path) { try fileManager.removeItem(at: url) }
+        try fileManager.moveItem(at: fileURL, to: url)
         return url
     }
 

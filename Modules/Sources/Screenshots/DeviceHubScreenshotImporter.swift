@@ -3,9 +3,9 @@ import Darwin
 import Foundation
 
 /// Xcode's Device Hub (`com.apple.dt.Devices`) keeps its screenshot location in its sandbox container, which other
-/// apps cannot change, so it always saves to the Desktop. While collection is on, new images there whose quarantine
-/// agent is DeviceHub are moved into the library folder, where the library watcher records them. Files already on
-/// the Desktop when watching starts, and files from any other app, are never touched.
+/// apps cannot change, so it always saves to the Desktop. While collection is on, new images and recordings there
+/// whose quarantine agent is DeviceHub are moved into the library folder, where the library watcher records them.
+/// Files already on the Desktop when watching starts, and files from any other app, are never touched.
 public struct DeviceHubScreenshotImporter: Sendable {
     static let quarantineAgent = "DeviceHub"
     public let source: URL

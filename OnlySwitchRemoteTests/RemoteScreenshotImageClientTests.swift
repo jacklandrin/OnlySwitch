@@ -21,11 +21,11 @@ struct RemoteScreenshotImageClientTests {
     @Test func cachedOriginalIsReturnedWithoutDownloading() async throws {
         let cache = RemoteScreenshotCacheClient.live(root: try Self.root())
         let shot = item()
-        let cached = try await cache.saveImage(macID, shot, Data([7]))
+        let cached = try await cache.saveImage(macID, shot, try FetchRecorder.transferFile(Data([7])))
         let fetches = FetchRecorder()
         let client = RemoteScreenshotImageClient.live(
             cache: cache,
-            fetchImage: { await fetches.fetch($0) },
+            fetchImage: { try await fetches.fetch($0) },
             makeRequestID: { requestID }
         )
 
@@ -39,7 +39,7 @@ struct RemoteScreenshotImageClientTests {
         let fetches = FetchRecorder()
         let client = RemoteScreenshotImageClient.live(
             cache: cache,
-            fetchImage: { await fetches.fetch($0) },
+            fetchImage: { try await fetches.fetch($0) },
             makeRequestID: { requestID }
         )
 
@@ -47,11 +47,26 @@ struct RemoteScreenshotImageClientTests {
 
         #expect(try Data(contentsOf: url) == Data([1, 2, 3]))
         #expect(await cache.imageURL(macID, shot) == url)
+        let transfer = try #require(await fetches.fileURLs.first)
+        #expect(FileManager.default.fileExists(atPath: transfer.path) == false)
         #expect(await fetches.invocations == [
             .init(macID: macID, request: .init(requestID: requestID, itemID: shot.id, revision: 3)),
         ])
         _ = try await client.load(macID, shot)
         #expect(await fetches.invocations.count == 1)
+    }
+
+    @Test func failedCacheSaveDeletesTheTransferFile() async throws {
+        let fetches = FetchRecorder()
+        let client = RemoteScreenshotImageClient.live(
+            cache: .noop,
+            fetchImage: { try await fetches.fetch($0) },
+            makeRequestID: { requestID }
+        )
+
+        await #expect(throws: RemoteDependencyError.self) { try await client.load(macID, item()) }
+        let transfer = try #require(await fetches.fileURLs.first)
+        #expect(FileManager.default.fileExists(atPath: transfer.path) == false)
     }
 
     @Test func downloadCancellationPropagatesUnchanged() async throws {
@@ -198,10 +213,19 @@ struct RemoteScreenshotImageClientTests {
 
 private actor FetchRecorder {
     private(set) var invocations: [RemoteScreenshotInvocation<RemoteScreenshotImageRequest>] = []
+    private(set) var fileURLs: [URL] = []
 
-    func fetch(_ invocation: RemoteScreenshotInvocation<RemoteScreenshotImageRequest>) -> RemoteScreenshotImagePayload {
+    func fetch(_ invocation: RemoteScreenshotInvocation<RemoteScreenshotImageRequest>) throws -> RemoteScreenshotImagePayload {
         invocations.append(invocation)
-        return .init(contentType: "public.png", data: Data([1, 2, 3]))
+        let url = try Self.transferFile(Data([1, 2, 3]))
+        fileURLs.append(url)
+        return .init(contentType: "public.png", fileURL: url)
+    }
+
+    static func transferFile(_ data: Data) throws -> URL {
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent("transfer-\(UUID().uuidString)")
+        try data.write(to: url)
+        return url
     }
 }
 

@@ -2,7 +2,7 @@ import ComposableArchitecture
 import RemoteCore
 import SwiftUI
 
-/// The Screenshots tab: the selected Mac's screenshot library as an adaptive grid.
+/// The Screenshots & Record tab: the selected Mac's screenshots and recordings as an adaptive grid.
 /// Renders reducer state and sends actions only.
 struct RemoteScreenshotsView: View {
     let store: StoreOf<RemoteScreenshotsFeature>
@@ -21,7 +21,7 @@ struct RemoteScreenshotsView: View {
                 )
             } else if let message = store.availabilityMessage {
                 ContentUnavailableView(
-                    "Screenshots",
+                    "Screenshots & Record",
                     systemImage: "exclamationmark.triangle",
                     description: Text(verbatim: message)
                 )
@@ -33,7 +33,7 @@ struct RemoteScreenshotsView: View {
                 }
             } else if store.isOffline {
                 ContentUnavailableView(
-                    "Screenshots",
+                    "Screenshots & Record",
                     systemImage: "wifi.slash",
                     description: Text("The selected Mac is offline.")
                 )
@@ -42,7 +42,7 @@ struct RemoteScreenshotsView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
-        .navigationTitle("Screenshots")
+        .navigationTitle("Screenshots & Record")
         // The viewer sheet is presented from the app root; see `RemoteScreenshotDetailPresentation`.
         .modifier(RemoteScreenshotPromptsModifier(store: store, isActive: store.selectedItemID == nil))
     }
@@ -60,8 +60,8 @@ struct RemoteScreenshotsView: View {
                 Label("No Screenshots", systemImage: "photo.on.rectangle.angled")
             } description: {
                 Text(isCollectionEnabled
-                     ? "Screenshots you take on this Mac appear here."
-                     : "Turn on screenshot collection in OnlySwitch on the Mac to see new screenshots here.")
+                     ? "Screenshots and screen recordings you take on this Mac appear here."
+                     : "Turn on screenshot collection in OnlySwitch on the Mac to see new screenshots and recordings here.")
             }
         }
         .padding(.bottom, RemotePageTabBar.contentBottomInset)

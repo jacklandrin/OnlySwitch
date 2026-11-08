@@ -43,10 +43,10 @@ struct RemoteScreenshotInvocation<Request: Equatable & Sendable>: Equatable, Sen
     let request: Request
 }
 
-/// Verified original bytes (SHA-256 checked) plus the manifest's content type.
+/// Verified original (SHA-256 checked) in a temporary file the receiver owns, plus the manifest's content type.
 struct RemoteScreenshotImagePayload: Equatable, Sendable {
     let contentType: String
-    let data: Data
+    let fileURL: URL
 }
 
 enum RemotePairAdoptionResult: Equatable, Sendable {

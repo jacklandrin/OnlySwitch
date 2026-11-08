@@ -368,6 +368,15 @@ struct ScreenshotsFeatureTests {
         #expect(recorder.editors.value == [newer.id])
     }
 
+    @Test func editIsIgnoredForRecordings() async {
+        let recorder = ScreenshotsCallRecorder()
+        let recording = item(createdAt: 1, fileName: "Screen Recording.mov")
+        let store = makeStore(started([recording]), client: .fixture(recorder, known: [recording]), presentation: .fixture(recorder))
+        await store.send(.editTapped(recording.id))
+        await store.finish()
+        #expect(recorder.editors.value.isEmpty)
+    }
+
     @Test func itemsChangedReordersAndRefreshesFileURLs() async {
         let recorder = ScreenshotsCallRecorder()
         let store = makeStore(started([older]), client: .fixture(recorder, known: [older, newer]), presentation: .fixture(recorder))

@@ -3,7 +3,7 @@ import ComposableArchitecture
 import Extensions
 import SwiftUI
 
-/// The Screenshots tab. Layout only: every interaction is a `ScreenshotsFeature` action. The same session store
+/// The Screenshots & Record tab. Layout only: every interaction is a `ScreenshotsFeature` action. The same session store
 /// is shown by the popover list, OnlyControl and Settings; each host keeps its own presentation state (hover,
 /// which host asked for the delete-all confirmation).
 public struct ScreenshotsView: View {
@@ -80,7 +80,7 @@ private struct ScreenshotsHeader: View {
 
     var body: some View {
         HStack(spacing: 8) {
-            Label("Screenshots".localized(), systemImage: "photo.on.rectangle.angled")
+            Label("Screenshots & Record".localized(), systemImage: "photo.on.rectangle.angled")
                 .font(compactPresentation ? .headline : .title2.bold())
                 .lineLimit(1)
             if !store.items.isEmpty {
@@ -260,8 +260,16 @@ private struct ScreenshotCell: View {
     private var isIncoming: Bool { store.incomingItemID == item.id }
     private var isCopied: Bool { store.copiedItemID == item.id }
     private var fileURL: URL? { store.fileURLs[item.id] }
-    private var thumbnailRequest: ScreenshotThumbnailRequest { .init(url: fileURL, revision: item.revision, maxPixel: maxPixel) }
-    private var pinTitle: String { (item.isPinned ? "Unpin Screenshot" : "Pin Screenshot").localized() }
+    private var thumbnailRequest: ScreenshotThumbnailRequest { .init(url: fileURL, revision: item.revision, maxPixel: maxPixel, isRecording: item.isRecording) }
+    private var pinTitle: String {
+        if item.isRecording { return (item.isPinned ? "Unpin Item" : "Pin Item").localized() }
+        return (item.isPinned ? "Unpin Screenshot" : "Pin Screenshot").localized()
+    }
+    private var openTitle: String { (item.isRecording ? "Open Item" : "Open Screenshot").localized() }
+    private var deleteTitle: String { (item.isRecording ? "Delete Item" : "Delete Screenshot").localized() }
+    private var accessibilityName: String {
+        item.isRecording ? "Screen Recording Accessibility Label".localizeWithFormat(arguments: item.fileName) : item.fileName
+    }
 
     var body: some View {
         ScreenshotThumbnail(image: thumbnail.image)
@@ -274,7 +282,7 @@ private struct ScreenshotCell: View {
             .onDrag(dragProvider) { ScreenshotThumbnail(image: thumbnail.image).frame(width: 160, height: 100).clipShape(.rect(cornerRadius: 8)) }
             .overlay(alignment: .topLeading) {
                 if isHovering {
-                    ScreenshotHoverButton(title: "Delete Screenshot".localized(), systemImage: "xmark", action: delete)
+                    ScreenshotHoverButton(title: deleteTitle, systemImage: "xmark", action: delete)
                 }
             }
             .overlay(alignment: .topTrailing) {
@@ -284,8 +292,11 @@ private struct ScreenshotCell: View {
                     ScreenshotPinnedBadge()
                 }
             }
+            .overlay(alignment: .bottomLeading) {
+                if item.isRecording { ScreenshotRecordingBadge(duration: thumbnail.duration) }
+            }
             .overlay(alignment: .bottomTrailing) {
-                if isHovering {
+                if isHovering && !item.isRecording {
                     ScreenshotHoverButton(title: "Edit Screenshot".localized(), systemImage: "pencil", action: edit)
                 }
             }
@@ -308,15 +319,17 @@ private struct ScreenshotCell: View {
             .help(item.fileName)
             .task(id: thumbnailRequest) { await thumbnail.load(thumbnailRequest) }
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel(item.fileName)
+            .accessibilityLabel(accessibilityName)
             .accessibilityAddTraits(.isButton)
             .accessibilityValue(isCopied ? "Copied".localized() : "")
             .accessibilityHint("Copy".localized())
             .accessibilityAction(.default, copy)
-            .accessibilityAction(named: Text("Open Screenshot".localized()), open)
-            .accessibilityAction(named: Text("Edit Screenshot".localized()), edit)
+            .accessibilityAction(named: Text(openTitle), open)
+            .accessibilityActions {
+                if !item.isRecording { Button("Edit Screenshot".localized(), action: edit) }
+            }
             .accessibilityAction(named: Text(pinTitle), togglePin)
-            .accessibilityAction(named: Text("Delete Screenshot".localized()), delete)
+            .accessibilityAction(named: Text(deleteTitle), delete)
     }
 
     private func copy() { store.send(.itemTapped(item.id)) }
@@ -355,6 +368,27 @@ private struct ScreenshotThumbnail: View {
                 }
             }
             .accessibilityHidden(true)
+    }
+}
+
+/// Marks a recording and shows its length once known.
+private struct ScreenshotRecordingBadge: View {
+    let duration: Double?
+
+    var body: some View {
+        HStack(spacing: 3) {
+            Image(systemName: "video.fill")
+            if let duration {
+                Text(Duration.seconds(duration), format: .time(pattern: duration >= 3600 ? .hourMinuteSecond : .minuteSecond))
+            }
+        }
+        .font(.caption2.monospacedDigit().weight(.semibold))
+        .foregroundStyle(.white)
+        .padding(.horizontal, 6)
+        .padding(.vertical, 3)
+        .background(.black.opacity(0.55), in: .capsule)
+        .padding(6)
+        .accessibilityHidden(true)
     }
 }
 
