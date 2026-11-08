@@ -73,17 +73,17 @@ final class SoundMixerVM: ObservableObject {
     @Published var systemVolume: Double = 50
     /// False when the output device's volume can be changed neither by macOS nor over DDC.
     @Published var isSystemVolumeAvailable = true
-    private var systemVolumeControl: SoundMixerService.SystemVolumeControl = .system
+    var systemVolumeControl: SoundMixerService.SystemVolumeControl = .system
     /// DDC reads occasionally fail, e.g. while another app talks to the display at the same time.
     private var missedDisplayVolumeReads = 0
     /// True while volume keys should drive the display but Accessibility is not granted yet.
     @Published var needsAccessibilityForVolumeKeys = false
-    private lazy var volumeKeyTap = DisplayVolumeKeyTap { [weak self] key, fine in
+    lazy var volumeKeyTap = DisplayVolumeKeyTap { [weak self] key, fine in
         self?.handleVolumeKey(key, fine: fine)
     }
-    private lazy var volumeHUD = DisplayVolumeHUD()
-    private var displayVolumeBeforeMute: Double = 50
-    private var didPromptAccessibilityForVolumeKeys = false
+    lazy var volumeHUD = DisplayVolumeHUD()
+    var displayVolumeBeforeMute: Double = 50
+    var didPromptAccessibilityForVolumeKeys = false
     // Only mutated on the main actor during init; read once in deinit after the last release.
     nonisolated(unsafe) private var accessibilityObserver: NSObjectProtocol?
     /// The current default output device, shown in the panel's "Output" section.
@@ -113,8 +113,8 @@ final class SoundMixerVM: ObservableObject {
     }()
 
     private var lifecycleRevision = 0
-    private let service = SoundMixerService()
-    private let ownPlayback = OwnPlaybackSource.live
+    let service = SoundMixerService()
+    let ownPlayback = OwnPlaybackSource.live
     /// Stored type-erased so the class stays available below macOS 14.4 (scriptable apps still work).
     private var systemMixerBox: AnyObject?
     // Only mutated on the main actor during init; read once in deinit after the last release.
@@ -122,20 +122,20 @@ final class SoundMixerVM: ObservableObject {
     nonisolated(unsafe) private var ownPlaybackObserver: NSObjectProtocol?
     private var autoRefreshTask: Task<Void, Never>?
     /// While the user drags a slider we must not rebuild rows underneath them.
-    private var isInteracting = false
+    var isInteracting = false
     /// Guards ``refresh()`` against overlapping itself across its suspension points.
     private var isRefreshing = false
     /// Latest value still to be written, keyed by row id (or ``systemVolumeKey``), plus the task
     /// draining it. A drag emits far more updates than an AppleScript round-trip can keep up with,
     /// so only the newest value survives and writes are rate-limited.
-    private var pendingVolumes: [String: Int] = [:]
-    private var volumeWriters: [String: Task<Void, Never>] = [:]
-    private static let systemVolumeKey = "__system__"
+    var pendingVolumes: [String: Int] = [:]
+    var volumeWriters: [String: Task<Void, Never>] = [:]
+    static let systemVolumeKey = "__system__"
     /// ~16 writes per second: fast enough to sound immediate, slow enough for AppleScript.
-    private static let volumeWriteInterval: UInt64 = 60_000_000
+    static let volumeWriteInterval: UInt64 = 60_000_000
 
     @available(macOS 14.4, *)
-    private var systemMixer: SystemAudioMixer? { systemMixerBox as? SystemAudioMixer }
+    var systemMixer: SystemAudioMixer? { systemMixerBox as? SystemAudioMixer }
 
     private init() {
         enabled = UserDefaults.standard.bool(forKey: UserDefaults.Key.soundMixerEnabled)
@@ -215,69 +215,6 @@ final class SoundMixerVM: ObservableObject {
         autoRefreshTask = nil
         // The panel can go away mid-drag; otherwise the flag would block every later refresh.
         isInteracting = false
-    }
-
-    /// The remote representation intentionally excludes Core Audio and scripting handles.
-    func remoteSnapshot() async -> RemoteSoundMixerSnapshot {
-        if enabled { await refresh() }
-        return SoundMixerRemoteBridge.snapshot(
-            revision: UInt64(Date().timeIntervalSince1970 * 1_000),
-            isEnabled: enabled,
-            systemVolume: systemVolume,
-            isSystemVolumeAvailable: isSystemVolumeAvailable,
-            output: outputDevice.map { .init(name: $0.name, symbolName: $0.symbolName) },
-            rows: rows.map { .init(id: $0.id, name: $0.name, volume: $0.volume, isMuted: $0.isMuted) },
-            equalizer: equalizerStore.withState { $0 },
-            routing: outputRoutingStore.withState { $0 }
-        )
-    }
-
-    func performRemoteCommand(_ command: RemoteSoundMixerCommand) async throws -> RemoteSoundMixerSnapshot {
-        guard enabled else { return await remoteSnapshot() }
-        let validated = try SoundMixerRemoteBridge.validate(
-            command,
-            rowIDs: Set(rows.map(\.id)),
-            routing: outputRoutingStore.withState { $0 }
-        )
-        switch validated {
-        case let .systemVolume(value):
-            updateSystemVolume(value, live: false)
-        case let .appVolume(id, value):
-            updateVolume(value, for: id, live: false)
-        case let .appMuted(id, isMuted):
-            if rows.first(where: { $0.id == id })?.isMuted != isMuted { toggleMute(for: id) }
-        case let .equalizerGain(id, band, gain):
-            equalizerStore.send(.setGain(id, band, gain))
-        case let .equalizerReset(id):
-            equalizerStore.send(.reset(id))
-        case let .toggleOutput(id, deviceID):
-            outputRoutingStore.send(.toggleDevice(id, deviceID))
-        case let .followSystem(id):
-            outputRoutingStore.send(.followSystem(id))
-        }
-        return await remoteSnapshot()
-    }
-
-    /// Polls while a remote Sound Mixer tab is subscribed and emits only snapshots whose content
-    /// changed. Cancelling the consumer cancels the polling task.
-    func remoteSnapshots(interval: Duration = .seconds(2)) -> AsyncThrowingStream<RemoteSoundMixerSnapshot, Error> {
-        AsyncThrowingStream { continuation in
-            let task = Task { @MainActor [weak self] in
-                var last: RemoteSoundMixerSnapshot?
-                // `guard let self` per iteration so the loop ends once the view model is gone.
-                while !Task.isCancelled {
-                    guard let self else { break }
-                    let next = await self.remoteSnapshot()
-                    if last.map({ !$0.hasSameContent(as: next) }) ?? true {
-                        continuation.yield(next)
-                        last = next
-                    }
-                    try? await Task.sleep(for: interval)
-                }
-                continuation.finish()
-            }
-            continuation.onTermination = { _ in task.cancel() }
-        }
     }
 
     // MARK: - Refresh
@@ -461,154 +398,5 @@ final class SoundMixerVM: ObservableObject {
     /// from the id, and `NSImage` is not comparable in any cheap way.
     private static func signature(of rows: [AppRow]) -> [String] {
         rows.map { "\($0.id)|\($0.name)|\(Int($0.volume))|\($0.isMuted)|\($0.pid ?? 0)|\($0.processObjectIDs)" }
-    }
-
-    // MARK: - Interaction
-
-
-    /// The single way a slider changes a row. The view passes the value in rather than writing it
-    /// through a `Binding` into ``rows``: a binding handed out by `ForEach` is written while
-    /// SwiftUI still holds its own access to the array, and the resulting overlapping access
-    /// corrupted the rows' storage.
-    ///
-    /// `live` is true while the slider is still under the pointer.
-    func updateVolume(_ value: Double, for id: String, live: Bool) {
-        isInteracting = live
-        guard let index = rows.firstIndex(where: { $0.id == id }) else { return }
-        rows[index].volume = value
-        if !live {
-            rows[index].isMuted = value == 0
-            if value > 0 { rows[index].volumeBeforeMute = value }
-        }
-        applyVolume(for: id, live: live)
-    }
-
-    /// `live` is true while the slider is still under the pointer. It keeps the tap path from
-    /// rebuilding its Core Audio device on every movement.
-    private func applyVolume(for id: String, live: Bool) {
-        guard let index = rows.firstIndex(where: { $0.id == id }) else { return }
-        switch rows[index].control {
-        case .scriptable:
-            guard let app = rows[index].scriptableApp else { return }
-            let service = service
-            scheduleWrite(Int(rows[index].volume), key: id) { await service.setVolume($0, of: app) }
-        case .systemTap:
-            // The tap's own callback applies the gain, so there is no round-trip to rate-limit.
-            guard #available(macOS 14.4, *), let mixer = systemMixer, let pid = rows[index].pid else { return }
-            mixer.setConfiguration(gain: rows[index].volume / 100,
-                                   settings: equalizerStore.withState { $0.settings(for: id) }, pid: pid,
-                                   processObjectIDs: rows[index].processObjectIDs, live: live,
-                                   routing: outputRoutingStore.withState { $0.selection(for: id) })
-        case .ownPlayer:
-            ownPlayback.setVolume(rows[index].volume)
-        }
-    }
-
-    /// Queues `value` and starts a writer for `key` if none is draining it yet.
-    private func scheduleWrite(_ value: Int, key: String, write: @escaping (Int) async -> Void) {
-        pendingVolumes[key] = value
-        guard volumeWriters[key] == nil else { return }
-        volumeWriters[key] = Task { [weak self] in
-            while true {
-                guard let self else { return }
-                // No suspension between reading the entry and clearing the writer, so this stays
-                // atomic against another `scheduleWrite` arriving on the main actor.
-                guard let next = pendingVolumes.removeValue(forKey: key) else {
-                    volumeWriters[key] = nil
-                    return
-                }
-                await write(next)
-                try? await Task.sleep(nanoseconds: Self.volumeWriteInterval)
-            }
-        }
-    }
-
-    func toggleMute(for id: String) {
-        guard let index = rows.firstIndex(where: { $0.id == id }) else { return }
-        switch rows[index].control {
-        case .scriptable:
-            toggleScriptableMute(at: index)
-        case .systemTap, .ownPlayer:
-            toggleSystemMute(at: index)
-        }
-    }
-
-    private func toggleScriptableMute(at index: Int) {
-        guard let app = rows[index].scriptableApp else { return }
-        if rows[index].isMuted {
-            let restore = rows[index].volumeBeforeMute > 0 ? rows[index].volumeBeforeMute : 50
-            rows[index].volume = restore
-            rows[index].isMuted = false
-        } else {
-            if rows[index].volume > 0 { rows[index].volumeBeforeMute = rows[index].volume }
-            rows[index].volume = 0
-            rows[index].isMuted = true
-        }
-        let value = Int(rows[index].volume)
-        Task { await service.setVolume(value, of: app) }
-    }
-
-    private func toggleSystemMute(at index: Int) {
-        if rows[index].isMuted {
-            let restore = rows[index].volumeBeforeMute > 0 ? rows[index].volumeBeforeMute : 100
-            rows[index].volume = restore
-            rows[index].isMuted = false
-        } else {
-            if rows[index].volume > 0 { rows[index].volumeBeforeMute = rows[index].volume }
-            rows[index].volume = 0
-            rows[index].isMuted = true
-        }
-        applyVolume(for: rows[index].id, live: false)
-    }
-
-    /// Same one-way flow as the per-app sliders.
-    func updateSystemVolume(_ value: Double, live: Bool) {
-        isInteracting = live
-        guard isSystemVolumeAvailable else { return }
-        systemVolume = value
-        let service = service
-        let control = systemVolumeControl
-        scheduleWrite(Int(value.rounded()), key: Self.systemVolumeKey) { await service.setSystemVolume($0, via: control) }
-    }
-
-    /// Volume keys drive the display only while its volume is reached over DDC; otherwise the tap
-    /// is stopped and macOS handles the keys itself.
-    private func updateVolumeKeyInterception() {
-        let wantsKeys: Bool
-        if enabled, case .display = systemVolumeControl { wantsKeys = true } else { wantsKeys = false }
-        volumeKeyTap.interceptsVolumeKeys = wantsKeys
-        guard wantsKeys else {
-            if volumeKeyTap.isRunning { volumeKeyTap.stop() }
-            needsAccessibilityForVolumeKeys = false
-            return
-        }
-        if !volumeKeyTap.isRunning {
-            let options = ["AXTrustedCheckOptionPrompt": !didPromptAccessibilityForVolumeKeys] as CFDictionary
-            didPromptAccessibilityForVolumeKeys = true
-            if AXIsProcessTrustedWithOptions(options) { _ = volumeKeyTap.start() }
-        }
-        needsAccessibilityForVolumeKeys = !volumeKeyTap.isRunning
-    }
-
-    private func handleVolumeKey(_ key: VolumeKeyEvent.Key, fine: Bool) {
-        guard enabled, isSystemVolumeAvailable, case let .display(name) = systemVolumeControl else { return }
-        var level = DisplayVolumeLevel(volume: systemVolume, volumeBeforeMute: displayVolumeBeforeMute)
-        level.apply(key, fine: fine)
-        displayVolumeBeforeMute = level.volumeBeforeMute
-        updateSystemVolume(level.volume, live: false)
-        volumeHUD.show(volume: level.volume, isMuted: level.isMuted, onScreenNamed: name)
-    }
-
-    func openAccessibilitySettings() {
-        guard let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")
-        else { return }
-        NSWorkspace.shared.open(url)
-    }
-
-    /// Opens the system Sound settings, so the panel can stand in for "Sound Settings…".
-    func openSoundSettings() {
-        guard let url = URL(string: "x-apple.systempreferences:com.apple.Sound-Settings.extension")
-        else { return }
-        NSWorkspace.shared.open(url)
     }
 }
