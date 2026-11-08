@@ -72,7 +72,9 @@ struct XcodeCleanerFeatureTests {
     @Test func destructiveItemRequiresConfirmationAndCancelDoesNotClean() async {
         var initial = XcodeCleanerFeature.State()
         initial.snapshot = CleanerSnapshot(items: [device])
-        let store = TestStore(initialState: initial) { XcodeCleanerFeature() }
+        let store = TestStore(initialState: initial) { XcodeCleanerFeature() } withDependencies: {
+            $0.uuid = .incrementing
+        }
         store.exhaustivity = .off
         await store.send(.cleanTapped(itemID: device.id))
         #expect(store.state.confirmationItemID == device.id)
@@ -124,7 +126,9 @@ struct XcodeCleanerFeatureTests {
         var initial = XcodeCleanerFeature.State()
         initial.activeHosts = [host, otherHost]
         initial.snapshot = CleanerSnapshot(items: [device])
-        let store = TestStore(initialState: initial) { XcodeCleanerFeature() }
+        let store = TestStore(initialState: initial) { XcodeCleanerFeature() } withDependencies: {
+            $0.uuid = .incrementing
+        }
         store.exhaustivity = .off
         await store.send(.cleanTappedInHost(itemID: device.id, hostID: host))
         #expect(store.state.confirmationHostID == host)

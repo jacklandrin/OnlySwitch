@@ -36,6 +36,7 @@ Use the narrowest applicable skill. If several conditions match, load the smalle
 - Keep implementation plans in `doc/plan/`. Keep reusable skill notes, routing supplements, and project-specific skill instructions in `doc/skills/`.
 - Keep business logic out of SwiftUI views. Move state transitions, validation, orchestration, and side effects into TCA reducers, domain types, or injected clients.
 - Preserve the boundaries between the macOS app, widget extension, remote app, and reusable Swift Package modules.
+- Keep Xcode targets thin: all code goes into `Modules` package modules; targets hold only entry points, resources, Info.plist, and entitlements. Run `Scripts/check-thin-targets.sh` after structural changes.
 - Prefer focused, composable modules and reusable abstractions over expanding monolithic files.
 - Do not let any Swift source file exceed 500 lines. When a change would push a file past the limit, split it into focused types, extensions, or files first. Unit test files are exempt.
 - Maintain Swift 6 concurrency safety, including explicit sendability and actor isolation at networking, persistence, and process-boundary crossings.

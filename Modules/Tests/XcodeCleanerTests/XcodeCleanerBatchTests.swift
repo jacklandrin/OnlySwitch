@@ -62,6 +62,7 @@ struct XcodeCleanerBatchTests {
         var initial = state([cache, device, other])
         initial.selectedItemIDs = [cache.id, device.id]
         let store = TestStore(initialState: initial) { XcodeCleanerFeature() } withDependencies: {
+            $0.uuid = .incrementing
             $0.xcodeCleanerClient.clean = { request in await recorder.record(request); throw CleanerFailure(key: "test") }
         }
         store.exhaustivity = .off
@@ -85,6 +86,7 @@ struct XcodeCleanerBatchTests {
         var initial = state([cache, other, device]); initial.selectedItemIDs = [cache.id, other.id]
         let result = CleanerCleanupResult(removedItemIDs: [cache.id, device.id], failures: [.init(key: "partial", itemID: other.id, mayHaveRemovedContents: true)])
         let store = TestStore(initialState: initial) { XcodeCleanerFeature() } withDependencies: {
+            $0.uuid = .incrementing
             $0.xcodeCleanerClient.clean = { request in await recorder.record(request); return result }
             $0.xcodeCleanerClient.scan = { await gate.value() }
         }
@@ -110,6 +112,7 @@ struct XcodeCleanerBatchTests {
         let recorder = CleanerBatchRecorder()
         let initial = state([cache, other])
         let store = TestStore(initialState: initial) { XcodeCleanerFeature() } withDependencies: {
+            $0.uuid = .incrementing
             $0.xcodeCleanerClient.clean = { request in await recorder.record(request); return .init(removedItemIDs: request.itemIDs) }
             $0.xcodeCleanerClient.scan = { await gate.value() }
         }
@@ -132,6 +135,7 @@ struct XcodeCleanerBatchTests {
     @Test func backgroundFailurePreservesUsableEstimatedInventory() async {
         let initial = state([cache, other])
         let store = TestStore(initialState: initial) { XcodeCleanerFeature() } withDependencies: {
+            $0.uuid = .incrementing
             $0.xcodeCleanerClient.clean = { request in .init(removedItemIDs: request.itemIDs) }
             $0.xcodeCleanerClient.scan = { throw CleanerFailure(key: "refresh unavailable") }
         }
@@ -152,6 +156,7 @@ struct XcodeCleanerBatchTests {
         var empty = cache; empty.bytes = 0
         let refreshed = CleanerSnapshot(items: [empty, other])
         let store = TestStore(initialState: state([cache, other])) { XcodeCleanerFeature() } withDependencies: {
+            $0.uuid = .incrementing
             $0.xcodeCleanerClient.clean = { request in .init(removedItemIDs: request.itemIDs) }
             $0.xcodeCleanerClient.scan = { refreshed }
         }
@@ -177,6 +182,7 @@ struct XcodeCleanerBatchTests {
         var regenerated = cache; regenerated.bytes = 9
         let refreshed = CleanerSnapshot(items: [regenerated, other])
         let store = TestStore(initialState: state([cache, other])) { XcodeCleanerFeature() } withDependencies: {
+            $0.uuid = .incrementing
             $0.xcodeCleanerClient.clean = { request in .init(removedItemIDs: request.itemIDs) }
             $0.xcodeCleanerClient.scan = { refreshed }
         }
@@ -193,6 +199,7 @@ struct XcodeCleanerBatchTests {
         let initial = state([cache, other])
         let partial = CleanerSnapshot(items: [], failures: [.init(key: "read denied", itemID: other.id)])
         let store = TestStore(initialState: initial) { XcodeCleanerFeature() } withDependencies: {
+            $0.uuid = .incrementing
             $0.xcodeCleanerClient.clean = { request in .init(removedItemIDs: request.itemIDs) }
             $0.xcodeCleanerClient.scan = { partial }
         }
@@ -215,6 +222,7 @@ struct XcodeCleanerBatchTests {
         let initial = state([cache, other])
         let outcome = CleanerCleanupResult(failures: [.init(key: "partial", mayHaveRemovedContents: true)])
         let store = TestStore(initialState: initial) { XcodeCleanerFeature() } withDependencies: {
+            $0.uuid = .incrementing
             $0.xcodeCleanerClient.clean = { _ in outcome }
             $0.xcodeCleanerClient.scan = { await gate.value() }
         }
@@ -232,6 +240,7 @@ struct XcodeCleanerBatchTests {
         let cleanup = CleanerAsyncGate<CleanerCleanupResult>()
         let scan = CleanerAsyncGate<CleanerSnapshot>()
         let store = TestStore(initialState: state([cache, other])) { XcodeCleanerFeature() } withDependencies: {
+            $0.uuid = .incrementing
             $0.xcodeCleanerClient.clean = { _ in await cleanup.value() }
             $0.xcodeCleanerClient.scan = { await scan.value() }
         }

@@ -30,6 +30,7 @@ struct AppUninstallerFeatureTests {
     @Test func acceptedAppUsesClientAndSelectsDisplayedItems() async {
         let snapshot = uninstallerSnapshot(), recorder = UninstallerRequestRecorder()
         let store = TestStore(initialState: AppUninstallerFeature.State()) { AppUninstallerFeature() } withDependencies: {
+            $0.uuid = .incrementing
             $0.appUninstallerClient.scan = { url in #expect(url == snapshot.applicationURL); return snapshot }
             $0.appUninstallerClient.activateSnapshot = { await recorder.activate($0) }
         }
@@ -57,6 +58,7 @@ struct AppUninstallerFeatureTests {
     @Test func pendingConfirmationRequiresExactOwnerAndTokenAndCancellationNeverRemoves() async throws {
         let host = UUID(), snapshot = uninstallerSnapshot(), recorder = UninstallerRequestRecorder()
         let store = TestStore(initialState: initialState(host: host, snapshot: snapshot)) { AppUninstallerFeature() } withDependencies: {
+            $0.uuid = .incrementing
             $0.appUninstallerClient.remove = { request in await recorder.record(request); return .init(removedItemIDs: [], failures: []) }
         }
         store.exhaustivity = .off
@@ -75,9 +77,14 @@ struct AppUninstallerFeatureTests {
 
     @Test func confirmedRemovalUsesFrozenOrderedSelectionAndRejectsDuplicateActions() async throws {
         let host = UUID(), snapshot = uninstallerSnapshot(), recorder = UninstallerRequestRecorder()
+        // Holds the removal in flight so the duplicate confirmation is sent before the
+        // response arrives; a non-exhaustive store would otherwise skip that response.
+        let (removalGate, releaseRemoval) = AsyncStream<Void>.makeStream()
         let store = TestStore(initialState: initialState(host: host, snapshot: snapshot)) { AppUninstallerFeature() } withDependencies: {
+            $0.uuid = .incrementing
             $0.appUninstallerClient.remove = { request in
                 await recorder.record(request)
+                for await _ in removalGate {}
                 return .init(removedItemIDs: request.itemIDs, failures: [])
             }
         }
@@ -87,6 +94,7 @@ struct AppUninstallerFeatureTests {
         await store.send(.toggleSelection("preferences"))
         await store.send(.confirmRemoval(hostID: host, token: pending.token))
         await store.send(.confirmRemoval(hostID: host, token: pending.token))
+        releaseRemoval.finish()
         await store.receive(\.removalResponse)
         await store.finish()
         #expect(await recorder.requests == [.init(snapshotID: snapshot.id, itemIDs: snapshot.items.map(\.id))])
@@ -120,7 +128,9 @@ struct AppUninstallerFeatureTests {
 
     @Test func ownerDisappearanceDismissesItsPendingConfirmation() async {
         let host = UUID(), snapshot = uninstallerSnapshot()
-        let store = TestStore(initialState: initialState(host: host, snapshot: snapshot)) { AppUninstallerFeature() }
+        let store = TestStore(initialState: initialState(host: host, snapshot: snapshot)) { AppUninstallerFeature() } withDependencies: {
+            $0.uuid = .incrementing
+        }
         store.exhaustivity = .off
         await store.send(.removeTapped(hostID: host))
         #expect(store.state.pendingConfirmation != nil)
@@ -142,6 +152,7 @@ struct AppUninstallerFeatureTests {
     @Test func appOnlyRemovalFinishesWithoutOfferingUnselectedDataFromStaleScan() async throws {
         let host = UUID(), snapshot = uninstallerSnapshot(), recorder = UninstallerRequestRecorder()
         let store = TestStore(initialState: initialState(host: host, snapshot: snapshot)) { AppUninstallerFeature() } withDependencies: {
+            $0.uuid = .incrementing
             $0.appUninstallerClient.remove = { request in
                 await recorder.record(request)
                 return .init(removedItemIDs: request.itemIDs)

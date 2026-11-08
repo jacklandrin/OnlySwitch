@@ -1,7 +1,7 @@
 #if os(macOS)
 import Foundation
 import Testing
-import Synchronization
+import ComposableArchitecture
 @testable import XcodeCleaner
 
 struct XcodeCleanerSimulatorTests {
@@ -20,18 +20,18 @@ struct XcodeCleanerSimulatorTests {
     }
     @Test func batchPreflightDoesNotRemeasureDevicesAndUsesOneInventoryPair() async throws {
         let fixture = try CleanerFixture(); defer { fixture.remove() }
-        let measurements = Mutex(0)
+        let measurements = LockIsolated(0)
         let runtimeJSON = """
         {"\(cleanerRuntimeImageID)":{"identifier":"\(cleanerRuntimeImageID)","runtimeIdentifier":"\(cleanerRuntimeIdentifier)","deletable":true,"sizeBytes":4096,"state":"Ready"}}
         """
         let recorder = CleanerCommandRecorder(deviceJSON: cleanerDevices(), runtimeJSON: runtimeJSON)
-        let adapter = XcodeCleanerSimulator(home: fixture.home, measureDevice: { _ in measurements.withLock { $0 += 1 }; return 32 }, run: { try await recorder.run($0) })
+        let adapter = XcodeCleanerSimulator(home: fixture.home, measureDevice: { _ in measurements.withValue { $0 += 1 }; return 32 }, run: { try await recorder.run($0) })
         let snapshot = try await adapter.scan()
         #expect(snapshot.items.first { $0.category == .simulatorDevice }?.bytes == 32)
-        #expect(measurements.withLock { $0 } == 1)
+        #expect(measurements.value == 1)
         let result = try await adapter.clean(.init(snapshotID: snapshot.id, itemIDs: ["device:\(cleanerDeviceID)", "runtime:\(cleanerRuntimeImageID)"]))
         #expect(Set(result.removedItemIDs) == ["device:\(cleanerDeviceID)", "runtime:\(cleanerRuntimeImageID)"])
-        #expect(measurements.withLock { $0 } == 1)
+        #expect(measurements.value == 1)
         let commands = await recorder.commands
         #expect(commands.filter { $0.arguments == ["simctl", "list", "--json"] }.count == 2)
         #expect(commands.filter { $0.arguments == ["simctl", "runtime", "list", "--json"] }.count == 2)

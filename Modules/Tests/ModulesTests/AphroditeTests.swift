@@ -1194,6 +1194,8 @@ struct AphroditeShareTests {
         let store = TestStore(initialState: AphroditeReducer.State(apps: [existing], storageState: .ready)) {
             AphroditeReducer()
         } withDependencies: {
+            $0.uuid = .incrementing
+            $0.date.now = .distantPast
             $0.aphroditePersistence.insertImported = { _ in throw AphroditePersistenceClient.Error.writeFailed }
         }
 
