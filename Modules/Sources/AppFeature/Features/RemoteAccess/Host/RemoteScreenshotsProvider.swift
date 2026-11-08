@@ -28,7 +28,12 @@ enum RemoteScreenshotsProvider {
         }
     }
 
-    static func service(source: Source, client: ScreenshotsClient, pollInterval: Duration = .seconds(1)) -> RemoteScreenshotsService {
+    static func service(
+        source: Source,
+        client: ScreenshotsClient,
+        pollInterval: Duration = .seconds(1),
+        clock: any Clock<Duration> = ContinuousClock()
+    ) -> RemoteScreenshotsService {
         RemoteScreenshotsService(
             libraries: { includesRecordings in
                 AsyncStream { continuation in
@@ -58,7 +63,7 @@ enum RemoteScreenshotsProvider {
                                 lastItems = items
                                 lastEnabled = enabled
                             }
-                            try? await Task.sleep(for: pollInterval)
+                            try? await clock.sleep(for: pollInterval)
                         }
                         continuation.finish()
                     }

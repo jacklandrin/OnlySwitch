@@ -156,6 +156,27 @@ let package = Package(
             ],
             swiftSettings: [.unsafeFlags(["-enforce-exclusivity=unchecked"])]
         ),
+        .testTarget(
+            name: "AppFeatureTests",
+            dependencies: [
+                "AppFeature", "Aphrodite", "Defines", "DesktopPet", "DisplayBrightness", "Extensions",
+                "OnlyAgent", "OnlyControl", "OnlySwitchObjC", "OnlySwitchPersistence", "PrivilegedHelperCore",
+                "RemoteCore", "RemoteTransport", "Screenshots", "SoundMixerEQ", "Switches", "SystemMonitor",
+                "Tailscale", "Utilities",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "CustomDump", package: "swift-custom-dump"),
+                .product(name: "Dependencies", package: "swift-dependencies"),
+                .product(name: "KeyboardShortcuts", package: "KeyboardShortcuts")
+            ],
+            exclude: [
+                // Never members of the old OnlySwitchTests Xcode target; kept out to preserve the suite.
+                "CodexUsageIntegrationTests.swift",
+                "EverySwitchTests.swift",
+                "OnlySwitchListSectionTests.swift",
+                "SystemMonitor/SystemMonitorLocalizationTests.swift"
+            ],
+            swiftSettings: [.swiftLanguageMode(.v5)]
+        ),
         .target(name: "CSoundMixerEQ"),
         .target(name: "SoundMixerEQ", dependencies: ["CSoundMixerEQ", .product(name: "ComposableArchitecture", package: "swift-composable-architecture"), .product(name: "Dependencies", package: "swift-dependencies")]),
         .target(name: "DisplayDDC"),

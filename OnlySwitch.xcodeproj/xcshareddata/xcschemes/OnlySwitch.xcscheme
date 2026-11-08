@@ -32,10 +32,20 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "041D725328353A150083092D"
-               BuildableName = "OnlySwitchTests.xctest"
-               BlueprintName = "OnlySwitchTests"
-               ReferencedContainer = "container:OnlySwitch.xcodeproj">
+               BlueprintIdentifier = "AppFeatureTests"
+               BuildableName = "AppFeatureTests"
+               BlueprintName = "AppFeatureTests"
+               ReferencedContainer = "container:Modules">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "OnlySwitchPersistenceTests"
+               BuildableName = "OnlySwitchPersistenceTests"
+               BlueprintName = "OnlySwitchPersistenceTests"
+               ReferencedContainer = "container:Modules">
             </BuildableReference>
          </TestableReference>
       </Testables>
