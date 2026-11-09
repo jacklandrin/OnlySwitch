@@ -7,6 +7,7 @@
 
 import Foundation
 import Extensions
+import OSLog
 
 public protocol SwitchCMD {
     static var status:String { get }
@@ -167,14 +168,14 @@ public func scriptDiskFilePath(scriptName: String) -> String {
     if !fileExistAtPath(scriptDirectoryPath) {
         if !directoryExistsAtPath(scriptDirectoryPath) {
             guard let _ = try? FileManager.default.createDirectory(at: scriptDirectoryURL, withIntermediateDirectories: true) else {
-                print("directory should be created and permissions allowed")
+                Logger.shell.error("directory should be created and permissions allowed")
                 return ""
             }
         }
     }
     guard let localScriptPath =  Bundle.main.path(forResource: scriptName, ofType: "sh") else {return ""}
     guard let _ = try? FileManager.default.createFile(atPath: scriptFilePath, contents: Data(contentsOf: URL(fileURLWithPath: localScriptPath)), attributes: nil) else {
-        print("File has not been created at \(scriptFilePath)")
+        Logger.shell.error("File has not been created at \(scriptFilePath)")
         return ""
     }
     return scriptFilePath

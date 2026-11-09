@@ -6,6 +6,8 @@
 import AppKit
 import Defines
 import SystemMonitor
+import OSLog
+import Extensions
 
 extension StatusBarController {
     func observeNotifications() {
@@ -29,7 +31,7 @@ extension StatusBarController {
             Task { @MainActor [weak self] in
                 guard let self else { return }
                 guard let newImageName else {
-                    print("⚠️ Invalid object type for changeMenuBarIcon notification")
+                    Logger.statusBar.warning("Invalid object type for changeMenuBarIcon notification")
                     return
                 }
                 self.setMainItemButton(image: newImageName)
@@ -86,7 +88,7 @@ extension StatusBarController {
                     // macOS 26 Tahoe: Safely remove status item
                     NSStatusBar.system.removeStatusItem(markItem)
                     self.markItem = nil
-                    print("✅ Mark button removed successfully")
+                    Logger.statusBar.info("Mark button removed successfully")
                 }
             }
         }

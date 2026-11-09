@@ -8,6 +8,8 @@
 
 import Foundation
 import os.log
+import OSLog
+import Extensions
 
 let supportFormat = ["audio/mpeg", "audio/aacp", "application/octet-stream"]
 
@@ -22,7 +24,7 @@ extension Downloader: URLSessionDataDelegate {
         totalBytesCount = response.expectedContentLength
 //        print("totalBytesCount:\(totalBytesCount)")
         let mimeType = response.mimeType
-        print("mineType:\(String(describing: mimeType))")
+        Logger.player.debug("mimeType: \(String(describing: mimeType))")
         if let mimeType = mimeType, !supportFormat.contains(mimeType) {
             let error = MimeTypeError.unsupportedFormat
             delegate?.download(self, completedWithError: error)
@@ -46,7 +48,7 @@ extension Downloader: URLSessionDataDelegate {
             delegate?.download(self, didReceiveData: data, progress: progress)
             progressHandler?(data, progress)
         } else  {
-            print("other response:\(String(describing: response))")
+            Logger.player.debug("other response: \(String(describing: response))")
         }
         
     }

@@ -23,6 +23,7 @@
 
 
 import CoreAudioKit
+import OSLog
 
 
 public extension NSSound {
@@ -92,14 +93,14 @@ public extension NSSound {
         
         //first be sure that a default device exists
         if (!AudioObjectHasProperty(AudioObjectID(kAudioObjectSystemObject), &theAddress) )    {
-            print("Unable to get default audio device")
+            Logger.audio.error("Unable to get default audio device")
             return theAnswer
         }
         
         //get the property 'default output device'
         let theError : OSStatus = AudioObjectGetPropertyData(AudioObjectID(kAudioObjectSystemObject), &theAddress, UInt32(0), nil, &theSize, &theAnswer)
         if (theError != noErr) {
-            print("Unable to get output audio device")
+            Logger.audio.error("Unable to get output audio device")
             return theAnswer
         }
         return theAnswer
@@ -122,7 +123,7 @@ public extension NSSound {
         
         defaultDevID = obtainDefaultOutputDevice()
         if (defaultDevID == kAudioObjectUnknown) {
-            print("Audio device not found!")
+            Logger.audio.error("Audio device not found!")
             return 0.0
         }        //device not found: return 0
         
@@ -131,14 +132,14 @@ public extension NSSound {
         
         //be sure that the default device has the volume property
         if (!AudioObjectHasProperty(defaultDevID, &theAddress) ) {
-            print("No volume control for device 0x%0x",defaultDevID)
+            Logger.audio.error("No volume control for device 0x\(defaultDevID, format: .hex)")
             return 0.0
         }
         
         //now read the property and correct it, if outside [0...1]
         theError = AudioObjectGetPropertyData(defaultDevID, &theAddress, 0, nil, &theSize, &theVolume)
         if ( theError != noErr )    {
-            print("Unable to read volume for device 0x%0x", defaultDevID)
+            Logger.audio.error("Unable to read volume for device 0x\(defaultDevID, format: .hex)")
             return 0.0
         }
         
@@ -170,14 +171,14 @@ public extension NSSound {
         defaultDevID = obtainDefaultOutputDevice()
         if (defaultDevID == kAudioObjectUnknown) {
             //device not found: return without trying to set
-            print("Audio Device unknown")
+            Logger.audio.error("Audio Device unknown")
             return
         }
         
         //check if the new value is in the correct range - normalize it if not
         newValue = theVolume > 1.0 ? 1.0 : (theVolume < 0.0 ? 0.0 : theVolume)
         if (newValue != theVolume) {
-            print("Tentative volume (%5.2f) was out of range; reset to %5.2f", theVolume, newValue)
+            Logger.audio.warning("Tentative volume (\(theVolume, format: .fixed(precision: 2))) was out of range; reset to \(newValue, format: .fixed(precision: 2))")
         }
         
         theAddress = AudioObjectPropertyAddress.init(mSelector: kAudioDevicePropertyMute, mScope: kAudioDevicePropertyScopeOutput, mElement: kAudioObjectPropertyElementMain)
@@ -193,7 +194,7 @@ public extension NSSound {
                 if (theError != noErr || !(canMute.boolValue))
                 {
                     canMute = false
-                    print("Should mute device 0x%0x but did not succeed",defaultDevID)
+                    Logger.audio.error("Should mute device 0x\(defaultDevID, format: .hex) but did not succeed")
                 }
             }
             else {canMute = false}
@@ -205,14 +206,14 @@ public extension NSSound {
         
         //be sure the device has a volume command
         if (!AudioObjectHasProperty(defaultDevID, &theAddress)) {
-            print("The device 0x%0x does not have a volume to set", defaultDevID)
+            Logger.audio.error("The device 0x\(defaultDevID, format: .hex) does not have a volume to set")
             return
         }
         
         //be sure the device can set the volume
         theError = AudioObjectIsPropertySettable(defaultDevID, &theAddress, &canSetVol)
         if ( theError != noErr || !canSetVol.boolValue ) {
-            print("The volume of device 0x%0x cannot be set", defaultDevID)
+            Logger.audio.error("The volume of device 0x\(defaultDevID, format: .hex) cannot be set")
             return
         }
         
@@ -222,13 +223,13 @@ public extension NSSound {
             theError = AudioObjectSetPropertyData(defaultDevID, &theAddress, 0, nil, UInt32(MemoryLayout.size(ofValue: muted)), &muted)
             
             if (theError != noErr) {
-                print("The device 0x%0x was not muted",defaultDevID)
+                Logger.audio.error("The device 0x\(defaultDevID, format: .hex) was not muted")
                 return
             }
         } else {       //else set it
             theError = AudioObjectSetPropertyData(defaultDevID, &theAddress, 0, nil, UInt32(MemoryLayout.size(ofValue: newValue)), &newValue)
             if (theError != noErr) {
-                print("The device 0x%0x was unable to set volume", defaultDevID)
+                Logger.audio.error("The device 0x\(defaultDevID, format: .hex) was unable to set volume")
             }
             //if device is able to handle muting, maybe it was muted, so unlock it
             if (muteOff && hasMute && canMute.boolValue) {
@@ -238,7 +239,7 @@ public extension NSSound {
             }
         }
         if (theError != noErr) {
-            print("Unable to set volume for device 0x%0x", defaultDevID)
+            Logger.audio.error("Unable to set volume for device 0x\(defaultDevID, format: .hex)")
         }
     }
 
@@ -259,7 +260,7 @@ public extension NSSound {
         defaultDevID = obtainDefaultOutputDevice()
         if (defaultDevID == kAudioObjectUnknown) {
             //device not found
-            print("Audio device unknown")
+            Logger.audio.error("Audio device unknown")
             return
         }
         
@@ -276,7 +277,7 @@ public extension NSSound {
             {
                 theError = AudioObjectSetPropertyData(defaultDevID, &theAddress, 0, nil, UInt32(MemoryLayout.size(ofValue: muted)), &muted)
                 if (theError != noErr) {
-                    print("Cannot change mute status of device 0x%0x", defaultDevID)
+                    Logger.audio.error("Cannot change mute status of device 0x\(defaultDevID, format: .hex)")
                 }
             }
         }
@@ -325,7 +326,7 @@ public extension NSSound {
         defaultDevID = obtainDefaultOutputDevice()
         if (defaultDevID == kAudioObjectUnknown) {
             //device not found
-            print("Audio device unknown")
+            Logger.audio.error("Audio device unknown")
             return false                       // works, but not the best return code for this
         }
         

@@ -7,6 +7,8 @@
 
 import Foundation
 import ScriptingBridge
+import OSLog
+import Extensions
 
 let appleMusicStateChangedNotification = NSNotification.Name("com.apple.Music.playerInfo")
 
@@ -53,13 +55,13 @@ class AppleMusicPlayer {
         switch playerState {
         case "Paused":
             pauseEvent()
-            print("paused")
+            Logger.player.debug("paused")
         case "Stopped":
             stoppedEvent()
-            print("stopped")
+            Logger.player.debug("stopped")
         case "Playing":
             playingEvent()
-            print("playing")
+            Logger.player.debug("playing")
         default:
             break
         }

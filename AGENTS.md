@@ -40,6 +40,7 @@ Use the narrowest applicable skill. If several conditions match, load the smalle
 - Prefer focused, composable modules and reusable abstractions over expanding monolithic files.
 - Do not let any Swift source file exceed 500 lines. When a change would push a file past the limit, split it into focused types, extensions, or files first. Unit test files are exempt.
 - Maintain Swift 6 concurrency safety, including explicit sendability and actor isolation at networking, persistence, and process-boundary crossings.
+- Do not use `print`, `debugPrint`, `dump`, or `NSLog` in production code. Log only through OSLog `Logger`: use the shared categories in `Modules/Sources/Extensions/Logger++.swift` (add a new category there when none fits), or a file-private `Logger` in modules that do not depend on `Extensions`. Choose the matching level (`.debug`, `.info`, `.warning`, `.error`, `.fault`) and keep sensitive values at the default private redaction. Test targets and standalone scripts are exempt.
 - Treat shell commands, Apple Events, keychain access, system settings, and user permissions as security-sensitive effects that require explicit dependencies and testable failure handling.
 - Do not evaluate macOS app changes against App Store constraints unless the user explicitly requests an App Store submission-readiness review.
 - Design new or substantially changed UI with modern platform styling, adopting Liquid Glass where supported, providing compatible fallbacks, supporting light and dark modes, and adapting layouts for macOS, iPhone, and iPad sizes as applicable.

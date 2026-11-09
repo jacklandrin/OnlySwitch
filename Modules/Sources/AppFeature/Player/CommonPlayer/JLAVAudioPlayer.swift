@@ -10,6 +10,8 @@ import AVFoundation
 import AVKit
 import MediaPlayer
 import Switches
+import OSLog
+import Extensions
 
 final class JLAVAudioPlayer: NSObject, AVPlayerItemMetadataOutputPushDelegate, AudioPlayer {
     
@@ -28,7 +30,7 @@ final class JLAVAudioPlayer: NSObject, AVPlayerItemMetadataOutputPushDelegate, A
                                                using: { notification in
             guard let userInfo = notification.userInfo,
                     let newValue  = userInfo["newValue"] as? Float else {
-                        print("No userInfo found in notification")
+                        Logger.player.warning("No userInfo found in notification")
                         return
                 }
             

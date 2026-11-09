@@ -6,6 +6,8 @@
 import AppKit
 import Defines
 import SwiftUI
+import OSLog
+import Extensions
 
 extension OnlySwitchListView {
     var singleSwitchList: some View {
@@ -71,7 +73,7 @@ extension OnlySwitchListView {
                             let locationY = gesture.location.y
                             if self.distanceY == 0 && locationY != 0 {
                                 NSCursor.closedHand.set()
-                                print("set closeHand")
+                                Logger.ui.debug("set closeHand")
                             }
 
                             withAnimation{
@@ -80,7 +82,7 @@ extension OnlySwitchListView {
 
                             if abs(self.distanceY) > 10 {
                                 let newIndex = movingIndex + Int(self.distanceY + 28 * (distanceY / abs(distanceY))) / Int(Layout.singleSwitchHeight)
-                                print("new index:\(newIndex), moving index:\(movingIndex), distance:\(self.distanceY)")
+                                Logger.ui.debug("new index: \(newIndex), moving index: \(movingIndex), distance: \(self.distanceY)")
                             }
                         }
                         .onEnded{ gesture in
@@ -257,7 +259,7 @@ extension OnlySwitchListView {
         var newIndex = index
         if abs(self.distanceY) > 10 {
             let indexOffset = Int(self.distanceY + 28 * (distanceY / abs(distanceY))) / Int(Layout.singleSwitchHeight)
-            print("indexOffset:\(indexOffset)")
+            Logger.ui.debug("indexOffset: \(indexOffset)")
             newIndex = movingIndex + indexOffset
         }
         if newIndex < 0 {

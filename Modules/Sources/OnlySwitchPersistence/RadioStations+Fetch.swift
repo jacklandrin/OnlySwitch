@@ -8,6 +8,7 @@
 import CoreData
 import Extensions
 import Foundation
+import OSLog
 
 extension RadioStations {
     public static func backupEntries() -> [RadioStationBackup] {
@@ -36,7 +37,7 @@ extension RadioStations {
     public static var defaultFetchRequest: NSFetchRequest<RadioStations> {
         let request: NSFetchRequest<RadioStations> = RadioStations.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(keyPath: \RadioStations.timestamp, ascending: true)]
-        print("fetched the radio stations")
+        Logger.persistence.debug("fetched the radio stations")
         return request
     }
 

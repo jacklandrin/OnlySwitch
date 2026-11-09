@@ -8,6 +8,8 @@
 import Defines
 import Foundation
 import AppKit
+import OSLog
+import Extensions
 
 @MainActor
 class SettingsWindow: NSWindow, NSWindowDelegate {
@@ -92,14 +94,14 @@ class SettingsWindow: NSWindow, NSWindowDelegate {
                     if !isShowing {
                         NSWorkspace.shared.open(url)
                         isShowing = true
-                        print("new setting window appears")
+                        Logger.ui.debug("new setting window appears")
                     }
                     if let window = NSApp.windows.first(where: { $0.title == "Settings" }) {
                         window.makeKeyAndOrderFront(nil)
                     }
                 } else {
                     NSWorkspace.shared.open(url)
-                    print("new setting window appears")
+                    Logger.ui.debug("new setting window appears")
                 }
             }
         }
@@ -119,7 +121,7 @@ class SettingsWindow: NSWindow, NSWindowDelegate {
     }
 
     private func onClose() {
-        print("settings window closing")
+        Logger.ui.debug("settings window closing")
         NSApp.activate(ignoringOtherApps: true)
         NSApp.windows.first?.makeKeyAndOrderFront(self)
         NSApp.setActivationPolicy(.accessory)

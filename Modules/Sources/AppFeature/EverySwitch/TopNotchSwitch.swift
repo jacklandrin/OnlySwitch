@@ -11,6 +11,7 @@ import AVFoundation
 import Switches
 import Defines
 import OSLog
+import Extensions
 
 final class TopNotchSwitch: SwitchProvider, @unchecked Sendable, CurrentScreen {
     weak var delegate: SwitchDelegate?
@@ -151,10 +152,10 @@ final class TopNotchSwitch: SwitchProvider, @unchecked Sendable, CurrentScreen {
             let tag = CGImageMetadataTagCopyValue(metadataTag)
             
             guard let valueTag = tag as? String else {
-                print("\tError during convert tag into string")
+                Logger.internalSwitch.error("Error during convert tag into string")
                 return true
             }
-            print(valueTag)
+            Logger.internalSwitch.debug("\(valueTag)")
             if valueString.starts(with: "apple_desktop:solar") {
                 tagType = "solar"
                 plist = valueTag

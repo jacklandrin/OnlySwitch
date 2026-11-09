@@ -8,6 +8,8 @@
 import Dependencies
 import Foundation
 import XCTestDynamicOverlay
+import OSLog
+import Extensions
 
 extension EvolutionGalleryService: TestDependencyKey {
     static let testValue = Self()
@@ -17,7 +19,7 @@ extension EvolutionGalleryService {
     static let mockValue = Self(
         fetchGalleryList: {
             guard let url = Bundle.main.url(forResource: "EvolutionMarket", withExtension: "json") else {
-                print("json file not found")
+                Logger.settings.error("json file not found")
                 return []
             }
             let data = try Data(contentsOf: url)

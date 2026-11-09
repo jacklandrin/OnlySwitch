@@ -9,6 +9,8 @@ import Foundation
 import Dependencies
 import Networking
 import OnlySwitchPersistence
+import OSLog
+import Extensions
 
 extension EvolutionGalleryService: DependencyKey {
     static var liveValue: Self { Self(
@@ -18,7 +20,7 @@ extension EvolutionGalleryService: DependencyKey {
                 return EvolutionGalleryAdaptor.convertToGallery(from: evolutionGalleryModels)
             } catch {
                 guard let url = Bundle.main.url(forResource: "EvolutionMarket", withExtension: "json") else {
-                    print("json file not found")
+                    Logger.settings.error("json file not found")
                     return []
                 }
                 let data = try Data(contentsOf: url)

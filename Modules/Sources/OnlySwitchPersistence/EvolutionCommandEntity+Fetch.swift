@@ -7,13 +7,15 @@
 
 import CoreData
 import Foundation
+import OSLog
+import Extensions
 
 extension EvolutionCommandEntity {
 
     @MainActor public static var defaultFetchRequest: NSFetchRequest<EvolutionCommandEntity> {
         let request:NSFetchRequest<EvolutionCommandEntity> = EvolutionCommandEntity.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(keyPath: \EvolutionCommandEntity.timestamp, ascending: false)]
-        print("fetched the evolution command")
+        Logger.persistence.debug("fetched the evolution command")
         return request
     }
 

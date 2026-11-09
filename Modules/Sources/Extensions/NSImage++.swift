@@ -7,6 +7,7 @@
 
 import Cocoa
 import AppKit
+import OSLog
 
 public extension NSImage {
     var jpgData: Data? {
@@ -24,7 +25,7 @@ public extension NSImage {
             try jpgData?.write(to: url, options: options)
             return true
         } catch {
-            print(error)
+            Logger.ui.error("\(error)")
             return false
         }
     }
@@ -147,7 +148,7 @@ public extension NSImage {
             try heic?.write(to: url, options: options)
             return true
         } catch {
-            print(error)
+            Logger.ui.error("\(error)")
             return false
         }
     }

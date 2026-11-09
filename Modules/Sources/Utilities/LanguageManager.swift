@@ -8,6 +8,7 @@
 import Foundation
 import Defines
 import Extensions
+import OSLog
 
 @MainActor
 public class LanguageManager: ObservableObject {
@@ -20,7 +21,7 @@ public class LanguageManager: ObservableObject {
         set {
             languageUserDefaults?.set(newValue, forKey: UserDefaults.Key.systemLangPriority)
             languageUserDefaults?.synchronize()
-            print("systemLangPriority:\(newValue)")
+            Logger.app.debug("systemLangPriority: \(newValue)")
         }
     }
     

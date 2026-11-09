@@ -7,6 +7,8 @@
 
 import SwiftUI
 import Switches
+import OSLog
+import Extensions
 
 @MainActor
 class SwitchListVM: ObservableObject, CurrentScreen {
@@ -80,7 +82,7 @@ class SwitchListVM: ObservableObject, CurrentScreen {
     }
 
     deinit{
-        print("switch list vm deinit")
+        Logger.ui.debug("switch list vm deinit")
     }
 
     private func refreshList() {
@@ -149,7 +151,7 @@ class SwitchListVM: ObservableObject, CurrentScreen {
         guard let screen = getScreenWithMouse() else {return}
         let menuBarHeight = NSApplication.shared.mainMenu?.menuBarHeight ?? 0
         self.model.maxHeight = screen.frame.height - menuBarHeight - 20
-        print(self.model.maxHeight)
+        Logger.ui.debug("max height: \(self.model.maxHeight)")
     }
 
 

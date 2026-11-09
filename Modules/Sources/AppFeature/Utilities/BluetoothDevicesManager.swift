@@ -10,6 +10,8 @@ import IOBluetooth
 import CoreBluetooth
 import Switches
 import OnlySwitchObjC
+import OSLog
+import Extensions
 
 enum AirPodsBattery:String {
     case left = "BatteryPercentLeft"
@@ -127,11 +129,11 @@ extension BluetoothDevicesManager:CBCentralManagerDelegate {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch central.state {
         case .poweredOn:
-            print("Power on")
+            Logger.bluetooth.debug("Power on")
         case .poweredOff:
-            print("Power off")
+            Logger.bluetooth.debug("Power off")
         case .unsupported:
-            print("Unsupported")
+            Logger.bluetooth.debug("Unsupported")
         default:
             break
         }

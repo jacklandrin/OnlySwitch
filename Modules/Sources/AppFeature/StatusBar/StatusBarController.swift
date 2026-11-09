@@ -13,6 +13,8 @@ import Foundation
 import ComposableArchitecture
 import SystemMonitor
 import Screenshots
+import OSLog
+import Extensions
 
 enum ScreenshotShortcutAction: Equatable {
     case none
@@ -134,7 +136,7 @@ class StatusBarController {
         
         // macOS 26 Tahoe: Validate button still exists before proceeding
         guard mainItem.button != nil else {
-            print("⚠️ togglePopover called but status bar button is nil")
+            Logger.statusBar.warning("togglePopover called but status bar button is nil")
             return
         }
         
@@ -182,7 +184,7 @@ class StatusBarController {
     @objc private func showMenuBarIcons(sender:AnyObject) {
         // macOS 26 Tahoe: Validate mark button still exists
         guard markItem?.button != nil else {
-            print("⚠️ showMenuBarIcons called but mark button is nil")
+            Logger.statusBar.warning("showMenuBarIcons called but mark button is nil")
             return
         }
         
@@ -202,9 +204,9 @@ class StatusBarController {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
                     self?.setupMainItemButtonWithRetry(image: image, attempt: attempt + 1)
                 }
-                print("⚠️ Status bar button not ready, retrying... (attempt \(attempt + 1))")
+                Logger.statusBar.warning("Status bar button not ready, retrying... (attempt \(attempt + 1))")
             } else {
-                print("❌ Failed to setup status bar button after 5 attempts")
+                Logger.statusBar.error("Failed to setup status bar button after 5 attempts")
             }
             return
         }
@@ -216,12 +218,12 @@ class StatusBarController {
         mainItemButton.sendAction(on: [.leftMouseDown, .rightMouseDown])
         mainItemButton.action = #selector(togglePopover(sender:))
         mainItemButton.target = self
-        print("✅ Status bar button setup successfully")
+        Logger.statusBar.info("Status bar button setup successfully")
     }
     
     func setMainItemButton(image: String) {
         guard let mainItemButton = mainItem.button else {
-            print("⚠️ Cannot update status bar button - button is nil")
+            Logger.statusBar.warning("Cannot update status bar button - button is nil")
             // Try to setup with retry if button became nil
             setupMainItemButtonWithRetry(image: image)
             return
@@ -249,9 +251,9 @@ class StatusBarController {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
                     self?.setMarkButton(attempt: attempt + 1)
                 }
-                print("⚠️ Mark button not ready, retrying... (attempt \(attempt + 1))")
+                Logger.statusBar.warning("Mark button not ready, retrying... (attempt \(attempt + 1))")
             } else {
-                print("❌ Failed to setup mark button after 5 attempts")
+                Logger.statusBar.error("Failed to setup mark button after 5 attempts")
             }
             return
         }
@@ -262,7 +264,7 @@ class StatusBarController {
         markItemButton.sendAction(on: [.leftMouseDown, .rightMouseDown])
         markItemButton.action = #selector(showMenuBarIcons(sender:))
         markItemButton.target = self
-        print("✅ Mark button setup successfully")
+        Logger.statusBar.info("Mark button setup successfully")
     }
 
     isolated deinit {
@@ -320,7 +322,7 @@ class StatusBarController {
         }
         
         guard let statusBarButton = mainItem.button else {
-            print("⚠️ Status bar button not available")
+            Logger.statusBar.warning("Status bar button not available")
             return
         }
         
@@ -329,7 +331,7 @@ class StatusBarController {
         } else {
             // macOS 26 Tahoe: Add safety check before showing popover
             guard !popover.isShown else {
-                print("⚠️ Popover already shown")
+                Logger.statusBar.debug("Popover already shown")
                 return
             }
             
@@ -362,7 +364,7 @@ class StatusBarController {
         } else {
             // macOS 26 Tahoe: Safety check before closing popover
             guard popover.isShown else {
-                print("⚠️ Popover already hidden")
+                Logger.statusBar.debug("Popover already hidden")
                 return
             }
             popover.performClose(sender)

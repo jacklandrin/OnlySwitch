@@ -9,6 +9,7 @@ import Dependencies
 import DependenciesMacros
 import Extensions
 import Foundation
+import OSLog
 
 @available(macOS 26.0, *)
 @DependencyClient
@@ -81,7 +82,7 @@ extension PromptDialogueService: DependencyKey {
                 )
                 return script
             } catch {
-                print(error)
+                Logger.onlyAgentDebug.error("\(error)")
                 throw error
             }
         } requestStream: { prompt, modelProvider, model, isAgentMode in

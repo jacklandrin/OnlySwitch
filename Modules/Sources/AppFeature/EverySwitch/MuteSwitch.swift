@@ -9,6 +9,8 @@ import Foundation
 import AppKit
 import Switches
 import Defines
+import OSLog
+import Extensions
 
 final class MuteSwitch: SwitchProvider, @unchecked Sendable {
     weak var delegate: SwitchDelegate?
@@ -108,7 +110,7 @@ final class NSMuteSwitchOperator: MuteSwitchProtocal, @unchecked Sendable {
         if isOn {
             NSSound.systemVolumeFadeToMute(seconds: 0, blocking: true)
             let isMuted = NSSound.systemVolumeIsMuted
-            print("turn on, isMuted:\(isMuted)")
+            Logger.internalSwitch.debug("turn on, isMuted: \(isMuted)")
             if !isMuted {
                 throw SwitchError.OperationFailed
             }
@@ -119,7 +121,7 @@ final class NSMuteSwitchOperator: MuteSwitchProtocal, @unchecked Sendable {
             }
             NSSound.systemVolume = volumeValue
             let isMuted = NSSound.systemVolumeIsMuted
-            print("turn off, isMuted:\(isMuted)")
+            Logger.internalSwitch.debug("turn off, isMuted: \(isMuted)")
             if isMuted {
                 throw SwitchError.OperationFailed
             }

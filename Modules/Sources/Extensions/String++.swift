@@ -8,6 +8,7 @@
 import Defines
 import Foundation
 import OSAKit
+import OSLog
 
 public extension String {
     @MainActor
@@ -19,7 +20,7 @@ public extension String {
         if administratorPrivilege {
             finalCommand += " with prompt \"OnlySwitch\" with administrator privileges"
         }
-        print("command: \(finalCommand)")
+        Logger.shell.debug("command: \(finalCommand)")
         return try await AppleScriptExecutor.shared.execute(source: finalCommand)
     }
 }
@@ -37,10 +38,10 @@ fileprivate class AppleScriptExecutor {
                     let osaScript = OSAScript(source: source)
                     if let descriptor = osaScript.executeAndReturnError(&error) {
                         if let outputString = descriptor.stringValue {
-                            print(outputString)
+                            Logger.shell.debug("\(outputString)")
                             continuation.resume(returning: outputString)
                         } else if let error = error {
-                            print("error:\(String(describing: error))")
+                            Logger.shell.error("error: \(String(describing: error))")
                             continuation.resume(throwing: SwitchError.ScriptFailed)
                         } else {
                             continuation.resume(returning: "")
@@ -107,7 +108,7 @@ public extension String {
                 return ""
             }
         } catch let error {
-            print("invalid regex: \(error.localizedDescription)")
+            Logger.app.error("invalid regex: \(error.localizedDescription)")
             return []
         }
     }

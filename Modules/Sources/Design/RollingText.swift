@@ -7,6 +7,9 @@
 
 import Foundation
 import SwiftUI
+import OSLog
+
+private let rollingTextLogger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "jacklandrin.OnlySwitch", category: "UI")
 
 public struct RollingText : View {
     public var text = ""
@@ -28,7 +31,7 @@ public struct RollingText : View {
                         .offset(x: self.animate ? CGFloat(-stringWidth - stringHeight * 2) : 0)
                         .animation(Animation.linear(duration: Double(stringWidth) / 30).delay(startDelay).repeatForever(autoreverses: false), value: self.animate)
                         .onAppear() {
-                            print("\(geometry.size.width)  \(stringWidth)")
+                            rollingTextLogger.debug("width: \(geometry.size.width), string width: \(stringWidth)")
                             if geometry.size.width - leftFade - rightFade < stringWidth {
                                 withAnimation() {
                                     self.animate = true
@@ -38,7 +41,7 @@ public struct RollingText : View {
                         .fixedSize(horizontal: true, vertical: false)
                         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
                         .onChange(of: self.text) {
-                            print("\(geometry.size.width)  \(stringWidth)")
+                            rollingTextLogger.debug("width: \(geometry.size.width), string width: \(stringWidth)")
                             if geometry.size.width - leftFade - rightFade < stringWidth {
                                 withAnimation() {
                                     self.animate = true

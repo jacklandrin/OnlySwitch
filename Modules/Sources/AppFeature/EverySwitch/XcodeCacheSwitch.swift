@@ -8,6 +8,8 @@
 import Foundation
 import AppKit
 import Switches
+import OSLog
+import Extensions
 
 final class XcodeCacheSwitch: SwitchProvider, @unchecked Sendable {
     weak var delegate: SwitchDelegate?
@@ -30,7 +32,7 @@ final class XcodeCacheSwitch: SwitchProvider, @unchecked Sendable {
     var lastSizeBeforeCleaning: Int? = 0
     var progressPercent: Double {
         let value = 1.0 - Double(currentSize) / Double(lastSizeBeforeCleaning ?? 1)
-        print("clean progress:\(value) \(currentSize) \(lastSizeBeforeCleaning ?? 1)")
+        Logger.internalSwitch.debug("clean progress: \(value) \(self.currentSize) \(self.lastSizeBeforeCleaning ?? 1)")
         return value
     }
     

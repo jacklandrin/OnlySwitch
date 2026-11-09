@@ -9,6 +9,8 @@ import AppKit
 import IOBluetooth
 import Switches
 import Defines
+import OSLog
+import Extensions
 
 final class AirPodsSwitch: SwitchProvider, @unchecked Sendable {
     weak var delegate: SwitchDelegate?
@@ -63,13 +65,13 @@ final class AirPodsSwitch: SwitchProvider, @unchecked Sendable {
         if isOn {
             let result = blManager.connect(device: currentDevice)
             if !result.0 {
-                print(result.1)
+                Logger.bluetooth.error("\(result.1)")
                 throw SwitchError.OperationFailed
             }
         } else {
             let result = blManager.disconnect(device: currentDevice)
             if !result.0 {
-                print(result.1)
+                Logger.bluetooth.error("\(result.1)")
                 throw SwitchError.OperationFailed
             }
         }

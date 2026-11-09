@@ -8,6 +8,8 @@
 import Foundation
 import Alamofire
 import Networking
+import OSLog
+import Extensions
 
 @MainActor
 class AboutVM:ObservableObject {
@@ -25,7 +27,7 @@ class AboutVM:ObservableObject {
                 self.updateHistoryInfo = presenter.updateHistoryInfo
                 self.updateHistoryList = presenter.updateHistoryList
             case let .failure(error):
-                print(error.localizedDescription)
+                Logger.settings.error("\(error.localizedDescription)")
             }
         }
     }

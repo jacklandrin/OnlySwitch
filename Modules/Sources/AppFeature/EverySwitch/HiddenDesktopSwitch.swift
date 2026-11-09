@@ -8,6 +8,8 @@
 import AppKit
 import Defines
 import Switches
+import OSLog
+import Extensions
 
 final class HiddenDesktopSwitch: SwitchProvider, @unchecked Sendable {
     weak var delegate: SwitchDelegate?
@@ -52,6 +54,6 @@ final class HiddenDesktopSwitch: SwitchProvider, @unchecked Sendable {
     }
     
     deinit{
-        print("hidden desktop switch deinit")
+        Logger.internalSwitch.debug("hidden desktop switch deinit")
     }
 }

@@ -11,6 +11,8 @@ import AVKit
 import MediaPlayer
 import SwiftUI
 import Switches
+import OSLog
+import Extensions
 
 let bufferSize = 512
 
@@ -53,7 +55,7 @@ final class JLASAudioPlayer: NSObject, AVPlayerItemMetadataOutputPushDelegate, A
                                                using: { notification in
             guard let userInfo = notification.userInfo,
                     let newValue  = userInfo["newValue"] as? Float else {
-                        print("No userInfo found in notification")
+                        Logger.player.warning("No userInfo found in notification")
                         return
                 }
             

@@ -7,6 +7,7 @@
 
 import CoreData
 import Extensions
+import OSLog
 
 public struct PersistenceController: Sendable {
     // Only the app migrates the shared store. The widget extension can launch
@@ -192,6 +193,6 @@ public struct PersistenceController: Sendable {
     }
 
     private static func log(_ error: NSError) {
-        NSLog("OnlySwitch persistence error: %@, %@", error, error.userInfo)
+        Logger.persistence.error("OnlySwitch persistence error: \(error), \(error.userInfo)")
     }
 }

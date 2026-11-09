@@ -9,6 +9,8 @@ import AppKit
 import CoreData
 import Switches
 import OnlySwitchPersistence
+import OSLog
+import Extensions
 
 let defaultRadioStations = [
     ["title":"Country Radio", "url":"https://live.leanstream.co/CKRYFM"],
@@ -96,7 +98,7 @@ final class RadioStationSwitch:SwitchProvider, @unchecked Sendable {
         do {
             try PersistenceController.shared.requireStore()
         } catch {
-            NSLog("OnlySwitch default radio stations could not be saved: %@", error as NSError)
+            Logger.persistence.error("OnlySwitch default radio stations could not be saved: \(error)")
             return
         }
         if firstRadioRun() {

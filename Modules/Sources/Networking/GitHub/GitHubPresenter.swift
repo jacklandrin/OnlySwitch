@@ -8,6 +8,9 @@
 import Alamofire
 import Combine
 import Foundation
+import OSLog
+
+private let gitHubLogger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "jacklandrin.OnlySwitch", category: "Network")
 
 public final class GitHubPresenter: ObservableObject, GitHubRepositoryProtocol, @unchecked Sendable {
     public static let shared = GitHubPresenter()
@@ -111,7 +114,7 @@ public final class GitHubPresenter: ObservableObject, GitHubRepositoryProtocol, 
             }
             try FileManager.default.moveItem(at: localURL, to: destination)
         } catch {
-            print(error.localizedDescription)
+            gitHubLogger.error("\(error.localizedDescription)")
         }
     }
 

@@ -7,6 +7,8 @@
 
 import AppKit
 import Networking
+import OSLog
+import Extensions
 
 @MainActor
 class UpdateVM: ObservableObject {
@@ -29,7 +31,7 @@ class UpdateVM: ObservableObject {
                     NSApp.terminate(self)
                 }
             case let .failure(error):
-                print(error.localizedDescription)
+                Logger.settings.error("\(error.localizedDescription)")
             }
         }
     }

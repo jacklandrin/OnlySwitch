@@ -13,6 +13,7 @@ import Networking
 import Sharing
 import Foundation
 import OnlySwitchPersistence
+import OSLog
 
 @MainActor
 class GeneralVM: ObservableObject {
@@ -202,7 +203,7 @@ class GeneralVM: ObservableObject {
                     Updater.checkForUpdates()
                 }
             case let .failure(error):
-                print(error.localizedDescription)
+                Logger.settings.error("\(error.localizedDescription)")
             }
             self.model.showProgress = false
         }

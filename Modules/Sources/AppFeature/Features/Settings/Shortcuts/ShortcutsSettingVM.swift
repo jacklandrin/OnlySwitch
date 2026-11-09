@@ -11,6 +11,8 @@ import KeyboardShortcuts
 import Alamofire
 import Networking
 import Switches
+import OSLog
+import Extensions
 
 class ShortcutsItem: ObservableObject {
     let error:(_ info:String) -> Void
@@ -164,7 +166,7 @@ final class ShortcutsSettingVM:ObservableObject, @unchecked Sendable {
                       let pngData = resized.pngData,
                       pngData.count <= 64 * 1024
                 else {
-                    if let error { print("Unable to read Shortcuts icon for \(name): \(error)") }
+                    if let error { Logger.settings.error("Unable to read Shortcuts icon for \(name): \(error)") }
                     return nil
                 }
                 return ShortcutAppearance(id: name, name: name, iconPNGData: pngData)
@@ -228,7 +230,7 @@ final class ShortcutsSettingVM:ObservableObject, @unchecked Sendable {
     
     func loadDataFromLocal() {
         guard let url = Bundle.main.url(forResource: "ShortcutsMarket", withExtension: "json") else {
-            print("json file not found")
+            Logger.settings.error("json file not found")
             return
         }
         do {
@@ -237,7 +239,7 @@ final class ShortcutsSettingVM:ObservableObject, @unchecked Sendable {
             self.model.sharedShortcutsList = allShortcutsOnMarket.map{SharedShortcutsItem(shortcutInfo: $0)}
             self.checkIfInstalled()
         } catch {
-            print("json convert failed")
+            Logger.settings.error("json convert failed")
         }
     }
 }
