@@ -78,3 +78,23 @@ struct SystemMonitorSectionTests {
         #expect(hidden == [.controls])
     }
 }
+
+struct OnlyControlSectionBarTitleFitTests {
+    @Test
+    func showsTitlesWhenWidestLabelFitsSegment() {
+        // 3 sections in 312pt with 4pt spacing → 101.33pt segments.
+        #expect(OnlyControlSectionBar.showsTitles(widestLabelWidth: 80, sectionCount: 3, availableWidth: 312, spacing: 4, horizontalPadding: 12))
+    }
+
+    @Test
+    func fallsBackToIconsWhenWidestLabelOverflowsSegment() {
+        // 12 sections in 760pt with 4pt spacing → ~59.67pt segments.
+        #expect(!OnlyControlSectionBar.showsTitles(widestLabelWidth: 70, sectionCount: 12, availableWidth: 760, spacing: 4, horizontalPadding: 12))
+    }
+
+    @Test
+    func showsTitlesBeforeLayoutIsKnown() {
+        #expect(OnlyControlSectionBar.showsTitles(widestLabelWidth: 70, sectionCount: 12, availableWidth: 0))
+        #expect(OnlyControlSectionBar.showsTitles(widestLabelWidth: 70, sectionCount: 0, availableWidth: 760))
+    }
+}
