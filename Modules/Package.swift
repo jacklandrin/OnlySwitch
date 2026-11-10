@@ -132,13 +132,14 @@ let package = Package(
         ),
         .testTarget(name: "OnlySwitchPersistenceTests", dependencies: ["OnlySwitchPersistence"]),
         .target(name: "PrivilegedHelperCore"),
+        .target(name: "ScriptEditor"),
         .target(
             name: "AppFeature",
             dependencies: [
                 "Aphrodite", "AppUninstaller", "Authenticator", "Defines", "Design", "DesktopPet",
                 "DisplayBrightness", "DisplayDDC", "Extensions", "Networking", "OnlyAgent", "OnlyControl",
                 "OnlySwitchObjC", "OnlySwitchPersistence", "PrivilegedHelperCore", "PureColorView",
-                "RadioBrowser", "RemoteCore", "RemoteTransport", "Scheduler", "Screenshots",
+                "RadioBrowser", "RemoteCore", "RemoteTransport", "Scheduler", "Screenshots", "ScriptEditor",
                 "SoundMixerEQ", "StickerView", "Switches", "SystemMonitor", "Tailscale", "Utilities",
                 "XcodeCleaner",
                 .product(name: "Alamofire", package: "Alamofire"),
@@ -359,6 +360,7 @@ let package = Package(
                 "RemoteTransport",
                 "SystemMonitor",
                 "StickerView",
+                "ScriptEditor",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ]
         )
