@@ -152,11 +152,13 @@ Dock Preview, Tailscale, Xcode Cleaner, and App Uninstaller are local Mac featur
 
 ### Shortcuts Gallery
 
-Anyone can contribute macOS Shortcuts. See [How to contribute to the Shortcuts Gallery](ShortcutsGalleryContributing.md).
+Open **OnlySwitch Settings → Shortcuts → Gallery** to browse ready-made macOS Shortcuts and add them to the Shortcuts app. In **My Shortcuts**, choose up to 10 to show in the OnlySwitch menu and assign keyboard shortcuts.
 
 <p align="center">
-  <img alt="Shortcuts Gallery" src="https://github.com/jacklandrin/OnlySwitch/assets/3782279/a9d90eed-c540-4183-9332-396dce0f72d4" width="70%" />
+  <img alt="OnlySwitch Shortcuts settings with the Gallery tab selected, showing shortcut cards and their Add or Added status" src="doc/images/shortcuts-gallery.jpg" width="90%" />
 </p>
+
+Anyone can contribute macOS Shortcuts. See [How to contribute to the Shortcuts Gallery](ShortcutsGalleryContributing.md).
 
 | Shortcut | Remark | Shortcut | Remark |
 |---|---|---|:---|
@@ -179,16 +181,18 @@ Anyone can contribute macOS Shortcuts. See [How to contribute to the Shortcuts G
 
 ### Evolution
 
-Evolution lets you build custom switches and buttons backed by Shell or AppleScript, invoke them with hotkeys, and share them through the Evolution Gallery. Evolution requires macOS 13 or later, and its settings are implemented with The Composable Architecture.
+Open **OnlySwitch Settings → Evolution → My Evolutions** to create custom switches and buttons with Shell or AppleScript. Select an Evolution in the sidebar to edit its scripts, test them, and assign a keyboard shortcut. On macOS 26 or later, when Only Agent is configured, you can describe what you want and ask it to draft a script for you to review.
 
 Evolution scripts run locally with the permissions of OnlySwitch. Review scripts before saving or importing them, especially scripts that execute shell commands, Apple Events, or privileged operations.
 
-![](https://github.com/jacklandrin/OnlySwitch/assets/3782279/69131917-bfe0-4c54-8b38-d4aeb26f749a)
+<p align="center">
+  <img alt="My Evolutions settings with a Dark mode button selected, showing the AI script drafting controls, AppleScript editor, and Test button" src="doc/images/evolution-editor.jpg" width="90%" />
+</p>
 
-Anyone can contribute an Evolution. See [How to contribute to the Evolution Gallery](EvolutionGalleryContributing.md).
+Switch to **Gallery** to browse ready-made Evolutions. Use **Add** to bring one into **My Evolutions**, where you can review and edit it. Anyone can contribute an Evolution; see [How to contribute to the Evolution Gallery](EvolutionGalleryContributing.md).
 
 <p align="center">
-  <img alt="Evolution Gallery" src="https://github.com/jacklandrin/OnlySwitch/assets/3782279/f3299ae0-0222-49a3-864a-80c6601bac6a" width="70%" />
+  <img alt="OnlySwitch Evolution settings with the Gallery tab selected, showing ready-made switches and buttons such as Stage Manager and Hide Desktop Icons" src="doc/images/evolution-gallery.jpg" width="90%" />
 </p>
 
 | Evolution | Remark | Evolution | Remark |
@@ -208,7 +212,7 @@ Evolution supports two types:
    - **Turn on:** changes the state to on.
    - **Turn off:** changes the state to off.
 
-Every script must pass the built-in test before the Evolution can be saved.
+Before saving, use **Test** on any new or changed **Run**, **Turn on**, or **Turn off** script.
 
 ### Aphrodite
 
@@ -220,10 +224,10 @@ Aphrodite builds mini apps from natural language. Describe what you want, choose
 
 ### Only Agent and OpenClaw
 
-Only Agent lets you describe a task in English and generates AppleScript to control your Mac. When Agent mode is enabled, the generated script is executed immediately. Only Agent supports Ollama, OpenAI, and Gemini providers and requires macOS 26 or later. Provider-backed requests may send your prompt to the provider you select; review both the prompt and generated script before enabling immediate execution.
+Only Agent is a conversational assistant for macOS 26 or later. Choose a model and describe the change you want to make. Only Agent can ask follow-up questions and draft Shell or AppleScript that you can run or save as an Evolution button. Use **Preview first** to review the script before running it, or **Run directly** to execute it immediately. If you choose a hosted model, your prompt may be sent to its provider.
 
 <p align="center">
-  <img alt="Only Agent" src="https://github.com/user-attachments/assets/3710ebf6-f93c-4436-bce2-6fcf2727e3e1" width="70%" />
+  <img alt="Only Agent conversation window with Preview first selected, example prompts, and a field for describing a system change" src="doc/images/only-agent.jpg" width="60%" />
 </p>
 
 You can also control OnlySwitch with natural language through [OpenClaw](https://openclaw.ai/). Say things like *“empty trash”*, *“toggle keep awake”*, or *“turn on dark mode”* to trigger the matching switch through a deeplink. See [OpenClaw setup](OpenClaw/README.md) for installation as an extra skill directory or under `~/.openclaw/skills`.
