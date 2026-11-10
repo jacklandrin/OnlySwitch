@@ -39,6 +39,7 @@ struct EvolutionReducer {
         var destination: DestinationState?
         var galleryState = EvolutionGalleryReducer.State()
         var preExecution: String = ""
+        var isOnlyAgentAvailable = false
     }
     
     @CasePathable
@@ -54,9 +55,11 @@ struct EvolutionReducer {
         case errorControl(Bool)
         case galleryAction(EvolutionGalleryReducer.Action)
         case setPreExecution(String)
+        case openOnlyAgent
     }
     
     @Dependency(\.evolutionListService) var evolutionListService
+    @Dependency(\.onlyAgentLauncher) var onlyAgentLauncher
     
     @Shared(.appStorage("pre-execution"))
     var preExecution: String?
@@ -140,6 +143,13 @@ struct EvolutionReducer {
                 state.preExecution = preExecution
                 self.$preExecution.withLock { $0 = preExecution }
                 return .none
+
+            case .openOnlyAgent:
+                guard state.isOnlyAgentAvailable else { return .none }
+                let launcher = onlyAgentLauncher
+                return .run { _ in
+                    await launcher.open()
+                }
             }
         }
         .ifLet(\.editorState, action: \.editorAction) {
@@ -158,6 +168,7 @@ struct EvolutionReducer {
     
     private func refresh(state: inout State) -> EffectOf<Self> {
         state.preExecution = preExecution ?? ""
+        state.isOnlyAgentAvailable = onlyAgentLauncher.isAvailable()
         return .run { send in
             return await send(
                 .loadList(

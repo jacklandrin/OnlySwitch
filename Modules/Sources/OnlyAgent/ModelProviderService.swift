@@ -11,7 +11,7 @@ import CodexKit
 import Foundation
 import Networking
 
-public enum ModelGenerationPurpose: String, Codable, Sendable { case chat, aphrodite }
+public enum ModelGenerationPurpose: String, Codable, Sendable { case chat, aphrodite, agent }
 
 public enum ModelProviderServiceError: Error, Sendable {
     case unsupportedPlatform
@@ -49,6 +49,14 @@ public struct ModelProviderService: Sendable {
     }
     public var chat: @Sendable (ModelProvider, _ model: String, _ prompt: String) async throws -> String = { _,_,_ in "" }
     public var generateApp: @Sendable (ModelGenerationRequest) async throws -> String = { _ in "" }
+    /// Streams a reply using the request's own system instructions instead of
+    /// the AppleScript-only default used by `chatStream`.
+    public var instructedChatStream: @Sendable (ModelGenerationRequest) async throws -> AsyncThrowingStream<ModelStreamEvent, Error> = { _ in
+        AsyncThrowingStream { continuation in
+            continuation.yield(.completed(finalText: ""))
+            continuation.finish()
+        }
+    }
     public var test: @Sendable (ModelProvider) async -> Bool = { _ in true }
     public var codexSignIn: @Sendable () async throws -> ChatGPTSession = {
         throw CodexError.uninitialized
@@ -151,6 +159,14 @@ extension ModelProviderService: DependencyKey {
                 if case let .completed(final) = event, !final.isEmpty { result = final }
             }
             return result
+        } instructedChatStream: { request in
+            switch request.provider {
+            case .ollama: return try await ollamaClient.chatStream(request.model, request.prompt, systemInstructions: request.systemInstructions)
+            case .openai: return try await openAIClient.chatStream(request.model, request.prompt, systemInstructions: request.systemInstructions, maximumOutputTokens: request.maximumOutputTokens)
+            case .codex: return try await codexClient.instructedChatStream(request)
+            case .gemini: return try await geminiClient.chatStream(request.model, request.prompt, systemInstructions: request.systemInstructions, maximumOutputTokens: request.maximumOutputTokens)
+            case .claude: return try await claudeClient.chatStream(request.model, request.prompt, systemInstructions: request.systemInstructions, maximumOutputTokens: request.maximumOutputTokens)
+            }
         } test: { provider in
             switch provider {
                 case .ollama:
@@ -182,6 +198,7 @@ extension ModelProviderService: DependencyKey {
         chatStream: { _, _, _ in throw ModelProviderServiceError.unsupportedPlatform },
         chat: { _, _, _ in throw ModelProviderServiceError.unsupportedPlatform },
         generateApp: { _ in throw ModelProviderServiceError.unsupportedPlatform },
+        instructedChatStream: { _ in throw ModelProviderServiceError.unsupportedPlatform },
         test: { _ in false },
         codexSignIn: { throw ModelProviderServiceError.unsupportedPlatform },
         codexSignOut: { throw ModelProviderServiceError.unsupportedPlatform },

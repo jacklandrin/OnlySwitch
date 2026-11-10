@@ -7,6 +7,7 @@
 
 import AlertToast
 import ComposableArchitecture
+import Defines
 import SwiftUI
 
 struct EvolutionView: View {
@@ -20,6 +21,9 @@ struct EvolutionView: View {
                         HStack {
                             Text("To add or remove any Evolutions on list".localized())
                             Spacer()
+                            if store.isOnlyAgentAvailable {
+                                onlyAgentButton
+                            }
                         }
                         Divider()
                         ScrollView(.vertical) {
@@ -119,6 +123,20 @@ struct EvolutionView: View {
             .task {
                 await store.send(.refresh).finish()
             }
+            .onReceive(NotificationCenter.default.publisher(for: .changeSettings)) { _ in
+                store.send(.refresh)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var onlyAgentButton: some View {
+        if #available(macOS 26.0, *) {
+            Button("Create with Only Agent".localized(), systemImage: "sparkles") {
+                store.send(.openOnlyAgent)
+            }
+            .buttonStyle(.glass)
+            .help("Describe what you want and let Only Agent write the script".localized())
         }
     }
 

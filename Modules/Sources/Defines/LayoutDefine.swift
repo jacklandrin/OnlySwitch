@@ -19,8 +19,8 @@ public struct Layout {
     public static let generalSettingSpacing: CGFloat = 7.0
     public static let communitySize: CGFloat = 30.0
     public static let iconSize: CGFloat = 25.0
-    public static let promptDialogHeight: CGFloat = 100.0
-    public static let promptDialogWidth: CGFloat = 500.0
+    public static let onlyAgentWindowWidth: CGFloat = 560.0
+    public static let onlyAgentWindowHeight: CGFloat = 640.0
 }
 
 

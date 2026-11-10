@@ -56,6 +56,13 @@ final class CodexLive: Sendable {
         try await codexRuntimePool.chatStream(model: model, prompt: prompt)
     }
 
+    func instructedChatStream(_ request: ModelGenerationRequest) async throws -> AsyncThrowingStream<ModelStreamEvent, Error> {
+        try await codexRuntimePool.chatStream(
+            model: request.model, prompt: request.prompt, purpose: request.purpose,
+            instructions: request.systemInstructions, conversationID: request.conversationID
+        )
+    }
+
     func generateApp(_ request: ModelGenerationRequest) async throws -> String {
         let stream = try await codexRuntimePool.chatStream(
             model: request.model, prompt: request.prompt, purpose: request.purpose,
