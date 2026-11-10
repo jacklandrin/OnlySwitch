@@ -20,11 +20,10 @@ struct EvolutionSidebarView: View {
                 )
             ) {
                 ForEach(store.scope(state: \.evolutionList, action: \.row)) { rowStore in
-                    // `Store` is itself Identifiable (by ObjectIdentifier), so tag with
-                    // the Evolution's UUID explicitly to match the selection type.
-                    let id: UUID? = rowStore.evolution.id
+                    // `Store` is itself Identifiable (by ObjectIdentifier), and a
+                    // `Binding<UUID?>` selection expects non-optional `UUID` tags.
                     EvolutionRowView(store: rowStore)
-                        .tag(id)
+                        .tag(rowStore.evolution.id)
                         .contextMenu {
                             Button("Delete…".localized(), systemImage: "trash", role: .destructive) {
                                 store.send(.deleteTapped(rowStore.evolution.id))
