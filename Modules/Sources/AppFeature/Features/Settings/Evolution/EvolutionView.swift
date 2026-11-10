@@ -109,7 +109,7 @@ struct EvolutionView: View {
     private var detail: some View {
         if let editorStore = store.scope(state: \.detail, action: \.detail) {
             EvolutionEditorView(store: editorStore)
-                .id(editorStore.id)
+                .id(editorStore.evolution.id)
         } else if store.hasLoaded, store.evolutionList.isEmpty {
             EvolutionEmptyStateView(store: store)
         } else {
