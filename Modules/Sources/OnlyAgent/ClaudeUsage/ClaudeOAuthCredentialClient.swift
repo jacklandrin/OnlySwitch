@@ -41,7 +41,7 @@ struct ClaudeOAuthCredentialReader: Sendable {
     let configDirectory: String?
     let homeDirectory: URL
     let readFile: @Sendable (URL) throws -> Data
-    let readKeychain: @Sendable (String, Bool) throws -> Data?
+    let readKeychain: @Sendable (String, Bool) async throws -> Data?
     var now: @Sendable () -> Date = { Date() }
 
     func read(allowKeychainPrompt: Bool) async throws -> ClaudeOAuthCredential {
@@ -63,7 +63,7 @@ struct ClaudeOAuthCredentialReader: Sendable {
         if configured != nil && directory.standardizedFileURL != homeDirectory.appending(path: ".claude", directoryHint: .isDirectory).standardizedFileURL { throw lastFailure }
         try Task.checkCancellation()
         do {
-            if let data = try readKeychain("Claude Code-credentials", allowKeychainPrompt) {
+            if let data = try await readKeychain("Claude Code-credentials", allowKeychainPrompt) {
                 return try ClaudeOAuthCredential.decode(data, now: now())
             }
         } catch is CancellationError { throw CancellationError() }
@@ -82,6 +82,9 @@ struct ClaudeOAuthCredentialReader: Sendable {
             return try Data(contentsOf: url)
         },
         readKeychain: { service, allowPrompt in
+            // Claude Code's item trusts /usr/bin/security, so this path never prompts.
+            if let data = await ClaudeKeychainSecurityTool.read(service: service) { return data }
+            try Task.checkCancellation()
             var query: [String: Any] = [
                 kSecClass as String: kSecClassGenericPassword,
                 kSecAttrService as String: service,

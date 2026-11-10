@@ -530,3 +530,22 @@ private extension ClaudeUsageSnapshot {
         .init(account: .init(email: "fixture@example.com", plan: "Pro"), session: .init(remainingPercent: 75, resetAt: nil), weekly: nil, models: [], extraUsage: nil, fetchedAt: Date(timeIntervalSince1970: 1_800_000_000))
     }
 }
+
+struct ClaudeKeychainSecurityToolTests {
+    @Test func textOutputIsReturnedAsJSON() throws {
+        let json = #"{"claudeAiOauth":{"accessToken":"fixture-token","scopes":["user:profile"]}}"#
+        let data = try #require(ClaudeKeychainSecurityTool.decodeOutput(json + "\n"))
+        #expect(String(decoding: data, as: UTF8.self) == json)
+    }
+
+    @Test func hexOutputIsDecoded() throws {
+        let json = #"{"claudeAiOauth":{"accessToken":"fixture-token"}}"#
+        let hex = Data(json.utf8).map { String(format: "%02x", $0) }.joined()
+        let data = try #require(ClaudeKeychainSecurityTool.decodeOutput(hex + "\n"))
+        #expect(String(decoding: data, as: UTF8.self) == json)
+    }
+
+    @Test func emptyOutputIsNil() {
+        #expect(ClaudeKeychainSecurityTool.decodeOutput(" \n") == nil)
+    }
+}
