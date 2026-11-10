@@ -10,6 +10,8 @@
 
 # OnlySwitch
 
+**English** · [Deutsch](README.de.md) · [简体中文](README.zh-CN.md)
+
 **A smaller menu bar starts with one all-in-one switch.**
 
 OnlySwitch puts everyday macOS controls—such as hiding desktop icons, changing appearance, keeping the Mac awake, and managing the notch—into one customizable menu-bar app. Add, remove, and reorder switches and Shortcuts, assign keyboard shortcuts, or place controls on the desktop as widgets.
