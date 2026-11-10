@@ -13,7 +13,8 @@ import ComposableArchitecture
 extension EvolutionListService: TestDependencyKey {
     static let testValue = Self(
         loadEvolutionList: unimplemented("\(Self.self).loadEvolutionList"),
-        removeItem: unimplemented("\(Self.self).removeItem")
+        removeItem: unimplemented("\(Self.self).removeItem"),
+        setActive: unimplemented("\(Self.self).setActive")
     )
 
     static let previewValue = Self(
@@ -38,6 +39,7 @@ extension EvolutionListService: TestDependencyKey {
                 )
             ]
         },
-        removeItem: { _ in }
+        removeItem: { _ in },
+        setActive: { _, _ in }
     )
 }

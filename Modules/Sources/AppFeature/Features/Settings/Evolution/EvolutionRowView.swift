@@ -7,69 +7,38 @@
 
 import ComposableArchitecture
 import SwiftUI
-import KeyboardShortcuts
-import Utilities
 
+/// An Evolution in the sidebar: icon, name, type, and whether it's in the menu.
 struct EvolutionRowView: View {
-
-    @SwiftUI.Bindable var store: StoreOf<EvolutionRowReducer>
-    @ObservedObject var langManager = LanguageManager.sharedManager
-
-    init(store: StoreOf<EvolutionRowReducer>) {
-        self.store = store
-    }
+    let store: StoreOf<EvolutionRowReducer>
 
     var body: some View {
-        WithPerceptionTracking {
-            HStack {
-                Toggle(
-                    "",
-                    isOn: Binding(
-                        get: { store.evolution.active },
-                        set: { _ in store.send(.toggle) }
-                    )
-                )
+        HStack(spacing: 8) {
+            Image(systemName: store.evolution.displayIconName)
+                .font(.system(size: 15))
+                .frame(width: 22, height: 22)
+                .foregroundStyle(store.evolution.active ? Color.accentColor : .secondary)
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 1) {
                 Text(store.evolution.name)
-                Spacer()
-                Button {
-                    store.send(.setNavigation(tag: .editor, state: store.editorState))
-                } label: {
-                    Text("Edit".localized())
-                }
-                .navigationDestination(
-                    isPresented: Binding(
-                        get: { store.destination?.tag == .editor },
-                        set: { isPresented in
-                            if !isPresented {
-                                store.send(.setNavigation(tag: nil, state: store.editorState))
-                            }
-                        }
-                    )
-                ) {
-                    EvolutionEditorView(
-                        store: store.scope(
-                            state: \.editorState,
-                            action: \.editorAction
-                        )
-                    )
-                }
-                KeyboardShortcuts.Recorder(for: store.keyboardShortcutName)
-                    .environment(\.locale, .init(identifier: langManager.currentLang))
-                    .padding(.leading, 10)
+                    .lineLimit(1)
+                Text(store.evolution.controlType == .Button ? "Button".localized() : "Switch".localized())
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
-            .padding(2)
+            Spacer(minLength: 4)
+            Toggle(
+                String(format: "Show %@ in the menu".localized(), store.evolution.name),
+                isOn: Binding(
+                    get: { store.evolution.active },
+                    set: { store.send(.setActive($0)) }
+                )
+            )
+            .toggleStyle(.switch)
+            .controlSize(.mini)
+            .labelsHidden()
+            .help("Show in the OnlySwitch menu".localized())
         }
-    }
-}
-
-struct EvolutionRowView_Previews: PreviewProvider {
-    static var previews: some View {
-        EvolutionRowView(
-            store: Store(
-                initialState: EvolutionRowReducer.State(evolution: EvolutionItem())
-            ) {
-                EvolutionRowReducer()
-            }
-        )
+        .padding(.vertical, 2)
     }
 }

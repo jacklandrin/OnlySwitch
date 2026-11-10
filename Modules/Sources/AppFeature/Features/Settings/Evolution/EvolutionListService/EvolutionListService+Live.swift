@@ -53,7 +53,12 @@ extension EvolutionListService: DependencyKey {
                     entity.privilegedOperationIdentifier = operation.rawValue
                 }
                 try context.save()
-                return EvolutionAdapter.evolutionItems(uniqueEntities)
+                let activeIDs = Set(UserDefaults.standard.array(forKey: UserDefaults.Key.evolutionIDs) as? [String] ?? [])
+                return EvolutionAdapter.evolutionItems(uniqueEntities).map { item in
+                    var item = item
+                    item.active = activeIDs.contains(item.id.uuidString)
+                    return item
+                }
             }
         },
         removeItem: { id in
@@ -63,6 +68,21 @@ extension EvolutionListService: DependencyKey {
             UserDefaults.standard.set(ids.filter { $0 != idString }, forKey: UserDefaults.Key.evolutionIDs)
             await MainActor.run {
                 KeyboardShortcuts.reset(KeyboardShortcuts.Name(idString))
+                NotificationCenter.default.post(name: .changeSettings, object: nil)
+            }
+        },
+        setActive: { id, isActive in
+            // The menu reads this list of IDs; its key and format are unchanged.
+            let idString = id.uuidString
+            var ids = (UserDefaults.standard.array(forKey: UserDefaults.Key.evolutionIDs) as? [String]) ?? []
+            if isActive {
+                // Keep the existing position so the menu order doesn't change.
+                if !ids.contains(idString) { ids.append(idString) }
+            } else {
+                ids.removeAll { $0 == idString }
+            }
+            UserDefaults.standard.set(ids, forKey: UserDefaults.Key.evolutionIDs)
+            await MainActor.run {
                 NotificationCenter.default.post(name: .changeSettings, object: nil)
             }
         }

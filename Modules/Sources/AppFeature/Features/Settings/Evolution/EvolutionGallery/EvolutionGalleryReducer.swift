@@ -13,6 +13,8 @@ struct EvolutionGalleryReducer {
     @ObservableState
     struct State: Equatable {
         var galleryList: IdentifiedArrayOf<EvolutionGalleryItemReducer.State> = []
+        var isLoading = false
+        var loadFailed = false
     }
 
     @CasePathable
@@ -32,6 +34,8 @@ struct EvolutionGalleryReducer {
         Reduce { state, action in
             switch action {
                 case .refresh:
+                    state.isLoading = true
+                    state.loadFailed = false
                     return .run { send in
                         return await send(
                             .loadList(
@@ -43,6 +47,7 @@ struct EvolutionGalleryReducer {
                     }
 
                 case let .loadList(.success(items)):
+                    state.isLoading = false
                     state.galleryList =
                     IdentifiedArray(
                         uniqueElements: items.compactMap { item in
@@ -54,6 +59,8 @@ struct EvolutionGalleryReducer {
                     return .none
 
                 case .loadList(.failure(_)):
+                    state.isLoading = false
+                    state.loadFailed = state.galleryList.isEmpty
                     return .none
 
                 case .itemAction(.element(_, action: .delegate(.installed))):

@@ -8,43 +8,50 @@
 import ComposableArchitecture
 import SwiftUI
 
+/// Ready-made Evolutions shared by the community.
 struct EvolutionGalleryView: View {
-
-    private let columns = [GridItem(.adaptive(minimum: 140, maximum: 180), spacing: 10)]
+    private let columns = [GridItem(.adaptive(minimum: 200, maximum: 280), spacing: 12)]
 
     let store: StoreOf<EvolutionGalleryReducer>
 
     var body: some View {
-        WithPerceptionTracking {
-            VStack {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 12) {
                 HStack {
-                    Text("Evolution Gallery".localized())
+                    Text("Ready-made Evolutions you can add and then edit.".localized())
+                        .foregroundStyle(.secondary)
                     Spacer()
-                    Button(action: {
-                        store.send(.refresh)
-                    }) {
-                        Image(systemName: "arrow.clockwise")
+                    if store.isLoading {
+                        ProgressView().controlSize(.small)
                     }
-                    .help("refresh".localized())
+                    Button("Refresh".localized(), systemImage: "arrow.clockwise") {
+                        store.send(.refresh)
+                    }
+                    .labelStyle(.iconOnly)
+                    .buttonStyle(.borderless)
+                    .help("Refresh".localized())
+                    .disabled(store.isLoading)
                 }
 
-                ScrollView {
-                    LazyVGrid(columns: columns, spacing: 10) {
-                        ForEach(
-                            store.scope(
-                                state: \.galleryList,
-                                action: \.itemAction
-                            )
-                        ) { itemStore in
+                if store.loadFailed {
+                    ContentUnavailableView {
+                        Label("Couldn't load the gallery.".localized(), systemImage: "wifi.exclamationmark")
+                    } actions: {
+                        Button("Retry".localized()) { store.send(.refresh) }
+                    }
+                    .frame(maxWidth: .infinity, minHeight: 240)
+                } else {
+                    LazyVGrid(columns: columns, spacing: 12) {
+                        ForEach(store.scope(state: \.galleryList, action: \.itemAction)) { itemStore in
                             EvolutionGalleryItemView(store: itemStore)
                         }
                     }
-                    Spacer()
                 }
             }
-            .frame(minWidth: 210, maxWidth: .infinity)
-            .padding(.horizontal, 10)
-            .task {
+            .padding(16)
+        }
+        .task {
+            if store.galleryList.isEmpty {
                 store.send(.refresh)
             }
         }

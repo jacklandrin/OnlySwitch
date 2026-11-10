@@ -10,123 +10,88 @@ import ComposableArchitecture
 import Defines
 import SwiftUI
 
+/// Settings › Evolution: "My Evolutions" (sidebar + inline editor) and "Gallery".
 struct EvolutionView: View {
     let store: StoreOf<EvolutionReducer>
 
     var body: some View {
-        WithPerceptionTracking {
-            NavigationStack {
-                HStack(spacing: 10) {
-                    VStack {
-                        HStack {
-                            Text("To add or remove any Evolutions on list".localized())
-                            Spacer()
-                            if store.isOnlyAgentAvailable {
-                                onlyAgentButton
-                            }
-                        }
-                        Divider()
-                        ScrollView(.vertical) {
-                            if store.evolutionList.isEmpty {
-                                Text("You can DIY switches or buttons here.".localized())
-                                Button("Refresh".localized()) {
-                                    store.send(.refresh)
-                                }
-                            } else {
-                                VStack {
-                                    ForEach(
-                                        store.scope(
-                                            state: \.evolutionList,
-                                            action: \.editor
-                                        )
-                                    ) { itemStore in
-                                        evolutionItemView(itemStore: itemStore)
-                                    }
-                                }
-
-                                Spacer()
-                            }
-                        }
-                        .onTapGesture {
-                            store.send(.select(nil))
-                        }
-                        .padding(.top, 10)
-
-                        HStack {
-                            Text("Pre-execution")
-                            TextField(
-                                "e.g: source ~/.zshrc",
-                                text: Binding(
-                                    get: { store.preExecution },
-                                    set: { store.send(.setPreExecution($0)) }
-                                    )
-                            )
-                        }
-
-                        HStack {
-                            Button {
-                                store.send(.setNavigation(tag: .editor))
-                            } label: {
-                                Text("+")
-                            }
-
-                            Button(action: {
-                                store.send(.remove)
-                            }) {
-                                Text("-")
-                            }
-
-                            Spacer()
-                        }
-                    }
-                    .frame(minWidth: 370, idealWidth: 420, maxWidth: 420)
-                    .padding(.bottom, 10)
-
-                    EvolutionGalleryView(
-                        store: store.scope(
-                            state: \.galleryState,
-                            action: \.galleryAction
-                        )
-                    )
+        VStack(spacing: 0) {
+            header
+            Divider()
+            switch store.tab {
+            case .mine:
+                HStack(spacing: 0) {
+                    EvolutionSidebarView(store: store)
+                        .frame(width: 230)
+                    Divider()
+                    detail
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
-                .padding([.top, .leading], 10)
-                .navigationDestination(
-                    isPresented: Binding(
-                        get: { store.destination?.tag == .editor },
-                        set: { isPresented in
-                            if !isPresented {
-                                store.send(.setNavigation(tag: nil))
-                            }
-                        }
-                    )
-                ) {
-                    if let editorStore = store.scope(
-                        state: \.editorState,
-                        action: \.editorAction
-                    ) {
-                        EvolutionEditorView(store: editorStore)
-                    }
-                }
-            }
-            .toast(isPresenting: Binding(
-                get: { store.showError },
-                set: { store.send(.errorControl($0)) }
-            ),
-                   alert: {
-                AlertToast(
-                    displayMode: .alert,
-                    type: .error(.red),
-                    title: "Load Evolution list failed".localized()
-                )
-            }
-            )
-            .task {
-                await store.send(.refresh).finish()
-            }
-            .onReceive(NotificationCenter.default.publisher(for: .changeSettings)) { _ in
-                store.send(.refresh)
+            case .gallery:
+                EvolutionGalleryView(store: store.scope(state: \.galleryState, action: \.galleryAction))
             }
         }
+        .task { await store.send(.task).finish() }
+        .onReceive(NotificationCenter.default.publisher(for: .changeSettings)) { _ in
+            store.send(.refresh)
+        }
+        .confirmationDialog(
+            String(format: "Delete “%@”?".localized(), store.pendingDeletion?.name ?? ""),
+            isPresented: Binding(
+                get: { store.pendingDeletion != nil },
+                set: { if !$0 { store.send(.deleteCancelled) } }
+            )
+        ) {
+            Button("Delete".localized(), role: .destructive) { store.send(.deleteConfirmed) }
+            Button("Cancel".localized(), role: .cancel) { store.send(.deleteCancelled) }
+        } message: {
+            Text("This can't be undone.".localized())
+        }
+        .alert(
+            "Discard unsaved changes?".localized(),
+            isPresented: Binding(
+                get: { store.pendingSelection != nil },
+                set: { if !$0 { store.send(.discardChangesCancelled) } }
+            )
+        ) {
+            Button("Discard".localized(), role: .destructive) { store.send(.discardChangesConfirmed) }
+            Button("Keep Editing".localized(), role: .cancel) { store.send(.discardChangesCancelled) }
+        }
+        .toast(
+            isPresenting: Binding(
+                get: { store.showLoadError },
+                set: { if !$0 { store.send(.dismissLoadError) } }
+            ),
+            alert: {
+                AlertToast(displayMode: .alert, type: .error(.red), title: "Load Evolution list failed".localized())
+            }
+        )
+    }
+
+    private var header: some View {
+        HStack {
+            Picker(
+                "Evolution".localized(),
+                selection: Binding(
+                    get: { store.tab },
+                    set: { store.send(.tabChanged($0)) }
+                )
+            ) {
+                Text("My Evolutions".localized()).tag(EvolutionReducer.Tab.mine)
+                Text("Gallery".localized()).tag(EvolutionReducer.Tab.gallery)
+            }
+            .pickerStyle(.segmented)
+            .labelsHidden()
+            .fixedSize()
+
+            Spacer()
+
+            if store.isOnlyAgentAvailable {
+                onlyAgentButton
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
     }
 
     @ViewBuilder
@@ -141,31 +106,29 @@ struct EvolutionView: View {
     }
 
     @ViewBuilder
-    func evolutionItemView(
-        itemStore: StoreOf<EvolutionRowReducer>
-    ) -> some View {
-        WithPerceptionTracking {
-            EvolutionRowView(store: itemStore)
-            .background(
-                store.selectID == itemStore.id
-                ? Color.accentColor
-                : Color.gray.opacity(0.1)
+    private var detail: some View {
+        if let editorStore = store.scope(state: \.detail, action: \.detail) {
+            EvolutionEditorView(store: editorStore)
+                .id(editorStore.id)
+        } else if store.hasLoaded, store.evolutionList.isEmpty {
+            EvolutionEmptyStateView(store: store)
+        } else {
+            ContentUnavailableView(
+                "Select an Evolution".localized(),
+                systemImage: "wand.and.rays",
+                description: Text("Choose one on the left, or create a new one.".localized())
             )
-            .onTapGesture {
-                store.send(.select(itemStore.id))
-            }
         }
     }
 }
 
-struct EvolutionView_Previews: PreviewProvider {
-    static var previews: some View {
-        EvolutionView(
-            store: Store(
-                initialState: EvolutionReducer.State()) {
-                    EvolutionReducer()
-                        .dependency(\.evolutionListService, .previewValue)
-                }
-        )
-    }
+#Preview {
+    EvolutionView(
+        store: Store(initialState: EvolutionReducer.State()) {
+            EvolutionReducer()
+                .dependency(\.evolutionListService, .previewValue)
+                .dependency(\.onlyAgentLauncher, .previewValue)
+        }
+    )
+    .frame(width: 860, height: 640)
 }

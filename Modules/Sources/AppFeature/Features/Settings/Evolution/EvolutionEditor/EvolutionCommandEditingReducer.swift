@@ -5,34 +5,38 @@
 //  Created by Jacklandrin on 2023/5/29.
 //
 
-import Foundation
 import ComposableArchitecture
+import Foundation
 
 @Reducer
 struct EvolutionCommandEditingReducer {
     @ObservableState
     struct State: Equatable, Identifiable {
-        var id = UUID()
         var command: EvolutionCommand
-        var statusCommandResult = ""
+        /// Raw output of the last successful test.
+        var lastOutput: String?
+        var errorMessage: String?
+        var isTesting = false
+
+        var id: CommandType { command.commandType }
+
         init(type: CommandType, command: EvolutionCommand?) {
-            if let command {
-                self.command = command
-            } else {
-                self.command = EvolutionCommand(commandType: type)
-            }
+            self.command = command ?? EvolutionCommand(commandType: type)
         }
+    }
+
+    struct TestFailure: Error, Equatable {
+        let message: String
     }
 
     @CasePathable
     enum Action: Equatable {
         case editCommand(String)
         case editTrueCondition(String)
-        case returnCommandString
+        case useLastOutput
         case changeExecuteType(CommandExecuteType)
-        case shouldTest
-        case testCommand(TaskResult<String>)
-        case delegate(EvolutionCommand)
+        case testTapped
+        case testFinished(Result<String, TestFailure>)
     }
 
     @Dependency(\.evolutionCommandService) var evolutionCommandService
@@ -40,45 +44,77 @@ struct EvolutionCommandEditingReducer {
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-                case let .editCommand(command):
-                    state.command.commandString = command
-                    return .none
+            case let .editCommand(command):
+                guard state.command.commandString != command else { return .none }
+                state.command.commandString = command
+                state.resetTestResult()
+                return .none
 
-                case let .editTrueCondition(condition):
-                    state.command.trueCondition = condition
-                    return .none
+            case let .editTrueCondition(condition):
+                state.command.trueCondition = condition
+                return .none
 
-                case .returnCommandString:
-                    state.command.commandString += "\r\n"
-                    return .none
+            case .useLastOutput:
+                if let lastOutput = state.lastOutput {
+                    state.command.trueCondition = lastOutput
+                }
+                return .none
 
-                case let .changeExecuteType(type):
-                    state.command.executeType = type
-                    return .none
+            case let .changeExecuteType(type):
+                guard state.command.executeType != type else { return .none }
+                state.command.executeType = type
+                state.resetTestResult()
+                return .none
 
-                case .shouldTest:
-                    return .run { [command = state.command] send in
-                        return await send(
-                            .testCommand(
-                                TaskResult { @MainActor in
-                                    try await evolutionCommandService.executeCommand(command)
-                                }
-                            )
-                        )
+            case .testTapped:
+                guard !state.isTesting,
+                      !state.command.commandString.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                    return .none
+                }
+                state.isTesting = true
+                state.errorMessage = nil
+                let command = state.command
+                let service = evolutionCommandService
+                return .run { send in
+                    do {
+                        let output = try await service.executeCommand(command)
+                        await send(.testFinished(.success(output)))
+                    } catch {
+                        await send(.testFinished(.failure(TestFailure(message: Self.message(for: error)))))
                     }
+                }
 
-                case let .testCommand(.success(result)):
-                    state.command.debugStatus = .success
-                    state.statusCommandResult = result
-                    return .send(.delegate(state.command))
+            case let .testFinished(.success(output)):
+                state.isTesting = false
+                state.command.debugStatus = .success
+                state.lastOutput = output
+                state.errorMessage = nil
+                return .none
 
-                case .testCommand(.failure(_)):
-                    state.command.debugStatus = .failed
-                    return .none
-
-                case .delegate:
-                    return .none
+            case let .testFinished(.failure(failure)):
+                state.isTesting = false
+                state.command.debugStatus = .failed
+                state.lastOutput = nil
+                state.errorMessage = failure.message
+                return .none
             }
         }
+    }
+
+    static func message(for error: Error) -> String {
+        if let error = error as? EvolutionError, error == .noCommand {
+            return "The script is empty.".localized()
+        }
+        // The shared runner reports only that the script failed; the OSA
+        // error itself goes to the shell log.
+        return "The script failed. Check its syntax and the permissions it needs.".localized()
+    }
+}
+
+extension EvolutionCommandEditingReducer.State {
+    mutating func resetTestResult() {
+        command.debugStatus = .unknow
+        lastOutput = nil
+        errorMessage = nil
     }
 }

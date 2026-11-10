@@ -6,71 +6,59 @@
 //
 
 import ComposableArchitecture
-import Defines
 import SwiftUI
 
+/// A gallery card: icon, name, description, author and Add.
 struct EvolutionGalleryItemView: View {
-    
     let store: StoreOf<EvolutionGalleryItemReducer>
 
-    init(store: StoreOf<EvolutionGalleryItemReducer>) {
-        self.store = store
-    }
-
     var body: some View {
-        WithPerceptionTracking {
-            VStack {
-                HStack {
-                    Image(
-                        systemName: store.item.evolution.iconName ?? (
-                            store.item.evolution.controlType == .Switch
-                            ? "lightswitch.on.square"
-                            : "button.programmable.square.fill"
-                        )
-                    )
-                    .resizable()
-                    .scaledToFit()
-                    .foregroundColor(.white)
-                    .frame(width: 20, height: 20)
-
-                    Spacer()
-                    Button {
-                        store.send(.install)
-                    } label: {
-                        Image(systemName: store.item.installed ? "checkmark.circle.fill" : "plus.circle.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .foregroundColor(.white)
-                            .frame(width: 20, height: 20)
-                    }
-                    .buttonStyle(.plain)
-                    .disabled(store.item.installed)
-                }
-                .padding(.horizontal, 10)
-                .padding(.top, 10)
-
-                Spacer(minLength: 10)
-                Text(store.item.evolution.name)
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .padding(.horizontal, 5)
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(alignment: .top) {
+                Image(systemName: store.item.evolution.displayIconName)
+                    .font(.system(size: 18))
+                    .foregroundStyle(Color.accentColor)
+                    .frame(width: 36, height: 36)
+                    .background(Color.accentColor.opacity(0.15), in: Circle())
+                    .accessibilityHidden(true)
                 Spacer()
-                HStack {
-                    Spacer()
-                    Text("@\(store.item.author)")
-                        .foregroundColor(.white)
-                        .font(.system(size: 10))
-                }
-                .padding(.trailing, 10)
-                .padding(.bottom, 5)
+                Text(store.item.evolution.controlType == .Button ? "Button".localized() : "Switch".localized())
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
-            .frame(maxWidth: .infinity)
-            .frame(height: 100)
-            .background(Color(.themeFountainBlue))
-            .help(store.item.description)
-            .cornerRadius(10)
+            Text(store.item.evolution.name)
+                .font(.headline)
+                .lineLimit(2)
+                .fixedSize(horizontal: false, vertical: true)
+            Text(store.item.description)
+                .font(.callout)
+                .foregroundStyle(.secondary)
+                .lineLimit(3)
+                .frame(maxWidth: .infinity, minHeight: 36, alignment: .topLeading)
+                .help(store.item.description)
+            HStack {
+                Text(verbatim: "@\(store.item.author)")
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
+                    .lineLimit(1)
+                Spacer()
+                if store.item.installed {
+                    Label("Added".localized(), systemImage: "checkmark.circle.fill")
+                        .font(.callout)
+                        .foregroundStyle(.green)
+                } else {
+                    Button("Add".localized(), systemImage: "plus") {
+                        store.send(.install)
+                    }
+                    .evolutionProminentButtonStyle()
+                    .controlSize(.small)
+                }
+            }
         }
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .evolutionCard()
+        .accessibilityElement(children: .contain)
     }
 }
 
@@ -79,13 +67,12 @@ struct EvolutionGalleryItemView: View {
     EvolutionGalleryItemView(
         store: Store(
             initialState: EvolutionGalleryItemReducer.State(
-                item: EvolutionGalleryItem(
-                    evolution: EvolutionItem()
-                )
+                item: EvolutionGalleryItem(evolution: EvolutionItem(name: "Dark Mode"))
             )
         ) {
             EvolutionGalleryItemReducer()
         }
     )
+    .frame(width: 240)
 }
 #endif

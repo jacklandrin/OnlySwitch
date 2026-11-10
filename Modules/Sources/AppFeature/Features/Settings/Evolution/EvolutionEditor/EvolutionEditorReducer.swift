@@ -7,196 +7,150 @@
 
 import ComposableArchitecture
 import Foundation
+import OnlyAgent
 import Switches
-
-enum EditorError: Error {
-    case noName
-}
 
 @Reducer
 struct EvolutionEditorReducer {
+    /// What still blocks saving, in the order it is shown to the user.
+    enum Requirement: Equatable, Hashable {
+        case name
+        case script(CommandType)
+        case test(CommandType)
+        case statusOnOutput
+    }
+
+    struct SaveFailure: Error, Equatable {}
+
     @ObservableState
     struct State: Equatable, Identifiable {
+        /// Working copy. Commands live in `commandStates` until `makeItem()`.
         var evolution: EvolutionItem
-        var commandStates: IdentifiedArrayOf<EvolutionCommandEditingReducer.State> = []
-        var switchCommandStates: IdentifiedArrayOf<EvolutionCommandEditingReducer.State> = []
-        var buttonCommandStates: IdentifiedArrayOf<EvolutionCommandEditingReducer.State> = []
-        
-        var showError = false
-        var showIconNamesPopover = false
-        
-        var id: UUID {
-            evolution.id
-        }
-        
-        init(evolution: EvolutionItem? = nil) {
-            if let evolution {
-                self.evolution = evolution
-            } else {
-                self.evolution = EvolutionItem()
-            }
-            
-            self.switchCommandStates = [
-                EvolutionCommandEditingReducer.State(type: .on, command: self.evolution.onCommand),
-                EvolutionCommandEditingReducer.State(type: .off, command: self.evolution.offCommand),
-                EvolutionCommandEditingReducer.State(type: .status, command: self.evolution.statusCommand)
+        /// The saved version (or the blank template for a new item).
+        let original: EvolutionItem
+        let isNew: Bool
+        /// Commands of the visible control type.
+        var commandStates: IdentifiedArrayOf<EvolutionCommandEditingReducer.State>
+        /// Commands of the other control type, kept so toggling the type loses nothing.
+        var stashedCommandStates: IdentifiedArrayOf<EvolutionCommandEditingReducer.State>
+        var showIconPicker = false
+        var isSaving = false
+        var showSaveError = false
+        var generation: Generation
+
+        var id: UUID { evolution.id }
+
+        init(evolution: EvolutionItem? = nil, generationAvailable: Bool = false) {
+            let item = evolution ?? EvolutionItem()
+            self.evolution = item
+            self.original = item
+            self.isNew = evolution == nil
+            self.generation = Generation(isAvailable: generationAvailable)
+            let switchStates: IdentifiedArrayOf<EvolutionCommandEditingReducer.State> = [
+                .init(type: .on, command: item.onCommand),
+                .init(type: .off, command: item.offCommand),
+                .init(type: .status, command: item.statusCommand)
             ]
-            self.buttonCommandStates = [
-                EvolutionCommandEditingReducer.State(type: .single, command: self.evolution.singleCommand),
+            let buttonStates: IdentifiedArrayOf<EvolutionCommandEditingReducer.State> = [
+                .init(type: .single, command: item.singleCommand)
             ]
-            
-            if self.evolution.controlType == .Switch {
-                self.commandStates = self.switchCommandStates
+            if item.controlType == .Button {
+                commandStates = buttonStates
+                stashedCommandStates = switchStates
             } else {
-                self.commandStates = self.buttonCommandStates
+                commandStates = switchStates
+                stashedCommandStates = buttonStates
             }
         }
     }
-    
+
     @CasePathable
-    enum Action: Sendable {
-        static func == (lhs: EvolutionEditorReducer.Action, rhs: EvolutionEditorReducer.Action) -> Bool {
-            switch (lhs, rhs) {
-            case (.finishSave(_), .finishSave(_)):
-                return false
-            default:
-                return lhs == rhs
-            }
-        }
-        
-        case toggleItem
+    enum Action {
         case changeName(String)
-        case toggleIconNamesPopover(Bool)
+        case toggleIconPicker(Bool)
         case selectIcon(String)
         case changeType(ControlType)
+        case revert
         case save
-        case finishSave(TaskResult<Void>)
-        case finishSaveIcon(TaskResult<Void>)
-        case errorControl(Bool)
-        case delegate(Delegate)
+        case saveFinished(Result<EvolutionItem, SaveFailure>)
+        case dismissSaveError
         case commandAction(IdentifiedActionOf<EvolutionCommandEditingReducer>)
-        case none
+        case generation(GenerationAction)
+        case delegate(Delegate)
+
+        @CasePathable
         enum Delegate: Equatable {
-            case goback
+            case saved(EvolutionItem)
         }
     }
-    
+
     @Dependency(\.evolutionCommandService) var evolutionCommandService
-    
+    @Dependency(\.evolutionScriptGenerationClient) var generationClient
+    @Dependency(\.onlyAgentLauncher) var onlyAgentLauncher
+
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-            case .toggleItem:
-                state.evolution.active.toggle()
-                return .none
-                
             case let .changeName(name):
                 state.evolution.name = name
                 return .none
-                
-            case let .toggleIconNamesPopover(shouldShow):
-                state.showIconNamesPopover = shouldShow
+
+            case let .toggleIconPicker(isPresented):
+                state.showIconPicker = isPresented
                 return .none
-                
+
             case let .selectIcon(name):
                 state.evolution.iconName = name
-                
-                return .run { [state = state] send in
-                    guard let iconName = state.evolution.iconName else {
-                        return await send(.none)
-                    }
-                    
-                    return await send(
-                        .finishSaveIcon(
-                            TaskResult {
-                                try await evolutionCommandService.saveIcon(state.evolution.id, iconName)
-                            }
-                        )
-                    )
-                }
-                
+                state.showIconPicker = false
+                return .none
+
             case let .changeType(type):
+                guard type != state.evolution.controlType, type == .Switch || type == .Button else {
+                    return .none
+                }
                 state.evolution.controlType = type
-                switch type {
-                case .Switch:
-                    state.commandStates = state.switchCommandStates
-                    
-                case .Button:
-                    state.commandStates = state.buttonCommandStates
-                    
-                default:
-                    break
-                }
+                let visible = state.commandStates
+                state.commandStates = state.stashedCommandStates
+                state.stashedCommandStates = visible
                 return .none
-                
+
+            case .revert:
+                let generation = state.generation
+                state = State(evolution: state.isNew ? nil : state.original, generationAvailable: generation.isAvailable)
+                state.generation.prompt = generation.prompt
+                return .none
+
             case .save:
-                switch state.evolution.controlType {
-                case .Button:
-                    state.evolution.singleCommand = state.commandStates.first{ $0.command.commandType == .single }?.command
-                    
-                case .Switch:
-                    state.evolution.onCommand = state.commandStates.first{ $0.command.commandType == .on }?.command
-                    state.evolution.offCommand = state.commandStates.first{ $0.command.commandType == .off }?.command
-                    state.evolution.statusCommand = state.commandStates.first{ $0.command.commandType == .status }?.command
-                    
-                default:
-                    break
+                guard state.canSave else { return .none }
+                state.isSaving = true
+                let item = state.makeItem()
+                let service = evolutionCommandService
+                return .run { send in
+                    do {
+                        try await service.saveCommand(item)
+                        await send(.saveFinished(.success(item)))
+                    } catch {
+                        await send(.saveFinished(.failure(SaveFailure())))
+                    }
                 }
-                return .run { [item = state.evolution] send in
-                    return await send(
-                        .finishSave(
-                            TaskResult {
-                                return try await evolutionCommandService.saveCommand(item)
-                            }
-                        )
-                    )
-                }
-                
-            case .finishSave(.success):
-                return .run { @MainActor send in
-                    send(.delegate(.goback))
-                }
-                
-            case .finishSave(.failure(_)):
-                return .run { @MainActor send in
-                    send(.errorControl(true))
-                }
-                
-            case .finishSaveIcon(.success):
-                return .run { @MainActor send in
-                    NotificationCenter.default.post(name: .changeSettings, object: nil)
-                }
-                
-            case .finishSaveIcon(.failure(_)):
+
+            case let .saveFinished(.success(item)):
+                state.isSaving = false
+                return .send(.delegate(.saved(item)))
+
+            case .saveFinished(.failure):
+                state.isSaving = false
+                state.showSaveError = true
                 return .none
-                
-            case let .errorControl(show):
-                state.showError = show
+
+            case .dismissSaveError:
+                state.showSaveError = false
                 return .none
-                
-            case .delegate:
-                return .none
-                
-            case let .commandAction(.element(id:_ , action: .delegate(command))):
-                switch command.commandType {
-                case .on:
-                    state.evolution.onCommand = command
-                    
-                case .off:
-                    state.evolution.offCommand = command
-                    
-                case .single:
-                    state.evolution.singleCommand = command
-                    
-                case .status:
-                    state.evolution.statusCommand = command
-                }
-                return .none
-                
-            case .commandAction:
-                return .none
-                
-            case .none:
+
+            case let .generation(action):
+                return reduceGeneration(&state, action)
+
+            case .commandAction, .delegate:
                 return .none
             }
         }
@@ -205,4 +159,3 @@ struct EvolutionEditorReducer {
         }
     }
 }
-
