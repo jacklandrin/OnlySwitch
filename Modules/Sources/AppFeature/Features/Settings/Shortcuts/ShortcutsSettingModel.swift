@@ -11,7 +11,6 @@ struct ShortcutsSettingModel {
     var shortcutsList : [ShortcutsItem] = [ShortcutsItem]()
     var errorInfo = ""
     var showErrorToast = false
-    var sharedShortcutsList:[SharedShortcutsItem] = [SharedShortcutsItem]()
 }
 
 

@@ -148,7 +148,7 @@ struct SettingsView: View {
                 PomodoroTimerSettingView()
 
             case .Shortcuts:
-                ShortcutsView()
+                ShortcutsSettingsView(store: settingVM.shortcutsStore)
 
             case .General:
                 GeneralView()
