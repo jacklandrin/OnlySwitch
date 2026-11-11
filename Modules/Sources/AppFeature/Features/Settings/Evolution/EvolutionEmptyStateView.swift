@@ -16,20 +16,30 @@ struct EvolutionEmptyStateView: View {
         } description: {
             Text("Build your own switches and buttons with Shell or AppleScript.".localized())
         } actions: {
-            HStack {
-                Button("New Evolution".localized(), systemImage: "plus") {
-                    store.send(.newTapped)
-                }
-                .evolutionProminentButtonStyle()
-                Button("Browse Gallery".localized(), systemImage: "square.grid.2x2") {
-                    store.send(.tabChanged(.gallery))
-                }
-                if store.isOnlyAgentAvailable {
-                    Button("Create with Only Agent".localized(), systemImage: "sparkles") {
-                        store.send(.openOnlyAgent)
-                    }
-                }
+            // Side by side when the labels fit; otherwise stacked so no title gets truncated.
+            ViewThatFits(in: .horizontal) {
+                HStack { buttons }
+                VStack { buttons }
             }
+        }
+    }
+
+    @ViewBuilder
+    private var buttons: some View {
+        Button("New Evolution".localized(), systemImage: "plus") {
+            store.send(.newTapped)
+        }
+        .evolutionProminentButtonStyle()
+        .fixedSize()
+        Button("Browse Gallery".localized(), systemImage: "square.grid.2x2") {
+            store.send(.tabChanged(.gallery))
+        }
+        .fixedSize()
+        if store.isOnlyAgentAvailable {
+            Button("Create with Only Agent".localized(), systemImage: "sparkles") {
+                store.send(.openOnlyAgent)
+            }
+            .fixedSize()
         }
     }
 }
