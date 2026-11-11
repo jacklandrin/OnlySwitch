@@ -53,6 +53,7 @@ struct GlobalSettingsView: View {
                                     }
                                     Spacer()
                                 }
+                                .contentShape(.rect)
                             }
                             .buttonStyle(.plain)
                             .accessibilityLabel(Text(mac.id == store.selectedMacID ? "Selected Mac: \(mac.displayName)" : "Select Mac: \(mac.displayName)"))
@@ -188,6 +189,8 @@ struct GlobalSettingsView: View {
             Text(title)
                 .foregroundStyle(Color.primary)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(.rect)
     }
 
     private static let reviewURL = URL(string: "itms-apps://itunes.apple.com/app/id6793657946?action=write-review")!

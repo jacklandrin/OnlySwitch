@@ -73,12 +73,12 @@ struct PairingView: View {
                                 HStack {
                                     Label(mac.displayName, systemImage: "desktopcomputer")
                                     Spacer()
-                                    if store.selectedMacID == mac.id {
-                                        Image(systemName: "checkmark.circle.fill")
-                                            .foregroundStyle(.tint)
-                                            .accessibilityHidden(true)
-                                    }
+                                    Image(systemName: store.selectedMacID == mac.id ? "checkmark.circle.fill" : "circle")
+                                        .foregroundStyle(store.selectedMacID == mac.id ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
+                                        .imageScale(.large)
+                                        .accessibilityHidden(true)
                                 }
+                                .contentShape(.rect)
                             }
                             .buttonStyle(.plain)
                             .disabled(store.isPairing)
