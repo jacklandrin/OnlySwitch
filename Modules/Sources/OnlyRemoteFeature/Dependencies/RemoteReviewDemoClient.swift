@@ -188,12 +188,19 @@ actor RemoteReviewDemoRuntime {
                 var gains = equalizer.gains
                 gains[band] = gain
                 let status: RemoteSoundMixerEqualizer.Status = gains.allSatisfy { $0 == 0 } ? .flat : .active
-                return .init(id: app.id, name: app.name, volume: app.volume, isMuted: app.isMuted, equalizer: .init(gains: gains, status: status), routing: app.routing)
+                return .init(id: app.id, name: app.name, volume: app.volume, isMuted: app.isMuted, equalizer: .init(gains: gains, status: status, preset: RemoteSoundMixerEqualizer.customPreset), routing: app.routing)
             }
         case let .resetAppEqualizer(id):
             update(id) { app in
                 guard app.equalizer != nil else { return app }
-                return .init(id: app.id, name: app.name, volume: app.volume, isMuted: app.isMuted, equalizer: .init(gains: [], status: .flat), routing: app.routing)
+                return .init(id: app.id, name: app.name, volume: app.volume, isMuted: app.isMuted, equalizer: .init(gains: [], status: .flat, preset: RemoteEqualizerPreset.flat.rawValue), routing: app.routing)
+            }
+        case let .setAppEqualizerPreset(id, preset):
+            update(id) { app in
+                guard let equalizer = app.equalizer else { return app }
+                // The demo has no gain curves; it only reflects the selected preset.
+                let status: RemoteSoundMixerEqualizer.Status = preset == RemoteEqualizerPreset.flat.rawValue ? .flat : .active
+                return .init(id: app.id, name: app.name, volume: app.volume, isMuted: app.isMuted, equalizer: .init(gains: equalizer.gains, status: status, preset: preset), routing: app.routing)
             }
         case let .toggleAppOutputDevice(id, deviceID):
             guard current.outputDevices.contains(where: { $0.id == deviceID }) else { break }

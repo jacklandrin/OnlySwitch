@@ -108,6 +108,51 @@ struct EqualizerFeatureTests {
         #expect(store.state.apps["music"]?.settings == .flat)
     }
 
+    @Test func applyingAPresetReplacesTheWholeCurveAndPersistsIt() async {
+        let saves = LockIsolated<[EqualizerSettings]>([])
+        let applies = LockIsolated<[EqualizerSettings]>([])
+        var initial = EqualizerFeature.State()
+        var tuned = EqualizerSettings.flat
+        tuned.setGain(-7, band: 3)
+        initial.apps["music"] = .init(source: source("music"), settings: tuned)
+        let store = TestStore(initialState: initial) { EqualizerFeature() } withDependencies: {
+            $0.equalizerClient.save = { _, settings in saves.withValue { $0.append(settings) } }
+            $0.equalizerClient.apply = { _, settings in
+                applies.withValue { $0.append(settings) }
+                return .active
+            }
+        }
+        await store.send(.applyPreset("music", .rock)) {
+            $0.apps["music"]?.settings = EqualizerPreset.rock.settings
+            $0.apps["music"]?.revision = 1
+            $0.saved["music"] = EqualizerPreset.rock.settings
+        }
+        await store.receive(\.applicationResponse) { $0.apps["music"]?.status = .active }
+        #expect(store.state.apps["music"]?.settings.preset == .rock)
+        #expect(saves.value == [EqualizerPreset.rock.settings])
+        #expect(applies.value == [EqualizerPreset.rock.settings])
+        await store.finish()
+    }
+
+    @Test func presetsAreIgnoredForUnsupportedOrUnknownSources() async {
+        var initial = EqualizerFeature.State()
+        initial.apps["old"] = .init(source: .init(id: "old", isPersistent: true, isSupported: false, isAvailable: true))
+        let store = TestStore(initialState: initial) { EqualizerFeature() }
+        await store.send(.applyPreset("old", .pop))
+        await store.send(.applyPreset("missing", .pop))
+        #expect(store.state.apps["old"]?.settings == .flat)
+    }
+
+    @Test func customSectionDisclosureIsIndependentPerApp() async {
+        var initial = EqualizerFeature.State()
+        initial.apps["music"] = .init(source: source("music"))
+        initial.apps["browser"] = .init(source: source("browser"))
+        let store = TestStore(initialState: initial) { EqualizerFeature() }
+        await store.send(.toggleCustomExpanded("music")) { $0.apps["music"]?.isCustomExpanded = true }
+        await store.send(.toggleCustomExpanded("music")) { $0.apps["music"]?.isCustomExpanded = false }
+        #expect(store.state.apps["browser"]?.isCustomExpanded == false)
+    }
+
     private func source(_ id: String, persistent: Bool = true, available: Bool = true) -> EqualizerFeature.Source {
         .init(id: id, isPersistent: persistent, isSupported: true, isAvailable: available)
     }

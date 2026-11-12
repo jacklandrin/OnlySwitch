@@ -51,6 +51,12 @@ extension RemotePeerSession {
         }
     }
 
+    func requireEqualizerPresets() throws {
+        guard negotiatedVersion?.supportsEqualizerPresetsRemote == true else {
+            throw RemoteProtocolError(code: .actionNotSupported, message: "Equalizer presets require a newer OnlySwitch")
+        }
+    }
+
     func requireBrightness() throws {
         guard negotiatedVersion?.supportsBrightnessRemote == true else {
             throw RemoteProtocolError(code: .actionNotSupported, message: "Brightness remote control requires a newer OnlySwitch")

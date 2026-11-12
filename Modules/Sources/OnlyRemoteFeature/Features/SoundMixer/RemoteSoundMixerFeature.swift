@@ -17,6 +17,10 @@ struct RemoteSoundMixerFeature {
         var availabilityMessage: String?
         var commandError: String?
         var expandedAppIDs: Set<String> = []
+        /// Apps whose manual "Custom EQ" bands are disclosed; presets stay the primary control.
+        var customEQExpandedAppIDs: Set<String> = []
+        /// Preset taps awaiting the Mac's next snapshot, so the chip highlights immediately.
+        var pendingPresets: [String: RemoteEqualizerPreset] = [:]
         /// Optimistic values for sliders the user is dragging; key `RemoteSoundMixerFeature.systemKey` or an app id.
         var draftVolumes: [String: Double] = [:]
         var draftGains: [String: [Int: Double]] = [:]
@@ -40,6 +44,13 @@ struct RemoteSoundMixerFeature {
             let gains = snapshot?.apps.first { $0.id == appID }?.equalizer?.gains ?? []
             return gains.indices.contains(band) ? gains[band] : 0
         }
+
+        /// `nil` when the Mac predates presets (show manual bands only); `.some(nil)` for a custom curve.
+        func preset(appID: String) -> RemoteEqualizerPreset?? {
+            if let pending = pendingPresets[appID] { return .some(pending) }
+            guard let raw = snapshot?.apps.first(where: { $0.id == appID })?.equalizer?.preset else { return nil }
+            return .some(RemoteEqualizerPreset(rawValue: raw))
+        }
     }
 
     enum Action: Equatable {
@@ -54,6 +65,8 @@ struct RemoteSoundMixerFeature {
         case gainChanged(appID: String, band: Int, gain: Double)
         case gainCommitted(appID: String, band: Int)
         case equalizerReset(appID: String)
+        case presetSelected(appID: String, preset: RemoteEqualizerPreset)
+        case customEQToggled(appID: String)
         case outputDeviceToggled(appID: String, deviceID: String)
         case followSystemOutput(appID: String)
         case commandFinished(RemoteProtocolError?)
@@ -125,6 +138,7 @@ struct RemoteSoundMixerFeature {
                       let equalizer = app(appID, in: state)?.equalizer,
                       equalizer.status != .unsupported else { return .none }
                 let gain = RemoteSoundMixerEqualizer.clampGain(gain)
+                state.pendingPresets[appID] = nil
                 state.draftGains[appID, default: [:]][band] = gain
                 let key = Self.gainKey(appID: appID, band: band)
                 state.activeDrags.insert(key)
@@ -138,13 +152,22 @@ struct RemoteSoundMixerFeature {
 
             case let .equalizerReset(appID):
                 guard state.canSendCommands, app(appID, in: state)?.equalizer != nil else { return .none }
-                let bandKeys = (0 ..< RemoteSoundMixerEqualizer.bandCount).map { Self.gainKey(appID: appID, band: $0) }
-                state.draftGains[appID] = nil
-                state.activeDrags.subtract(bandKeys)
-                return .merge(
-                    .merge(bandKeys.map { .cancel(id: CancelID.command($0)) }),
-                    send(.resetAppEqualizer(id: appID), key: "\(appID)#eqreset", debounced: false)
-                )
+                state.pendingPresets[appID] = nil
+                return replaceCurve(appID, command: .resetAppEqualizer(id: appID), state: &state)
+
+            case let .presetSelected(appID, preset):
+                guard state.canSendCommands,
+                      let equalizer = app(appID, in: state)?.equalizer,
+                      equalizer.preset != nil,
+                      equalizer.status != .unsupported else { return .none }
+                state.pendingPresets[appID] = preset
+                return replaceCurve(appID, command: .setAppEqualizerPreset(id: appID, preset: preset.rawValue), state: &state)
+
+            case let .customEQToggled(appID):
+                if state.customEQExpandedAppIDs.remove(appID) == nil {
+                    state.customEQExpandedAppIDs.insert(appID)
+                }
+                return .none
 
             case let .outputDeviceToggled(appID, deviceID):
                 guard state.canSendCommands,
@@ -159,9 +182,21 @@ struct RemoteSoundMixerFeature {
 
             case let .commandFinished(error):
                 state.commandError = error?.message
+                if error != nil { state.pendingPresets = [:] }
                 return .none
             }
         }
+    }
+
+    /// Whole-curve commands supersede in-flight band edits for the same app.
+    private func replaceCurve(_ appID: String, command: RemoteSoundMixerCommand, state: inout State) -> Effect<Action> {
+        let bandKeys = (0 ..< RemoteSoundMixerEqualizer.bandCount).map { Self.gainKey(appID: appID, band: $0) }
+        state.draftGains[appID] = nil
+        state.activeDrags.subtract(bandKeys)
+        return .merge(
+            .merge(bandKeys.map { .cancel(id: CancelID.command($0)) }),
+            send(command, key: "\(appID)#eqcurve", debounced: false)
+        )
     }
 
     private static func gainKey(appID: String, band: Int) -> String { "\(appID)#eq\(band)" }
@@ -221,6 +256,12 @@ struct RemoteSoundMixerFeature {
             if bands.isEmpty == false { result[entry.key] = bands }
         }
         state.expandedAppIDs.formIntersection(appIDs)
+        state.customEQExpandedAppIDs.formIntersection(appIDs)
+        // Keep a pending preset until the Mac confirms it; command failures clear it.
+        state.pendingPresets = state.pendingPresets.filter { appID, preset in
+            guard let equalizer = snapshot.apps.first(where: { $0.id == appID })?.equalizer else { return false }
+            return equalizer.preset != preset.rawValue
+        }
     }
 
     private func reconcile(_ state: inout State) -> Effect<Action> {
@@ -285,6 +326,8 @@ struct RemoteSoundMixerFeature {
         state.isStreaming = false
         state.snapshot = nil
         state.expandedAppIDs = []
+        state.customEQExpandedAppIDs = []
+        state.pendingPresets = [:]
         state.draftVolumes = [:]
         state.draftGains = [:]
         state.activeDrags = []

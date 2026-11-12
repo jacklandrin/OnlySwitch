@@ -27,7 +27,7 @@ struct RemoteCoreTests {
     @Test func transactionalPairingRequiresMinorTwo() {
         #expect(!RemoteProtocolVersion(major: 1, minor: 1).supportsTransactionalPairing)
         #expect(RemoteProtocolVersion(major: 1, minor: 2).supportsTransactionalPairing)
-        #expect(RemoteProtocolVersion.current == .init(major: 1, minor: 10))
+        #expect(RemoteProtocolVersion.current == .init(major: 1, minor: 11))
     }
 
     @Test func soundMixerRequiresProtocolMinorThree() throws {
@@ -44,7 +44,7 @@ struct RemoteCoreTests {
 
     @Test func systemMonitorRequiresProtocolMinorFour() {
         #expect(RemoteProtocolVersion(major: 1, minor: 3).supportsSystemMonitorRemote == false)
-        #expect(RemoteProtocolVersion.current == .init(major: 1, minor: 10))
+        #expect(RemoteProtocolVersion.current == .init(major: 1, minor: 11))
         #expect(RemoteProtocolVersion.current.supportsSystemMonitorRemote)
     }
 
@@ -190,9 +190,9 @@ struct RemoteCoreTests {
 
     @Test func protocolMinorNegotiatesWithoutSendingNewMessagesToLegacyPeers() {
         let legacy = RemoteProtocolVersion(major: 1, minor: 0)
-        let future = RemoteProtocolVersion(major: 1, minor: 11)
+        let future = RemoteProtocolVersion(major: 1, minor: 12)
 
-        #expect(RemoteProtocolVersion.current == .init(major: 1, minor: 10))
+        #expect(RemoteProtocolVersion.current == .init(major: 1, minor: 11))
         #expect(RemoteProtocolVersion.current.negotiated(with: legacy) == legacy)
         #expect(legacy.supportsAuthenticatedRevocation == false)
         #expect(RemoteProtocolVersion.current.supportsAuthenticatedRevocation)
@@ -215,11 +215,31 @@ struct RemoteCoreTests {
     }
 
     @Test func protocolOneEightEnablesSoundMixerTabAndBrightness() {
-        #expect(RemoteProtocolVersion.current == .init(major: 1, minor: 10))
+        #expect(RemoteProtocolVersion.current == .init(major: 1, minor: 11))
         #expect(RemoteProtocolVersion(major: 1, minor: 8).supportsSoundMixerTabRemote)
         #expect(RemoteProtocolVersion(major: 1, minor: 8).supportsBrightnessRemote)
         #expect(RemoteProtocolVersion(major: 1, minor: 7).supportsSoundMixerTabRemote == false)
         #expect(RemoteProtocolVersion(major: 1, minor: 7).supportsBrightnessRemote == false)
+    }
+
+    @Test func protocolOneElevenEnablesEqualizerPresets() throws {
+        #expect(RemoteProtocolVersion(major: 1, minor: 11).supportsEqualizerPresetsRemote)
+        #expect(RemoteProtocolVersion(major: 1, minor: 10).supportsEqualizerPresetsRemote == false)
+        let command = RemoteSoundMixerCommand.setAppEqualizerPreset(id: "a", preset: "rock")
+        #expect(command.requiresSoundMixerTab)
+        #expect(command.requiresEqualizerPresets)
+        #expect(RemoteSoundMixerCommand.resetAppEqualizer(id: "a").requiresEqualizerPresets == false)
+        #expect(try JSONDecoder().decode(RemoteSoundMixerCommand.self, from: JSONEncoder().encode(command)) == command)
+    }
+
+    @Test func equalizerPresetRoundTripsAndIsOptionalForLegacyMacs() throws {
+        let current = RemoteSoundMixerEqualizer(gains: [5, 4], status: .active, preset: "rock")
+        #expect(try JSONDecoder().decode(RemoteSoundMixerEqualizer.self, from: JSONEncoder().encode(current)) == current)
+        let legacy = try JSONDecoder().decode(
+            RemoteSoundMixerEqualizer.self, from: Data(#"{"gains":[1],"status":"active"}"#.utf8)
+        )
+        #expect(legacy.preset == nil)
+        #expect(RemoteSoundMixerEqualizer(gains: [], status: .flat, preset: String(repeating: "x", count: 200)).preset?.count == 64)
     }
 
     @Test func legacySoundMixerSnapshotDecodesWithDefaults() throws {

@@ -186,10 +186,16 @@ struct RemoteSoundMixerView: View {
                 RemoteEqualizerView(
                     equalizer: equalizer,
                     isEnabled: store.canSendCommands,
+                    preset: store.state.preset(appID: app.id),
+                    isCustomExpanded: store.customEQExpandedAppIDs.contains(app.id),
                     gain: { store.state.gain(appID: app.id, band: $0) },
                     onGainChange: { store.send(.gainChanged(appID: app.id, band: $0, gain: $1)) },
                     onGainCommit: { store.send(.gainCommitted(appID: app.id, band: $0)) },
-                    onReset: { store.send(.equalizerReset(appID: app.id)) }
+                    onReset: { store.send(.equalizerReset(appID: app.id)) },
+                    onSelectPreset: { store.send(.presetSelected(appID: app.id, preset: $0)) },
+                    onToggleCustom: {
+                        store.send(.customEQToggled(appID: app.id), animation: reduceMotion ? nil : .snappy)
+                    }
                 )
             }
         }

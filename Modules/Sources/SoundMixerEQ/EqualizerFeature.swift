@@ -18,6 +18,8 @@ public struct EqualizerFeature {
         public var source: Source
         public var settings: EqualizerSettings
         public var isExpanded = false
+        /// Second-level disclosure for manual band editing; presets are the primary control.
+        public var isCustomExpanded = false
         public var status: Status = .flat
         public var revision = 0
         public init(source: Source, settings: EqualizerSettings = .flat) { self.source = source; self.settings = settings }
@@ -35,6 +37,8 @@ public struct EqualizerFeature {
         case load
         case sourcesChanged([Source])
         case toggleExpanded(String)
+        case toggleCustomExpanded(String)
+        case applyPreset(String, EqualizerPreset)
         case setGain(String, Int, Double)
         case reset(String)
         case applicationResponse(String, Int, Status)
@@ -65,6 +69,11 @@ public struct EqualizerFeature {
             case .toggleExpanded(let id):
                 state.apps[id]?.isExpanded.toggle()
                 return .none
+            case .toggleCustomExpanded(let id):
+                state.apps[id]?.isCustomExpanded.toggle()
+                return .none
+            case .applyPreset(let id, let preset):
+                return replaceSettings(id, with: preset.settings, state: &state)
             case .setGain(let id, let band, let gain):
                 guard var app = state.apps[id], app.source.isSupported, (0..<10).contains(band) else { return .none }
                 app.settings.setGain(gain, band: band)
@@ -73,18 +82,25 @@ public struct EqualizerFeature {
                 persist(app, state: &state)
                 return apply(id, state: &state)
             case .reset(let id):
-                guard var app = state.apps[id] else { return .none }
-                app.settings = .flat
-                app.revision += 1
-                state.apps[id] = app
-                persist(app, state: &state)
-                return apply(id, state: &state)
+                guard state.apps[id] != nil else { return .none }
+                return replaceSettings(id, with: .flat, state: &state)
             case .applicationResponse(let id, let revision, let status):
                 guard state.apps[id]?.revision == revision else { return .none }
                 state.apps[id]?.status = status
                 return .none
             }
         }
+    }
+
+    private func replaceSettings(_ id: String, with settings: EqualizerSettings, state: inout State) -> Effect<Action> {
+        guard var app = state.apps[id] else { return .none }
+        // Reset to flat stays allowed everywhere; non-flat curves need a supported source.
+        guard settings.isFlat || app.source.isSupported else { return .none }
+        app.settings = settings
+        app.revision += 1
+        state.apps[id] = app
+        persist(app, state: &state)
+        return apply(id, state: &state)
     }
 
     private func persist(_ app: App, state: inout State) {

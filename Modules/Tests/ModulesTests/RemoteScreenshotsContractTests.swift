@@ -12,7 +12,7 @@ struct RemoteScreenshotsContractTests {
     }
 
     @Test func protocolOneTenAddsRecordings() {
-        #expect(RemoteProtocolVersion.current == .init(major: 1, minor: 10))
+        #expect(RemoteProtocolVersion.current.supportsScreenRecordingsRemote)
         #expect(RemoteProtocolVersion(major: 1, minor: 9).supportsScreenRecordingsRemote == false)
         #expect(RemoteProtocolVersion(major: 1, minor: 10).supportsScreenRecordingsRemote)
     }

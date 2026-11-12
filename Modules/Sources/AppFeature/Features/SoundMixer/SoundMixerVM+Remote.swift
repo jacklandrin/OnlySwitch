@@ -41,6 +41,8 @@ extension SoundMixerVM {
             equalizerStore.send(.setGain(id, band, gain))
         case let .equalizerReset(id):
             equalizerStore.send(.reset(id))
+        case let .equalizerPreset(id, preset):
+            equalizerStore.send(.applyPreset(id, preset))
         case let .toggleOutput(id, deviceID):
             outputRoutingStore.send(.toggleDevice(id, deviceID))
         case let .followSystem(id):

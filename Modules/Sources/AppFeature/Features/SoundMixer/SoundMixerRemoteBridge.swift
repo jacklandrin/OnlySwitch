@@ -25,6 +25,7 @@ enum SoundMixerRemoteBridge {
         case appMuted(String, Bool)
         case equalizerGain(String, Int, Double)
         case equalizerReset(String)
+        case equalizerPreset(String, EqualizerPreset)
         case toggleOutput(String, String)
         case followSystem(String)
     }
@@ -52,7 +53,11 @@ enum SoundMixerRemoteBridge {
                 volume: row.volume,
                 isMuted: row.isMuted,
                 equalizer: equalizer.apps[row.id].map {
-                    RemoteSoundMixerEqualizer(gains: $0.settings.gains, status: .init(status: $0.status))
+                    RemoteSoundMixerEqualizer(
+                        gains: $0.settings.gains,
+                        status: .init(status: $0.status),
+                        preset: $0.settings.preset?.rawValue ?? RemoteSoundMixerEqualizer.customPreset
+                    )
                 },
                 routing: routing.apps[row.id].map {
                     RemoteSoundMixerRouting(selectedDeviceIDs: $0.selection.deviceUIDs, status: .init(status: $0.status))
@@ -99,6 +104,11 @@ enum SoundMixerRemoteBridge {
             return .equalizerGain(try processingRow(id), band, RemoteSoundMixerEqualizer.clampGain(gain))
         case let .resetAppEqualizer(id):
             return .equalizerReset(try processingRow(id))
+        case let .setAppEqualizerPreset(id, rawPreset):
+            guard let preset = EqualizerPreset(rawValue: rawPreset) else {
+                throw RemoteProtocolError(code: .actionNotSupported, message: "Unknown equalizer preset")
+            }
+            return .equalizerPreset(try processingRow(id), preset)
         case let .toggleAppOutputDevice(id, deviceID):
             let id = try processingRow(id)
             // An unplugged device stays deselectable; only a new selection must be online.

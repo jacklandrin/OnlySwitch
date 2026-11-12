@@ -18,12 +18,18 @@ public struct RemoteSoundMixerEqualizer: Codable, Equatable, Sendable {
     public static let bandCount = 10
     public static let frequencies: [Double] = [31.25, 62.5, 125, 250, 500, 1_000, 2_000, 4_000, 8_000, 16_000]
 
+    /// Stable preset identifier, or `customPreset` for a hand-tuned curve.
+    /// `nil` when the Mac predates protocol 1.11 and cannot apply presets.
+    public static let customPreset = "custom"
+
     public let gains: [Double]
     public let status: Status
+    public let preset: String?
 
-    public init(gains: [Double], status: Status) {
+    public init(gains: [Double], status: Status, preset: String? = nil) {
         self.gains = (0..<Self.bandCount).map { gains.indices.contains($0) ? Self.clampGain(gains[$0]) : 0 }
         self.status = status
+        self.preset = preset.map { String($0.prefix(64)) }
     }
 
     public static func clampGain(_ value: Double) -> Double { value.isFinite ? min(12, max(-12, value)) : 0 }
@@ -33,7 +39,8 @@ public struct RemoteSoundMixerEqualizer: Codable, Equatable, Sendable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.init(
             gains: try container.decodeIfPresent([Double].self, forKey: .gains) ?? [],
-            status: (try? container.decode(Status.self, forKey: .status)) ?? .unavailable
+            status: (try? container.decode(Status.self, forKey: .status)) ?? .unavailable,
+            preset: try container.decodeIfPresent(String.self, forKey: .preset)
         )
     }
 }
@@ -170,6 +177,8 @@ public enum RemoteSoundMixerCommand: Codable, Equatable, Sendable {
     case setAppMuted(id: String, isMuted: Bool)
     case setAppEqualizerGain(id: String, band: Int, gain: Double)
     case resetAppEqualizer(id: String)
+    /// Protocol 1.11+: `preset` is an `EqualizerPreset` raw value on the Mac.
+    case setAppEqualizerPreset(id: String, preset: String)
     case toggleAppOutputDevice(id: String, deviceID: String)
     case followSystemOutput(id: String)
 
@@ -177,7 +186,14 @@ public enum RemoteSoundMixerCommand: Codable, Equatable, Sendable {
     public var requiresSoundMixerTab: Bool {
         switch self {
         case .setSystemVolume, .setAppVolume, .setAppMuted: false
-        case .setAppEqualizerGain, .resetAppEqualizer, .toggleAppOutputDevice, .followSystemOutput: true
+        case .setAppEqualizerGain, .resetAppEqualizer, .setAppEqualizerPreset, .toggleAppOutputDevice,
+             .followSystemOutput: true
         }
+    }
+
+    /// Commands that are only valid once both peers negotiated `supportsEqualizerPresetsRemote`.
+    public var requiresEqualizerPresets: Bool {
+        if case .setAppEqualizerPreset = self { return true }
+        return false
     }
 }

@@ -1,16 +1,25 @@
 import RemoteCore
 import SwiftUI
 
+/// Presets first; manual bands sit behind a "Custom EQ" disclosure.
+/// Macs older than protocol 1.11 report no preset, so the manual bands are shown directly.
 struct RemoteEqualizerView: View {
     static let bandLabels = ["31", "62", "125", "250", "500", "1k", "2k", "4k", "8k", "16k"]
 
     let equalizer: RemoteSoundMixerEqualizer
     var isEnabled = true
+    /// `nil` when presets are unsupported; `.some(nil)` for a custom curve.
+    let preset: RemoteEqualizerPreset??
+    let isCustomExpanded: Bool
     let gain: (Int) -> Double
     let onGainChange: (Int, Double) -> Void
     let onGainCommit: (Int) -> Void
     let onReset: () -> Void
+    let onSelectPreset: (RemoteEqualizerPreset) -> Void
+    let onToggleCustom: () -> Void
     @ScaledMetric(relativeTo: .body) private var sliderLength: CGFloat = 132
+    @ScaledMetric(relativeTo: .subheadline) private var chipMinWidth: CGFloat = 92
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -18,10 +27,12 @@ struct RemoteEqualizerView: View {
                 Label("Equalizer", systemImage: "slider.vertical.3")
                     .font(.subheadline.weight(.semibold))
                 Spacer(minLength: 8)
-                Button("Reset EQ", action: onReset)
-                    .buttonStyle(.bordered)
-                    .controlSize(.small)
-                    .disabled(isInteractive == false)
+                if preset == nil {
+                    Button("Reset EQ", action: onReset)
+                        .buttonStyle(.bordered)
+                        .controlSize(.small)
+                        .disabled(isInteractive == false)
+                }
             }
             if let statusMessage {
                 Text(statusMessage)
@@ -29,16 +40,81 @@ struct RemoteEqualizerView: View {
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             }
-            // Spread bands across wide layouts; scroll when the row cannot fit at its minimum spacing.
-            ViewThatFits(in: .horizontal) {
-                bandRow
-                ScrollView(.horizontal) {
-                    bandRow
+            if let preset {
+                presetGrid(selected: preset)
+                    .disabled(isInteractive == false)
+                customDisclosure(isCustom: preset == nil)
+                if isCustomExpanded {
+                    bands
+                        .transition(reduceMotion ? .opacity : .opacity.combined(with: .move(edge: .top)))
                 }
-                .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
+            } else {
+                bands
             }
-            .disabled(isInteractive == false)
         }
+    }
+
+    private var bands: some View {
+        // Spread bands across wide layouts; scroll when the row cannot fit at its minimum spacing.
+        ViewThatFits(in: .horizontal) {
+            bandRow
+            ScrollView(.horizontal) {
+                bandRow
+            }
+            .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
+        }
+        .disabled(isInteractive == false)
+    }
+
+    private func presetGrid(selected: RemoteEqualizerPreset?) -> some View {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: chipMinWidth), spacing: 8)], spacing: 8) {
+            ForEach(RemoteEqualizerPreset.allCases) { preset in
+                presetChip(preset, isSelected: preset == selected)
+            }
+        }
+    }
+
+    private func presetChip(_ preset: RemoteEqualizerPreset, isSelected: Bool) -> some View {
+        Button { onSelectPreset(preset) } label: {
+            Text(preset.title)
+                .font(.subheadline.weight(isSelected ? .semibold : .regular))
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+                .frame(maxWidth: .infinity, minHeight: 44)
+                .foregroundStyle(isSelected ? Color.white : Color.primary)
+                .background(
+                    isSelected ? AnyShapeStyle(Color.accentColor) : AnyShapeStyle(.fill.tertiary),
+                    in: Capsule()
+                )
+                .contentShape(Capsule())
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
+    }
+
+    private func customDisclosure(isCustom: Bool) -> some View {
+        Button(action: onToggleCustom) {
+            HStack {
+                Text("Custom EQ")
+                Spacer(minLength: 8)
+                if isCustom {
+                    Text("Custom")
+                        .font(.caption.weight(.semibold))
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 3)
+                        .background(Color.accentColor.opacity(0.15), in: Capsule())
+                }
+                Image(systemName: "chevron.down")
+                    .rotationEffect(.degrees(isCustomExpanded ? 180 : 0))
+                    .accessibilityHidden(true)
+            }
+            .font(.subheadline)
+            .frame(minHeight: 44)
+            .contentShape(.rect)
+        }
+        .buttonStyle(.plain)
+        .foregroundStyle(.tint)
+        .accessibilityValue(isCustomExpanded ? Text("Expanded") : Text("Collapsed"))
     }
 
     private var bandRow: some View {

@@ -28,8 +28,35 @@ struct SoundMixerRemoteBridgeTests {
         )
         #expect(snapshot.isSystemVolumeAvailable == false)
         #expect(snapshot.outputDevices.map(\.id) == ["spk", "hp"])
-        #expect(snapshot.apps[0].equalizer == .init(gains: [3, 0, -2], status: .active))
+        #expect(snapshot.apps[0].equalizer == .init(gains: [3, 0, -2], status: .active, preset: "custom"))
         #expect(snapshot.apps[0].routing == .init(selectedDeviceIDs: ["hp"], status: .active))
+    }
+
+    @Test func snapshotNamesTheMatchingPreset() {
+        var eq = EqualizerFeature.State()
+        eq.apps["music"] = .init(source: .init(id: "music", isPersistent: true, isSupported: true, isAvailable: true),
+                                 settings: EqualizerPreset.rock.settings)
+        let snapshot = SoundMixerRemoteBridge.snapshot(
+            revision: 2, isEnabled: true, systemVolume: 40, isSystemVolumeAvailable: true, output: nil,
+            rows: [.init(id: "music", name: "Music", volume: 30, isMuted: false)],
+            equalizer: eq, routing: routingState()
+        )
+        #expect(snapshot.apps[0].equalizer?.preset == "rock")
+        #expect(snapshot.apps[0].equalizer?.gains == EqualizerPreset.rock.gains)
+    }
+
+    @Test func presetCommandsValidateKnownPresetsOnProcessingRows() throws {
+        let routing = routingState()
+        #expect(try SoundMixerRemoteBridge.validate(.setAppEqualizerPreset(id: "music", preset: "hipHop"),
+                                                  rowIDs: ["music"], routing: routing) == .equalizerPreset("music", .hipHop))
+        #expect(throws: RemoteProtocolError.self) {
+            try SoundMixerRemoteBridge.validate(.setAppEqualizerPreset(id: "music", preset: "unknown"),
+                                                rowIDs: ["music"], routing: routing)
+        }
+        #expect(throws: RemoteProtocolError.self) {
+            try SoundMixerRemoteBridge.validate(.setAppEqualizerPreset(id: "gone", preset: "rock"),
+                                                rowIDs: ["music"], routing: routing)
+        }
     }
 
     @Test func disabledMixerSendsNoApps() {
@@ -60,7 +87,7 @@ struct SoundMixerRemoteBridgeTests {
         let app = try #require(snapshot.apps.first)
         #expect(app.id == own)
         #expect(app.volume == 35)
-        #expect(app.equalizer == .init(gains: [4, -3], status: .active))
+        #expect(app.equalizer == .init(gains: [4, -3], status: .active, preset: "custom"))
         #expect(app.routing == .init(selectedDeviceIDs: ["hp", "spk"], status: .active))
     }
 
@@ -109,6 +136,7 @@ struct SoundMixerRemoteBridgeTests {
         for command: RemoteSoundMixerCommand in [
             .setAppEqualizerGain(id: own, band: 0, gain: 3),
             .resetAppEqualizer(id: own),
+            .setAppEqualizerPreset(id: own, preset: "rock"),
             .toggleAppOutputDevice(id: own, deviceID: "spk"),
             .followSystemOutput(id: own),
         ] {

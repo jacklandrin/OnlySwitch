@@ -108,7 +108,7 @@ extension RemoteReviewDemoRuntime {
                     name: "Music",
                     volume: 80,
                     isMuted: false,
-                    equalizer: .init(gains: [3, 2, 1, 0, -1, 0, 1, 2, 3, 2], status: .active),
+                    equalizer: .init(gains: [3, 2, 1, 0, -1, 0, 1, 2, 3, 2], status: .active, preset: "custom"),
                     routing: .init(selectedDeviceIDs: [], status: .followingSystem)
                 ),
                 .init(
@@ -116,7 +116,7 @@ extension RemoteReviewDemoRuntime {
                     name: "Safari",
                     volume: 45,
                     isMuted: false,
-                    equalizer: .init(gains: [], status: .flat),
+                    equalizer: .init(gains: [], status: .flat, preset: "flat"),
                     routing: .init(selectedDeviceIDs: [], status: .followingSystem)
                 ),
             ],

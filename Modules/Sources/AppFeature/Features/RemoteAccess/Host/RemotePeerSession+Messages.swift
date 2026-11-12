@@ -66,6 +66,7 @@ extension RemotePeerSession {
         case let .soundMixerCommand(command):
             try requireSoundMixer()
             if command.requiresSoundMixerTab { try requireSoundMixerTab() }
+            if command.requiresEqualizerPresets { try requireEqualizerPresets() }
             guard let snapshot = try await commandSnapshot({ try await soundMixerCommand(command) }) else { return }
             try await sendEncrypted(.soundMixerSnapshot(snapshot))
         case let .soundMixerSubscriptionUpdate(enabled):

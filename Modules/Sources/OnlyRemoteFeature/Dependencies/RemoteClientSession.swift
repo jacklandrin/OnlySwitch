@@ -174,6 +174,9 @@ actor RemoteClientSession {
         if command.requiresSoundMixerTab, protocolVersion.supportsSoundMixerTabRemote == false {
             throw Self.soundMixerUpgradeRequired
         }
+        if command.requiresEqualizerPresets, protocolVersion.supportsEqualizerPresetsRemote == false {
+            throw Self.soundMixerUpgradeRequired
+        }
         try await sendMessage(.soundMixerCommand(command))
     }
     func setSoundMixerStreaming(_ enabled: Bool) async throws {

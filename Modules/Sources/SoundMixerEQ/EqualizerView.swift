@@ -3,6 +3,7 @@ import ComposableArchitecture
 import SwiftUI
 
 /// Compact editor; the parent owns the app row and disclosure control.
+/// Presets are the primary control; manual band editing sits behind a second-level disclosure.
 public struct EqualizerView: View {
     @Bindable private var store: StoreOf<EqualizerFeature>
     private let appID: String
@@ -15,25 +16,12 @@ public struct EqualizerView: View {
     public var body: some View {
         if let app = store.apps[appID] {
             VStack(alignment: .leading, spacing: 8) {
-                HStack {
-                    Text(localize("Equalizer")).font(.caption.weight(.semibold))
-                    Spacer()
-                    Button(localize("Reset EQ")) { store.send(.reset(appID)) }
-                        .font(.caption)
-                        .disabled(app.settings.isFlat)
-                }
+                Text(localize("Equalizer")).font(.caption.weight(.semibold))
                 if app.source.isSupported {
-                    Grid(horizontalSpacing: 12, verticalSpacing: 8) {
-                        ForEach(0..<5) { row in
-                            GridRow {
-                                bandControl(row * 2, settings: app.settings)
-                                bandControl(row * 2 + 1, settings: app.settings)
-                            }
-                        }
+                    EqualizerPresetGrid(selected: app.settings.preset, localize: localize) {
+                        store.send(.applyPreset(appID, $0))
                     }
-                    Text(verbatim: "−12 dB · 0 dB · +12 dB")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
+                    customSection(app)
                 }
                 if let message = statusMessage(app.status) {
                     Text(localize(message))
@@ -45,6 +33,44 @@ public struct EqualizerView: View {
             .padding(10)
             .background(.quaternary.opacity(0.35), in: RoundedRectangle(cornerRadius: 10))
             .accessibilityElement(children: .contain)
+        }
+    }
+
+    @ViewBuilder
+    private func customSection(_ app: EqualizerFeature.App) -> some View {
+        Button {
+            store.send(.toggleCustomExpanded(appID), animation: .snappy(duration: 0.2))
+        } label: {
+            HStack(spacing: 4) {
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 9, weight: .semibold))
+                    .rotationEffect(.degrees(app.isCustomExpanded ? 90 : 0))
+                    .accessibilityHidden(true)
+                Text(localize("Custom EQ"))
+                Spacer(minLength: 4)
+                if app.settings.preset == nil {
+                    Text(localize("Custom"))
+                        .foregroundStyle(Color.accentColor)
+                }
+            }
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityValue(Text(localize(app.isCustomExpanded ? "Expanded" : "Collapsed")))
+        if app.isCustomExpanded {
+            Grid(horizontalSpacing: 12, verticalSpacing: 8) {
+                ForEach(0..<5) { row in
+                    GridRow {
+                        bandControl(row * 2, settings: app.settings)
+                        bandControl(row * 2 + 1, settings: app.settings)
+                    }
+                }
+            }
+            Text(verbatim: "−12 dB · 0 dB · +12 dB")
+                .font(.caption2)
+                .foregroundStyle(.secondary)
         }
     }
 
@@ -80,6 +106,43 @@ public struct EqualizerView: View {
         case .waitingForAudio: "Waiting for audio. Check audio recording permission if playback is silent."
         case .flat, .active: nil
         }
+    }
+}
+
+/// Four-column chip grid; the selected chip mirrors the curve that is currently applied.
+struct EqualizerPresetGrid: View {
+    let selected: EqualizerPreset?
+    let localize: (String) -> String
+    let onSelect: (EqualizerPreset) -> Void
+
+    private let columns = Array(repeating: GridItem(.flexible(), spacing: 6), count: 4)
+
+    var body: some View {
+        LazyVGrid(columns: columns, spacing: 6) {
+            ForEach(EqualizerPreset.allCases) { preset in
+                chip(preset)
+            }
+        }
+    }
+
+    private func chip(_ preset: EqualizerPreset) -> some View {
+        let isSelected = preset == selected
+        return Button { onSelect(preset) } label: {
+            Text(localize(preset.titleKey))
+                .font(.caption2.weight(isSelected ? .semibold : .regular))
+                .lineLimit(1)
+                .minimumScaleFactor(0.75)
+                .frame(maxWidth: .infinity, minHeight: 22)
+                .foregroundStyle(isSelected ? Color.white : Color.primary)
+                .background(
+                    isSelected ? AnyShapeStyle(Color.accentColor) : AnyShapeStyle(.quaternary),
+                    in: Capsule()
+                )
+                .contentShape(Capsule())
+        }
+        .buttonStyle(.plain)
+        .help(localize(preset.titleKey))
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 }
 #endif

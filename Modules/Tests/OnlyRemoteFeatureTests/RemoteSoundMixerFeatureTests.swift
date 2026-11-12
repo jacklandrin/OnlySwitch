@@ -239,6 +239,99 @@ struct RemoteSoundMixerFeatureTests {
         }
     }
 
+    @Test func presetSelectionSendsCommandAndHighlightsUntilConfirmed() async {
+        let spy = SoundMixerConnectionSpy()
+        var state = streamingState()
+        state.snapshot = makeSnapshot(apps: makeApps(preset: "flat"))
+        state.draftGains = ["a": [1: 4]]
+        state.activeDrags = ["a#eq1"]
+        let store = makeStore(initialState: state, spy: spy)
+
+        #expect(store.state.preset(appID: "a") == .some(.flat))
+        await store.send(.presetSelected(appID: "a", preset: .rock)) {
+            $0.pendingPresets = ["a": .rock]
+            $0.draftGains = [:]
+            $0.activeDrags = []
+        }
+        await store.receive(.commandFinished(nil))
+        #expect(store.state.preset(appID: "a") == .some(.rock))
+
+        let stale = makeSnapshot(revision: 2, apps: makeApps(preset: "flat"))
+        await store.send(.connectionEvent(.soundMixer(macID, stale))) { $0.snapshot = stale }
+        #expect(store.state.preset(appID: "a") == .some(.rock))
+
+        let confirmed = makeSnapshot(revision: 3, apps: makeApps(preset: "rock"))
+        await store.send(.connectionEvent(.soundMixer(macID, confirmed))) {
+            $0.snapshot = confirmed
+            $0.pendingPresets = [:]
+        }
+        #expect(await spy.commands == [.setAppEqualizerPreset(id: "a", preset: "rock")])
+    }
+
+    /// Must match the Mac's `EqualizerPreset` raw values (see `EqualizerPresetTests`).
+    @Test func presetIdentifiersMatchTheMacCatalog() {
+        #expect(RemoteEqualizerPreset.allCases.map(\.rawValue) == [
+            "flat", "pop", "rock", "jazz", "classical", "electronic", "hipHop", "vocal",
+            "bassBoost", "trebleBoost", "acoustic", "loudness",
+        ])
+    }
+
+    @Test func customCurvesAndUnknownPresetsShowNoSelection() {
+        var state = streamingState()
+        state.snapshot = makeSnapshot(apps: makeApps(preset: "custom"))
+        #expect(state.preset(appID: "a") == .some(nil))
+        state.snapshot = makeSnapshot(apps: makeApps(preset: "futurePreset"))
+        #expect(state.preset(appID: "a") == .some(nil))
+    }
+
+    @Test func legacyMacsWithoutPresetsNeverReceivePresetCommands() async {
+        let spy = SoundMixerConnectionSpy()
+        let store = makeStore(initialState: streamingState(), spy: spy)
+
+        #expect(store.state.preset(appID: "a") == nil)
+        await store.send(.presetSelected(appID: "a", preset: .pop))
+        await store.finish()
+        #expect(await spy.commands.isEmpty)
+    }
+
+    @Test func manualEditOrFailureDropsPendingPreset() async {
+        let spy = SoundMixerConnectionSpy()
+        let clock = TestClock()
+        var state = streamingState()
+        state.snapshot = makeSnapshot(apps: makeApps(preset: "flat"))
+        state.pendingPresets = ["a": .jazz]
+        let store = makeStore(initialState: state, spy: spy, clock: clock)
+
+        await store.send(.gainChanged(appID: "a", band: 0, gain: 2)) {
+            $0.pendingPresets = [:]
+            $0.draftGains = ["a": [0: 2]]
+            $0.activeDrags = ["a#eq0"]
+        }
+        await clock.advance(by: RemoteSoundMixerFeature.debounce)
+        await store.receive(.commandFinished(nil))
+        await store.send(.presetSelected(appID: "a", preset: .vocal)) {
+            $0.pendingPresets = ["a": .vocal]
+            $0.draftGains = [:]
+            $0.activeDrags = []
+        }
+        await store.receive(.commandFinished(nil))
+        await store.send(.commandFinished(.init(code: .executionFailed, message: "Failed"))) {
+            $0.commandError = "Failed"
+            $0.pendingPresets = [:]
+        }
+    }
+
+    @Test func customEQDisclosureTogglesAndIsDroppedWithTheApp() async {
+        let store = TestStore(initialState: streamingState()) { RemoteSoundMixerFeature() }
+
+        await store.send(.customEQToggled(appID: "a")) { $0.customEQExpandedAppIDs = ["a"] }
+        let next = makeSnapshot(revision: 2, apps: [makeApps()[1]])
+        await store.send(.connectionEvent(.soundMixer(macID, next))) {
+            $0.snapshot = next
+            $0.customEQExpandedAppIDs = []
+        }
+    }
+
     @Test func expansionToggles() async {
         let store = TestStore(initialState: streamingState()) { RemoteSoundMixerFeature() }
 
@@ -284,14 +377,14 @@ struct RemoteSoundMixerFeatureTests {
         return state
     }
 
-    private func makeApps() -> [RemoteSoundMixerApp] {
+    private func makeApps(preset: String? = nil) -> [RemoteSoundMixerApp] {
         [
             .init(
                 id: "a",
                 name: "Music",
                 volume: 50,
                 isMuted: false,
-                equalizer: .init(gains: [], status: .flat),
+                equalizer: .init(gains: [], status: .flat, preset: preset),
                 routing: .init(selectedDeviceIDs: [], status: .followingSystem)
             ),
             .init(id: "b", name: "Safari", volume: 70, isMuted: true),
