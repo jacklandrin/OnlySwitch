@@ -112,6 +112,16 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "WebBrowserTests"
+               BuildableName = "WebBrowserTests"
+               BlueprintName = "WebBrowserTests"
+               ReferencedContainer = "container:Modules">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "ScreenshotsTests"
                BuildableName = "ScreenshotsTests"
                BlueprintName = "ScreenshotsTests"
