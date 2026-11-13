@@ -72,6 +72,10 @@ public extension UserDefaults {
         /// The schedule list; intentionally not exportable (targets are machine specific).
         public static let schedules = "schedulesKey"
         public static let showSchedulesTab = "showSchedulesTabKey"
+        // Browser
+        /// Bookmarks and the selected bookmark as JSON (`BrowserStoredState`).
+        public static let browserState = "browserStateKey"
+        public static let showBrowserTab = "showBrowserTabKey"
         // Tabs
         /// Comma-separated `SectionBar.Section` ids for the optional popover/Only Control tabs.
         public static let tabOrder = "tabOrderKey"
@@ -153,7 +157,7 @@ public extension UserDefaults {
             shortcutsDic,
             orderWeight, onlyControlOrderWeight,
             soundMixerEnabled,
-            systemMonitorPreferences, showSystemMonitorTab, showXcodeCleanerTab, showAppUninstallerTab, showScreenshotsTab, showSchedulesTab, tabOrder,
+            systemMonitorPreferences, showSystemMonitorTab, showXcodeCleanerTab, showAppUninstallerTab, showScreenshotsTab, showSchedulesTab, showBrowserTab, browserState, tabOrder,
             backNoisesTrack, automaticallyStopPlayNoiseTime,
             autoStopKeepAwakeMode, autoStopKeepAwakeTime, autoStopKeepAwakeStartDate, autoStopKeepAwakeEndDate, autoStopKeepAwakeOnSleep, KeepAwakeKey,
             autoDimScreenTime, dimScreenPercent, syncExternalBrightness,

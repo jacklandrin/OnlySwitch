@@ -20,4 +20,5 @@ public extension Logger {
     static let persistence = Logger(subsystem: subsystem, category: "Persistence")
     static let settings = Logger(subsystem: subsystem, category: "Settings")
     static let bluetooth = Logger(subsystem: subsystem, category: "Bluetooth")
+    static let browser = Logger(subsystem: subsystem, category: "Browser")
 }
