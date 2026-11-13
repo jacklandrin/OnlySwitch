@@ -4,6 +4,7 @@ import SwiftUI
 /// Bookmark picker, navigation buttons, address field and the actions menu. Rendering only.
 struct BrowserToolbar: View {
     let store: StoreOf<BrowserFeature>
+    var addressFocused: FocusState<Bool>.Binding
 
     var body: some View {
         VStack(spacing: 6) {
@@ -90,7 +91,12 @@ struct BrowserToolbar: View {
         ))
         .textFieldStyle(.roundedBorder)
         .autocorrectionDisabled()
-        .onSubmit { store.send(.addressSubmitted) }
+        .focused(addressFocused)
+        .onSubmit {
+            store.send(.addressSubmitted)
+            // Leave the field after a valid address so the toolbar can hide again.
+            if !store.showsInvalidAddress { addressFocused.wrappedValue = false }
+        }
         .overlay {
             RoundedRectangle(cornerRadius: 6)
                 .stroke(Color.red, lineWidth: 1)
