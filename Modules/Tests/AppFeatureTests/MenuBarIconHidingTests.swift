@@ -24,6 +24,20 @@ struct StatusBarControllerStatusItemConfigurationTests {
 }
 
 @MainActor
+struct StatusBarControllerMarkerClickTests {
+    @Test("a left click on the marker toggles hiding", arguments: [false, true])
+    func leftClickToggles(isCollapsed: Bool) {
+        #expect(StatusBarController.markerClickTarget(isRightClick: false, isCollapsed: isCollapsed) == !isCollapsed)
+    }
+
+    @Test("a right click on the marker only hides")
+    func rightClickOnlyHides() {
+        #expect(StatusBarController.markerClickTarget(isRightClick: true, isCollapsed: false) == true)
+        #expect(StatusBarController.markerClickTarget(isRightClick: true, isCollapsed: true) == nil)
+    }
+}
+
+@MainActor
 struct HideMenubarIconsSettingVMTests {
     @Test("native visibility limitation notice is macOS 27 only")
     func nativeVisibilityLimitationNoticeAvailability() {
