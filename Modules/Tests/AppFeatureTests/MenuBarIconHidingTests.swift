@@ -23,6 +23,44 @@ struct StatusBarControllerStatusItemConfigurationTests {
     }
 }
 
+struct AutoCollapsePointerTests {
+    private let now = Date(timeIntervalSinceReferenceDate: 1_000)
+
+    @Test("hides once the delay passes with the pointer never in the menu bar")
+    func hidesWhenPointerNeverEntered() {
+        #expect(HideMenubarIconsSwitch.remainingAutoCollapseDelay(now: now, interval: 5, isPointerInMenuBar: false, pointerLastInMenuBar: nil) == nil)
+    }
+
+    @Test("waits the full delay again while the pointer is in the menu bar")
+    func waitsWhilePointerInMenuBar() {
+        #expect(HideMenubarIconsSwitch.remainingAutoCollapseDelay(now: now, interval: 5, isPointerInMenuBar: true, pointerLastInMenuBar: now) == 5)
+    }
+
+    @Test("counts the delay from when the pointer left the menu bar")
+    func countsFromWhenPointerLeft() {
+        let leftTwoSecondsAgo = now.addingTimeInterval(-2)
+        #expect(HideMenubarIconsSwitch.remainingAutoCollapseDelay(now: now, interval: 5, isPointerInMenuBar: false, pointerLastInMenuBar: leftTwoSecondsAgo) == 3)
+        let leftSixSecondsAgo = now.addingTimeInterval(-6)
+        #expect(HideMenubarIconsSwitch.remainingAutoCollapseDelay(now: now, interval: 5, isPointerInMenuBar: false, pointerLastInMenuBar: leftSixSecondsAgo) == nil)
+    }
+
+    @Test("the menu bar is the strip above the visible frame")
+    func menuBarStrip() {
+        let frame = CGRect(x: 0, y: 0, width: 1512, height: 982)
+        let visibleFrame = CGRect(x: 0, y: 70, width: 1512, height: 875)
+        #expect(MenuBarPointerTracker.isPoint(CGPoint(x: 700, y: 960), inMenuBarOf: frame, visibleFrame: visibleFrame, minimumHeight: 24))
+        #expect(MenuBarPointerTracker.isPoint(CGPoint(x: 700, y: 940), inMenuBarOf: frame, visibleFrame: visibleFrame, minimumHeight: 24) == false)
+        #expect(MenuBarPointerTracker.isPoint(CGPoint(x: 1600, y: 960), inMenuBarOf: frame, visibleFrame: visibleFrame, minimumHeight: 24) == false)
+    }
+
+    @Test("a hidden menu bar still counts the status bar's height")
+    func autoHiddenMenuBar() {
+        let frame = CGRect(x: 0, y: 0, width: 1512, height: 982)
+        #expect(MenuBarPointerTracker.isPoint(CGPoint(x: 700, y: 970), inMenuBarOf: frame, visibleFrame: frame, minimumHeight: 24))
+        #expect(MenuBarPointerTracker.isPoint(CGPoint(x: 700, y: 950), inMenuBarOf: frame, visibleFrame: frame, minimumHeight: 24) == false)
+    }
+}
+
 @MainActor
 struct StatusBarControllerMarkerClickTests {
     @Test("a left click on the marker toggles hiding", arguments: [false, true])
