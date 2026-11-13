@@ -18,6 +18,7 @@ import Tailscale
 import Extensions
 import KeyboardShortcuts
 import Scheduler
+import WebBrowser
 
 struct SettingsView: View {
     @StateObject var settingVM = SettingsVM.shared
@@ -176,6 +177,11 @@ struct SettingsView: View {
 
             case .Schedules:
                 ScheduleSettingsView(store: settingVM.schedulesStore)
+                    .environment(\.locale, Locale(identifier: langManager.currentLang))
+                    .id(langManager.currentLang)
+
+            case .Browser:
+                BrowserSettingsView(store: settingVM.browserStore)
                     .environment(\.locale, Locale(identifier: langManager.currentLang))
                     .id(langManager.currentLang)
 

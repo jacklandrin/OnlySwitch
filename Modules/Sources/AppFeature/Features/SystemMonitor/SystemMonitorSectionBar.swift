@@ -17,6 +17,7 @@ enum SectionBar {
         case screenshots
         case brightness
         case schedules
+        case browser
 
         var allowsOutsideClickDismissal: Bool { self != .appUninstaller && self != .screenshots }
 
@@ -34,6 +35,7 @@ enum SectionBar {
             case .screenshots: "Screenshots & Record".localized()
             case .brightness: "Brightness".localized()
             case .schedules: "Schedules".localized()
+            case .browser: "Browser".localized()
             }
         }
 
@@ -51,6 +53,7 @@ enum SectionBar {
             case .screenshots: "photo.on.rectangle.angled"
             case .brightness: "sun.max.fill"
             case .schedules: "calendar.badge.clock"
+            case .browser: "safari"
             }
         }
 
@@ -59,7 +62,7 @@ enum SectionBar {
             switch self {
             case .codexUsage: "openai_logo"
             case .claudeUsage: "claude_logo"
-            case .controls, .authenticator, .soundMixer, .systemMonitor, .aphrodite, .xcodeCleaner, .appUninstaller, .screenshots, .brightness, .schedules: nil
+            case .controls, .authenticator, .soundMixer, .systemMonitor, .aphrodite, .xcodeCleaner, .appUninstaller, .screenshots, .brightness, .schedules, .browser: nil
             }
         }
     }
@@ -76,13 +79,14 @@ enum SectionBar {
         screenshots: Bool = false,
         brightness: Bool = false,
         schedules: Bool = false,
+        browser: Bool = false,
         order: [Section] = Section.manageable
     ) -> [Section] {
         let isVisible: [Section: Bool] = [
             .authenticator: authenticator, .soundMixer: soundMixer, .systemMonitor: systemMonitor,
             .codexUsage: codexUsage, .claudeUsage: claudeUsage, .aphrodite: aphrodite,
             .xcodeCleaner: xcodeCleaner, .appUninstaller: appUninstaller, .screenshots: screenshots,
-            .brightness: brightness, .schedules: schedules,
+            .brightness: brightness, .schedules: schedules, .browser: browser,
         ]
         return [.controls] + order.filter { isVisible[$0] == true }
     }

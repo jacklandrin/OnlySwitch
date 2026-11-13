@@ -21,6 +21,7 @@ import AppUninstaller
 import Screenshots
 import DisplayBrightness
 import Scheduler
+import WebBrowser
 
 enum Focusable: Hashable {
   case none
@@ -58,6 +59,7 @@ struct OnlySwitchListView: View {
     @AppStorage(UserDefaults.Key.showScreenshotsTab) private var showScreenshotsTab = true
     @AppStorage(UserDefaults.Key.showBrightnessTab) private var showBrightnessTab = true
     @AppStorage(UserDefaults.Key.showSchedulesTab) private var showSchedulesTab = true
+    @AppStorage(UserDefaults.Key.showBrowserTab) private var showBrowserTab = true
     @AppStorage(UserDefaults.Key.tabOrder) private var tabOrder = ""
 
     let columns = [
@@ -144,6 +146,14 @@ struct OnlySwitchListView: View {
                             }
                             .padding(.horizontal, 12)
                             .padding(.vertical, 6)
+                            .environment(\.locale, Locale(identifier: languageManager.currentLang))
+                            .id(languageManager.currentLang)
+                        case .browser:
+                            BrowserPanelView(store: SettingsVM.shared.browserStore, compact: true) {
+                                SettingsVM.shared.selection = .Browser
+                                SettingsWindow.shared.show()
+                            }
+                            .frame(height: min(BrowserLayout.popoverContentHeight, max(240, maximumPanelHeight - measuredChromeHeight)))
                             .environment(\.locale, Locale(identifier: languageManager.currentLang))
                             .id(languageManager.currentLang)
                         case .aphrodite:
@@ -286,6 +296,7 @@ struct OnlySwitchListView: View {
             screenshots: showScreenshotsTab,
             brightness: showBrightnessTab,
             schedules: showSchedulesTab,
+            browser: showBrowserTab,
             order: SectionBar.manageableOrder(from: tabOrder)
         )
     }

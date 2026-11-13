@@ -72,6 +72,7 @@ extension SectionBar.Section {
         case .screenshots: UserDefaults.Key.showScreenshotsTab
         case .brightness: UserDefaults.Key.showBrightnessTab
         case .schedules: UserDefaults.Key.showSchedulesTab
+        case .browser: UserDefaults.Key.showBrowserTab
         case .controls, .authenticator, .soundMixer: nil
         }
     }

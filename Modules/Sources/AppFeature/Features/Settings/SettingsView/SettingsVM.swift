@@ -19,6 +19,7 @@ import Tailscale
 import DisplayBrightness
 import RadioBrowser
 import Scheduler
+import WebBrowser
 
 enum SettingsItem: String, CaseIterable {
     case General = "General"
@@ -27,6 +28,7 @@ enum SettingsItem: String, CaseIterable {
     case Shortcuts = "Shortcuts"
     case Evolution = "Evolution"
     case Schedules = "Schedules"
+    case Browser = "Browser"
     case ModelProviders = "Model Providers"
     case Aphrodite = "Aphrodite"
     case AirPods = "AirPods"
@@ -69,6 +71,7 @@ enum SettingsItem: String, CaseIterable {
         case .Shortcuts: "command"
         case .Evolution: "wand.and.stars"
         case .Schedules: "calendar.badge.clock"
+        case .Browser: "safari"
         case .ModelProviders: "brain"
         case .Aphrodite: "sparkles"
         case .AirPods: "airpodspro"
@@ -100,6 +103,7 @@ enum SettingsItem: String, CaseIterable {
         case .Shortcuts: .pink
         case .Evolution: .purple
         case .Schedules: .red
+        case .Browser: .blue
         case .ModelProviders: .mint
         case .Aphrodite: .orange
         case .AirPods: .cyan
@@ -213,6 +217,10 @@ class SettingsVM: ObservableObject {
         $0.scheduleNotifications = .app
         $0.scheduleSystemEvents = .app
     }
+
+    /// The single browser store shared by Settings, the popover list and OnlyControl. Live web views belong to
+    /// `BrowserWebViewPool.shared`, so pages survive tab switches and popover closes.
+    lazy var browserStore = Store(initialState: BrowserFeature.State()) { BrowserFeature() }
 
     init() {
         settingItems = SettingsItem.allCases

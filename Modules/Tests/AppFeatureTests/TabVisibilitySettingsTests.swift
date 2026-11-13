@@ -13,7 +13,7 @@ struct TabVisibilitySettingsTests {
     @Test func everyOptionalTabIsManageableAndControlsIsNot() {
         #expect(SectionBar.Section.manageable == SectionBar.Section.allCases.filter { $0 != .controls })
         #expect(!SectionBar.Section.manageable.contains(.controls))
-        #expect(SectionBar.Section.manageable.count == 11)
+        #expect(SectionBar.Section.manageable.count == 12)
     }
 
     @Test func tabsBackedByDefaultsUseTheExistingSharedKeys() {
@@ -26,6 +26,7 @@ struct TabVisibilitySettingsTests {
         #expect(SectionBar.Section.appUninstaller.visibilityDefaultsKey == UserDefaults.Key.showAppUninstallerTab)
         #expect(SectionBar.Section.screenshots.visibilityDefaultsKey == UserDefaults.Key.showScreenshotsTab)
         #expect(SectionBar.Section.schedules.visibilityDefaultsKey == UserDefaults.Key.showSchedulesTab)
+        #expect(SectionBar.Section.browser.visibilityDefaultsKey == UserDefaults.Key.showBrowserTab)
         #expect(SectionBar.Section.authenticator.visibilityDefaultsKey == nil)
         #expect(SectionBar.Section.soundMixer.visibilityDefaultsKey == nil)
     }
@@ -180,12 +181,14 @@ struct TabVisibilitySettingsTests {
             systemMonitor: false, codexUsage: false, schedules: client.isVisible(.schedules)) == [.controls, .schedules])
     }
 
-    @Test func schedulesTabIsLastAndUsesItsSymbol() {
+    @Test func schedulesAndBrowserTabsAreLastAndUseTheirSymbols() {
         let all = SectionBar.sections(authenticator: true, soundMixer: true, systemMonitor: true, codexUsage: true,
             claudeUsage: true, aphrodite: true, xcodeCleaner: true, appUninstaller: true, screenshots: true,
-            brightness: true, schedules: true)
-        #expect(all.last == .schedules)
+            brightness: true, schedules: true, browser: true)
+        #expect(all.suffix(2) == [.schedules, .browser])
         #expect(all.count == SectionBar.Section.allCases.count)
+        #expect(SectionBar.Section.browser.symbolName == "safari")
+        #expect(SectionBar.Section.browser.assetName == nil)
         #expect(SectionBar.Section.schedules.symbolName == "calendar.badge.clock")
         #expect(SectionBar.Section.schedules.assetName == nil)
         #expect(SectionBar.Section.schedules.allowsOutsideClickDismissal)
@@ -292,5 +295,16 @@ struct TabVisibilitySettingsTests {
     @Test func tabsSettingsPageFollowsBuiltIn() {
         let items = SettingsItem.allCases
         #expect(items.firstIndex(of: .Tabs) == items.firstIndex(of: .Customize).map { $0 + 1 })
+    }
+
+    @Test func browserTabIsShownWhenVisibleAndFollowsTheSavedOrder() {
+        let sections = SectionBar.sections(
+            authenticator: false, soundMixer: false, systemMonitor: false, codexUsage: false,
+            browser: true, order: [.browser, .schedules]
+        )
+        #expect(sections == [.controls, .browser])
+        #expect(SectionBar.manageableOrder(from: "browser,schedules").prefix(2) == [.browser, .schedules])
+        #expect(SectionBar.Section.browser.title == "Browser".localized())
+        #expect(SectionBar.Section.browser.allowsOutsideClickDismissal)
     }
 }

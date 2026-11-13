@@ -23,6 +23,7 @@ import AppUninstaller
 import Screenshots
 import DisplayBrightness
 import Scheduler
+import WebBrowser
 import Utilities
 
 struct OnlyControlView: View {
@@ -45,6 +46,7 @@ struct OnlyControlView: View {
     @AppStorage(UserDefaults.Key.showScreenshotsTab) private var showScreenshotsTab = true
     @AppStorage(UserDefaults.Key.showBrightnessTab) private var showBrightnessTab = true
     @AppStorage(UserDefaults.Key.showSchedulesTab) private var showSchedulesTab = true
+    @AppStorage(UserDefaults.Key.showBrowserTab) private var showBrowserTab = true
     @AppStorage(UserDefaults.Key.tabOrder) private var tabOrder = ""
     
     private let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
@@ -157,6 +159,14 @@ struct OnlyControlView: View {
                 }
                 .padding(.horizontal, 30)
                 .padding(.vertical, 12)
+                .environment(\.locale, Locale(identifier: languageManager.currentLang))
+                .id(languageManager.currentLang)
+            case .browser:
+                BrowserPanelView(store: SettingsVM.shared.browserStore, compact: false) {
+                    SettingsVM.shared.selection = .Browser
+                    SettingsWindow.shared.show()
+                }
+                .frame(height: max(320, sectionViewportHeight ?? 480))
                 .environment(\.locale, Locale(identifier: languageManager.currentLang))
                 .id(languageManager.currentLang)
             case .aphrodite:
@@ -294,6 +304,7 @@ struct OnlyControlView: View {
             screenshots: showScreenshotsTab,
             brightness: showBrightnessTab,
             schedules: showSchedulesTab,
+            browser: showBrowserTab,
             order: SectionBar.manageableOrder(from: tabOrder)
         )
     }
