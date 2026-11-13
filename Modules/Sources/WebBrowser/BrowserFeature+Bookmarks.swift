@@ -113,9 +113,10 @@ extension BrowserFeature {
             let enabled = draft.usesMobileUserAgent
             effects.append(.run { [webClient] _ in await webClient.setMobileUserAgent(id, enabled) })
         }
-        // Applied after the user agent change so the new address replaces that reload.
-        if previous.url != url, state.selectedID == id {
-            state.addressText = url.absoluteString
+        // Applied after the user agent change so the new address replaces that reload. Pages that are not
+        // alive ignore the load and open the new address when next shown.
+        if previous.url != url {
+            if state.selectedID == id { state.addressText = url.absoluteString }
             effects.append(.run { [webClient] _ in await webClient.load(id, url) })
         }
         return .concatenate(effects)

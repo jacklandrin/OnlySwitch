@@ -80,6 +80,22 @@ struct BrowserFeatureBookmarkTests {
         #expect(log.commands.value == ["mobile 1 true", "load 1 https://other.example"])
     }
 
+    @Test func editingAnotherBookmarksAddressReloadsItsLivePageWithoutTouchingTheToolbar() async {
+        let log = WebCommandLog()
+        let (one, two) = (BrowserBookmark.fixture(1), BrowserBookmark.fixture(2))
+        let store = makeStore(log, bookmarks: [one, two], selected: one.id)
+        await store.send(.editBookmarkTapped(two.id)) {
+            $0.draft = BrowserBookmarkDraft(editingID: two.id, title: "Site 2", address: "https://site2.example")
+        }
+        await store.send(.draftAddressChanged("moved.example")) { $0.draft?.address = "moved.example" }
+        await store.send(.draftSaveTapped) {
+            $0.draft = nil
+            $0.bookmarks[id: two.id]?.url = URL(string: "https://moved.example")!
+        }
+        await store.finish()
+        #expect(log.commands.value == ["load 2 https://moved.example"])
+    }
+
     @Test func cancelDiscardsTheDraft() async {
         let store = makeStore(WebCommandLog(), bookmarks: [], selected: nil)
         await store.send(.addBookmarkTapped) { $0.draft = BrowserBookmarkDraft() }
