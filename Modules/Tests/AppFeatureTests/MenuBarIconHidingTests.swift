@@ -286,11 +286,57 @@ struct MenuBarClientCoreVisibilityApplierTests {
 
 @MainActor
 struct AXMenuBarVisibleItemResolverTests {
+    private let ownMarker = AXMenuBarItemRecord(midX: 500, bundleIdentifier: "jacklandrin.OnlySwitch", systemItemIdentifier: nil)
+
+    @Test("a marker position the menu bar has not confirmed is rejected")
+    func resolverRejectsPlaceholderMarkerPosition() {
+        // Just after launch AppKit reported x=19 for the marker while the menu bar showed it at 3662.
+        let resolver = AXMenuBarVisibleItemResolver(
+            markerScreenX: { 19 }, mainItemScreenX: { 3700 }, runningBundleIdentifiers: { Set(["com.left.app"]) },
+            ownBundleIdentifier: { "jacklandrin.OnlySwitch" },
+            source: RecordingAXSource(isTrusted: true, items: [
+                .init(midX: 3237, bundleIdentifier: "com.left.app", systemItemIdentifier: nil),
+                .init(midX: 3662, bundleIdentifier: "jacklandrin.OnlySwitch", systemItemIdentifier: nil),
+                .init(midX: 3700, bundleIdentifier: "jacklandrin.OnlySwitch", systemItemIdentifier: nil)
+            ])
+        )
+
+        #expect(throws: MenuBarIconHidingError.invalidMarkerPosition) {
+            try resolver.itemsToKeepVisible()
+        }
+    }
+
+    @Test("a menu bar without OnlySwitch's items yet is rejected")
+    func resolverRejectsMenuBarWithoutOwnItems() {
+        let resolver = AXMenuBarVisibleItemResolver(
+            markerScreenX: { 500 }, mainItemScreenX: { 600 }, runningBundleIdentifiers: { [] },
+            ownBundleIdentifier: { "jacklandrin.OnlySwitch" },
+            source: RecordingAXSource(isTrusted: true, items: [
+                .init(midX: 420, bundleIdentifier: "com.left.app", systemItemIdentifier: nil)
+            ])
+        )
+
+        #expect(throws: MenuBarIconHidingError.invalidMarkerPosition) {
+            try resolver.itemsToKeepVisible()
+        }
+    }
+
+    @Test("a marker within a few points of the menu bar's position is accepted")
+    func resolverAcceptsMarkerWithinTolerance() throws {
+        let resolver = AXMenuBarVisibleItemResolver(
+            markerScreenX: { 503 }, mainItemScreenX: { 600 }, runningBundleIdentifiers: { [] },
+            ownBundleIdentifier: { "jacklandrin.OnlySwitch" },
+            source: RecordingAXSource(isTrusted: true, items: [ownMarker])
+        )
+
+        #expect(try resolver.itemsToKeepVisible().allowedBundleIdentifiers == ["jacklandrin.OnlySwitch"])
+    }
     @Test("resolver keeps the marker's visible-side items")
     func resolverKeepsOnlySwitchAndItemsAtOrRightOfMarker() throws {
         let resolver = AXMenuBarVisibleItemResolver(
             markerScreenX: { 500 }, mainItemScreenX: { 600 }, runningBundleIdentifiers: { [] }, ownBundleIdentifier: { "jacklandrin.OnlySwitch" },
             source: RecordingAXSource(isTrusted: true, items: [
+                .init(midX: 500, bundleIdentifier: "jacklandrin.OnlySwitch", systemItemIdentifier: nil),
                 .init(midX: 420, bundleIdentifier: "com.left.app", systemItemIdentifier: nil),
                 .init(midX: 500, bundleIdentifier: "com.equal.app", systemItemIdentifier: nil),
                 .init(midX: 620, bundleIdentifier: nil, systemItemIdentifier: 2)
@@ -340,7 +386,7 @@ struct AXMenuBarVisibleItemResolverTests {
         }
         let resolver = AXMenuBarVisibleItemResolver(
             markerScreenX: { 500 }, mainItemScreenX: { 600 }, runningBundleIdentifiers: { [] }, ownBundleIdentifier: { "jacklandrin.OnlySwitch" },
-            source: RecordingAXSource(isTrusted: true, items: records)
+            source: RecordingAXSource(isTrusted: true, items: records + [.init(midX: 500, bundleIdentifier: "jacklandrin.OnlySwitch", systemItemIdentifier: nil)])
         )
 
         #expect(try resolver.itemsToKeepVisible().allowedSystemItemIdentifiers == [0, 1, 2, 3, 4, 5, 6, 7, 8])
@@ -351,6 +397,7 @@ struct AXMenuBarVisibleItemResolverTests {
         let resolver = AXMenuBarVisibleItemResolver(
             markerScreenX: { 500 }, mainItemScreenX: { 600 }, runningBundleIdentifiers: { [] }, ownBundleIdentifier: { "jacklandrin.OnlySwitch" },
             source: RecordingAXSource(isTrusted: true, items: [
+                .init(midX: 500, bundleIdentifier: "jacklandrin.OnlySwitch", systemItemIdentifier: nil),
                 .init(midX: 420, bundleIdentifier: "com.left.bundle", systemItemIdentifier: nil),
                 .init(midX: 450, bundleIdentifier: nil, systemItemIdentifier: 2),
                 .init(midX: 580, bundleIdentifier: nil, systemItemIdentifier: nil),
@@ -372,6 +419,7 @@ struct AXMenuBarVisibleItemResolverTests {
         let resolver = AXMenuBarVisibleItemResolver(
             markerScreenX: { 500 }, mainItemScreenX: { 600 }, runningBundleIdentifiers: { [] }, ownBundleIdentifier: { "jacklandrin.OnlySwitch" },
             source: RecordingAXSource(isTrusted: true, items: [
+                .init(midX: 500, bundleIdentifier: "jacklandrin.OnlySwitch", systemItemIdentifier: nil),
                 .init(midX: 600, bundleIdentifier: nil, systemItemIdentifier: 99)
             ])
         )
@@ -440,7 +488,7 @@ struct AXMenuBarVisibleItemResolverTests {
     func resolverKeepsOnlySwitchBundleWithValidGeometry() throws {
         let resolver = AXMenuBarVisibleItemResolver(
             markerScreenX: { 500 }, mainItemScreenX: { 600 }, runningBundleIdentifiers: { [] }, ownBundleIdentifier: { "jacklandrin.OnlySwitch" },
-            source: RecordingAXSource(isTrusted: true, items: [])
+            source: RecordingAXSource(isTrusted: true, items: [ownMarker])
         )
 
         #expect(try resolver.itemsToKeepVisible() == .init(
@@ -455,7 +503,7 @@ struct AXMenuBarVisibleItemResolverTests {
             mainItemScreenX: { 600 },
             runningBundleIdentifiers: { Set(["com.running.not-in-ax"]) },
             ownBundleIdentifier: { "jacklandrin.OnlySwitch" },
-            source: RecordingAXSource(isTrusted: true, items: [])
+            source: RecordingAXSource(isTrusted: true, items: [ownMarker])
         )
 
         #expect(try resolver.itemsToKeepVisible().allowedBundleIdentifiers == [
@@ -471,6 +519,7 @@ struct AXMenuBarVisibleItemResolverTests {
             runningBundleIdentifiers: { Set(["com.left.only", "com.not-in-ax"]) },
             ownBundleIdentifier: { "jacklandrin.OnlySwitch" },
             source: RecordingAXSource(isTrusted: true, items: [
+                .init(midX: 500, bundleIdentifier: "jacklandrin.OnlySwitch", systemItemIdentifier: nil),
                 .init(midX: 420, bundleIdentifier: "com.left.only", systemItemIdentifier: nil)
             ])
         )
@@ -488,6 +537,7 @@ struct AXMenuBarVisibleItemResolverTests {
             runningBundleIdentifiers: { Set(["com.duplicate.bundle"]) },
             ownBundleIdentifier: { "jacklandrin.OnlySwitch" },
             source: RecordingAXSource(isTrusted: true, items: [
+                .init(midX: 500, bundleIdentifier: "jacklandrin.OnlySwitch", systemItemIdentifier: nil),
                 .init(midX: 420, bundleIdentifier: "com.duplicate.bundle", systemItemIdentifier: nil),
                 .init(midX: 620, bundleIdentifier: "com.duplicate.bundle", systemItemIdentifier: nil)
             ])
@@ -506,6 +556,7 @@ struct AXMenuBarVisibleItemResolverTests {
             runningBundleIdentifiers: { Set<String>() },
             ownBundleIdentifier: { "jacklandrin.OnlySwitch" },
             source: RecordingAXSource(isTrusted: true, items: [
+                .init(midX: 500, bundleIdentifier: "jacklandrin.OnlySwitch", systemItemIdentifier: nil),
                 .init(midX: 420, bundleIdentifier: "jacklandrin.OnlySwitch", systemItemIdentifier: nil)
             ])
         )
@@ -521,6 +572,7 @@ struct AXMenuBarVisibleItemResolverTests {
             runningBundleIdentifiers: { Set<String>() },
             ownBundleIdentifier: { "jacklandrin.OnlySwitch" },
             source: RecordingAXSource(isTrusted: true, items: [
+                .init(midX: 500, bundleIdentifier: "jacklandrin.OnlySwitch", systemItemIdentifier: nil),
                 .init(midX: 420, bundleIdentifier: nil, systemItemIdentifier: nil),
                 .init(midX: 620, bundleIdentifier: nil, systemItemIdentifier: 99)
             ])
@@ -605,7 +657,7 @@ struct AXMenuBarRecordCollectorTests {
             mainItemScreenX: { 1600 },
             runningBundleIdentifiers: { Set(["com.tencent.xinWeChat", "jacklandrin.OnlySwitch"]) },
             ownBundleIdentifier: { "jacklandrin.OnlySwitch" },
-            source: RecordingAXSource(isTrusted: true, items: records)
+            source: RecordingAXSource(isTrusted: true, items: records + [.init(midX: 1550, bundleIdentifier: "jacklandrin.OnlySwitch", systemItemIdentifier: nil)])
         )
 
         #expect(try resolver.itemsToKeepVisible() == .init(
