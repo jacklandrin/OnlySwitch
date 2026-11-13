@@ -1,5 +1,6 @@
 import AppKit
 @preconcurrency import ApplicationServices
+import Combine
 import Defines
 import Foundation
 import Testing
@@ -31,6 +32,27 @@ struct HideMenubarIconsSettingVMTests {
 
         #expect(!legacy.showsNativeVisibilityLimitation)
         #expect(native.showsNativeVisibilityLimitation)
+    }
+
+    @Test("changing a setting notifies the settings view")
+    func settingChangesNotifyObservers() {
+        let preferences = Preferences.shared
+        let originalTime = preferences.autoCollapseMenubarTime
+        let originalEnabled = preferences.menubarCollaspable
+        defer {
+            preferences.autoCollapseMenubarTime = originalTime
+            preferences.menubarCollaspable = originalEnabled
+        }
+        let vm = HideMenubarIconsSettingVM(operatingSystemMajorVersion: { 27 })
+        var notifications = 0
+        let cancellable = vm.objectWillChange.sink { notifications += 1 }
+        defer { cancellable.cancel() }
+
+        vm.automaticallyHideTime = originalTime == 5 ? 10 : 5
+        #expect(notifications == 1)
+
+        vm.isEnable = !originalEnabled
+        #expect(notifications == 2)
     }
 }
 

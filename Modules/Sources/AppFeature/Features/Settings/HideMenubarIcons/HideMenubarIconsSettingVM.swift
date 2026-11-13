@@ -25,6 +25,8 @@ class HideMenubarIconsSettingVM:ObservableObject {
             return preferences.menubarCollaspable
         }
         set {
+            // Preferences is a class, so changing its property doesn't fire @Published.
+            objectWillChange.send()
             preferences.menubarCollaspable = newValue
         }
     }
@@ -34,6 +36,8 @@ class HideMenubarIconsSettingVM:ObservableObject {
             return preferences.autoCollapseMenubarTime
         }
         set {
+            // Preferences is a class, so changing its property doesn't fire @Published.
+            objectWillChange.send()
             preferences.autoCollapseMenubarTime = newValue
         }
     }
