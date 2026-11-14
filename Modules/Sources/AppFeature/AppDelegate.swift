@@ -151,6 +151,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             name: .desktopPetVisibilityChanged,
             object: nil
         )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(desktopPetNeedsSettingsDidChange),
+            name: .desktopPetNeedsSettingsChanged,
+            object: nil
+        )
         NotificationCenter.default.removeObserver(
             self,
             name: .dockPreviewVisibilityChanged,
@@ -220,6 +226,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         if let previewSwitch = SwitchManager.shared.getSwitch(of: .dockPreview) {
             previewSwitch.delegate?.shouldRefreshIfNeed(aSwitch: previewSwitch)
         }
+    }
+
+    @objc private func desktopPetNeedsSettingsDidChange() {
+        desktopPetController?.reloadNeedsSettings()
     }
 
     @objc private func desktopPetVisibilityDidChange() {

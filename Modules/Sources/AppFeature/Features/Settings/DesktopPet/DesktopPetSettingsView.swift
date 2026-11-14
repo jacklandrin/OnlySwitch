@@ -34,6 +34,15 @@ struct DesktopPetSettingsView: View {
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             }
+
+            Section {
+                Toggle("Desktop Pet Gets Hungry".localized(), isOn: $store.isHungerEnabled)
+            } footer: {
+                Text("Desktop Pet Gets Hungry Footer".localized())
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
         }
         .formStyle(.grouped)
         .animation(.default, value: store.mode)

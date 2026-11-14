@@ -21,12 +21,14 @@ struct DesktopPetSettingsFeatureTests {
             DesktopPetSettingsFeature()
         } withDependencies: {
             $0.desktopPetClickActionStorage.load = { .control(target) }
+            $0.desktopPetHungerSetting.load = { false }
             $0.scheduleExecutor.catalog = { catalog }
         }
 
         await store.send(.task) {
             $0.clickAction = .control(target)
             $0.mode = .control
+            $0.isHungerEnabled = false
         }
         await store.receive(\.catalogLoaded) {
             $0.catalog = catalog
@@ -81,6 +83,22 @@ struct DesktopPetSettingsFeatureTests {
         await store.send(.binding(.set(\.mode, .control))) {
             $0.mode = .control
         }
+    }
+
+    @Test func togglingHungerSaves() async {
+        let saved = LockIsolated<[Bool]>([])
+        let store = TestStore(initialState: DesktopPetSettingsFeature.State()) {
+            DesktopPetSettingsFeature()
+        } withDependencies: {
+            $0.desktopPetHungerSetting.save = { value in saved.withValue { $0.append(value) } }
+        }
+
+        await store.send(.binding(.set(\.isHungerEnabled, false))) {
+            $0.isHungerEnabled = false
+        }
+        await store.finish()
+
+        #expect(saved.value == [false])
     }
 
     @Test func missingTargetIsReportedOnlyAfterCatalogLoads() {

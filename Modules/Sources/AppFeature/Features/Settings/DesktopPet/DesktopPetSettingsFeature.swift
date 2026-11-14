@@ -14,6 +14,7 @@ struct DesktopPetSettingsFeature {
     @ObservableState
     struct State: Equatable {
         var clickAction: DesktopPetClickAction = .onlyControl
+        var isHungerEnabled = true
         var mode: Mode = .onlyControl
         var catalog: [RemoteControlDescriptor] = []
         var targetSearch = ""
@@ -44,6 +45,7 @@ struct DesktopPetSettingsFeature {
     }
 
     @Dependency(\.desktopPetClickActionStorage) var storage
+    @Dependency(\.desktopPetHungerSetting) var hungerSetting
     @Dependency(\.scheduleExecutor) var executor
 
     var body: some ReducerOf<Self> {
@@ -55,11 +57,16 @@ struct DesktopPetSettingsFeature {
                 state.clickAction = .onlyControl
                 return save(.onlyControl)
 
+            case .binding(\.isHungerEnabled):
+                let isEnabled = state.isHungerEnabled
+                return .run { [hungerSetting] _ in hungerSetting.save(isEnabled) }
+
             case .binding:
                 return .none
 
             case .task:
                 state.clickAction = storage.load()
+                state.isHungerEnabled = hungerSetting.load()
                 state.mode = state.target == nil ? .onlyControl : .control
                 return .run { [executor] send in
                     await send(.catalogLoaded(await executor.catalog()))
