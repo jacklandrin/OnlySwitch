@@ -1,3 +1,4 @@
+import DesktopPetSkinKit
 import SwiftUI
 
 public struct DesktopPetView: View {
@@ -12,6 +13,7 @@ public struct DesktopPetView: View {
     private let isHungry: Bool
     private let reaction: DesktopPetReaction?
     private let reactionStartedAt: Date?
+    private let skin: DesktopPetSkin?
 
     public init(
         isActive: Bool = true,
@@ -22,7 +24,8 @@ public struct DesktopPetView: View {
         workingAgents: [DesktopPetAgent] = [],
         isHungry: Bool = false,
         reaction: DesktopPetReaction? = nil,
-        reactionStartedAt: Date? = nil
+        reactionStartedAt: Date? = nil,
+        skin: DesktopPetSkin? = nil
     ) {
         self.isActive = isActive
         self.isDragging = isDragging
@@ -33,13 +36,14 @@ public struct DesktopPetView: View {
         self.isHungry = isHungry
         self.reaction = reaction
         self.reactionStartedAt = reactionStartedAt
+        self.skin = skin
     }
 
     public var body: some View {
         TimelineView(
             .animation(
                 minimumInterval: DesktopPetRefreshPolicy.minimumInterval,
-                paused: DesktopPetRefreshPolicy.isPaused(
+                paused: skin != nil || DesktopPetRefreshPolicy.isPaused(
                     isActive: isActive,
                     isDragging: isDragging,
                     reduceMotion: reduceMotion
@@ -60,17 +64,36 @@ public struct DesktopPetView: View {
             )
 
             ZStack(alignment: .top) {
-                DesktopPetArtwork(
-                    motion: motion,
-                    pomodoroPhase: pomodoroState?.phase,
-                    isControlPresented: isControlPresented,
-                    isDragging: isDragging,
-                    reduceMotion: reduceMotion,
-                    isMusicPlaying: isMusicPlaying,
-                    isAgentWorking: !workingAgents.isEmpty,
-                    isHungry: isHungry,
-                    reaction: reaction
-                )
+                Group {
+                    if let skin {
+                        DesktopPetSkinWebView(
+                            skin: skin,
+                            state: DesktopPetAnimationState(
+                                pomodoroPhase: pomodoroState?.phase,
+                                isMusicPlaying: isMusicPlaying,
+                                isAgentWorking: !workingAgents.isEmpty,
+                                isHungry: isHungry,
+                                reaction: reaction,
+                                isDragging: isDragging,
+                                isControlPresented: isControlPresented
+                            ),
+                            reduceMotion: reduceMotion,
+                            isPaused: !isActive
+                        )
+                    } else {
+                        DesktopPetArtwork(
+                            motion: motion,
+                            pomodoroPhase: pomodoroState?.phase,
+                            isControlPresented: isControlPresented,
+                            isDragging: isDragging,
+                            reduceMotion: reduceMotion,
+                            isMusicPlaying: isMusicPlaying,
+                            isAgentWorking: !workingAgents.isEmpty,
+                            isHungry: isHungry,
+                            reaction: reaction
+                        )
+                    }
+                }
                 .frame(
                     width: DesktopPetMetrics.artworkSize.width,
                     height: DesktopPetMetrics.artworkSize.height

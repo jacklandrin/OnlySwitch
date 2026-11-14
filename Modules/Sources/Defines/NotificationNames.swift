@@ -17,6 +17,7 @@ public extension Notification.Name {
     static let changeMenuBarIcon = Notification.Name("changeMenuBarIcon")
     static let desktopPetVisibilityChanged = Notification.Name("desktopPetVisibilityChanged")
     static let desktopPetNeedsSettingsChanged = Notification.Name("desktopPetNeedsSettingsChanged")
+    static let desktopPetSkinChanged = Notification.Name("desktopPetSkinChanged")
     static let dockPreviewVisibilityChanged = Notification.Name("dockPreviewVisibilityChanged")
     static let volumeChange = Notification.Name("volumeChange")
     static let soundWaveToggle = Notification.Name("soundWaveToggleNotification")

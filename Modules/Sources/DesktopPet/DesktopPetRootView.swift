@@ -74,7 +74,8 @@ struct DesktopPetRootView: View {
             workingAgents: activityStore.runningAgents,
             isHungry: needsStore.isHungry,
             reaction: needsStore.reaction,
-            reactionStartedAt: needsStore.reactionStartedAt
+            reactionStartedAt: needsStore.reactionStartedAt,
+            skin: presentation.skin
         )
         .rotationEffect(.degrees(presentation.edgeTilt))
         .animation(

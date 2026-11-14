@@ -16,6 +16,7 @@ import Networking
 import FirebaseCore
 import Extensions
 import DesktopPet
+import DesktopPetSkinKit
 import UserNotifications
 import OnlySwitchPersistence
 import OSLog
@@ -158,6 +159,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         )
         NotificationCenter.default.removeObserver(
             self,
+            name: .desktopPetSkinChanged,
+            object: nil
+        )
+        NotificationCenter.default.removeObserver(
+            self,
             name: .dockPreviewVisibilityChanged,
             object: nil
         )
@@ -195,6 +201,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             controller?.setControlPresented(isPresented)
         }
         controller.setControlPresented(onlyControlWindow.isShowing)
+        applySelectedDesktopPetSkin()
 
         if Preferences.shared.showDesktopPet {
             controller.show()
@@ -211,6 +218,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             self,
             selector: #selector(desktopPetNeedsSettingsDidChange),
             name: .desktopPetNeedsSettingsChanged,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(applySelectedDesktopPetSkin),
+            name: .desktopPetSkinChanged,
             object: nil
         )
     }
@@ -230,6 +243,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         dockPreviewController.setEnabled(Preferences.shared.dockPreviewEnabled)
         if let previewSwitch = SwitchManager.shared.getSwitch(of: .dockPreview) {
             previewSwitch.delegate?.shouldRefreshIfNeed(aSwitch: previewSwitch)
+        }
+    }
+
+    /// Shows the selected custom skin, or the built-in pet when none is selected or it no longer exists.
+    @objc private func applySelectedDesktopPetSkin() {
+        let library = DesktopPetSkinLibraryClient.liveValue
+        Task { @MainActor [weak self] in
+            let skins = await library.load()
+            let selected = library.selectedID().flatMap { id in skins.first { $0.id == id } }
+            self?.desktopPetController?.setSkin(selected)
         }
     }
 

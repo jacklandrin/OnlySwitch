@@ -1,4 +1,5 @@
 import AppKit
+import DesktopPetSkinKit
 import SwiftUI
 import ComposableArchitecture
 
@@ -164,6 +165,12 @@ public final class DesktopPetController: NSObject {
     public func setControlPresented(_ isPresented: Bool) {
         presentation.isControlPresented = isPresented
         updateEdgeVisibility()
+    }
+
+    /// Shows a custom skin, or the built-in pet for `nil`. A web view exists only while a skin is set.
+    public func setSkin(_ skin: DesktopPetSkin?) {
+        guard presentation.skin != skin else { return }
+        presentation.skin = skin
     }
 
     public func setPomodoroState(_ state: DesktopPetPomodoroState?) {

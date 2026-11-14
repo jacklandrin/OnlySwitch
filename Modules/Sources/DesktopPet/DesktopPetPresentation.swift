@@ -1,3 +1,4 @@
+import DesktopPetSkinKit
 import Observation
 
 @MainActor
@@ -9,4 +10,6 @@ final class DesktopPetPresentation {
     var pomodoroState: DesktopPetPomodoroState?
     /// Lean in degrees while the pet peeks out from behind a screen edge.
     var edgeTilt: Double = 0
+    /// The custom skin to show instead of the built-in pet.
+    var skin: DesktopPetSkin?
 }
