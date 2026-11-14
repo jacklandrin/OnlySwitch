@@ -43,6 +43,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     }
     var checkUpdatePresenter = GitHubPresenter.shared
     private var desktopPetController: DesktopPetController?
+    private var desktopPetSkinTask: Task<Void, Never>?
     private var desktopPetPomodoroRefreshTask: Task<Void, Never>?
     private let remoteAccessController = RemoteAccessController()
     private lazy var crashReportPrompt = CrashReportPrompt()
@@ -249,8 +250,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     /// Shows the selected custom skin, or the built-in pet when none is selected or it no longer exists.
     @objc private func applySelectedDesktopPetSkin() {
         let library = DesktopPetSkinLibraryClient.liveValue
-        Task { @MainActor [weak self] in
+        // Only the latest change wins when several arrive while the library is loading.
+        desktopPetSkinTask?.cancel()
+        desktopPetSkinTask = Task { @MainActor [weak self] in
             let skins = await library.load()
+            guard !Task.isCancelled else { return }
             let selected = library.selectedID().flatMap { id in skins.first { $0.id == id } }
             self?.desktopPetController?.setSkin(selected)
         }

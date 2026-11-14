@@ -106,6 +106,7 @@ public final class DesktopPetController: NSObject {
         constrainPanelToVisibleScreen()
         saveFrame()
         presentation.isActive = true
+        presentation.isShown = true
         isVisible = true
         activityStore.send(.start)
         needsStore.send(.start)
@@ -127,6 +128,7 @@ public final class DesktopPetController: NSObject {
         saveFrame()
         presentation.isActive = false
         presentation.isDragging = false
+        presentation.isShown = false
         isVisible = false
         panel.orderOut(nil)
     }
