@@ -10,29 +10,20 @@ struct DesktopPetSkinsSection: View {
 
     var body: some View {
         Section {
-            Picker(
-                "Desktop Pet Appearance".localized(),
-                selection: Binding(
-                    get: { store.selectedID },
-                    set: { store.send(.selected($0)) }
-                )
-            ) {
-                Text("Desktop Pet Built-in".localized()).tag(UUID?.none)
-                ForEach(store.skins) { skin in
-                    Text(skin.name).tag(UUID?.some(skin.id))
-                }
-            }
-            .pickerStyle(.radioGroup)
+            DesktopPetSkinRow(
+                skin: nil,
+                isSelected: store.selectedID == nil,
+                onSelect: { store.send(.selected(nil)) },
+                onDelete: {}
+            )
 
             ForEach(store.skins) { skin in
-                LabeledContent(skin.name) {
-                    Button("Desktop Pet Delete Skin".localized(), systemImage: "trash", role: .destructive) {
-                        skinPendingDeletion = skin
-                    }
-                    .labelStyle(.iconOnly)
-                    .buttonStyle(.borderless)
-                    .help("Desktop Pet Delete Skin".localized())
-                }
+                DesktopPetSkinRow(
+                    skin: skin,
+                    isSelected: store.selectedID == skin.id,
+                    onSelect: { store.send(.selected(skin.id)) },
+                    onDelete: { skinPendingDeletion = skin }
+                )
             }
 
             Button("Desktop Pet Create With AI".localized(), systemImage: "sparkles") {
