@@ -24,6 +24,8 @@ public enum DesktopPetSkinPromptBuilder {
         The background stays transparent. Keep the character centered and leave about 8 px of margin.
         - Every state needs at least one selector of the form [data-state="<state>"] … in the CSS.
         - Only url(#id) and data:image URLs are allowed. Prefer SVG shapes and CSS transforms.
+        - Do not use @font-face, image-set(), src(), or SVG <set>/<animate> on href. Write URLs and CSS \
+        plainly: no character references other than &amp; &lt; &gt; &quot; and no escapes inside url().
         - Keep it under 40 KB. Make it cute, readable at small size, and look good on light and dark desktops.
         - If the request is inappropriate, reply with exactly: ERROR: <short reason>.
 

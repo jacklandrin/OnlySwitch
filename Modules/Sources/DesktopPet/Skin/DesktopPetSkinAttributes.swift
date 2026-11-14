@@ -1,7 +1,16 @@
 /// Converts pet state into the six host attributes of the skin contract. Values come only from
 /// enums and booleans, never from user or model text, so the generated script cannot be injected.
 enum DesktopPetSkinAttributes {
-    typealias Attribute = (name: String, value: String)
+    /// Only `values(for:reduceMotion:isPaused:)` can create one, so `script(_:)` never sees free text.
+    struct Attribute: Equatable {
+        let name: String
+        let value: String
+
+        fileprivate init(_ name: String, _ value: String) {
+            self.name = name
+            self.value = value
+        }
+    }
 
     static func values(for state: DesktopPetAnimationState, reduceMotion: Bool, isPaused: Bool) -> [Attribute] {
         let pomodoro = switch state.pomodoroPhase {
@@ -10,12 +19,12 @@ enum DesktopPetSkinAttributes {
         case nil: "none"
         }
         return [
-            ("data-state", state.animation.rawValue),
-            ("data-control", state.isControlPresented ? "on" : "off"),
-            ("data-pomodoro", pomodoro),
-            ("data-hungry", String(state.isHungry)),
-            ("data-reduce-motion", String(reduceMotion)),
-            ("data-paused", String(isPaused)),
+            Attribute("data-state", state.animation.rawValue),
+            Attribute("data-control", state.isControlPresented ? "on" : "off"),
+            Attribute("data-pomodoro", pomodoro),
+            Attribute("data-hungry", String(state.isHungry)),
+            Attribute("data-reduce-motion", String(reduceMotion)),
+            Attribute("data-paused", String(isPaused)),
         ]
     }
 
