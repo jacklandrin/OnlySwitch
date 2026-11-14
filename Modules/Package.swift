@@ -82,6 +82,10 @@ let package = Package(
             targets: ["DesktopPet"]
         ),
         .library(
+            name: "DesktopPetSkinKit",
+            targets: ["DesktopPetSkinKit"]
+        ),
+        .library(
             name: "RemoteCore",
             targets: ["RemoteCore"]
         ),
@@ -163,7 +167,7 @@ let package = Package(
         .testTarget(
             name: "AppFeatureTests",
             dependencies: [
-                "AppFeature", "Aphrodite", "Defines", "DesktopPet", "DisplayBrightness", "Extensions",
+                "AppFeature", "Aphrodite", "Defines", "DesktopPet", "DesktopPetSkinKit", "DisplayBrightness", "Extensions",
                 "OnlyAgent", "OnlyControl", "OnlySwitchObjC", "OnlySwitchPersistence", "PrivilegedHelperCore",
                 "RemoteCore", "RemoteTransport", "Screenshots", "SoundMixerEQ", "Switches", "SystemMonitor",
                 "Tailscale", "Utilities",
@@ -283,6 +287,7 @@ let package = Package(
                 "Extensions",
                 "Defines",
                 "Design",
+                "DesktopPetSkinKit",
                 "Networking"
             ],
             resources: [
@@ -331,8 +336,12 @@ let package = Package(
             name: "DesktopPet",
             dependencies: [
                 "Design",
+                "DesktopPetSkinKit",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ]
+        ),
+        .target(
+            name: "DesktopPetSkinKit"
         ),
         .target(
             name: "RemoteCore"
@@ -355,6 +364,7 @@ let package = Package(
                 "Switches",
                 "Authenticator",
                 "DesktopPet",
+                "DesktopPetSkinKit",
                 "OnlyControl",
                 "OnlyAgent",
                 "Aphrodite",
