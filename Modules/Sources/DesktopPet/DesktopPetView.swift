@@ -9,6 +9,9 @@ public struct DesktopPetView: View {
     private let pomodoroState: DesktopPetPomodoroState?
     private let isMusicPlaying: Bool
     private let workingAgents: [DesktopPetAgent]
+    private let isHungry: Bool
+    private let reaction: DesktopPetReaction?
+    private let reactionStartedAt: Date?
 
     public init(
         isActive: Bool = true,
@@ -16,7 +19,10 @@ public struct DesktopPetView: View {
         isControlPresented: Bool = false,
         pomodoroState: DesktopPetPomodoroState? = nil,
         isMusicPlaying: Bool = false,
-        workingAgents: [DesktopPetAgent] = []
+        workingAgents: [DesktopPetAgent] = [],
+        isHungry: Bool = false,
+        reaction: DesktopPetReaction? = nil,
+        reactionStartedAt: Date? = nil
     ) {
         self.isActive = isActive
         self.isDragging = isDragging
@@ -24,6 +30,9 @@ public struct DesktopPetView: View {
         self.pomodoroState = pomodoroState
         self.isMusicPlaying = isMusicPlaying
         self.workingAgents = workingAgents
+        self.isHungry = isHungry
+        self.reaction = reaction
+        self.reactionStartedAt = reactionStartedAt
     }
 
     public var body: some View {
@@ -44,7 +53,10 @@ public struct DesktopPetView: View {
                 isDragging: isDragging,
                 reduceMotion: reduceMotion,
                 isMusicPlaying: isMusicPlaying,
-                isAgentWorking: !workingAgents.isEmpty
+                isAgentWorking: !workingAgents.isEmpty,
+                isHungry: isHungry,
+                reaction: reaction,
+                reactionStartedAt: reactionStartedAt
             )
 
             ZStack(alignment: .top) {
@@ -55,7 +67,9 @@ public struct DesktopPetView: View {
                     isDragging: isDragging,
                     reduceMotion: reduceMotion,
                     isMusicPlaying: isMusicPlaying,
-                    isAgentWorking: !workingAgents.isEmpty
+                    isAgentWorking: !workingAgents.isEmpty,
+                    isHungry: isHungry,
+                    reaction: reaction
                 )
                 .frame(
                     width: DesktopPetMetrics.artworkSize.width,
@@ -91,6 +105,10 @@ public struct DesktopPetView: View {
         if !workingAgents.isEmpty {
             values.append(workingAgents.map(\.name).joined(separator: ", "))
             values.append(String(localized: "Agent working", bundle: .main))
+        }
+        let needs = DesktopPetAnimationState(isHungry: isHungry, reaction: reaction)
+        if let key = needs.accessibilityStatusKey {
+            values.append(Bundle.main.localizedString(forKey: key, value: nil, table: nil))
         }
         return values.joined(separator: ", ")
     }

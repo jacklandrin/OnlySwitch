@@ -8,6 +8,8 @@ struct DesktopPetArtwork: View {
     let reduceMotion: Bool
     var isMusicPlaying = false
     var isAgentWorking = false
+    var isHungry = false
+    var reaction: DesktopPetReaction?
 
     var body: some View {
         ZStack {
@@ -81,24 +83,15 @@ struct DesktopPetArtwork: View {
                 ))
                 .frame(width: 38, height: 38)
                 .shadow(color: .cyan.opacity(0.6), radius: 5)
-                .offset(
-                    x: (isControlPresented ? 20 : -20)
-                        + (isControlPresented ? 0 : motion.sliderOffset)
-                )
+                .offset(x: faceOffset)
 
-            HStack(spacing: 5) {
-                Capsule()
-                    .fill(Color(red: 0.04, green: 0.17, blue: 0.32))
-                    .frame(width: 4, height: 10)
-                Capsule()
-                    .fill(Color(red: 0.04, green: 0.17, blue: 0.32))
-                    .frame(width: 4, height: 10)
+            DesktopPetFace(isHappy: reaction != nil, eyeScale: motion.eyeScale)
+                .offset(x: faceOffset)
+
+            if let reaction {
+                DesktopPetReactionOverlay(reaction: reaction, motion: motion)
+                    .offset(x: faceOffset)
             }
-            .scaleEffect(x: 1, y: motion.eyeScale)
-            .offset(
-                x: (isControlPresented ? 20 : -20)
-                    + (isControlPresented ? 0 : motion.sliderOffset)
-            )
 
             Circle()
                 .stroke(.mint, lineWidth: 3)
@@ -118,6 +111,11 @@ struct DesktopPetArtwork: View {
                 .blur(radius: 1)
                 .offset(x: -31, y: -29)
 
+            if isHungry, reaction != .eating {
+                DesktopPetNeedBadge()
+                    .offset(x: 46, y: -44)
+            }
+
             if isAgentWorking {
                 DesktopPetWorkingIndicator(pulse: motion.musicPulse)
                     .offset(y: 33)
@@ -134,6 +132,10 @@ struct DesktopPetArtwork: View {
         .offset(x: motion.horizontalOffset, y: motion.verticalOffset)
         .animation(reduceMotion ? nil : .snappy(duration: 0.18), value: isDragging)
         .animation(reduceMotion ? nil : .snappy(duration: 0.28), value: isControlPresented)
+    }
+
+    private var faceOffset: CGFloat {
+        (isControlPresented ? 20 : -20) + (isControlPresented ? 0 : motion.sliderOffset)
     }
 
     private var haloColor: Color {
