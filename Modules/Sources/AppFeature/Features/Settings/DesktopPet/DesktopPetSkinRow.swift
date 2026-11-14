@@ -16,30 +16,34 @@ struct DesktopPetSkinRow: View {
     }
 
     var body: some View {
-        Button(action: onSelect) {
-            HStack(spacing: 12) {
-                DesktopPetSkinPreviewTile(skin: skin, isAnimating: isSelected || isHovered)
-                Text(name)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                if isSelected {
-                    Image(systemName: "checkmark")
-                        .foregroundStyle(.tint)
-                        .accessibilityHidden(true)
+        HStack(spacing: 12) {
+            // Selection and deletion are sibling buttons so each gets its own click and accessibility element.
+            Button(action: onSelect) {
+                HStack(spacing: 12) {
+                    DesktopPetSkinPreviewTile(skin: skin, isAnimating: isSelected || isHovered)
+                    Text(name)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    if isSelected {
+                        Image(systemName: "checkmark")
+                            .foregroundStyle(.tint)
+                            .accessibilityHidden(true)
+                    }
                 }
-                if skin != nil {
-                    Button("Desktop Pet Delete Skin".localized(), systemImage: "trash", role: .destructive, action: onDelete)
-                        .labelStyle(.iconOnly)
-                        .buttonStyle(.borderless)
-                        .help("Desktop Pet Delete Skin".localized())
-                }
+                .contentShape(.rect)
             }
-            .padding(6)
-            .background(isSelected ? AnyShapeStyle(.tint.opacity(0.12)) : AnyShapeStyle(.clear), in: .rect(cornerRadius: 12))
-            .contentShape(.rect(cornerRadius: 12))
+            .buttonStyle(.plain)
+            .accessibilityLabel(name)
+            .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
+
+            if skin != nil {
+                Button("Desktop Pet Delete Skin".localized(), systemImage: "trash", role: .destructive, action: onDelete)
+                    .labelStyle(.iconOnly)
+                    .buttonStyle(.borderless)
+                    .help("Desktop Pet Delete Skin".localized())
+            }
         }
-        .buttonStyle(.plain)
+        .padding(6)
+        .background(isSelected ? AnyShapeStyle(.tint.opacity(0.12)) : AnyShapeStyle(.clear), in: .rect(cornerRadius: 12))
         .onHover { isHovered = $0 }
-        .accessibilityLabel(name)
-        .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
     }
 }
