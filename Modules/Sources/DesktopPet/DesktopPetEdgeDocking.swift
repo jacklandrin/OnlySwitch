@@ -17,6 +17,14 @@ public enum DesktopPetEdgeDocking {
     static let peekWidth: CGFloat = 56
     static let peekTilt: Double = 16
 
+    /// The least the pet may retreat. A hungry pet keeps peeking out to ask for food.
+    public static func minimumPhase(
+        isControlPresented: Bool, hasCompletion: Bool, hasReaction: Bool, isHungry: Bool
+    ) -> DesktopPetEdgePhase {
+        if isControlPresented || hasCompletion || hasReaction { return .revealed }
+        return isHungry ? .peeking : .hidden
+    }
+
     /// The edge the pet is pushed against, unless another display continues past it there.
     public static func dockEdge(
         for frame: CGRect,
@@ -201,5 +209,16 @@ private extension DesktopPetDockEdge {
     /// Horizontal direction pointing from this edge into the screen.
     var inward: CGFloat {
         self == .left ? 1 : -1
+    }
+}
+
+extension DesktopPetEdgePhase {
+    /// Orders phases by how much of the pet is on screen.
+    var visibility: Int {
+        switch self {
+        case .hidden: 0
+        case .peeking: 1
+        case .revealed: 2
+        }
     }
 }

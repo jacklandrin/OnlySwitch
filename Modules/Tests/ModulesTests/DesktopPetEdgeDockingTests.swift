@@ -185,4 +185,38 @@ struct DesktopPetEdgeDockingTests {
         #expect(spring.isSettled)
         #expect(spring.position == CGPoint(x: 1440, y: 300))
     }
+
+    @Test(arguments: [
+        DesktopPetMinimumPhaseCase(control: false, completion: false, reaction: false, hungry: false, expected: .hidden),
+        DesktopPetMinimumPhaseCase(control: false, completion: false, reaction: false, hungry: true, expected: .peeking),
+        DesktopPetMinimumPhaseCase(control: false, completion: false, reaction: true, hungry: true, expected: .revealed),
+        DesktopPetMinimumPhaseCase(control: false, completion: false, reaction: true, hungry: false, expected: .revealed),
+        DesktopPetMinimumPhaseCase(control: true, completion: false, reaction: false, hungry: false, expected: .revealed),
+        DesktopPetMinimumPhaseCase(control: false, completion: true, reaction: false, hungry: false, expected: .revealed),
+    ])
+    func minimumPhaseKeepsNeedsVisible(_ testCase: DesktopPetMinimumPhaseCase) {
+        #expect(DesktopPetEdgeDocking.minimumPhase(
+            isControlPresented: testCase.control,
+            hasCompletion: testCase.completion,
+            hasReaction: testCase.reaction,
+            isHungry: testCase.hungry
+        ) == testCase.expected)
+    }
+
+    @Test func phasesAreOrderedByVisibility() {
+        #expect(DesktopPetEdgePhase.hidden.visibility < DesktopPetEdgePhase.peeking.visibility)
+        #expect(DesktopPetEdgePhase.peeking.visibility < DesktopPetEdgePhase.revealed.visibility)
+    }
+}
+
+struct DesktopPetMinimumPhaseCase: Sendable, CustomTestStringConvertible {
+    let control: Bool
+    let completion: Bool
+    let reaction: Bool
+    let hungry: Bool
+    let expected: DesktopPetEdgePhase
+
+    var testDescription: String {
+        "control=\(control) completion=\(completion) reaction=\(reaction) hungry=\(hungry) -> \(expected)"
+    }
 }

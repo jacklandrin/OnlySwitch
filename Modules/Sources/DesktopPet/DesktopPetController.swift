@@ -23,6 +23,7 @@ public final class DesktopPetController: NSObject {
     private let panel: DesktopPetPanel
     private let playbackStore: StoreOf<DesktopPetPlaybackFeature>
     private let activityStore: StoreOf<DesktopPetAgentActivityFeature>
+    private let needsStore: StoreOf<DesktopPetNeedsFeature>
     private let presentation = DesktopPetPresentation()
     private var dragStartOrigin: CGPoint?
     private var dragStartMouseLocation: CGPoint?
@@ -54,7 +55,8 @@ public final class DesktopPetController: NSObject {
         onActivate: @escaping @MainActor () -> Void,
         onClose: @escaping @MainActor () -> Void = {},
         playbackClient: DesktopPetPlaybackClient = .init(),
-        activityClient: DesktopPetAgentActivityClient = .liveValue
+        activityClient: DesktopPetAgentActivityClient = .liveValue,
+        needsStorage: DesktopPetNeedsStorage = .liveValue
     ) {
         playbackStore = Store(initialState: DesktopPetPlaybackFeature.State()) {
             DesktopPetPlaybackFeature()
@@ -65,6 +67,11 @@ public final class DesktopPetController: NSObject {
             DesktopPetAgentActivityFeature()
         } withDependencies: {
             $0.desktopPetAgentActivity = activityClient
+        }
+        needsStore = Store(initialState: DesktopPetNeedsFeature.State()) {
+            DesktopPetNeedsFeature()
+        } withDependencies: {
+            $0.desktopPetNeedsStorage = needsStorage
         }
         self.onActivate = onActivate
         self.onClose = onClose
@@ -88,6 +95,7 @@ public final class DesktopPetController: NSObject {
     isolated deinit {
         NotificationCenter.default.removeObserver(self)
         activityStore.send(.stop)
+        needsStore.send(.stop)
         stopEdgeTracking()
     }
 
@@ -99,12 +107,14 @@ public final class DesktopPetController: NSObject {
         presentation.isActive = true
         isVisible = true
         activityStore.send(.start)
+        needsStore.send(.start)
         panel.orderFrontRegardless()
         updateEdgeTracking()
     }
 
     public func hide() {
         activityStore.send(.stop)
+        needsStore.send(.stop)
         clearPlayback()
         stopEdgeTracking()
         if var dock, dock.phase != .revealed {
@@ -143,6 +153,12 @@ public final class DesktopPetController: NSObject {
         setRestingFrame(frame, display: display ?? isVisible)
         constrainPanelToVisibleScreen()
         saveFrame()
+    }
+
+    /// Re-reads the hunger setting after Settings changes it.
+    public func reloadNeedsSettings() {
+        needsStore.send(.settingsChanged)
+        updateEdgeVisibility()
     }
 
     public func setControlPresented(_ isPresented: Bool) {
@@ -186,12 +202,16 @@ public final class DesktopPetController: NSObject {
                 },
                 playbackStore: playbackStore,
                 activityStore: activityStore,
+                needsStore: needsStore,
                 onPlaybackVisibilityChanged: { [weak self] _ in
                     self?.resizeContent()
                 },
                 onActivityVisibilityChanged: { [weak self] in
                     self?.resizeContent()
                     self?.updateEdgeTracking()
+                },
+                onNeedsChanged: { [weak self] in
+                    self?.updateEdgeVisibility()
                 },
                 onClose: { [weak self] in
                     self?.close()
@@ -364,15 +384,7 @@ public final class DesktopPetController: NSObject {
     private func updateEdgeVisibility() {
         guard isVisible, let dock, dragStartOrigin == nil else { return }
 
-        let wanted = presentation.isControlPresented || activityStore.completion != nil
-            ? .revealed
-            : DesktopPetEdgeDocking.phase(
-                forMouseLocation: NSEvent.mouseLocation,
-                restingFrame: dock.restingFrame,
-                edge: dock.edge,
-                screenFrame: dock.screenFrame,
-                current: dock.phase
-            )
+        let wanted = edgePhase(for: dock)
 
         if wanted.visibility >= dock.phase.visibility {
             cancelPendingPhase()
@@ -389,17 +401,26 @@ public final class DesktopPetController: NSObject {
         }
     }
 
-    /// Steps back toward hidden once the linger delay has passed, if the mouse is still away.
-    private func retreatIfMouseIsAway() {
-        guard isVisible, let dock, dragStartOrigin == nil,
-              !presentation.isControlPresented, activityStore.completion == nil else { return }
-        let wanted = DesktopPetEdgeDocking.phase(
+    /// The mouse-driven phase, raised to the least the pet may retreat while it has needs to show.
+    private func edgePhase(for dock: Dock) -> DesktopPetEdgePhase {
+        let mouse = DesktopPetEdgeDocking.phase(
             forMouseLocation: NSEvent.mouseLocation,
             restingFrame: dock.restingFrame,
             edge: dock.edge,
             screenFrame: dock.screenFrame,
             current: dock.phase
         )
+        let minimum = DesktopPetEdgeDocking.minimumPhase(
+            isControlPresented: presentation.isControlPresented, hasCompletion: activityStore.completion != nil,
+            hasReaction: needsStore.reaction != nil, isHungry: needsStore.isHungry
+        )
+        return minimum.visibility > mouse.visibility ? minimum : mouse
+    }
+
+    /// Steps back toward hidden once the linger delay has passed, if the mouse is still away.
+    private func retreatIfMouseIsAway() {
+        guard isVisible, let dock, dragStartOrigin == nil else { return }
+        let wanted = edgePhase(for: dock)
         if wanted.visibility < dock.phase.visibility {
             setEdgePhase(wanted)
         }
@@ -475,16 +496,5 @@ public final class DesktopPetController: NSObject {
 
     private func saveFrame() {
         panel.saveFrame(usingName: Self.autosaveName)
-    }
-}
-
-private extension DesktopPetEdgePhase {
-    /// Orders phases by how much of the pet is on screen.
-    var visibility: Int {
-        switch self {
-        case .hidden: 0
-        case .peeking: 1
-        case .revealed: 2
-        }
     }
 }
