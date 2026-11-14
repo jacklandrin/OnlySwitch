@@ -138,6 +138,11 @@ final class AXMenuBarVisibleItemResolver: MenuBarVisibleItemResolving {
         let ownBundleIdentifiers = Set(
             [ownBundleIdentifier()].compactMap { $0 }.filter { $0.isEmpty == false }
         )
+        // Just after launch AppKit can report a placeholder position for the marker before the menu bar has placed it,
+        // which would put every icon on the visible side. Trust the position only once the menu bar shows OnlySwitch there.
+        guard Self.menuBarShowsOwnItem(at: markerX, in: items, ownBundleIdentifiers: ownBundleIdentifiers) else {
+            throw MenuBarIconHidingError.invalidMarkerPosition
+        }
         let runningBundles = Set(
             runningBundleIdentifiers().filter { $0.isEmpty == false }
         )
@@ -172,6 +177,21 @@ final class AXMenuBarVisibleItemResolver: MenuBarVisibleItemResolving {
             allowedBundleIdentifiers: allowedBundleIdentifiers.sorted(),
             allowedSystemItemIdentifiers: systemItemIdentifiers.sorted()
         )
+    }
+
+    static let markerPositionTolerance: CGFloat = 4
+
+    private static func menuBarShowsOwnItem(
+        at markerX: CGFloat,
+        in items: [AXMenuBarItemRecord],
+        ownBundleIdentifiers: Set<String>
+    ) -> Bool {
+        items.contains { item in
+            guard let bundleIdentifier = item.bundleIdentifier, ownBundleIdentifiers.contains(bundleIdentifier) else {
+                return false
+            }
+            return abs(item.midX - markerX) <= markerPositionTolerance
+        }
     }
 }
 

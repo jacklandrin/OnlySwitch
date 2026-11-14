@@ -22,6 +22,21 @@ final class HideMenubarIconsSwitch: SwitchProvider, @unchecked Sendable {
     private var transitionOwner: UUID?
     
     private var timer:Timer? = nil
+    var isPointerInMenuBar: @MainActor () -> Bool = { MenuBarPointerTracker.isPointerInMenuBar() }
+    @MainActor private var pointerLastInMenuBar: Date?
+    @MainActor private var trackerStorage: MenuBarPointerTracker?
+
+    @MainActor
+    private var pointerTracker: MenuBarPointerTracker {
+        if let trackerStorage {
+            return trackerStorage
+        }
+        let tracker = MenuBarPointerTracker { [weak self] in
+            self?.pointerLastInMenuBar = Date()
+        }
+        trackerStorage = tracker
+        return tracker
+    }
     
     @UserDefaultValue(key: UserDefaults.Key.isMenubarCollapse, defaultValue: false)
     private var isMenubarCollapse:Bool
@@ -91,6 +106,7 @@ final class HideMenubarIconsSwitch: SwitchProvider, @unchecked Sendable {
     @MainActor
     func resetPersistedStateAfterFailedStartup() {
         timer?.invalidate()
+        trackerStorage?.stop()
         setPersistedState(false)
         NotificationCenter.default.post(name: .toggleMenubarCollapse, object: false)
     }
@@ -116,6 +132,7 @@ final class HideMenubarIconsSwitch: SwitchProvider, @unchecked Sendable {
     @MainActor
     private func autoCollapseIfNeeded() {
         timer?.invalidate()
+        trackerStorage?.stop()
         guard Preferences.shared.isAutoCollapseMenubar else {return}
         guard persistedState == false else { return }
         startTimerToCollapse()
@@ -123,18 +140,68 @@ final class HideMenubarIconsSwitch: SwitchProvider, @unchecked Sendable {
     
     @MainActor
     private func startTimerToCollapse() {
+        pointerLastInMenuBar = nil
+        pointerTracker.start()
+        scheduleCollapseCheck(after: autoCollapseInterval)
+    }
+
+    @MainActor
+    private var autoCollapseInterval: TimeInterval {
+        TimeInterval(Preferences.shared.autoCollapseMenubarTime)
+    }
+
+    @MainActor
+    private func scheduleCollapseCheck(after delay: TimeInterval) {
         timer?.invalidate()
-        self.timer = Timer(timeInterval: TimeInterval(Preferences.shared.autoCollapseMenubarTime), repeats: false) { [weak self] _ in
+        let timer = Timer(timeInterval: delay, repeats: false) { [weak self] _ in
             Task { @MainActor [weak self] in
-                guard let self, Preferences.shared.isAutoCollapseMenubar else { return }
-                do {
-                    try await self.operateSwitch(isOn: true)
-                } catch {
-                    // A denied permission or unavailable native API must leave
-                    // the persisted state expanded.
-                }
+                await self?.collapseIfPointerStayedAway()
             }
         }
-        RunLoop.current.add(self.timer!, forMode: .common)
+        self.timer = timer
+        RunLoop.current.add(timer, forMode: .common)
+    }
+
+    @MainActor
+    private func collapseIfPointerStayedAway() async {
+        guard Preferences.shared.isAutoCollapseMenubar, persistedState == false else {
+            pointerTracker.stop()
+            return
+        }
+        let isPointerInMenuBar = isPointerInMenuBar()
+        if isPointerInMenuBar {
+            pointerLastInMenuBar = Date()
+        }
+        if let delay = Self.remainingAutoCollapseDelay(
+            now: Date(),
+            interval: autoCollapseInterval,
+            isPointerInMenuBar: isPointerInMenuBar,
+            pointerLastInMenuBar: pointerLastInMenuBar
+        ) {
+            scheduleCollapseCheck(after: delay)
+            return
+        }
+        pointerTracker.stop()
+        do {
+            try await operateSwitch(isOn: true)
+        } catch {
+            // A denied permission or unavailable native API must leave
+            // the persisted state expanded.
+        }
+    }
+
+    /// How much longer to wait before hiding, or nil to hide now. The delay restarts whenever the pointer is in the menu bar, so icons stay shown while someone is using or rearranging them.
+    nonisolated static func remainingAutoCollapseDelay(
+        now: Date,
+        interval: TimeInterval,
+        isPointerInMenuBar: Bool,
+        pointerLastInMenuBar: Date?
+    ) -> TimeInterval? {
+        if isPointerInMenuBar {
+            return interval
+        }
+        guard let pointerLastInMenuBar else { return nil }
+        let remaining = interval - now.timeIntervalSince(pointerLastInMenuBar)
+        return remaining > 0 ? remaining : nil
     }
 }
