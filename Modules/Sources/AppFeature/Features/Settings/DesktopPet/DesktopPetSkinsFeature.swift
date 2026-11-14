@@ -64,7 +64,8 @@ struct DesktopPetSkinsFeature {
 
             case let .loaded(skins, id):
                 state.skins = skins
-                state.selectedID = id
+                // A selected skin that vanished (deleted or no longer valid) falls back to the built-in pet.
+                state.selectedID = skins.contains { $0.id == id } ? id : nil
                 return .none
 
             case let .selected(id):

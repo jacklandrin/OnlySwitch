@@ -31,6 +31,22 @@ struct DesktopPetSkinsFeatureTests {
         }
     }
 
+    @Test func vanishedSelectionFallsBackToBuiltIn() async {
+        let skins = [cat]
+        let store = TestStore(initialState: DesktopPetSkinsFeature.State()) {
+            DesktopPetSkinsFeature()
+        } withDependencies: {
+            $0.desktopPetSkinLibrary.load = { skins }
+            $0.desktopPetSkinLibrary.selectedID = { UUID(9) }
+        }
+
+        await store.send(.task)
+        await store.receive(\.loaded) {
+            $0.skins = skins
+            $0.selectedID = nil
+        }
+    }
+
     // 2
     @Test(arguments: [UUID(1), nil] as [UUID?])
     func selectingSavesSelectionAndNotifies(id: UUID?) async {
