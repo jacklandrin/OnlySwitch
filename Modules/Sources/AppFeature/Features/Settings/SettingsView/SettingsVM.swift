@@ -25,6 +25,7 @@ enum SettingsItem: String, CaseIterable {
     case General = "General"
     case Customize = "Customize"
     case Tabs = "Tabs"
+    case DesktopPet = "Desktop Pet"
     case Shortcuts = "Shortcuts"
     case Evolution = "Evolution"
     case Schedules = "Schedules"
@@ -50,6 +51,10 @@ enum SettingsItem: String, CaseIterable {
     case iOSRemote = "iOS Remote"
     case About = "About"
 
+    /// Recently added pages that show a "New" sidebar badge until first opened.
+    /// Add every new Settings page here (see AGENTS.md).
+    static let newItems: Set<SettingsItem> = [.DesktopPet]
+
     var titleLocalizationKey: String {
         switch self {
         case .DimScreen:
@@ -68,6 +73,7 @@ enum SettingsItem: String, CaseIterable {
         case .General: "gearshape"
         case .Customize: "square.grid.2x2"
         case .Tabs: "rectangle.stack"
+        case .DesktopPet: "pawprint"
         case .Shortcuts: "command"
         case .Evolution: "wand.and.stars"
         case .Schedules: "calendar.badge.clock"
@@ -100,6 +106,7 @@ enum SettingsItem: String, CaseIterable {
         case .General: .gray
         case .Customize: .blue
         case .Tabs: .indigo
+        case .DesktopPet: .orange
         case .Shortcuts: .pink
         case .Evolution: .purple
         case .Schedules: .red
@@ -135,7 +142,14 @@ class SettingsVM: ObservableObject {
 
     @Published var settingItems: [SettingsItem]
 
-    @Published var selection: SettingsItem? = .General
+    @Published var selection: SettingsItem? = .General {
+        didSet {
+            if let selection { seenNewItems = newBadgeTracker.markSeen(selection) }
+        }
+    }
+
+    @Published private(set) var seenNewItems: Set<SettingsItem>
+    private let newBadgeTracker = SettingsNewBadgeTracker()
 
     var evolutionStore = Store(
         initialState: EvolutionReducer.State()) {
@@ -143,6 +157,13 @@ class SettingsVM: ObservableObject {
         } withDependencies: {
             $0.evolutionListService = .liveValue
         }
+
+    /// Edits what clicking the desktop pet does; the catalog comes from the same executor schedules use.
+    lazy var desktopPetStore = Store(initialState: DesktopPetSettingsFeature.State()) {
+        DesktopPetSettingsFeature()
+    } withDependencies: {
+        $0.scheduleExecutor = .app
+    }
 
     lazy var shortcutsStore = Store(initialState: ShortcutsSettingsReducer.State()) {
         ShortcutsSettingsReducer()
@@ -223,12 +244,17 @@ class SettingsVM: ObservableObject {
     lazy var browserStore = Store(initialState: BrowserFeature.State()) { BrowserFeature() }
 
     init() {
+        seenNewItems = newBadgeTracker.seenItems()
         settingItems = SettingsItem.allCases
         if #available(macOS 26.0, *) {} else {
             if let index = settingItems.firstIndex(of: .ModelProviders) {
                 settingItems.remove(at: index)
             }
         }
+    }
+
+    func showsNewBadge(_ item: SettingsItem) -> Bool {
+        newBadgeTracker.showsBadge(for: item, seen: seenNewItems)
     }
 
     func toggleSliderbar() {

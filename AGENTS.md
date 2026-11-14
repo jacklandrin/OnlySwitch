@@ -45,4 +45,5 @@ Use the narrowest applicable skill. If several conditions match, load the smalle
 - Do not evaluate macOS app changes against App Store constraints unless the user explicitly requests an App Store submission-readiness review.
 - Design new or substantially changed UI with modern platform styling, adopting Liquid Glass where supported, providing compatible fallbacks, supporting light and dark modes, and adapting layouts for macOS, iPhone, and iPad sizes as applicable.
 - Translate every new user-facing string into every language supported by OnlySwitch; do not ship newly added source-only strings.
+- Mark every newly added Settings sidebar page as new by adding its `SettingsItem` case to `SettingsItem.newItems`. Its sidebar row then shows a "New" badge until the user opens that page once (tracked by `SettingsNewBadgeTracker`). When a page has been out long enough, it may be removed from `newItems`.
 - Avoid unrelated formatting or refactoring. Update documentation when a change alters an architectural decision or workflow.

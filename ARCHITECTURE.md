@@ -47,6 +47,10 @@ Asset catalogs and string catalogs remain in the targets and are read via `Bundl
 
 Test targets live in `Modules/Tests` and run from the app schemes' Test actions. The `Modules-Package` scheme cannot be tested as a whole on macOS because `OnlyRemoteFeature` is iOS-only, so `OnlySwitch.xcscheme` is the single macOS test entry point and lists every macOS package test target; add new macOS test targets there. Remote tests (`OnlyRemoteFeatureTests`) run from the `OnlySwitchRemote` scheme on an iOS simulator. Known limitation: plain `swift build`/`swift test` in `Modules/` cannot resolve the package graph because `swift-issue-reporting` and `xctest-dynamic-overlay` both declare an `IssueReporting` target; build and test through the Xcode schemes.
 
+## Desktop pet click action
+
+The `DesktopPet` module only reports a click through `onActivate`; what the click does is app policy in `AppFeature`. `DesktopPetClickAction` (`.onlyControl`, the default, or `.control(ScheduleTarget)`) is stored as JSON under `UserDefaults.Key.desktopPetClickAction` and included in settings backups. The Desktop Pet settings page (`DesktopPetSettingsFeature`) lists targets from the same `ScheduleExecutorClient` catalog and reuses the Scheduler module's public target list, so built-in switches and buttons, Evolutions and Shortcuts appear exactly as they do for schedules. At click time `DesktopPetClickPerformer` runs the target through `ScheduleExecutorClient.app` (the validated `RemoteCommandRouter` path): switches and players toggle, everything else runs. Any failed run, such as a deleted Shortcut, is logged and falls back to toggling OnlyControl so a click never goes unanswered.
+
 ## Current repository boundaries
 
 - `Modules/` is the primary Swift Package boundary. It contains feature modules such as `OnlyControl`, `OnlyAgent`, `Authenticator`, `StickerView`, and `DesktopPet`, plus shared `Defines`, `Extensions`, `Utilities`, `Networking`, `RemoteCore`, and `RemoteTransport` modules.

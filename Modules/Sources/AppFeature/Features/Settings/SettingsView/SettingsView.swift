@@ -85,6 +85,10 @@ struct SettingsView: View {
             Text(item.titleLocalizationKey.localized())
                 .id(currentLang)
                 .lineLimit(2)
+            if settingVM.showsNewBadge(item) {
+                SettingsNewBadge()
+                    .id(currentLang)
+            }
         }
         .frame(minWidth: 190, alignment: .leading)
         .padding(.vertical, 6)
@@ -159,6 +163,10 @@ struct SettingsView: View {
 
             case .Tabs:
                 TabVisibilitySettingsView()
+
+            case .DesktopPet:
+                DesktopPetSettingsView(store: settingVM.desktopPetStore)
+                    .id(langManager.currentLang)
 
             case .HideMenubarIcons:
                 HideMenubarIconsSettingView()

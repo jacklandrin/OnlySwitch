@@ -2,13 +2,25 @@ import RemoteCore
 import SwiftUI
 
 /// The popover content of `ScheduleTargetPicker`.
-struct ScheduleTargetList: View {
+public struct ScheduleTargetList: View {
     let groups: [ScheduleTargetGroup]
     let selection: RemoteControlID?
     @Binding var search: String
     let select: (RemoteControlID) -> Void
 
-    var body: some View {
+    public init(
+        groups: [ScheduleTargetGroup],
+        selection: RemoteControlID?,
+        search: Binding<String>,
+        select: @escaping (RemoteControlID) -> Void
+    ) {
+        self.groups = groups
+        self.selection = selection
+        _search = search
+        self.select = select
+    }
+
+    public var body: some View {
         VStack(spacing: 0) {
             ScheduleSearchField(prompt: ScheduleStrings.text("Schedule Search"), text: $search)
                 .padding(10)

@@ -14,6 +14,9 @@ public extension UserDefaults {
         public static let appearanceColumnCount = "appearanceColumnCountKey"
         public static let showAds = "showAdsKey"
         public static let showDesktopPet = "showDesktopPetKey"
+        public static let desktopPetClickAction = "desktopPetClickActionKey"
+        /// Newly added Settings pages the user has opened; their sidebar "New" badge stays hidden.
+        public static let seenNewSettingsItems = "seenNewSettingsItemsKey"
         public static let dockPreviewEnabled = "dockPreviewEnabledKey"
         //Evolution
         public static let evolutionIDs = "evolutionIDsKey"
@@ -148,7 +151,7 @@ public extension UserDefaults {
         /// user-facing setting (hasRunRadio, radioStation, window session state, caches,
         /// version-check bookkeeping, live volume mirrors).
         public static let exportableKeys: [String] = [
-            menubarIcon, appearanceColumnCount, showAds, showDesktopPet, dockPreviewEnabled,
+            menubarIcon, appearanceColumnCount, showAds, showDesktopPet, desktopPetClickAction, dockPreviewEnabled,
             evolutionIDs,
             WorkDuration, RestDuration, RestAlert, WorkAlert, AllowNotificationAlert, PTimerCycleCount,
             soundWaveEffectDisplay, volume, allowNotificationChangingStation, allowNotificationTrack, radioEnable,

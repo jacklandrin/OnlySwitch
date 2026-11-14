@@ -172,9 +172,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
 
     private func setupDesktopPet() {
         let onlyControlWindow = OnlyControlWindow.shared
+        let clickPerformer = DesktopPetClickPerformer.app {
+            onlyControlWindow.toggle(monitorsOutsideClicks: true)
+        }
         let controller = DesktopPetController(
             onActivate: {
-                onlyControlWindow.toggle(monitorsOutsideClicks: true)
+                Task { @MainActor in await clickPerformer.perform() }
             },
             onClose: {
                 Preferences.shared.showDesktopPet = false

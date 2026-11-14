@@ -2,13 +2,13 @@ import Foundation
 import RemoteCore
 
 /// A titled group of catalog controls shown in the target picker.
-struct ScheduleTargetGroup: Equatable, Identifiable {
-    enum Kind: Int, CaseIterable, Comparable {
+public struct ScheduleTargetGroup: Equatable, Identifiable {
+    public enum Kind: Int, CaseIterable, Comparable, Sendable {
         case switches, buttons, evolution, shortcuts
 
-        static func < (lhs: Self, rhs: Self) -> Bool { lhs.rawValue < rhs.rawValue }
+        public static func < (lhs: Self, rhs: Self) -> Bool { lhs.rawValue < rhs.rawValue }
 
-        var titleKey: String {
+        public var titleKey: String {
             switch self {
             case .switches: "Schedule Section Switches"
             case .buttons: "Schedule Section Buttons"
@@ -26,17 +26,17 @@ struct ScheduleTargetGroup: Equatable, Identifiable {
         }
     }
 
-    var kind: Kind
-    var descriptors: [RemoteControlDescriptor]
+    public var kind: Kind
+    public var descriptors: [RemoteControlDescriptor]
 
-    var id: Kind { kind }
+    public var id: Kind { kind }
 }
 
 /// Groups and filters the catalog for the target picker.
-enum ScheduleTargetGroups {
+public enum ScheduleTargetGroups {
     /// Non-empty groups in a fixed order (Switches, Buttons, Evolution, Shortcuts), each sorted by title.
     /// `search` matches titles ignoring case and diacritics; a blank search keeps everything.
-    static func make(catalog: [RemoteControlDescriptor], search: String) -> [ScheduleTargetGroup] {
+    public static func make(catalog: [RemoteControlDescriptor], search: String) -> [ScheduleTargetGroup] {
         let query = search.trimmingCharacters(in: .whitespacesAndNewlines)
         let matching = query.isEmpty ? catalog : catalog.filter {
             $0.title.range(of: query, options: [.caseInsensitive, .diacriticInsensitive]) != nil
