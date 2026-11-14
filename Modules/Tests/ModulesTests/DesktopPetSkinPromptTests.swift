@@ -36,6 +36,14 @@ struct DesktopPetSkinPromptTests {
         #expect(prompt.contains("give it a wizard hat"))
     }
 
+    @Test func editPromptFencesTheCurrentMarkupLast() {
+        let markup = "<style>#pet{color:red}</style><div id=\"pet\"></div>"
+        let prompt = DesktopPetSkinPromptBuilder.editPrompt(
+            instruction: "make it blue", currentName: "Cat", currentMarkup: markup
+        )
+        #expect(prompt.hasSuffix("```html\n\(markup)\n```"))
+    }
+
     @Test func editPromptAsksForAMinimalCompleteChange() {
         let prompt = DesktopPetSkinPromptBuilder.editPrompt(
             instruction: "make it blue", currentName: "Cat", currentMarkup: "<div id=\"pet\"></div>"

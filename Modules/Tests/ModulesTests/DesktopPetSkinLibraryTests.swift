@@ -58,6 +58,20 @@ struct DesktopPetSkinLibraryTests {
         await #expect(throws: DesktopPetSkinLibraryError.full) { _ = try await client.save(skin("extra")) }
     }
 
+    @Test func replacingAnExistingSkinIsAllowedWhenFull() async throws {
+        let (client, _) = try makeClient()
+        var skins: [DesktopPetSkin] = []
+        for index in 0..<DesktopPetSkinLibraryClient.maximumSkins {
+            let next = skin("\(index)")
+            skins.append(next)
+            _ = try await client.save(next)
+        }
+        var edited = skins[3]
+        edited.name = "Edited"
+        skins[3] = edited
+        #expect(try await client.save(edited) == skins)
+    }
+
     @Test func deletingSelectedSkinClearsSelection() async throws {
         let (client, _) = try makeClient()
         let cat = skin()

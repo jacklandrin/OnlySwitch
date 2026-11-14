@@ -129740,7 +129740,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bewerk met AI…"
+            "value" : "Bewerken met AI…"
           }
         },
         "pl" : {
@@ -129829,7 +129829,7 @@
         "fil" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Maglarawan ng pagbabago, hal. “bigyan ng sombrero ng wizard”"
+            "value" : "Maglarawan ng pagbabago, hal. “bigyan ito ng sombrero ng wizard”"
           }
         },
         "fr" : {
@@ -129847,7 +129847,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Descrivi una modifica, ad es. «dagli un cappello da mago»"
+            "value" : "Descrivi una modifica, ad es. «mettile un cappello da mago»"
           }
         },
         "ja" : {
@@ -129883,7 +129883,7 @@
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Опишите изменение, например: «добавь волшебную шляпу»"
+            "value" : "Опишите изменение, например: «надень на него шляпу волшебника»"
           }
         },
         "sk" : {
@@ -129907,7 +129907,7 @@
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Опишіть зміну, наприклад: «додай чарівницький капелюх»"
+            "value" : "Опишіть зміну, наприклад: «одягни йому капелюх чарівника»"
           }
         },
         "zh-Hans" : {

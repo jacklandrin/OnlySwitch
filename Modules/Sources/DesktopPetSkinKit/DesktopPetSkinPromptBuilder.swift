@@ -56,7 +56,9 @@ public enum DesktopPetSkinPromptBuilder {
         Keep NAME: as the current name unless the request asks you to rename the pet.
 
         Current skin:
+        ```html
         \(currentMarkup)
+        ```
         """
     }
 
