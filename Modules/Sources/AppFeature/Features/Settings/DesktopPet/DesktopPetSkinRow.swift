@@ -7,6 +7,7 @@ struct DesktopPetSkinRow: View {
     let skin: DesktopPetSkin?
     let isSelected: Bool
     let onSelect: () -> Void
+    let onEdit: () -> Void
     let onDelete: () -> Void
 
     @State private var isHovered = false
@@ -36,6 +37,10 @@ struct DesktopPetSkinRow: View {
             .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
 
             if skin != nil {
+                Button("Desktop Pet Edit With AI".localized(), systemImage: "wand.and.stars", action: onEdit)
+                    .labelStyle(.iconOnly)
+                    .buttonStyle(.borderless)
+                    .help("Desktop Pet Edit With AI".localized())
                 Button("Desktop Pet Delete Skin".localized(), systemImage: "trash", role: .destructive, action: onDelete)
                     .labelStyle(.iconOnly)
                     .buttonStyle(.borderless)

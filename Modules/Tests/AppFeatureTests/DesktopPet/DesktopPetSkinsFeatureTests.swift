@@ -150,6 +150,10 @@ struct DesktopPetSkinsFeatureTests {
                 requested.withValue { $0.append(description) }
                 return draft
             }
+            $0.desktopPetSkinGeneration.edit = { _, _ in
+                Issue.record("edit must not be called without a draft")
+                return draft
+            }
         }
 
         await store.send(.generator(.generateTapped)) {
@@ -158,6 +162,8 @@ struct DesktopPetSkinsFeatureTests {
         await store.receive(\.generator.generated) {
             $0.generator?.isGenerating = false
             $0.generator?.draft = draft
+            $0.generator?.summary = "a sleepy cat"
+            $0.generator?.description = ""
         }
 
         #expect(requested.value == ["a sleepy cat"])
@@ -188,7 +194,7 @@ struct DesktopPetSkinsFeatureTests {
             DesktopPetSkinsFeature()
         }
 
-        await store.send(.generator(.generated(.failure(failure.error)))) {
+        await store.send(.generator(.generated(.failure(failure.error), request: "a sleepy cat"))) {
             $0.generator?.isGenerating = false
             $0.generator?.errorMessage = failure.expectedMessage
         }
@@ -202,7 +208,7 @@ struct DesktopPetSkinsFeatureTests {
         let selected = LockIsolated<[UUID?]>([])
         let notified = LockIsolated(0)
         var state = DesktopPetSkinsFeature.State()
-        state.generator = DesktopPetSkinsFeature.Generator(description: "a sleepy cat", draft: draft)
+        state.generator = DesktopPetSkinsFeature.Generator(draft: draft, summary: "a sleepy cat")
         let expected = DesktopPetSkin(
             id: id, name: "Sleepy Cat", summary: "a sleepy cat", createdAt: now, contractVersion: 1, markup: "<m>"
         )
@@ -234,17 +240,17 @@ struct DesktopPetSkinsFeatureTests {
         #expect(notified.value == 1)
     }
 
-    @Test func savingUnnamedDraftNamesItFromTheDescription() async {
+    @Test func savingUnnamedDraftNamesItFromTheSummary() async {
         let id = UUID(0)
         let now = Date(timeIntervalSinceReferenceDate: 5)
-        let description = "a sleepy orange cat with a long striped scarf"
+        let summary = "a sleepy orange cat with a long striped scarf\nadd a hat"
         let saved = LockIsolated<[DesktopPetSkin]>([])
         var state = DesktopPetSkinsFeature.State()
         state.generator = DesktopPetSkinsFeature.Generator(
-            description: description, draft: DesktopPetSkinDraft(name: "", markup: "<m>")
+            description: "unsent text", draft: DesktopPetSkinDraft(name: "", markup: "<m>"), summary: summary
         )
         let expected = DesktopPetSkin(
-            id: id, name: String(description.prefix(20)), summary: description, createdAt: now,
+            id: id, name: String(summary.prefix(20)), summary: summary, createdAt: now,
             contractVersion: DesktopPetSkinContract.version, markup: "<m>"
         )
         let store = TestStore(initialState: state) {
@@ -279,7 +285,7 @@ struct DesktopPetSkinsFeatureTests {
         let notified = LockIsolated(0)
         var state = DesktopPetSkinsFeature.State()
         state.skins = [cat]
-        state.generator = DesktopPetSkinsFeature.Generator(description: "a sleepy cat", draft: draft)
+        state.generator = DesktopPetSkinsFeature.Generator(draft: draft, summary: "a sleepy cat")
         let store = TestStore(initialState: state) {
             DesktopPetSkinsFeature()
         } withDependencies: {
@@ -322,6 +328,191 @@ struct DesktopPetSkinsFeatureTests {
         // Fails if the generation effect is still running, i.e. was not cancelled.
         await store.finish()
     }
+
+    // MARK: - Editing with AI
+
+    @Test(arguments: [true, false])
+    func editingKnownSkinOpensGeneratorWithItsDraftAndSummary(isModelSelected: Bool) async {
+        var state = DesktopPetSkinsFeature.State()
+        state.skins = [cat, dog]
+        let dog = self.dog
+        let store = TestStore(initialState: state) {
+            DesktopPetSkinsFeature()
+        } withDependencies: {
+            $0.desktopPetSkinGeneration.isModelSelected = { isModelSelected }
+        }
+
+        await store.send(.editTapped(dog.id)) {
+            var generator = DesktopPetSkinsFeature.Generator(
+                isModelSelected: isModelSelected, editingSkinID: dog.id, summary: dog.summary
+            )
+            generator.draft = DesktopPetSkinDraft(name: dog.name, markup: dog.markup)
+            $0.generator = generator
+        }
+    }
+
+    @Test func editingUnknownSkinDoesNothing() async {
+        var state = DesktopPetSkinsFeature.State()
+        state.skins = [cat]
+        let store = TestStore(initialState: state) {
+            DesktopPetSkinsFeature()
+        } withDependencies: {
+            $0.desktopPetSkinGeneration.isModelSelected = { true }
+        }
+
+        await store.send(.editTapped(UUID(9)))
+    }
+
+    @Test func generatingWithDraftEditsItAndAppendsTheRequest() async {
+        let edits = LockIsolated<[EditCall]>([])
+        let base = DesktopPetSkinDraft(name: "Dog", markup: "<dog>")
+        let edited = DesktopPetSkinDraft(name: "Wizard Dog", markup: "<wizard-dog>")
+        var state = DesktopPetSkinsFeature.State()
+        state.generator = DesktopPetSkinsFeature.Generator(
+            description: "  give it a wizard hat \n", draft: base, isModelSelected: true,
+            editingSkinID: dog.id, summary: "dog"
+        )
+        let store = TestStore(initialState: state) {
+            DesktopPetSkinsFeature()
+        } withDependencies: {
+            $0.desktopPetSkinGeneration.edit = { instruction, base in
+                edits.withValue { $0.append(EditCall(instruction: instruction, base: base)) }
+                return edited
+            }
+            $0.desktopPetSkinGeneration.generate = { _ in
+                Issue.record("generate must not be called when a draft exists")
+                return edited
+            }
+        }
+
+        await store.send(.generator(.generateTapped)) {
+            $0.generator?.isGenerating = true
+        }
+        await store.receive(\.generator.generated) {
+            $0.generator?.isGenerating = false
+            $0.generator?.draft = edited
+            $0.generator?.summary = "dog\ngive it a wizard hat"
+            $0.generator?.description = ""
+        }
+        await store.finish()
+
+        #expect(edits.value == [EditCall(instruction: "give it a wizard hat", base: base)])
+    }
+
+    @Test func failedEditKeepsDescriptionSummaryAndDraft() async {
+        let base = DesktopPetSkinDraft(name: "Dog", markup: "<dog>")
+        var state = DesktopPetSkinsFeature.State()
+        state.generator = DesktopPetSkinsFeature.Generator(
+            description: "give it a wizard hat", draft: base, isModelSelected: true,
+            editingSkinID: dog.id, summary: "dog"
+        )
+        let store = TestStore(initialState: state) {
+            DesktopPetSkinsFeature()
+        } withDependencies: {
+            $0.desktopPetSkinGeneration.edit = { _, _ in throw DesktopPetSkinGenerationError.refused("no hats") }
+        }
+
+        await store.send(.generator(.generateTapped)) {
+            $0.generator?.isGenerating = true
+        }
+        await store.receive(\.generator.generated) {
+            $0.generator?.isGenerating = false
+            $0.generator?.errorMessage = "no hats"
+        }
+        await store.finish()
+    }
+
+    @Test(arguments: [("Wizard Dog", "Wizard Dog"), ("", "Dog")])
+    func savingEditReplacesSkinInPlace(draftName: String, expectedName: String) async {
+        let now = Date(timeIntervalSinceReferenceDate: 5)
+        let saved = LockIsolated<[DesktopPetSkin]>([])
+        let selected = LockIsolated<[UUID?]>([])
+        let notified = LockIsolated(0)
+        var state = DesktopPetSkinsFeature.State()
+        state.skins = [cat, dog]
+        state.selectedID = cat.id
+        state.generator = DesktopPetSkinsFeature.Generator(
+            draft: DesktopPetSkinDraft(name: draftName, markup: "<wizard-dog>"),
+            editingSkinID: dog.id, summary: "dog\ngive it a wizard hat"
+        )
+        let expected = DesktopPetSkin(
+            id: dog.id, name: expectedName, summary: "dog\ngive it a wizard hat", createdAt: dog.createdAt,
+            contractVersion: DesktopPetSkinContract.version, markup: "<wizard-dog>"
+        )
+        let cat = self.cat
+        let store = TestStore(initialState: state) {
+            DesktopPetSkinsFeature()
+        } withDependencies: {
+            $0.uuid = .constant(UUID(0))
+            $0.date.now = now
+            $0.desktopPetSkinLibrary.save = { skin in
+                saved.withValue { $0.append(skin) }
+                return [cat, skin]
+            }
+            $0.desktopPetSkinLibrary.select = { id in selected.withValue { $0.append(id) } }
+            $0.desktopPetSkinNotifier = { notified.withValue { $0 += 1 } }
+        }
+
+        await store.send(.generator(.saveTapped)) {
+            $0.generator?.isGenerating = true
+        }
+        await store.receive(\.saved) {
+            $0.skins = [cat, expected]
+            $0.selectedID = expected.id
+            $0.generator = nil
+        }
+        await store.finish()
+
+        #expect(saved.value == [expected])
+        #expect(selected.value == [dog.id])
+        #expect(notified.value == 1)
+    }
+
+    @Test func savingEditOfDeletedSkinSavesItAsNew() async {
+        let id = UUID(0)
+        let now = Date(timeIntervalSinceReferenceDate: 5)
+        let saved = LockIsolated<[DesktopPetSkin]>([])
+        var state = DesktopPetSkinsFeature.State()
+        state.skins = [cat]
+        state.generator = DesktopPetSkinsFeature.Generator(
+            draft: DesktopPetSkinDraft(name: "Wizard Dog", markup: "<wizard-dog>"),
+            editingSkinID: dog.id, summary: "dog\ngive it a wizard hat"
+        )
+        let expected = DesktopPetSkin(
+            id: id, name: "Wizard Dog", summary: "dog\ngive it a wizard hat", createdAt: now,
+            contractVersion: DesktopPetSkinContract.version, markup: "<wizard-dog>"
+        )
+        let cat = self.cat
+        let store = TestStore(initialState: state) {
+            DesktopPetSkinsFeature()
+        } withDependencies: {
+            $0.uuid = .constant(id)
+            $0.date.now = now
+            $0.desktopPetSkinLibrary.save = { skin in
+                saved.withValue { $0.append(skin) }
+                return [cat, skin]
+            }
+            $0.desktopPetSkinLibrary.select = { _ in }
+            $0.desktopPetSkinNotifier = {}
+        }
+
+        await store.send(.generator(.saveTapped)) {
+            $0.generator?.isGenerating = true
+        }
+        await store.receive(\.saved) {
+            $0.skins = [cat, expected]
+            $0.selectedID = id
+            $0.generator = nil
+        }
+        await store.finish()
+
+        #expect(saved.value == [expected])
+    }
+}
+
+private struct EditCall: Equatable, Sendable {
+    let instruction: String
+    let base: DesktopPetSkinDraft
 }
 
 private func makeSkin(id: UUID, name: String) -> DesktopPetSkin {

@@ -42,6 +42,24 @@ public enum DesktopPetSkinPromptBuilder {
         "Pet description: \(description)"
     }
 
+    public static func editPrompt(instruction: String, currentName: String, currentMarkup: String) -> String {
+        """
+        Edit the existing desktop pet skin below.
+
+        Current name: \(currentName)
+
+        Requested change: \(instruction)
+
+        Apply ONLY the requested change. Keep the character's identity and everything else exactly as it is.
+        Every required state must keep working with its own distinct pose or expression.
+        Return the COMPLETE edited skin in the same reply format, not a diff or a fragment.
+        Keep NAME: as the current name unless the request asks you to rename the pet.
+
+        Current skin:
+        \(currentMarkup)
+        """
+    }
+
     public static func repairPrompt(
         description: String, previousMarkup: String, error: DesktopPetSkinValidationError
     ) -> String {

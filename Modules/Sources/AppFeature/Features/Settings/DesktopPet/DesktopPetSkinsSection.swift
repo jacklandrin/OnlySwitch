@@ -14,6 +14,7 @@ struct DesktopPetSkinsSection: View {
                 skin: nil,
                 isSelected: store.selectedID == nil,
                 onSelect: { store.send(.selected(nil)) },
+                onEdit: {},
                 onDelete: {}
             )
 
@@ -22,6 +23,7 @@ struct DesktopPetSkinsSection: View {
                     skin: skin,
                     isSelected: store.selectedID == skin.id,
                     onSelect: { store.send(.selected(skin.id)) },
+                    onEdit: { store.send(.editTapped(skin.id)) },
                     onDelete: { skinPendingDeletion = skin }
                 )
             }

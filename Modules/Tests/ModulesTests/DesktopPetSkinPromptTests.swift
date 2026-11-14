@@ -26,6 +26,27 @@ struct DesktopPetSkinPromptTests {
         #expect(prompt.contains("<div id=\"pet\"></div>"))
     }
 
+    @Test func editPromptCarriesNameMarkupAndRequest() {
+        let markup = "<style>#pet{color:red}</style><div id=\"pet\"></div>"
+        let prompt = DesktopPetSkinPromptBuilder.editPrompt(
+            instruction: "give it a wizard hat", currentName: "Sleepy Cat", currentMarkup: markup
+        )
+        #expect(prompt.contains("Sleepy Cat"))
+        #expect(prompt.contains(markup))
+        #expect(prompt.contains("give it a wizard hat"))
+    }
+
+    @Test func editPromptAsksForAMinimalCompleteChange() {
+        let prompt = DesktopPetSkinPromptBuilder.editPrompt(
+            instruction: "make it blue", currentName: "Cat", currentMarkup: "<div id=\"pet\"></div>"
+        )
+        #expect(prompt.contains("ONLY"))
+        #expect(prompt.contains("COMPLETE"))
+        #expect(prompt.contains("NAME:"))
+        #expect(prompt.localizedCaseInsensitiveContains("state"))
+        #expect(prompt.localizedCaseInsensitiveContains("rename"))
+    }
+
     @Test func parsesNameAndFencedMarkup() throws {
         let reply = "Sure!\nNAME: Sleepy Cat\n```html\n<style>a{}</style><svg id=\"pet\"></svg>\n```\nEnjoy"
         #expect(try DesktopPetSkinReplyParser.parse(reply) == DesktopPetSkinDraft(

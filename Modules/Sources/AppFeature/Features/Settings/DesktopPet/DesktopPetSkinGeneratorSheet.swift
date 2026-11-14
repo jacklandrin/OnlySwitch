@@ -18,9 +18,9 @@ struct DesktopPetSkinGeneratorSheet: View {
                     .background(.quaternary.opacity(0.5), in: .rect(cornerRadius: 8))
                     .frame(height: 90)
                     .disabled(store.isGenerating)
-                    .accessibilityLabel("Desktop Pet Describe".localized())
+                    .accessibilityLabel(placeholder)
                 if store.description.isEmpty {
-                    Text("Desktop Pet Describe".localized())
+                    Text(placeholder)
                         .foregroundStyle(.secondary)
                         .padding(.horizontal, 11)
                         .padding(.vertical, 14)
@@ -36,7 +36,7 @@ struct DesktopPetSkinGeneratorSheet: View {
             }
 
             HStack {
-                Button("Desktop Pet Generate".localized()) { store.send(.generateTapped) }
+                Button(generateTitle) { store.send(.generateTapped) }
                     .disabled(!canGenerate)
                 if store.isGenerating {
                     ProgressView().controlSize(.small)
@@ -69,6 +69,16 @@ struct DesktopPetSkinGeneratorSheet: View {
         }
         .padding(20)
         .frame(minWidth: 520)
+    }
+
+    private var isRefining: Bool { store.draft != nil }
+
+    private var placeholder: String {
+        (isRefining ? "Desktop Pet Describe Change" : "Desktop Pet Describe").localized()
+    }
+
+    private var generateTitle: String {
+        (isRefining ? "Desktop Pet Apply Change" : "Desktop Pet Generate").localized()
     }
 
     private var canGenerate: Bool {

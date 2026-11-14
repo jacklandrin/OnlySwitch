@@ -24,13 +24,17 @@ struct DesktopPetSkinsFeature {
         var errorMessage: String?
         var previewAnimation: DesktopPetAnimation = .idle
         var isModelSelected = false
+        /// The saved skin being edited, or nil when creating a new pet.
+        var editingSkinID: UUID?
+        /// The requests that produced the current draft, one per line.
+        var summary = ""
     }
 
     @CasePathable
     enum GeneratorAction: BindableAction {
         case binding(BindingAction<Generator>)
         case generateTapped
-        case generated(Result<DesktopPetSkinDraft, DesktopPetSkinGenerationError>)
+        case generated(Result<DesktopPetSkinDraft, DesktopPetSkinGenerationError>, request: String)
         case saveTapped
         case cancelTapped
     }
@@ -41,6 +45,7 @@ struct DesktopPetSkinsFeature {
         case selected(UUID?)
         case deleteTapped(UUID)
         case createTapped
+        case editTapped(UUID)
         case generator(GeneratorAction)
         case saved([DesktopPetSkin], UUID)
         case saveFailed(String)
@@ -90,6 +95,15 @@ struct DesktopPetSkinsFeature {
                 state.generator = Generator(isModelSelected: generation.isModelSelected())
                 return .none
 
+            case let .editTapped(id):
+                guard let skin = state.skins.first(where: { $0.id == id }) else { return .none }
+                var generator = Generator(
+                    isModelSelected: generation.isModelSelected(), editingSkinID: id, summary: skin.summary
+                )
+                generator.draft = DesktopPetSkinDraft(name: skin.name, markup: skin.markup)
+                state.generator = generator
+                return .none
+
             case let .generator(action):
                 return reduceGenerator(&state, action)
 
@@ -119,30 +133,38 @@ struct DesktopPetSkinsFeature {
             return .none
 
         case .generateTapped:
-            let description = generator.description.trimmingCharacters(in: .whitespacesAndNewlines)
-            guard !description.isEmpty else { return .none }
+            let request = generator.description.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !request.isEmpty else { return .none }
+            let base = generator.draft
             generator.isGenerating = true
             generator.errorMessage = nil
             return .run { [generation] send in
                 do {
-                    await send(.generator(.generated(.success(try await generation.generate(description)))))
+                    let draft = if let base {
+                        try await generation.edit(request, base)
+                    } else {
+                        try await generation.generate(request)
+                    }
+                    await send(.generator(.generated(.success(draft), request: request)))
                 } catch let error as DesktopPetSkinGenerationError {
-                    await send(.generator(.generated(.failure(error))))
+                    await send(.generator(.generated(.failure(error), request: request)))
                 } catch is CancellationError {
                     return
                 } catch {
                     // Network and provider errors: show the generic message. Never log the error, it may echo the request.
-                    await send(.generator(.generated(.failure(.noMarkup))))
+                    await send(.generator(.generated(.failure(.noMarkup), request: request)))
                 }
             }
             .cancellable(id: CancelID.generation, cancelInFlight: true)
 
-        case let .generated(.success(draft)):
+        case let .generated(.success(draft), request):
             generator.isGenerating = false
             generator.draft = draft
+            generator.summary = generator.summary.isEmpty ? request : generator.summary + "\n" + request
+            generator.description = ""
             return .none
 
-        case let .generated(.failure(error)):
+        case let .generated(.failure(error), _):
             generator.isGenerating = false
             switch error {
             case .noModelSelected: generator.errorMessage = "Desktop Pet No Model".localized()
@@ -154,14 +176,7 @@ struct DesktopPetSkinsFeature {
         case .saveTapped:
             guard let draft = generator.draft else { return .none }
             generator.isGenerating = true
-            let skin = DesktopPetSkin(
-                id: uuid(),
-                name: draft.name.isEmpty ? String(generator.description.prefix(20)) : draft.name,
-                summary: generator.description,
-                createdAt: now,
-                contractVersion: DesktopPetSkinContract.version,
-                markup: draft.markup
-            )
+            let skin = skinToSave(from: draft, generator: generator, existing: state.skins)
             return .run { [library, notify] send in
                 do {
                     let skins = try await library.save(skin)
@@ -180,5 +195,27 @@ struct DesktopPetSkinsFeature {
             state.generator = nil
             return .cancel(id: CancelID.generation)
         }
+    }
+
+    /// A new skin, or the edited skin replacing the original in place (keeping its id and creation date).
+    private func skinToSave(from draft: DesktopPetSkinDraft, generator: Generator, existing: [DesktopPetSkin]) -> DesktopPetSkin {
+        if let id = generator.editingSkinID, let original = existing.first(where: { $0.id == id }) {
+            return DesktopPetSkin(
+                id: id,
+                name: draft.name.isEmpty ? original.name : draft.name,
+                summary: generator.summary,
+                createdAt: original.createdAt,
+                contractVersion: DesktopPetSkinContract.version,
+                markup: draft.markup
+            )
+        }
+        return DesktopPetSkin(
+            id: uuid(),
+            name: draft.name.isEmpty ? String(generator.summary.prefix(20)) : draft.name,
+            summary: generator.summary,
+            createdAt: now,
+            contractVersion: DesktopPetSkinContract.version,
+            markup: draft.markup
+        )
     }
 }
