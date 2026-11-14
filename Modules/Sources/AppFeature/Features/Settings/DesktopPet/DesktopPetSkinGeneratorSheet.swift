@@ -18,6 +18,7 @@ struct DesktopPetSkinGeneratorSheet: View {
                 .padding(10)
                 .background(.quaternary.opacity(0.5), in: .rect(cornerRadius: 8))
                 .disabled(store.isGenerating)
+                .onSubmit { if canGenerate { store.send(.generateTapped) } }
 
             if !store.isModelSelected {
                 Label("Desktop Pet No Model".localized(), systemImage: "exclamationmark.triangle.fill")
