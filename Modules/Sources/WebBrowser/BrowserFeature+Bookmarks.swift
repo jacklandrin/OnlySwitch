@@ -5,7 +5,7 @@ import OSLog
 
 extension BrowserFeature {
     func persist(_ state: State) -> Effect<Action> {
-        let stored = BrowserStoredState(bookmarks: Array(state.bookmarks), selectedID: state.selectedID)
+        let stored = BrowserStoredState(bookmarks: Array(state.bookmarks), selectedID: state.selectedID, viewportSize: state.viewportSize)
         return .run { [storage] _ in
             do {
                 try storage.save(stored)
@@ -32,7 +32,7 @@ extension BrowserFeature {
                 id: uuid(),
                 title: state.navigation.title,
                 url: url,
-                usesMobileUserAgent: state.selectedBookmark?.usesMobileUserAgent ?? false
+                usesMobileUserAgent: true
             ))
             return persist(state)
 

@@ -12,6 +12,10 @@ public struct BrowserSettingsView: View {
 
     public var body: some View {
         Form {
+            Section {
+                BrowserViewportPicker(store: store)
+            }
+
             if store.storageCorrupted {
                 Label(BrowserStrings.text("Browser Storage Corrupted"), systemImage: "exclamationmark.triangle")
                     .foregroundStyle(.orange)
@@ -78,12 +82,6 @@ public struct BrowserSettingsView: View {
                     .truncationMode(.middle)
             }
             Spacer()
-            if bookmark.usesMobileUserAgent {
-                Image(systemName: "iphone")
-                    .foregroundStyle(.secondary)
-                    .help(BrowserStrings.text("Browser Mobile Version"))
-                    .accessibilityLabel(BrowserStrings.text("Browser Mobile Version"))
-            }
             Button(BrowserStrings.text("Browser Edit Bookmark"), systemImage: "pencil") {
                 store.send(.editBookmarkTapped(bookmark.id))
             }

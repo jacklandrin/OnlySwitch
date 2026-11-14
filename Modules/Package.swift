@@ -220,7 +220,7 @@ let package = Package(
         .testTarget(name: "RadioBrowserTests", dependencies: ["RadioBrowser", .product(name: "ComposableArchitecture", package: "swift-composable-architecture")]),
         .target(name: "Scheduler", dependencies: ["Extensions", "RemoteCore", .product(name: "ComposableArchitecture", package: "swift-composable-architecture"), .product(name: "Dependencies", package: "swift-dependencies")]),
         .testTarget(name: "SchedulerTests", dependencies: ["Scheduler", "RemoteCore", .product(name: "ComposableArchitecture", package: "swift-composable-architecture")]),
-        .target(name: "WebBrowser", dependencies: ["Extensions", .product(name: "ComposableArchitecture", package: "swift-composable-architecture"), .product(name: "Dependencies", package: "swift-dependencies")]),
+        .target(name: "WebBrowser", dependencies: ["Extensions", .product(name: "ComposableArchitecture", package: "swift-composable-architecture"), .product(name: "Dependencies", package: "swift-dependencies")], resources: [.process("Resources")]),
         .testTarget(name: "WebBrowserTests", dependencies: ["WebBrowser", .product(name: "ComposableArchitecture", package: "swift-composable-architecture")]),
         .target(name: "XcodeCleaner", dependencies: ["Extensions", .product(name: "Dependencies", package: "swift-dependencies"), .product(name: "ComposableArchitecture", package: "swift-composable-architecture")]),
         .testTarget(name: "XcodeCleanerTests", dependencies: ["XcodeCleaner", .product(name: "ComposableArchitecture", package: "swift-composable-architecture")]),

@@ -6,7 +6,7 @@ public struct BrowserBookmark: Codable, Equatable, Identifiable, Sendable {
     public var url: URL
     public var usesMobileUserAgent: Bool
 
-    public init(id: UUID, title: String, url: URL, usesMobileUserAgent: Bool = false) {
+    public init(id: UUID, title: String, url: URL, usesMobileUserAgent: Bool = true) {
         self.id = id
         self.title = title
         self.url = url

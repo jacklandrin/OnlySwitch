@@ -16,6 +16,7 @@ public struct BrowserFeature: Sendable {
         public var storageCorrupted = false
         public var isClearingWebsiteData = false
         public var hasStarted = false
+        public var viewportSize: BrowserViewportSize = .standard
 
         public init() {}
 
@@ -24,6 +25,7 @@ public struct BrowserFeature: Sendable {
 
     public enum Action: Equatable, Sendable {
         case onAppear
+        case viewportSizeChanged(BrowserViewportSize)
         case navigationEvent(BrowserNavigationEvent)
         case selectBookmark(UUID)
         case addressTextChanged(String)
@@ -62,6 +64,11 @@ public struct BrowserFeature: Sendable {
             switch action {
             case .onAppear:
                 return start(&state)
+
+            case let .viewportSizeChanged(size):
+                guard state.viewportSize != size else { return .none }
+                state.viewportSize = size
+                return persist(state)
 
             case let .navigationEvent(event):
                 guard event.bookmarkID == state.selectedID else { return .none }
@@ -138,6 +145,7 @@ public struct BrowserFeature: Sendable {
         state.hasStarted = true
         switch storage.load() {
         case let .loaded(stored):
+            state.viewportSize = stored.viewportSize
             state.bookmarks = IdentifiedArray(stored.bookmarks, uniquingIDsWith: { first, _ in first })
             let restored = stored.selectedID.flatMap { state.bookmarks[id: $0]?.id }
             showPage(restored ?? state.bookmarks.first?.id, in: &state)

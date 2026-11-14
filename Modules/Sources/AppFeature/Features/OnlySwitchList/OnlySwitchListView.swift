@@ -153,7 +153,7 @@ struct OnlySwitchListView: View {
                                 SettingsVM.shared.selection = .Browser
                                 SettingsWindow.shared.show()
                             }
-                            .frame(height: min(BrowserLayout.popoverContentHeight, max(240, maximumPanelHeight - measuredChromeHeight)))
+                            .frame(height: min(SettingsVM.shared.browserStore.viewportSize.size.height + 12, max(240, maximumPanelHeight - measuredChromeHeight)))
                             .environment(\.locale, Locale(identifier: languageManager.currentLang))
                             .id(languageManager.currentLang)
                         case .aphrodite:
@@ -272,7 +272,10 @@ struct OnlySwitchListView: View {
     }
     
     var listWidth:CGFloat {
-        SwitchListAppearance(rawValue: switchVM.currentAppearance) == .single ? Layout.popoverWidth : Layout.popoverWidth * 2 - 40
+        if selectedSection == .browser {
+            return max(Layout.popoverWidth, SettingsVM.shared.browserStore.viewportSize.size.width + 24)
+        }
+        return SwitchListAppearance(rawValue: switchVM.currentAppearance) == .single ? Layout.popoverWidth : Layout.popoverWidth * 2 - 40
     }
     
     var soundWaveHeight:CGFloat {

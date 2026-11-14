@@ -1,0 +1,12 @@
+Dark Reader API 4.9.135
+Copyright (c) 2026 Dark Reader Ltd.
+License: MIT (full license in DarkReader-LICENSE.txt)
+
+Upstream: https://github.com/darkreader/darkreader
+Official npm archive: https://registry.npmjs.org/darkreader/-/darkreader-4.9.135.tgz
+Archive integrity (npm SHA-512):
+sha512-h/gmS/KzY8HgmsgOSFh7ssJnsC5ymuhIwZqxksPKCS1K400OUJyjDPZN1L2YIrzX+oezhVUNnCDZPfmPUvdJNA==
+
+DarkReader.js is the unmodified official API build. It is bundled locally; no CDN
+or runtime library download is used. OnlySwitch's separate controller disables
+optional resource fetching and image analysis, and preserves native dark pages.

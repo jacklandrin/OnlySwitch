@@ -35,7 +35,14 @@ public struct BrowserPanelView: View {
             if store.bookmarks.isEmpty {
                 BrowserEmptyView(onManageBookmarks: onManageBookmarks)
             } else {
-                page
+                GeometryReader { geometry in
+                    page
+                        .frame(
+                            width: BrowserLayout.viewportSize(store.viewportSize, fitting: geometry.size).width,
+                            height: BrowserLayout.viewportSize(store.viewportSize, fitting: geometry.size).height
+                        )
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
             }
         }
         .padding(.horizontal, compact ? 12 : 30)

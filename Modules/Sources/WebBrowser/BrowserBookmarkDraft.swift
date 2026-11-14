@@ -8,7 +8,7 @@ public struct BrowserBookmarkDraft: Equatable, Sendable {
     public var usesMobileUserAgent: Bool
     public var showsInvalidAddress = false
 
-    public init(editingID: UUID? = nil, title: String = "", address: String = "", usesMobileUserAgent: Bool = false) {
+    public init(editingID: UUID? = nil, title: String = "", address: String = "", usesMobileUserAgent: Bool = true) {
         self.editingID = editingID
         self.title = title
         self.address = address

@@ -5,10 +5,21 @@ import Foundation
 public struct BrowserStoredState: Codable, Equatable, Sendable {
     public var bookmarks: [BrowserBookmark]
     public var selectedID: UUID?
+    public var viewportSize: BrowserViewportSize
 
-    public init(bookmarks: [BrowserBookmark] = [], selectedID: UUID? = nil) {
+    public init(bookmarks: [BrowserBookmark] = [], selectedID: UUID? = nil, viewportSize: BrowserViewportSize = .standard) {
         self.bookmarks = bookmarks
         self.selectedID = selectedID
+        self.viewportSize = viewportSize
+    }
+
+    private enum CodingKeys: String, CodingKey { case bookmarks, selectedID, viewportSize }
+
+    public init(from decoder: any Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        bookmarks = try values.decode([BrowserBookmark].self, forKey: .bookmarks)
+        selectedID = try values.decodeIfPresent(UUID.self, forKey: .selectedID)
+        viewportSize = try values.decodeIfPresent(BrowserViewportSize.self, forKey: .viewportSize) ?? .standard
     }
 }
 

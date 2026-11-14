@@ -60,12 +60,7 @@ struct BrowserToolbar: View {
     private var moreMenu: some View {
         Menu {
             Button(BrowserStrings.text("Browser Home"), systemImage: "house") { store.send(.homeTapped) }
-            if let id = store.selectedID {
-                Toggle(BrowserStrings.text("Browser Mobile Version"), isOn: Binding(
-                    get: { store.selectedBookmark?.usesMobileUserAgent ?? false },
-                    set: { _ in store.send(.mobileUserAgentToggled(id)) }
-                ))
-            }
+            BrowserViewportPicker(store: store)
             Button(BrowserStrings.text("Browser Add Current Page"), systemImage: "bookmark.badge.plus") {
                 store.send(.addCurrentPageTapped)
             }

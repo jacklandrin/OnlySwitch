@@ -30,7 +30,6 @@ struct BrowserFeatureBookmarkTests {
             $0.draft?.address = "menubarx.app"
             $0.draft?.showsInvalidAddress = false
         }
-        await store.send(.draftMobileUserAgentChanged(true)) { $0.draft?.usesMobileUserAgent = true }
         let added = BrowserBookmark(id: newID, title: "", url: URL(string: "https://menubarx.app")!, usesMobileUserAgent: true)
         await store.send(.draftSaveTapped) {
             $0.draft = nil
@@ -64,7 +63,7 @@ struct BrowserFeatureBookmarkTests {
         let one = BrowserBookmark.fixture(1)
         let store = makeStore(log, bookmarks: [one], selected: one.id)
         await store.send(.editBookmarkTapped(one.id)) {
-            $0.draft = BrowserBookmarkDraft(editingID: one.id, title: "Site 1", address: "https://site1.example")
+            $0.draft = BrowserBookmarkDraft(editingID: one.id, title: "Site 1", address: "https://site1.example", usesMobileUserAgent: false)
         }
         await store.send(.draftTitleChanged("  Renamed ")) { $0.draft?.title = "  Renamed " }
         await store.send(.draftAddressChanged("https://other.example")) { $0.draft?.address = "https://other.example" }
@@ -85,7 +84,7 @@ struct BrowserFeatureBookmarkTests {
         let (one, two) = (BrowserBookmark.fixture(1), BrowserBookmark.fixture(2))
         let store = makeStore(log, bookmarks: [one, two], selected: one.id)
         await store.send(.editBookmarkTapped(two.id)) {
-            $0.draft = BrowserBookmarkDraft(editingID: two.id, title: "Site 2", address: "https://site2.example")
+            $0.draft = BrowserBookmarkDraft(editingID: two.id, title: "Site 2", address: "https://site2.example", usesMobileUserAgent: false)
         }
         await store.send(.draftAddressChanged("moved.example")) { $0.draft?.address = "moved.example" }
         await store.send(.draftSaveTapped) {

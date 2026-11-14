@@ -6,6 +6,7 @@ import WebKit
 /// the host (tab switch, popover close) leaves the page running. It also reports whether the pointer
 /// is where the auto-hiding toolbar should appear (see `BrowserToolbarReveal`).
 public struct BrowserWebViewHost: NSViewRepresentable {
+    @Environment(\.colorScheme) private var colorScheme
     @ObservedObject var pool: BrowserWebViewPool
     let bookmarkID: UUID
     var toolbarIsVisible = false
@@ -39,7 +40,11 @@ public struct BrowserWebViewHost: NSViewRepresentable {
         context.coordinator.toolbarIsVisible = toolbarIsVisible
         context.coordinator.toolbarHeight = toolbarHeight
         context.coordinator.onChange = onPointerWantsToolbarChange
-        container.display(pool.webViews[bookmarkID])
+        let webView = pool.webViews[bookmarkID]
+        // The explicit isolated update also handles cached/hidden pages whose media-query events
+        // WebKit may defer. Pages never receive a native message handler.
+        context.coordinator.updateAppearance(of: webView, isDark: colorScheme == .dark)
+        container.display(webView)
     }
 
     public static func dismantleNSView(_ container: BrowserWebViewContainer, coordinator: Coordinator) {
@@ -54,6 +59,27 @@ public struct BrowserWebViewHost: NSViewRepresentable {
         var toolbarHeight: CGFloat = 0
         var onChange: @MainActor (Bool) -> Void = { _ in }
         private var lastRequest = false
+        private weak var appearanceWebView: WKWebView?
+        private var lastAppearanceIsDark: Bool?
+
+        func updateAppearance(of webView: WKWebView?, isDark: Bool) {
+            guard let webView else {
+                appearanceWebView = nil
+                lastAppearanceIsDark = nil
+                return
+            }
+            let appearanceName: NSAppearance.Name = isDark ? .darkAqua : .aqua
+            guard appearanceWebView !== webView || lastAppearanceIsDark != isDark
+                || webView.appearance?.name != appearanceName else { return }
+            appearanceWebView = webView
+            lastAppearanceIsDark = isDark
+            webView.appearance = NSAppearance(named: appearanceName)
+            webView.evaluateJavaScript(
+                "globalThis.onlySwitchBrowserAppearance?.apply(\(isDark));",
+                in: nil,
+                in: .defaultClient
+            ) { _ in }
+        }
 
         func pointerMoved(distanceFromTop: CGFloat?) {
             let wants = BrowserToolbarReveal.pointerWantsToolbar(

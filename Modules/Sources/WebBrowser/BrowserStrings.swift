@@ -10,7 +10,7 @@ public enum BrowserStrings {
         "Browser Bookmark Address", "Browser Save", "Browser Cancel", "Browser Empty Title", "Browser Empty Message",
         "Browser Manage Bookmarks", "Browser Settings Empty", "Browser Website Data", "Browser Website Data Note",
         "Browser Clear Website Data", "Browser Clear Website Data Title", "Browser Clear Website Data Message",
-        "Browser Clear", "Browser Storage Corrupted", "Browser Load Failed",
+        "Browser Page Size", "Browser Clear", "Browser Storage Corrupted", "Browser Load Failed",
     ]
 
     public static func text(_ key: String) -> String { key.localized() }

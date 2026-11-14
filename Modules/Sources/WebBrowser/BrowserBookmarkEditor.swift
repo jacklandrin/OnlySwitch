@@ -27,10 +27,7 @@ struct BrowserBookmarkEditor: View {
                         .foregroundStyle(.red)
                 }
 
-                Toggle(BrowserStrings.text("Browser Mobile Version"), isOn: Binding(
-                    get: { draft.usesMobileUserAgent },
-                    set: { store.send(.draftMobileUserAgentChanged($0)) }
-                ))
+
             }
             .formStyle(.grouped)
 

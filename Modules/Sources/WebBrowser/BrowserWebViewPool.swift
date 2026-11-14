@@ -1,3 +1,4 @@
+import AppKit
 import Combine
 import Extensions
 import Foundation
@@ -19,6 +20,11 @@ public final class BrowserWebViewPool: ObservableObject {
     private var failures: [UUID: String] = [:]
     private var continuation: AsyncStream<BrowserNavigationEvent>.Continuation?
     private lazy var dataStore = WKWebsiteDataStore(forIdentifier: Self.dataStoreIdentifier)
+    private let initialAppearance: @MainActor () -> NSAppearance
+
+    init(initialAppearance: @escaping @MainActor () -> NSAppearance = { NSApplication.shared.effectiveAppearance }) {
+        self.initialAppearance = initialAppearance
+    }
 
     func makeEventStream() -> AsyncStream<BrowserNavigationEvent> {
         continuation?.finish()
@@ -32,7 +38,7 @@ public final class BrowserWebViewPool: ObservableObject {
 
     func activate(_ bookmark: BrowserBookmark) {
         if webViews[bookmark.id] == nil {
-            let webView = makeWebView(id: bookmark.id, mobile: bookmark.usesMobileUserAgent)
+            let webView = makeWebView(id: bookmark.id)
             webViews[bookmark.id] = webView
             webView.load(URLRequest(url: bookmark.url))
         }
@@ -50,7 +56,8 @@ public final class BrowserWebViewPool: ObservableObject {
 
     func setMobileUserAgent(_ id: UUID, _ enabled: Bool) {
         guard let webView = webViews[id] else { return }
-        webView.customUserAgent = enabled ? BrowserUserAgent.mobile : nil
+        // Retained for older reducer clients; desktop mode is no longer supported.
+        webView.customUserAgent = BrowserUserAgent.mobile
         webView.reload()
     }
 
@@ -77,13 +84,28 @@ public final class BrowserWebViewPool: ObservableObject {
         publish(id)
     }
 
-    private func makeWebView(id: UUID, mobile: Bool) -> WKWebView {
+    private func makeWebView(id: UUID) -> WKWebView {
         let configuration = WKWebViewConfiguration()
         configuration.websiteDataStore = dataStore
         configuration.preferences.isElementFullscreenEnabled = true
+        configuration.userContentController.addUserScript(WKUserScript(
+            source: BrowserUserAgent.viewportScript,
+            injectionTime: .atDocumentEnd,
+            forMainFrameOnly: true,
+            in: .defaultClient
+        ))
+        configuration.userContentController.addUserScript(WKUserScript(
+            source: BrowserAppearanceScript.source,
+            injectionTime: .atDocumentEnd,
+            forMainFrameOnly: true,
+            in: .defaultClient
+        ))
         let webView = WKWebView(frame: .zero, configuration: configuration)
+        // Navigation starts before a SwiftUI host attaches. Pages may read their preferred theme
+        // once during startup, so supply the application's appearance before the first load.
+        webView.appearance = initialAppearance()
         webView.allowsBackForwardNavigationGestures = true
-        webView.customUserAgent = mobile ? BrowserUserAgent.mobile : nil
+        webView.customUserAgent = BrowserUserAgent.mobile
         let delegate = BrowserWebViewDelegate(pageID: id, pool: self)
         delegates[id] = delegate
         webView.navigationDelegate = delegate
