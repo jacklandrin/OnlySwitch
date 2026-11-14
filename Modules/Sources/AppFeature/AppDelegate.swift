@@ -151,9 +151,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             name: .desktopPetVisibilityChanged,
             object: nil
         )
-        NotificationCenter.default.addObserver(
+        NotificationCenter.default.removeObserver(
             self,
-            selector: #selector(desktopPetNeedsSettingsDidChange),
             name: .desktopPetNeedsSettingsChanged,
             object: nil
         )
@@ -206,6 +205,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             self,
             selector: #selector(desktopPetVisibilityDidChange),
             name: .desktopPetVisibilityChanged,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(desktopPetNeedsSettingsDidChange),
+            name: .desktopPetNeedsSettingsChanged,
             object: nil
         )
     }
