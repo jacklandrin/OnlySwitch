@@ -51,7 +51,8 @@ enum DesktopPetMotion {
         isActive: Bool,
         isDragging: Bool,
         reduceMotion: Bool,
-        isMusicPlaying: Bool = false
+        isMusicPlaying: Bool = false,
+        isAgentWorking: Bool = false
     ) -> MotionValues {
         guard isActive, !isDragging, !reduceMotion else { return .still }
 
@@ -93,6 +94,21 @@ enum DesktopPetMotion {
                 sliderOffset: switchWave > 0.9 ? 2.5 : 0,
                 badgeScale: 1,
                 badgeGlowOpacity: 0
+            )
+        }
+
+        if isAgentWorking {
+            let typing = sin(seconds * .pi * 2 / 0.55)
+            return MotionValues(
+                verticalOffset: -abs(typing) * 1.5,
+                horizontalOffset: typing * 1.5,
+                rotationDegrees: typing * 1.8,
+                eyeScale: baseline.eyeScale,
+                sliderOffset: typing * 3,
+                badgeScale: baseline.badgeScale,
+                badgeGlowOpacity: baseline.badgeGlowOpacity,
+                musicPulse: (typing + 1) / 2,
+                musicCounterPulse: (1 - typing) / 2
             )
         }
 

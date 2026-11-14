@@ -16,14 +16,24 @@ enum DesktopPetMetrics {
 
     static func canvasSize(
         for state: DesktopPetPomodoroState?,
-        showsPlayback: Bool = false
+        showsPlayback: Bool = false,
+        showsAgentStatus: Bool = false
     ) -> CGSize {
         let petSize = state == nil ? canvasSize : pomodoroCanvasSize
+        let petStackHeight = petSize.height
+            + (showsPlayback ? nowPlayingLaneHeight + playbackLaneHeight(for: state) : 0)
         return CGSize(
-            width: petSize.width,
-            height: petSize.height
-                + (showsPlayback ? nowPlayingLaneHeight + playbackLaneHeight(for: state) : 0)
+            width: petSize.width + (showsAgentStatus ? agentStatusWidth + agentStatusGap : 0),
+            height: showsAgentStatus ? max(petStackHeight, agentStatusHeight) : petStackHeight
         )
+    }
+
+    static let agentStatusWidth: CGFloat = 148
+    static let agentStatusHeight: CGFloat = 40
+    static let agentStatusGap: CGFloat = 8
+
+    static func agentStatusBottomPadding(for state: DesktopPetPomodoroState?) -> CGFloat {
+        max(0, (canvasSize(for: state).height - agentStatusHeight) / 2)
     }
 
     /// Reserved even without now-playing text, so the panel does not resize between tracks.

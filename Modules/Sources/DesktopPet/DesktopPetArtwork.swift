@@ -7,6 +7,7 @@ struct DesktopPetArtwork: View {
     let isDragging: Bool
     let reduceMotion: Bool
     var isMusicPlaying = false
+    var isAgentWorking = false
 
     var body: some View {
         ZStack {
@@ -117,7 +118,10 @@ struct DesktopPetArtwork: View {
                 .blur(radius: 1)
                 .offset(x: -31, y: -29)
 
-            if isMusicPlaying {
+            if isAgentWorking {
+                DesktopPetWorkingIndicator(pulse: motion.musicPulse)
+                    .offset(y: 33)
+            } else if isMusicPlaying {
                 DesktopPetMusicEqualizer(
                     pulse: motion.musicPulse,
                     counterPulse: motion.musicCounterPulse

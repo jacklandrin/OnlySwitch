@@ -26,6 +26,20 @@ public enum DesktopPetLayout {
         )
     }
 
+    /// Status expands to the pet's left; keeping the right edge keeps its on-screen anchor.
+    public static func resizedFramePreservingPet(_ frame: CGRect, to size: CGSize) -> CGRect {
+        var result = resizedFramePreservingCenter(frame, to: size)
+        result.origin.x = frame.maxX - size.width
+        return result
+    }
+
+    public static func restoredFramePreservingPet(_ frame: CGRect, to size: CGSize) -> CGRect {
+        let horizontalStatusWidth = DesktopPetMetrics.canvasSize(for: nil, showsAgentStatus: true).width
+        return frame.width >= horizontalStatusWidth
+            ? resizedFramePreservingPet(frame, to: size)
+            : resizedFramePreservingCenter(frame, to: size)
+    }
+
     public static func constrainedFrame(_ frame: CGRect, to visibleFrame: CGRect) -> CGRect {
         var result = frame
         result.origin.x = min(

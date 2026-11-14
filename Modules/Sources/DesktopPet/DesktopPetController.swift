@@ -22,6 +22,7 @@ public final class DesktopPetController: NSObject {
     private let onClose: @MainActor () -> Void
     private let panel: DesktopPetPanel
     private let playbackStore: StoreOf<DesktopPetPlaybackFeature>
+    private let activityStore: StoreOf<DesktopPetAgentActivityFeature>
     private let presentation = DesktopPetPresentation()
     private var dragStartOrigin: CGPoint?
     private var dragStartMouseLocation: CGPoint?
@@ -52,12 +53,18 @@ public final class DesktopPetController: NSObject {
     public init(
         onActivate: @escaping @MainActor () -> Void,
         onClose: @escaping @MainActor () -> Void = {},
-        playbackClient: DesktopPetPlaybackClient = .init()
+        playbackClient: DesktopPetPlaybackClient = .init(),
+        activityClient: DesktopPetAgentActivityClient = .liveValue
     ) {
         playbackStore = Store(initialState: DesktopPetPlaybackFeature.State()) {
             DesktopPetPlaybackFeature()
         } withDependencies: {
             $0.desktopPetPlayback = playbackClient
+        }
+        activityStore = Store(initialState: DesktopPetAgentActivityFeature.State()) {
+            DesktopPetAgentActivityFeature()
+        } withDependencies: {
+            $0.desktopPetAgentActivity = activityClient
         }
         self.onActivate = onActivate
         self.onClose = onClose
@@ -80,27 +87,24 @@ public final class DesktopPetController: NSObject {
 
     isolated deinit {
         NotificationCenter.default.removeObserver(self)
+        activityStore.send(.stop)
         stopEdgeTracking()
     }
 
     public func show() {
         restoreFrameIfNeeded()
-        setRestingFrame(
-            DesktopPetLayout.resizedFramePreservingCenter(
-                restingFrame,
-                to: DesktopPetMetrics.canvasSize(for: pomodoroState, showsPlayback: playbackStore.source != nil)
-            ),
-            display: false
-        )
+        resizeContent(display: false)
         constrainPanelToVisibleScreen()
         saveFrame()
         presentation.isActive = true
         isVisible = true
+        activityStore.send(.start)
         panel.orderFrontRegardless()
         updateEdgeTracking()
     }
 
     public func hide() {
+        activityStore.send(.stop)
         clearPlayback()
         stopEdgeTracking()
         if var dock, dock.phase != .revealed {
@@ -125,14 +129,18 @@ public final class DesktopPetController: NSObject {
         playbackStore.send(.clear)
     }
 
-    private func resizeForPlayback(_ showsPlayback: Bool) {
-        setRestingFrame(
-            DesktopPetLayout.resizedFramePreservingCenter(
-                restingFrame,
-                to: DesktopPetMetrics.canvasSize(for: pomodoroState, showsPlayback: showsPlayback)
-            ),
-            display: isVisible
+    private func resizeContent(display: Bool? = nil) {
+        let size = DesktopPetMetrics.canvasSize(
+            for: pomodoroState, showsPlayback: playbackStore.source != nil,
+            showsAgentStatus: activityStore.showsStatus
         )
+        var frame = DesktopPetLayout.resizedFramePreservingPet(restingFrame, to: size)
+        switch dock?.edge {
+        case .left: frame.origin.x = restingFrame.minX
+        case .right: frame.origin.x = restingFrame.maxX - size.width
+        case nil: break
+        }
+        setRestingFrame(frame, display: display ?? isVisible)
         constrainPanelToVisibleScreen()
         saveFrame()
     }
@@ -147,15 +155,7 @@ public final class DesktopPetController: NSObject {
 
         pomodoroState = state
         presentation.pomodoroState = state
-        setRestingFrame(
-            DesktopPetLayout.resizedFramePreservingCenter(
-                restingFrame,
-                to: DesktopPetMetrics.canvasSize(for: state, showsPlayback: playbackStore.source != nil)
-            ),
-            display: isVisible
-        )
-        constrainPanelToVisibleScreen()
-        saveFrame()
+        resizeContent()
     }
 
     func close() {
@@ -185,8 +185,13 @@ public final class DesktopPetController: NSObject {
                     self?.dragEnded(value)
                 },
                 playbackStore: playbackStore,
-                onPlaybackVisibilityChanged: { [weak self] isShown in
-                    self?.resizeForPlayback(isShown)
+                activityStore: activityStore,
+                onPlaybackVisibilityChanged: { [weak self] _ in
+                    self?.resizeContent()
+                },
+                onActivityVisibilityChanged: { [weak self] in
+                    self?.resizeContent()
+                    self?.updateEdgeTracking()
                 },
                 onClose: { [weak self] in
                     self?.close()
@@ -201,7 +206,7 @@ public final class DesktopPetController: NSObject {
 
         if panel.setFrameUsingName(Self.autosaveName) {
             panel.setFrame(
-                DesktopPetLayout.resizedFramePreservingCenter(
+                DesktopPetLayout.restoredFramePreservingPet(
                     panel.frame,
                     to: DesktopPetMetrics.canvasSize
                 ),
@@ -359,7 +364,7 @@ public final class DesktopPetController: NSObject {
     private func updateEdgeVisibility() {
         guard isVisible, let dock, dragStartOrigin == nil else { return }
 
-        let wanted = presentation.isControlPresented
+        let wanted = presentation.isControlPresented || activityStore.completion != nil
             ? .revealed
             : DesktopPetEdgeDocking.phase(
                 forMouseLocation: NSEvent.mouseLocation,
@@ -386,7 +391,8 @@ public final class DesktopPetController: NSObject {
 
     /// Steps back toward hidden once the linger delay has passed, if the mouse is still away.
     private func retreatIfMouseIsAway() {
-        guard isVisible, let dock, dragStartOrigin == nil, !presentation.isControlPresented else { return }
+        guard isVisible, let dock, dragStartOrigin == nil,
+              !presentation.isControlPresented, activityStore.completion == nil else { return }
         let wanted = DesktopPetEdgeDocking.phase(
             forMouseLocation: NSEvent.mouseLocation,
             restingFrame: dock.restingFrame,

@@ -8,19 +8,22 @@ public struct DesktopPetView: View {
     private let isControlPresented: Bool
     private let pomodoroState: DesktopPetPomodoroState?
     private let isMusicPlaying: Bool
+    private let workingAgents: [DesktopPetAgent]
 
     public init(
         isActive: Bool = true,
         isDragging: Bool = false,
         isControlPresented: Bool = false,
         pomodoroState: DesktopPetPomodoroState? = nil,
-        isMusicPlaying: Bool = false
+        isMusicPlaying: Bool = false,
+        workingAgents: [DesktopPetAgent] = []
     ) {
         self.isActive = isActive
         self.isDragging = isDragging
         self.isControlPresented = isControlPresented
         self.pomodoroState = pomodoroState
         self.isMusicPlaying = isMusicPlaying
+        self.workingAgents = workingAgents
     }
 
     public var body: some View {
@@ -40,7 +43,8 @@ public struct DesktopPetView: View {
                 isActive: isActive,
                 isDragging: isDragging,
                 reduceMotion: reduceMotion,
-                isMusicPlaying: isMusicPlaying
+                isMusicPlaying: isMusicPlaying,
+                isAgentWorking: !workingAgents.isEmpty
             )
 
             ZStack(alignment: .top) {
@@ -50,7 +54,8 @@ public struct DesktopPetView: View {
                     isControlPresented: isControlPresented,
                     isDragging: isDragging,
                     reduceMotion: reduceMotion,
-                    isMusicPlaying: isMusicPlaying
+                    isMusicPlaying: isMusicPlaying,
+                    isAgentWorking: !workingAgents.isEmpty
                 )
                 .frame(
                     width: DesktopPetMetrics.artworkSize.width,
@@ -76,9 +81,18 @@ public struct DesktopPetView: View {
         )
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(accessibilityLabel)
-        .accessibilityValue(pomodoroState?.remainingTime ?? "")
+        .accessibilityValue(accessibilityValue)
         .accessibilityHint("Click to toggle Only Control. Drag to move.")
         .accessibilityAddTraits(.isButton)
+    }
+
+    private var accessibilityValue: String {
+        var values = [pomodoroState?.remainingTime].compactMap(\.self)
+        if !workingAgents.isEmpty {
+            values.append(workingAgents.map(\.name).joined(separator: ", "))
+            values.append(String(localized: "Agent working", bundle: .main))
+        }
+        return values.joined(separator: ", ")
     }
 
     private var accessibilityLabel: Text {
