@@ -18,6 +18,7 @@ struct DesktopPetSettingsFeature {
         var mode: Mode = .onlyControl
         var catalog: [RemoteControlDescriptor] = []
         var targetSearch = ""
+        var skins = DesktopPetSkinsFeature.State()
 
         var target: ScheduleTarget? { clickAction.target }
 
@@ -42,6 +43,7 @@ struct DesktopPetSettingsFeature {
         case task
         case catalogLoaded([RemoteControlDescriptor])
         case targetSelected(RemoteControlID)
+        case skins(DesktopPetSkinsFeature.Action)
     }
 
     @Dependency(\.desktopPetClickActionStorage) var storage
@@ -50,6 +52,7 @@ struct DesktopPetSettingsFeature {
 
     var body: some ReducerOf<Self> {
         BindingReducer()
+        Scope(state: \.skins, action: \.skins) { DesktopPetSkinsFeature() }
         Reduce { state, action in
             switch action {
             case .binding(\.mode):
@@ -68,12 +71,18 @@ struct DesktopPetSettingsFeature {
                 state.clickAction = storage.load()
                 state.isHungerEnabled = hungerSetting.load()
                 state.mode = state.target == nil ? .onlyControl : .control
-                return .run { [executor] send in
-                    await send(.catalogLoaded(await executor.catalog()))
-                }
+                return .merge(
+                    .run { [executor] send in
+                        await send(.catalogLoaded(await executor.catalog()))
+                    },
+                    .send(.skins(.task))
+                )
 
             case let .catalogLoaded(catalog):
                 state.catalog = catalog
+                return .none
+
+            case .skins:
                 return .none
 
             case let .targetSelected(id):

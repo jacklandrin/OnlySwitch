@@ -8,6 +8,8 @@ struct DesktopPetSettingsView: View {
 
     var body: some View {
         Form {
+            DesktopPetSkinsSection(store: store.scope(state: \.skins, action: \.skins))
+
             Section {
                 Picker("Desktop Pet Click Action".localized(), selection: $store.mode) {
                     Text("Desktop Pet Show OnlyControl".localized())

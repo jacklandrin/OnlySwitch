@@ -1,4 +1,7 @@
 import ComposableArchitecture
+import DesktopPet
+import DesktopPetSkinKit
+import Foundation
 import RemoteCore
 import Scheduler
 import Testing
@@ -14,25 +17,37 @@ struct DesktopPetSettingsFeatureTests {
         ScheduleTarget(controlID: darkMode.id, title: "Dark Mode", behavior: .switch)
     }
 
-    @Test func taskLoadsSavedActionAndCatalog() async {
+    @Test func taskLoadsSavedActionCatalogAndSkins() async {
         let target = darkModeTarget
         let catalog = [darkMode, shortcut]
+        let skin = DesktopPetSkin(
+            id: UUID(1), name: "Cat", summary: "cat", createdAt: Date(timeIntervalSinceReferenceDate: 0),
+            contractVersion: DesktopPetSkinContract.version, markup: "<div id=\"pet\"></div>"
+        )
         let store = TestStore(initialState: DesktopPetSettingsFeature.State()) {
             DesktopPetSettingsFeature()
         } withDependencies: {
             $0.desktopPetClickActionStorage.load = { .control(target) }
             $0.desktopPetHungerSetting.load = { false }
             $0.scheduleExecutor.catalog = { catalog }
+            $0.desktopPetSkinLibrary.load = { [skin] }
+            $0.desktopPetSkinLibrary.selectedID = { skin.id }
         }
+        // The catalog and the skin library load concurrently, so their actions arrive in either order.
+        store.exhaustivity = .off(showSkippedAssertions: false)
 
         await store.send(.task) {
             $0.clickAction = .control(target)
             $0.mode = .control
             $0.isHungerEnabled = false
         }
-        await store.receive(\.catalogLoaded) {
-            $0.catalog = catalog
-        }
+        await store.finish()
+        // `store.state` only includes received actions once they are skipped (applied).
+        await store.skipReceivedActions(strict: false)
+
+        #expect(store.state.catalog == catalog)
+        #expect(store.state.skins.skins == [skin])
+        #expect(store.state.skins.selectedID == skin.id)
     }
 
     @Test func selectingTargetSavesControlAction() async {
