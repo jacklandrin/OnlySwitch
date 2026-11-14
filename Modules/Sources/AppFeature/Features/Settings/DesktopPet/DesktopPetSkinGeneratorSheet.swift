@@ -10,24 +10,14 @@ struct DesktopPetSkinGeneratorSheet: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            ZStack(alignment: .topLeading) {
-                TextEditor(text: $store.description)
-                    .font(.body)
-                    .scrollContentBackground(.hidden)
-                    .padding(6)
-                    .background(.quaternary.opacity(0.5), in: .rect(cornerRadius: 8))
-                    .frame(height: 90)
-                    .disabled(store.isGenerating)
-                    .accessibilityLabel(placeholder)
-                if store.description.isEmpty {
-                    Text(placeholder)
-                        .foregroundStyle(.secondary)
-                        .padding(.horizontal, 11)
-                        .padding(.vertical, 14)
-                        .allowsHitTesting(false)
-                        .accessibilityHidden(true)
-                }
-            }
+            // A vertical text field draws its own placeholder, so it always lines up with the caret.
+            TextField(placeholder, text: $store.description, axis: .vertical)
+                .textFieldStyle(.plain)
+                .font(.body)
+                .lineLimit(4, reservesSpace: true)
+                .padding(10)
+                .background(.quaternary.opacity(0.5), in: .rect(cornerRadius: 8))
+                .disabled(store.isGenerating)
 
             if !store.isModelSelected {
                 Label("Desktop Pet No Model".localized(), systemImage: "exclamationmark.triangle.fill")
