@@ -188,11 +188,11 @@ class StatusBarController {
             return
         }
         
-        guard let event = NSApp.currentEvent, event.isRightClicked else {return}
+        guard let event = NSApp.currentEvent,
+              let collapse = Self.markerClickTarget(isRightClick: event.isRightClicked, isCollapsed: isMenubarCollapse)
+        else { return }
         Task {
-            if isMenubarCollapse == false {
-                try? await HideMenubarIconsSwitch.shared.operateSwitch(isOn: true)
-            }
+            try? await HideMenubarIconsSwitch.shared.operateSwitch(isOn: collapse)
         }
     }
 

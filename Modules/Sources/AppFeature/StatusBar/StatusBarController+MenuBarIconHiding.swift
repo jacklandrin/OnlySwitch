@@ -36,6 +36,15 @@ extension StatusBarController {
         }
     }
 
+    /// The collapse state a click on the marker asks for, or nil when the click changes nothing.
+    /// A left click toggles hiding; a right click only hides, as it always has.
+    static func markerClickTarget(isRightClick: Bool, isCollapsed: Bool) -> Bool? {
+        if isRightClick {
+            return isCollapsed ? nil : true
+        }
+        return !isCollapsed
+    }
+
     private func screenMidX(of item: NSStatusItem?) -> CGFloat? {
         guard let button = item?.button, let window = button.window else { return nil }
         return window.convertToScreen(button.convert(button.bounds, to: nil)).midX
@@ -71,12 +80,25 @@ extension StatusBarController {
             }
         }
 
-        do {
-            try await HideMenubarIconsSwitch.shared.operateSwitch(isOn: isMenubarCollapse)
-        } catch {
-            await recoverFromFailedMenuBarStartup()
+        // The menu bar can take a moment after launch to place OnlySwitch's items, and hiding is refused until it has.
+        for attempt in 0..<Self.startupRestoreAttempts {
+            do {
+                try await HideMenubarIconsSwitch.shared.operateSwitch(isOn: isMenubarCollapse)
+                return
+            } catch {
+                guard isMenubarCollapse, attempt < Self.startupRestoreAttempts - 1 else { break }
+            }
+            do {
+                try await Task.sleep(for: Self.startupRestoreRetryDelay)
+            } catch {
+                return
+            }
         }
+        await recoverFromFailedMenuBarStartup()
     }
+
+    static let startupRestoreAttempts = 20
+    static let startupRestoreRetryDelay = Duration.milliseconds(250)
 
     private func recoverFromFailedMenuBarStartup() async {
         try? await menuBarIconHidingCoordinator.setCollapsed(false)
