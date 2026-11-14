@@ -6,7 +6,7 @@ import Foundation
 /// Reads and writes whether the desktop pet gets hungry, and tells the running pet about changes.
 struct DesktopPetHungerSetting: Sendable {
     var load: @Sendable () -> Bool
-    var save: @Sendable (Bool) -> Void
+    var save: @Sendable (Bool) async -> Void
 
     static func userDefaults(_ defaults: UserDefaults, notificationCenter: NotificationCenter = .default) -> Self {
         // Both types are documented as thread-safe but are not declared `Sendable`.
@@ -17,7 +17,11 @@ struct DesktopPetHungerSetting: Sendable {
             load: { defaults.value.object(forKey: key) as? Bool ?? true },
             save: { isEnabled in
                 defaults.value.set(isEnabled, forKey: key)
-                center.value.post(name: .desktopPetNeedsSettingsChanged, object: nil)
+                // Observers such as `AppDelegate` are main-actor isolated, and notifications are
+                // delivered on the posting thread, so post from the main actor.
+                await MainActor.run {
+                    center.value.post(name: .desktopPetNeedsSettingsChanged, object: nil)
+                }
             }
         )
     }

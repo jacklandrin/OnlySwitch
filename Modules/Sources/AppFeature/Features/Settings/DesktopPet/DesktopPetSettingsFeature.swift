@@ -59,7 +59,7 @@ struct DesktopPetSettingsFeature {
 
             case .binding(\.isHungerEnabled):
                 let isEnabled = state.isHungerEnabled
-                return .run { [hungerSetting] _ in hungerSetting.save(isEnabled) }
+                return .run { [hungerSetting] _ in await hungerSetting.save(isEnabled) }
 
             case .binding:
                 return .none

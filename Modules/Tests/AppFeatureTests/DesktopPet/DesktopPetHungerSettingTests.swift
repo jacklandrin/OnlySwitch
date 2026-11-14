@@ -17,21 +17,21 @@ struct DesktopPetHungerSettingTests {
         #expect(!UserDefaults.Key.exportableKeys.contains(UserDefaults.Key.desktopPetNeeds))
     }
 
-    @Test func savesAndPostsChange() throws {
+    @Test func savesAndPostsChangeOnTheMainThread() async throws {
         let suite = "DesktopPetHungerSettingTests.\(UUID().uuidString)"
         let defaults = try #require(UserDefaults(suiteName: suite))
         defer { defaults.removePersistentDomain(forName: suite) }
         let center = NotificationCenter()
-        let posted = LockIsolated(0)
+        let posted = LockIsolated<[Bool]>([])
         let token = center.addObserver(forName: .desktopPetNeedsSettingsChanged, object: nil, queue: nil) { _ in
-            posted.withValue { $0 += 1 }
+            posted.withValue { $0.append(Thread.isMainThread) }
         }
         defer { center.removeObserver(token) }
         let setting = DesktopPetHungerSetting.userDefaults(defaults, notificationCenter: center)
 
         #expect(setting.load())
-        setting.save(false)
+        await setting.save(false)
         #expect(!setting.load())
-        #expect(posted.value == 1)
+        #expect(posted.value == [true])
     }
 }
