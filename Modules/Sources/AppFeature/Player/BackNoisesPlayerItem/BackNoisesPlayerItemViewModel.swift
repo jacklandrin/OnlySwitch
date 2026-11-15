@@ -11,6 +11,11 @@ import Foundation
 class BackNoisesPlayerItemViewModel: CommonPlayerItem,
                                 ObservableObject,
                                 Identifiable {
+    private let player: () -> AudioPlayer
+
+    init(player: @escaping () -> AudioPlayer = { PlayerManager.shared.player }) {
+        self.player = player
+    }
     
     var changeToNextTrack:(() -> Void)?
     var changeToPreviousTrack:(() -> Void)?
@@ -22,10 +27,10 @@ class BackNoisesPlayerItemViewModel: CommonPlayerItem,
         }
         set {
             self.model.isPlaying = newValue
-            if newValue {
-                PlayerManager.shared.player.play(stream: self)
-            } else {
-                PlayerManager.shared.player.stop()
+            if newValue, model.url != nil {
+                player().play(stream: self)
+            } else if !newValue, player().currentPlayerItem === self {
+                player().stop()
             }
         }
     }

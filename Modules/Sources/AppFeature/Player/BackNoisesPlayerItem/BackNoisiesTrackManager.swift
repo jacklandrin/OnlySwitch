@@ -29,7 +29,7 @@ final class BackNoisesTrackManager:ObservableObject, @unchecked Sendable {
     }
     
     static let shared = BackNoisesTrackManager()
-    var currentBackNoisesItem = BackNoisesPlayerItemViewModel()
+    let currentBackNoisesItem: BackNoisesPlayerItemViewModel
     
     var currentTrack:Tracks {
         get {
@@ -47,6 +47,11 @@ final class BackNoisesTrackManager:ObservableObject, @unchecked Sendable {
     }
 
     private let folderName = "backNoises"
+    private let cachePath: @Sendable () -> String?
+    private let download: @Sendable (Tracks) async throws -> String
+    private let player: () -> AudioPlayer
+    private var loadTask: Task<Void, Never>?
+    private var loadGeneration = UUID()
 
     let trackList:[Tracks] = [
         .WhiteNoise,
@@ -62,52 +67,89 @@ final class BackNoisesTrackManager:ObservableObject, @unchecked Sendable {
         .Fireplace
     ]
     
-    init() {
-        setPlayItem(track: currentTrack)
+    init(
+        loadImmediately: Bool = true,
+        cachePath: @escaping @Sendable () -> String? = { GitHubPresenter.shared.myAppPath },
+        download: @escaping @Sendable (Tracks) async throws -> String = { track in
+            try await BackNoisesTrackManager.downloadBackgroundNoises(track: track)
+        },
+        player: @escaping () -> AudioPlayer = { PlayerManager.shared.player }
+    ) {
+        self.cachePath = cachePath
+        self.download = download
+        self.player = player
+        self.currentBackNoisesItem = BackNoisesPlayerItemViewModel(player: player)
+        if loadImmediately { setPlayItem(track: currentTrack) }
     }
 
-    private func setPlayItem(track: Tracks) {
-        func setTrackURL(trackURL: String) {
-            if let item = PlayerManager.shared.player.currentPlayerItem, item.isPlaying {
-                if item.type == .BackNoises {
-                    PlayerManager.shared.player.stop()
-                } else {
-                    item.isPlaying = false
-                }
-            }
+    @discardableResult
+    func setPlayItem(track: Tracks) -> Task<Void, Never>? {
+        loadTask?.cancel()
+        let generation = UUID()
+        loadGeneration = generation
+        currentBackNoisesItem.title = track.rawValue
+        currentBackNoisesItem.changeToPreviousTrack = { [weak self] in self?.changeTrack(action: .previous) }
+        currentBackNoisesItem.changeToNextTrack = { [weak self] in self?.changeTrack(action: .next) }
 
-            let isPlaying = currentBackNoisesItem.isPlaying
-            currentBackNoisesItem.url = URL(string: trackURL)
-            currentBackNoisesItem.title = track.rawValue
-            currentBackNoisesItem.changeToPreviousTrack = {
-                self.changeTrack(action: .previous)
-            }
-
-            currentBackNoisesItem.changeToNextTrack = {
-                self.changeTrack(action: .next)
-            }
-
-            currentBackNoisesItem.isPlaying = isPlaying
-
-            NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.backNoises)
-            NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.radioStation)
+        // Claim playback now, so a radio started during the download can supersede it.
+        if currentBackNoisesItem.isPlaying,
+           let item = player().currentPlayerItem,
+           item !== currentBackNoisesItem, item.isPlaying {
+            item.isPlaying = false
         }
 
-        if let trackURL = GitHubPresenter.shared.myAppPath?.appendingPathComponent(string: "backNoises/" + track.fileName()), FileManager.default.fileExists(atPath: trackURL) {
-            setTrackURL(trackURL: trackURL)
+        if let trackURL = cachedTrackURL(track: track) {
+            applyTrackURL(trackURL)
+            return nil
         } else {
-            Task { @MainActor in
+            currentBackNoisesItem.url = nil
+            loadTask = Task { @MainActor [weak self] in
+                guard let self else { return }
                 do {
-                    let path = try await downloadBackgroundNoises(track: track)
-                    setTrackURL(trackURL: path)
+                    let url = try await resolveTrackURL(track: track)
+                    guard !Task.isCancelled, loadGeneration == generation else { return }
+                    applyTrackURL(url)
                 } catch {
-                    if let item = PlayerManager.shared.player.currentPlayerItem {
-                        item.isPlaying = false
-                    }
+                    guard !Task.isCancelled, loadGeneration == generation else { return }
+                    currentBackNoisesItem.isPlaying = false
+                    NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.backNoises)
                 }
             }
+            return loadTask
         }
     }
+
+    private func applyTrackURL(_ trackURL: URL) {
+        // A different source started while we were downloading: preserve that newer intent.
+        if currentBackNoisesItem.isPlaying,
+           let item = player().currentPlayerItem,
+           item !== currentBackNoisesItem, item.isPlaying {
+            currentBackNoisesItem.isPlaying = false
+        }
+        let isPlaying = currentBackNoisesItem.isPlaying
+        currentBackNoisesItem.url = trackURL
+        currentBackNoisesItem.isPlaying = isPlaying
+        NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.backNoises)
+        NotificationCenter.default.post(name: .refreshSingleSwitchStatus, object: SwitchType.radioStation)
+    }
+
+    private func cachedTrackURL(track: Tracks) -> URL? {
+        guard let path = cachePath() else { return nil }
+        let url = URL(fileURLWithPath: path, isDirectory: true)
+            .appendingPathComponent(folderName, isDirectory: true)
+            .appendingPathComponent(track.fileName())
+        var isDirectory: ObjCBool = false
+        guard FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory),
+              !isDirectory.boolValue else { return nil }
+        return url
+    }
+
+    func resolveTrackURL(track: Tracks) async throws -> URL {
+        if let url = cachedTrackURL(track: track) { return url }
+        return URL(fileURLWithPath: try await download(track))
+    }
+
+    deinit { loadTask?.cancel() }
     
     func changeTrack(action:ChangeTrackAction) {
         let newIndex:Int!
@@ -149,11 +191,11 @@ final class BackNoisesTrackManager:ObservableObject, @unchecked Sendable {
         return size
     }
 
-    private func downloadBackgroundNoises(track: Tracks) async throws -> String {
+    private static func downloadBackgroundNoises(track: Tracks) async throws -> String {
         var components = URLComponents()
         components.scheme = httpsScheme
         components.host = URLHost.userContent.rawValue
         components.path = "/" + EndPointKinds.backNoises.rawValue + track.fileName()
-        return try await GitHubPresenter.shared.downloadFile(from: components.url!, name: folderName + "/" + track.fileName())
+        return try await GitHubPresenter.shared.downloadFile(from: components.url!, name: "backNoises/" + track.fileName())
     }
 }

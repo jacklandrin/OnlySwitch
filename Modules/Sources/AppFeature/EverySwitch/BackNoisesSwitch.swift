@@ -37,9 +37,14 @@ final class BackNoisesSwitch: SwitchProvider, @unchecked Sendable {
     @MainActor
     func operateSwitch(isOn: Bool) async throws {
         if isOn {
-            self.backNoisesTrackManager.currentBackNoisesItem.isPlaying = true
-            if let url = self.backNoisesTrackManager.currentBackNoisesItem.url, !fileExistAtPath(url.absoluteString) {
-                self.backNoisesTrackManager.currentTrack = self.backNoisesTrackManager.currentBackNoisesItem.track
+            let item = backNoisesTrackManager.currentBackNoisesItem
+            if let url = item.url, url.isFileURL, FileManager.default.fileExists(atPath: url.path) {
+                item.isPlaying = true
+            } else {
+                item.url = nil
+                item.isPlaying = true
+                let track = backNoisesTrackManager.currentTrack
+                backNoisesTrackManager.currentTrack = track
             }
         } else {
             self.backNoisesTrackManager.currentBackNoisesItem.isPlaying = false
