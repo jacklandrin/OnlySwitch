@@ -45,6 +45,7 @@ struct OnlyControlView: View {
     @AppStorage(UserDefaults.Key.showAppUninstallerTab) private var showAppUninstallerTab = true
     @AppStorage(UserDefaults.Key.showScreenshotsTab) private var showScreenshotsTab = true
     @AppStorage(UserDefaults.Key.showBrightnessTab) private var showBrightnessTab = true
+    @AppStorage(UserDefaults.Key.displayBrightnessEnabled) private var displayBrightnessEnabled = true
     @AppStorage(UserDefaults.Key.showSchedulesTab) private var showSchedulesTab = true
     @AppStorage(UserDefaults.Key.showBrowserTab) private var showBrowserTab = true
     @AppStorage(UserDefaults.Key.tabOrder) private var tabOrder = ""
@@ -302,7 +303,7 @@ struct OnlyControlView: View {
             xcodeCleaner: showXcodeCleanerTab,
             appUninstaller: showAppUninstallerTab,
             screenshots: showScreenshotsTab,
-            brightness: showBrightnessTab,
+            brightness: showBrightnessTab && displayBrightnessEnabled,
             schedules: showSchedulesTab,
             browser: showBrowserTab,
             order: SectionBar.manageableOrder(from: tabOrder)

@@ -9,6 +9,7 @@ import Foundation
 import AppKit
 import Combine
 import Defines
+import Extensions
 
 struct BrightnessSyncState {
     private(set) var isRunning = false
@@ -51,6 +52,11 @@ final class BrightnessSyncManager {
     static let shared = BrightnessSyncManager()
     private init() {}
     func updateState() {
+        guard UserDefaults.isDisplayBrightnessEnabled() else {
+            // Keep event subscribers attached so they recover when the switch is turned back on.
+            DisplayBrightnessService.shared.stop(finishingStreams: false)
+            return
+        }
         DisplayBrightnessService.shared.start()
         Task { @MainActor in
             await DisplayBrightnessService.shared.updateSettings(DisplayBrightnessSettingsPersistence.load())

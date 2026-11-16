@@ -130048,6 +130048,506 @@
           }
         }
       }
+    },
+    "Control External Displays via DDC" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ovládat externí displeje přes DDC"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Externe Displays über DDC steuern"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Control External Displays via DDC"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Controlar pantallas externas mediante DDC"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kontrolin ang mga External Display gamit ang DDC"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contrôler les écrans externes via DDC"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upravljaj vanjskim zaslonima putem DDC-a"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Controlla i display esterni tramite DDC"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DDC で外部ディスプレイを制御"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DDC로 외부 디스플레이 제어"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Externe beeldschermen bedienen via DDC"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Steruj zewnętrznymi wyświetlaczami przez DDC"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Controlar monitores externos via DDC"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Управлять внешними мониторами через DDC"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ovládať externé displeje cez DDC"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ku xakameey shaashadaha dibadda iyadoo la adeegsanayo DDC"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Harici ekranları DDC ile denetle"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Керувати зовнішніми моніторами через DDC"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通过 DDC 控制外接显示器"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "透過 DDC 控制外接顯示器"
+          }
+        }
+      }
+    },
+    "Adjusts external monitor brightness over DDC. When off, external displays use software dimming. Some monitors may disconnect or flicker with DDC." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upravuje jas externích monitorů přes DDC. Když je vypnuto, externí displeje používají softwarové ztlumení. Některé monitory se při použití DDC mohou odpojovat nebo blikat."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passt die Helligkeit externer Monitore über DDC an. Wenn ausgeschaltet, verwenden externe Displays softwarebasiertes Abdunkeln. Manche Monitore trennen sich mit DDC eventuell oder flackern."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adjusts external monitor brightness over DDC. When off, external displays use software dimming. Some monitors may disconnect or flicker with DDC."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajusta el brillo de los monitores externos mediante DDC. Si está desactivado, las pantallas externas usan atenuación por software. Algunos monitores pueden desconectarse o parpadear con DDC."
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inaayos ang liwanag ng external monitor sa pamamagitan ng DDC. Kapag naka-off, software dimming ang gagamitin ng mga external display. Maaaring madiskonekta o mag-flicker ang ilang monitor kapag may DDC."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajuste la luminosité des moniteurs externes via DDC. Lorsque l'option est désactivée, les écrans externes utilisent l'atténuation logicielle. Certains moniteurs peuvent se déconnecter ou scintiller avec DDC."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Podešava svjetlinu vanjskih monitora putem DDC-a. Kada je isključeno, vanjski zasloni koriste softversko zatamnjenje. Neki se monitori mogu odspojiti ili treperiti s DDC-om."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regola la luminosità dei monitor esterni tramite DDC. Se disattivato, i display esterni usano l'attenuazione software. Alcuni monitor potrebbero disconnettersi o sfarfallare con DDC."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DDC を使って外部モニタの輝度を調整します。オフの場合、外部ディスプレイはソフトウェア調光を使用します。一部のモニタでは DDC により接続が切れたりちらついたりすることがあります。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DDC를 통해 외부 모니터의 밝기를 조절합니다. 끄면 외부 디스플레이는 소프트웨어 디밍을 사용합니다. 일부 모니터는 DDC 사용 시 연결이 끊기거나 깜박일 수 있습니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Past de helderheid van externe monitoren aan via DDC. Als dit uit staat, gebruiken externe beeldschermen softwarematig dimmen. Sommige monitoren kunnen met DDC de verbinding verliezen of flikkeren."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reguluje jasność zewnętrznych monitorów przez DDC. Gdy wyłączone, zewnętrzne wyświetlacze używają programowego przyciemniania. Niektóre monitory mogą się rozłączać lub migotać przy użyciu DDC."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajusta o brilho de monitores externos via DDC. Quando desativado, as telas externas usam escurecimento por software. Alguns monitores podem desconectar ou piscar com DDC."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Регулирует яркость внешних мониторов через DDC. Если выключено, внешние дисплеи используют программное затемнение. Некоторые мониторы могут отключаться или мерцать при использовании DDC."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upravuje jas externých monitorov cez DDC. Keď je vypnuté, externé displeje používajú softvérové stlmenie. Niektoré monitory sa môžu pri DDC odpájať alebo blikať."
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wuxuu iftiinka kormeerayaasha dibadda ka hagaajiyaa DDC. Marka la damiyo, shaashadaha dibadda waxay isticmaalaan hoos-u-dhigis software. Qaar ka mid ah kormeerayaasha ayaa laga yaabaa inay go'aan ama soo-bax-soo-dhac marka DDC la isticmaalo."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Harici monitör parlaklığını DDC ile ayarlar. Kapalıyken harici ekranlar yazılımsal karartma kullanır. Bazı monitörler DDC ile bağlantıyı kesebilir veya titreyebilir."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Регулює яскравість зовнішніх моніторів через DDC. Коли вимкнено, зовнішні дисплеї використовують програмне затемнення. Деякі монітори можуть відключатися або мерехтіти при використанні DDC."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通过 DDC 调节外接显示器亮度。关闭时，外接显示器使用软件调光。某些显示器在使用 DDC 时可能会断开连接或闪烁。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "透過 DDC 調整外接顯示器亮度。關閉時，外接顯示器會使用軟體調暗。某些顯示器在使用 DDC 時可能會中斷連線或閃爍。"
+          }
+        }
+      }
+    },
+    "Display Brightness" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jas displeje"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Displayhelligkeit"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Display Brightness"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brillo de pantalla"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Liwanag ng Display"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Luminosité de l'écran"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Svjetlina zaslona"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Luminosità del display"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ディスプレイの輝度"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "디스플레이 밝기"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beeldschermhelderheid"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jasność wyświetlacza"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brilho da tela"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Яркость дисплея"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jas displeja"
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Iftiinka Shaashadda"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ekran Parlaklığı"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Яскравість дисплея"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "显示器亮度"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "顯示器亮度"
+          }
+        }
+      }
+    },
+    "Turn off to stop all brightness control, including the Brightness tab, brightness keys, remote brightness and Dim Screen." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vypnutím zastavíte veškeré ovládání jasu, včetně karty Jas, kláves jasu, vzdáleného jasu a funkce Ztlumit obrazovku."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausschalten, um die gesamte Helligkeitssteuerung zu beenden, einschließlich des Tabs „Helligkeit“, der Helligkeitstasten, der Remote-Helligkeit und „Bildschirm verdunkeln“."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn off to stop all brightness control, including the Brightness tab, brightness keys, remote brightness and Dim Screen."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desactívalo para detener todo el control del brillo, incluida la pestaña Brillo, las teclas de brillo, el brillo remoto y Atenuar pantalla."
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I-off para ihinto ang lahat ng kontrol sa liwanag, kasama ang tab na Liwanag, mga brightness key, remote na liwanag, at Dim Screen."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Désactivez pour arrêter tout contrôle de la luminosité, y compris l'onglet Luminosité, les touches de luminosité, la luminosité à distance et Assombrir l'écran."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Isključite za zaustavljanje svih kontrola svjetline, uključujući karticu Svjetlina, tipke za svjetlinu, udaljenu svjetlinu i Zatamnjivanje zaslona."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disattiva per interrompere ogni controllo della luminosità, inclusi la scheda Luminosità, i tasti di luminosità, la luminosità remota e Attenua schermo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "オフにすると、「明るさ」タブ、輝度キー、リモート輝度、画面を暗くするを含む、すべての輝度制御が停止します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "끄면 밝기 탭, 밝기 키, 원격 밝기, 화면 어둡게 하기를 포함한 모든 밝기 제어가 중지됩니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schakel uit om alle helderheidsregeling te stoppen, inclusief het tabblad Helderheid, helderheidstoetsen, helderheid op afstand en Scherm dimmen."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyłącz, aby zatrzymać całą kontrolę jasności, w tym kartę Jasność, klawisze jasności, zdalną jasność i Przyciemnianie ekranu."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desative para interromper todo o controle de brilho, incluindo a aba Brilho, as teclas de brilho, o brilho remoto e Escurecer tela."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выключите, чтобы остановить всё управление яркостью, включая вкладку «Яркость», клавиши яркости, удалённую яркость и «Затемнить экран»."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vypnutím zastavíte všetko ovládanie jasu vrátane karty Jas, klávesov jasu, vzdialeného jasu a funkcie Stlmiť obrazovku."
+          }
+        },
+        "so" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dami si aad u joojiso xakamaynta iftiinka oo dhan, oo ay ku jiraan tabka Iftiinka, furayaasha iftiinka, iftiinka fogaan laga maamulo iyo Hoos u dhig Shaashadda."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parlaklık sekmesi, parlaklık tuşları, uzaktan parlaklık ve Ekranı Karart dahil tüm parlaklık denetimini durdurmak için kapatın."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вимкніть, щоб зупинити все керування яскравістю, зокрема вкладку «Яскравість», клавіші яскравості, віддалену яскравість і «Затемнити екран»."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭后将停止所有亮度控制，包括“亮度”标签页、亮度按键、远程亮度和调暗屏幕。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "關閉後將停止所有亮度控制，包括「亮度」標籤頁、亮度按鍵、遠端亮度和調暗螢幕。"
+          }
+        }
+      }
     }
   },
   "version" : "1.1"

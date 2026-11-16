@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import Defines
+import Extensions
 import Switches
 import DisplayBrightness
 
@@ -85,8 +86,9 @@ final class DimScreenSwitch: SwitchProvider, @unchecked Sendable {
         }
     }
 
+    /// Dim Screen drives the brightness service, so it is hidden while Display Brightness is off.
     func isVisible() -> Bool {
-        return true
+        UserDefaults.isDisplayBrightnessEnabled()
     }
 
     private func setTimer() {

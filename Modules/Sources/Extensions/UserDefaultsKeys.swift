@@ -96,6 +96,10 @@ public extension UserDefaults {
         public static let autoStopKeepAwakeOnSleep = "autoStopKeepAwakeOnSleepKey"
         public static let KeepAwakeKey = "KeepAwakeKey"
         // Display Brightness
+        /// Master switch for the whole brightness feature; default on.
+        public static let displayBrightnessEnabled = "displayBrightnessEnabledKey"
+        /// Allows DDC I/O with external displays (issue #232); default off.
+        public static let externalDisplayDDCEnabled = "externalDisplayDDCEnabledKey"
         public static let showBrightnessTab = "showBrightnessTabKey"
         public static let smoothBrightnessTransitions = "smoothBrightnessTransitionsKey"
         public static let combinedBrightnessDimming = "combinedBrightnessDimmingKey"
@@ -170,7 +174,7 @@ public extension UserDefaults {
             backNoisesTrack, automaticallyStopPlayNoiseTime,
             autoStopKeepAwakeMode, autoStopKeepAwakeTime, autoStopKeepAwakeStartDate, autoStopKeepAwakeEndDate, autoStopKeepAwakeOnSleep, KeepAwakeKey,
             autoDimScreenTime, dimScreenPercent, syncExternalBrightness,
-            showBrightnessTab, smoothBrightnessTransitions, combinedBrightnessDimming, allowZeroSoftwareBrightness, controlWithBrightnessKeys,
+            displayBrightnessEnabled, externalDisplayDDCEnabled, showBrightnessTab, smoothBrightnessTransitions, combinedBrightnessDimming, allowZeroSoftwareBrightness, controlWithBrightnessKeys,
             nightShiftStrength, nightShiftStartDate, nightShiftEndDate, isNightShiftScheduleOn,
             sticker,
             showCodexUsageTab, showClaudeUsageTab, showAphroditeTab, currentAIModel, ollamaUrl, openAIHost,

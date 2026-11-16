@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import DisplayBrightness
+import Extensions
 import Foundation
 import RemoteCore
 
@@ -11,10 +12,16 @@ final class RemoteBrightnessProvider {
 
     private let store: StoreOf<DisplayBrightnessFeature>
     private let pollInterval: Duration
+    private let isEnabled: @MainActor () -> Bool
     private var revision: UInt64 = 0
 
-    init(store: StoreOf<DisplayBrightnessFeature>, pollInterval: Duration = .milliseconds(400)) {
+    init(
+        store: StoreOf<DisplayBrightnessFeature>,
+        pollInterval: Duration = .milliseconds(400),
+        isEnabled: @escaping @MainActor () -> Bool = { UserDefaults.isDisplayBrightnessEnabled() }
+    ) {
         self.store = store
+        self.isEnabled = isEnabled
         self.pollInterval = pollInterval
     }
 
@@ -26,34 +33,49 @@ final class RemoteBrightnessProvider {
 
     func currentSnapshot() -> RemoteBrightnessSnapshot {
         revision &+= 1
-        return Self.remoteSnapshot(from: store.snapshot, revision: revision)
+        return Self.remoteSnapshot(from: isEnabled() ? store.snapshot : BrightnessSnapshot(), revision: revision)
     }
 
     func snapshots(hostID: UUID) -> AsyncStream<RemoteBrightnessSnapshot> {
         AsyncStream { continuation in
-            store.send(.appeared(hostID: hostID))
-            let task = Task { @MainActor [weak self, pollInterval] in
+            // Master switch off: no `.appeared` (so nothing scans) until it is turned back on.
+            var registered = false
+            if isEnabled() {
+                store.send(.appeared(hostID: hostID))
+                registered = true
+            }
+            // The task alone owns the host registration, so it is released exactly once when the loop
+            // ends (consumer cancelled/terminated, or provider gone), even if cancelled while sleeping.
+            let task = Task { @MainActor [weak self, store, pollInterval, registered] in
+                var registered = registered
                 var last: BrightnessSnapshot?
                 // `guard let self` per iteration so the loop ends once the provider is gone.
                 while !Task.isCancelled {
                     guard let self else { break }
-                    let next = self.store.snapshot
+                    let enabled = self.isEnabled()
+                    if enabled != registered {
+                        store.send(enabled ? .appeared(hostID: hostID) : .disappeared(hostID: hostID))
+                        registered = enabled
+                    }
+                    // Compare what peers see, so flipping the master switch always pushes a snapshot.
+                    let next = enabled ? store.snapshot : BrightnessSnapshot()
                     if next != last {
                         continuation.yield(self.currentSnapshot())
                         last = next
                     }
                     try? await Task.sleep(for: pollInterval)
                 }
+                if registered { store.send(.disappeared(hostID: hostID)) }
                 continuation.finish()
             }
-            continuation.onTermination = { [weak self] _ in
-                task.cancel()
-                Task { @MainActor in self?.store.send(.disappeared(hostID: hostID)) }
-            }
+            continuation.onTermination = { _ in task.cancel() }
         }
     }
 
     func perform(_ command: RemoteBrightnessCommand) throws(RemoteProtocolError) -> RemoteBrightnessSnapshot {
+        guard isEnabled() else {
+            throw RemoteProtocolError(code: .controlUnavailable, message: "Display brightness is turned off")
+        }
         switch command {
         case let .setLevel(displayID, level):
             guard let display = store.snapshot.displays.first(where: { $0.id == displayID }) else {

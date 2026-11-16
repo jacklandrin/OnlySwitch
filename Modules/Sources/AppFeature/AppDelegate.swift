@@ -113,6 +113,28 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             }
         }
 
+        // Display Brightness master switch: starts or stops the whole feature.
+        NotificationCenter.default.addObserver(
+            forName: .displayBrightnessEnabledDidChange,
+            object: nil,
+            queue: .main
+        ) { _ in
+            Task { @MainActor in
+                BrightnessSyncManager.shared.updateState()
+            }
+        }
+
+        // External display DDC toggle (issue #232): reclassify displays when flipped.
+        NotificationCenter.default.addObserver(
+            forName: .externalDisplayDDCEnabledDidChange,
+            object: nil,
+            queue: .main
+        ) { _ in
+            Task { @MainActor in
+                await DisplayBrightnessService.shared.ddcAvailabilityChanged()
+            }
+        }
+
         // Checks on launch and hourly; each check respects the "Check Updates on Launch" preference.
         updateCheckScheduler.start()
         // Workaround for issue [#147](https://github.com/jacklandrin/OnlySwitch/issues/147)

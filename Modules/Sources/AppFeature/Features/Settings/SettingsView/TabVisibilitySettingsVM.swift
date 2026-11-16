@@ -80,17 +80,23 @@ extension SectionBar.Section {
 
 @MainActor
 final class TabVisibilitySettingsVM: ObservableObject {
-    @Published private(set) var sections: [SectionBar.Section] = SectionBar.Section.manageable
+    @Published private(set) var sections: [SectionBar.Section] = []
     @Published private(set) var visibility: [SectionBar.Section: Bool] = [:]
     /// While true the rows show drag handles instead of visibility toggles.
     @Published private(set) var isReordering = false
 
     private let client: TabVisibilityClient
     private let notificationCenter: NotificationCenter
+    private let isDisplayBrightnessEnabled: @MainActor () -> Bool
     private var settingsChanges: AnyCancellable?
 
-    init(client: TabVisibilityClient = .live, notificationCenter: NotificationCenter = .default) {
+    init(
+        client: TabVisibilityClient = .live,
+        notificationCenter: NotificationCenter = .default,
+        isDisplayBrightnessEnabled: @escaping @MainActor () -> Bool = { UserDefaults.isDisplayBrightnessEnabled() }
+    ) {
         self.client = client
+        self.isDisplayBrightnessEnabled = isDisplayBrightnessEnabled
         self.notificationCenter = notificationCenter
         reload()
         // Keeps the page in sync when a tab changes elsewhere, e.g. Authenticator's own Enabled toggle.
@@ -137,13 +143,25 @@ final class TabVisibilitySettingsVM: ObservableObject {
         let insertion = min(max(0, destination - source.filter { $0 < destination }.count), reordered.count)
         reordered.insert(contentsOf: moving, at: insertion)
         guard reordered != sections else { return }
-        client.setOrder(reordered)
-        sections = client.order()
+        client.setOrder(mergingHiddenSections(into: reordered))
+        sections = displayedOrder()
         notificationCenter.post(name: .changeSettings, object: nil)
     }
 
+    /// The saved order without tabs whose feature is turned off (Brightness while Display Brightness is off).
+    private func displayedOrder() -> [SectionBar.Section] {
+        client.order().filter { $0 != .brightness || isDisplayBrightnessEnabled() }
+    }
+
+    /// Puts the reordered displayed tabs back into the saved order; hidden tabs keep their saved slots.
+    private func mergingHiddenSections(into reordered: [SectionBar.Section]) -> [SectionBar.Section] {
+        let displayed = Set(reordered)
+        var next = reordered.makeIterator()
+        return client.order().compactMap { displayed.contains($0) ? next.next() : $0 }
+    }
+
     func reload() {
-        let latestOrder = client.order()
+        let latestOrder = displayedOrder()
         if latestOrder != sections { sections = latestOrder }
         let latest = Dictionary(uniqueKeysWithValues: sections.map { ($0, client.isVisible($0)) })
         if latest != visibility { visibility = latest }

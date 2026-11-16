@@ -3,6 +3,7 @@ import Combine
 import Defines
 import DisplayBrightness
 import DisplayDDC
+import Extensions
 import OnlySwitchObjC
 
 /// AppKit/native effects stay on the main actor; blocking I2C uses DisplayDDC's shared queue.
@@ -59,8 +60,11 @@ final class DisplayBrightnessService {
 
     private init() {}
 
+    /// Master "Display Brightness" switch; when off the service performs no work at all.
+    private var isEnabled: Bool { UserDefaults.isDisplayBrightnessEnabled() }
+
     func start() {
-        guard !hasStarted else { return }
+        guard isEnabled, !hasStarted else { return }
         hasStarted = true
         isSleeping = false
         let center = NotificationCenter.default
@@ -105,6 +109,7 @@ final class DisplayBrightnessService {
     }
 
     func scan() async -> BrightnessSnapshot {
+        guard isEnabled else { return BrightnessSnapshot() }
         start()
         guard !isSleeping else { return presentedSnapshot(coordinator.snapshot) }
         discoveryRevision &+= 1
@@ -115,7 +120,8 @@ final class DisplayBrightnessService {
             if activeScanRevision == revision { activeScanRevision = nil }
         }
         let screens = NSScreen.screens.filter { $0.displayID != 0 && CGDisplayMirrorsDisplay($0.displayID) == kCGNullDirectDisplay }
-        let readings = await ddc.brightnessDisplays()
+        // With DDC off (issue #232) no I2C probing happens; non-native displays fall back to software.
+        let readings = UserDefaults.isExternalDisplayDDCEnabled() ? await ddc.brightnessDisplays() : []
         guard revision == discoveryRevision, !isSleeping else { return presentedSnapshot(coordinator.snapshot) }
         let previous = coordinator.snapshot.displays
         tokens.removeAll()
@@ -151,7 +157,7 @@ final class DisplayBrightnessService {
 
     /// Dim Screen passes `isManual: false` so its own writes do not cancel dimming.
     func apply(_ request: BrightnessRequest, isManual: Bool = true) async throws {
-        guard !isSleeping else { throw BrightnessError.unavailable }
+        guard isEnabled, !isSleeping else { throw BrightnessError.unavailable }
         keyboardTasks.removeValue(forKey: request.screenID)?.cancel()
         keyboardAccumulator.cancel(screenID: request.screenID)
         let manualNative = isManual && coordinator.snapshot.displays.first(where: { $0.id == request.screenID })?.control == .native
@@ -164,6 +170,7 @@ final class DisplayBrightnessService {
     }
 
     func updateSettings(_ settings: BrightnessSettings) async {
+        guard isEnabled else { return }
         guard settings != coordinator.settings else { return }
         let wasSyncing = coordinator.settings.syncNativeBrightness
         if wasSyncing != settings.syncNativeBrightness {
@@ -187,6 +194,7 @@ final class DisplayBrightnessService {
     }
 
     func resetSoftwareDimming() async {
+        guard isEnabled else { return }
         guard !isResettingDimming else { return }
         isResettingDimming = true
         defer { isResettingDimming = false }
@@ -210,7 +218,12 @@ final class DisplayBrightnessService {
         }
     }
 
-    func stop() {
+    /// Stops all brightness work and restores software shades. With `finishingStreams: false` the
+    /// `events()` subscribers stay registered and receive an empty snapshot, so they recover when the
+    /// service is started again (master switch turned back on).
+    func stop(finishingStreams: Bool = true) {
+        // Cleared first so the empty-inventory publish below cannot re-enable brightness-key routing.
+        hasStarted = false
         cancelKeyboardAdjustments()
         keyboardController.stop()
         outputRevision &+= 1
@@ -226,8 +239,14 @@ final class DisplayBrightnessService {
         observers.forEach(NotificationCenter.default.removeObserver)
         workspaceObservers.forEach(NSWorkspace.shared.notificationCenter.removeObserver)
         observers.removeAll(); workspaceObservers.removeAll()
-        continuations.values.forEach { $0.finish() }; continuations.removeAll()
-        hasStarted = false
+        if finishingStreams {
+            continuations.values.forEach { $0.finish() }; continuations.removeAll()
+        } else {
+            // Current (empty) generation: the store ignores snapshots older than the one it holds.
+            yieldSnapshot(coordinator.snapshot)
+        }
+        // Cache-only: makes queued DDC writes fail.
+        Task { [ddc] in await ddc.invalidateBrightnessDisplays() }
     }
 
     private func sleep() {
@@ -244,7 +263,15 @@ final class DisplayBrightnessService {
         coordinator.replaceInventory([])
     }
 
+    /// The external-display DDC toggle changed: reclassify displays (DDC <-> software) via the
+    /// topology path, which also invalidates queued DDC state. Before `start()` the first scan reads the gate.
+    func ddcAvailabilityChanged() async {
+        guard isEnabled, hasStarted else { return }
+        await topologyChanged()
+    }
+
     private func topologyChanged() async {
+        guard isEnabled else { return }
         cancelKeyboardAdjustments()
         outputRevision &+= 1
         discoveryRevision &+= 1
@@ -271,6 +298,7 @@ final class DisplayBrightnessService {
 
     private func writeHardware(id: UInt32, level: Double) async -> Bool {
         if let token = tokens[id] {
+            guard UserDefaults.isExternalDisplayDDCEnabled() else { return false }
             return await ddc.setBrightness(Int((level * 100).rounded()), token: token)
         }
         guard coordinator.snapshot.displays.first(where: { $0.id == id })?.control == .native,

@@ -70,7 +70,8 @@ struct TabVisibilitySettingsTests {
         defer { center.removeObserver(observer) }
         let viewModel = TabVisibilitySettingsVM(
             client: TabVisibilityClient(isVisible: { stored[$0] ?? true }, setVisible: { stored[$1] = $0 }),
-            notificationCenter: center
+            notificationCenter: center,
+            isDisplayBrightnessEnabled: { true }
         )
 
         #expect(!viewModel.isVisible(.screenshots))
@@ -90,7 +91,8 @@ struct TabVisibilitySettingsTests {
         let center = NotificationCenter()
         let viewModel = TabVisibilitySettingsVM(
             client: TabVisibilityClient(isVisible: { stored[$0] ?? true }, setVisible: { stored[$1] = $0 }),
-            notificationCenter: center
+            notificationCenter: center,
+            isDisplayBrightnessEnabled: { true }
         )
         stored[.authenticator] = false
         viewModel.reload()
@@ -100,7 +102,8 @@ struct TabVisibilitySettingsTests {
     @Test func unrelatedSettingsChangesDoNotRepublishTheTabsPage() {
         let viewModel = TabVisibilitySettingsVM(
             client: TabVisibilityClient(isVisible: { _ in true }, setVisible: { _, _ in }),
-            notificationCenter: NotificationCenter()
+            notificationCenter: NotificationCenter(),
+            isDisplayBrightnessEnabled: { true }
         )
         var publishes = 0
         let cancellable = viewModel.objectWillChange.sink { publishes += 1 }
@@ -155,6 +158,41 @@ struct TabVisibilitySettingsTests {
         client.setVisible(true, .brightness)
         #expect(SectionBar.sections(authenticator: false, soundMixer: false,
             systemMonitor: false, codexUsage: false, brightness: client.isVisible(.brightness)) == [.controls, .brightness])
+    }
+
+    @Test func settingsPageHidesBrightnessRowWhileDisplayBrightnessIsOff() throws {
+        let suite = "BrightnessMasterTabTests.\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let client = TabVisibilityClient.defaults(defaults,
+            authenticatorEnabled: { false }, setAuthenticatorEnabled: { _ in },
+            soundMixerEnabled: { false }, setSoundMixerEnabled: { _ in })
+        defaults.set(true, forKey: UserDefaults.Key.showBrightnessTab)
+
+        let off = TabVisibilitySettingsVM(client: client, notificationCenter: NotificationCenter(), isDisplayBrightnessEnabled: { false })
+        #expect(!off.sections.contains(.brightness))
+        #expect(off.sections.count == SectionBar.Section.manageable.count - 1)
+
+        let on = TabVisibilitySettingsVM(client: client, notificationCenter: NotificationCenter(), isDisplayBrightnessEnabled: { true })
+        #expect(on.sections.contains(.brightness))
+    }
+
+    @Test func reorderingWhileBrightnessIsHiddenKeepsItsSavedSlot() throws {
+        var stored = SectionBar.Section.manageable
+        let brightnessIndex = try #require(stored.firstIndex(of: .brightness))
+        let viewModel = TabVisibilitySettingsVM(
+            client: TabVisibilityClient(isVisible: { _ in true }, setVisible: { _, _ in },
+                order: { stored }, setOrder: { stored = $0 }),
+            notificationCenter: NotificationCenter(),
+            isDisplayBrightnessEnabled: { false }
+        )
+        let first = viewModel.sections[0], second = viewModel.sections[1]
+
+        viewModel.move(fromOffsets: [0], toOffset: 2)
+        #expect(Array(viewModel.sections.prefix(2)) == [second, first])
+        #expect(stored.firstIndex(of: .brightness) == brightnessIndex)
+        #expect(stored.count == SectionBar.Section.manageable.count)
+        #expect(stored.filter { $0 != .brightness } == viewModel.sections)
     }
 
     @Test func hidingSelectedBrightnessReturnsOnlyControlToControls() async {
@@ -245,7 +283,8 @@ struct TabVisibilitySettingsTests {
         let viewModel = TabVisibilitySettingsVM(
             client: TabVisibilityClient(isVisible: { _ in true }, setVisible: { _, _ in },
                 order: { stored }, setOrder: { stored = $0 }),
-            notificationCenter: center
+            notificationCenter: center,
+            isDisplayBrightnessEnabled: { true }
         )
         let first = stored[0], second = stored[1], last = stored[stored.count - 1]
 
@@ -275,7 +314,8 @@ struct TabVisibilitySettingsTests {
         let viewModel = TabVisibilitySettingsVM(
             client: TabVisibilityClient(isVisible: { _ in true }, setVisible: { _, _ in },
                 order: { stored }, setOrder: { stored = $0 }),
-            notificationCenter: NotificationCenter()
+            notificationCenter: NotificationCenter(),
+            isDisplayBrightnessEnabled: { true }
         )
         #expect(!viewModel.isReordering)
         viewModel.toggleReordering()

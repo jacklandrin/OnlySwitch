@@ -170,6 +170,42 @@ struct SettingsBackupTests {
         for key in keys { #expect(decoded.preferences[key] as? Bool == false) }
     }
 
+    @Test func displayBrightnessMasterToggleIsExportedAndRoundTrips() throws {
+        let key = UserDefaults.Key.displayBrightnessEnabled
+        #expect(UserDefaults.Key.exportableKeys.contains(key))
+        #expect(SettingsBackup.isExportablePreference(key))
+        let source = makeDefaults()
+        source.set(false, forKey: key)
+        let collected = SettingsBackup.collectPreferences(from: source)
+        #expect(collected[key] as? Bool == false)
+        let backup = SettingsBackup(preferences: collected, sharedPreferences: [:],
+            radioStations: [], evolution: .init(preExecution: nil, commands: []))
+        let decoded = try SettingsBackup(data: backup.encoded())
+        let destination = makeDefaults()
+        SettingsBackup.replace(decoded.preferences, in: destination, isAllowed: SettingsBackup.isExportablePreference)
+        #expect(!UserDefaults.isDisplayBrightnessEnabled(in: destination))
+    }
+
+    @Test func externalDisplayDDCToggleIsExportedAndRoundTrips() throws {
+        let key = UserDefaults.Key.externalDisplayDDCEnabled
+        #expect(UserDefaults.Key.exportableKeys.contains(key))
+        #expect(SettingsBackup.isExportablePreference(key))
+
+        let source = makeDefaults()
+        source.set(true, forKey: key)
+        let collected = SettingsBackup.collectPreferences(from: source)
+        #expect(collected[key] as? Bool == true)
+
+        let backup = SettingsBackup(preferences: collected, sharedPreferences: [:],
+            radioStations: [], evolution: .init(preExecution: nil, commands: []))
+        let decoded = try SettingsBackup(data: backup.encoded())
+        #expect(decoded.preferences[key] as? Bool == true)
+
+        let destination = makeDefaults()
+        SettingsBackup.replace(decoded.preferences, in: destination, isAllowed: SettingsBackup.isExportablePreference)
+        #expect(UserDefaults.isExternalDisplayDDCEnabled(in: destination))
+    }
+
     @Test func rejectsGarbageAndNewerVersions() throws {
         #expect(throws: SettingsBackupError.invalidFile) {
             try SettingsBackup(data: Data("not a plist".utf8))

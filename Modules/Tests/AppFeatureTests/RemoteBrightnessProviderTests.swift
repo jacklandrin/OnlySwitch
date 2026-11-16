@@ -30,7 +30,7 @@ struct RemoteBrightnessProviderTests {
     @Test func setLevelValidatesDisplayAndClamps() throws {
         var state = DisplayBrightnessFeature.State()
         state.snapshot = .init(generation: 1, displays: displays)
-        let provider = RemoteBrightnessProvider(store: makeStore(state))
+        let provider = RemoteBrightnessProvider(store: makeStore(state), isEnabled: { true })
 
         #expect(throws: RemoteProtocolError.self) { try provider.perform(.setLevel(displayID: 99, level: 0.5)) }
         #expect(throws: RemoteProtocolError.self) { try provider.perform(.setLevel(displayID: 2, level: 0.5)) }
@@ -44,7 +44,7 @@ struct RemoteBrightnessProviderTests {
 
     @Test func streamRegistersAndReleasesHost() async {
         let store = makeStore()
-        let provider = RemoteBrightnessProvider(store: store, pollInterval: .milliseconds(10))
+        let provider = RemoteBrightnessProvider(store: store, pollInterval: .milliseconds(10), isEnabled: { true })
         let host = UUID()
 
         var registered = false
@@ -59,5 +59,51 @@ struct RemoteBrightnessProviderTests {
             await Task.yield()
         }
         #expect(store.hosts.contains(host) == false)
+    }
+
+    @Test func masterSwitchOffHidesDisplaysRejectsCommandsAndDoesNotRegister() async {
+        var state = DisplayBrightnessFeature.State()
+        state.snapshot = .init(generation: 1, displays: displays)
+        let store = makeStore(state)
+        let provider = RemoteBrightnessProvider(store: store, pollInterval: .milliseconds(10), isEnabled: { false })
+
+        #expect(provider.currentSnapshot().displays.isEmpty)
+        #expect(throws: RemoteProtocolError.self) { try provider.perform(.setLevel(displayID: 1, level: 0.5)) }
+
+        let host = UUID()
+        var received: [RemoteBrightnessSnapshot] = []
+        for await snapshot in provider.snapshots(hostID: host) {
+            received.append(snapshot)
+            break
+        }
+        #expect(received.count == 1)
+        #expect(received.first?.displays.isEmpty == true)
+        #expect(store.hosts.contains(host) == false)
+    }
+
+    @Test func streamRegistersWhenSwitchTurnsBackOn() async {
+        let store = makeStore()
+        let enabled = TestMutex(false)
+        let provider = RemoteBrightnessProvider(store: store, pollInterval: .milliseconds(10), isEnabled: { enabled.withLock { $0 } })
+        let host = UUID()
+        let stream = provider.snapshots(hostID: host)
+        var iterator = stream.makeAsyncIterator()
+        _ = await iterator.next()
+        #expect(store.hosts.contains(host) == false)
+        enabled.withLock { $0 = true }
+        for _ in 0..<200 where !store.hosts.contains(host) { try? await Task.sleep(for: .milliseconds(10)) }
+        #expect(store.hosts.contains(host))
+    }
+
+    @Test func turningSwitchBackOnPushesTheStoredDisplaysEvenIfTheyDidNotChange() async {
+        var state = DisplayBrightnessFeature.State()
+        state.snapshot = .init(generation: 1, displays: displays)
+        let enabled = TestMutex(false)
+        let provider = RemoteBrightnessProvider(store: makeStore(state), pollInterval: .milliseconds(10),
+                                                isEnabled: { enabled.withLock { $0 } })
+        var iterator = provider.snapshots(hostID: UUID()).makeAsyncIterator()
+        #expect(await iterator.next()?.displays.isEmpty == true)
+        enabled.withLock { $0 = true }
+        #expect(await iterator.next()?.displays.isEmpty == false)
     }
 }

@@ -5,6 +5,8 @@
 //  Created by Jacklandrin on 2022/8/13.
 //
 
+import Defines
+import Extensions
 import Foundation
 
 @MainActor
@@ -20,6 +22,26 @@ class DimScreenSettingVM: ObservableObject {
                 sliderValue = normalizedValue
             }
             preferences.dimScreenPercent = normalizedValue
+        }
+    }
+
+    /// Master switch for the whole brightness feature.
+    @Published var isDisplayBrightnessEnabled: Bool = UserDefaults.isDisplayBrightnessEnabled() {
+        didSet {
+            guard isDisplayBrightnessEnabled != oldValue else { return }
+            UserDefaults.standard.set(isDisplayBrightnessEnabled, forKey: UserDefaults.Key.displayBrightnessEnabled)
+            NotificationCenter.default.post(name: .displayBrightnessEnabledDidChange, object: nil)
+            // Rebuilds switch rows (Dim Screen `isVisible()`) and the Settings → Tabs list.
+            NotificationCenter.default.post(name: .changeSettings, object: nil)
+        }
+    }
+
+    /// Switch for DDC communication with external displays (issue #232).
+    @Published var isExternalDisplayDDCEnabled: Bool = UserDefaults.isExternalDisplayDDCEnabled() {
+        didSet {
+            guard isExternalDisplayDDCEnabled != oldValue else { return }
+            UserDefaults.standard.set(isExternalDisplayDDCEnabled, forKey: UserDefaults.Key.externalDisplayDDCEnabled)
+            NotificationCenter.default.post(name: .externalDisplayDDCEnabledDidChange, object: nil)
         }
     }
 
