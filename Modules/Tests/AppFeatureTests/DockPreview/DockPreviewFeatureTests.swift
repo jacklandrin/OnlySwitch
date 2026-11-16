@@ -22,39 +22,88 @@ struct DockPreviewFeatureTests {
         await store.finish()
     }
 
+    private func unsettled(_ hover: DockHoverEvent) -> DockHoverEvent {
+        var hover = hover
+        hover.isSettled = false
+        return hover
+    }
+
+    /// Feeds `count` identical direct hits and returns every update.
+    private func feed(
+        _ stabilizer: inout DockHoverStabilizer,
+        _ hover: DockHoverEvent?,
+        times count: Int
+    ) -> [DockHoverStabilizer.Update] {
+        (0..<count).map { _ in stabilizer.update(hover) }
+    }
+
     @Test
-    func firstHoverWaitsForDockRevealToSettle() {
+    func newAppLoadsAfterTwoHitsButSettlesPositionLater() {
         var stabilizer = DockHoverStabilizer()
         var hover = DockHoverEvent(
             pid: 42, appName: "TextEdit",
             itemFrame: CGRect(x: 500, y: -40, width: 64, height: 64),
             screenFrame: CGRect(x: 0, y: 0, width: 1_440, height: 900)
         )
+        // Window loading starts on the second hit even while the Dock is
+        // still revealing, but the event is marked unsettled.
         #expect(stabilizer.update(hover) == .unchanged)
         hover.itemFrame.origin.y = -10
-        #expect(stabilizer.update(hover) == .unchanged)
+        #expect(stabilizer.update(hover) == .changed(unsettled(hover)))
         hover.itemFrame.origin.y = 16
-        #expect(stabilizer.update(hover) == .unchanged)
-        #expect(stabilizer.update(hover) == .unchanged)
+        #expect(feed(&stabilizer, hover, times: 4) == Array(repeating: .unchanged, count: 4))
         #expect(stabilizer.update(hover) == .changed(hover))
         #expect(stabilizer.update(hover) == .unchanged)
 
+        // After settling, geometry changes for the same app are only emitted
+        // once stable, so a visible preview never jumps to a transient frame.
         hover.itemFrame.size.height = 96
-        #expect(stabilizer.update(hover) == .unchanged)
-        #expect(stabilizer.update(hover) == .unchanged)
+        #expect(feed(&stabilizer, hover, times: 4) == Array(repeating: .unchanged, count: 4))
         #expect(stabilizer.update(hover) == .changed(hover))
         #expect(stabilizer.update(nil) == .changed(nil))
         #expect(stabilizer.update(hover) == .unchanged)
+        #expect(stabilizer.update(hover) == .changed(unsettled(hover)))
     }
 
     @Test
-    func leavingBeforeDockSettlesNeverShowsAPreview() {
+    func crossingAnIconWithASingleHitNeverLoadsIt() {
+        var stabilizer = DockHoverStabilizer()
+        let first = DockHoverEvent(pid: 42, appName: "TextEdit", itemFrame: .zero, screenFrame: .zero)
+        var second = first
+        second.pid = 43
+        second.appName = "Notes"
+        second.itemFrame.origin.x = 64
+        var third = second
+        third.pid = 44
+        third.itemFrame.origin.x = 128
+        #expect(stabilizer.update(first) == .unchanged)
+        #expect(stabilizer.update(second) == .unchanged)
+        #expect(stabilizer.update(third) == .unchanged)
+        #expect(stabilizer.update(third) == .changed(unsettled(third)))
+    }
+
+    @Test
+    func movingToAnotherAppEmitsItUnsettled() {
+        var stabilizer = DockHoverStabilizer()
+        let first = DockHoverEvent(pid: 42, appName: "TextEdit", itemFrame: .zero, screenFrame: .zero)
+        var second = first
+        second.pid = 43
+        second.appName = "Notes"
+        second.itemFrame.origin.x = 64
+        #expect(feed(&stabilizer, first, times: 5).last == .changed(first))
+        #expect(stabilizer.update(second) == .unchanged)
+        #expect(stabilizer.update(second) == .changed(unsettled(second)))
+        #expect(feed(&stabilizer, second, times: 3).last == .changed(second))
+    }
+
+    @Test
+    func leavingBeforeDockSettlesClearsTheUnsettledHover() {
         var stabilizer = DockHoverStabilizer()
         let hover = DockHoverEvent(pid: 42, appName: "TextEdit", itemFrame: .zero, screenFrame: .zero)
-        #expect(stabilizer.update(hover) == .unchanged)
-        #expect(stabilizer.update(nil) == .unchanged)
-        #expect(stabilizer.update(hover) == .unchanged)
-        #expect(stabilizer.update(hover) == .unchanged)
+        #expect(feed(&stabilizer, hover, times: 2).last == .changed(unsettled(hover)))
+        #expect(stabilizer.update(nil) == .changed(nil))
+        #expect(feed(&stabilizer, hover, times: 2).last == .changed(unsettled(hover)))
+        #expect(feed(&stabilizer, hover, times: 2) == [.unchanged, .unchanged])
         #expect(stabilizer.update(hover) == .changed(hover))
     }
 
@@ -62,15 +111,53 @@ struct DockPreviewFeatureTests {
     func exitGraceDoesNotCountAsStableDockGeometry() {
         var stabilizer = DockHoverStabilizer()
         let hover = DockHoverEvent(pid: 42, appName: "TextEdit", itemFrame: .zero, screenFrame: .zero)
-        #expect(stabilizer.update(hover) == .unchanged)
+        #expect(feed(&stabilizer, hover, times: 2).last == .changed(unsettled(hover)))
         for _ in 0..<5 {
             #expect(stabilizer.update(hover, isDirectHit: false) == .unchanged)
         }
-        #expect(stabilizer.update(hover) == .unchanged)
-        #expect(stabilizer.update(hover) == .unchanged)
+        #expect(feed(&stabilizer, hover, times: 4) == Array(repeating: .unchanged, count: 4))
         #expect(stabilizer.update(hover) == .changed(hover))
         #expect(stabilizer.update(hover, isDirectHit: false) == .unchanged)
         #expect(stabilizer.update(nil) == .changed(nil))
+    }
+
+    @Test
+    func unsettledHoverLoadsWindowsButKeepsPreviewHiddenUntilSettled() async {
+        var hover = DockHoverEvent(pid: 42, appName: "TextEdit", itemFrame: .zero, screenFrame: .zero)
+        hover.isSettled = false
+        var settled = hover
+        settled.isSettled = true
+        settled.itemFrame = CGRect(x: 500, y: 16, width: 64, height: 64)
+        let window = DockPreviewWindow(id: 1, title: "Document", pid: 42, frame: .zero, isActivatable: true)
+        let store = TestStore(initialState: DockPreviewFeature.State(
+            isEnabled: true, authorization: .authorized, isObserving: true
+        )) { DockPreviewFeature() } withDependencies: {
+            $0.dockPreview.windows = { _ in [window] }
+            $0.dockPreview.capture = { _ in Data([1]) }
+        }
+
+        await store.send(.hovered(hover)) {
+            $0.hoverGeneration = 1
+            $0.hover = hover
+            $0.status = .loading
+        }
+        await store.receive(\.windowsLoaded) {
+            $0.preview = .init(generation: 1, appName: "TextEdit", itemFrame: .zero,
+                               screenFrame: .zero, windows: [window], isPositionSettled: false)
+            $0.status = .idle
+        }
+        await store.receive(\.thumbnailLoaded) {
+            $0.preview?.windows[0].thumbnailData = Data([1])
+        }
+        #expect(!DockPreviewPanelController.isPresentable(store.state.preview!, status: store.state.status))
+
+        await store.send(.hovered(settled)) {
+            $0.hover = settled
+            $0.preview?.itemFrame = settled.itemFrame
+            $0.preview?.isPositionSettled = true
+        }
+        #expect(DockPreviewPanelController.isPresentable(store.state.preview!, status: store.state.status))
+        await store.finish()
     }
 
     @Test

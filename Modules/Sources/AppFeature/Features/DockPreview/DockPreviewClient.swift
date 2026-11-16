@@ -61,6 +61,9 @@ private final class DockPreviewRuntime {
 
     private var observationTask: Task<Void, Never>?
     private var activationTargets: [CGWindowID: AXUIElement] = [:]
+    /// Windows from the latest listing, reused by captures to skip a second
+    /// `SCShareableContent` query per thumbnail.
+    private var shareableWindows: [CGWindowID: SCWindow] = [:]
     private var lastHover: DockHoverEvent?
     private var previewFrame: CGRect?
     private var pendingExitSince: ContinuousClock.Instant?
@@ -101,7 +104,7 @@ private final class DockPreviewRuntime {
                         continuation.yield(event)
                     }
                     do {
-                        try await Task.sleep(for: .milliseconds(80))
+                        try await Task.sleep(for: .milliseconds(40))
                     } catch {
                         return
                     }
@@ -134,6 +137,12 @@ private final class DockPreviewRuntime {
         if activationTargets.count > 128 {
             activationTargets.removeAll(keepingCapacity: true)
         }
+        if shareableWindows.count > 128 {
+            shareableWindows.removeAll(keepingCapacity: true)
+        }
+        for window in candidates {
+            shareableWindows[window.windowID] = window
+        }
 
         return candidates.map { window in
             let title = window.title?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
@@ -154,14 +163,21 @@ private final class DockPreviewRuntime {
     }
 
     func capture(_ window: DockPreviewWindow) async throws -> Data {
-        let content = try await SCShareableContent.excludingDesktopWindows(
-            true,
-            onScreenWindowsOnly: true
-        )
-        guard let source = content.windows.first(where: {
-            $0.windowID == window.id && $0.owningApplication?.processID == window.pid
-        }) else {
-            throw DockPreviewFailure.capture
+        let source: SCWindow
+        if let cached = shareableWindows[window.id],
+           cached.owningApplication?.processID == window.pid {
+            source = cached
+        } else {
+            let content = try await SCShareableContent.excludingDesktopWindows(
+                true,
+                onScreenWindowsOnly: true
+            )
+            guard let fresh = content.windows.first(where: {
+                $0.windowID == window.id && $0.owningApplication?.processID == window.pid
+            }) else {
+                throw DockPreviewFailure.capture
+            }
+            source = fresh
         }
 
         let filter = SCContentFilter(desktopIndependentWindow: source)
@@ -204,6 +220,7 @@ private final class DockPreviewRuntime {
         previewFrame = nil
         pendingExitSince = nil
         activationTargets.removeAll(keepingCapacity: false)
+        shareableWindows.removeAll(keepingCapacity: false)
     }
 
     func updatePreviewFrame(_ frame: CGRect?) {
@@ -241,6 +258,7 @@ private final class DockPreviewRuntime {
 
     private func dockHover(at point: CGPoint?) -> DockHoverEvent? {
         guard let point,
+              Self.isNearDockEdge(NSEvent.mouseLocation),
               let dock = NSRunningApplication.runningApplications(withBundleIdentifier: "com.apple.dock").first
         else { return nil }
 
@@ -277,6 +295,19 @@ private final class DockPreviewRuntime {
             screenFrame: screen.visibleFrame,
             mediaPlayer: DockPreviewMediaPlayer(bundleIdentifier: application.bundleIdentifier)
         )
+    }
+
+    /// The Dock lives on a screen's bottom, left or right edge; skipping the
+    /// Accessibility hit test elsewhere keeps the fast poll cheap while idle.
+    private static func isNearDockEdge(_ pointer: CGPoint) -> Bool {
+        let margin: CGFloat = 200
+        return NSScreen.screens.contains { screen in
+            let frame = screen.frame
+            guard NSMouseInRect(pointer, frame, false) else { return false }
+            return pointer.y - frame.minY <= margin ||
+                pointer.x - frame.minX <= margin ||
+                frame.maxX - pointer.x <= margin
+        }
     }
 
     private func accessibilityWindows(pid: pid_t) -> [AccessibilityWindow] {

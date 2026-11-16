@@ -23,6 +23,7 @@ struct DockPreviewFeature {
             var windows: [DockPreviewWindow]
             var mediaPlayer: DockPreviewMediaPlayer? = nil
             var isMediaPlaying = false
+            var isPositionSettled = true
         }
 
         var isEnabled = false
@@ -111,6 +112,7 @@ struct DockPreviewFeature {
                     state.hover = hover
                     state.preview?.itemFrame = hover.itemFrame
                     state.preview?.screenFrame = hover.screenFrame
+                    state.preview?.isPositionSettled = hover.isSettled
                     return .none
                 }
                 state.hoverGeneration &+= 1
@@ -151,7 +153,8 @@ struct DockPreviewFeature {
                         itemFrame: currentHover.itemFrame,
                         screenFrame: currentHover.screenFrame,
                         windows: windows,
-                        mediaPlayer: currentHover.mediaPlayer
+                        mediaPlayer: currentHover.mediaPlayer,
+                        isPositionSettled: currentHover.isSettled
                     )
                     state.status = .idle
                     let captures: Effect<Action> = .run { send in
@@ -188,7 +191,8 @@ struct DockPreviewFeature {
                         itemFrame: currentHover.itemFrame,
                         screenFrame: currentHover.screenFrame,
                         windows: [],
-                        mediaPlayer: mediaPlayer
+                        mediaPlayer: mediaPlayer,
+                        isPositionSettled: currentHover.isSettled
                     )
                     state.status = .idle
                     return loadMediaPlayback(state.preview)
@@ -200,7 +204,8 @@ struct DockPreviewFeature {
                         itemFrame: currentHover.itemFrame,
                         screenFrame: currentHover.screenFrame,
                         windows: [],
-                        mediaPlayer: currentHover.mediaPlayer
+                        mediaPlayer: currentHover.mediaPlayer,
+                        isPositionSettled: currentHover.isSettled
                     )
                     state.status = .captureFailed
                     return loadMediaPlayback(state.preview)

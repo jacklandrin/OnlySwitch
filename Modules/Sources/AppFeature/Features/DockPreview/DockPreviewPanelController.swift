@@ -77,8 +77,7 @@ final class DockPreviewPanelController {
             }
         }
 
-        guard let preview,
-              !preview.windows.isEmpty || status == .captureFailed || preview.mediaPlayer != nil else {
+        guard let preview, Self.isPresentable(preview, status: status) else {
             panel.orderOut(nil)
             updatePreviewFrame(nil)
             return
@@ -98,6 +97,15 @@ final class DockPreviewPanelController {
         panel.setFrame(frame.insetBy(dx: -inset, dy: -inset), display: true)
         updatePreviewFrame(frame)
         panel.makeKeyAndOrderFront(nil)
+    }
+
+    static func isPresentable(
+        _ preview: DockPreviewFeature.State.Preview,
+        status: DockPreviewFeature.State.Status
+    ) -> Bool {
+        // Never place the panel from a Dock frame that may still be animating.
+        preview.isPositionSettled &&
+            (!preview.windows.isEmpty || status == .captureFailed || preview.mediaPlayer != nil)
     }
 
     static func size(
