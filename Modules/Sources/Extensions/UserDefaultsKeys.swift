@@ -136,6 +136,8 @@ public extension UserDefaults {
         public static let authenticatorAccounts = "authenticatorAccountsKey"
         //others
         public static let newestVersion = "newestVersionKey"
+        public static let lastPromptedUpdateBuild = "lastPromptedUpdateBuildKey"
+        public static let lastPromptedUpdateDate = "lastPromptedUpdateDateKey"
         public static let systemLangPriority = "systemLangPriority"
         public static let NSVolume = "NSVolumeKey"
         public static let ASVolume = "ASVolumeKey"

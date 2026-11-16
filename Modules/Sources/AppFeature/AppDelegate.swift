@@ -41,7 +41,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             .preferences
             .currentAppearance
     }
-    var checkUpdatePresenter = GitHubPresenter.shared
+    private lazy var updateCheckScheduler = UpdateCheckScheduler.live()
     private var desktopPetController: DesktopPetController?
     private var desktopPetSkinTask: Task<Void, Never>?
     private var desktopPetPomodoroRefreshTask: Task<Void, Never>?
@@ -113,9 +113,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             }
         }
 
-        if PreferencesObserver.shared.preferences.checkUpdateOnLaunch {
-            checkUpdate()
-        }
+        // Checks on launch and hourly; each check respects the "Check Updates on Launch" preference.
+        updateCheckScheduler.start()
         // Workaround for issue [#147](https://github.com/jacklandrin/OnlySwitch/issues/147)
         NSApp.setActivationPolicy(.accessory)
 
@@ -339,22 +338,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     }
 
     func checkUpdate() {
-        checkUpdatePresenter.checkUpdate(releaseType: GitHubRelease.self) { result in
-            switch result {
-            case .success:
-                let newestVersion = self.checkUpdatePresenter.latestVersion
-                UserDefaults.standard.set(newestVersion, forKey: UserDefaults.Key.newestVersion)
-                UserDefaults.standard.synchronize()
-                if !self.checkUpdatePresenter.isTheNewestVersion {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
-                        Updater.checkForUpdates()
-                    }
-                }
-
-            case let .failure(error):
-                Logger.app.error("\(error.localizedDescription)")
-            }
-        }
+        Updater.checkForUpdates()
     }
 
     @MainActor

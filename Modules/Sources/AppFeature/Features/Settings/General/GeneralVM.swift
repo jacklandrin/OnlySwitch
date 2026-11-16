@@ -72,8 +72,6 @@ class GeneralVM: ObservableObject {
         return model.menubarIcons
     }
     
-    private let checkUpdatePresenter = GitHubPresenter.shared
-    
     var currentMenubarIcon:String
     {
         get {
@@ -102,12 +100,8 @@ class GeneralVM: ObservableObject {
         }
     }
     
-    var latestVersion: String {
-        return checkUpdatePresenter.latestVersion
-    }
-    
     var isTheNewestVersion: Bool {
-        return checkUpdatePresenter.isTheNewestVersion
+        return model.isTheNewestVersion
     }
     
     var showErrorToast: Bool {
@@ -160,9 +154,6 @@ class GeneralVM: ObservableObject {
     
     init() {
         currentAppearance = Preferences.shared.currentAppearance
-        checkUpdatePresenter.objectWillChange.sink{ _ in
-            self.objectWillChange.send()
-        }.store(in: &cancellable)
     }
     
     func clearCache() {
@@ -191,21 +182,24 @@ class GeneralVM: ObservableObject {
     }
 
     func checkUpdate() {
-        self.model.showProgress = true
-        checkUpdatePresenter.checkUpdate(releaseType: GitHubRelease.self) { result in
+        guard !model.showProgress else { return }
+        model.showProgress = true
+        Task {
+            let result = await Updater.shared.probeForUpdate()
+            model.showProgress = false
             switch result {
-            case .success:
-                self.model.newestVersion = self.checkUpdatePresenter.latestVersion
-                UserDefaults.standard.set(self.newestVersion,
-                                          forKey: UserDefaults.Key.newestVersion)
-                UserDefaults.standard.synchronize()
-                if !self.checkUpdatePresenter.isTheNewestVersion {
-                    Updater.checkForUpdates()
-                }
-            case let .failure(error):
-                Logger.settings.error("\(error.localizedDescription)")
+            case let .available(update):
+                model.newestVersion = update.displayText
+                model.isTheNewestVersion = false
+            case .upToDate:
+                model.newestVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+                model.isTheNewestVersion = true
+            case .busy, .failed:
+                break
             }
-            self.model.showProgress = false
+            // A user-initiated Sparkle check also offers builds the user skipped earlier
+            // and reports errors, which the silent probe does not.
+            Updater.shared.showUpdateWindow()
         }
     }
 }
