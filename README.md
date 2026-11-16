@@ -71,7 +71,8 @@ To control OnlySwitch from an iPhone or iPad, install [OnlyRemote from the App S
 - Use Apple Widgets on macOS Sonoma and later, including Evolution controls.
 - Open the compact **Only Control** interface for a focused control panel.
 - Control your Mac from iPhone or iPad with [OnlyRemote](#onlyremote).
-- Enable the optional Desktop Pet, drag it anywhere, click it to show or dismiss Only Control, and skip to the next track or radio station with playback animations for Apple Music, Spotify, and Radio.
+- Customize the optional [Desktop Pet](#desktop-pet) with AI-generated skins, feeding and petting, agent activity, and your choice of click action.
+- Keep bookmarked websites close at hand in the optional [Browser](#browser) tab.
 - Enable **Turn off after sleep** for Keep Awake to turn it off when you manually put your Mac to sleep.
 
 <p align="center">
@@ -81,6 +82,20 @@ To control OnlySwitch from an iPhone or iPad, install [OnlyRemote from the App S
 <p align="center">
   <img alt="OnlySwitch desktop pet" src="https://github.com/user-attachments/assets/f45e4b4f-932e-4768-8bfd-845e22fdfff3" width="152" height="188" />
 </p>
+
+### Desktop Pet
+
+Enable **Show desktop pet**, then open **OnlySwitch Settings → Desktop Pet** to choose what a click does: show or dismiss Only Control, toggle a switch, or run a Shortcut or Evolution. Drag the pet anywhere and use its music controls for Apple Music, Spotify, and Radio.
+
+Right-click the pet to feed or pet it. Hunger is cosmetic and can be turned off in settings. The pet also animates while Codex or Claude Code is working and shows a brief completion bubble when an observed task finishes successfully.
+
+Describe a character to generate a custom skin with the model selected in **Model Providers**. Preview and select saved skins in Desktop Pet settings, or ask AI to edit one with a new description.
+
+### Browser
+
+Show the **Browser** tab under **OnlySwitch Settings → Tabs**, and manage bookmarks under **OnlySwitch Settings → Browser**. Open saved websites in the menu-bar list or Only Control, choose a mobile viewport size, and let pages follow the app's light or dark appearance. Move the pointer to the top of the page to reveal the toolbar.
+
+Browser keeps its own website data separate from Safari; you can clear it in Browser settings. Downloads open in your default browser. Mobile layouts depend on the website, and camera and microphone access are unavailable in this tab.
 
 ### Schedules
 
@@ -114,11 +129,13 @@ Use the **Schedules** tab in the menu bar or Only Control to see what runs next,
 | Show desktop pet | finished | Tailscale | requires official client |
 | Dock Preview | requires Accessibility and Screen Recording | | |
 
-Switches can be added to or removed from the list. Optional tabs (Authenticator, Sound Mixer, Brightness, Screenshots & Record, System Monitor, Codex Usage, Claude Usage, Aphrodite, Xcode Cleaner, and App Uninstaller) are shown or hidden under **OnlySwitch Settings → Tabs**; switches that only toggled a tab have been replaced by this page.
+Switches can be added to or removed from the list. Optional tabs (Authenticator, Sound Mixer, Brightness, Browser, Screenshots & Record, System Monitor, Codex Usage, Claude Usage, Aphrodite, Xcode Cleaner, and App Uninstaller) are shown or hidden under **OnlySwitch Settings → Tabs**; switches that only toggled a tab have been replaced by this page.
 
 ### Sound Mixer
 
 Sound Mixer sets the volume and mute state of each app that is playing audio. On macOS 14.4 or later, each app can also expand its own 10-band equalizer (−12 to +12 dB, with a flat reset) and route its audio to one or more output devices at the same time. Equalizer settings and output selections are remembered per app; selecting no output follows the system default. If every selected device is disconnected, the app's original audio is restored until a selected device returns.
+
+Choose from twelve built-in EQ presets, including Flat, or expand **Custom EQ** to adjust the ten bands manually.
 
 When the current output is an external display with speakers, the keyboard's volume up, volume down, and mute keys adjust the display's volume over DDC/CI and show a volume HUD. Holding Shift+Option steps in finer increments. Capturing these keys requires Accessibility permission.
 

@@ -71,7 +71,8 @@ Um OnlySwitch vom iPhone oder iPad aus zu steuern, installiere [OnlyRemote aus d
 - Verwende Apple-Widgets ab macOS Sonoma, auch mit Bedienelementen aus Evolution.
 - Öffne **Only Control**, um die wichtigsten Bedienelemente in einer kompakten Ansicht zu nutzen.
 - Steuere deinen Mac mit [OnlyRemote](#onlyremote) vom iPhone oder iPad aus.
-- Aktiviere das optionale Schreibtisch-Haustier und ziehe es an eine beliebige Position. Per Klick öffnest oder schließt du Only Control. Wechsle zum nächsten Titel oder Radiosender und sieh Wiedergabeanimationen für Apple Music, Spotify und Radio.
+- Gestalte das optionale [Schreibtisch-Haustier](#schreibtisch-haustier) mit KI-generierten Designs, Füttern und Streicheln, Agentenaktivität und einer frei wählbaren Klickaktion.
+- Öffne gespeicherte Webseiten im optionalen [Browser](#browser)-Tab.
 - Aktiviere bei **Wach bleiben** die Option **Nach Ruhezustand ausschalten**, damit die Funktion deaktiviert wird, wenn du den Mac manuell in den Ruhezustand versetzt.
 
 <p align="center">
@@ -81,6 +82,20 @@ Um OnlySwitch vom iPhone oder iPad aus zu steuern, installiere [OnlyRemote aus d
 <p align="center">
   <img alt="OnlySwitch-Schreibtisch-Haustier" src="https://github.com/user-attachments/assets/f45e4b4f-932e-4768-8bfd-845e22fdfff3" width="152" height="188" />
 </p>
+
+### Schreibtisch-Haustier
+
+Aktiviere **Schreibtisch-Haustier anzeigen** und öffne **OnlySwitch-Einstellungen → Desktop-Haustier**, um die Klickaktion auszuwählen: Only Control öffnen oder schließen, einen Schalter umlegen oder einen Kurzbefehl oder eine Evolution ausführen. Ziehe das Haustier an eine beliebige Position und bediene Apple Music, Spotify und Radio über seine Musiksteuerung.
+
+Per Rechtsklick kannst du das Haustier füttern oder streicheln. Hunger beeinflusst nur seine Darstellung und lässt sich in den Einstellungen ausschalten. Während Codex oder Claude Code arbeitet, zeigt das Haustier eine passende Animation. Wenn eine beobachtete Aufgabe erfolgreich endet, erscheint kurz eine Sprechblase.
+
+Beschreibe eine Figur, um mit dem unter **Model Providers** ausgewählten Modell ein eigenes Design zu erzeugen. In den Haustier-Einstellungen kannst du gespeicherte Designs als Vorschau ansehen und auswählen oder mit einer neuen Beschreibung von der KI bearbeiten lassen.
+
+### Browser
+
+Blende den **Browser**-Tab unter **OnlySwitch-Einstellungen → Tabs** ein und verwalte Lesezeichen unter **OnlySwitch-Einstellungen → Browser**. Öffne gespeicherte Webseiten in der Menüleistenliste oder in Only Control, wähle eine mobile Ansichtsgröße und lass die Seiten dem hellen oder dunklen Erscheinungsbild der App folgen. Bewege den Mauszeiger an den oberen Seitenrand, um die Symbolleiste einzublenden.
+
+Der Browser speichert Websitedaten getrennt von Safari; du kannst sie in den Browser-Einstellungen löschen. Downloads werden im Standardbrowser geöffnet. Mobile Layouts hängen von der jeweiligen Website ab. Kamera und Mikrofon sind in diesem Tab nicht verfügbar.
 
 ### Zeitpläne
 
@@ -114,11 +129,13 @@ Im Tab **Zeitpläne** in der Menüleistenliste oder in Only Control siehst du, w
 | Schreibtisch-Haustier anzeigen | Verfügbar | Tailscale | Offizieller Client erforderlich |
 | Dock-Fenstervorschau | Berechtigungen für Bedienungshilfen und Bildschirmaufnahme erforderlich | | |
 
-Du kannst Schalter zur Liste hinzufügen oder daraus entfernen. Optionale Tabs wie Authenticator, Lautstärkemixer, Helligkeit, Bildschirmfotos & Aufnahmen, Systemmonitor, Codex-Nutzung, Claude-Nutzung, Aphrodite, Xcode Cleaner und App Uninstaller lassen sich unter **OnlySwitch-Einstellungen → Tabs** ein- und ausblenden. Diese Seite ersetzt die früheren Schalter, die nur einen Tab ein- oder ausgeblendet haben.
+Du kannst Schalter zur Liste hinzufügen oder daraus entfernen. Optionale Tabs wie Authenticator, Lautstärkemixer, Helligkeit, Browser, Bildschirmfotos & Aufnahmen, Systemmonitor, Codex-Nutzung, Claude-Nutzung, Aphrodite, Xcode Cleaner und App Uninstaller lassen sich unter **OnlySwitch-Einstellungen → Tabs** ein- und ausblenden. Diese Seite ersetzt die früheren Schalter, die nur einen Tab ein- oder ausgeblendet haben.
 
 ### Lautstärkemixer
 
 Der Lautstärkemixer regelt die Lautstärke und Stummschaltung für jede App, die Audio wiedergibt. Ab macOS 14.4 kannst du pro App zusätzlich einen 10-Band-Equalizer öffnen (−12 bis +12 dB, mit Rücksetzen auf eine neutrale Einstellung) und den Ton gleichzeitig an eines oder mehrere Ausgabegeräte senden. OnlySwitch merkt sich den Equalizer und die Ausgabegeräte pro App. Ohne Auswahl gilt die Systemvorgabe. Wenn alle ausgewählten Geräte getrennt werden, wird die ursprüngliche Audioausgabe der App wiederhergestellt, bis eines dieser Geräte erneut verfügbar ist.
+
+Wähle aus zwölf integrierten EQ-Voreinstellungen einschließlich Flat oder öffne **Eigener EQ**, um die zehn Bänder manuell einzustellen.
 
 Wenn der Ton über ein externes Display mit Lautsprechern ausgegeben wird, regeln die Tasten für lauter, leiser und stumm die Displaylautstärke über DDC/CI. Dabei erscheint eine Lautstärkeanzeige. Mit gedrückter Umschalt- und Wahltaste erfolgt die Regelung in kleineren Schritten. Zum Abfangen dieser Tasten ist die Berechtigung für Bedienungshilfen nötig.
 
