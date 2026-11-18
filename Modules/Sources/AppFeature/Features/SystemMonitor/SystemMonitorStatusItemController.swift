@@ -244,145 +244,106 @@ private enum SystemMonitorStatusItemFormatter {
     }
 }
 
-@MainActor
-private final class StatusItemContentView: NSView {
-    private let metric: SystemMonitorMetric
-    private let imageView = NSImageView()
-    private let valueLabel = NSTextField(labelWithString: "")
-    private let topDot = NetworkIndicatorDot(color: .systemRed)
-    private let bottomDot = NetworkIndicatorDot(color: .systemBlue)
-    private let topValueLabel = NSTextField(labelWithString: "")
-    private let bottomValueLabel = NSTextField(labelWithString: "")
-
-    init(metric: SystemMonitorMetric) {
-        self.metric = metric
-        super.init(frame: .zero)
-
-        wantsLayer = false
-        configureStandardContent()
-        configureNetworkContent()
-        let isNetwork = metric == .network
-        imageView.isHidden = isNetwork
-        valueLabel.isHidden = isNetwork
-        topDot.isHidden = !isNetwork
-        bottomDot.isHidden = !isNetwork
-        topValueLabel.isHidden = !isNetwork
-        bottomValueLabel.isHidden = !isNetwork
+private enum SystemMonitorStatusItemImage {
+    static func make(
+        for presentation: SystemMonitorStatusItemPresentation,
+        size: NSSize
+    ) -> NSImage {
+        let image = NSImage(size: size, flipped: false) { bounds in
+            switch presentation.visualStyle {
+            case .standard:
+                drawStandard(presentation, in: bounds)
+            case .network:
+                drawNetwork(presentation, in: bounds)
+            }
+            return true
+        }
+        image.isTemplate = presentation.visualStyle == .standard
+        if presentation.visualStyle == .network {
+            // Resolve the label and dot colors in the current menu bar appearance.
+            image.cacheMode = .never
+        }
+        return image
     }
 
-    @available(*, unavailable)
-    required init?(coder: NSCoder) {
-        nil
-    }
-
-    override func layout() {
-        super.layout()
-        guard metric == .network else {
-            let iconSide: CGFloat = 16
-            let leading: CGFloat = 5
-            let labelHeight = ceil(valueLabel.font?.boundingRectForFont.height ?? 13)
-            imageView.frame = CGRect(
-                x: leading,
-                y: (bounds.height - iconSide) / 2,
-                width: iconSide,
-                height: iconSide
-            )
-            valueLabel.frame = CGRect(
-                x: leading + iconSide + 3,
-                y: floor((bounds.height - labelHeight) / 2),
-                width: max(0, bounds.width - (leading + iconSide + 3) - 4),
-                height: labelHeight
-            )
-            return
+    private static func drawStandard(
+        _ presentation: SystemMonitorStatusItemPresentation,
+        in bounds: NSRect
+    ) {
+        let iconSide: CGFloat = 16
+        if let icon = NSImage(systemSymbolName: presentation.symbolName, accessibilityDescription: nil),
+           icon.size.width > 0, icon.size.height > 0 {
+            let scale = min(1, iconSide / max(icon.size.width, icon.size.height))
+            let width = icon.size.width * scale
+            let height = icon.size.height * scale
+            icon.draw(in: NSRect(
+                x: bounds.minX + 5 + (iconSide - width) / 2,
+                y: bounds.midY - height / 2,
+                width: width,
+                height: height
+            ))
         }
 
+        let font = NSFont.monospacedDigitSystemFont(ofSize: NSFont.systemFontSize, weight: .medium)
+        drawValue(
+            presentation.title,
+            font: font,
+            color: .black,
+            in: NSRect(
+                x: bounds.minX + 24,
+                y: bounds.minY,
+                width: bounds.width - 28,
+                height: bounds.height
+            )
+        )
+    }
+
+    private static func drawNetwork(
+        _ presentation: SystemMonitorStatusItemPresentation,
+        in bounds: NSRect
+    ) {
+        let lines = presentation.title.split(separator: "\n", maxSplits: 1, omittingEmptySubsequences: false)
+        let upload = lines.first.map { String($0.dropFirst(2)) } ?? "—"
+        let download = lines.dropFirst().first.map { String($0.dropFirst(2)) } ?? "—"
+        let font = NSFont.monospacedDigitSystemFont(ofSize: 9, weight: .medium)
         let lineHeight: CGFloat = 10
-        let totalHeight = lineHeight * 2
-        let topY = (bounds.height + totalHeight) / 2 - lineHeight
-        let bottomY = topY - lineHeight
-        let dotLeading: CGFloat = 7
-        let dotSide: CGFloat = 7
-        let valueLeading: CGFloat = 21
-        let valueWidth = max(0, bounds.width - valueLeading - 5)
+        let rows: [(value: String, color: NSColor, y: CGFloat)] = [
+            (upload, .systemRed, bounds.midY),
+            (download, .systemBlue, bounds.midY - lineHeight),
+        ]
 
-        topDot.frame = CGRect(
-            x: dotLeading,
-            y: topY + (lineHeight - dotSide) / 2,
-            width: dotSide,
-            height: dotSide
-        )
-        bottomDot.frame = CGRect(
-            x: dotLeading,
-            y: bottomY + (lineHeight - dotSide) / 2,
-            width: dotSide,
-            height: dotSide
-        )
-        topValueLabel.frame = CGRect(x: valueLeading, y: topY, width: valueWidth, height: lineHeight)
-        bottomValueLabel.frame = CGRect(x: valueLeading, y: bottomY, width: valueWidth, height: lineHeight)
-    }
-
-    // The status-bar button remains the single click target; this view is visual only.
-    override func hitTest(_ point: NSPoint) -> NSView? {
-        nil
-    }
-
-    func update(_ presentation: SystemMonitorStatusItemPresentation) {
-        switch presentation.visualStyle {
-        case .standard:
-            let image = NSImage(systemSymbolName: presentation.symbolName, accessibilityDescription: nil)
-            image?.isTemplate = true
-            imageView.image = image
-            valueLabel.stringValue = presentation.title
-
-        case .network:
-            let lines = presentation.title.split(separator: "\n", maxSplits: 1, omittingEmptySubsequences: false)
-            topValueLabel.stringValue = lines.indices.contains(0) ? String(lines[0].dropFirst(2)) : "—"
-            bottomValueLabel.stringValue = lines.indices.contains(1) ? String(lines[1].dropFirst(2)) : "—"
+        for row in rows {
+            row.color.setFill()
+            NSBezierPath(ovalIn: NSRect(
+                x: bounds.minX + 7,
+                y: row.y + (lineHeight - 7) / 2,
+                width: 7,
+                height: 7
+            )).fill()
+            drawValue(
+                row.value,
+                font: font,
+                color: .labelColor,
+                in: NSRect(
+                    x: bounds.minX + 21,
+                    y: row.y,
+                    width: bounds.width - 26,
+                    height: lineHeight
+                )
+            )
         }
     }
 
-    private func configureStandardContent() {
-        imageView.imageScaling = .scaleProportionallyDown
-        imageView.contentTintColor = .labelColor
-        valueLabel.font = NSFont.monospacedDigitSystemFont(ofSize: NSFont.systemFontSize, weight: .medium)
-        valueLabel.textColor = .labelColor
-        valueLabel.alignment = .right
-        valueLabel.lineBreakMode = .byClipping
-        addSubview(imageView)
-        addSubview(valueLabel)
-    }
-
-    private func configureNetworkContent() {
-        let valueFont = NSFont.monospacedDigitSystemFont(ofSize: 9, weight: .medium)
-        for valueLabel in [topValueLabel, bottomValueLabel] {
-            valueLabel.font = valueFont
-            valueLabel.textColor = .labelColor
-            valueLabel.alignment = .right
-            valueLabel.lineBreakMode = .byClipping
-            addSubview(valueLabel)
-        }
-
-        addSubview(topDot)
-        addSubview(bottomDot)
-    }
-}
-
-@MainActor
-private final class NetworkIndicatorDot: NSView {
-    init(color: NSColor) {
-        super.init(frame: .zero)
-        wantsLayer = true
-        layer?.backgroundColor = color.cgColor
-    }
-
-    @available(*, unavailable)
-    required init?(coder: NSCoder) {
-        nil
-    }
-
-    override func layout() {
-        super.layout()
-        layer?.cornerRadius = min(bounds.width, bounds.height) / 2
+    private static func drawValue(_ value: String, font: NSFont, color: NSColor, in bounds: NSRect) {
+        let text = NSAttributedString(string: value, attributes: [
+            .font: font,
+            .foregroundColor: color,
+        ])
+        let size = text.size()
+        NSGraphicsContext.saveGraphicsState()
+        defer { NSGraphicsContext.restoreGraphicsState() }
+        NSBezierPath.clip(bounds)
+        text.draw(at: NSPoint(x: bounds.maxX - size.width, y: bounds.midY - size.height / 2))
     }
 }
 
@@ -394,28 +355,24 @@ private final class AppKitSystemMonitorStatusItemFactory: SystemMonitorStatusIte
 }
 
 @MainActor
-private final class AppKitSystemMonitorStatusItem: SystemMonitorStatusItemHandle {
+final class AppKitSystemMonitorStatusItem: SystemMonitorStatusItemHandle {
     private let item: NSStatusItem
     private let actionTarget = ActionTarget()
-    private let contentView: StatusItemContentView
     private var isRemoved = false
 
-    init(metric: SystemMonitorMetric, statusBar: NSStatusBar = .system) {
-        item = statusBar.statusItem(withLength: Self.width(for: metric))
-        contentView = StatusItemContentView(metric: metric)
+    convenience init(metric: SystemMonitorMetric) {
+        let item = NSStatusBar.system.statusItem(withLength: Self.width(for: metric))
+        self.init(metric: metric, item: item)
+    }
+
+    init(metric: SystemMonitorMetric, item: NSStatusItem) {
+        self.item = item
+        item.length = Self.width(for: metric)
         StatusBarController.configureStatusItem(item)
 
         guard let button = item.button else { return }
-        button.image = nil
         button.title = ""
-        contentView.translatesAutoresizingMaskIntoConstraints = false
-        button.addSubview(contentView)
-        NSLayoutConstraint.activate([
-            contentView.leadingAnchor.constraint(equalTo: button.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: button.trailingAnchor),
-            contentView.topAnchor.constraint(equalTo: button.topAnchor),
-            contentView.bottomAnchor.constraint(equalTo: button.bottomAnchor)
-        ])
+        button.imagePosition = .imageOnly
         button.sendAction(on: [.leftMouseUp])
         button.target = actionTarget
         button.action = #selector(ActionTarget.performAction)
@@ -423,7 +380,11 @@ private final class AppKitSystemMonitorStatusItem: SystemMonitorStatusItemHandle
 
     func update(_ presentation: SystemMonitorStatusItemPresentation) {
         guard let button = item.button else { return }
-        contentView.update(presentation)
+        // Let AppKit host the indicator image without laying out custom button subviews.
+        button.image = SystemMonitorStatusItemImage.make(
+            for: presentation,
+            size: NSSize(width: item.length, height: NSStatusBar.system.thickness)
+        )
         button.toolTip = presentation.accessibilityLabel
         button.setAccessibilityLabel(presentation.accessibilityLabel)
     }

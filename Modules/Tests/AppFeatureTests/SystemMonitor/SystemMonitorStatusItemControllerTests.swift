@@ -1,3 +1,4 @@
+import AppKit
 import Foundation
 import SystemMonitor
 import Testing
@@ -5,6 +6,40 @@ import Testing
 
 @MainActor
 struct SystemMonitorStatusItemControllerTests {
+    @Test(arguments: [SystemMonitorMetric.cpu, .network])
+    func indicatorUpdatesTheNativeButtonImageWithoutInstallingCustomSubviews(metric: SystemMonitorMetric) throws {
+        _ = NSApplication.shared
+        let item = NSStatusBar.system.statusItem(withLength: metric == .network ? 80 : 64)
+        defer { NSStatusBar.system.removeStatusItem(item) }
+        let button = try #require(item.button)
+        let originalSubviews = button.subviews.map(ObjectIdentifier.init)
+        let handle = AppKitSystemMonitorStatusItem(metric: metric, item: item)
+        let isNetwork = metric == .network
+        let initial = SystemMonitorStatusItemPresentation(
+            symbolName: metric.rawValue,
+            title: isNetwork ? "↑ —\n↓ —" : "—",
+            accessibilityLabel: "Unavailable",
+            visualStyle: isNetwork ? .network : .standard
+        )
+        let updated = SystemMonitorStatusItemPresentation(
+            symbolName: metric.rawValue,
+            title: isNetwork ? "↑ 2 KB/s\n↓ 6 KB/s" : "42%",
+            accessibilityLabel: "Updated reading",
+            visualStyle: initial.visualStyle
+        )
+
+        handle.update(initial)
+        #expect(button.subviews.map(ObjectIdentifier.init) == originalSubviews)
+        let initialImage = try #require(button.image?.tiffRepresentation)
+        handle.update(updated)
+
+        let updatedImage = try #require(button.image?.tiffRepresentation)
+        #expect(updatedImage != initialImage)
+        #expect(button.subviews.map(ObjectIdentifier.init) == originalSubviews)
+        #expect(button.toolTip == updated.accessibilityLabel)
+        #expect(button.accessibilityLabel() == updated.accessibilityLabel)
+    }
+
     @Test
     func enablingCPUAndNetworkCreatesOnlyThoseIndicatorsInStableOrder() {
         let factory = RecordingSystemMonitorStatusItemFactory()
